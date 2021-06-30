@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Icon, Tabs, Select, Upload } from 'antd';
+import { Button, Tabs, Select, Upload } from 'antd';
 import appHelperGuide from '../../../../../../../assets/images/product/app-helper-guide.png';
 import appBindDeviceFail from '../../../../../../../assets/images/product/bind-device-fail.png';
 import UploadFile from '../../../../../../../components/upFile/UploadFile';

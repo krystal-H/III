@@ -10,7 +10,10 @@ import './productInformation.scss';
 import SafetySelectionTips from '../../../../components/SafetySelectionTips/SafetySelectionTips';
 import LabelTip from '../../../../components/form-com/LabelTip';
 
-import { Input, Select, Radio, Form, Icon, Checkbox, Row, Col, Button } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+
+import { Input, Select, Radio, Checkbox, Row, Col, Button } from 'antd';
 import SelectSpan from '../../../../components/form-com/SelectSpan';
 import { getUrlParam } from '../../../../util/util';
 const { Option } = Select;

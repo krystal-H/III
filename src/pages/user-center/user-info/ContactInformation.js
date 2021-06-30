@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import {Form,Input,Button,Select, notification} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Select, notification } from 'antd';
 import {get,Paths,post} from '../../../api';
 
 const { Option } = Select;
@@ -198,7 +200,7 @@ class ContactInformation extends Component {
                     </div>
                 </Form.Item>
             </Form>
-        )
+        );
     }
 }
 

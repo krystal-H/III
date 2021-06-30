@@ -2,7 +2,9 @@
  * Created by xiaodaoguang on 2019/10/18.
  */
 import React, { Component } from 'react';
-import { Input, Form, Button, Modal, Row, Col, Radio, Checkbox } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Modal, Row, Col, Radio, Checkbox } from 'antd';
 import { UploadFileClass } from '../../../../../components/upload-file';
 import { Notification } from '../../../../../components/Notification';
 

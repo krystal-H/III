@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Button, Badge, Card, Icon, Tooltip, Alert, Table } from "antd";
+import { QuestionCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import { Button, Badge, Card, Tooltip, Alert, Table } from "antd";
 import {
     getDataByShadow,
     getHistoryDataByShadow,
@@ -49,7 +50,7 @@ const getTips = (type, status) => {
         </div>
     );
 };
-const loadingSign = <Icon type="sync" spin title="加载中" />;
+const loadingSign = <SyncOutlined spin title="加载中" />;
 const getNow = () => moment().format("YYYY-MM-DD HH:mm:ss");
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -269,59 +270,57 @@ export default class DeviceShadow extends Component {
             {nam:'故障数据',source:errorList},
             { nam:'配置数据', source:configList},
         ]
-        return (
-            <>
-                <div className="lcp-status">
-                    <div className="lcp-status-item lcp-status-item-active">
-                        在线状态：
-                        <Tooltip title={getTips(0, online)} placement="top">
-                            <Icon type="question-circle-o" />
-                        </Tooltip>
-                    </div>
-                    <div className="lcp-status-item">
-                        {isLoading ? (
-                            loadingSign
-                        ) : online ? (
-                            <Badge status="success" text="在线" />
-                        ) : (
-                            <Badge status="error" text="离线" />
-                        )}
-                    </div>
-                    <div className="lcp-status-item lcp-status-item-active">
-                        故障状态：
-                        <Tooltip title={getTips(1, onerror)} placement="top">
-                            <Icon type="question-circle-o" />
-                        </Tooltip>
-                    </div>
-                    <div className="lcp-status-item">
-                        {isLoading ? (
-                            loadingSign
-                        ) : onerror ? (
-                            <Badge status="error" text="已发生故障" />
-                        ) : (
-                            <Badge status="success" text="未发生故障" />
-                        )}
-                    </div>
+        return <>
+            <div className="lcp-status">
+                <div className="lcp-status-item lcp-status-item-active">
+                    在线状态：
+                    <Tooltip title={getTips(0, online)} placement="top">
+                        <QuestionCircleOutlined />
+                    </Tooltip>
                 </div>
-                {
-                    _data.map(({nam,source})=>{
-                        return <div key={nam}>
-                            <div className="lcp-title marg-top20">{nam}</div>
-                            <Table
-                                // bordered
-                                className="lcp-table-small"
-                                loading={isLoading}
-                                rowKey="lcpId"
-                                pagination={false}
-                                columns={this.columns}
-                                dataSource={source}
-                            />
-                        </div>
+                <div className="lcp-status-item">
+                    {isLoading ? (
+                        loadingSign
+                    ) : online ? (
+                        <Badge status="success" text="在线" />
+                    ) : (
+                        <Badge status="error" text="离线" />
+                    )}
+                </div>
+                <div className="lcp-status-item lcp-status-item-active">
+                    故障状态：
+                    <Tooltip title={getTips(1, onerror)} placement="top">
+                        <QuestionCircleOutlined />
+                    </Tooltip>
+                </div>
+                <div className="lcp-status-item">
+                    {isLoading ? (
+                        loadingSign
+                    ) : onerror ? (
+                        <Badge status="error" text="已发生故障" />
+                    ) : (
+                        <Badge status="success" text="未发生故障" />
+                    )}
+                </div>
+            </div>
+            {
+                _data.map(({nam,source})=>{
+                    return <div key={nam}>
+                        <div className="lcp-title marg-top20">{nam}</div>
+                        <Table
+                            // bordered
+                            className="lcp-table-small"
+                            loading={isLoading}
+                            rowKey="lcpId"
+                            pagination={false}
+                            columns={this.columns}
+                            dataSource={source}
+                        />
+                    </div>
 
-                    })
-                }
-            </>
-        );
+                })
+            }
+        </>;
     };
     render() {
         const {
@@ -349,47 +348,45 @@ export default class DeviceShadow extends Component {
             download: this.download,
         };
         return (
-                <div className="device-shadow-page">
-                    <Alert
-                        className="page-visualization-alert"
-                        message={this.alertMsg}
-                        type="info"
-                        showIcon
-                    />
-                    <div className="btn-changemod" >
-                        <Button.Group>
-                            {tabs.map((d, i) => {
-                                return (
-                                    <Button
-                                        type={i === tab ? "primary" : undefined}
-                                        onClick={() => this.toggleTab(i)}
-                                        key={i + d}
-                                    >
-                                        {d}
-                                    </Button>
-                                );
-                            })}
-                        </Button.Group>
-                        <span className="fresh-time">
-                            最新更新时间：{time}
-                            <Icon
-                                type="sync"
-                                spin={isLoading}
-                                title="刷新"
-                                className="lcp-refresh"
-                                onClick={isLoading ? null : this.getData}
-                            />
-                        </span>
-                    </div>
-                    {
-                        isError ? 
-                        <Crash tryAgain={this.getData} /> : tab === 0 ? 
-                        this.getFormListView() : 
-                        this.getJsonView()
-                    }
-
-                    <DeviceShadowHistoryModal {...modalProps} />
+            <div className="device-shadow-page">
+                <Alert
+                    className="page-visualization-alert"
+                    message={this.alertMsg}
+                    type="info"
+                    showIcon
+                />
+                <div className="btn-changemod" >
+                    <Button.Group>
+                        {tabs.map((d, i) => {
+                            return (
+                                <Button
+                                    type={i === tab ? "primary" : undefined}
+                                    onClick={() => this.toggleTab(i)}
+                                    key={i + d}
+                                >
+                                    {d}
+                                </Button>
+                            );
+                        })}
+                    </Button.Group>
+                    <span className="fresh-time">
+                        最新更新时间：{time}
+                        <SyncOutlined
+                            spin={isLoading}
+                            title="刷新"
+                            className="lcp-refresh"
+                            onClick={isLoading ? null : this.getData} />
+                    </span>
                 </div>
+                {
+                    isError ? 
+                    <Crash tryAgain={this.getData} /> : tab === 0 ? 
+                    this.getFormListView() : 
+                    this.getJsonView()
+                }
+
+                <DeviceShadowHistoryModal {...modalProps} />
+            </div>
         );
     }
 }

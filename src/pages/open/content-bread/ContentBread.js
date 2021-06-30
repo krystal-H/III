@@ -1,5 +1,6 @@
 import React from 'react'
-import { Breadcrumb, Icon } from 'antd';
+import { HomeOutlined } from '@ant-design/icons';
+import { Breadcrumb } from 'antd';
 import { Link } from 'react-router-dom';
 
 import './ContentTitle.scss';
@@ -78,7 +79,7 @@ export default function contentBread({location,routes}) {
                                         <Link to={bread.path || null}>
                                             {
                                                 index === 0 &&
-                                                <Icon type='home' />
+                                                <HomeOutlined />
                                             }
                                             {
                                                 bread.text &&
@@ -88,7 +89,7 @@ export default function contentBread({location,routes}) {
                                         <span>
                                             {
                                                 index === 0 &&
-                                                <Icon type='home' />
+                                                <HomeOutlined />
                                             }
                                             {
                                                 bread.text &&
@@ -102,5 +103,5 @@ export default function contentBread({location,routes}) {
                 </Breadcrumb>
             }
         </div>
-    )
+    );
 }

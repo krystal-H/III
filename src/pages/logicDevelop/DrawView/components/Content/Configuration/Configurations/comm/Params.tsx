@@ -1,5 +1,8 @@
 import React, { Component } from "react";
-import { Form, Input, Icon, Button, Popconfirm } from "antd";
+import { CloseOutlined, DeleteFilled, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Popconfirm } from "antd";
 import ParamModal from "../commModal/ParamModal";
 import { ConfigurationProps, formType } from "../../../../../store/types";
 
@@ -119,10 +122,10 @@ class Params extends Component<ParamsProps> {
               <span>{name}</span>
               {readonly ? null : (
                 <div className="draw-topic-right">
-                  <Icon type="edit" onClick={() => this.editParam(id)} />
+                  <EditOutlined onClick={() => this.editParam(id)} />
                   {this.getDel(
                     "您确定要删除当前参数吗？",
-                    <Icon type="close" />,
+                    <CloseOutlined />,
                     () => this.delParam(id)
                   )}
                 </div>
@@ -132,45 +135,43 @@ class Params extends Component<ParamsProps> {
         })}
       </div>
     );
-    return (
-      <>
-        <Form.Item label="入参配置" required={isRequire}>
-          {isRequire && form
-            ? form.getFieldDecorator("__paramLen__", {
-                initialValue: params.length,
-                rules: [
-                  {
-                    pattern: /^[1-9]\d*$/,
-                    message: "入参不能为空",
-                  },
-                ],
-              })(<Input type="hidden" />)
-            : null}
+    return <>
+      <Form.Item label="入参配置" required={isRequire}>
+        {isRequire && form
+          ? form.getFieldDecorator("__paramLen__", {
+              initialValue: params.length,
+              rules: [
+                {
+                  pattern: /^[1-9]\d*$/,
+                  message: "入参不能为空",
+                },
+              ],
+            })(<Input type="hidden" />)
+          : null}
 
-          {readonly ? null : (
-            <div className={delCls}>
-              {this.getDel(
-                "您确定要删除所有参数吗？",
-                <Icon type="delete" theme="filled" />,
-                this.delAllParam,
-                isEmpty
-              )}
-            </div>
-          )}
-          {paramList}
-          <Button block icon="plus" onClick={this.addParam} disabled={readonly}>
-            添加入参
-          </Button>
-        </Form.Item>
-        <ParamModal
-          isShow={showParamModal}
-          id={showParamId}
-          list={params}
-          hide={this.hideParamModal}
-          submit={this.saveParam}
-        />
-      </>
-    );
+        {readonly ? null : (
+          <div className={delCls}>
+            {this.getDel(
+              "您确定要删除所有参数吗？",
+              <DeleteFilled />,
+              this.delAllParam,
+              isEmpty
+            )}
+          </div>
+        )}
+        {paramList}
+        <Button block icon={<PlusOutlined />} onClick={this.addParam} disabled={readonly}>
+          添加入参
+        </Button>
+      </Form.Item>
+      <ParamModal
+        isShow={showParamModal}
+        id={showParamId}
+        list={params}
+        hide={this.hideParamModal}
+        submit={this.saveParam}
+      />
+    </>;
   }
 }
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Tooltip, Icon } from 'antd';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { Tooltip } from 'antd';
 import propsType from 'prop-types';
 
 /**
@@ -9,7 +10,7 @@ const LabelTip = ({label, tip, tipPlacement = "top", icon, colon = false,}) => {
     return (
         <span>
             <span>{label}</span>&nbsp;
-            <Tooltip title={tip} placement={tipPlacement}><Icon type={icon || "question-circle-o"} /></Tooltip>
+            <Tooltip title={tip} placement={tipPlacement}><LegacyIcon type={icon || "question-circle-o"} /></Tooltip>
             &nbsp;
             <span>
                 {
@@ -17,7 +18,7 @@ const LabelTip = ({label, tip, tipPlacement = "top", icon, colon = false,}) => {
                 }
             </span>
         </span>
-    )
+    );
 }
 
 LabelTip.prototype = {

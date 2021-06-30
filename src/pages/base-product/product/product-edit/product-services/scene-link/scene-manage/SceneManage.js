@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Button, Icon, Input, Divider,Table } from 'antd'
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Input, Divider, Table } from 'antd';
 import { Notification} from '../../../../../../../components/Notification'
 import {cloneDeep,flattenDepth} from 'lodash'
 import { addKeyToTableData, uniqueItemInArrayByKey} from '../../../../../../../util/util';
@@ -10,7 +11,7 @@ import FlowChart from '../../../../../../../components/flow-chart/FlowChart';
 import {BatchAddForm,CustomForm,ApproverModal,LinkProtocolsForm} from './SceneModals';
 import DoubleBtns from '../../../../../../../components/double-btns/DoubleBtns';
 import {SceneType,SceneStatus} from '../../../../../../../configs/text-map';
- 
+
 // const { Search } = Input;
 const NOT_IN_ACTIONS = ['Base_Null_Reserved_Null','updateFlag']; // 控制数据中需要过滤掉的字段
 
@@ -638,11 +639,11 @@ export default class SceneManage extends Component {
                                     <Button type="primary" 
                                             style={{ float: 'right' }} 
                                             onClick={() => this.openModal('customVisible')}>
-                                                <Icon type="plus"/> 自定义 </Button>
+                                                <PlusOutlined /> 自定义 </Button>
                                     <Button type="primary" 
                                             style={{ float: 'right',marginRight:'24px' }} 
                                             onClick={() => this.openModal('batchAddVisible')}>
-                                                <Icon type="plus"/> 批量添加 </Button>
+                                                <PlusOutlined /> 批量添加 </Button>
                                 </React.Fragment>
                             }
                             <Button type="primary" 
@@ -723,6 +724,6 @@ export default class SceneManage extends Component {
                     ></ActionConfirmModal>
                 }
             </div>
-        )
+        );
     }
 }

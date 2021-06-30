@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Pagination, Tabs, Icon, Button, Row, Col, Table } from 'antd';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { Pagination, Tabs, Button, Row, Col, Table } from 'antd';
 import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
 import { Notification } from '../../../../components/Notification';
 import ProductIcon from '../../../../components/product-components/product-icon/ProductIcon';
@@ -511,7 +512,7 @@ export default class ApplicationDetail extends PureComponent {
                         <span className="fl app-id">APPID：{appId.value}</span>
                         <span className="fl app-secret">
                             APPSecret：{appSecretText}
-                            <Icon type={showSecretType} className="icon-display" style={{ fontSize: '18px' }}
+                            <LegacyIcon type={showSecretType} className="icon-display" style={{ fontSize: '18px' }}
                                   theme="twoTone"
                                   twoToneColor="#2874FF" onClick={() => this.changeState('showSecret')} />
                         </span>
@@ -588,7 +589,7 @@ export default class ApplicationDetail extends PureComponent {
                                     </Col>
                                     <Col span={21} className="detail-right">
                                         {appSecretText}
-                                        <Icon type={showSecretType} className="icon-display"
+                                        <LegacyIcon type={showSecretType} className="icon-display"
                                               style={{ fontSize: '18px' }}
                                               theme="twoTone"
                                               twoToneColor="#2874FF" onClick={() => this.changeState('showSecret')} />
@@ -715,6 +716,6 @@ export default class ApplicationDetail extends PureComponent {
                     createAppVersion={this.createAppVersion}
                 />}
             </section>
-        )
+        );
     }
 }

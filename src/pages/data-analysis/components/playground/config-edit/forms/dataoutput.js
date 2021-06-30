@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import {Form,Table,Select} from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Table, Select } from 'antd';
 import {getNodeNameFormItem} from '../common'
 
 const {Option} = Select

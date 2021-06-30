@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Modal, Descriptions, Button, Icon,Select } from "antd";
+import { ExportOutlined } from '@ant-design/icons';
+import { Modal, Descriptions, Button, Select } from "antd";
 import Crash from "../../../../../components/Crash";
 import EmptyData from "../../../../../components/EmptyData";
 import CommECharts from "../../../../../components/CommECharts";
@@ -107,7 +108,7 @@ export default class DeviceShadowHistoryModal extends Component {
 
     download = (
         <Button type="link" className="lcp-remark-export" onClick={this.export}>
-            <Icon type="export" />
+            <ExportOutlined />
             导出
         </Button>
     );

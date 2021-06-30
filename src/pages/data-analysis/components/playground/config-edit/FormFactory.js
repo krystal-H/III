@@ -1,5 +1,6 @@
 import React from 'react'
-import {Form} from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import {NODE_TYPES} from '../nodes-container/configs'
 
 import DataInput from './forms/dataInput'
@@ -51,7 +52,7 @@ const commonWrapper = function(formName,FormComponent) {
     })(
         FormComponent
     )
-} 
+}
 
 const DataInputForm = commonWrapper('form_for_dataInput',
     DataInput

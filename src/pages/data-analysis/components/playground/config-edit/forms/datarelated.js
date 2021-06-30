@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import {Form,Table,Select,Radio} from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Table, Select, Radio } from 'antd';
 import {COMMON_COLUMNS,getNodeNameFormItem} from '../common'
 
 const {Option} = Select

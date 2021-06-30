@@ -11,7 +11,7 @@ import SubResetPassword from './SubResetPassword';
 import PageTitle from '../../../components/page-title/PageTitle';
 import AloneSection from '../../../components/alone-section/AloneSection';
 import { DateTool,strToAsterisk } from '../../../util/util';
-import { Icon } from "antd";
+import { Icon as LegacyIcon } from '@ant-design/compatible';
 
 import './SecuritySetting.scss'
 
@@ -76,7 +76,7 @@ function Setting ({
                                         <span className="flex-item">
                                             <span className="tit">用户secretId：</span>
                                             {showid?secretId:strToAsterisk(secretId, 10)}
-                                            <Icon
+                                            <LegacyIcon
                                                 type={showid?"eye":"eye-invisible"}
                                                 style={{ fontSize: "18px", marginLeft: "6px" }}
                                                 theme="twoTone"
@@ -87,7 +87,7 @@ function Setting ({
                                         <span className="flex-item">
                                             <span className="tit">用户SecretKey：</span>
                                             {showkey?secretKey:strToAsterisk(secretKey, 10)}
-                                            <Icon
+                                            <LegacyIcon
                                                 type={showkey?"eye":"eye-invisible"}
                                                 style={{ fontSize: "18px", marginLeft: "6px" }}
                                                 theme="twoTone"
@@ -159,6 +159,6 @@ function Setting ({
                 }
             </AloneSection>
         </React.Fragment>
-    )
+    );
 
 }

@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Button, Radio, Alert,Input,Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button, Radio, Alert, Input, Upload } from 'antd';
 import { post,Paths } from '../../../api';
 import {Notification} from '../../../components/Notification'
 const { TextArea } = Input;
@@ -105,7 +108,7 @@ export class ValidationFirmwareDialog  extends Component{
                     </Form.Item>
                     <div className='ota_uploadbox'>
                         <Upload className='upbtn' beforeUpload={this.beforeUpload} fileList={[]} accept='.xls,.xlsx'>
-                            <Button type="primary" icon="upload">批量导入</Button>
+                            <Button type="primary" icon={<UploadOutlined />}>批量导入</Button>
                         </Upload>
                         <Button className='downbtn' type="link" onClick={this.downloadMac}>下载模板</Button>
                     </div>
@@ -119,6 +122,6 @@ export class ValidationFirmwareDialog  extends Component{
                 </Form>
                 <Alert message={desc[validateType]} type="info" showIcon />
             </div>
-        )
+        );
     }
 }

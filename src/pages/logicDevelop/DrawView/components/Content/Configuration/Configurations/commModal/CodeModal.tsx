@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { Modal, Form, Input, message } from "antd";
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input, message } from "antd";
 import { formItemLayout, getNameCom } from "../../BaseConfiguration";
-import { FormComponentProps } from "antd/lib/form";
+import { FormComponentProps } from '@ant-design/compatible/lib/form';
 import { systemCodeList } from "../../../../../store/constants";
 
 interface CodeModalProps extends FormComponentProps {

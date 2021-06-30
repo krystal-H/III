@@ -1,5 +1,6 @@
 import React from 'react';
-import { Select, Carousel, Icon } from 'antd';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Select, Carousel } from 'antd';
 import { connect } from 'react-redux';
 import ModuleItem from './ModuleItem';
 
@@ -52,13 +53,13 @@ class ModuleSelect extends React.Component{
                         {
                             list.length > 4 &&
                             <>
-                                <Icon type="left" className="btn-left" onClick={() => this.carousel.prev()}></Icon>
-                                <Icon type="right" className="btn-right" onClick={() => this.carousel.next()}></Icon>
+                                <LeftOutlined className="btn-left" onClick={() => this.carousel.prev()}></LeftOutlined>
+                                <RightOutlined className="btn-right" onClick={() => this.carousel.next()}></RightOutlined>
                             </>
                         }
                     </div>
                 </div>
-        )
+        );
     }
 }
 

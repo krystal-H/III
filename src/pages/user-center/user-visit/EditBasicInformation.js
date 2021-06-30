@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {trim} from 'lodash';
-import { Input, Select, Switch, Form, Button } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Select, Switch, Button } from 'antd';
 import {get, post, Paths} from '../../../api';
 import {encryption,checkAccount} from '../../../util/util'
 import {Notification} from '../../../components/Notification';

@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
-import {Modal,Form,Collapse,Input,Table,Checkbox,Button,Icon} from 'antd'
+import { SyncOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Collapse, Input, Table, Checkbox, Button } from 'antd';
 import { Notification } from '../../../../components/Notification';
 import { DateTool } from '../../../../util/util';
 import { cloneDeep } from "lodash";
@@ -290,13 +293,11 @@ export function DownHistory ({
         >
             <div className='topbtnbox'>
                 <Button className='addbtn' type='link' onClick={addTslHistory} >新增导出</Button>  
-                <Icon
-                    type="sync"
+                <SyncOutlined
                     title="刷新列表"
                     spin={downHistoryLoading}
                     className="refresh"
-                    onClick={getDownTslHistory}
-                />
+                    onClick={getDownTslHistory} />
             </div>
             <Table 
                 rowKey="createTime"
@@ -307,5 +308,5 @@ export function DownHistory ({
             />
                
         </Modal>
-    )
+    );
 }

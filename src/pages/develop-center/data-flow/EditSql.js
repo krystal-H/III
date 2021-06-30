@@ -1,5 +1,7 @@
 import React, {memo, useState, useEffect } from 'react';
-import { Input,Form,Modal,Select} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Modal, Select } from 'antd';
 import { get,post, Paths} from '../../../api';
 import CodeView from "../../../components/CodeView2";
 const {Option} = Select

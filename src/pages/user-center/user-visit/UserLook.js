@@ -8,7 +8,9 @@ import TreeStructureDisplay from '../../../components/tree-structure-display/Tre
 import {strToAsterisk} from '../../../util/util';
 import PageTitle from '../../../components/page-title/PageTitle';
 
-import {  Tree, Modal, Icon } from 'antd';
+import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
+
+import { Tree, Modal } from 'antd';
 import './userLook.scss'
 
 
@@ -42,7 +44,7 @@ export default class UserLook extends Component {
                 title: '用户SecretKey',
                 dataIndex: 'secret',
                 key: 'secret',
-                render: text => <a>{this.state.eye?strToAsterisk(text,10):text}{this.state.eye?<Icon className='eyeLeft' type="eye-invisible" onClick={this.clickEye} />:<Icon  className='eyeLeft' type="eye"  onClick={this.clickEye}/>}</a>
+                render: text => <a>{this.state.eye?strToAsterisk(text,10):text}{this.state.eye?<EyeInvisibleOutlined className='eyeLeft' onClick={this.clickEye} />:<EyeOutlined className='eyeLeft' onClick={this.clickEye} />}</a>
             },
             {
                 title: '创建时间',

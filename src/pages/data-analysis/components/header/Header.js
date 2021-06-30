@@ -1,4 +1,5 @@
 import React from 'react'
+import { BugOutlined, CloudUploadOutlined, SaveOutlined } from '@ant-design/icons';
 import {Button} from 'antd'
 import {saveNodes,publishFlow,configFlow,testFlow} from '../../subjects';
 import './Header.scss'
@@ -32,17 +33,17 @@ export default React.memo(function Header({
                                 size="small"
                                 onClick={test}
                                 // disabled={![2].includes(testEnv)}
-                                icon="bug">调试</Button>
+                                icon={<BugOutlined />}>调试</Button>
                         <Button type="primary" 
                                 size="small"
                                 onClick={save}
                                 disabled={![0,1,3].includes(testEnv)}   
-                                icon="save">保存</Button>
+                                icon={<SaveOutlined />}>保存</Button>
                         <Button type="primary" 
                                 size="small"
                                 onClick={publish}
                                 disabled={![1,3].includes(testEnv)}  
-                                icon="cloud-upload">发布</Button>
+                                icon={<CloudUploadOutlined />}>发布</Button>
                     </>:
                     <>
                         {/* <Button type="primary" 
@@ -52,10 +53,10 @@ export default React.memo(function Header({
                         <Button type="primary" 
                                 size="small"
                                 onClick={save}  
-                                icon="save">保存</Button>
+                                icon={<SaveOutlined />}>保存</Button>
                     </>
                 }
             </div>
         </header>
-    )
+    );
 })

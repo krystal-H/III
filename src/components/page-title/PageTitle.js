@@ -1,5 +1,7 @@
 import React from 'react'
-import {Icon,Button} from 'antd'
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { Button } from 'antd';
 import { withRouter} from 'react-router-dom'
 
 import './PageTitle.scss'
@@ -22,7 +24,7 @@ function PageTitle({noback,
         <div className="page-title">
             {
                 !noback && 
-                <span className="back" onClick={backHandle || defaultGoback}><Icon type="arrow-left" /></span>
+                <span className="back" onClick={backHandle || defaultGoback}><ArrowLeftOutlined /></span>
             }
             <span className="title">{title}</span>
 
@@ -32,7 +34,7 @@ function PageTitle({noback,
                         <Button type={btnStyle} 
                                 onClick={btnClickHandle} 
                                 loading={btnLoading} 
-                                icon={btnIcon}>
+                                icon={<LegacyIcon type={btnIcon} />}>
                             {
                                 btnText
                             }
@@ -40,7 +42,7 @@ function PageTitle({noback,
                 </span>
             }
         </div>
-    )
+    );
 }
 
 export default withRouter(React.memo(PageTitle))

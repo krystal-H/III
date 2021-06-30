@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {post, Paths} from '../../../api';
-import { Input,Form} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input } from 'antd';
 import TextAreaCounter from '../../../components/textAreaCounter/TextAreaCounter';
 import {Notification} from '../../../components/Notification';
 import './caseManage.scss'
@@ -54,58 +56,57 @@ class CaseAddForm extends Component {
             wrapperCol: { span: 20 },
         };
         let { getFieldDecorator,getFieldValue } = this.props.form;
-        return ( 
-                <Form  {...formlayout} onSubmit={this.handleSubmit}>
-                    <Form.Item label="实例名称">
-                        {getFieldDecorator('name', {
-                            rules: [{ required: true, message: '请输入实例名称'},
-                                    { max: 20, message: '最大输入长度为20' }],
-                        })(<Input placeholder="请输入实例名称" />)
-                        }
-                    </Form.Item>
-                    <TextAreaCounter
-                        label="备注"
-                        formId='desc'
-                        astrictNub='50'
-                        rows='3'
-                        isRequired={true}
-                        placeholder='实例备注' 
-                        getFieldDecorator={getFieldDecorator}
-                        getFieldValue={getFieldValue}
-                    />
-                    <Form.Item label="cpu(核)">
-                        {getFieldDecorator('namespaceCpu', {
-                            rules: [{
-                                max: 3,
-                                required: true,
-                                pattern: /^\d{1,3}$/,
-                                message: "请输入不超过3位数的数字"
-                            }],
-                            initialValue: 20
-                        })(<Input placeholder="请输入申请核数（核）/默认20核" onBlur={this.blurr.bind(this,'namespaceCpu')} />)
-                        }
-                    </Form.Item>
-                    <Form.Item label="内存(G)">
-                        {getFieldDecorator('namespaceMemory', {
-                            rules: [{ max: 3, required: true,
-                                pattern: /^\d{1,3}$/,
-                                message: "请输入不超过3位数的数字"}],
-                            initialValue: 10
-                        })(<Input placeholder="请输入申请内存（G）/默认10G" onBlur={this.blurr.bind(this,'namespaceMemory')} />)
-                        }
-                    </Form.Item>
-                    <Form.Item label="存储(G)">
-                        {getFieldDecorator('namespaceStorage', {
-                            rules: [{ max: 4, required: true,
-                                pattern: /^\d{1,4}$/,
-                                message: "请输入不超过4位数的数字"}],
-                            initialValue: 100
-                        })(<Input placeholder="请输入申请存储空间（G）/默认100G" onBlur={this.blurr.bind(this,'namespaceStorage')} />)
-                        }
-                    </Form.Item>
-                </Form>
-          
-        )
+        return (
+            <Form  {...formlayout} onSubmit={this.handleSubmit}>
+                <Form.Item label="实例名称">
+                    {getFieldDecorator('name', {
+                        rules: [{ required: true, message: '请输入实例名称'},
+                                { max: 20, message: '最大输入长度为20' }],
+                    })(<Input placeholder="请输入实例名称" />)
+                    }
+                </Form.Item>
+                <TextAreaCounter
+                    label="备注"
+                    formId='desc'
+                    astrictNub='50'
+                    rows='3'
+                    isRequired={true}
+                    placeholder='实例备注' 
+                    getFieldDecorator={getFieldDecorator}
+                    getFieldValue={getFieldValue}
+                />
+                <Form.Item label="cpu(核)">
+                    {getFieldDecorator('namespaceCpu', {
+                        rules: [{
+                            max: 3,
+                            required: true,
+                            pattern: /^\d{1,3}$/,
+                            message: "请输入不超过3位数的数字"
+                        }],
+                        initialValue: 20
+                    })(<Input placeholder="请输入申请核数（核）/默认20核" onBlur={this.blurr.bind(this,'namespaceCpu')} />)
+                    }
+                </Form.Item>
+                <Form.Item label="内存(G)">
+                    {getFieldDecorator('namespaceMemory', {
+                        rules: [{ max: 3, required: true,
+                            pattern: /^\d{1,3}$/,
+                            message: "请输入不超过3位数的数字"}],
+                        initialValue: 10
+                    })(<Input placeholder="请输入申请内存（G）/默认10G" onBlur={this.blurr.bind(this,'namespaceMemory')} />)
+                    }
+                </Form.Item>
+                <Form.Item label="存储(G)">
+                    {getFieldDecorator('namespaceStorage', {
+                        rules: [{ max: 4, required: true,
+                            pattern: /^\d{1,4}$/,
+                            message: "请输入不超过4位数的数字"}],
+                        initialValue: 100
+                    })(<Input placeholder="请输入申请存储空间（G）/默认100G" onBlur={this.blurr.bind(this,'namespaceStorage')} />)
+                    }
+                </Form.Item>
+            </Form>
+        );
     }
 }
 export const AddForm = Form.create({

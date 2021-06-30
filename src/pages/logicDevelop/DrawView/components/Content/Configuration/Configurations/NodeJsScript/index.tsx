@@ -7,7 +7,9 @@ import {
 } from "../../../../../store/types";
 import { ConfigurationProps } from "../../../Configuration";
 import CodeView from "../../../../../../../../components/CodeView2";
-import { Form, Button, Select, Input } from "antd";
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button, Select, Input } from "antd";
 import {
   NodeJsTemplateList,
   eventTypeList,

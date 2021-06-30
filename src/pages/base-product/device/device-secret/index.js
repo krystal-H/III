@@ -2,7 +2,9 @@
  * Created by xiaodaoguang on 2020/1/6.
  */
 import React, { useState, useEffect } from "react";
-import { Input, Form, Button, Icon, Select, Table } from "antd";
+import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Select, Table } from "antd";
 import { strToAsterisk, DateTool } from "../../../../util/util";
 import { get, Paths, post } from "../../../../api";
 import { REQUEST_SUCCESS } from "../../../../configs/request.config";
@@ -77,7 +79,7 @@ export default props => {
                     return (
                         <div>
                             <span key="detail">{appSecretText}</span>
-                            <Icon
+                            <LegacyIcon
                                 type={showSecretType}
                                 style={{ fontSize: "18px", marginLeft: "6px" }}
                                 theme="twoTone"

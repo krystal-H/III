@@ -1,5 +1,7 @@
 import React, {memo, useState, useEffect,useRef } from 'react';
-import { Input,Form,Modal,Select} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Modal, Select } from 'antd';
 import { post, Paths} from '../../../api';
 import './dataflow.scss';
 

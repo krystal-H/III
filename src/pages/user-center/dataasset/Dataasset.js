@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {get,post, Paths} from '../../../api';
-import { Input, Button, Table, Divider, Tooltip, Tag ,Form,Select} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Table, Divider, Tooltip, Tag, Select } from 'antd';
 import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
 import AloneSection from '../../../components/alone-section/AloneSection';
 import { Link } from 'react-router-dom';

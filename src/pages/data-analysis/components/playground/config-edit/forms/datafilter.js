@@ -1,5 +1,7 @@
 import React from 'react'
-import { Form, Input, Radio, Table, Button, Select} from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Radio, Table, Button, Select } from 'antd';
 import { getNodeNameFormItem} from '../common'
 
 const { Option } = Select

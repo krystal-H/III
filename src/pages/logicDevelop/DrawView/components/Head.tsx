@@ -1,4 +1,15 @@
 import React, { Component } from "react";
+
+import {
+  ApartmentOutlined,
+  BugOutlined,
+  CloudUploadOutlined,
+  FlagOutlined,
+  QuestionCircleOutlined,
+  RollbackOutlined,
+  SaveOutlined,
+} from '@ant-design/icons';
+
 import { Divider, Popover, Button, message } from "antd";
 import ConnectDebugInputModal from "../containers/ConnectDebugInputModal";
 import { SystemState, Status } from "../store/types";
@@ -132,7 +143,7 @@ class Head extends Component<HeadProps> {
           <Pop content="撤销">
             <Button
               shape="circle"
-              icon="rollback"
+              icon={<RollbackOutlined />}
               disabled={!canUndo}
               onClick={canUndo ? undo : undefined}
             />
@@ -141,7 +152,7 @@ class Head extends Component<HeadProps> {
           <Pop content="整理节点">
             <Button
               shape="circle"
-              icon="apartment"
+              icon={<ApartmentOutlined />}
               className="draw-rotate"
               onClick={clearNode}
             />
@@ -152,7 +163,7 @@ class Head extends Component<HeadProps> {
           <Pop content="保存">
             <Button
               shape="circle"
-              icon="save"
+              icon={<SaveOutlined />}
               loading={isSaving}
               disabled={isSaving}
               onClick={this.save}
@@ -162,7 +173,7 @@ class Head extends Component<HeadProps> {
           <Pop content="部署">
             <Button
               shape="circle"
-              icon="cloud-upload"
+              icon={<CloudUploadOutlined />}
               loading={isInDeploy}
               disabled={isSaving || isInDeploy}
               // onClick={this.testPublish}
@@ -173,7 +184,7 @@ class Head extends Component<HeadProps> {
           <Pop content="调试">
             <Button
               shape="circle"
-              icon="bug"
+              icon={<BugOutlined />}
               loading={isInDebug}
               disabled={disabledDebug}
               onClick={this.debug}
@@ -183,7 +194,7 @@ class Head extends Component<HeadProps> {
           <Pop content="发布正式环境">
             <Button
               shape="circle"
-              icon="flag"
+              icon={<FlagOutlined />}
               loading={isInPublish}
               disabled={disabledPublish}
               // onClick={this.publish}
@@ -194,7 +205,7 @@ class Head extends Component<HeadProps> {
           <Divider type="vertical" />
 
           <Pop content="帮助">
-            <Button shape="circle" icon="question-circle" disabled={true} />
+            <Button shape="circle" icon={<QuestionCircleOutlined />} disabled={true} />
           </Pop>
         </div>
 

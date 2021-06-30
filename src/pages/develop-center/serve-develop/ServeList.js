@@ -1,4 +1,5 @@
 import React,{useState,useCallback,useEffect} from 'react'
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Table, Divider,Modal } from 'antd'
 import { DateTool,openNewWindow } from '../../../util/util'
 import { Paths, get, post } from '../../../api'
@@ -11,7 +12,7 @@ import { Notification } from '../../../components/Notification'
 const PAGE_ROWS = 10
 
 //testEnv和proEnv的值 0、1、2、3，0是开发状态，按钮也显示“发布”，但灰色不可点击
-const ACTIONYPE = ["发布","发布","停止","启动","",""] 
+const ACTIONYPE = ["发布","发布","停止","启动","",""]
 
 export default function ServeList({projectId}) {
     const [addServeVisible,setAddServeVisible] = useState(false)
@@ -380,87 +381,85 @@ export default function ServeList({projectId}) {
         </>
 
     } 
-    return (
-        <>
-            <div className="tab-content-wrapper">           
-                <div className="tools">
-                    <span className="tool-item">
-                        <Button type="primary"
-                            onClick={openAddServe}
-                            icon="plus">新建服务</Button>
-                    </span>
-                    <span className="tool-item">
-                        <Input placeholder="请输入服务名称查询"
-                            style={{ width: '240px' }}
-                            value={name}
-                            onChange={e =>  setName(e.target.value)}
-                            maxLength={20} />
-                    </span>
-                    <span className="tool-item">
-                        <Button type="primary" icon="search" onClick={() => getList(1)}>查询</Button>
-                    </span>
-                </div>
+    return <>
+        <div className="tab-content-wrapper">           
+            <div className="tools">
+                <span className="tool-item">
+                    <Button type="primary"
+                        onClick={openAddServe}
+                        icon={<PlusOutlined />}>新建服务</Button>
+                </span>
+                <span className="tool-item">
+                    <Input placeholder="请输入服务名称查询"
+                        style={{ width: '240px' }}
+                        value={name}
+                        onChange={e =>  setName(e.target.value)}
+                        maxLength={20} />
+                </span>
+                <span className="tool-item">
+                    <Button type="primary" icon={<SearchOutlined />} onClick={() => getList(1)}>查询</Button>
+                </span>
             </div>
-            <div className="table-wrapper">
+        </div>
+        <div className="table-wrapper">
 
-                <Table columns={PageColumns} rowKey='id'
-                    dataSource={dataList}
-                    pagination={{
-                        total: totalRows,
-                        current: pageIndex,
-                        defaultCurrent: 1,
-                        defaultPageSize: PAGE_ROWS,
-                        onChange: (index) => getList(index),
-                        showQuickJumper: true,
-                        hideOnSinglePage: true,
-                        showTotal: total => <span>共 <a>{total}</a> 条</span>
-                    }}
-                />
-            </div>
-            {
-                addServeVisible &&
-                <AddServe  
-                    visible={addServeVisible}
-                    onOk={addServeOkHandle}
-                    projectId={projectId}
-                    projectList={projectList}
-                    onCancel={() => setAddServeVisible(false)}>
-                </AddServe>
-            }
-            {
-                copyServeId &&
-                <CopyServe 
-                    visible={copyServeId!==-1 || editContent.id!==-1}
-                    editContent= {editContent}
-                    onOk={copyOrEditOkHandle}
-                    onCancel={cancelEditCopyMod} >
-                </CopyServe>
-            }
-            { getActionModal() }
-            
-            {
-                callExplainVisible &&
-                <CallExplain paramList={paramList} url={url} visible={callExplainVisible} onCancel={() => setcallExplainData({callExplainVisible:false,paramList:[]})}></CallExplain>
-            }
-            {
-                dataAnlVisibel && 
-                <Modal  visible={dataAnlVisibel}
-                        className="sql-modal-self-class" 
-                        width={500}
-                        title="选择数据分析类型"
-                        closable={true}
-                        centered={true}
-                        footer={null}
-                        onCancel={() => setDataAnlData({dataAnlVisibel:false,dataAnlRecord:null})}
-                        destroyOnClose={true}
-                        maskClosable={false}>
-                        <div className="type-select">
-                            <span onClick={() => openDataAnalysis(1)}>节点实时流任务</span>
-                            <span onClick={() => openDataAnalysis(3)}>数据分析任务</span>
-                            <span onClick={() => openDataAnalysis(4)}>SQL实时流任务</span>
-                        </div>
-                </Modal>
-            }
-        </>
-    )
+            <Table columns={PageColumns} rowKey='id'
+                dataSource={dataList}
+                pagination={{
+                    total: totalRows,
+                    current: pageIndex,
+                    defaultCurrent: 1,
+                    defaultPageSize: PAGE_ROWS,
+                    onChange: (index) => getList(index),
+                    showQuickJumper: true,
+                    hideOnSinglePage: true,
+                    showTotal: total => <span>共 <a>{total}</a> 条</span>
+                }}
+            />
+        </div>
+        {
+            addServeVisible &&
+            <AddServe  
+                visible={addServeVisible}
+                onOk={addServeOkHandle}
+                projectId={projectId}
+                projectList={projectList}
+                onCancel={() => setAddServeVisible(false)}>
+            </AddServe>
+        }
+        {
+            copyServeId &&
+            <CopyServe 
+                visible={copyServeId!==-1 || editContent.id!==-1}
+                editContent= {editContent}
+                onOk={copyOrEditOkHandle}
+                onCancel={cancelEditCopyMod} >
+            </CopyServe>
+        }
+        { getActionModal() }
+        
+        {
+            callExplainVisible &&
+            <CallExplain paramList={paramList} url={url} visible={callExplainVisible} onCancel={() => setcallExplainData({callExplainVisible:false,paramList:[]})}></CallExplain>
+        }
+        {
+            dataAnlVisibel && 
+            <Modal  visible={dataAnlVisibel}
+                    className="sql-modal-self-class" 
+                    width={500}
+                    title="选择数据分析类型"
+                    closable={true}
+                    centered={true}
+                    footer={null}
+                    onCancel={() => setDataAnlData({dataAnlVisibel:false,dataAnlRecord:null})}
+                    destroyOnClose={true}
+                    maskClosable={false}>
+                    <div className="type-select">
+                        <span onClick={() => openDataAnalysis(1)}>节点实时流任务</span>
+                        <span onClick={() => openDataAnalysis(3)}>数据分析任务</span>
+                        <span onClick={() => openDataAnalysis(4)}>SQL实时流任务</span>
+                    </div>
+            </Modal>
+        }
+    </>;
 }

@@ -2,7 +2,17 @@ import React, { Component } from "react";
 import BaseConfiguration, { getNameCom } from "../../BaseConfiguration";
 import { NodeItem, formType } from "../../../../../store/types";
 import { ConfigurationProps } from "../../../Configuration";
-import { Popconfirm, Form, Button, Icon, Select, Input } from "antd";
+import {
+  CloseOutlined,
+  DeleteFilled,
+  DownOutlined,
+  EditOutlined,
+  PlusOutlined,
+  UpOutlined,
+} from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Popconfirm, Button, Select, Input } from "antd";
 import {
   getCompareName,
   compareTypeMaps,
@@ -155,141 +165,136 @@ class ConditionalJudgment extends Component<CalculatProps> {
     const isEmpty = list.length === 0,
       delCls = "draw-del" + (isEmpty ? " disabled" : "");
 
-    return (
-      <>
-        <Form.Item
-          label={getNameCom(
-            "条件配置",
-            "可以设置多个子条件，按顺序进行判断并产生最终的布尔值"
-          )}
-          required
-        >
-          {readonly ? null : (
-            <div className={delCls}>
-              {this.getDel(
-                "您确定要删除所有条件配置吗？",
-                <Icon type="delete" theme="filled" />,
-                () => this.delAll(form),
-                isEmpty
-              )}
-            </div>
-          )}
-          <div className="draw-topic">
-            {list.map(
-              (
-                {
-                  id,
-                  operate,
-                  source,
-                  sourceType,
-                  sourceValue,
-                  target,
-                  targetType,
-                  targetValue,
-                  logic,
-                }: any,
-                idx: number
-              ) => {
-                const onlyOperate =
-                    compareTypeWithNoTarget.indexOf(operate) > -1,
-                  isLast = list.length - 1 === idx;
-                const n1 =
-                    getCompareName(source, sourceType, sourceValue, parents) +
-                    " ",
-                  n2 = onlyOperate
-                    ? ""
-                    : getCompareName(target, targetType, targetValue, parents),
-                  n3 = onlyOperate
-                    ? compareTypeMaps[operate].value2
-                    : compareTypeMaps[operate].value;
-                const name = "条件" + (idx + 1) + "：" + n1 + n3 + " " + n2;
-                const logicContent = isLast ? null : (
-                  <div className="draw-logic">
-                    <div className="draw-logic-inner">
-                      <div className="draw-logic-content">
-                        <Select
-                          placeholder="请选择"
-                          value={logic}
-                          onChange={(v: number) => this.changeLogic(id, v)}
-                          disabled={readonly}
-                        >
-                          {logicList.map(({ id, value }) => (
-                            <Select.Option value={id} key={id}>
-                              {value}
-                            </Select.Option>
-                          ))}
-                        </Select>
-                      </div>
-                    </div>
-                  </div>
-                );
-                return (
-                  <React.Fragment key={id}>
-                    <div className="draw-topic-item">
-                      <span title={name}>{name}</span>
-                      {readonly ? null : (
-                        <div className="draw-topic-right">
-                          {idx === 0 ? null : (
-                            <Icon type="up" onClick={() => this.up(id)} />
-                          )}
-                          {isLast ? null : (
-                            <Icon type="down" onClick={() => this.down(id)} />
-                          )}
-
-                          <Icon
-                            type="edit"
-                            onClick={() => this.editListItem(id)}
-                          />
-                          {this.getDel(
-                            "确定删除该路径吗？",
-                            <Icon type="close" />,
-                            () => this.del(id, form)
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    {logicContent}
-                  </React.Fragment>
-                );
-              }
+    return <>
+      <Form.Item
+        label={getNameCom(
+          "条件配置",
+          "可以设置多个子条件，按顺序进行判断并产生最终的布尔值"
+        )}
+        required
+      >
+        {readonly ? null : (
+          <div className={delCls}>
+            {this.getDel(
+              "您确定要删除所有条件配置吗？",
+              <DeleteFilled />,
+              () => this.delAll(form),
+              isEmpty
             )}
           </div>
-          {readonly ? null : (
-            <Button
-              block
-              icon="plus"
-              onClick={this.addListItem}
-              disabled={noAdd}
-            >
-              {btnTxt}
-            </Button>
-          )}
-
-          {/* 以“__”为前缀和后缀的字段不会自动赋值进配置信息里 */}
-          {form.getFieldDecorator("__listLen__", {
-            initialValue: list.length,
-            rules: [
+        )}
+        <div className="draw-topic">
+          {list.map(
+            (
               {
-                pattern: /^[1-9]\d*$/,
-                message: "条件配置不能为空",
-              },
-            ],
-          })(<Input type="hidden" />)}
-        </Form.Item>
+                id,
+                operate,
+                source,
+                sourceType,
+                sourceValue,
+                target,
+                targetType,
+                targetValue,
+                logic,
+              }: any,
+              idx: number
+            ) => {
+              const onlyOperate =
+                  compareTypeWithNoTarget.indexOf(operate) > -1,
+                isLast = list.length - 1 === idx;
+              const n1 =
+                  getCompareName(source, sourceType, sourceValue, parents) +
+                  " ",
+                n2 = onlyOperate
+                  ? ""
+                  : getCompareName(target, targetType, targetValue, parents),
+                n3 = onlyOperate
+                  ? compareTypeMaps[operate].value2
+                  : compareTypeMaps[operate].value;
+              const name = "条件" + (idx + 1) + "：" + n1 + n3 + " " + n2;
+              const logicContent = isLast ? null : (
+                <div className="draw-logic">
+                  <div className="draw-logic-inner">
+                    <div className="draw-logic-content">
+                      <Select
+                        placeholder="请选择"
+                        value={logic}
+                        onChange={(v: number) => this.changeLogic(id, v)}
+                        disabled={readonly}
+                      >
+                        {logicList.map(({ id, value }) => (
+                          <Select.Option value={id} key={id}>
+                            {value}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              );
+              return (
+                <React.Fragment key={id}>
+                  <div className="draw-topic-item">
+                    <span title={name}>{name}</span>
+                    {readonly ? null : (
+                      <div className="draw-topic-right">
+                        {idx === 0 ? null : (
+                          <UpOutlined onClick={() => this.up(id)} />
+                        )}
+                        {isLast ? null : (
+                          <DownOutlined onClick={() => this.down(id)} />
+                        )}
 
-        <ValueMatchModal
-          title="配置条件"
-          needSource={true}
-          needOperate={true}
-          isShow={showListModal}
-          parents={parents}
-          id={showListId}
-          list={list}
-          hide={this.hideListModal}
-          submit={(data: any) => this.saveListItem(data, form)}
-        />
-      </>
-    );
+                        <EditOutlined onClick={() => this.editListItem(id)} />
+                        {this.getDel(
+                          "确定删除该路径吗？",
+                          <CloseOutlined />,
+                          () => this.del(id, form)
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {logicContent}
+                </React.Fragment>
+              );
+            }
+          )}
+        </div>
+        {readonly ? null : (
+          <Button
+            block
+            icon={<PlusOutlined />}
+            onClick={this.addListItem}
+            disabled={noAdd}
+          >
+            {btnTxt}
+          </Button>
+        )}
+
+        {/* 以“__”为前缀和后缀的字段不会自动赋值进配置信息里 */}
+        {form.getFieldDecorator("__listLen__", {
+          initialValue: list.length,
+          rules: [
+            {
+              pattern: /^[1-9]\d*$/,
+              message: "条件配置不能为空",
+            },
+          ],
+        })(<Input type="hidden" />)}
+      </Form.Item>
+
+      <ValueMatchModal
+        title="配置条件"
+        needSource={true}
+        needOperate={true}
+        isShow={showListModal}
+        parents={parents}
+        id={showListId}
+        list={list}
+        hide={this.hideListModal}
+        submit={(data: any) => this.saveListItem(data, form)}
+      />
+    </>;
   };
   public render(): JSX.Element {
     const {

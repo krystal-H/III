@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {get,post, Paths} from '../../../api';
+import { PlusOutlined } from '@ant-design/icons';
 import { Input, Button, Table, Alert, Modal, Tooltip, Divider ,Popconfirm} from 'antd';
 import PageTitle from '../../../components/page-title/PageTitle';
 import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
@@ -143,60 +144,60 @@ export default class Authorize extends Component {
         let { loading, name, addRuleVisible,ruleList, pager,confirmType } = this.state;
         
         return (
-           <div className='dataflow-page'>
-               <PageTitle noback={true} title="数据流转" />
-                <header className="page-content-header">
-                    <div className='searchBox'>
-                        <Input.Search placeholder="请输入规则名查找"
-                            enterButton
-                            maxLength={20}
-                            onSearch={value => this.searchRule(value)} 
-                        />
-                    </div>
-                    <div className='butFloatRight'>
-                        <Button className='but-add' type="primary" icon='plus' onClick={this.openAdd}>创建规则</Button>
-                    </div>
-                </header>
-                <div className='commonContentBox'>
-                    <div className='centent'>
-                        <Alert
-                            message='数据流转规则可以对设备上报的数据进行简单处理，并将处理后的数据流转到其他Topic或其他存储实例，目前只支持Json数据的处理'
-                            type="info"
-                            showIcon
-                        />
-                        <div className='guid-step'>{this.getGuidStep()}</div>
-                    </div>
-                </div>
-                <div className='commonContentBox'>
-                    <div className='centent'>
-                        <Table 
-                            rowKey="transferId"
-                            columns={this.columns} 
-                            dataSource={ruleList} 
-                            pagination={{
-                                defaultCurrent:pager.pageIndex,
-                                total:pager.totalRows,
-                                hideOnSinglePage:false,
-                                onChange:this.pagerIndex,
-                                current: pager.pageIndex
-                            }} 
-                            loading={loading} 
-                        />
-                    </div>
-                </div>
-                <AddRule visable={addRuleVisible} closeMod={updatelist=>{this.closeAdd(updatelist)}}></AddRule>
-               
-                <ActionConfirmModal
-                    visible={confirmType>0}
-                    modalOKHandle={this.modOk}
-                    modalCancelHandle={this.modCancel}
-                    title={confirmType>0&&CONFIRMTXT[confirmType-1][0]}
-                    descText={confirmType>0&&CONFIRMTXT[confirmType-1][1]}
-                    targetName={name}
-                />
-               
+            <div className='dataflow-page'>
+                <PageTitle noback={true} title="数据流转" />
+                 <header className="page-content-header">
+                     <div className='searchBox'>
+                         <Input.Search placeholder="请输入规则名查找"
+                             enterButton
+                             maxLength={20}
+                             onSearch={value => this.searchRule(value)} 
+                         />
+                     </div>
+                     <div className='butFloatRight'>
+                         <Button className='but-add' type="primary" icon={<PlusOutlined />} onClick={this.openAdd}>创建规则</Button>
+                     </div>
+                 </header>
+                 <div className='commonContentBox'>
+                     <div className='centent'>
+                         <Alert
+                             message='数据流转规则可以对设备上报的数据进行简单处理，并将处理后的数据流转到其他Topic或其他存储实例，目前只支持Json数据的处理'
+                             type="info"
+                             showIcon
+                         />
+                         <div className='guid-step'>{this.getGuidStep()}</div>
+                     </div>
+                 </div>
+                 <div className='commonContentBox'>
+                     <div className='centent'>
+                         <Table 
+                             rowKey="transferId"
+                             columns={this.columns} 
+                             dataSource={ruleList} 
+                             pagination={{
+                                 defaultCurrent:pager.pageIndex,
+                                 total:pager.totalRows,
+                                 hideOnSinglePage:false,
+                                 onChange:this.pagerIndex,
+                                 current: pager.pageIndex
+                             }} 
+                             loading={loading} 
+                         />
+                     </div>
+                 </div>
+                 <AddRule visable={addRuleVisible} closeMod={updatelist=>{this.closeAdd(updatelist)}}></AddRule>
                 
-           </div>
-        )
+                 <ActionConfirmModal
+                     visible={confirmType>0}
+                     modalOKHandle={this.modOk}
+                     modalCancelHandle={this.modCancel}
+                     title={confirmType>0&&CONFIRMTXT[confirmType-1][0]}
+                     descText={confirmType>0&&CONFIRMTXT[confirmType-1][1]}
+                     targetName={name}
+                 />
+                
+                 
+            </div>
+        );
     }
 }

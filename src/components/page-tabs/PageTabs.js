@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import {Icon} from 'antd';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
 import {Link} from 'react-router-dom';
 import {pageTabs} from '../../configs/page-tabs';
 import {cloneDeep} from 'lodash';
@@ -24,7 +24,7 @@ export default function PageTabs({developerInfo,Nums=[],clickHandles = []}) {
         <div className="page-tabs-wrapper">
             
             <div className="tabs-title">
-                <Icon type={titleIcon}></Icon>
+                <LegacyIcon type={titleIcon}></LegacyIcon>
                 <span>{titleText}</span>
             </div>
             {
@@ -67,7 +67,7 @@ export default function PageTabs({developerInfo,Nums=[],clickHandles = []}) {
                 })
             }
         </div>
-    )
+    );
 }
 
 

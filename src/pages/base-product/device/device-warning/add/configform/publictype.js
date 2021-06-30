@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Form ,Input,Radio} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Radio } from 'antd';
 
 class Publictype extends Component {
 

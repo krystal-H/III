@@ -1,6 +1,5 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
-import {Icon} from 'antd';
 import {cloneDeep} from 'lodash';
 // import DescWrapper from '../../../../../components/desc-wrapper/DescWrapper';
 

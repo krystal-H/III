@@ -1,4 +1,5 @@
 import React, { useState,useEffect,useCallback,useMemo } from 'react'
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Tabs, Button, Input, Table, Divider, Select } from 'antd'
 import PageTitle from '../../../components/page-title/PageTitle'
 import AloneSection from '../../../components/alone-section/AloneSection'
@@ -297,13 +298,13 @@ export default function ProjectDetail({match,history}) {
                     <span className="tool-item">
                         <Button type="primary"
                             loading={openRelaLoading}
-                            icon="plus" onClick={openRelaModal}>关联产品</Button>
+                            icon={<PlusOutlined />} onClick={openRelaModal}>关联产品</Button>
                     </span>
                     <span className="tool-item">
                         <Button type="default"
                             name={name}
                             onClick={() => history.push({pathname:`/open/base/product/add`,search:`projectId=${PROJECT_ID}`})}
-                            icon="plus">创建产品</Button>
+                            icon={<PlusOutlined />}>创建产品</Button>
                     </span>
                     <span className="tool-item">
                         <Input placeholder="请输入产品查询名称"
@@ -314,9 +315,10 @@ export default function ProjectDetail({match,history}) {
                     <span className="tool-item">
                         <Button type="primary"
                                 onClick={() => getList(1)} 
-                                icon="search">查询</Button>
+                                icon={<SearchOutlined />}>查询</Button>
                     </span>
-                </div>)
+                </div>
+            );
         }
         if (type === 2) {
             return (
@@ -325,7 +327,7 @@ export default function ProjectDetail({match,history}) {
                         <Button type="primary"
                                 loading={openRelaLoading}
                                 onClick={openRelaModal}
-                                icon="plus">关联设备</Button>
+                                icon={<PlusOutlined />}>关联设备</Button>
                     </span>
                     <span className="tool-item">
                         <Input placeholder="请输入设备物理地址/设备ID"
@@ -346,9 +348,10 @@ export default function ProjectDetail({match,history}) {
                         </Select>
                     </span>
                     <span className="tool-item">
-                        <Button type="primary" icon="search" onClick={() => getList(2)} >查询</Button>
+                        <Button type="primary" icon={<SearchOutlined />} onClick={() => getList(2)} >查询</Button>
                     </span>
-                </div>)
+                </div>
+            );
         }
     }
     const getTable = () => {

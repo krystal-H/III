@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Input,Button , Pagination, Select, Table,Icon,Tooltip } from 'antd';
+import { SyncOutlined } from '@ant-design/icons';
+import { Input, Button, Pagination, Select, Table, Tooltip } from 'antd';
 import {get, Paths} from '../../../../../api';
 import { getUserProductListAction,getDeviceStatAction,getDeviceListAction } from '../store/ActionCreator';
 import AloneSection from '../../../../../components/alone-section/AloneSection';
@@ -219,101 +220,101 @@ export default class List extends PureComponent {
 
 
             return (
-            <section className="page-main-wrapper flex-column devicelistpage">
-                <PageTitle noback={true} title="设备管理"></PageTitle>
-                <header className="page-content-header">
-                    <CommSearchMod
-                        list={[productList,groupList]}
-                        searchedData={this.searchedData}
-                    ></CommSearchMod>
-                    <div className="count-data-box">
-                        <ul className="device-inine-data">
-                            <li>
-                                <p><span className="icon-cube"></span>当前异常数</p>
-                                <span className="count">{exception || 0}</span>
-                            </li>
-                            <li>
-                                <p><span className="icon-cube"></span>累计设备总数</p>
-                                <span className="count">{total || 0}</span>
-                            </li>
-                            <li>
-                                <p><span className="icon-cube"></span>累计入网总数</p>
-                                <span className="count">{totalActive || 0}</span>
-                            </li>
-                            <li>
-                                <p><span className="icon-cube"></span>今日入网总数</p>
-                                <span className="count">{todayActive || 0}</span>
-                            </li>
-                        </ul>
-                        <div className="device-refresh" onClick={this.getDeviceStat}>
-                            <span>刷新</span>
-                            <Icon type="sync" className="device-refresh-icon" spin={!freshStatu}/>
-                        </div>
-                    </div>
-                </header>
-                <div className="flex-column flex1">
-                    <AloneSection title="联网设备列表">
-                        <div className="alone-section-content-default">
-                        <Tooltip title="最多导出1千条数据" placement="top">
-                        <a href='javascript:void(0)' className='btn-exportdata' onClick={this.exportData}>导出数据</a>
-                        </Tooltip>
-                            
-                            <div className='lineSearchBox'>
-                                <div className='search-info-box'>
-                                    <div className='searchBox'>
-                                        <Input.Group compact>
-                                            <Select className='type-select' value={infoType} onChange={(val)=>{this.onChangeListParams("infoType",val)}}>
-                                                <Option value={1}>设备ID</Option>
-                                                <Option value={2}>物理地址</Option>
-                                            </Select>
-                                            <Input className='input' maxLength={100} value={field} placeholder="请输入设备ID号"  onChange={e=>{this.onChangeListParams("field",e.target.value)}} />
-                                        </Input.Group>
-                                    </div>
-                                    <span className='margin-left-10px' >设备标签：</span>
-                                    <Input className='input' placeholder="请输入标签Key" maxLength={100} value={labelKey}  onChange={e=>{this.onChangeListParams("labelKey",e.target.value)}} />
-                                    <Input className='input margin-left-10px' placeholder="请输入标签Value" maxLength={100} value={labelValue}  onChange={e=>{this.onChangeListParams("labelValue",e.target.value)}} />
-                                    <Select className='type-select margin-left-10px' value={innet} onChange={(val)=>{this.onChangeListParams("innet",val)}}>
-                                        <Option value={1}>已/未入网</Option>
-                                        <Option value={2}>已入网</Option>
-                                        <Option value={3}>未入网</Option>
-                                    </Select>
-                                    <Select className='type-select margin-left-10px' value={online} onChange={(val)=>{this.onChangeListParams("online",val)}}>
-                                        <Option value={1}>在/离线</Option>
-                                        <Option value={2}>在线</Option>
-                                        <Option value={3}>离线</Option>
-                                    </Select>
-                                </div>
-                                <div className='searchBut'>
-                                    <Button className='btn' type="primary" onClick={this.inquireDeviceList}>查询</Button><Button className='btn' onClick={this.resetSearch}>重置</Button>
-                                </div>
+                <section className="page-main-wrapper flex-column devicelistpage">
+                    <PageTitle noback={true} title="设备管理"></PageTitle>
+                    <header className="page-content-header">
+                        <CommSearchMod
+                            list={[productList,groupList]}
+                            searchedData={this.searchedData}
+                        ></CommSearchMod>
+                        <div className="count-data-box">
+                            <ul className="device-inine-data">
+                                <li>
+                                    <p><span className="icon-cube"></span>当前异常数</p>
+                                    <span className="count">{exception || 0}</span>
+                                </li>
+                                <li>
+                                    <p><span className="icon-cube"></span>累计设备总数</p>
+                                    <span className="count">{total || 0}</span>
+                                </li>
+                                <li>
+                                    <p><span className="icon-cube"></span>累计入网总数</p>
+                                    <span className="count">{totalActive || 0}</span>
+                                </li>
+                                <li>
+                                    <p><span className="icon-cube"></span>今日入网总数</p>
+                                    <span className="count">{todayActive || 0}</span>
+                                </li>
+                            </ul>
+                            <div className="device-refresh" onClick={this.getDeviceStat}>
+                                <span>刷新</span>
+                                <SyncOutlined className="device-refresh-icon" spin={!freshStatu} />
                             </div>
-                            <Table
-                                className='devicetablelist'
-                                rowKey='deviceUniqueId'
-                                dataSource={list}
-                                columns={columns}
-                                pagination={false}
-                            />
                         </div>
-                        <div className="list-pagination">
-                            {
-                                pager && pager.totalRows>0 &&
-                                <Pagination className="self-pa"
-                                    total={pager.totalRows}
-                                    current={pageIndex}
-                                    defaultCurrent={1}
-                                    defaultPageSize={pageRows}
-                                    onChange={(page) => this.changePage(page)}
-                                    showTotal={total => <span>共 <a>{total}</a> 条</span>}
-                                    showQuickJumper
-                                    hideOnSinglePage
-                                ></Pagination>
-                            }
-                        </div>
-                    </AloneSection>
-                </div>
-            </section>
-        )
+                    </header>
+                    <div className="flex-column flex1">
+                        <AloneSection title="联网设备列表">
+                            <div className="alone-section-content-default">
+                            <Tooltip title="最多导出1千条数据" placement="top">
+                            <a href='javascript:void(0)' className='btn-exportdata' onClick={this.exportData}>导出数据</a>
+                            </Tooltip>
+                                
+                                <div className='lineSearchBox'>
+                                    <div className='search-info-box'>
+                                        <div className='searchBox'>
+                                            <Input.Group compact>
+                                                <Select className='type-select' value={infoType} onChange={(val)=>{this.onChangeListParams("infoType",val)}}>
+                                                    <Option value={1}>设备ID</Option>
+                                                    <Option value={2}>物理地址</Option>
+                                                </Select>
+                                                <Input className='input' maxLength={100} value={field} placeholder="请输入设备ID号"  onChange={e=>{this.onChangeListParams("field",e.target.value)}} />
+                                            </Input.Group>
+                                        </div>
+                                        <span className='margin-left-10px' >设备标签：</span>
+                                        <Input className='input' placeholder="请输入标签Key" maxLength={100} value={labelKey}  onChange={e=>{this.onChangeListParams("labelKey",e.target.value)}} />
+                                        <Input className='input margin-left-10px' placeholder="请输入标签Value" maxLength={100} value={labelValue}  onChange={e=>{this.onChangeListParams("labelValue",e.target.value)}} />
+                                        <Select className='type-select margin-left-10px' value={innet} onChange={(val)=>{this.onChangeListParams("innet",val)}}>
+                                            <Option value={1}>已/未入网</Option>
+                                            <Option value={2}>已入网</Option>
+                                            <Option value={3}>未入网</Option>
+                                        </Select>
+                                        <Select className='type-select margin-left-10px' value={online} onChange={(val)=>{this.onChangeListParams("online",val)}}>
+                                            <Option value={1}>在/离线</Option>
+                                            <Option value={2}>在线</Option>
+                                            <Option value={3}>离线</Option>
+                                        </Select>
+                                    </div>
+                                    <div className='searchBut'>
+                                        <Button className='btn' type="primary" onClick={this.inquireDeviceList}>查询</Button><Button className='btn' onClick={this.resetSearch}>重置</Button>
+                                    </div>
+                                </div>
+                                <Table
+                                    className='devicetablelist'
+                                    rowKey='deviceUniqueId'
+                                    dataSource={list}
+                                    columns={columns}
+                                    pagination={false}
+                                />
+                            </div>
+                            <div className="list-pagination">
+                                {
+                                    pager && pager.totalRows>0 &&
+                                    <Pagination className="self-pa"
+                                        total={pager.totalRows}
+                                        current={pageIndex}
+                                        defaultCurrent={1}
+                                        defaultPageSize={pageRows}
+                                        onChange={(page) => this.changePage(page)}
+                                        showTotal={total => <span>共 <a>{total}</a> 条</span>}
+                                        showQuickJumper
+                                        hideOnSinglePage
+                                    ></Pagination>
+                                }
+                            </div>
+                        </AloneSection>
+                    </div>
+                </section>
+            );
     }
 }
 

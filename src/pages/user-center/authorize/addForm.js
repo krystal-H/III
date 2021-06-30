@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {get,post, Paths} from '../../../api';
-import { Cascader, Select, Radio ,Form, Input,Button} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Cascader, Select, Radio, Input, Button } from 'antd';
 import './authorize.scss'
 const { Option } = Select;
 

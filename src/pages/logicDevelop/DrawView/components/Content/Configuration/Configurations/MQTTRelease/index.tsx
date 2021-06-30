@@ -14,7 +14,9 @@ import {
   queueTypeList,
   eventTypeList,
 } from "../../../../../store/constants";
-import { Form, Radio, Select, Divider } from "antd";
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Radio, Select, Divider } from "antd";
 import CodeView from "../../../../../../../../components/CodeView2";
 import rules from "../../rules";
 // import Params from "../comm/Params";

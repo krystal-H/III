@@ -2,7 +2,8 @@
  * Created by xiao on 2019/12/18.
  */
 import React, { useState, PureComponent, forwardRef, useImperativeHandle, memo } from 'react';
-import { Upload, Icon, Modal, Button } from 'antd';
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { Upload, Modal, Button } from 'antd';
 import { Notification } from '../../components/Notification';
 import { Paths } from '../../api';
 
@@ -56,13 +57,13 @@ function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false
     }, [fileList, getFileListUrl]); // 如果想要useImperativeHandle更新，需要传参数
     const uploadImg = (
         <div>
-            <Icon type="plus" style={{ fontSize: '34px', color: '#C4C6CF' }} />
+            <PlusOutlined style={{ fontSize: '34px', color: '#C4C6CF' }} />
             <div className="ant-upload-text">上传图片</div>
         </div>
     );
     const uploadButton = (
         <Button type="primary">
-            <Icon type="upload" /> 上传附件
+            <UploadOutlined /> 上传附件
         </Button>
     );
     const buttonType = isNotImg ? uploadButton : uploadImg;
@@ -395,13 +396,13 @@ export class UploadFileClass extends PureComponent {
         const { fileList, previewVisible, previewImage } = this.state;
         const uploadImg = (
             <div>
-                <Icon type="plus" style={{ fontSize: '34px', color: '#C4C6CF' }} />
+                <PlusOutlined style={{ fontSize: '34px', color: '#C4C6CF' }} />
                 <div className="ant-upload-text">上传图片</div>
             </div>
         );
         const uploadButton = (
             <Button type="primary"  disabled={disabled}>
-                <Icon type="upload" /> 上传附件
+                <UploadOutlined /> 上传附件
             </Button>
         );
         const buttonType = isNotImg ? uploadButton : uploadImg;

@@ -3,7 +3,8 @@
 // 相关样式在 css-in-modals.scss 文件中
 
 import React from 'react';
-import {Modal,Icon} from 'antd';
+import { WarningTwoTone } from '@ant-design/icons';
+import { Modal } from 'antd';
 
 const MODAL_WIDTH = 480;
 
@@ -42,7 +43,7 @@ export default function ActionConfirmModal({
                 {
                     needWarnIcon && 
                     <div style={{width:60,fontSize:34}} className="child-center">
-                        <Icon type="warning" theme="twoTone" twoToneColor="#ff9900"/>
+                        <WarningTwoTone twoToneColor="#ff9900" />
                     </div>
                 }
                 <div className="tops-content flex1">
@@ -64,5 +65,5 @@ export default function ActionConfirmModal({
                 children
             }
         </Modal>
-    )
+    );
 }

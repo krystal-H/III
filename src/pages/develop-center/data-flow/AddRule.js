@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Input,Form,Modal} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Modal } from 'antd';
 import { post, Paths} from '../../../api';
 import TextAreaCounter from '../../../components/textAreaCounter/TextAreaCounter';
 

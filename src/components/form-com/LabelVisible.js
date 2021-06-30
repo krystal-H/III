@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Icon, Tooltip } from 'antd';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { Tooltip } from 'antd';
 import { copyTextToClipBoard } from '../../util/util';
 
 /**
@@ -18,15 +19,14 @@ const LabelVisible = ({defaultVisible = false, label = "", tip = "", copy = fals
     }
 
     return (
-            <span >
-                <Tooltip title={tip}>
-                    <span onClick={handleClick} style={copy ? {cursor: "pointer"} : {}}>{(visible || (label && label.length < 9)) ? label : label.slice(0, 4)+label.slice(4, -4).replace(/\w/g, '*')+label.slice(-4)}</span>
-                </Tooltip>
-                &nbsp;
-                <Icon style={{color: '#2F78FF'}} type={visible ? "eye" : "eye-invisible"} onClick={() => setVisible(!visible)}/>
-            </span>
-        
-    )
+        <span >
+            <Tooltip title={tip}>
+                <span onClick={handleClick} style={copy ? {cursor: "pointer"} : {}}>{(visible || (label && label.length < 9)) ? label : label.slice(0, 4)+label.slice(4, -4).replace(/\w/g, '*')+label.slice(-4)}</span>
+            </Tooltip>
+            &nbsp;
+            <LegacyIcon style={{color: '#2F78FF'}} type={visible ? "eye" : "eye-invisible"} onClick={() => setVisible(!visible)}/>
+        </span>
+    );
 }
 
 export default LabelVisible

@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import BaseConfiguration from "../../BaseConfiguration";
 import { NodeItem, formType } from "../../../../../store/types";
 import { ConfigurationProps } from "../../../Configuration";
-import { Form, Select } from "antd";
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Select } from "antd";
 import rules from "../../rules";
 import CodeView from "../../../../../../../../components/CodeView2";
 

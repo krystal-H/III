@@ -7,7 +7,9 @@ import {
   DataValueType,
 } from "../../../../../store/types";
 import { ConfigurationProps } from "../../../Configuration";
-import { Form, Select, Input } from "antd";
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Select, Input } from "antd";
 import { opeTypeList } from "../../../../../store/constants";
 import ValueMatch from "../comm/ValueMatch";
 import rules from "../../rules";

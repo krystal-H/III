@@ -1,5 +1,5 @@
 import React from 'react'
-import {Icon} from 'antd'
+import { CopyOutlined, DeleteOutlined } from '@ant-design/icons';
 import ProductIcon from '../../../../../components/product-components/product-icon/ProductIcon';
 import { productStatusText } from '../../../../../configs/text-map';
 import './ProductCard.scss';
@@ -46,13 +46,13 @@ function ProductCard(props) {
             <div className="btn-controls">
                 <span className={"btn-base border-right " + (mode == '2' ? "disable" : "isOk")}
                       onClick={copyFunction}
-                        ><Icon type="copy" /> 复制</span>|
+                        ><CopyOutlined /> 复制</span>|
                 <span className={"btn-base " + (mode == '2' ? "disable" : "isOk")}
                       onClick={deleteFunction}  
-                        ><Icon type="delete" /> 删除</span>
+                        ><DeleteOutlined /> 删除</span>
             </div>
         </div>
-    )
+    );
 }
 
 export default React.memo(ProductCard)

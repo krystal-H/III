@@ -1,5 +1,7 @@
 import React from 'react'
-import {Form,Input,Table,Checkbox,Select,InputNumber} from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Table, Checkbox, Select, InputNumber } from 'antd';
 import {COMMON_COLUMNS,getNodeNameFormItem} from '../common'
 
 const {Option} = Select

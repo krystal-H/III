@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Modal, Button, Input, Table, Select, InputNumber, Icon, Divider } from 'antd'
+import { UploadOutlined } from '@ant-design/icons';
+import { Modal, Button, Input, Table, Select, InputNumber, Divider } from 'antd';
 import FlowChart from '../../../../../components/flow-chart/FlowChart';
 import { createArrayByLength } from '../../../../../util/util';
 import { get, post, Paths } from '../../../../../api';
@@ -617,7 +618,7 @@ export function RemoteConfigAddModal({ visible, productId, onCancel, configProto
                                                     </div> :
                                                     <div>
                                                         <div className="file-input-wrapper">
-                                                            <Button type="primary"><Icon type="upload" /> 选择本地设备数据文件</Button>
+                                                            <Button type="primary"><UploadOutlined /> 选择本地设备数据文件</Button>
                                                             <input type="file"
                                                                    onInput={importRemoteExcel}
                                                                    accept=".xls,.xlsx" />
@@ -681,7 +682,7 @@ export function RemoteConfigAddModal({ visible, productId, onCancel, configProto
                             </div>
                         </div>
                     </div>
-                )
+                );
             default:
                 break;
         }

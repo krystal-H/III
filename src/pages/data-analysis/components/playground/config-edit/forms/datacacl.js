@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react'
-import {Form,Radio,Table,Checkbox} from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Radio, Table, Checkbox } from 'antd';
 import {getNodeNameFormItem,COMMON_COLUMNS,InputAndSelectInLine,NUMBER_TYPE} from '../common'
 
 const FuncOptions = [

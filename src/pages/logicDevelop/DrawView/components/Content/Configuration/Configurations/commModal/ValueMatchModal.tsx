@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { Modal, Form, Input, Select, message, DatePicker } from "antd";
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input, Select, message, DatePicker } from "antd";
 import { formItemLayout } from "../../BaseConfiguration";
-import { FormComponentProps } from "antd/lib/form";
+import { FormComponentProps } from '@ant-design/compatible/lib/form';
 import {
   ParentItemProps,
   ValueType,

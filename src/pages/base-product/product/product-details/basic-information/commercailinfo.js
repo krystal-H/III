@@ -4,7 +4,7 @@ import { post,Paths } from '../../../../../api';
 import NoSourceWarn from '../../../../../components/no-source-warn/NoSourceWarn';
 import {UpDataCommercialInfo} from './UpDataCommercialInfo';
 import moment from 'moment';
-import { Icon } from 'antd';
+import { UndoOutlined } from '@ant-design/icons';
 
 import './info.scss';
 
@@ -83,7 +83,7 @@ class CommercailInfo extends Component {
                                         :<div className='update_box'>
                                             <span className='createTime'>{moment(modifyTime?modifyTime:createTime).format('YYYY-MM-DD HH:mm:ss')}</span>
                                             <span className='update' onClick={this.upData.bind(this,false)}>
-                                                <Icon type="undo" style={{marginRight:'10px'}} />
+                                                <UndoOutlined style={{marginRight:'10px'}} />
                                                 更新
                                             </span>
                                         </div>

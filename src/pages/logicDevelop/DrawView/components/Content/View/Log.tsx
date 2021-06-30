@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Icon as LegacyIcon } from '@ant-design/compatible';
 import { Button, Tabs } from "antd";
 import { Pop } from "../../Head";
 import SvgView, { MyIcon } from "../../../../../../components/SvgView";
@@ -54,12 +55,12 @@ class Log extends Component<LogProps> {
       <>
         <Pop content={isFullscreen ? "关闭全屏显示" : "全屏显示"}>
           <Button type="link" onClick={toFullscreen}>
-            <SvgView icon={icon} />
+            <SvgView icon={<LegacyIcon type={icon} />} />
           </Button>
         </Pop>
         <Pop content="关闭日志栏">
           <Button type="link" onClick={toggle}>
-            <SvgView icon={MyIcon.Close} />
+            <SvgView icon={<LegacyIcon type={MyIcon.Close} />} />
           </Button>
         </Pop>
       </>

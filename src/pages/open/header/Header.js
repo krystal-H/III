@@ -1,5 +1,17 @@
 import React,{PureComponent} from 'react'
-import {Icon,Modal,Radio} from 'antd'
+
+import {
+    CaretDownOutlined,
+    ClusterOutlined,
+    LogoutOutlined,
+    SafetyCertificateOutlined,
+    SnippetsOutlined,
+    SoundOutlined,
+    TeamOutlined,
+    UserOutlined,
+} from '@ant-design/icons';
+
+import { Modal, Radio } from 'antd';
 import {Link,withRouter} from 'react-router-dom';
 import {post,Paths} from '../../../api'
 import store from '../../../store'
@@ -107,144 +119,146 @@ export default class Header extends PureComponent  {
             }
         }
 
-        return (<header className="page-header">
-            <section className="logo">
-                    <img src={LogoImg} alt="logo"/>
-                    <span>{LOGO_TEXT}</span>
-            </section>
-            {/* 新交互，侧边导航收起，不支持展开，注释此菜单 */}
-            {
-                // !onlyLogo && !noCollapsed &&
-                // <span className="menu-icon">
-                //     <Icon type={collapsed ? 'menu-unfold' : 'menu-fold'}
-                //         onClick={() => setCollapsed(!collapsed)}
-                //         ></Icon>
-                // </span>
-            }
-            {
-                !onlyLogo && 
-                <React.Fragment>
-                    
-                    {/* 用户中心入口 */}
-                    <section className="user-icon-wrapper">
-                        <img src={DefaultUserIcon} alt="用户头像" className="user-img"/>
-                        <Icon type="caret-down" />
-                        <div className="menus-wrapper">
-                            <div className="icon-base-info">
-                                <span className="single-text" style={{flex:1}}>{email || account || '未获取到邮箱'}</span>
-                                <span className="right"
-                                    onClick={this.logout}
-                                    >
-                                    <Icon type="logout" />
-                                    &nbsp;退出
-                                </span>
-                            </div>
-                            <div className="user-menus">
-                                <div className="menus-item">
-                                    <Link to="/userCenter/info" target="_blank">
-                                        <span>
-                                            <Icon type="user" />
-                                            &nbsp;基本资料</span>
-                                    </Link>
-                                </div>
-                                {
-                                    // 子账号（isSubUser：1）没有以下内容
-                                    (isSubUser === 0 )&& 
-                                    <React.Fragment>
-                                        <div className="menus-item">
-                                            <Link to="/userCenter/security" target="_blank">
-                                                <span>
-                                                    <Icon type="safety-certificate" />
-                                                    &nbsp;安全设置</span>
-                                            </Link>
-                                        </div>
-                                        <div className="menus-item">
-                                            <Link to="/userCenter/visit" target="_blank">
-                                                <span>
-                                                    <Icon type="team" />
-                                                    &nbsp;访问用户</span>
-                                            </Link>
-                                        </div>
-                                        <div className="menus-item">
-                                            <Link to="/userCenter/role" target="_blank">
-                                                <span>
-                                                    <Icon type="cluster" />
-                                                    &nbsp;用户角色</span>
-                                            </Link>
-                                        </div>
-                                        <div className="menus-item">
-                                            <Link to="/userCenter/log" target="_blank">
-                                                <span>
-                                                    <Icon type="snippets" />
-                                                    &nbsp;操作日志</span>
-                                            </Link>
-                                        </div>
-                                        <div className="menus-item">
-                                            <Link to="/userCenter/case" target="_blank">
-                                                <span>
-                                                    <Icon type="snippets" />
-                                                    &nbsp;实例管理</span>
-                                            </Link>
-                                        </div>
-                                        <div className="menus-item">
-                                            <Link to="/userCenter/authorize" target="_blank">
-                                                <span>
-                                                    <Icon type="snippets" />
-                                                    &nbsp;授权管理</span>
-                                            </Link>
-                                        </div>
-                                        <div className="menus-item">
-                                            <Link to="/userCenter/dataasset" target="_blank">
-                                                <span>
-                                                    <Icon type="snippets" />
-                                                    &nbsp;数据资产</span>
-                                            </Link>
-                                        </div>
-                                    </React.Fragment>
-                                }
-                            </div>
-                        </div>
-                    </section>
-                    {/* 消息中心入口 */}
-                    <section className="message-icon">
-                        <Link to="/messageCenter" target="_blank">
-                            <Icon type="sound" data-nums={totalUnRead} className={messageIconClassName}/>
-                        </Link>
+        return (
+            <header className="page-header">
+                <section className="logo">
+                        <img src={LogoImg} alt="logo"/>
+                        <span>{LOGO_TEXT}</span>
+                </section>
+                {/* 新交互，侧边导航收起，不支持展开，注释此菜单 */}
+                {
+                    // !onlyLogo && !noCollapsed &&
+                    // <span className="menu-icon">
+                    //     <Icon type={collapsed ? 'menu-unfold' : 'menu-fold'}
+                    //         onClick={() => setCollapsed(!collapsed)}
+                    //         ></Icon>
+                    // </span>
+                }
+                {
+                    !onlyLogo && 
+                    <React.Fragment>
                         
-                    </section>
-                    <section className="instance">
-                        <span className='instancenam'>{this.getCurInstancenam()}</span>
-                        {
-                        instanceList&&instanceList.length>0 &&
-                        <span className='btn'onClick={this.instanceModSwitch.bind(this,true)}>切换实例</span>
-                        }
-                    </section> 
+                        {/* 用户中心入口 */}
+                        <section className="user-icon-wrapper">
+                            <img src={DefaultUserIcon} alt="用户头像" className="user-img"/>
+                            <CaretDownOutlined />
+                            <div className="menus-wrapper">
+                                <div className="icon-base-info">
+                                    <span className="single-text" style={{flex:1}}>{email || account || '未获取到邮箱'}</span>
+                                    <span className="right"
+                                        onClick={this.logout}
+                                        >
+                                        <LogoutOutlined />
+                                        &nbsp;退出
+                                    </span>
+                                </div>
+                                <div className="user-menus">
+                                    <div className="menus-item">
+                                        <Link to="/userCenter/info" target="_blank">
+                                            <span>
+                                                <UserOutlined />
+                                                &nbsp;基本资料</span>
+                                        </Link>
+                                    </div>
+                                    {
+                                        // 子账号（isSubUser：1）没有以下内容
+                                        (isSubUser === 0 )&& 
+                                        <React.Fragment>
+                                            <div className="menus-item">
+                                                <Link to="/userCenter/security" target="_blank">
+                                                    <span>
+                                                        <SafetyCertificateOutlined />
+                                                        &nbsp;安全设置</span>
+                                                </Link>
+                                            </div>
+                                            <div className="menus-item">
+                                                <Link to="/userCenter/visit" target="_blank">
+                                                    <span>
+                                                        <TeamOutlined />
+                                                        &nbsp;访问用户</span>
+                                                </Link>
+                                            </div>
+                                            <div className="menus-item">
+                                                <Link to="/userCenter/role" target="_blank">
+                                                    <span>
+                                                        <ClusterOutlined />
+                                                        &nbsp;用户角色</span>
+                                                </Link>
+                                            </div>
+                                            <div className="menus-item">
+                                                <Link to="/userCenter/log" target="_blank">
+                                                    <span>
+                                                        <SnippetsOutlined />
+                                                        &nbsp;操作日志</span>
+                                                </Link>
+                                            </div>
+                                            <div className="menus-item">
+                                                <Link to="/userCenter/case" target="_blank">
+                                                    <span>
+                                                        <SnippetsOutlined />
+                                                        &nbsp;实例管理</span>
+                                                </Link>
+                                            </div>
+                                            <div className="menus-item">
+                                                <Link to="/userCenter/authorize" target="_blank">
+                                                    <span>
+                                                        <SnippetsOutlined />
+                                                        &nbsp;授权管理</span>
+                                                </Link>
+                                            </div>
+                                            <div className="menus-item">
+                                                <Link to="/userCenter/dataasset" target="_blank">
+                                                    <span>
+                                                        <SnippetsOutlined />
+                                                        &nbsp;数据资产</span>
+                                                </Link>
+                                            </div>
+                                        </React.Fragment>
+                                    }
+                                </div>
+                            </div>
+                        </section>
+                        {/* 消息中心入口 */}
+                        <section className="message-icon">
+                            <Link to="/messageCenter" target="_blank">
+                                <SoundOutlined data-nums={totalUnRead} className={messageIconClassName} />
+                            </Link>
+                            
+                        </section>
+                        <section className="instance">
+                            <span className='instancenam'>{this.getCurInstancenam()}</span>
+                            {
+                            instanceList&&instanceList.length>0 &&
+                            <span className='btn'onClick={this.instanceModSwitch.bind(this,true)}>切换实例</span>
+                            }
+                        </section> 
 
 
-                </React.Fragment>
-            }
-            {
-                instanceList&&instanceList.length>0 && 
-                <Modal
-                    title="切换实例"
-                    visible={instanceMod}
-                    width={400}
-                    className="instanceMod"
-                    onOk={this.okChange}
-                    onCancel={this.instanceModSwitch.bind(this,false)}
-                >
-                    <Radio.Group value={curInstanceId} onChange={this.changeInstance}>
-                        {
-                            instanceList.map((item,index)=>{
-                                    return <Radio style={radioStyle} key={item.id+"_"+index} value={item.id}>{item.name}</Radio>
-                            })
-                        }
-                    </Radio.Group>
-                    
-                </Modal>
+                    </React.Fragment>
+                }
+                {
+                    instanceList&&instanceList.length>0 && 
+                    <Modal
+                        title="切换实例"
+                        visible={instanceMod}
+                        width={400}
+                        className="instanceMod"
+                        onOk={this.okChange}
+                        onCancel={this.instanceModSwitch.bind(this,false)}
+                    >
+                        <Radio.Group value={curInstanceId} onChange={this.changeInstance}>
+                            {
+                                instanceList.map((item,index)=>{
+                                        return <Radio style={radioStyle} key={item.id+"_"+index} value={item.id}>{item.name}</Radio>
+                                })
+                            }
+                        </Radio.Group>
+                        
+                    </Modal>
 
-            }
-            
-        </header>)
+                }
+                
+            </header>
+        );
     }
 }

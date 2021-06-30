@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { Input, Form, Button, Icon, Select, Modal, Tooltip, InputNumber } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Select, Modal, Tooltip, InputNumber } from 'antd';
 import { UploadFileClass } from "../../../../components/upload-file";
 import { Notification } from '../../../../components/Notification';
 import TextAreaCounter from '../../../../components/textAreaCounter/TextAreaCounter';
@@ -233,7 +236,7 @@ class AddAppVersion extends Component {
                             </Select>)}
                             <Tooltip
                                 title={status === 1 ? '用户可选择是否升级到新版本，不升级仍然可以继续使用' : '用户必须确认升级才可以继续使用'}
-                                placement="top"><Icon type="question-circle-o" /></Tooltip>
+                                placement="top"><QuestionCircleOutlined /></Tooltip>
                         </Form.Item>
                         <TextAreaCounter
                             label='备注'

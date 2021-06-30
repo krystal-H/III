@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { SearchOutlined } from '@ant-design/icons';
 import { Tabs,Input,Button,Select,Table,DatePicker} from 'antd'
 import PageTitle from '../../../components/page-title/PageTitle'
 import AloneSection from '../../../components/alone-section/AloneSection'
@@ -127,7 +128,7 @@ export default function ServeDetail() {
                                         style={{marginRight:'12px'}}
                                         onClick={onSearch}
                                         loading={searchLoading} 
-                                        icon="search">查询</Button>
+                                        icon={<SearchOutlined />}>查询</Button>
                             </div>
                             <div>
                                 <Table  rowKey={"timestamp"}
@@ -153,5 +154,5 @@ export default function ServeDetail() {
                 </Tabs>
             </AloneSection>
         </React.Fragment>
-    )
+    );
 }

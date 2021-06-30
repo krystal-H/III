@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import FullScreenFlexWrapper from '../full-screen-flex-wrapper/FullScreenFlexWrapper';
 import VerificationCodeInput from '../../../components/verification-code-input/VerificationCodeInput';
-import {Form,Input,Button,Checkbox,notification,Modal} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Checkbox, notification, Modal } from 'antd';
 import {Link} from 'react-router-dom';
 import {post,Paths,get} from '../../../api'
 import { encryption ,getVcodeImgUrl,getUrlParam,psdPattern} from '../../../util/util';

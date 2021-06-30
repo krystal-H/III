@@ -2,7 +2,17 @@ import React, { Component } from "react";
 import BaseConfiguration, { getNameCom } from "../../BaseConfiguration";
 import { NodeItem, formType } from "../../../../../store/types";
 import { ConfigurationProps } from "../../../Configuration";
-import { Form, Button, Popconfirm, Icon, Input } from "antd";
+import {
+  CloseOutlined,
+  DeleteFilled,
+  DownOutlined,
+  EditOutlined,
+  PlusOutlined,
+  UpOutlined,
+} from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button, Popconfirm, Input } from "antd";
 import ValueMatchModal from "../commModal/ValueMatchModal";
 import {
   getCompareName,
@@ -164,7 +174,7 @@ class OptionJudgment extends Component<OptionJudgmentProps> {
                 </span>
                 {readonly ? null : (
                   <div className="draw-topic-right">
-                    <Icon type="edit" onClick={() => this.editPath(id)} />
+                    <EditOutlined onClick={() => this.editPath(id)} />
                   </div>
                 )}
               </div>
@@ -172,7 +182,7 @@ class OptionJudgment extends Component<OptionJudgmentProps> {
           })}
         </div>
       ) : (
-        <Button block icon="plus" onClick={this.addInput} disabled={readonly}>
+        <Button block icon={<PlusOutlined />} onClick={this.addInput} disabled={readonly}>
           输入
         </Button>
       );
@@ -192,7 +202,7 @@ class OptionJudgment extends Component<OptionJudgmentProps> {
           <div className={delCls}>
             {this.getDel(
               "您确定要删除所有路径吗？",
-              <Icon type="delete" theme="filled" />,
+              <DeleteFilled />,
               () => this.delAllPath(form),
               isEmpty
             )}
@@ -221,16 +231,16 @@ class OptionJudgment extends Component<OptionJudgmentProps> {
                   {readonly ? null : (
                     <div className="draw-topic-right">
                       {idx === 0 ? null : (
-                        <Icon type="up" onClick={() => this.upPath(id)} />
+                        <UpOutlined onClick={() => this.upPath(id)} />
                       )}
                       {idx === paths.length - 1 ? null : (
-                        <Icon type="down" onClick={() => this.downPath(id)} />
+                        <DownOutlined onClick={() => this.downPath(id)} />
                       )}
 
-                      <Icon type="edit" onClick={() => this.editPath(id)} />
+                      <EditOutlined onClick={() => this.editPath(id)} />
                       {this.getDel(
                         "确定删除该路径吗？",
-                        <Icon type="close" />,
+                        <CloseOutlined />,
                         () => this.delPath(id, form)
                       )}
                     </div>
@@ -241,7 +251,7 @@ class OptionJudgment extends Component<OptionJudgmentProps> {
           )}
         </div>
         {readonly ? null : (
-          <Button block icon="plus" onClick={this.addPath} disabled={noAdd}>
+          <Button block icon={<PlusOutlined />} onClick={this.addPath} disabled={noAdd}>
             {btnTxt}
           </Button>
         )}
@@ -257,42 +267,40 @@ class OptionJudgment extends Component<OptionJudgmentProps> {
         })(<Input type="hidden" />)}
       </Form.Item>
     );
-    return (
-      <>
-        <Form.Item
-          label={getNameCom(
-            "输入",
-            "路径选择的输入变量，用于对比所有路径的条件，可以是一个固定值或者来自其他节点的动态值"
-          )}
-          required
-        >
-          {inputContent}
-          {/* 以“__”为前缀和后缀的字段不会自动赋值进配置信息里 */}
-          {form.getFieldDecorator("__inputLen__", {
-            initialValue: input.length,
-            rules: [
-              {
-                pattern: /^[1-9]\d*$/,
-                message: "输入不能为空",
-              },
-            ],
-          })(<Input type="hidden" />)}
-        </Form.Item>
-        {pathContent}
+    return <>
+      <Form.Item
+        label={getNameCom(
+          "输入",
+          "路径选择的输入变量，用于对比所有路径的条件，可以是一个固定值或者来自其他节点的动态值"
+        )}
+        required
+      >
+        {inputContent}
+        {/* 以“__”为前缀和后缀的字段不会自动赋值进配置信息里 */}
+        {form.getFieldDecorator("__inputLen__", {
+          initialValue: input.length,
+          rules: [
+            {
+              pattern: /^[1-9]\d*$/,
+              message: "输入不能为空",
+            },
+          ],
+        })(<Input type="hidden" />)}
+      </Form.Item>
+      {pathContent}
 
-        <ValueMatchModal
-          title={title}
-          needSource={false}
-          needOperate={!isInput}
-          isShow={showPathModal}
-          parents={parents}
-          id={showPathId}
-          list={input.concat(paths)}
-          hide={this.hidePathModal}
-          submit={(data: any) => this.savePath(data, form)}
-        />
-      </>
-    );
+      <ValueMatchModal
+        title={title}
+        needSource={false}
+        needOperate={!isInput}
+        isShow={showPathModal}
+        parents={parents}
+        id={showPathId}
+        list={input.concat(paths)}
+        hide={this.hidePathModal}
+        submit={(data: any) => this.savePath(data, form)}
+      />
+    </>;
   };
   public render(): JSX.Element {
     const {

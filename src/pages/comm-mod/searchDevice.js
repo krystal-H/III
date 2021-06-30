@@ -1,4 +1,5 @@
 import React,{useState,useEffect} from "react";
+import { SearchOutlined } from '@ant-design/icons';
 import { Input, Select,Button } from "antd";
 const {Option} = Select;
 const TYPE = ["按产品","按分组"]
@@ -121,7 +122,7 @@ export default ({
             <Button type="primary" className="btn"
                 onClick={onSearch}
                 loading={searchLoading}
-                icon="search"
+                icon={<SearchOutlined />}
             >查询
             </Button>
             <Button type="default" className="btn"
@@ -130,6 +131,6 @@ export default ({
             >重置
             </Button>
         </div>
-    )
+    );
     
 }

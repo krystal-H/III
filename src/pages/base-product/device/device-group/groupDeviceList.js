@@ -1,5 +1,8 @@
 import React, { PureComponent,useEffect } from 'react';
-import {Modal, Table,Radio,Form,Select,Upload,Button } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Table, Radio, Select, Upload, Button } from 'antd';
 import moment from 'moment';
 import {get,post, Paths} from '../../../../api';
 import SearchProduct from './searchProduct';
@@ -241,13 +244,13 @@ const UploadDevice =  Form.create({ name:'form-upload-device' })(function ({
                             appId: 31438,
                             domainType: 4,
                         }}>
-                        <Button type="primary" icon="upload">上传文件</Button><span style={{marginLeft:"15px"}}>仅支持.xls,.xlsx格式文件</span>
+                        <Button type="primary" icon={<UploadOutlined />}>上传文件</Button><span style={{marginLeft:"15px"}}>仅支持.xls,.xlsx格式文件</span>
                     </Upload>
                 )}
                 <a href="http://skintest.hetyj.com/31438/6b0b20891e06ac31d0eed37a5083cca9.xlsx">下载模板</a>
             </Form.Item>
         </Form>
     </div>
-    )
+    );
 })
 

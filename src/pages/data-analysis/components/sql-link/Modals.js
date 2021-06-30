@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import {Modal,Form,Input,Table,Checkbox,Button,Select,Radio} from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input, Table, Checkbox, Button, Select, Radio } from 'antd';
 import { Notification } from '../../../../components/Notification';
 import {getDeviceListByProductId,getDownPropOrEventList,getDownDatasource,getDownTableByDatasource,getDownFieldsByDatasourceTable,getEventList} from '../playground/apis'
 import { deleteLine } from '../../../logicDevelop/DrawView/store/action';
@@ -35,7 +37,7 @@ const PRE_DATA = [
         intBit:'',
         doubleBit:''
     }
-]  
+]
 
 export const InputConfigModal =  Form.create({
     name:'sql-link-input-config'
@@ -364,7 +366,7 @@ export const InputConfigModal =  Form.create({
                     </Form>
                 </div>
             </Modal>
-        )
+        );
     }
 )
 
@@ -703,6 +705,6 @@ export const OutputConfigModal =  Form.create({
                     </Form>
                 </div>
             </Modal>
-        )
+        );
     }
 )

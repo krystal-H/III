@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Input, Icon, Modal,Tooltip } from 'antd';
+import { ArrowRightOutlined } from '@ant-design/icons';
+import { Button, Input, Modal, Tooltip } from 'antd';
 import { connect } from 'react-redux';
 import * as actions from '../../store/ActionCreator';
 import {post, Paths} from '../../../../../api';
@@ -228,7 +229,7 @@ class ModuleInfo extends React.Component{
                                 }
                                 {/* <span className="link">使用指南</span> */}
                             </div>
-                            <Icon type="arrow-right" className="icon-right"/>
+                            <ArrowRightOutlined className="icon-right" />
                             <div className="module-embed-item">
                                 <h4>功能测试</h4>
                                 <p>将模组与PCB链接后,可通过C-Life平台提供的在线调试工具,对MCU进行功能点详细测试。</p>
@@ -236,7 +237,7 @@ class ModuleInfo extends React.Component{
                                 <Button type="normal" onClick={this.handleDebugger}>进入调试工具</Button>
                                 {/* <p><span className="link center">调试工具使用帮助</span></p> */}
                             </div>
-                            <Icon type="arrow-right" className="icon-right"/>
+                            <ArrowRightOutlined className="icon-right" />
                             <div className="module-embed-item">
                                 <h4>{hardwareType === 0 ? 'MCU开发' : '模组开发'}</h4>
                                 <p>您可以下载C家APP，将设备进行联网测试，从使用用户角度进行全链路全场景验证。</p>
@@ -252,7 +253,7 @@ class ModuleInfo extends React.Component{
                         <img alt="example" style={{ width: '100%',backgroundColor:'#e9e9e9'}} src={referenceCircuitDiagram || defaultIocn} />
                     </Modal>
                 </div>
-        )
+        );
     }
 }
 

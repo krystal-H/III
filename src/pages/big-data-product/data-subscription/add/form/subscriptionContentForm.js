@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Table, Tabs } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Table, Tabs } from 'antd';
 import { Notification } from '../../../../../components/Notification';
 
 const { TabPane } = Tabs;

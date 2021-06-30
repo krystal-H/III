@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Icon as LegacyIcon } from '@ant-design/compatible';
 import { Button } from "antd";
 import { Pop } from "../../Head";
 import draw from "../../../tools/draw";
@@ -55,19 +56,19 @@ class Tools extends Component<ToolsProps> {
         <div className="draw-toolBox-group">
           <Pop content={t1}>
             <Button type="link" onClick={toggleChooserView}>
-              <SvgView icon={MyIcon.LeftView} fill={c1} />
+              <SvgView icon={<LegacyIcon type={MyIcon.LeftView} />} fill={c1} />
             </Button>
           </Pop>
 
           <Pop content={t2}>
             <Button type="link" onClick={toggleLogView}>
-              <SvgView icon={MyIcon.LogView} fill={c2} />
+              <SvgView icon={<LegacyIcon type={MyIcon.LogView} />} fill={c2} />
             </Button>
           </Pop>
 
           <Pop content={t3}>
             <Button type="link" onClick={toggleConfigurationView}>
-              <SvgView icon={MyIcon.RightView} fill={c3} />
+              <SvgView icon={<LegacyIcon type={MyIcon.RightView} />} fill={c3} />
             </Button>
           </Pop>
         </div>

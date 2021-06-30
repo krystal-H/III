@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { post,Paths } from '../../../../../api';
-import { Form, Input } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input } from 'antd';
 import DoubleBtns from '../../../../../components/double-btns/DoubleBtns';
 import TextAreaCounter from '../../../../../components/textAreaCounter/TextAreaCounter';
 import { UploadFileClass } from '../../../../../components/upload-file';

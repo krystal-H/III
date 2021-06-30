@@ -2,7 +2,12 @@ import React from 'react';
 import moment from 'moment';
 import {cloneDeep} from 'lodash';
 
-import { DatePicker, Select, Form, Button } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
+
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+
+import { DatePicker, Select, Button } from 'antd';
 const { Option } = Select;
 
 /**
@@ -98,7 +103,7 @@ export const ExportStagerDataDialog = Form.create({
                                 <DatePicker format='YYYY/MM/DD' />
                             )}
                         </Form.Item>
-                        <Button type="primary" htmlType="submit" icon="download" block>
+                        <Button type="primary" htmlType="submit" icon={<DownloadOutlined />} block>
                             下载
                         </Button>
                     </Form>

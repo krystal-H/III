@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import BaseConfiguration, { getNameCom } from "../../BaseConfiguration";
 import { NodeItem, formType } from "../../../../../store/types";
 import { ConfigurationProps } from "../../../Configuration";
-import { Form, Collapse, Table } from "antd"; // Button, Divider, Popconfirm
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Collapse, Table } from "antd"; // Button, Divider, Popconfirm
 import ValueMatch from "../comm/ValueMatch";
 import { systemCodeList } from "../../../../../store/constants";
 // import CodeModal from "../commModal/CodeModal";

@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button} from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button } from 'antd';
 import Header from '../../open/header/Header';
 import {Link} from 'react-router-dom';
 import VerificationCodeInput from '../../../components/verification-code-input/VerificationCodeInput';
@@ -113,44 +116,44 @@ class LoginForm extends React.Component {
 			{ showVerifyCode ,vcodeImageUrl} = this.state;
 
       return (
-        <Form className="login-form" onSubmit={this.handleSubmit}>
-          <Form.Item>
-            {getFieldDecorator('username', {
-              rules: [{ required: true, message: '请输入用户名' }],
-            })(
-              <Input
-                prefix={<Icon type="user"/>}
-                placeholder="请输入用户名"
-              />,
-            )}
-          </Form.Item>
-          <Form.Item>
-            {getFieldDecorator('password', {
-				rules: [{ required: true, message: '请输入密码' }],
-            })(
-				<Input.Password 
-                prefix={<Icon type="lock"/>}
-                placeholder="请输入密码"
-				/>,
-				)}
-          </Form.Item>
-		  {
-			  showVerifyCode &&
-				<VerificationCodeInput getFieldDecorator={getFieldDecorator} 
-									   imgSrc={vcodeImageUrl}
-									   refreshVeriCode={this.refreshVeriCode}
-									   ></VerificationCodeInput>
-		  }
-          <Form.Item className="login-form-button">
-            <Button type="primary" htmlType="submit">
-              登 录
-            </Button>
-          </Form.Item>
-        </Form>
+          <Form className="login-form" onSubmit={this.handleSubmit}>
+            <Form.Item>
+              {getFieldDecorator('username', {
+                rules: [{ required: true, message: '请输入用户名' }],
+              })(
+                <Input
+                  prefix={<UserOutlined />}
+                  placeholder="请输入用户名"
+                />,
+              )}
+            </Form.Item>
+            <Form.Item>
+              {getFieldDecorator('password', {
+                  rules: [{ required: true, message: '请输入密码' }],
+              })(
+                  <Input.Password 
+                  prefix={<LockOutlined />}
+                  placeholder="请输入密码"
+                  />,
+                  )}
+            </Form.Item>
+            {
+                showVerifyCode &&
+                  <VerificationCodeInput getFieldDecorator={getFieldDecorator} 
+                                         imgSrc={vcodeImageUrl}
+                                         refreshVeriCode={this.refreshVeriCode}
+                                         ></VerificationCodeInput>
+            }
+            <Form.Item className="login-form-button">
+              <Button type="primary" htmlType="submit">
+                登 录
+              </Button>
+            </Form.Item>
+          </Form>
       );
     }
 }
-  
+
 const WrappedLoginForm = Form.create({ name: 'normal_login' },)(LoginForm);
 
 export default function Login ({

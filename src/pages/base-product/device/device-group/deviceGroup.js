@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {get,post, Paths} from '../../../../api';
-import { Input, Button, Table, Divider, Modal ,Form} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Table, Divider, Modal } from 'antd';
 import { Notification } from '../../../../components/Notification';
 import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
 import {AddForm} from './addForm';

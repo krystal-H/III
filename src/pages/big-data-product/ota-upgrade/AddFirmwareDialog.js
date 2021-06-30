@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Input, Form, Select,Radio,Cascader,AutoComplete } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Select, Radio, Cascader, AutoComplete } from 'antd';
 import { get,post,Paths } from '../../../api';
 import {Notification} from '../../../components/Notification';
 import { UploadFileClass } from '../../../components/upload-file';
@@ -24,7 +26,6 @@ const mapDispatchToProps = dispatch => {
         getExtVerLi: param => dispatch(getExtVerLi(param)),
     }
 }
-@connect(mapStateToProps, mapDispatchToProps)
 export const AddFirmwareDialog = Form.create({
     name: 'addFirmwareDialog'
 })(

@@ -2,7 +2,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {get, post, Paths} from '../../../api';
-import { Input, Select, Switch, Icon, Form, Row, Col, Button } from 'antd';
+import { CloseCircleOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Select, Switch, Row, Col, Button } from 'antd';
 import {trim} from 'lodash';//去除文本前后空格
 import {encryption,checkAccount} from '../../../util/util';
 import {Notification} from '../../../components/Notification';
@@ -304,18 +307,20 @@ class AddUserInfoForm extends Component {
                             <Col span={19}>
                                     {
                                         userNameList.map((item,index)=>{
-                                            return <div className='uesrName' key={'productName'+index}>
-                                                    <Form.Item label='' hasFeedback colon={false} >
-                                                        {getFieldDecorator('productName_'+index, {
-                                                            rules: [{ required: true, min: 6, max: 14, message: '请输入6~14位大小写字母＋数字' }]
-                                                        })(
-                                                            <Input className='input'  style={{width:'300px'}} placeholder="请输入用户名称" suffix={'@'+parentAccountId} onChange={this.userName.bind(this,index)}/>
-                                                        )}
-                                                    </Form.Item>
-                                                    {
-                                                        index>0?<span className='delete' onClick={this.deleteUserList.bind(this,index)}><Icon type="close-circle" /></span>:null
-                                                    }
-                                            </div> 
+                                            return (
+                                                <div className='uesrName' key={'productName'+index}>
+                                                        <Form.Item label='' hasFeedback colon={false} >
+                                                            {getFieldDecorator('productName_'+index, {
+                                                                rules: [{ required: true, min: 6, max: 14, message: '请输入6~14位大小写字母＋数字' }]
+                                                            })(
+                                                                <Input className='input'  style={{width:'300px'}} placeholder="请输入用户名称" suffix={'@'+parentAccountId} onChange={this.userName.bind(this,index)}/>
+                                                            )}
+                                                        </Form.Item>
+                                                        {
+                                                            index>0?<span className='delete' onClick={this.deleteUserList.bind(this,index)}><CloseCircleOutlined /></span>:null
+                                                        }
+                                                </div>
+                                            ); 
                                         })
                                     }
                                 

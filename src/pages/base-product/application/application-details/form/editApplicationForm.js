@@ -2,7 +2,9 @@
  * Created by xiaodaoguang on 2019/10/18.
  */
 import React, { memo, useState, useRef, useEffect } from 'react';
-import { Input, Form, Row, Col, Icon } from 'antd';
+import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Row, Col } from 'antd';
 import { Notification } from '../../../../../components/Notification';
 import TextAreaCounter from '../../../../../components/textAreaCounter/TextAreaCounter';
 import { UploadFileHooks } from '../../../../../components/upload-file';
@@ -286,7 +288,7 @@ export const EditApplicationForm = memo(Form.create({
                 className="app-secret"
             >
                 {appSecretText}
-                <Icon type={showSecretType} className="icon-display" style={{ marginLeft: '10px', fontSize: '18px' }}
+                <LegacyIcon type={showSecretType} className="icon-display" style={{ marginLeft: '10px', fontSize: '18px' }}
                       theme="twoTone"
                       twoToneColor="#2874FF" onClick={() => setShowSecret(!showSecret)} />
                 <span className="secret-desc">由系统自动分配的密码</span>

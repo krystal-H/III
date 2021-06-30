@@ -1,6 +1,8 @@
 import React, { Component,createRef } from 'react';
 import {get,post, Paths} from '../../../api';
-import {Select, Input,Row ,Col , Button, Card ,Form,Icon} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Select, Input, Row, Col, Button, Card } from 'antd';
 import PageTitle from '../../../components/page-title/PageTitle';
 import TextAreaCounter from '../../../components/textAreaCounter/TextAreaCounter';
 import './dataasset.scss';

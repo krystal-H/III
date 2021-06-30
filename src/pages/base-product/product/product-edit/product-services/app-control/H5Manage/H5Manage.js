@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Button, Icon, Input, Divider,Table } from 'antd'
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Input, Divider, Table } from 'antd';
 import { Notification} from '../../../../../../../components/Notification'
 import {cloneDeep} from 'lodash'
 import { addKeyToTableData} from '../../../../../../../util/util';
@@ -613,7 +614,7 @@ export default class H5Manage extends Component {
 		                            <Button type="primary" 
 		                                style={{ float: 'right',marginRight:'12px'}} 
 		                                onClick={this.addNewPage}>
-		                                <Icon type="plus"/>
+		                                <PlusOutlined />
 		                                 新建H5页面
 		                            </Button>
                             }
@@ -731,6 +732,6 @@ export default class H5Manage extends Component {
                     ></H5TemplateManage>
                 }
             </div>
-        )
+        );
     }
 }

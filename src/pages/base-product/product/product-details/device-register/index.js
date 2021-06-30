@@ -1,5 +1,7 @@
 import React, { PureComponent, Component } from 'react';
-import { Input, Form, Button, Icon, Select, Table } from 'antd';
+import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Select, Table } from 'antd';
 import { Notification } from '../../../../../components/Notification';
 import { strToAsterisk, DateTool } from '../../../../../util/util';
 import { get, Paths, post } from '../../../../../api';
@@ -140,11 +142,11 @@ export default class DeviceRegister extends PureComponent {
                 return (
                     <div>
                         <span key="detail">{appSecretText}</span>
-                        <Icon type={showSecretType} style={{ fontSize: '18px', marginLeft: '6px' }}
+                        <LegacyIcon type={showSecretType} style={{ fontSize: '18px', marginLeft: '6px' }}
                               theme="twoTone"
                               twoToneColor="#2874FF" onClick={() => this.showSecret(index)} />
                     </div>
-                )
+                );
             }
         }, {
             title: '入网状态',

@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from 'react';
-import {Button,Icon,Table,Divider,Tooltip} from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Table, Divider, Tooltip } from 'antd';
 import { get,Paths } from '../../../../../api';
 import { DateTool, setFuncDataType,addKeyToTableData, createArrayByLength} from '../../../../../util/util';
 import { cloneDeep} from 'lodash';
@@ -398,7 +399,7 @@ export default function RemoteConfig({productId,protocolLists = [],remoteType='p
                                 <Button style={{float:'right'}} 
                                         type="primary"
                                         onClick={() => addOrEditRemoteConfig()}>
-                                            <Icon type="plus"/>
+                                            <PlusOutlined />
                                             创建任务
                                 </Button>:
                                 <Tooltip title="无配置协议时不支持创建">
@@ -406,7 +407,7 @@ export default function RemoteConfig({productId,protocolLists = [],remoteType='p
                                                 type="primary"
                                                 disabled={true}
                                             >
-                                                <Icon type="plus"/>
+                                                <PlusOutlined />
                                                 创建任务
                                         </Button>
                                 </Tooltip>
@@ -477,5 +478,5 @@ export default function RemoteConfig({productId,protocolLists = [],remoteType='p
                                          record={errorLogRecord} ></RemoteErrorLogModal>
                 }  
         </div>
-    )
+    );
 }

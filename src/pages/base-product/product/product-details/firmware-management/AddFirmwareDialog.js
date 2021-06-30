@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Input, Form, Select,Button } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Select, Button } from 'antd';
 import { get,post,Paths } from '../../../../../api';
 import {Notification} from '../../../../../components/Notification';
 import { UploadFileClass } from '../../../../../components/upload-file';

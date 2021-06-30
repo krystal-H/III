@@ -1,5 +1,7 @@
 import React, { Component,useEffect } from 'react';
-import { Form ,Input,Button,Select,Cascader} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Select, Cascader } from 'antd';
 import TextAreaCounter from '../../../../../components/textAreaCounter/TextAreaCounter';
 const {Option} = Select
 const formlayout = {

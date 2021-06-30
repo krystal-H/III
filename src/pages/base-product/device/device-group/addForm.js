@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Input,Form} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input } from 'antd';
 import TextAreaCounter from '../../../../components/textAreaCounter/TextAreaCounter';
 
 class CaseAddForm extends Component {

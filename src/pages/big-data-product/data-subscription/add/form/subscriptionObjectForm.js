@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Select, Checkbox, Row, Col, Radio } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Select, Checkbox, Row, Col, Radio } from 'antd';
 import { Notification } from '../../../../../components/Notification';
 
 const Option = Select.Option;

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Select, DatePicker, Table } from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Select, DatePicker, Table } from 'antd';
 
 import PageTitle from '../../../components/page-title/PageTitle';
 import AloneSection from '../../../components/alone-section/AloneSection';

@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react'
-import {Form,Select,Radio,Table} from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Select, Radio, Table } from 'antd';
 // import {getDeviceListByProductId,getDownPropOrEventList} from '../../apis'
 import {INPUT_DEFAULT_PROPS} from '../../nodes-container/configs'
 import {COMMON_COLUMNS,getNodeNameFormItem} from '../common'

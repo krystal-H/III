@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from "react";
+import { PlusOutlined } from '@ant-design/icons';
 import { Tabs, Button, Table, Divider } from "antd";
 import { DateTool } from "../../../../util/util";
 import { get, Paths,post } from "../../../../api";
@@ -211,7 +212,7 @@ const WarningConfigList = props=>{
     const {list,pager} = warningList;
 
     return <>
-        <div className="addwarning-btn"><Button href='#/open/base/device/addWarningConfig' icon="plus" type="primary">新增</Button></div>
+        <div className="addwarning-btn"><Button href='#/open/base/device/addWarningConfig' icon={<PlusOutlined />} type="primary">新增</Button></div>
         <Table 
             rowKey="id"
             columns={columns} 
@@ -234,7 +235,7 @@ const WarningConfigList = props=>{
             targetName={editId[1]}
         />
 
-    </>
+    </>;
 
 
 }

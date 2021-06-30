@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import BaseConfiguration, { getNameCom } from "../../BaseConfiguration";
 import { NodeItem, formType } from "../../../../../store/types";
 import { ConfigurationProps } from "../../../Configuration";
-import { Popconfirm, Form, Button, Icon, Select, Input } from "antd";
+import { CloseOutlined, DeleteFilled, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Popconfirm, Button, Select, Input } from "antd";
 import ValueMatchModal from "../commModal/ValueMatchModal";
 import {
   getCompareName,
@@ -155,7 +158,7 @@ class Calculat extends Component<CalculatProps> {
                 </span>
                 {readonly ? null : (
                   <div className="draw-topic-right">
-                    <Icon type="edit" onClick={() => this.editListItem(id)} />
+                    <EditOutlined onClick={() => this.editListItem(id)} />
                   </div>
                 )}
               </div>
@@ -163,7 +166,7 @@ class Calculat extends Component<CalculatProps> {
           })}
         </div>
       ) : readonly ? null : (
-        <Button block icon="plus" onClick={this.addInput}>
+        <Button block icon={<PlusOutlined />} onClick={this.addInput}>
           配置源数据
         </Button>
       );
@@ -180,7 +183,7 @@ class Calculat extends Component<CalculatProps> {
           <div className={delCls}>
             {this.getDel(
               "您确定要删除所有参数吗？",
-              <Icon type="delete" theme="filled" />,
+              <DeleteFilled />,
               () => this.delAll(form),
               isEmpty
             )}
@@ -199,10 +202,10 @@ class Calculat extends Component<CalculatProps> {
                   <span title={name}>{name}</span>
                   {readonly ? null : (
                     <div className="draw-topic-right">
-                      <Icon type="edit" onClick={() => this.editListItem(id)} />
+                      <EditOutlined onClick={() => this.editListItem(id)} />
                       {this.getDel(
                         "确定删除该参数吗？",
-                        <Icon type="close" />,
+                        <CloseOutlined />,
                         () => this.del(id, form)
                       )}
                     </div>
@@ -213,7 +216,7 @@ class Calculat extends Component<CalculatProps> {
           )}
         </div>
         {readonly ? null : (
-          <Button block icon="plus" onClick={this.addListItem} disabled={noAdd}>
+          <Button block icon={<PlusOutlined />} onClick={this.addListItem} disabled={noAdd}>
             {btnTxt}
           </Button>
         )}
@@ -229,74 +232,72 @@ class Calculat extends Component<CalculatProps> {
         })(<Input type="hidden" />)}
       </Form.Item>
     );
-    return (
-      <>
-        <div className="draw-group">
-          <div className="draw-group-inner">输入配置</div>
-        </div>
-        <Form.Item
-          label={getNameCom(
-            "数据源",
-            "数值计算节点的数据源只能是数值型数据。用于作为下述计算的基准数"
-          )}
-          required
+    return <>
+      <div className="draw-group">
+        <div className="draw-group-inner">输入配置</div>
+      </div>
+      <Form.Item
+        label={getNameCom(
+          "数据源",
+          "数值计算节点的数据源只能是数值型数据。用于作为下述计算的基准数"
+        )}
+        required
+      >
+        {inputContent}
+
+        {/* 以“__”为前缀和后缀的字段不会自动赋值进配置信息里 */}
+        {form.getFieldDecorator("__inputLen__", {
+          initialValue: input.length,
+          rules: [
+            {
+              pattern: /^[1-9]\d*$/,
+              message: "数据源不能为空",
+            },
+          ],
+        })(<Input type="hidden" />)}
+      </Form.Item>
+
+      <div className="draw-group">
+        <div className="draw-group-inner">数值计算</div>
+      </div>
+
+      <Form.Item
+        label={getNameCom(
+          "运算方法",
+          "数值计算节点的数据源只能是数值型数据。用于作为下述计算的基准数"
+        )}
+        required
+      >
+        <Select
+          placeholder="请选择"
+          value={logic}
+          onChange={this.changeLogic}
+          disabled={readonly}
         >
-          {inputContent}
+          {logicalOperationList.map(({ id, value }) => (
+            <Select.Option value={id} key={id}>
+              {value}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
 
-          {/* 以“__”为前缀和后缀的字段不会自动赋值进配置信息里 */}
-          {form.getFieldDecorator("__inputLen__", {
-            initialValue: input.length,
-            rules: [
-              {
-                pattern: /^[1-9]\d*$/,
-                message: "数据源不能为空",
-              },
-            ],
-          })(<Input type="hidden" />)}
-        </Form.Item>
+      {paramContent}
 
-        <div className="draw-group">
-          <div className="draw-group-inner">数值计算</div>
-        </div>
-
-        <Form.Item
-          label={getNameCom(
-            "运算方法",
-            "数值计算节点的数据源只能是数值型数据。用于作为下述计算的基准数"
-          )}
-          required
-        >
-          <Select
-            placeholder="请选择"
-            value={logic}
-            onChange={this.changeLogic}
-            disabled={readonly}
-          >
-            {logicalOperationList.map(({ id, value }) => (
-              <Select.Option value={id} key={id}>
-                {value}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-
-        {paramContent}
-
-        <ValueMatchModal
-          title={title}
-          label={label}
-          needSource={false}
-          needOperate={false}
-          onlyNumber={true}
-          isShow={showListModal}
-          parents={parents}
-          id={showListId}
-          list={input.concat(list)}
-          hide={this.hideListModal}
-          submit={(data: any) => this.saveListItem(data, form)}
-        />
-      </>
-    );
+      <ValueMatchModal
+        title={title}
+        label={label}
+        needSource={false}
+        needOperate={false}
+        onlyNumber={true}
+        isShow={showListModal}
+        parents={parents}
+        id={showListId}
+        list={input.concat(list)}
+        hide={this.hideListModal}
+        submit={(data: any) => this.saveListItem(data, form)}
+      />
+    </>;
   };
   public render(): JSX.Element {
     const {

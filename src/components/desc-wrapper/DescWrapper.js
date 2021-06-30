@@ -1,5 +1,5 @@
 import React from 'react';
-import {Icon} from 'antd';
+import { ExclamationCircleTwoTone } from '@ant-design/icons';
 
 import './DescWrapper.scss';
 
@@ -11,22 +11,24 @@ import './DescWrapper.scss';
         '3. 每个固件有唯一的内部版本号；',
         '4. 若固件的版本号高于设备端的版本号，将触发固件升级；'
     ];
- */ 
+ */
 
 function DescWrapper ({style = {},desc = []}) {
 
-    return (<div style={style} className="desc-wrapper">
-        <Icon type="exclamation-circle" theme="twoTone"/>
-        {
-            desc.map((item,index)=>{
-                if(index){//区分第一个标题跟后面得说明
-                    return <div key={'desc'+index} className='list_text'>{item}</div>
-                }else{
-                    return <span key={'desc'+index}>{item}</span>
-                }
-            })
-        }
-    </div>)
+    return (
+        <div style={style} className="desc-wrapper">
+            <ExclamationCircleTwoTone />
+            {
+                desc.map((item,index)=>{
+                    if(index){//区分第一个标题跟后面得说明
+                        return <div key={'desc'+index} className='list_text'>{item}</div>
+                    }else{
+                        return <span key={'desc'+index}>{item}</span>
+                    }
+                })
+            }
+        </div>
+    );
 }
 
 export default React.memo(DescWrapper)

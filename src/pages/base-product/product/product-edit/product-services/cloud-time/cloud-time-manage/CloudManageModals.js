@@ -1,5 +1,7 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Select } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button, Modal, Input, Select } from 'antd';
 import { Notification} from '../../../../../../../components/Notification';
 import { cloneDeep,uniq,difference } from 'lodash'
 import { setFuncDataType } from '../../../../../../../util/util';

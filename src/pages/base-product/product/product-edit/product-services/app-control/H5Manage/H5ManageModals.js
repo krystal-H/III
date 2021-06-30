@@ -1,5 +1,8 @@
 import React  from 'react';
-import { Button, Modal, Form, Input, Icon, Select,Tabs,Checkbox,Tooltip,Radio} from 'antd';
+import { QuestionCircleTwoTone } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button, Modal, Input, Select, Tabs, Checkbox, Tooltip, Radio } from 'antd';
 import { Notification} from '../../../../../../../components/Notification';
 import UploadFile from '../../../../../../../components/upFile/UploadFile';
 import {Paths,get,axios} from '../../../../../../../api';
@@ -592,7 +595,7 @@ export class H5TemplateManage extends React.Component {
                                         >
                                             <span>保留模板事件 </span> 
                                             <Tooltip title="保留模板所有交互，协议逻辑">
-                                                <Icon type="question-circle" theme="twoTone"/>
+                                                <QuestionCircleTwoTone />
                                             </Tooltip>
                                     </Checkbox>
                                 </div>
@@ -602,6 +605,6 @@ export class H5TemplateManage extends React.Component {
                     }
 
             </Modal>
-        )
+        );
     }
 }

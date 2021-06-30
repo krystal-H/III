@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import {Modal, Form,Button,Input,Select,Icon,Divider,InputNumber,Checkbox} from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Button, Input, Select, Divider, InputNumber, Checkbox } from 'antd';
 import { Notification} from '../../../../../../../components/Notification';
 import {cloneDeep} from 'lodash';
 import MyIcon from '../../../../../../../components/my-icon/MyIcon';
@@ -573,7 +576,7 @@ export const CustomForm = Form.create({
                                                 <label className="ant-form-item-required">功能参数映射</label>
                                             </div>
                                             <div style={{textAlign:'right',lineHeight:'40px'}} className="ant-col ant-col-20">
-                                                <a onClick={this.conditionAddParam}><Icon type="plus"/> 添加</a>
+                                                <a onClick={this.conditionAddParam}><PlusOutlined /> 添加</a>
                                             </div>
                                         </div>
                                         <Form.Item wrapperCol={{ span: 24 }}>
@@ -607,7 +610,7 @@ export const CustomForm = Form.create({
                                             <a style={{padding:"0 24px 12px 0"}} 
                                             className="justify-list-item"
                                             onClick={() => openModal('linkProtocolsVisible')}
-                                            ><Icon type="plus"/> 添加</a>
+                                            ><PlusOutlined /> 添加</a>
                                         </div>
                                     </div>
                                 </Form.Item>
@@ -621,8 +624,8 @@ export const CustomForm = Form.create({
                             </div>
                         </Form.Item>
                     </Form>
-                </Modal> 
-            )
+                </Modal>
+            );
         }
     }
 )

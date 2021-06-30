@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from "react";
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Table, Divider,Button,Input } from "antd";
 import { DateTool } from "../../../util/util";
 import { get, Paths,post } from "../../../api";
@@ -109,14 +110,14 @@ export default props=>{
             </AloneSection>
             <div className='commonContentBox'>
                 <div className='centent'>
-                    <Button href='#/open/developCenter/deviceMonitor/add' icon="plus" type="primary">新增配置</Button>     
+                    <Button href='#/open/developCenter/deviceMonitor/add' icon={<PlusOutlined />} type="primary">新增配置</Button>     
                     <Input placeholder="请输入预警唯一ID查询"
                         style={{ width: '240px',margin:'0 24px 24px' }}
                         value={searchId}
                         onChange={e =>  setSearchId(e.target.value)}
                         maxLength={20} 
                     />
-                    <Button type="primary" icon="search" onClick={() => getIndexPage(1)}>查询</Button>
+                    <Button type="primary" icon={<SearchOutlined />} onClick={() => getIndexPage(1)}>查询</Button>
                     <Table 
                         rowKey="id"
                         columns={columns} 
@@ -143,7 +144,7 @@ export default props=>{
                 targetName={editId[1]}
             />
 
-    </>
+    </>;
 
 
 }

@@ -1,5 +1,8 @@
 import React,{useState} from 'react'
-import {Modal,Table,Button,Input,Select,Form,Radio,Upload} from 'antd'
+import { SearchOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Table, Button, Input, Select, Radio, Upload } from 'antd';
 import { Notification } from '../../../components/Notification'
 // import {Paths} from '../../../api'
 import CommSearchMod from '../../comm-mod/searchDevice';
@@ -101,7 +104,7 @@ export  function RelaModal({
                             style={{marginRight:'12px'}}
                             onClick={onSearch}
                             loading={searchLoading}
-                            icon="search"
+                            icon={<SearchOutlined />}
                         >查询
                         </Button>
                         <Button type="default" loading={resetLoading} onClick={reset}>重置</Button>
@@ -140,7 +143,7 @@ export  function RelaModal({
                     }}>
                 </Table>
         </Modal>
-    )
+    );
 }
 
 // export const AddDevices =  Form.create({ name:'form-for-add-device' })(function ({
@@ -175,7 +178,7 @@ export  function RelaModal({
 //                     labelJson[_key] = _value
 //                 }
 //             }
-            
+
 //             if (!err) {
 
 //               console.log('Received values of form: ', values);
@@ -276,7 +279,7 @@ export  function RelaModal({
 //                                     {
 //                                         productList.map(item => {
 //                                             let {name,productId} = item;
-            
+
 //                                             return (<Option key={productId} value={productId}>{name}</Option>)
 //                                         })
 //                                     }
@@ -310,7 +313,7 @@ export  function RelaModal({
 //                                 {getFieldDecorator('data', {
 //                                     rules: [{ required: true, message: '请上传文件！' }],
 //                                     initialValue:[],
-                                    
+
 //                                 })(
 //                                     <Upload
 //                                         accept='.xls,.xlsx' 
@@ -333,7 +336,7 @@ export  function RelaModal({
 //                                         let {key,value} = item;
 
 //                                         return  (
-                                        
+
 //                                             <div className="new-label-item" key={index}>
 //                                                 <Input
 //                                                     value={key}

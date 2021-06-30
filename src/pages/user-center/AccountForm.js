@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import {Form,Input,Button,Radio,Checkbox,Row,Col} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Radio, Checkbox, Row, Col } from 'antd';
 import VerificationCodeInput from '../../components/verification-code-input/VerificationCodeInput';
 import {post,Paths} from '../../api';
 import { encryption ,getVcodeImgUrl,psdPattern} from '../../util/util';

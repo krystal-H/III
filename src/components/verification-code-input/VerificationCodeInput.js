@@ -1,5 +1,7 @@
 import React from 'react'
-import {Form,Input,Row,Col,Tooltip} from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Row, Col, Tooltip } from 'antd';
 
 export default function VerificationCodeInput({getFieldDecorator,imgSrc,refreshVeriCode}) {
    

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import BaseConfiguration from "../../BaseConfiguration";
-import { Form, Radio, Divider, Select } from "antd";
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Radio, Divider, Select } from "antd";
 import { NodeItem, formType, QueueType } from "../../../../../store/types";
 import rules from "../../rules";
 // import Params from "../comm/Params";

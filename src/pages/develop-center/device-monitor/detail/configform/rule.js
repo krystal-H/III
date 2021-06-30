@@ -1,5 +1,7 @@
 import React, { Component,useState ,useEffect}  from 'react';
-import { Form ,Input,DatePicker,Col,Select,Radio,Button} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, DatePicker, Col, Select, Radio, Button } from 'antd';
 import {get,post, Paths} from '../../../../../api';
 import { cloneDeep } from "lodash";
 import { idName } from '../../../../../components/ObjectView/types';

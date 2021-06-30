@@ -2,15 +2,9 @@
  * Created by xiaodaoguang on 2019/8/29.
  */
 import React, { Component } from 'react';
-import {
-    Form,
-    Input,
-    Select,
-    Row,
-    Col,
-    Button,
-    Radio,
-} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Select, Row, Col, Button, Radio } from 'antd';
 
 const Option = Select.Option;
 

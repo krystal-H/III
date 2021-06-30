@@ -2,7 +2,10 @@ import React from 'react';
 import { get,post,Paths } from '../../../../../api';
 import UploadFile from '../../../../../components/upFile/UploadFile';
 import {Notification} from '../../../../../components/Notification';
-import { Select, Form, Button, Input, Tooltip, Icon } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Select, Button, Input, Tooltip } from 'antd';
 const { Option } = Select;
 
 /**
@@ -144,7 +147,7 @@ export const UpdataDevice = Form.create({
                             <Form.Item label={
                                     <span>固件模块：
                                         <Tooltip placement='top' title="请选择固件的细分模块，升级时将只针对该模块升级。">
-                                            <Icon type="question-circle-o" />
+                                            <QuestionCircleOutlined />
                                         </Tooltip>
                                     </span>
                                 } hasFeedback
@@ -162,7 +165,7 @@ export const UpdataDevice = Form.create({
                             <Form.Item label={
                                     <span>固件系列标识：
                                         <Tooltip placement='top' title="区分不同固件包，只有相同的固件才能升级">
-                                            <Icon type="question-circle-o" />
+                                            <QuestionCircleOutlined />
                                         </Tooltip>
                                     </span>
                                 } hasFeedback
@@ -174,7 +177,7 @@ export const UpdataDevice = Form.create({
                             <Form.Item label={
                                     <span>内部版本号：
                                         <Tooltip placement='top' title="同一系列的固件根据内部版本号决定是否升级">
-                                            <Icon type="question-circle-o" />
+                                            <QuestionCircleOutlined />
                                         </Tooltip>
                                     </span>
                                 } hasFeedback
@@ -201,7 +204,7 @@ export const UpdataDevice = Form.create({
                             </Button>
                          </Form>
                     </div>
-                )
+                );
             }
         }   
 );

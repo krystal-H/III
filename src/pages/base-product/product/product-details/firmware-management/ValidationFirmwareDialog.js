@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Button, Upload, Icon } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button, Upload } from 'antd';
 import { post,Paths } from '../../../../../api';
 import {Notification} from '../../../../../components/Notification'
 import './but.scss';
@@ -191,7 +194,7 @@ export const ValidationFirmwareDialog = Form.create({
                                                 accept='.xls,.xlsx'
                                             >
                                                 <Button>
-                                                    <Icon type="upload" />批量倒入
+                                                    <UploadOutlined />批量倒入
                                                 </Button>
                                             </Upload>
                                         </div>)
@@ -208,7 +211,7 @@ export const ValidationFirmwareDialog = Form.create({
                         </div>
                      </Form>
                 </div>
-            )
+            );
         }
     }
 );

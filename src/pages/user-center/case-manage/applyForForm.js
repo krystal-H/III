@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {get,post, Paths} from '../../../api';
-import { Input, Button, Table, Divider, Modal, Tooltip, Tag ,Form} from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Table, Divider, Modal, Tooltip, Tag } from 'antd';
 import TextAreaCounter from '../../../components/textAreaCounter/TextAreaCounter';
 import {Notification} from '../../../components/Notification';
 import './caseManage.scss'

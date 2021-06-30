@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { withRouter } from "react-router"
 import { connect } from 'react-redux'
-import { Modal,Icon,Button } from 'antd'
+import { FrownTwoTone } from '@ant-design/icons';
+import { Modal, Button } from 'antd';
 import { changeLoginModalStatu } from '../store/ActionCreator'
 
 
@@ -37,7 +38,7 @@ class GuideToLogin extends Component {
     render() {
         let {visible} = this.props
 
-        return  (
+        return (
             <Modal
                 title={<span style={{fontSize:'20px'}}>未登录账号</span>}
                 visible={visible}
@@ -51,9 +52,9 @@ class GuideToLogin extends Component {
                     </Button>
                 }
             >
-                <p style={{fontSize:"18px",textAlign:'center'}}><Icon type="frown" theme="twoTone" twoToneColor="rgb(184, 81, 22)" /><span style={{marginLeft:'12px'}}>请先登录账号</span></p>
+                <p style={{fontSize:"18px",textAlign:'center'}}><FrownTwoTone twoToneColor="rgb(184, 81, 22)" /><span style={{marginLeft:'12px'}}>请先登录账号</span></p>
             </Modal>
-        )
+        );
     }
 }
 

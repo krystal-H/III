@@ -6,7 +6,9 @@ import {
   DataValueType,
 } from "../../../../../store/types";
 import { ConfigurationProps } from "../../../Configuration";
-import { Form, Input } from "antd";
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input } from "antd";
 import ValueMatch from "../comm/ValueMatch";
 import rules from "../../rules";
 

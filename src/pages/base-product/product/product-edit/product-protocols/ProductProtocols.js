@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Tabs, Table, Divider, Button, Icon } from 'antd';
+import { BookOutlined, ExportOutlined } from '@ant-design/icons';
+import { Tabs, Table, Divider, Button } from 'antd';
 import { Notification} from '../../../../../components/Notification'
 import { connect } from 'react-redux';
 import { cloneDeep,isArray,isEqual } from 'lodash';
@@ -15,7 +16,7 @@ import LabelTip from '@src/components/form-com/LabelTip';
 
 const { TabPane } = Tabs;
 
-const NEED_UPDATE_FLAG_DATATYPE= ['2']; 
+const NEED_UPDATE_FLAG_DATATYPE= ['2'];
 
 const mapStateToProps = state => {
     return {
@@ -1103,8 +1104,8 @@ export default class ProductProtocols extends Component {
                 {
                     productProtocolLists.length ?
                     <div className="export-wrapper">
-                        <span onClick={this.openTSLModal}><Icon type="book" /> 查看物模型TSL</span>
-                        <span  onClick={this.exportProtocols}><Icon type="export" /> 导出完整协议</span>
+                        <span onClick={this.openTSLModal}><BookOutlined /> 查看物模型TSL</span>
+                        <span  onClick={this.exportProtocols}><ExportOutlined /> 导出完整协议</span>
                     </div> : null
                 }
                 <Tabs 
@@ -1226,6 +1227,6 @@ export default class ProductProtocols extends Component {
                 }
                 <DebuggerModal productId={productId} canOperate={canOperate}/>
             </div>
-        )
+        );
     }
 }

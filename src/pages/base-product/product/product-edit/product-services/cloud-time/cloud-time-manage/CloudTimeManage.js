@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Button, Icon, Input, Divider,Table } from 'antd'
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Input, Divider, Table } from 'antd';
 import {cloneDeep,isEqual} from 'lodash'
 import { Paths,post} from '../../../../../../../api'
 import {addKeyToTableData} from '../../../../../../../util/util'
@@ -271,7 +272,7 @@ export default class CloudManage extends Component {
                                 <Button type="primary" 
                                     style={{ float: 'right' }} 
                                     onClick={() => this.openModal('cloudAddVisible')}>
-                                    <Icon type="plus"/>
+                                    <PlusOutlined />
                                             创 建
                                 </Button>
                             }
@@ -320,6 +321,6 @@ export default class CloudManage extends Component {
                     
                 }
             </div>
-        )
+        );
     }
 }

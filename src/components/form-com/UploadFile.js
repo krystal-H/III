@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Upload, Icon } from "antd";
+import { PlusOutlined } from '@ant-design/icons';
+import { Upload } from "antd";
 import { post, Paths } from '../../api';
 
 const defaultData = {
@@ -80,7 +81,7 @@ class UploadFile extends React.Component {
         });
         const uploadBtn = !maxLength || fileList.length < maxLength ? 
                 <div>
-                    <Icon type="plus" />
+                    <PlusOutlined />
                     <div className="ant-upload-text">上传图片</div>
                 </div> : null
 

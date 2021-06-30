@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { Modal, Form, Input, message, Select } from "antd";
-import { FormComponentProps } from "antd/lib/form";
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input, message, Select } from "antd";
+import { FormComponentProps } from '@ant-design/compatible/lib/form';
 import rules from "./Content/Configuration/rules";
 import { ParamType, RequireType } from "../store/types";
 import { booleanList, paramTypeMaps, booleanMaps } from "../store/constants";

@@ -1,5 +1,19 @@
 import React, { PureComponent } from 'react';
-import { Button, Modal, Form, Input, InputNumber, Icon, Tabs, Select, Table , AutoComplete,Radio,Checkbox} from 'antd';
+import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { ArrowUpOutlined, CloseCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+    Button,
+    Modal,
+    Input,
+    InputNumber,
+    Tabs,
+    Select,
+    Table,
+    AutoComplete,
+    Radio,
+    Checkbox,
+} from 'antd';
 import { Notification } from '../../../../../components/Notification';
 import { cloneDeep } from 'lodash';
 import { get, Paths, post } from '../../../../../api';
@@ -462,46 +476,48 @@ export const ProtocolAddForm = Form.create({ name: 'form_in_modal-protocol-add' 
             let { selectedCommonList, selectedDisctItem } = this.state,
                 {functionDataType} = selectedDisctItem;
 
-            return <div className="p-data-area">
-                <h3>数据定义</h3>
-                <h4>{selectedDisctItem.commonName || ''}{
-                    [10,11].includes(+functionDataType) && <span className="margin-l-16" style={{fontWeight:'bold'}}>{['数组','结构体'][functionDataType - 10]}</span>}
-                </h4>
-                {
-                    selectedDisctItem.commonDetailList.map((commonDetail, index) => (
-                        <div style={{ marginBottom: '8px' }} key={index}>
-                            {   
-                                [10].includes(+functionDataType) &&
-                                <span className="margin-l-16" style={{fontWeight:'bold'}}>子元素：</span>
-                            }
-                            <span className="margin-l-16">{commonDetail.commonMark}</span>
-                            <span className="margin-l-16">{commonDetail.mark}</span>
-                            <InputNumber
-                                style={{ display: 'inline-block', width: '70px', marginLeft: '16px' }} 
-                                min={1} max={1024} 
-                                value={commonDetail.functionLength}
-                                onChange={value => this.commonDetailChangeHandle(index,'functionLength',value)} 
-                                />
-                            <span className="margin-l-8">{commonDetail.functionUnit == 1 ? '字节' : '位'}</span>
-                            {
-                                commonDetail.mark === '数值型' && 
-                                <Select value={+commonDetail.isSigned || 0}
-                                        onChange={value => this.commonDetailChangeHandle(index,'isSigned',value)}  
-                                        style={{ width: 100, marginLeft: '16px' }}>
-                                            <Option value={0}>无符号</Option>
-                                            <Option value={1}>有符号</Option>
-                                </Select>
-                            }
-                            {
-                                [6, 7].includes(selectedDisctItem.functionDataType) &&
-                                <span className="margin-l-16 select-icon"
-                                    onClick={this.choiceCommonListHandle.bind(this, index)}>
-                                    <Icon type="check-circle" theme={selectedCommonList.indexOf(index) > -1 ? 'twoTone' : null} /></span>
-                            }
-                        </div>
-                    ))
-                }
-            </div>
+            return (
+                <div className="p-data-area">
+                    <h3>数据定义</h3>
+                    <h4>{selectedDisctItem.commonName || ''}{
+                        [10,11].includes(+functionDataType) && <span className="margin-l-16" style={{fontWeight:'bold'}}>{['数组','结构体'][functionDataType - 10]}</span>}
+                    </h4>
+                    {
+                        selectedDisctItem.commonDetailList.map((commonDetail, index) => (
+                            <div style={{ marginBottom: '8px' }} key={index}>
+                                {   
+                                    [10].includes(+functionDataType) &&
+                                    <span className="margin-l-16" style={{fontWeight:'bold'}}>子元素：</span>
+                                }
+                                <span className="margin-l-16">{commonDetail.commonMark}</span>
+                                <span className="margin-l-16">{commonDetail.mark}</span>
+                                <InputNumber
+                                    style={{ display: 'inline-block', width: '70px', marginLeft: '16px' }} 
+                                    min={1} max={1024} 
+                                    value={commonDetail.functionLength}
+                                    onChange={value => this.commonDetailChangeHandle(index,'functionLength',value)} 
+                                    />
+                                <span className="margin-l-8">{commonDetail.functionUnit == 1 ? '字节' : '位'}</span>
+                                {
+                                    commonDetail.mark === '数值型' && 
+                                    <Select value={+commonDetail.isSigned || 0}
+                                            onChange={value => this.commonDetailChangeHandle(index,'isSigned',value)}  
+                                            style={{ width: 100, marginLeft: '16px' }}>
+                                                <Option value={0}>无符号</Option>
+                                                <Option value={1}>有符号</Option>
+                                    </Select>
+                                }
+                                {
+                                    [6, 7].includes(selectedDisctItem.functionDataType) &&
+                                    <span className="margin-l-16 select-icon"
+                                        onClick={this.choiceCommonListHandle.bind(this, index)}>
+                                        <LegacyIcon type="check-circle" theme={selectedCommonList.indexOf(index) > -1 ? 'twoTone' : null} /></span>
+                                }
+                            </div>
+                        ))
+                    }
+                </div>
+            );
         }
         // 查找时，各级下拉框切换事件
         changeOptionsHandle = (whice, value) => {
@@ -967,7 +983,7 @@ export const ProtocolAddForm = Form.create({ name: 'form_in_modal-protocol-add' 
                                     </Form.Item>
                                     {
                                         ((paramIndex > 0) && !keyDisable) &&
-                                        <span className="sub-icon" onClick={this.controlParam.bind(this,index,'sub','',paramIndex)}><Icon type="close-circle" /></span>
+                                        <span className="sub-icon" onClick={this.controlParam.bind(this,index,'sub','',paramIndex)}><CloseCircleOutlined /></span>
                                     }
                                 </Form.Item>
                             ))
@@ -1277,7 +1293,7 @@ export const ProtocolAddForm = Form.create({ name: 'form_in_modal-protocol-add' 
                                                                     <span className="des"> 用来描述功能的词，如“检测值”的功能，可以加上“电压”，“温度”的扩展词细化描述；</span>
                                                                 </div>
                                                                 <div className="select-item-btn">
-                                                                    <Button type="primary" icon="search" loading={searchLoading} onClick={this.searchHandle}>查询</Button>
+                                                                    <Button type="primary" icon={<SearchOutlined />} loading={searchLoading} onClick={this.searchHandle}>查询</Button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1343,7 +1359,7 @@ export const ProtocolAddForm = Form.create({ name: 'form_in_modal-protocol-add' 
                                             this.getSelectedDisctItemDom()
                                         }
                                         <div className="data-done">
-                                            <span onClick={this.confirmDist}>完 成&nbsp;<Icon type="arrow-up" /></span>
+                                            <span onClick={this.confirmDist}>完 成&nbsp;<ArrowUpOutlined /></span>
                                         </div>
                                     </div>
                                 </div>

@@ -1,5 +1,7 @@
 import React,{useState,useEffect} from 'react'
-import {Modal,Input,Select,Form,Table} from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input, Select, Table } from 'antd';
 import { Paths, get } from '../../../api'
 
 const {Option} = Select

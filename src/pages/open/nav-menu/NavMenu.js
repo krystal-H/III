@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import {Link, withRouter} from 'react-router-dom';
-import { Menu, Icon } from 'antd';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { Menu } from 'antd';
 import MyIcon from '../../../components/my-icon/MyIcon';
 import {isEqual} from 'lodash';
 
@@ -100,7 +101,7 @@ class NavMenu extends PureComponent {
                                             key={`${item.menuId}`}
                                             title={
                                                 <span>
-                                                    {menuIcon.indexOf('icon-') > -1 ? <MyIcon type={menuIcon}></MyIcon> : <Icon type={menuIcon} />}
+                                                    {menuIcon.indexOf('icon-') > -1 ? <MyIcon type={menuIcon}></MyIcon> : <LegacyIcon type={menuIcon} />}
                                                     <span>{dealMenuText(text)}</span>
                                                 </span>
                                             }
@@ -155,7 +156,7 @@ class NavMenu extends PureComponent {
                                                 })
                                             }
                                         </SubMenu>
-                                    )
+                                    );
                                 }
                                 return null
                             }
@@ -163,7 +164,7 @@ class NavMenu extends PureComponent {
                     }
                 </Menu>
             </div>
-        )
+        );
     }
 }
 

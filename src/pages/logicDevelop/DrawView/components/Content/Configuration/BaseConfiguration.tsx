@@ -1,9 +1,12 @@
 import React, { Component } from "react";
-import { Tabs, Popover, Icon, Form, Input } from "antd";
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Tabs, Popover, Input } from "antd";
 import { NodeItem, formType, DebugObject, Status } from "../../../store/types";
 import rules from "./rules";
 import { configurationMap } from "../../../store/params";
-import { FormComponentProps } from "antd/lib/form";
+import { FormComponentProps } from '@ant-design/compatible/lib/form';
 import LogView from "./LogView";
 
 const { TabPane } = Tabs;
@@ -23,17 +26,15 @@ export const getNameCom = (
   explain: string | React.ReactNode = undefined,
   btn: React.ReactNode = undefined
 ) => {
-  return (
-    <>
-      {name}
-      {explain ? (
-        <Popover content={explain} overlayClassName="draw-popover">
-          <Icon type="question-circle" />
-        </Popover>
-      ) : null}
-      {btn ? btn : null}
-    </>
-  );
+  return <>
+    {name}
+    {explain ? (
+      <Popover content={explain} overlayClassName="draw-popover">
+        <QuestionCircleOutlined />
+      </Popover>
+    ) : null}
+    {btn ? btn : null}
+  </>;
 };
 export const nameTit = getNameCom(rules.nameStr, rules.nameExplain);
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Icon } from 'antd';
 import {connect} from 'react-redux';
 import ServiceGuide from '../../../../../../components/product-components/service-guide/ServiceGuide';
 import CloudManage from './cloud-time-manage/CloudTimeManage';

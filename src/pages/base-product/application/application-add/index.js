@@ -1,5 +1,7 @@
 import React, { memo, useState, useRef } from 'react';
-import { Input, Form, Select, Row, Col, Radio, Upload, Button, Icon, Checkbox } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Select, Row, Col, Radio, Upload, Button, Checkbox } from 'antd';
 import PageTitle from '../../../../components/page-title/PageTitle';
 import { UploadFileHooks } from '../../../../components/upload-file';
 import { Notification } from '../../../../components/Notification';

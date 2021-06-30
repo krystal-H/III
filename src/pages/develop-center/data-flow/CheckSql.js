@@ -1,5 +1,8 @@
 import React, {memo, useState, useEffect } from 'react';
-import { Input,Form,Button,Select,Drawer,Popover,Icon} from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Select, Drawer, Popover } from 'antd';
 import { get,post, Paths} from '../../../api';
 import CodeView from "../../../components/CodeView2";
 import {Notification} from '../../../components/Notification';
@@ -154,7 +157,7 @@ export default Form.create({
                         <Popover 
                             content={'设备使用自定义 Topic 时 Payload 数据格式即为上报的数据'} 
                             overlayClassName="draw-popover"
-                        >Payload数据 <Icon type="question-circle" />
+                        >Payload数据 <QuestionCircleOutlined />
                         </Popover>
                     }
                     labelCol= {{ span:24}} wrapperCol={{span:24}}>
@@ -173,5 +176,5 @@ export default Form.create({
             <Button className='' type="primary" onClick={()=>{checkSql()}} >调 试</Button>
             {checkResult && <ObjectView keyName="调试结果" data={checkResult} />}
         </Drawer>
-    )
+    );
 }));

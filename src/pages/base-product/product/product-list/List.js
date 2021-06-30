@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Input, Pagination, Icon } from 'antd';
+import { Input, Pagination } from 'antd';
 import { Notification} from '../../../../components/Notification'
 import { connect } from 'react-redux';
 import { cloneDeep } from 'lodash';

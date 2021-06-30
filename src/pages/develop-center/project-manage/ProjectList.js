@@ -1,5 +1,7 @@
 import React,{useState,useEffect,useCallback} from 'react'
-import {Modal,Form,Input} from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Input } from 'antd';
 import PageTitle from '../../../components/page-title/PageTitle'
 import NoSourceWarn from '../../../components/no-source-warn/NoSourceWarn'
 import AloneSection from '../../../components/alone-section/AloneSection'
