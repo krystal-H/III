@@ -34,7 +34,6 @@ export default class App extends Component {
     render() {   
         
         return (
-            // <ConfigProvider locale={config.locale} getPopupContainer={this.getParentNode}>
             <ConfigProvider locale={config.locale} >
                 <Provider store={store}>
                     <Router getUserConfirmation={this.customConfirm}>

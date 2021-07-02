@@ -2,7 +2,7 @@
 import CryptoJS from 'crypto-js';
 import moment from 'moment';
 import {Paths} from '../api';
-import {trim,cloneDeep} from 'lodash';
+import {cloneDeep} from 'lodash';
 import {notification} from 'antd';
 
 /**
@@ -313,7 +313,6 @@ export function strToAsterisk(str, num) {
 export function checkAccount (val) {
     // 验证账户格式
     var reg = /^[a-zA-Z\d\_]{6,14}$/;
-    // val = trim(val);
     return reg.test(val);
 };
 

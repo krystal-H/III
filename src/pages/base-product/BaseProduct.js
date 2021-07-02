@@ -10,7 +10,7 @@ export default function BaseProduct({match,muenList}) {
     let {path} = match;
     return (
         <Switch>
-            {
+            {/* {
                 muenList.map((item,index)=>{
                     if(item.menuname=='产品'){
                         return <Route key='产品' path={`${path}/product`} component={Product}></Route>
@@ -21,7 +21,8 @@ export default function BaseProduct({match,muenList}) {
                     }
                 })
             }
-            <Redirect to={`${path}/${muenList[0].url}`} />
+            <Redirect to={`${path}/${muenList[0].url}`} /> */}
+            <Route key='产品' path={`${path}/product`} component={Product}></Route>
         </Switch>
     )
 }

@@ -61,21 +61,3 @@ export const deleteRole = (roleId) => {
     }).catch(err => Promise.resolve(0));
   }
 }
-
-// 实例列表
-export const updateInstanceList= (data) => {
-  return {
-    type: ActionTypes.UPDATE_INSTANCELIST,
-    data:fromJS(data)
-  }
-}
-
-export const getInstanceList= (params ={}) => {
-  return (dispatch,getState) => {
-    get(Paths.getCaseList,params).then((res) => {
-      let data = res.data,
-          action = updateInstanceList(data);
-      dispatch(action);
-    });
-  }
-}

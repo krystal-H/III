@@ -67,7 +67,7 @@ export default class UserCenter extends Component {
                 <div className="page-header-wrapper">
                     <Header newMessageNums={newMessageNums} developerInfo={developerInfo} noCollapsed={true}></Header>
                 </div>
-                <div className="content-wrapper">
+                <div className="page-content-wrapper">
                     <PageTabs developerInfo={developerInfo}></PageTabs>
                     <section className="right-wrapper flex-column">
                         <div className="flex1 scroll-y">

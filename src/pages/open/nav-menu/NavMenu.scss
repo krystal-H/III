@@ -1,20 +1,24 @@
-@import '../../../assets/css/variables.scss';
 
+@import '../../../assets/css/variables.scss';
 
 .menu-wapper{
     height: 100%;
     width: 100%;
+    padding-top: 45px;
     position: absolute;
     top: 0;
     left: 0;
     z-index: 9;
-
+    background-color: #EEEFF1;
+    
     .self-menu{
         height: 100%;
-
+        .ant-menu-item{
+            margin: 0;
+        }
+        background-color: #EEEFF1;
         &.ant-menu-inline-collapsed{
-            width: $menuWidth;
-
+            width: $menuCollWidth;
             .ant-menu-submenu-title{
                 padding: 0 22px !important;
             }

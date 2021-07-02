@@ -2,16 +2,14 @@ import React,{ Component} from 'react';
 import { Switch,Route,Redirect} from 'react-router-dom';
 import loadable from '@loadable/component';
 import {connect} from 'react-redux';
-import {getDeveloperInfo,gatMuenList,updateMuenList,getInstanceList} from '../user-center/store/ActionCreator';
+import {getDeveloperInfo,gatMuenList,updateMuenList} from '../user-center/store/ActionCreator';
 import {getNewMessageNums} from '../message-center/store/ActionCreator';
 
 import OutsideWrapper  from '../../components/outside-wrapper/OutsideWrapper';
 import Header from './header/Header';
 import NavMenu from './nav-menu/NavMenu';
-// import ContentBread from './content-bread/ContentBread';
 import Base from '../base-product/BaseProduct';
-
-import './Open.scss';
+import { MenuUnfoldOutlined, MenuFoldOutlined, } from '@ant-design/icons';
 
 // 模块懒加载
 const BigDataProduct = loadable( () => import('../big-data-product/BigDataProduct'));
@@ -22,7 +20,6 @@ const mapStateToProps = state => {
         developerInfo: state.getIn(['userCenter', 'developerInfo']).toJS(),
         muenList: state.getIn(['userCenter', 'muenList']).toJS(),
         newMessageNums: state.getIn(['message', 'newMessageNums']).toJS(),
-        instanceList: state.getIn(['userCenter', 'instanceList']).toJS()
     }
 }
 
@@ -32,14 +29,13 @@ const mapDispatchToProps = dispatch => {
         updateMuenList: (data) => dispatch(updateMuenList(data)),
         gatMuenList: () => dispatch(gatMuenList()),
         getNewMessageNums: () => dispatch(getNewMessageNums()),
-        getInstanceList: (params) => dispatch(getInstanceList(params)),
     }
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Open extends Component {
     state = {
-        collapsed:false
+        collapsed:false //左侧菜单收缩切换
     }
     setCollapsed = () => {
         this.setState({
@@ -51,7 +47,6 @@ export default class Open extends Component {
         // 请求用户信息
         this.props.getDeveloperInfo();
         this.props.getNewMessageNums();
-        this.props.getInstanceList();
 
         if(JSON.parse(localStorage.getItem('menuList'))){
             this.props.updateMuenList(JSON.parse(localStorage.getItem('menuList')));
@@ -60,33 +55,26 @@ export default class Open extends Component {
         }
     }
     render () {
-        let { match,routes ,developerInfo,newMessageNums,instanceList} = this.props,
-        {collapsed} = this.state,
-        {path} = match;
+        const { match,routes ,developerInfo,newMessageNums} = this.props;
+        const {collapsed} = this.state, {path} = match
         let muenList = JSON.parse(localStorage.getItem('menuList'))||[];
         return (
-
             <OutsideWrapper>
                 <section className="page-header-wrapper">
-                    <Header developerInfo={developerInfo} collapsed={collapsed} newMessageNums={newMessageNums} setCollapsed={this.setCollapsed} instanceList={instanceList}></Header>
+                    <Header developerInfo={developerInfo} newMessageNums={newMessageNums}  ></Header>
                 </section>
-                <div className="content-wrapper">
-                    <div className="left-menus">
-                        <NavMenu muenList={muenList} collapsed={collapsed} routes={routes}></NavMenu>
+                <div className="page-content-wrapper">
+                    <div className={`left-menus${collapsed?' collap':''}`}> 
+                        {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                            className: 'trigger-coll',
+                            onClick: this.setCollapsed,
+                        })}
+                        <NavMenu muenList={muenList} routes={routes} collapsed={collapsed} ></NavMenu>
                     </div>
                     <section className="right-wrapper flex-column">
-                        {/* 新交互，不需要面包屑 */}
-                        {/* <ContentBread location={window.location} routes={routes} /> */}
                         <div className="flex1">
                             <Switch>
-                                {
-                                    /**
-                                     * 为了满足进入页面默认显示一级菜单得首个二级目录
-                                     * 这里让后台添加了url，本来想着直接遍历，用url，发现两个问题
-                                     * 1.url 跟 component不能公用一个值
-                                     * 2.现在得下拉菜单现在是独立前端处理。但是接口还是返回了，处理不能统一。
-                                     * 综上述借口所述，简单暴力得字段判断处理了。
-                                     */
+                                {/* {
                                     muenList.map((item,index)=>{
                                         if(item.menuname=='基础产品'){
                                             return <Route key='基础产品' path={`${path}/base`}
@@ -102,13 +90,21 @@ export default class Open extends Component {
                                             ></Route>
                                         }
                                     })
-                                }
-                                
+                                } */}
                                 <Route key='开发中心' path={`${path}/developCenter`}
                                     render={props => <DevelopCenter {...props}></DevelopCenter>}
                                 ></Route>
+
+                                <Route key='首页' path={`${path}/home`}
+                                    render={props => <DevelopCenter {...props}></DevelopCenter>}
+                                ></Route>
+
+                                <Route key='基础产品' path={`${path}/base`}
+                                    render={props => <Base {...props}></Base>}
+                                ></Route>
+
                                 <Redirect from={`${path}/userCenter`} to="/userCenter"></Redirect>
-                                <Redirect to={muenList.length>0?`${path}/${muenList[0].url}`:`${path}/base`}></Redirect>
+                                <Redirect to={`${path}/home`}></Redirect>
                             </Switch>
                         </div>
                     </section>

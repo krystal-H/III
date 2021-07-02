@@ -1,19 +1,13 @@
 import React from 'react'
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
-import { Input, Row, Col, Tooltip } from 'antd';
+import { Input, Row, Col, Tooltip,Form } from 'antd';
 
-export default function VerificationCodeInput({getFieldDecorator,imgSrc,refreshVeriCode}) {
+export default function VerificationCodeInput({imgSrc,refreshVeriCode}) {
    
     return (
-        <Form.Item>
+        <Form.Item name='veriCode' rules={[{ required: true, message: '请输入验证码' },{len:4,message:'验证码长度为4'}]}>
             <Row>
                 <Col span={15}>
-                    {getFieldDecorator('veriCode', {
-                        rules:[{required:true,message:'请输入验证码'},{len:4,message:'验证码长度为4'}],
-                        initialValue: '',
-                        
-                    })(<Input placeholder="请输入验证码" />)}
+                    <Input placeholder="请输入验证码" />
                 </Col>
                 <Col span={8} offset={1}>
                     <div className="code-img-wrapper">

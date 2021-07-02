@@ -20,7 +20,7 @@
     }
     
     // 内容区域 - 自适应高度
-    .content-wrapper{
+    .page-content-wrapper{
         flex: 1;
         height: 0;
         display: flex;
@@ -35,6 +35,19 @@
             height: 100%;
             width: $menuWidth;
             position: relative;
+            .trigger-coll{
+                position: absolute;
+                top: 14px;
+                left:22px;
+                font-size: 18px;
+                &:hover{
+                    color: $activeBgColor;
+                }
+                z-index: 10;
+            }
+            &.collap{
+                width: $menuCollWidth;
+            }
         }
     
         // 右侧区域 - 自适应宽度，和内容区域等高，可滚动，自定义滚动条样式
