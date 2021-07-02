@@ -1,30 +1,37 @@
-$iconSize:100px;
+$iconSize: 80px;
 $borderRadius: 50%;
 
-.icon-wrapper{
+.icon-wrapper {
     width: $iconSize;
     height: $iconSize;
-    background:rgba(247,249,250,1);
-    border-radius:$borderRadius;
-    border:1px solid rgba(233,233,233,1);
+    background: rgba(247, 249, 250, 1);
+    border: 1px solid rgba(233, 233, 233, 1);
     display: flex;
+    justify-content: center;
+    align-content: center;
 
-    &.show-img{
-        border:none;
+    &.show-img {
+        border: none;
     }
 
-    i,img{
+    i,
+    img {
         margin: auto;
     }
 
-    img{
-        width: 100%;
-        height: 100%;
-        object-fit:cover;
-        border-radius:$borderRadius;
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+        border-radius: $borderRadius;
     }
 
-    i{
+    i {
         font-size: 32px;
+    }
+    .anticon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }

@@ -1,55 +1,102 @@
-@import './../../../../assets/css/variables.scss';
-
-.page-main-wrapper{
+@charset 'utf-8';
+@import "./../../../../assets/css/variables.scss";
+@import './../../../../assets/css/tools.scss';
+$shadow: rgba(0, 0, 0, 0.12);
+.page-wrapper {
     height: 100%;
     min-height: 520px;
 
-    .page-content-header{
-        height: max-content;
-        background-color: $sectionBgColor;
-        padding: 0  $gap $gap * 2/3;      
+    .page-title {
+        padding: 12px 24px;
+        line-height: 34px;
+        font-size: 20px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.85);
+        box-shadow: 0px 2px 6px 0px $shadow;
+        // @include self-border(10px, red)
     }
-
-    .bg-wrapper{
-        padding: $gap;
+    .page-header {
+        height: 78px;
+        margin: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: $GrayBgColor;
+        box-shadow: 0px 2px 6px 0px $shadow;
+        border-radius: 2px;
+        &-left {
+            display: flex;
+            justify-content: flex-start;
+            align-content: center;
+        }
+        &-right {
+            padding-right: 22px;
+        }
     }
+    // 状态
+    .status {
+        display: inline-block;
+        margin-left: $gap;
+        padding: 0 $gap / 2;
+        font-size: 12px;
+        font-family: PingFangSC;
+        font-weight: 400;
+        border-radius: 2px;
 
-    .page-main-content-wrapper{
+        &.status-0 {
+            color: $doneColor;
+            background-color: rgba(238, 251, 230, 1);
+        }
+        &.status-1 {
+            color: $underWayColor;
+            background-color: rgba(235, 247, 255, 1);
+        }
+        &.status-2 {
+            color: $unusualColor;
+            background-color: rgba(253, 244, 232, 1);
+        }
+    }
+    // table
+    .bg-wrapper {
+        padding: 22px;
+        margin: 0 16px;
+        box-shadow: 0px 2px 6px 0px $shadow;
+        border-radius: 2px;
+    }
+    .page-table-wrapper {
         background-color: $sectionBgColor;
-        .lists-wrapper{
+        .lists-wrapper {
             justify-content: flex-start;
             align-content: flex-start;
             flex-wrap: wrap;
             padding: $gap;
             padding-right: 0;
-
-            &.six-item{
+            &.six-item {
                 justify-content: space-around;
                 padding-right: $gap;
                 align-content: space-around;
-
-                .list-item{
+                .list-item {
                     width: 31%;
                     margin: 0;
                 }
             }
-    
-            .list-item{
+            .list-item {
                 width: 30%;
-                height:43%;
+                height: 43%;
                 background: $sectionBgColor;
-                border-radius:$borderRadius;
-                border:1px solid rgba(217,217,217,1);
-                font-weight:400;
-                color:rgba(0,0,0,0.45);
+                border-radius: $borderRadius;
+                border: 1px solid rgba(217, 217, 217, 1);
+                font-weight: 400;
+                color: rgba(0, 0, 0, 0.45);
                 margin: 0 $gap $gap 0;
             }
         }
 
-        .list-pagination{
+        .list-pagination {
             height: max-content;
+            margin-top: $gap;
             padding: 0 $gap $gap 0;
-            .self-pa{
+            .self-pa {
                 width: max-content;
                 float: right;
             }
@@ -58,50 +105,39 @@
 }
 
 @media screen and (max-height: 769px) {
-    .page-main-wrapper{
-        .page-content-header{
-            padding: 0  $gap $gap / 4;
+    .page-wrapper {
+        .page-content-header {
+            padding: 0 $gap $gap / 4;
         }
-
-        .bg-wrapper{
+        .bg-wrapper {
             padding: $gap / 2;
         }
     }
-
-
-    .page-main-content-wrapper{
+    .page-table-wrapper {
         padding: $gap / 4;
-
-        .lists-wrapper{
+        .lists-wrapper {
             padding: 0 !important;
-
-            .list-item{
+            .list-item {
                 height: 46% !important;
-
-                .product-info{
+                .product-info {
                     padding: $gap / 2;
-
-                    .product-cut{
+                    .product-cut {
                         padding-top: $gap / 2;
                         padding-right: $gap / 4;
                     }
-
-                    .product-info-body{
+                    .product-info-body {
                         margin: $gap / 2 0;
                         line-height: $gap;
                     }
                 }
-
-                .btn-controls{
+                .btn-controls {
                     height: 40px;
                     line-height: 40px;
                 }
             }
         }
-
-        .list-pagination{
-            padding: 0 $gap $gap / 4 0 !important; 
+        .list-pagination {
+            padding: 0 $gap $gap / 4 0 !important;
         }
     }
-
 }
