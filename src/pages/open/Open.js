@@ -14,6 +14,7 @@ import { MenuUnfoldOutlined, MenuFoldOutlined, } from '@ant-design/icons';
 // 模块懒加载
 const BigDataProduct = loadable( () => import('../big-data-product/BigDataProduct'));
 const DevelopCenter = loadable( () => import('../develop-center/DevelopCenter'));
+const Overview = loadable( () => import('../home/overview/index'));
 
 const mapStateToProps = state => {
     return {
@@ -96,7 +97,7 @@ export default class Open extends Component {
                                 ></Route>
 
                                 <Route key='首页' path={`${path}/home`}
-                                    render={props => <DevelopCenter {...props}></DevelopCenter>}
+                                    render={props => <Overview {...props}></Overview>}
                                 ></Route>
 
                                 <Route key='基础产品' path={`${path}/base`}
