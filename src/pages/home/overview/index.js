@@ -5,29 +5,29 @@ import {
 } from '@ant-design/icons';
 import './index.scss';
 //==产品管理图片
-import projectmn1 from './../../../assets/overImage/project1.png';
-import projectmn2 from './../../../assets/overImage/project2.png';
-import projectmn3 from './../../../assets/overImage/project3.png';
-import projectmn4 from './../../../assets/overImage/project4.png';
-import projectmn5 from './../../../assets/overImage/project5.png';
+import projectmn1 from './../../../assets/images/overImage/project1.png';
+import projectmn2 from './../../../assets/images/overImage/project2.png';
+import projectmn3 from './../../../assets/images/overImage/project3.png';
+import projectmn4 from './../../../assets/images/overImage/project4.png';
+import projectmn5 from './../../../assets/images/overImage/project5.png';
 //==快速入口图片
-import quick1 from './../../../assets/overImage/quick1.png';
-import quick2 from './../../../assets/overImage/quick2.png';
+import quick1 from './../../../assets/images/overImage/quick1.png';
+import quick2 from './../../../assets/images/overImage/quick2.png';
 //==新建产品图片
-import newproduct1 from './../../../assets/overImage/newproduct1.png';
-import newproduct2 from './../../../assets/overImage/newproduct2.png';
-import newproduct3 from './../../../assets/overImage/newproduct3.png';
-import newproduct4 from './../../../assets/overImage/newproduct4.png';
-import newproduct5 from './../../../assets/overImage/newproduct5.png';
-import processimg from './../../../assets/overImage/processimg.png';
+import newproduct1 from './../../../assets/images/overImage/newproduct1.png';
+import newproduct2 from './../../../assets/images/overImage/newproduct2.png';
+import newproduct3 from './../../../assets/images/overImage/newproduct3.png';
+import newproduct4 from './../../../assets/images/overImage/newproduct4.png';
+import newproduct5 from './../../../assets/images/overImage/newproduct5.png';
+import processimg from './../../../assets/images/overImage/processimg.png';
 //==数据服务图片
-import dataservice1 from './../../../assets/overImage/dataservice1.png';
-import dataservice2 from './../../../assets/overImage/dataservice2.png';
-import dataservice3 from './../../../assets/overImage/dataservice3.png';
+import dataservice1 from './../../../assets/images/overImage/dataservice1.png';
+import dataservice2 from './../../../assets/images/overImage/dataservice2.png';
+import dataservice3 from './../../../assets/images/overImage/dataservice3.png';
 //==帮助图片
-import help1 from './../../../assets/overImage/help1.png';
-import help2 from './../../../assets/overImage/help2.png';
-import help3 from './../../../assets/overImage/help3.png';
+import help1 from './../../../assets/images/overImage/help1.png';
+import help2 from './../../../assets/images/overImage/help2.png';
+import help3 from './../../../assets/images/overImage/help3.png';
 export default function OverviewWrap() {
     const contentStyle = {
         height: '174px',
@@ -78,6 +78,22 @@ export default function OverviewWrap() {
                                 <a>进入</a>
                             </div>
                             <div className='over-view-productmn-content'>
+                                <div >
+                                    <div className='over-view-productmn-content-img center-layout-wrap'><img src={projectmn1} /></div>
+                                    <div className='over-view-productmn-content-content'>
+                                        <div>睡眠监测器</div>
+                                        <div>开发中</div>
+                                        <div>更新时间2021-06-06</div>
+                                    </div>
+                                </div>
+                                <div >
+                                    <div className='over-view-productmn-content-img center-layout-wrap'><img src={projectmn1} /></div>
+                                    <div className='over-view-productmn-content-content'>
+                                        <div>睡眠监测器</div>
+                                        <div>开发中</div>
+                                        <div>更新时间2021-06-06</div>
+                                    </div>
+                                </div>
                                 <div >
                                     <div className='over-view-productmn-content-img center-layout-wrap'><img src={projectmn1} /></div>
                                     <div className='over-view-productmn-content-content'>
