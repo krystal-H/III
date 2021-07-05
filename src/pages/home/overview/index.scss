@@ -42,7 +42,8 @@
 
 .over-view {
   padding: 16px;
-background-color: #FFFFFF;
+  background-color: #FFFFFF;
+
   .over-view-banner {
     .ant-carousel .slick-dots-bottom {
       bottom: 20px;
@@ -55,11 +56,12 @@ background-color: #FFFFFF;
     font-family: PingFangSC-Regular, PingFang SC;
 
     .over-view-content-left {
-      width: 767px;
+      // width: 767px;
       margin-right: 16px;
+      width: 100%;
 
       .over-view-statistical {
-        width: 767px;
+        // width: 767px;
         height: 100px;
         background: #FFFFFF;
         display: flex;
@@ -69,7 +71,8 @@ background-color: #FFFFFF;
           font-weight: 400;
           width: 170px;
           height: 56px;
-          margin-right: 14px;
+          // margin-right: 14px;
+          flex:1;
 
           &:first-child {
             margin-left: 22px;
@@ -143,14 +146,14 @@ background-color: #FFFFFF;
             margin-top: 18px;
 
             >div {
-              width: 232px;
+              width: 300px;
               height: 96px;
               background: #F8F9FB;
               border-radius: 4px;
               display: flex;
               align-items: center;
               padding-left: 12px;
-
+margin-right: 12px;
               &:hover {
                 background: #F0F1F3;
               }
@@ -201,7 +204,7 @@ background-color: #FFFFFF;
             }
 
             .over-view-productmn-content-two {
-              height: 80px ;
+              height: 80px;
             }
           }
         }
@@ -214,7 +217,7 @@ background-color: #FFFFFF;
           border-top: 1px solid #DFE1E6;
 
           >div {
-            width: 130px;
+            // width: 130px;
             height: 28px;
             display: flex;
             font-size: 12px;
@@ -223,15 +226,21 @@ background-color: #FFFFFF;
             line-height: 22px;
             align-items: center;
             margin-right: 18px;
-
-            &:hover {
-              color: #2F78FF;
-            }
+            flex: 1;
+            // &:hover {
+            //   color: #2F78FF;
+            // }
 
             img {
               height: 18px;
               width: 18px;
               margin-right: 3px;
+            }
+            div{
+              cursor: pointer;
+              &:hover{
+                color: #2F78FF;
+              }
             }
           }
         }
@@ -251,13 +260,15 @@ background-color: #FFFFFF;
         }
 
         .over-view-device-content {
-            padding-bottom: 3px;
+          padding-bottom: 3px;
+
           .over-view-device-content-item {
             display: flex;
             border-bottom: 1px solid #DFE1E6;
             padding: 16px 0;
-            &:last-child{
-                border-bottom:none
+
+            &:last-child {
+              border-bottom: none
             }
 
             >div {
