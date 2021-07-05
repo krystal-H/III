@@ -5,7 +5,7 @@
 /*****************长宽、间隔*************/
 
 // 页面最小宽高 
-$minWidth:1300px;
+$minWidth:1366px;
 $minHeight:620px;
 
 // header高度，导航宽度，二级tab宽度
@@ -38,6 +38,8 @@ $doneColor: rgba(78,166,64,1);        // 完成状态
 $underWayColor:rgba(47, 120, 255, 1); // 进行中状态
 $unusualColor:rgba(245, 133, 66, 1);  // 异常状态
 $warnColor:rgba(240, 66, 66, 1);      // 警告状态   
+$_666Color: #666666;
+$_323Color: #323232;
 
 // 主背景色
 $GrayBgColor:rgba(255, 255, 255, 1);
@@ -74,3 +76,6 @@ $border:1px solid $themeColor;
 $grayBorder:1px solid $grayBorderColor;
 
 /****************End******************/
+
+// 阴影颜色
+$shadow: rgba(0, 0, 0, 0.12);

@@ -17,6 +17,45 @@
     }
 }
 
+// 字体
+@mixin text($size, $color) {
+    font-size: $size;
+    color: $color;
+    word-break: break-all;
+}
+
+// flex
+/*
+  $justify: justify-content的值，默认space-between
+  $align: align-items的值，默认center
+*/
+@mixin flex($justify: space-between, $align: center, $direction: row) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+// 不换行
+@mixin no-wrap() {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+// 限制文字行数
+/*
+$line 行数
+*/
+@mixin limit-line($line) {
+overflow : hidden;
+text-overflow: ellipsis;
+display: -webkit-box;
+-webkit-line-clamp: $line;
+/*! autoprefixer: off */
+-webkit-box-orient: vertical;
+/*! autoprefixer: on */
+}
+
 // @mixin menu-width {
 //     width: $menuWidth;
 //     min-width: $menuWidth;
