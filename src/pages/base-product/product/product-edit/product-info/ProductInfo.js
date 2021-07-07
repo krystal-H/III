@@ -34,9 +34,9 @@ class ProductInfo extends React.Component {
                 productId: productBaseInfo.productId,
                 productIcon: productIcon && productIcon.length ? productIcon[0] : ''
 
-            }).then( () => {
+            }).then(() => {
                 EDIT_STATUS = false;
-                this.forceUpdate( () => {
+                this.forceUpdate(() => {
                     this.props.history.push("./protocols");
                 })
             })
@@ -52,39 +52,39 @@ class ProductInfo extends React.Component {
         this.setIcon()
     }
 
-    componentDidMount(){
-        setTimeout( () => {
+    componentDidMount() {
+        setTimeout(() => {
             this.setIcon()
         })
     }
 
-    componentWillUnmount () {
+    componentWillUnmount() {
         EDIT_STATUS = false
     }
 
-    setIcon () {
-        let {productIcon = ''} = this.props.productBaseInfo;
-        if ( (this.setedIcon !== productIcon) && this.productIcon) {
+    setIcon() {
+        let { productIcon = '' } = this.props.productBaseInfo;
+        if ((this.setedIcon !== productIcon) && this.productIcon) {
             this.setedIcon = productIcon;
-            
+
             this.productIcon.setState({
-                fileList: productIcon ? 
-                            [
-                                {
-                                    uid:  1000 * Math.random(),
-                                    name: '',
-                                    status: 'done',
-                                    url: productIcon,
-                                }
-                            ]:
-                            []
+                fileList: productIcon ?
+                    [
+                        {
+                            uid: 1000 * Math.random(),
+                            name: '',
+                            status: 'done',
+                            url: productIcon,
+                        }
+                    ] :
+                    []
             })
         }
 
     }
 
     render() {
-        const { form,canOperate=true} = this.props;
+        const { form, canOperate = true } = this.props;
         const { getFieldDecorator } = form;
         const formLayout = {
             labelCol: {
@@ -127,8 +127,8 @@ class ProductInfo extends React.Component {
                 authorityType === 2
                     ? "高级认证"
                     : authorityType === 1
-                    ? "中级认证"
-                    : "初级认证";
+                        ? "中级认证"
+                        : "初级认证";
         } else if (accessModeId === 1) {
             authorityText = authorityType === 0 ? "无认证" : "有认证";
         } else {
@@ -152,45 +152,45 @@ class ProductInfo extends React.Component {
                             </span>
                         </FormItem>
                         {
-                            canOperate ? 
-                            <FormItem label="产品名称" {...formLayout}>
-                                {getFieldDecorator("productName", {
-                                    initialValue: productName || '',
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: "产品名称不能为空"
-                                        }
-                                    ]
-                                })(
-                                    <Input
-                                    placeholder="请输入产品名称"
-                                    maxLength={20}
-                                    style={{ width: 468 }}
-                                    />
+                            canOperate ?
+                                <FormItem label="产品名称" {...formLayout}>
+                                    {getFieldDecorator("productName", {
+                                        initialValue: productName || '',
+                                        rules: [
+                                            {
+                                                required: true,
+                                                message: "产品名称不能为空"
+                                            }
+                                        ]
+                                    })(
+                                        <Input
+                                            placeholder="请输入产品名称"
+                                            maxLength={20}
+                                            style={{ width: 468 }}
+                                        />
                                     )}
-                            </FormItem>
-                            :
-                            <FormItem label="产品名称" {...formLayout}>
-                                <span>{productName || ''}</span>
-                            </FormItem>
+                                </FormItem>
+                                :
+                                <FormItem label="产品名称" {...formLayout}>
+                                    <span>{productName || ''}</span>
+                                </FormItem>
                         }
                         {
-                            canOperate ? 
-                            <FormItem label="产品型号" {...formLayout}>
-                                {getFieldDecorator("productCode", {
-                                    initialValue: productCode || ''
-                                })(
-                                    <Input
-                                        placeholder="请输入产品型号"
-                                        maxLength={20}
-                                        style={{ width: 468 }}
-                                    />
-                                )}
-                            </FormItem>
-                            :<FormItem label="产品型号" {...formLayout}>
-                                 <span>{productCode || ''}</span>
-                            </FormItem>
+                            canOperate ?
+                                <FormItem label="产品型号" {...formLayout}>
+                                    {getFieldDecorator("productCode", {
+                                        initialValue: productCode || ''
+                                    })(
+                                        <Input
+                                            placeholder="请输入产品型号"
+                                            maxLength={20}
+                                            style={{ width: 468 }}
+                                        />
+                                    )}
+                                </FormItem>
+                                : <FormItem label="产品型号" {...formLayout}>
+                                    <span>{productCode || ''}</span>
+                                </FormItem>
                         }
                         <FormItem label="所属分类" {...formLayout}>
                             <span>{allCategoryName}</span>
@@ -207,16 +207,16 @@ class ProductInfo extends React.Component {
                                 推荐尺寸信息64*64。支持gif、jpeg、jpg、png格式，不超过500KB。
                             </span> */}
                             {
-                                canOperate ? 
-                                <UploadFileClass onRef={el => this.productIcon = el} 
-                                    maxCount={1} 
-                                    preferSize={'64*64'} 
-                                    format='.gif,.jpeg,.jpg,.png' 
-                                    maxSize={0.5} />
-                                :
-                                <div className="icon-wrapper-in-detail">
-                                    <img src={productIcon || DefaultIcon} alt=""/>
-                                </div>
+                                canOperate ?
+                                    <UploadFileClass onRef={el => this.productIcon = el}
+                                        maxCount={1}
+                                        preferSize={'64*64'}
+                                        format='.gif,.jpeg,.jpg,.png'
+                                        maxSize={0.5} />
+                                    :
+                                    <div className="icon-wrapper-in-detail">
+                                        <img src={productIcon || DefaultIcon} alt="" />
+                                    </div>
                             }
                         </FormItem>
                         <FormItem label="接入方式" {...formLayout}>
@@ -284,109 +284,109 @@ class ProductInfo extends React.Component {
                         <div className="product-info-item-content">
                             {showSSID ? (
                                 <div>
-                                    {canOperate ? 
-                                    <FormItem
-                                        label={
-                                            <LabelTip
-                                            label="AP-SSID"
-                                            tip={
-                                                <span>
+                                    {canOperate ?
+                                        <FormItem
+                                            label={
+                                                <LabelTip
+                                                    label="AP-SSID"
+                                                    tip={
+                                                        <span>
                                                             AP配网时的密码{" "}
                                                             <a>使用指南</a>
                                                         </span>
                                                     }
-                                                    />
-                                                }
-                                                {...formLayout}
-                                                >
+                                                />
+                                            }
+                                            {...formLayout}
+                                        >
                                             {getFieldDecorator("ssid", {
                                                 initialValue: ssid || "",
                                                 rules: [
                                                     {
                                                         pattern: /^\w{1,20}$/,
                                                         message:
-                                                        "1-20个英文字母或数字"
+                                                            "1-20个英文字母或数字"
                                                     }
                                                 ]
                                             })(
                                                 <Input
-                                                maxLength={20}
-                                                placeholder="选填1-20个英文字母或数字"
-                                                ref={ref => this.ssidRef = ref}
-                                                onFocus={this.passwordInputFocusHandel} 
-                                                readOnly 
+                                                    maxLength={20}
+                                                    placeholder="选填1-20个英文字母或数字"
+                                                    ref={ref => this.ssidRef = ref}
+                                                    onFocus={this.passwordInputFocusHandel}
+                                                    readOnly
                                                 />
-                                                )}
+                                            )}
                                         </FormItem>
-                                    :<FormItem
-                                        label={
-                                            <LabelTip
-                                            label="AP-SSID"
-                                            tip={
-                                                <span>
+                                        : <FormItem
+                                            label={
+                                                <LabelTip
+                                                    label="AP-SSID"
+                                                    tip={
+                                                        <span>
                                                             AP配网时的密码{" "}
                                                             <a>使用指南</a>
                                                         </span>
                                                     }
-                                                    />
-                                                }
-                                                {...formLayout}
-                                                >
-                                                <span>{ssid || ""}</span>
+                                                />
+                                            }
+                                            {...formLayout}
+                                        >
+                                            <span>{ssid || ""}</span>
                                         </FormItem>
                                     }
                                     {
                                         canOperate ?
-                                        <FormItem label={"AP-密码"} {...formLayout}>
-                                            {getFieldDecorator("ssidPassword", {
-                                                initialValue: ssidPassword || "",
-                                                rules: [
-                                                    {
-                                                        pattern: /^\w{8,20}$/,
-                                                        message:
-                                                            "8-20个英文字母或数字"
-                                                    }
-                                                ]
-                                            })(
-                                                <Input.Password
-                                                    maxLength={20}
-                                                    placeholder="选填仅8-20个英文字母或数字"
-                                                    ref={ref => this.passwordRef = ref}
-                                                    onFocus={this.passwordInputFocusHandel} 
-                                                    readOnly 
-                                                />
-                                            )}
-                                            <span className="explain-text">
-                                                配网时AP的SSID和密码
-                                            </span>
-                                        </FormItem>
-                                        :
-                                        <FormItem label={"AP-密码"} {...formLayout}>
-                                            <span>{ssidPassword || ""}</span>
-                                            <span className="explain-text">
-                                                配网时AP的SSID和密码
-                                            </span>
-                                        </FormItem>
+                                            <FormItem label={"AP-密码"} {...formLayout}>
+                                                {getFieldDecorator("ssidPassword", {
+                                                    initialValue: ssidPassword || "",
+                                                    rules: [
+                                                        {
+                                                            pattern: /^\w{8,20}$/,
+                                                            message:
+                                                                "8-20个英文字母或数字"
+                                                        }
+                                                    ]
+                                                })(
+                                                    <Input.Password
+                                                        maxLength={20}
+                                                        placeholder="选填仅8-20个英文字母或数字"
+                                                        ref={ref => this.passwordRef = ref}
+                                                        onFocus={this.passwordInputFocusHandel}
+                                                        readOnly
+                                                    />
+                                                )}
+                                                <span className="explain-text">
+                                                    配网时AP的SSID和密码
+                                                </span>
+                                            </FormItem>
+                                            :
+                                            <FormItem label={"AP-密码"} {...formLayout}>
+                                                <span>{ssidPassword || ""}</span>
+                                                <span className="explain-text">
+                                                    配网时AP的SSID和密码
+                                                </span>
+                                            </FormItem>
                                     }
                                 </div>
                             ) : null}
                             {showRadiocastName ? (
                                 canOperate ?
-                                <FormItem label={"广播名"} {...formLayout}>
-                                    {getFieldDecorator("radiocastName", {
-                                        initialValue: radiocastName || ''
-                                    })(
-                                        <Input
-                                            placeholder="请输入广播名"
-                                            maxLength={20}
-                                            style={{ width: 468 }}
-                                        />
-                                    )}
-                                </FormItem>
-                                :
-                                <FormItem label={"广播名"} {...formLayout}>
-                                    <span>{radiocastName || ''}</span>
-                                </FormItem>
+                                    <FormItem label={"广播名"} {...formLayout}>
+                                        {getFieldDecorator("radiocastName", {
+                                            initialValue: radiocastName || ''
+                                        })(
+                                            <Input
+                                                placeholder="请输入广播名"
+                                                maxLength={20}
+                                                style={{ width: 468 }}
+                                            />
+                                        )}
+                                    </FormItem>
+                                    :
+                                    <FormItem label={"广播名"} {...formLayout}>
+                                        <span>{radiocastName || ''}</span>
+                                    </FormItem>
                             ) : null}
                         </div>
                     </AloneSection>
@@ -415,7 +415,7 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Form.create({
-    onValuesChange:() => {
+    onValuesChange: () => {
         console.log(11111)
         EDIT_STATUS = true
     }

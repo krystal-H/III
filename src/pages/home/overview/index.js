@@ -36,6 +36,8 @@ export default function OverviewWrap() {
         background: '#364d79',
         width: '100%'
     };
+    useEffect(()=>{
+    },[])
     return (
         <div className='over-view'>
             <div className='over-view-banner'>
@@ -105,7 +107,7 @@ export default function OverviewWrap() {
                             </div>
                         </div>
 
-                        <div className='over-view-productmn-footer'>
+                        <div className='over-view-productmn-footer hover-commons-unite'>
                             <div>
                                 <img src={projectmn1} />
                                 <div>设备注册</div>
@@ -211,7 +213,7 @@ export default function OverviewWrap() {
                     <div className='over-view-boxshadow over-view-productmn' >
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
-                                <div>产品管理</div>
+                                <div>APP开发</div>
                                 <a>进入</a>
                             </div>
                             <div className='over-view-productmn-content'>
@@ -230,7 +232,7 @@ export default function OverviewWrap() {
                 <div className='over-view-content-right'>
                     <div className='over-view-boxshadow over-view-unified-wrap' >
                         <div>
-                            <div>产品管理</div>
+                            <div>快捷入口</div>
                         </div>
                         <div className='over-view-quick-entry'>
                             <div className='center-layout-wrap'>
@@ -252,7 +254,7 @@ export default function OverviewWrap() {
                             <div>产品管理</div>
                             <a>更多</a>
                         </div>
-                        <div className='over-view-message'>
+                        <div className='over-view-message hover-commons-unite'>
                             <div>
                                 【公告信息】这是一条信息内容简介一条信息内容简介【公告信息】这是一条信息内容简介一条信息内容简介【公告信息】这是一条信息内容简介一条信息内容简介绍…
                             </div>
@@ -318,7 +320,7 @@ export default function OverviewWrap() {
                         <div>
                             <div>帮助</div>
                         </div>
-                        <div className='over-view-help'>
+                        <div className='over-view-help hover-commons-unite'>
                             <div>
                                 <img src={help1} />
                                 <div>客服</div>
