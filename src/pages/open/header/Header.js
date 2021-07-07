@@ -19,8 +19,6 @@ import store from '../../../store'
 
 import './Header.scss'
 
-import DefaultUserIcon from '../../../assets/images/common/userIcon@2x.png'
-
 const LOGO_TEXT = '物联网云平台';
 
 export default class Header extends PureComponent  {
@@ -35,34 +33,31 @@ export default class Header extends PureComponent  {
         })
     }
     render () {
-        let {onlyLogo,developerInfo:{email,account,isSubUser},newMessageNums:{totalUnRead}} = this.props,
-            messageIconClassName = '';
-        if (totalUnRead) {
-            messageIconClassName += " nums-wrapper"
-            if (totalUnRead > 99) {
-                totalUnRead = '99+'
-                messageIconClassName += " max-num"
-            }
-        }
-
+        let {onlyLogo,developerInfo={},newMessageNums={}} = this.props,
+            {email,account,isSubUser}= developerInfo,
+            {totalUnRead} = newMessageNums;
+            totalUnRead=100
         return (
             <header className="page-header">
                 <span className="logo">{LOGO_TEXT}</span>
                 {
                     !onlyLogo && 
-                    <>
-                        
-
+                    <div className='right'>
                         <Link to="/messageCenter" target="_blank">帮助文档</Link>
                         <Link to="/messageCenter" >工单</Link>
-                        <Link to="/messageCenter" target="_blank">
-                            <BellOutlined data-nums={totalUnRead} className={messageIconClassName} />
+                        <Link to="/messageCenter"  target="_blank">
+                            <BellOutlined className='bellicon' />
+                            { totalUnRead &&  <span className='msgnum'> {totalUnRead>99?'99+':totalUnRead} </span> || null }
                         </Link>
+                        <div className='user'>
+                            <span className='username'>{email || account || '未知账号'}</span>
+                            <CaretDownOutlined />
+                        </div>
 
 
 
                         {/* 用户中心入口 */}
-                        <section className="user-icon-wrapper">
+                        {/* <section className="user-icon-wrapper">
                             <img src={DefaultUserIcon} alt="用户头像" className="user-img"/>
                             <CaretDownOutlined />
                             <div className="menus-wrapper">
@@ -119,13 +114,12 @@ export default class Header extends PureComponent  {
                                     }
                                 </div>
                             </div>
-                        </section>
+                        </section> */}
                         
-                    </>
+                    </div>
                 }
             </header>
         );
     }
 }
 
-// export default withRouter(Header)
