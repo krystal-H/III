@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
-import { Form, Input, Button, Checkbox, Tag, Select, Space } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Tag, Select, Radio } from 'antd';
 import './editInfo.scss'
-export default function ProtocolDelete({ dataType }) {
+const optionsWithDisabled = [
+    { label: '属性', value: 'Apple' },
+    { label: '事件', value: 'Pear' },
+    { label: '服务', value: 'Orange' },
+]
+export default function ProtocolDelete() {
     useEffect(() => {
     }, [])
-    return <div className='edit-protocol-wrap'><EnumerTemp></EnumerTemp></div>
+    const [currentTab, setCurrentTab] = useState('Apple')
+    const tabChange = (e) => {
+        setCurrentTab(e.target.value)
+    }
+    return <div className='edit-protocol-wrap'>
+        <div className='addcus-tab'> <Radio.Group buttonStyle="solid" optionType="button" value={currentTab} onChange={tabChange} options={optionsWithDisabled} /></div>
+        <NumberTemp></NumberTemp>
+    </div>
 }
 function BoolTemp() {
     const onFinish = (values) => {
@@ -88,9 +99,6 @@ function EnumerTemp() {
         setTagArr([...tagArr, value])
         setShowAdd(true)
     }
-    // useEffect(() => {
-    //     setTagArr(['Unremovable', 'Tag 2', 'Tag 3'])
-    // }, [])
     return (
         <Form
             name="basic"
@@ -128,7 +136,7 @@ function EnumerTemp() {
                 name="password"
             ><span>枚举型</span>
             </Form.Item>
-            {/* <Form.Item
+            <Form.Item
                 label="枚举值"
                 name="password"
             >
@@ -149,59 +157,16 @@ function EnumerTemp() {
                             onSearch={confirmAdd}
                         />)
                     }</div>
-            </Form.Item> */}
-            <Form.Item
-                label="数据类型："
-            >
-                <div className='peotocols-enums-wrap'>
-                    <div className='peotocols-enums-wrap-title'>
-                        <div className='peotocols-enums-wrap-title-colomn'>参数值</div>
-                        <div>-</div>
-                        <div className='peotocols-enums-wrap-title-colomn'>参数描述</div>
-                    </div>
-                    <div>
-                        <Form.List name="users">
-                            {(fields, { add, remove }) => (
-                                <>
-                                    {fields.map(({ key, name, fieldKey, ...restField }) => (
-                                        <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                            <Form.Item
-                                                {...restField}
-                                                name={[name, 'first']}
-                                                fieldKey={[fieldKey, 'first']}
-                                                rules={[{ required: true, message: 'Missing first name' }]}
-                                                noStyle
-                                            >
-                                                <Input />
-                                            </Form.Item>
-                                            <span>-</span>
-                                            <Form.Item
-                                                {...restField}
-                                                name={[name, 'last']}
-                                                fieldKey={[fieldKey, 'last']}
-                                                noStyle
-                                                rules={[{ required: true, message: 'Missing last name' }]}
-                                            >
-                                                <Input  />
-                                            </Form.Item>
-                                            <MinusCircleOutlined onClick={() => remove(name)} />
-                                        </Space>
-                                    ))}
-                                    <Form.Item>
-                                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                            新加
-                                        </Button>
-                                    </Form.Item>
-                                </>
-                            )}
-                        </Form.List>
-                    </div>
-                </div>
             </Form.Item>
             <Form.Item
                 label="数据传输类型："
                 name="password"
-            ><span>可下发可上报</span>
+            >
+                <Radio.Group style={{ marginBottom: 16 }}>
+                    <Radio.Button value="one">属性</Radio.Button>
+                    <Radio.Button value="two">事件</Radio.Button>
+                    <Radio.Button value="three">服务</Radio.Button>
+                </Radio.Group>
             </Form.Item>
         </Form>
     )
@@ -242,18 +207,22 @@ function NumberTemp() {
             <Form.Item
                 label="标识符"
                 name="password"
-            ><span>switch</span>
+            ><Input />
             </Form.Item>
             <Form.Item
                 label="数据类型："
                 name="password"
-            ><span>
-                    数值型</span>
+            >
+                <Select allowClear >
+                    <Option value="male">数值型</Option>
+                    <Option value="female1">枚举型</Option>
+                    <Option value="female2">布尔型</Option>
+                </Select>
             </Form.Item>
             <Form.Item label="数值范围">
                 <div className='number-input-wrap'>
                     <Form.Item
-                        name={['address', 'province']}
+                        name={['address', 'province1']}
                         noStyle
                         rules={[{ required: true, message: 'Province is required' }]}
                     >
@@ -261,7 +230,7 @@ function NumberTemp() {
                     </Form.Item>
                     <span style={{ margin: '0 10px' }}>至</span>
                     <Form.Item
-                        name={['address', 'street']}
+                        name={['address', 'street1']}
                         noStyle
                         rules={[{ required: true, message: 'Street is required' }]}
                     >
@@ -275,6 +244,7 @@ function NumberTemp() {
             >
                 <Input />
             </Form.Item>
+
             <Form.Item name="gender" label="倍数" rules={[{ required: true }]}>
                 <Select allowClear >
                     <Option value="male">100</Option>
@@ -288,10 +258,52 @@ function NumberTemp() {
                     <Option value="other">other</Option>
                 </Select>
             </Form.Item>
+            <Form.Item label="枚举值">
+                <div className='number-input-wrap'>
+                <div>{
+                    tagArr.map((item, index) => {
+                        return (<Tag onClose={() => handleClose(item)} key={index} closable>
+                            {item}
+                        </Tag>)
+                    })
+                }
+                    {
+                        showAdd ? (<Button type="primary" ghost onClick={openAdd}>
+                            添加
+                        </Button>) : (<Search
+                            allowClear
+                            enterButton="确定"
+                            size="middle"
+                            onSearch={confirmAdd}
+                        />)
+                    }</div>
+                    {/* <Form.Item
+                        name={['address', 'province']}
+                        noStyle
+                        rules={[{ required: true, message: 'Province is required' }]}
+                    >
+                        <Input  placeholder='参考值' />
+                    </Form.Item>
+                    <span>-</span>
+                    <Form.Item
+                        name={['address', 'street']}
+                        noStyle
+                        rules={[{ required: true, message: 'Street is required' }]}
+                    >
+                        <Input  placeholder='参数描述'/>
+                    </Form.Item>
+                    <Button type="primary">确定</Button> */}
+                </div>
+            </Form.Item>
             <Form.Item
                 label="数据传输类型："
-                name="password"
-            ><span>可下发可上报</span>
+                name="selectRel"
+            >
+                <Radio.Group >
+                    <Radio value="one">可下发可上报</Radio>
+                    <Radio value="two">可下发</Radio>
+                    <Radio value="three">可上报</Radio>
+                </Radio.Group>
             </Form.Item>
         </Form>
     )
