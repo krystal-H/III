@@ -42,6 +42,13 @@
     white-space: nowrap;
 }
 
+
+@mixin hover-active($color:$activeBgColor) {
+    &:hover{
+        color: $color;
+    }
+}
+
 // 限制文字行数
 /*
 $line 行数

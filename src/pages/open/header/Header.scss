@@ -1,35 +1,34 @@
-@import '../../../assets/css/variables.scss';
-@import '../../../assets/css/tools.scss';
-
 .page-header{
-    background: rgb(151, 150, 150);
+    color: $_474Color;
+    height: 100%;
+    background:#fff;
     box-shadow:0px 1px 4px 0px rgba(0,21,41,0.12);
+    position: relative;
+    z-index: 10;
 
-    .logo,.user-icon-wrapper,.menu-icon,.message-icon{
-        display: inline-block;
-        height: $headerHeight;
-        line-height: $headerHeight;
-    }
+    // .logo,.user-icon-wrapper,.menu-icon,.message-icon{
+    //     display: inline-block;
+    //     height: $headerHeight;
+    //     line-height: $headerHeight;
+    // }
 
     .logo{
+        display: inline-block;
+        height: 100%;
         width: 260px;
-        color: #fff;
-        text-align: left;
-        text-indent: $gap * 1.5;
-        font-weight: 600;
+        line-height: $headerHeight;
+        background: url(../../../assets/images/clife-logo.png) no-repeat 28px center;
+        background-size: auto 28px;
+        text-indent: 124px;
+        font-size: $subTitleFontSize;
+        @include hover-active()
+    }
+    .right{
+        position: absolute;
+        right: 0;
+        height: 100%
 
-        img{
-            height:26px;
-        }
-
-        > span{
-            font-size:14px;
-            font-family:PingFangSC;
-            font-weight:500;
-            vertical-align: middle;
-            color:rgba(255,255,255,1);
-            margin-left: $gap / 2;
-        }
+        
     }
 
     .menu-icon{
