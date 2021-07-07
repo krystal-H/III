@@ -63,6 +63,12 @@ display: -webkit-box;
 /*! autoprefixer: on */
 }
 
+// 宽高
+@mixin wh($width, $height) {
+ width: $width;
+ height: $height;
+}
+
 // @mixin menu-width {
 //     width: $menuWidth;
 //     min-width: $menuWidth;

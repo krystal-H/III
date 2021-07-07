@@ -1,0 +1,61 @@
+@charset 'utf-8';
+
+.add-product {
+  .step-box {
+    width: 510px;
+    margin: 12px auto 36px auto;
+  }
+  .search-box {
+    @include flex();
+    @include text(12px, $subFontColor);
+    span {
+      @include text(12px, $_3D9);
+    }
+  }
+  .level1-box {
+    @include flex(flex-start);
+    margin: 22px 0;
+    &-item {
+      cursor: pointer;
+      text-align: center;
+      margin-right: 14px;
+      padding: 6px 16px;
+      border-radius: 4px;
+      border: $border;
+      @include text(12px, $themeColor);
+    }
+  }
+  .level2-box {
+    @include flex(flex-start);
+    border: $_border;
+    padding: 22px;
+    &-item {
+      position: relative;
+      cursor: pointer;
+      padding: 8px 16px;
+      margin-right: 14px;
+      margin-bottom: 14px;
+      border-radius: 4px;
+      background: $_faf;
+      @include text(12px, $_595);
+    }
+  }
+  .onwActive {
+    @include text(12px, $_fff);
+    background: $themeColor;
+    border-radius: 4px;
+  }
+  .twoActive {
+    border: 1px solid $themeColor;
+    @include text(12px, $themeColor);
+  }
+  // 二级品类选择
+  .selected-icon {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    @include wh(21px, 21px);
+    background: url('../../../../assets/images/level2Selected.png');
+    background-size: 100% 100%;
+  }
+}

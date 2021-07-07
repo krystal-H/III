@@ -9,6 +9,7 @@ import ProductIcon from '../../../../components/product-components/product-icon/
 import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
 import { Notification } from '../../../../components/Notification';
 import { post, Paths } from '../../../../api';
+import MakeProductModal from '../makeProduct/makeProduct'
 
 const { Search } = Input;
 const { Option } = Select;
@@ -25,8 +26,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-export default class List extends PureComponent {
+class List extends PureComponent {
   constructor(props) {
     super(props)
     this.defaultListParams = { // 产品列表相关默认请求参数
@@ -46,7 +46,9 @@ export default class List extends PureComponent {
 
       copyModalVisible: false, // 复制弹窗
       copyLoading: false, // 复制loading
-      copyInputValue: '' // 复制弹窗中输入的产品名称确认
+      copyInputValue: '', // 复制弹窗中输入的产品名称确认
+
+      isClicked: false // 制作产品按钮
     }
     this.columns = [
       {
@@ -137,7 +139,7 @@ export default class List extends PureComponent {
     })
   }
   // 弹窗 “取消” 操作
-  modalCancelHandle = (type = 'copyModalVisible', inputValue) => {
+  modalCancelHandle(type = 'copyModalVisible', inputValue) {
     this.setState({
       [type]: false,
       [inputValue]: ''
@@ -193,9 +195,15 @@ export default class List extends PureComponent {
       [type]: e.target.value
     })
   }
+  // 制作产品
+  makeHandle = (isClicked = false) => {
+    this.setState({
+      isClicked: !isClicked
+    })
+  }
   render() {
-    let { listParams, selectedItem, deleteVisible, deleteLoading, deleteInputValue, copyModalVisible, copyLoading, copyInputValue } = this.state
-    let { productList } = this.props,
+    const { listParams, selectedItem, deleteVisible, deleteLoading, deleteInputValue, copyModalVisible, copyLoading, copyInputValue, isClicked } = this.state
+    const { productList } = this.props,
       { list, pager } = productList
     return (
       <section className="page-wrapper">
@@ -210,7 +218,7 @@ export default class List extends PureComponent {
             </Select>
           </div>
           <div className="page-header-right">
-            <Button type="primary">制作产品</Button>
+            <Button type="primary" onClick={this.makeHandle.bind(this, false)}>制作产品</Button>
           </div>
         </div>
         {/* table */}
@@ -282,7 +290,18 @@ export default class List extends PureComponent {
               placeholder="新产品名称" />
           </ActionConfirmModal>
         }
+        {/* 制作产品 */}
+        {
+          isClicked && 
+          <MakeProductModal 
+            visible={isClicked}
+            cancelHandle={this.makeHandle.bind(this, true)}>
+            
+          </MakeProductModal>
+        }
       </section>
     )
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(List)
