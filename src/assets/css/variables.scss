@@ -38,9 +38,14 @@ $doneColor: rgba(78,166,64,1);        // 完成状态
 $underWayColor:rgba(47, 120, 255, 1); // 进行中状态
 $unusualColor:rgba(245, 133, 66, 1);  // 异常状态
 $warnColor:rgba(240, 66, 66, 1);      // 警告状态   
+
 $_666Color: #666666;
 $_323Color: #323232;
 $_3D9: #3D90FF;
+$_9E9: #E9E9E9; // 边框颜色
+$_faf: #FAFAFA; // 背景色
+$_fff: rgb(255, 255, 255); // 字体颜色
+$_595: #595959; // 字体颜色
 
 // 主背景色
 $GrayBgColor:rgba(255, 255, 255, 1);
@@ -80,3 +85,5 @@ $grayBorder:1px solid $grayBorderColor;
 
 // 阴影颜色
 $shadow: rgba(0, 0, 0, 0.12);
+// 边框
+$_border: 1px solid $_9E9;

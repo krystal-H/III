@@ -42,19 +42,19 @@ let list1 = [
 let list2 = [
   {
     key: 1,
-    value: '气体感应报警'
+    value: '气体感应报警1'
   },
   {
     key: 2,
-    value: '气体感应报警'
+    value: '气体感应报警11'
   },
   {
     key: 3,
-    value: '气体感应报警'
+    value: '气体感应报警111'
   },
   {
     key: 4,
-    value: '气体感应报警'
+    value: '气体感应报警1111'
   },
 ]
 const stepStyle = {

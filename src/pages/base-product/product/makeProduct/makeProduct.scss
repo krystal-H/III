@@ -21,13 +21,13 @@
       margin-right: 14px;
       padding: 6px 16px;
       border-radius: 4px;
-      border: 1px solid #2F78FF;
-      @include text(12px, #2F78FF);
+      border: $border;
+      @include text(12px, $themeColor);
     }
   }
   .level2-box {
     @include flex(flex-start);
-    border: 1px solid #E9E9E9;
+    border: $_border;
     padding: 22px;
     &-item {
       position: relative;
@@ -36,26 +36,26 @@
       margin-right: 14px;
       margin-bottom: 14px;
       border-radius: 4px;
-      background: #FAFAFA;
-      @include text(12px, #595959);
+      background: $_faf;
+      @include text(12px, $_595);
     }
   }
   .onwActive {
-    @include text(12px, #FFFFFF);
-    background: #2F78FF;
+    @include text(12px, $_fff);
+    background: $themeColor;
     border-radius: 4px;
   }
   .twoActive {
-    border: 1px solid #2F78FF;
-    @include text(12px, #2F78FF);
+    border: 1px solid $themeColor;
+    @include text(12px, $themeColor);
   }
+  // 二级品类选择
   .selected-icon {
     position: absolute;
     right: 0;
     bottom: 0;
-    width: 0;
-    height: 0;
-    border-bottom: 20px solid #2F78FF;
-    border-left: 20px solid transparent;
+    @include wh(21px, 21px);
+    background: url('../../../../assets/images/level2Selected.png');
+    background-size: 100% 100%;
   }
 }
