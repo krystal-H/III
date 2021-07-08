@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { Modal, Steps, Input, Button, Select, Tabs, Skeleton, Table } from 'antd';
+import { Modal, Steps, Button, Select } from 'antd';
 import "./makeProduct.scss";
+import ConfirmDepPlan from './confirmDepPlan';
 
 const { Step } = Steps;
-// const { Search } = Input;
 const { Option } = Select;
-const { TabPane } = Tabs;
 
 const stepList = [
   {
@@ -61,42 +60,6 @@ const stepStyle = {
   cursor: 'pointer'
 }
 
-
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-  }
-];
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-];
-
 export default class MakeProductModal extends Component {
   constructor(props) {
     super(props)
@@ -106,9 +69,6 @@ export default class MakeProductModal extends Component {
       currentIndex: 0, // 一级选中品类
       currentIndex2: null, // 二级品类
       isDisabled: false, // 下一步按钮是否可点
-      btnIndex: 0,
-      planActiveKey1: '1',
-      planActiveKey: '1'
     }
   }
   // 下一步
@@ -135,42 +95,9 @@ export default class MakeProductModal extends Component {
     this.setState({ [type]: index });
     // 判断选择品类后，赋值，下一步可点 todo
   }
-  // 切换方案
-  handleChange = (activeKey) => {
-    this.setState(() => {
-      return { planActiveKey1: activeKey };
-    });
-  };
-  // 切换
-  handleChange2(activeKey) {
-    this.setState({
-      planActiveKey: activeKey
-    })
-  }
-  // 切换按钮
-  changeBtn(index, type, item, e) {
-    this.setState({
-      btnIndex: index,
-      planActiveKey: '1'
-    }, this.getPlan)
-  }
-  // 获取对应方案的信息
-  getPlan() {
-
-  }
   render() {
     const { stepcurrent, currentIndex, currentIndex2, isDisabled, btnIndex, planActiveKey1, planActiveKey } = this.state
     const { cancelHandle, visible } = this.props
-    const btnList = [
-      {
-        key: '1',
-        value: '气体感觉报警器_NB'
-      },
-      {
-        key: '2',
-        value: '气体感觉报警器_zigbee'
-      }
-    ]
     return (
       <Modal
         title="创建产品"
@@ -240,63 +167,7 @@ export default class MakeProductModal extends Component {
             </div>
           </>}
           {/* 确定开发方案 */}
-          {
-            stepcurrent === 1 && <>
-              <Tabs activeKey={planActiveKey1} defaultActiveKey="1" onChange={(activeKey) => this.handleChange(activeKey)}>
-                <TabPane tab="免开发方案" key="1">
-                  <div className="dep-plan-block">
-                    <p className="dep-plan-tip">免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。</p>
-                    {
-                      btnList ? btnList.map((item, index) => (
-                        <Button className={`dep-btn ${btnIndex === index ? "active-btn" : ""}`}
-                          key={item.key}
-                          onClick={(e) => this.changeBtn(index, 'btnIndex', item, e)}>{item.value}</Button>
-                      )) : null
-                    }
-                    <div className="dep-plan-cont">
-                      <Tabs activeKey={planActiveKey} tabPosition="left" onChange={activeKey => this.handleChange2(activeKey)}>
-                        <TabPane tab="方案简介" key="1">
-                          <div className="dep-brief">
-                            <div className="dep-brief-img"></div>
-                            <div className="flex1 dep-brief-cont-box">
-                              <div className="dep-brief-cont">
-                                <p className="dep-brief-cont-title">概述：</p>
-                                <p className="dep-brief-cont-desc">无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。</p>
-                              </div>
-                              <div className="dep-brief-cont">
-                                <p className="dep-brief-cont-title">特点：</p>
-                                <p className="dep-brief-cont-desc">无需开发。</p>
-                              </div>
-                              <div className="dep-brief-cont">
-                                <p className="dep-brief-cont-title">适合：</p>
-                                <p className="dep-brief-cont-desc">功能简单的硬件设备。</p>
-                              </div>
-                            </div>
-                          </div>
-                        </TabPane>
-                        <TabPane tab="方案功能点" key="2">
-                          <div className="pad20">
-                            <Table columns={columns} dataSource={data} pagination={false} size="small" />
-                          </div>
-                        </TabPane>
-                        <TabPane tab="方案控制面板" key="3">
-                          <div className="dep-brief">
-                            <div className="dep-brief-img"></div>
-                          </div>
-                        </TabPane>
-                      </Tabs>
-                    </div>
-                  </div>
-                </TabPane>
-                <TabPane tab="独立MCU方案" key="2">
-                  独立MCU方案
-                </TabPane>
-                <TabPane tab="SoC方案" key="3">
-                  SoC方案
-                </TabPane>
-              </Tabs>
-            </>
-          }
+          {stepcurrent === 1 && <ConfirmDepPlan />}
         </div>
       </Modal>
     )
