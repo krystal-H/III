@@ -1,0 +1,36 @@
+.change-modal-tab3 {
+  .change-modal-tab3-dec {
+    div {
+      font-size: 12px;
+      font-weight: 400;
+      color: #666666;
+      line-height: 17px;
+      margin-bottom: 16px;
+
+      &:first-child {
+        margin-top: 10px;
+      }
+    }
+
+    a {
+      font-size: 12px;
+      font-weight: 400;
+      color: #206FFF;
+      line-height: 17px;
+    }
+  }
+
+  .change-modal-tab3-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 13px;
+    div {
+      font-size: 14px;
+      font-weight: 600;
+      color: #323232;
+      line-height: 20px;
+    }
+  }
+}

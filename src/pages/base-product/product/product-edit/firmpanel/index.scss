@@ -1,0 +1,159 @@
+.confirm-pannel {
+  padding: 22px;
+
+  .confirm-pannel-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 22px;
+
+    div {
+      &:first-child {
+        height: 17px;
+        font-size: 12px;
+        font-weight: 400;
+        color: #666666;
+        line-height: 17px;
+      }
+
+      &:last-child {
+        height: 17px;
+        font-size: 12px;
+        font-weight: 400;
+        color: #323232;
+        line-height: 17px;
+      }
+    }
+  }
+
+  .confirm-pannel-content {
+    display: flex;
+    justify-content: center;
+
+    >div {
+      &:nth-child(1) {
+        width: 247px;
+        height: 439px;
+        background: #F8F9FB;
+        border-radius: 4px;
+      }
+
+      &:nth-child(2) {
+        flex: 1;
+        justify-content: space-between;
+        align-items: center;
+        display: flex;
+        margin: 0 42px 0 29px;
+
+        .confirm-pannel-content-left {
+          width: 80px;
+
+          button {
+            width: 100%;
+
+            &:first-child {
+              margin-bottom: 22px;
+            }
+          }
+        }
+
+        .confirm-pannel-content-right {
+          width: 190px;
+          font-size: 12px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #666666;
+          line-height: 17px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+
+          >div {
+            &:nth-child(1) {
+              width: 157px;
+            }
+
+            &:nth-child(2) {
+              width: 114px;
+              height: 114px;
+              margin: 22px 0;
+            }
+
+            &:nth-child(3) {
+              width: 190px;
+
+              a {
+                font-size: 12px;
+                font-weight: 400;
+                color: #206FFF;
+                line-height: 17px;
+              }
+            }
+          }
+        }
+      }
+
+      &:nth-child(3) {
+        width: 360px;
+        height: 439px;
+        background: #FAFAFA;
+        border-radius: 4px;
+        padding: 22px;
+
+        .confirm-pannel-content-title {
+          height: 17px;
+          font-size: 12px;
+          font-weight: 400;
+          color: #323232;
+          line-height: 17px;
+        }
+
+        .confirm-pannel-content-item {
+          button {
+            width: 54px;
+            padding: 0;
+            line-height: 20px;
+            height: 22px;
+          }
+
+          >div {
+
+            margin-bottom: 8px;
+
+            &:nth-child(1) {
+              font-size: 12px;
+              font-weight: 600;
+              color: #323232;
+              line-height: 17px;
+
+              margin-top: 22px;
+            }
+
+            &:nth-child(2) {
+              font-size: 12px;
+              font-weight: 400;
+              color: #666666;
+              line-height: 17px;
+            }
+
+          }
+
+        }
+
+        .confirm-pannel-content-other {
+          margin-top: 22px;
+          font-size: 12px;
+          font-weight: 400;
+          color: #666666;
+          line-height: 17px;
+
+          a {
+            font-size: 12px;
+            font-weight: 400;
+            color: #206FFF;
+            line-height: 17px;
+          }
+        }
+      }
+    }
+  }
+}
