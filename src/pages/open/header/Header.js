@@ -17,6 +17,8 @@ import {Link,withRouter} from 'react-router-dom';
 import {post,Paths} from '../../../api'
 import store from '../../../store'
 
+import DefaultUserIcon from '../../../assets/images/userIcon.png'
+
 import './Header.scss'
 
 const LOGO_TEXT = '物联网云平台';
@@ -33,10 +35,9 @@ export default class Header extends PureComponent  {
         })
     }
     render () {
-        let {onlyLogo,developerInfo={},newMessageNums={}} = this.props,
+        const {onlyLogo,developerInfo={},newMessageNums={}} = this.props,
             {email,account,isSubUser}= developerInfo,
-            {totalUnRead} = newMessageNums;
-            totalUnRead=100
+        {totalUnRead} = newMessageNums;
         return (
             <header className="page-header">
                 <span className="logo">{LOGO_TEXT}</span>
@@ -47,11 +48,12 @@ export default class Header extends PureComponent  {
                         <Link to="/messageCenter" >工单</Link>
                         <Link to="/messageCenter"  target="_blank">
                             <BellOutlined className='bellicon' />
-                            { totalUnRead &&  <span className='msgnum'> {totalUnRead>99?'99+':totalUnRead} </span> || null }
+                            { "totalUnRead" &&  <span className='msgnum'> {"totalUnRead>99"?99:totalUnRead} </span> || null }
                         </Link>
                         <div className='user'>
+                            <img src={DefaultUserIcon} alt="用户头像" className="usericon"/>
                             <span className='username'>{email || account || '未知账号'}</span>
-                            <CaretDownOutlined />
+                            <CaretDownOutlined className='downicon'/>
                         </div>
 
 

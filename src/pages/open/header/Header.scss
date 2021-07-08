@@ -21,30 +21,41 @@
         
     }
     .right{
-        display: flex;
-        align-items:center;
-        position: absolute;
-        right: 0;
-        top: 0;
+        text-align:right ;
         height: 100%;
+        width: 600px;
+        & > a,.user{
+            @include ver-middle;
+            margin-left: 28px;
+        }
+        position: absolute;
+        right: 16px;
+        top: 0;
         .bellicon{
             font-size: 18px;
         }
         .msgnum{
             display: inline-block;
-            width: 16px;
-            height: 16px;
-            border-radius: 100%;
+            padding: 2px;
+            border-radius: 50%;
             background-color: rgba(255, 52, 0, 1);
             font-size: 12px;
+            color: #fff;
+            &:hover{
+                color: #fff;
+            }
         }
         .user{
-            
             height: 100%;
-            width: 120px;
-            background:url(../../../assets/images/userIcon.png) no-repeat 0 center;
-            background-size: auto 28px;
-            // $menuFontColor: rgba(71, 76, 88, 1);
+            & > img,span{
+                @include ver-middle;
+            }
+            .usericon{
+                height: 28px;
+            }
+            .username{
+                margin: 19px 11px;
+            }
         }
 
         

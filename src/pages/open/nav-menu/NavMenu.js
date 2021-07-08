@@ -16,12 +16,23 @@ import {
 import './NavMenu.scss';
 
 const { SubMenu } = Menu;
+const muenList = JSON.parse(localStorage.getItem('menuList'))||[];
 
-//校验一、二级菜单是否有权限
-function AuthorityToJudge (muenList=[],name='') {
-    name = name.indexOf('*')>-1?name.slice(1):name;
-    return muenList.indexOf(name);
+function getNavList(menus){
+    return menus.map((itm,index)=>{
+        const {menuname,childmenus} = itm;
+        if(childmenus.length>0){
+            return <SubMenu key={menuname+index} icon={<MailOutlined />} title={menuname}>
+                        {getNavList(childmenus)}
+                    </SubMenu>
+        }
+        
+        return <Menu.Item key={ menuname + index}>
+                    <Link to={`open/home`}>{menuname}</Link>
+                </Menu.Item>
+    })
 }
+
 class NavMenu extends PureComponent {
     state = {
         defaultSelectedKeys: ['1'],
@@ -61,21 +72,14 @@ class NavMenu extends PureComponent {
             <div className="menu-wapper">
                 <Menu
                     className="self-menu"
-                    defaultSelectedKeys={defaultSelectedKeys}
-                    defaultOpenKeys={defaultOpenKeys}
+                    // defaultSelectedKeys={defaultSelectedKeys}
+                    // defaultOpenKeys={defaultOpenKeys}
                     mode="inline"
                     inlineCollapsed={collapsed}
                     inlineIndent={22}
                     forceSubMenuRender={true}
                 >
-                    <Menu.Item key="1" icon={<DesktopOutlined />}>总览</Menu.Item>
-                    <SubMenu key="sub1" icon={<MailOutlined />} title="产品">
-                        <Menu.Item key="5">产品管理</Menu.Item>
-                        <Menu.Item key="6">设备注册</Menu.Item>
-                        <Menu.Item key="7">固件升级</Menu.Item>
-                        <Menu.Item key="8">场景服务</Menu.Item>
-                    </SubMenu>
-
+                    {getNavList(muenList)}
                 </Menu>
             </div>
         );

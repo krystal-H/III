@@ -27,8 +27,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getDeveloperInfo: () => dispatch(getDeveloperInfo()),
-        updateMuenList: (data) => dispatch(updateMuenList(data)),
-        gatMuenList: () => dispatch(gatMuenList()),
+        // updateMuenList: (data) => dispatch(updateMuenList(data)),
+        // gatMuenList: () => dispatch(gatMuenList()),
         getNewMessageNums: () => dispatch(getNewMessageNums()),
     }
 }
@@ -49,11 +49,11 @@ export default class Open extends Component {
         this.props.getDeveloperInfo();
         this.props.getNewMessageNums();
 
-        if(JSON.parse(localStorage.getItem('menuList'))){
-            this.props.updateMuenList(JSON.parse(localStorage.getItem('menuList')));
-        }else{
-            this.props.gatMuenList()
-        }
+        // if(JSON.parse(localStorage.getItem('menuList'))){
+        //     this.props.updateMuenList(JSON.parse(localStorage.getItem('menuList')));
+        // }else{
+        //     this.props.gatMuenList()
+        // }
     }
     render () {
         const { match,routes ,developerInfo,newMessageNums} = this.props;
@@ -70,7 +70,7 @@ export default class Open extends Component {
                             className: 'trigger-coll',
                             onClick: this.setCollapsed,
                         })}
-                        <NavMenu muenList={muenList} routes={routes} collapsed={collapsed} ></NavMenu>
+                        <NavMenu routes={routes} collapsed={collapsed} ></NavMenu>
                     </div>
                     <section className="right-wrapper flex-column">
                         <div className="flex1">

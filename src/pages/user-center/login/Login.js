@@ -6,7 +6,7 @@ import VerificationCodeInput from '../../../components/verification-code-input/V
 import OutsideWrapper from '../../../components/outside-wrapper/OutsideWrapper'
 import {post,get,Paths} from '../../../api';
 import {encryption,getVcodeImgUrl} from '../../../util/util';
-
+import { menuList } from '../../../configs/route.config';
 import IntroImg from '../../../assets/images/account/login-intro.png';
 
 import './Login.scss'
@@ -19,7 +19,6 @@ class WrappedLoginForm extends Component {
 	}
 		
     onFinish = values => {
-		console.log(222,values)
           let _values = values;
           // 对密码进行加密
           _values.password = encryption(_values.password)
@@ -27,7 +26,8 @@ class WrappedLoginForm extends Component {
             loading:true
           }).then(data => {
             get(Paths.getGroupMenuList,{version:1.1},{loading:true}).then((res) => { //获取权限菜单
-				localStorage.setItem('menuList', JSON.stringify(res.data));
+				// localStorage.setItem('menuList', JSON.stringify(res.data));
+				localStorage.setItem('menuList', JSON.stringify(menuList));
 				window.location = window.location.origin + window.location.pathname + '#/open/home';
             });
           }).catch(error => {
