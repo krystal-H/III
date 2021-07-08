@@ -9,7 +9,7 @@ import ProductDetails from './product-details/ProductDetails';
 const ProductEdit = loadable( () => import('./product-edit/ProductEdit'));
 const DeviceDebugging = loadable( () => import('./deviceDebugging/deviceDebuggerTest/StartTest'));
 
-export default function Product({ match }) {
+export default function ProductManage({ match }) {
     let {path} = match;
 
     return (

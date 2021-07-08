@@ -5,7 +5,7 @@ import { HashRouter as Router, Switch } from "react-router-dom";
 import { ConfigProvider } from 'antd';
 import {config} from '../configs/antd.config';
 import store from '../store';
-import {routes,RouteWithSubRoutes} from '../configs/route.config';
+import {mainRoutes,RouteWithSubRoutes} from '../configs/route.config';
 import GuideToLogin from '../pages/user-center/guide-to-login/GuideToLogin';
 import Loading from '../components/loading/Loading';
 
@@ -41,7 +41,7 @@ export default class App extends Component {
                         <Switch>
                             {
                                 // 项目创建时，路由使用的是配置管理，后来发现会导致打包无法分包的问题，就放弃了此种方式；只有此处保留了这种用法，用于向下层组件传递部分路由配置数据
-                                routes.map((route,i) => {
+                                mainRoutes.map((route,i) => {
                                     return <RouteWithSubRoutes key={i} {...route}></RouteWithSubRoutes>
                                 })
                             }

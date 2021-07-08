@@ -6,7 +6,7 @@ const defaultState = fromJS({
     developerInfo : {
 
     },
-    muenList:[],
+    menulist:[],
     instanceList:[],
 });
 
@@ -17,8 +17,8 @@ export default (state = defaultState, action) => {
     case ActionTypes.UPDATE_DEVELOPER_INFO:
       return state.set('developerInfo',action.info || false)
     case ActionTypes.MUEN_LIST:
-      return state.set('muenList',action.data || [])
-      case ActionTypes.UPDATE_INSTANCELIST:
+      return state.set('menulist',action.data || [])
+    case ActionTypes.UPDATE_INSTANCELIST:
       return state.set('instanceList',action.data || [])
     default:
       return state;

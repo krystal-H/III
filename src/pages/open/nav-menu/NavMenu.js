@@ -79,7 +79,7 @@ class NavMenu extends PureComponent {
                     inlineIndent={22}
                     forceSubMenuRender={true}
                 >
-                    {getNavList(muenList)}
+                    {/* {getNavList(muenList)} */}
                 </Menu>
             </div>
         );

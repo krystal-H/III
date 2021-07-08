@@ -4,7 +4,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import loadable from '@loadable/component';
-import { find } from "lodash";
+import { find,cloneDeep } from "lodash";
 /*Open是业务入口页面*/
 import Open from '../pages/open/Open';
 import LogicDevelop from "../pages/logicDevelop";
@@ -127,11 +127,10 @@ export const navRoutes = [
         ]
     }
 ]
-export const routes =  [
+export const mainRoutes =  [
     {
         path: '/open',
-        component: Open,
-        routes: []
+        component: Open
     },
     {
         path: '/account',
@@ -143,8 +142,7 @@ export const routes =  [
     },
     {
         path: '/userCenter',
-        component:UserCenter,
-        routes:[]
+        component:UserCenter
     },
     {
         path: '/messageCenter',
@@ -275,37 +273,37 @@ export const menuList = [
         ],
         items:[],
     },
-    {
-        menuname:'用户中心',
-        childmenus:[
-            {
-                menuname:'基本资料',
-                childmenus:[],
-                items:[],
-            },
-            {
-                menuname:'安全设置',
-                childmenus:[],
-                items:[],
-            },
-            {
-                menuname:'访问用户',
-                childmenus:[],
-                items:[],
-            },
-            {
-                menuname:'用户角色',
-                childmenus:[],
-                items:[],
-            },
-            {
-                menuname:'操作日志',
-                childmenus:[],
-                items:[],
-            },
-        ],
-        items:[],
-    },
+    // {
+    //     menuname:'用户中心',
+    //     childmenus:[
+    //         {
+    //             menuname:'基本资料',
+    //             childmenus:[],
+    //             items:[],
+    //         },
+    //         {
+    //             menuname:'安全设置',
+    //             childmenus:[],
+    //             items:[],
+    //         },
+    //         {
+    //             menuname:'访问用户',
+    //             childmenus:[],
+    //             items:[],
+    //         },
+    //         {
+    //             menuname:'用户角色',
+    //             childmenus:[],
+    //             items:[],
+    //         },
+    //         {
+    //             menuname:'操作日志',
+    //             childmenus:[],
+    //             items:[],
+    //         },
+    //     ],
+    //     items:[],
+    // },
 ]
 
 
@@ -326,32 +324,43 @@ export function PrivateRoute({ component: Component, redirect, path, isOk = fals
 }
 
 export function RouteWithSubRoutes(route) {
-    let { path, component: Component, redirect, ...rest } = route;
+    let { path, component: Component, redirect} = route;
 
     if (Component) {
         return (
             <Route
                 path={path}
-                render={props => (
-                    <Component {...props} {...rest} />
-                )}
+                render={ props => ( <Component {...props} /> ) }
             />
         );
     }
-
     return <Redirect to={redirect}></Redirect>
 }
 
-function getNavRoutes(menus){
-    return menus.map(({
-        menuname,
-        childmenus=[],
-        items=[],
-    })=>{
-        if(childmenus.length>0){
-            return getNavRoutes(childmenus)
-        }
-        let _nav = find(navRoutes,['menuname',menuname]);
-        return {..._nav,items}
-    })
+
+
+export function getNavRoutes(menu){
+
+    let _navRoutes = navRoutes;
+
+    function authorityMenu(menus){
+        let result =  menus.map(({
+            menuname,
+            childmenus=[],
+            items=[],
+        })=>{
+            let _nav = find(_navRoutes,['menuname',menuname]);
+
+            if(childmenus.length>0){
+                _navRoutes = _nav.childmenus;
+                _nav.childmenus = authorityMenu(childmenus)
+            }
+            return {..._nav,items}
+            
+        })
+        _navRoutes = navRoutes;
+        return result
+    }
+    return authorityMenu(menu)
 }
+

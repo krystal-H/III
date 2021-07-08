@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Form,Input, Button } from 'antd';
+import { connect } from 'react-redux';
 import Header from '../../open/header/Header';
 import {Link} from 'react-router-dom';
 import VerificationCodeInput from '../../../components/verification-code-input/VerificationCodeInput';
@@ -8,7 +9,7 @@ import {post,get,Paths} from '../../../api';
 import {encryption,getVcodeImgUrl} from '../../../util/util';
 import { menuList } from '../../../configs/route.config';
 import IntroImg from '../../../assets/images/account/login-intro.png';
-
+import {getMenuList} from '../../user-center/store/ActionCreator';
 import './Login.scss'
 
 class WrappedLoginForm extends Component {
@@ -25,11 +26,8 @@ class WrappedLoginForm extends Component {
           post(Paths.loginCheck,_values,{
             loading:true
           }).then(data => {
-            get(Paths.getGroupMenuList,{version:1.1},{loading:true}).then((res) => { //获取权限菜单
-				// localStorage.setItem('menuList', JSON.stringify(res.data));
-				localStorage.setItem('menuList', JSON.stringify(menuList));
-				window.location = window.location.origin + window.location.pathname + '#/open/home';
-            });
+			  this.props.getMenuList();
+			  window.location = window.location.origin + window.location.pathname + '#/open';
           }).catch(error => {
 			  let {needVeriCode} = error,
 			  	  {showVerifyCode} = this.state;
@@ -81,6 +79,15 @@ class WrappedLoginForm extends Component {
       );
     }
 }
+
+const mapDispatchToProps = dispatch => {
+    return {
+        getMenuList: () => dispatch(getMenuList()),
+    }
+}
+const LoginForm = connect(null, mapDispatchToProps)(WrappedLoginForm);
+
+
 export default function Login () {
         return (
 			<OutsideWrapper>
@@ -105,7 +112,7 @@ export default function Login () {
 								<div className="login-title" style={{position: "relative"}}>
 									使用C-Life云帐号登录
 								</div>
-								<WrappedLoginForm />
+								<LoginForm />
 								<div className="login-other">
 									<span>还没有帐号? <Link to="/account/register">免费注册</Link></span>
 									<span style={{float:'right'}}><Link to="/account/forgtopassword">忘记密码</Link></span>

@@ -2,11 +2,11 @@ import React from 'react'
 import {Switch,Route,Redirect} from 'react-router-dom';
 import loadable from '@loadable/component';
 
-const Product = loadable(() => import('./product/Product'));
+const ProductManage = loadable(() => import('./product-manage'));
 const Device = loadable(() => import('./device/Device'));
 const Application = loadable(() => import('./application/Application'));
 
-export default function BaseProduct({match,muenList}) {
+export default function Product({match,muenList}) {
     let {path} = match;
     return (
         <Switch>
@@ -22,7 +22,7 @@ export default function BaseProduct({match,muenList}) {
                 })
             }
             <Redirect to={`${path}/${muenList[0].url}`} /> */}
-            <Route key='产品' path={`${path}/product`} component={Product}></Route>
+            <Route key='产品管理' path={`${path}/proManage`} component={ProductManage}></Route>
         </Switch>
     )
 }

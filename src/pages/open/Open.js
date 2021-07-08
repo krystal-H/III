@@ -2,24 +2,29 @@ import React,{ Component} from 'react';
 import { Switch,Route,Redirect} from 'react-router-dom';
 import loadable from '@loadable/component';
 import {connect} from 'react-redux';
-import {getDeveloperInfo,gatMuenList,updateMuenList} from '../user-center/store/ActionCreator';
+import {getDeveloperInfo,getMenuList} from '../user-center/store/ActionCreator';
 import {getNewMessageNums} from '../message-center/store/ActionCreator';
 
 import OutsideWrapper  from '../../components/outside-wrapper/OutsideWrapper';
 import Header from './header/Header';
 import NavMenu from './nav-menu/NavMenu';
-import Base from '../base-product/BaseProduct';
 import { MenuUnfoldOutlined, MenuFoldOutlined, } from '@ant-design/icons';
 
 // 模块懒加载
-const BigDataProduct = loadable( () => import('../big-data-product/BigDataProduct'));
-const DevelopCenter = loadable( () => import('../develop-center/DevelopCenter'));
+// const BigDataProduct = loadable( () => import('../big-data-product/BigDataProduct'));
+// const DevelopCenter = loadable( () => import('../develop-center/DevelopCenter'));
 const Overview = loadable( () => import('../home/overview/index'));
+const Product = loadable( () => import('../product'));
+
+const RouteComponentLi ={
+    '总览':Overview,
+    '产品':Product,
+}
 
 const mapStateToProps = state => {
     return {
         developerInfo: state.getIn(['userCenter', 'developerInfo']).toJS(),
-        muenList: state.getIn(['userCenter', 'muenList']).toJS(),
+        menulist: state.getIn(['userCenter', 'menulist']).toJS(),
         newMessageNums: state.getIn(['message', 'newMessageNums']).toJS(),
     }
 }
@@ -27,12 +32,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getDeveloperInfo: () => dispatch(getDeveloperInfo()),
-        // updateMuenList: (data) => dispatch(updateMuenList(data)),
-        // gatMuenList: () => dispatch(gatMuenList()),
         getNewMessageNums: () => dispatch(getNewMessageNums()),
+        getMenuList: () => dispatch(getMenuList()),
     }
 }
-
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Open extends Component {
     state = {
@@ -48,17 +51,22 @@ export default class Open extends Component {
         // 请求用户信息
         this.props.getDeveloperInfo();
         this.props.getNewMessageNums();
+        /*
+            登录时候 getMenuList 过，但是登入后若页面刷则需要重新请求menulist，
+            如果页面没刷新一直有muenList，则少请求一遍
+        */
+        if(this.props.menulist.length==0){
+            this.props.getMenuList();
+        }
 
-        // if(JSON.parse(localStorage.getItem('menuList'))){
-        //     this.props.updateMuenList(JSON.parse(localStorage.getItem('menuList')));
-        // }else{
-        //     this.props.gatMuenList()
-        // }
+        setTimeout(()=>{
+            console.log(11111,this.props.menulist)
+
+        },3000)
     }
     render () {
-        const { match,routes ,developerInfo,newMessageNums} = this.props;
+        const { match,routes ,developerInfo,newMessageNums,menulist} = this.props;
         const {collapsed} = this.state, {path} = match
-        let muenList = JSON.parse(localStorage.getItem('menuList'))||[];
         return (
             <OutsideWrapper>
                 <section className="page-header-wrapper">
@@ -70,7 +78,7 @@ export default class Open extends Component {
                             className: 'trigger-coll',
                             onClick: this.setCollapsed,
                         })}
-                        <NavMenu routes={routes} collapsed={collapsed} ></NavMenu>
+                        <NavMenu menulist={menulist} collapsed={collapsed} ></NavMenu>
                     </div>
                     <section className="right-wrapper flex-column">
                         <div className="flex1">
@@ -92,17 +100,30 @@ export default class Open extends Component {
                                         }
                                     })
                                 } */}
-                                <Route key='开发中心' path={`${path}/developCenter`}
-                                    render={props => <DevelopCenter {...props}></DevelopCenter>}
-                                ></Route>
 
-                                <Route key='首页' path={`${path}/home`}
+                                {
+                                    menulist.map(({
+                                        menuname,
+                                        path,
+                                        ...rest
+                                    },index)=>{
+                                        const RouteComponent = RouteComponentLi[menuname];
+                                        if(RouteComponent){
+                                            return <Route key={index} path={path} 
+                                                    render={props => <RouteComponent {...props} {...rest} />}
+                                                ></Route>
+
+                                        }
+                                    })
+                                }
+
+                                {/* <Route key='首页' path={`${path}/home`}
                                     render={props => <Overview {...props}></Overview>}
                                 ></Route>
 
-                                <Route key='基础产品' path={`${path}/base`}
-                                    render={props => <Base {...props}></Base>}
-                                ></Route>
+                                <Route key='产品' path={`${path}/product`}
+                                    render={props => <Product {...props} />}
+                                ></Route> */}
 
                                 <Redirect from={`${path}/userCenter`} to="/userCenter"></Redirect>
                                 <Redirect to={`${path}/home`}></Redirect>

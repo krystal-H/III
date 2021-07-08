@@ -1,7 +1,7 @@
 import * as ActionTypes from './ActionTypes';
 import {get,Paths} from '../../../api';
 import { fromJS } from 'immutable';
-
+import {menuList,getNavRoutes} from '../../../configs/route.config'
 
 export const changeLoginModalStatu= (statu) => {
   return {
@@ -30,16 +30,14 @@ export const getDeveloperInfo= () => {
   }
 }
 //获取菜单
-export const gatMuenList = () => {
+export const getMenuList = () => {
   return (dispatch,getState) => {
-    get(Paths.getGroupMenuList,{version:1.1}).then((res) => { //获取权限菜单
-      if(res.code==0){
-        localStorage.setItem('menuList', JSON.stringify(res.data));
-        let  action = updateMuenList(res.data);
+    get(Paths.getGroupMenuList,{version:1.1}).then((res) => {
+        // let action = updateMuenList(res.data);
+        let data = getNavRoutes(menuList)
+        console.log('---routesMenu--',data)
+        let action = updateMuenList(data);
         dispatch(action);
-      }else{
-        localStorage.removeItem('menuList');
-      }
     });
   }
 }

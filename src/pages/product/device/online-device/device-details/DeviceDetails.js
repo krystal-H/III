@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 import { Tabs,Pagination,Divider,AutoComplete } from 'antd';
 import { getDeviceLabelListAction,getLabelBaseListAction, getDefaultLabelAction } from '../store/ActionCreator';
-import { getProtocolLists } from '../../../product/store/ActionCreator';
+import { getProtocolLists } from '../../../product-manage/store/ActionCreator';
 import { get,post,Paths } from "../../../../../api";
 import {Notification} from '../../../../../components/Notification';
 import { DateTool } from '../../../../../util/util';
@@ -12,8 +12,8 @@ import ActionConfirmModal from '../../../../../components/action-confirm-modal/A
 import AloneSection from '../../../../../components/alone-section/AloneSection';
 import LabelVisible from '../../../../../components/form-com/LabelVisible';
 import LabelTip from '../../../../../components/form-com/LabelTip';
-import RemoteConfig from '../../../product/product-details/remote-config/RemoteConfig';
-import TopicList from '../../../product/product-details/topic-list/TopicList'
+import RemoteConfig from '../../../product-manage/product-details/remote-config/RemoteConfig';
+import TopicList from '../../../product-manage/product-details/topic-list/TopicList'
 import DeviceShadow from './DeviceShadow';
 
 const { TabPane } = Tabs;

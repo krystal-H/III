@@ -1,7 +1,7 @@
 import { combineReducers } from "redux-immutable";
-import { reducer as productReducer } from "../pages/base-product/product/store";
-import { reducer_debug as debugReducer } from "../pages/base-product/product/store";
-import { reducer as deviceReducer } from "../pages/base-product/device/online-device/store";
+import { reducer as productReducer } from "../pages/product/product-manage/store";
+import { reducer_debug as debugReducer } from "../pages/product/product-manage/store";
+import { reducer as deviceReducer } from "../pages/product/device/online-device/store";
 import { reducer as userCenterReducer } from "../pages/user-center/store";
 import { reducer as deviceDataApiReducer } from "../pages/big-data-product/device-data-api/store";
 import { reducer as customMethodReducer } from "../pages/big-data-product/custom-method/store";
