@@ -30,7 +30,7 @@ import help2 from './../../../assets/images/overImage/help2.png';
 import help3 from './../../../assets/images/overImage/help3.png';
 export default function OverviewWrap() {
     const contentStyle = {
-        height: '174px',
+        height: 'auto',
         color: '#fff',
         textAlign: 'center',
         background: '#364d79',

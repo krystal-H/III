@@ -1,0 +1,65 @@
+.GrayModal-top {
+  display: flex;
+  align-items: center;
+
+  div {
+    &:first-child {
+      font-size: 12px;
+      font-weight: 400;
+      color: #323232;
+      line-height: 22px;
+    }
+
+    &:last-child {
+      font-size: 14px;
+      font-weight: 500;
+      color: #2F78FF;
+      line-height: 20px;
+    }
+  }
+}
+
+.GrayModal-tip {
+  font-size: 12px;
+  font-weight: 400;
+  color: #666666;
+  line-height: 22px;
+  margin-top: 22px;
+}
+
+.GrayModal-tab {
+  .GrayModal-img-wrap {
+    .GrayModal-img-wrap-item {
+      position: relative;
+      width: 65px;
+      height: 65px;
+      background: #F7F9FA;
+      border: 1px solid #E9E9E9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .GrayModal-img-wrap-check {
+        position: absolute;
+        top: 0;
+        top: 0;
+        right: 0;
+
+        .ant-checkbox-input,
+        .ant-checkbox-inner {
+          border-radius: 50%;
+        }
+      }
+
+      img {
+        height: 25px;
+        width: 25px;
+      }
+    }
+  }
+  .GrayModal-form-wrap{
+      width: 50%;
+      margin-top: 20px;
+  }
+}

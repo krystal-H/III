@@ -3,13 +3,20 @@
 // modal内部样式
 .add-modal {
   .ant-modal-footer {
-    text-align: center;
+    height: 70px;
+    @include flex(center, center);    
     .ant-btn-primary[disabled] {
       color: $_fff;
       background: $_97B;
       border-color: $_c3c;
       text-shadow: none;
       box-shadow: none;
+    }
+    .ant-btn {
+      padding: 4px 24px;
+      &:nth-of-type(2) {
+        margin-left: 14px;
+      }
     }
   }
 }
@@ -146,5 +153,8 @@
     .flex1 {
       flex: 1;
     }
+  }
+  .ant-tabs-nav {
+    margin-bottom: 0;
   }
 }
