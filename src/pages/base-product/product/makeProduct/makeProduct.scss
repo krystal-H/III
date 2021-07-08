@@ -3,7 +3,8 @@
 // modal内部样式
 .add-modal {
   .ant-modal-footer {
-    text-align: center;
+    height: 70px;
+    @include flex(center, center);    
     .ant-btn-primary[disabled] {
       color: $_fff;
       background: $_97B;

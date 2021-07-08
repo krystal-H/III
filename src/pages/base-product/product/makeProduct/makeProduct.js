@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Modal, Steps, Button, Select } from 'antd';
 import "./makeProduct.scss";
 import ConfirmDepPlan from './confirmDepPlan';
+import SetupProduct from './setupProduct';
 
 const { Step } = Steps;
 const { Option } = Select;
@@ -16,7 +17,7 @@ const stepList = [
     content: 'Second-content',
   },
   {
-    title: '开发硬件',
+    title: '建立产品信息',
     content: 'Last-content',
   },
 ];
@@ -64,7 +65,7 @@ export default class MakeProductModal extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      stepcurrent: 1, // 步骤
+      stepcurrent: 2, // 步骤
       category: '', // 产品品类
       currentIndex: 0, // 一级选中品类
       currentIndex2: null, // 二级品类
@@ -73,6 +74,7 @@ export default class MakeProductModal extends Component {
   }
   // 下一步
   clickNext = (index, e) => {
+    // if (index === 1) { this.setState({ isDisabled: true }) }
     this.setState({ stepcurrent: ++index });
   }
   // 上一步
@@ -96,7 +98,7 @@ export default class MakeProductModal extends Component {
     // 判断选择品类后，赋值，下一步可点 todo
   }
   render() {
-    const { stepcurrent, currentIndex, currentIndex2, isDisabled, btnIndex, planActiveKey1, planActiveKey } = this.state
+    const { stepcurrent, currentIndex, currentIndex2, isDisabled } = this.state
     const { cancelHandle, visible } = this.props
     return (
       <Modal
@@ -110,7 +112,7 @@ export default class MakeProductModal extends Component {
         wrapClassName={'add-modal'}
         footer={[
           stepcurrent !== 0 && <Button key="previous" onClick={(e) => this.clickPrevious(stepcurrent, e)}>上一步</Button>,
-          <Button type="primary" key="next" disabled={isDisabled} onClick={(e) => this.clickNext(stepcurrent, e)}>下一步</Button>
+          <Button type="primary" key="next" disabled={isDisabled} onClick={(e) => this.clickNext(stepcurrent, e)}>{stepcurrent === 2 ? '确认创建' : '下一步'}</Button>
         ]}>
         <div className="add-product">
           <div className="step-box">
@@ -168,6 +170,8 @@ export default class MakeProductModal extends Component {
           </>}
           {/* 确定开发方案 */}
           {stepcurrent === 1 && <ConfirmDepPlan />}
+          {/* 建立产品信息 */}
+          {stepcurrent === 2 && <SetupProduct />}
         </div>
       </Modal>
     )
