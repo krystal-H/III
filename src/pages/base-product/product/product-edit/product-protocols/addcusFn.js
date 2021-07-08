@@ -1,22 +1,57 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
-import { Form, Input, Button, Tag, Select, Radio } from 'antd';
+import { Form, Input, Button, Space, Select, Radio, Tabs } from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import './editInfo.scss'
 const optionsWithDisabled = [
-    { label: '属性', value: 'Apple' },
-    { label: '事件', value: 'Pear' },
-    { label: '服务', value: 'Orange' },
+    { label: '属性', value: 'one' },
+    { label: '事件', value: 'two' },
+    { label: '服务', value: 'three' },
 ]
 export default function ProtocolDelete() {
+    const { TabPane } = Tabs;
     useEffect(() => {
     }, [])
-    const [currentTab, setCurrentTab] = useState('Apple')
+    const [currentTab, setCurrentTab] = useState('one')
     const tabChange = (e) => {
         setCurrentTab(e.target.value)
     }
+    //tab切换
+    // const getTemp = () => {
+    //     if (currentTab == 'one') {
+    //         return <Test></Test>
+    //     } else if (currentTab == 'two') {
+    //         return <EventTemp></EventTemp>
+    //     } else if (currentTab == 'three') {
+    //         return <ServeTemp />
+    //     }
+    // }
+    const renderTabBar = (props, DefaultTabBar) => {
+        const tabInfo = [];
+        console.log(props, '=====')
+        props.panes.forEach(item => {
+            tabInfo.push({
+                key: item.key,
+                title: item.props.tab
+            })
+        });
+        return (
+            <div className='addcus-tab'> <Radio.Group buttonStyle="solid" optionType="button" value={currentTab} onChange={tabChange} options={optionsWithDisabled} /></div>
+        )
+    }
     return <div className='edit-protocol-wrap'>
-        <div className='addcus-tab'> <Radio.Group buttonStyle="solid" optionType="button" value={currentTab} onChange={tabChange} options={optionsWithDisabled} /></div>
-        <NumberTemp></NumberTemp>
+        {/* <div className='addcus-tab'> <Radio.Group buttonStyle="solid" optionType="button" value={currentTab} onChange={tabChange} options={optionsWithDisabled} /></div> */}
+        <Tabs activeKey={currentTab} defaultActiveKey="one" renderTabBar={renderTabBar}>
+            <TabPane tab="Tab 1" key="one">
+                <NumberTemp></NumberTemp>
+            </TabPane>
+            <TabPane tab="Tab 2" key="two">
+                <EventTemp></EventTemp>
+            </TabPane>
+            <TabPane tab="Tab 3" key="three">
+                <ServeTemp />
+            </TabPane>
+        </Tabs>
     </div>
 }
 function BoolTemp() {
@@ -140,23 +175,7 @@ function EnumerTemp() {
                 label="枚举值"
                 name="password"
             >
-                <div>{
-                    tagArr.map((item, index) => {
-                        return (<Tag onClose={() => handleClose(item)} key={index} closable>
-                            {item}
-                        </Tag>)
-                    })
-                }
-                    {
-                        showAdd ? (<Button type="primary" ghost onClick={openAdd}>
-                            添加
-                        </Button>) : (<Search
-                            allowClear
-                            enterButton="确定"
-                            size="middle"
-                            onSearch={confirmAdd}
-                        />)
-                    }</div>
+                <div></div>
             </Form.Item>
             <Form.Item
                 label="数据传输类型："
@@ -171,15 +190,29 @@ function EnumerTemp() {
         </Form>
     )
 }
+//属性组件
 function NumberTemp() {
     const [form] = Form.useForm();
     const onFinish = (values) => {
         console.log('Success:', values);
     }
-
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     }
+    //数据类型
+    const dataOptions = [{
+        value: 'a',
+        label: '布尔型',
+    }, {
+        value: 'n',
+        label: '枚举型',
+    }, {
+        value: 'b',
+        label: '字符型',
+    }, {
+        value: 'd',
+        label: '数值型',
+    }]
     return (
         <Form
             name="numberT"
@@ -214,9 +247,11 @@ function NumberTemp() {
                 name="password"
             >
                 <Select allowClear >
-                    <Option value="male">数值型</Option>
-                    <Option value="female1">枚举型</Option>
-                    <Option value="female2">布尔型</Option>
+                    {
+                        dataOptions.map(item => (
+                            <Option key={item.value} value={item.value}>{item.label}</Option>
+                        ))
+                    }
                 </Select>
             </Form.Item>
             <Form.Item label="数值范围">
@@ -260,39 +295,6 @@ function NumberTemp() {
             </Form.Item>
             <Form.Item label="枚举值">
                 <div className='number-input-wrap'>
-                <div>{
-                    tagArr.map((item, index) => {
-                        return (<Tag onClose={() => handleClose(item)} key={index} closable>
-                            {item}
-                        </Tag>)
-                    })
-                }
-                    {
-                        showAdd ? (<Button type="primary" ghost onClick={openAdd}>
-                            添加
-                        </Button>) : (<Search
-                            allowClear
-                            enterButton="确定"
-                            size="middle"
-                            onSearch={confirmAdd}
-                        />)
-                    }</div>
-                    {/* <Form.Item
-                        name={['address', 'province']}
-                        noStyle
-                        rules={[{ required: true, message: 'Province is required' }]}
-                    >
-                        <Input  placeholder='参考值' />
-                    </Form.Item>
-                    <span>-</span>
-                    <Form.Item
-                        name={['address', 'street']}
-                        noStyle
-                        rules={[{ required: true, message: 'Street is required' }]}
-                    >
-                        <Input  placeholder='参数描述'/>
-                    </Form.Item>
-                    <Button type="primary">确定</Button> */}
                 </div>
             </Form.Item>
             <Form.Item
@@ -305,6 +307,262 @@ function NumberTemp() {
                     <Radio value="three">可上报</Radio>
                 </Radio.Group>
             </Form.Item>
+        </Form>
+    )
+}
+//事件组件
+function EventTemp() {
+    const onFinish = (values) => {
+        console.log('Success:', values);
+    }
+
+    const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    }
+    const eventTabOptions = [{ label: '故障', value: 'one' },
+    { label: '告警', value: 'two' },
+    { label: '信息', value: 'three' }]
+    const formItemLayout = {
+        labelCol: {
+            span: 8,
+        },
+        wrapperCol: {
+            span: 16,
+        },
+    };
+    const formItemLayoutWithOutLabel = {
+        wrapperCol: {
+            span: 16, offset: 8
+        },
+    };
+    return (
+        <Form
+            name="basic"
+            labelCol={{
+                span: 8,
+            }}
+            wrapperCol={{
+                span: 16,
+            }}
+            initialValues={{
+                remember: true,
+            }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+        >
+            <Form.Item
+                label="功能点名称："
+                name="username"
+                rules={[
+                    {
+                        required: true,
+                    },
+                ]}
+            >
+                <Input />
+            </Form.Item>
+
+            <Form.Item
+                label="标识符"
+                name="password"
+            ><Input />
+            </Form.Item>
+            <Form.Item
+                label="事件类型："
+                name="password"
+            >
+                <Radio.Group options={eventTabOptions} />
+            </Form.Item>
+            <Form.List
+                name="names"
+            >
+                {(fields, { add, remove }, { errors }) => (
+                    <>
+                        {fields.map((field, index) => (
+                            <Form.Item
+                                {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                                label={index === 0 ? '输出参数' : ''}
+                                required={false}
+                                key={field.key}
+                            >
+                                <Form.Item
+                                    {...field}
+                                    validateTrigger={['onChange', 'onBlur']}
+                                    noStyle
+                                >
+                                    <Input placeholder="passenger name" style={{ width: '80%', marginRight: '10px' }} />
+                                </Form.Item>
+                                {fields.length ? (
+                                    <MinusCircleOutlined
+                                        className="dynamic-delete-button"
+                                        onClick={() => remove(field.name)}
+                                    />
+                                ) : null}
+                            </Form.Item>
+                        ))}
+                        <Form.Item {...(fields.length === 0 ? formItemLayout : formItemLayoutWithOutLabel)} label={fields.length === 0 ? '输出参数' : ''}>
+                            <Button
+                                type="dashed"
+                                onClick={() => add()}
+                                style={{ width: '60%' }}
+                                icon={<PlusOutlined />}
+                            >
+                                添加参数
+                            </Button>
+                            <Form.ErrorList errors={errors} />
+                        </Form.Item>
+                    </>
+                )}
+            </Form.List>
+        </Form>
+    )
+}
+//服务组件
+function ServeTemp() {
+    const onFinish = (values) => {
+        console.log('Success:', values);
+    }
+
+    const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    }
+    const eventTabOptions = [{ label: '故障', value: 'one' },
+    { label: '告警', value: 'two' },
+    { label: '信息', value: 'three' }]
+    const formItemLayout = {
+        labelCol: {
+            span: 8,
+        },
+        wrapperCol: {
+            span: 16,
+        },
+    };
+    const formItemLayoutWithOutLabel = {
+        wrapperCol: {
+            span: 16, offset: 8
+        },
+    };
+    return (
+        <Form
+            name="basic"
+            labelCol={{
+                span: 8,
+            }}
+            wrapperCol={{
+                span: 16,
+            }}
+            initialValues={{
+                remember: true,
+            }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+        >
+            <Form.Item
+                label="功能点名称："
+                name="username"
+                rules={[
+                    {
+                        required: true,
+                    },
+                ]}
+            >
+                <Input />
+            </Form.Item>
+
+            <Form.Item
+                label="标识符"
+                name="password"
+            ><Input />
+            </Form.Item>
+            <Form.Item
+                label="事件类型："
+                name="password"
+            >
+                <Radio.Group options={eventTabOptions} />
+            </Form.Item>
+            <Form.List
+                name="names"
+            >
+                {(fields, { add, remove }, { errors }) => (
+                    <>
+                        {fields.map((field, index) => (
+                            <Form.Item
+                                {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                                label={index === 0 ? '输出参数' : ''}
+                                required={false}
+                                key={field.key}
+                            >
+                                <Form.Item
+                                    {...field}
+                                    validateTrigger={['onChange', 'onBlur']}
+                                    noStyle
+                                >
+                                    <Input placeholder="passenger name" style={{ width: '190px', marginRight: '10px' }} />
+                                </Form.Item>
+                                {fields.length ? (
+                                    <MinusCircleOutlined
+                                        className="dynamic-delete-button"
+                                        onClick={() => remove(field.name)}
+                                    />
+                                ) : null}
+                            </Form.Item>
+                        ))}
+                        <Form.Item {...(fields.length === 0 ? formItemLayout : formItemLayoutWithOutLabel)} label={fields.length === 0 ? '输出参数' : ''}>
+                            <Button
+                                type="dashed"
+                                onClick={() => add()}
+                                style={{ width: '60%' }}
+                                icon={<PlusOutlined />}
+                            >
+                                添加参数
+                            </Button>
+                            <Form.ErrorList errors={errors} />
+                        </Form.Item>
+                    </>
+                )}
+            </Form.List>
+            <Form.List
+                name="names2"
+            >
+                {(fields, { add, remove }, { errors }) => (
+                    <>
+                        {fields.map((field, index) => (
+                            <Form.Item
+                                {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                                label={index === 0 ? '输入参数' : ''}
+                                required={false}
+                                key={field.key}
+                            >
+                                <Form.Item
+                                    {...field}
+                                    validateTrigger={['onChange', 'onBlur']}
+                                    noStyle
+                                >
+                                    <Input placeholder="passenger name" style={{ width: '190px', marginRight: '10px' }} />
+                                </Form.Item>
+                                {fields.length ? (
+                                    <MinusCircleOutlined
+                                        className="dynamic-delete-button"
+                                        onClick={() => remove(field.name)}
+                                    />
+                                ) : null}
+                            </Form.Item>
+                        ))}
+                        <Form.Item {...(fields.length === 0 ? formItemLayout : formItemLayoutWithOutLabel)} label={fields.length === 0 ? '输出参数' : ''}>
+                            <Button
+                                type="dashed"
+                                onClick={() => add()}
+                                style={{ width: '60%' }}
+                                icon={<PlusOutlined />}
+                            >
+                                添加参数
+                            </Button>
+                            <Form.ErrorList errors={errors} />
+                        </Form.Item>
+                    </>
+                )}
+            </Form.List>
+
         </Form>
     )
 }
