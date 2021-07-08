@@ -1,5 +1,19 @@
 @charset 'utf-8';
 
+// modal内部样式
+.add-modal {
+  .ant-modal-footer {
+    text-align: center;
+    .ant-btn-primary[disabled] {
+      color: $_fff;
+      background: $_97B;
+      border-color: $_c3c;
+      text-shadow: none;
+      box-shadow: none;
+    }
+  }
+}
+// 内容
 .add-product {
   .step-box {
     width: 510px;
@@ -8,7 +22,7 @@
   .search-box {
     @include flex();
     @include text(12px, $subFontColor);
-    span {
+    .submit-item {
       @include text(12px, $_3D9);
     }
   }
@@ -55,7 +69,82 @@
     right: 0;
     bottom: 0;
     @include wh(21px, 21px);
-    background: url('../../../../assets/images/level2Selected.png');
+    background: url("../../../../assets/images/level2Selected.png");
     background-size: 100% 100%;
+  }
+  // 确定开发面板
+  .dep-plan-block {
+    .dep-plan-tip {
+      @include text(12px, $_666Color);
+      margin-top: 22px;
+      margin-bottom: 22px;
+    }
+    .dep-btn {
+      padding: 7px 16px;
+      margin-right: 14px;
+      margin-bottom: 35px;
+      border-radius: 4px;
+      @include text(12px, #2f78ff);
+      border: 1px solid #2f78ff;
+    }
+    .active-btn {
+      background: #2f78ff;
+      color: #ffffff;
+    }
+    .dep-plan-cont {
+      @include wh(100%, 244px);
+      background: #ffffff;
+      border-radius: 4px;
+      border: 1px solid #e9e9e9;
+      .ant-tabs-ink-bar {
+        display: none;
+      }
+      .ant-tabs {
+        height: 100%;
+        &-content {
+          height: 100%;
+        }
+      }
+      .ant-tabs-tab-active {
+        color: #2f78ff;
+        background: #f2f7fe;
+      }
+      .ant-tabs-tabpane {
+        padding-left: 0px;
+        overflow-y: auto;
+        @include self-scroll-bar();
+      }
+      // 简介
+      .dep-brief {
+        height: 100%;
+        padding: 22px;
+        display: flex;
+        @include self-scroll-bar();
+        @include text(12px, #595959);
+        &-img {
+          margin-right: 22px;
+          @include wh(134px, 188px);
+          border: 1px solid;
+          .ant-skeleton,
+          .ant-skeleton-image {
+            @include wh(100%, 100%);
+          }
+        }
+        &-cont-box {
+          overflow-y: auto;
+          @include self-scroll-bar;
+        }
+        &-cont {
+          margin-bottom: 22px;
+        }
+      }
+      .pad20 {
+        padding: 20px;
+        overflow-y: auto;
+      }
+    }
+    .flex1 {
+      flex: 1;
+    }
   }
 }
