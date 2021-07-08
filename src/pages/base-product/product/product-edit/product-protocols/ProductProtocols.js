@@ -4,6 +4,7 @@ import { Table, Button, Drawer } from 'antd';
 import './ProductProtocols.scss';
 import EditInfo from './editInfo'
 import Addfunction from './addModal'
+import NewCusmFn from './addcusFn'
 export default function ProtocolDelete() {
     const columns = [
         { title: 'DP ID', dataIndex: 'name' },
@@ -19,13 +20,22 @@ export default function ProtocolDelete() {
         { title: '操作', dataIndex: 'remark' },
     ];
     const [dataSource, setdataSource] = useState([]);
-    
+
     const [selectId, setSelectId] = useState(0);
-    //编辑标准功能=======
+    //编辑标准功能/新增自定义功能=======
+    const [isStarDia, setIsStarDia] = useState(true); //
     const [editVisible, setEditVisible] = useState(false);
+    //编辑右边抽屉
     const openEdit = () => {
+        setIsStarDia(true)
         setEditVisible(true);
     };
+    //新增自定义功能抽屉
+    const openCusmon = () => {
+        setIsStarDia(false)
+        setEditVisible(true);
+    };
+    //关闭抽屉
     const onCloseEdit = () => {
         setEditVisible(false);
     };
@@ -61,7 +71,7 @@ export default function ProtocolDelete() {
         </div>
         <div className='Protocol-download'>
             <div>标准功能</div>
-            <Button type="primary">新建自定义功能</Button >
+            <Button type="primary"onClick={openCusmon}>新建自定义功能</Button >
         </div>
         <div >
             <Table
@@ -71,7 +81,7 @@ export default function ProtocolDelete() {
             />
         </div>
         <Drawer
-            title="Basic Drawer"
+            title={isStarDia ? '编辑标准功能' : '新增自定义功能'}
             placement="right"
             closable={false}
             onClose={onCloseEdit}
@@ -93,9 +103,9 @@ export default function ProtocolDelete() {
             }
         >
             <div>
-                <EditInfo selectId={selectId}></EditInfo>
+                {isStarDia ? <EditInfo selectId={selectId}></EditInfo> : <NewCusmFn></NewCusmFn>}
             </div>
         </Drawer>
-        {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>} 
+        {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>}
     </div>
 }

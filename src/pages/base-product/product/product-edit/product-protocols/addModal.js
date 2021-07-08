@@ -64,7 +64,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
   }, [])
   //tab2
   const onSearch = (value) => {
-    console.log(value,'======')
+    console.log(value, '======')
   }
   const [searchValue, setSearchValue] = useState(0)
   return (
@@ -88,7 +88,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
           </TabPane>
           <TabPane tab="Tab 2" key="2">
             <div>
-              <Search placeholder="搜索功能点名称"  allowClear onSearch={onSearch} style={{ width: 465 }} />
+              <Search placeholder="搜索功能点名称" allowClear onSearch={onSearch} style={{ width: 465 }} />
               <Select
                 labelInValue
                 defaultValue={{ value: 'lucy' }}
