@@ -29,7 +29,7 @@ export const getDeveloperInfo= () => {
     });
   }
 }
-//保存菜单
+//获取菜单
 export const gatMuenList = () => {
   return (dispatch,getState) => {
     get(Paths.getGroupMenuList,{version:1.1}).then((res) => { //获取权限菜单
