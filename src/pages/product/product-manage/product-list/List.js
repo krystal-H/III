@@ -9,7 +9,7 @@ import ProductIcon from '../../../../components/product-components/product-icon/
 import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
 import { Notification } from '../../../../components/Notification';
 import { post, Paths } from '../../../../api';
-import MakeProductModal from '../makeProduct/makeProduct'
+import AddProductModal from '../addProduct/addProduct'
 
 const { Search } = Input;
 const { Option } = Select;
@@ -48,7 +48,7 @@ class List extends PureComponent {
       copyLoading: false, // 复制loading
       copyInputValue: '', // 复制弹窗中输入的产品名称确认
 
-      isClicked: false // 制作产品按钮
+      isClicked: true // 制作产品按钮
     }
     this.columns = [
       {
@@ -126,7 +126,7 @@ class List extends PureComponent {
     let pathroute = 'details';
     if (mode !== 1) { pathroute = 'edit'; }
     this.props.history.push({
-      pathname: `/open/base/product/${pathroute}/${productId}`
+      pathname: `/open/product/proManage/${pathroute}/${productId}`
     });
   }
   // 列表 “删除”、“复制” 操作
@@ -293,11 +293,10 @@ class List extends PureComponent {
         {/* 制作产品 */}
         {
           isClicked && 
-          <MakeProductModal 
+          <AddProductModal 
             visible={isClicked}
             cancelHandle={this.makeHandle.bind(this, true)}>
-            
-          </MakeProductModal>
+          </AddProductModal>
         }
       </section>
     )

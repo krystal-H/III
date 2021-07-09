@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Steps, Button, Select } from 'antd';
-import "./makeProduct.scss";
+import "./addProduct.scss";
 import ConfirmDepPlan from './confirmDepPlan';
 import SetupProduct from './setupProduct';
 
@@ -71,11 +71,15 @@ export default class MakeProductModal extends Component {
       currentIndex2: null, // 二级品类
       isDisabled: false, // 下一步按钮是否可点
     }
+    this.refSetupProduct = null
   }
   // 下一步
   clickNext = (index, e) => {
-    // if (index === 1) { this.setState({ isDisabled: true }) }
-    this.setState({ stepcurrent: ++index });
+    if (index === 2) { // 表单提交
+      this.refSetupProduct.onFinish()
+    } else {
+      this.setState({ stepcurrent: ++index });
+    }
   }
   // 上一步
   clickPrevious = (index, e) => {
@@ -171,7 +175,7 @@ export default class MakeProductModal extends Component {
           {/* 确定开发方案 */}
           {stepcurrent === 1 && <ConfirmDepPlan />}
           {/* 建立产品信息 */}
-          {stepcurrent === 2 && <SetupProduct />}
+          {stepcurrent === 2 && <SetupProduct onRef={ref => this.refSetupProduct = ref} />}
         </div>
       </Modal>
     )

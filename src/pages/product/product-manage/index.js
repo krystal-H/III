@@ -11,11 +11,10 @@ const DeviceDebugging = loadable( () => import('./deviceDebugging/deviceDebugger
 
 export default function ProductManage({ match }) {
     let {path} = match;
-
     return (
         <Switch>
             <Route path={`${path}/list`} component={ProductList}></Route>
-            <Route path={`${path}/add`} component={ProductInformation}></Route>
+            {/* <Route path={`${path}/add`} component={ProductInformation}></Route> */}
             <Route path={`${path}/edit/:id`} component={ProductEdit}></Route>
             <Route path={`${path}/details/:id`} component={ProductDetails}></Route>
             <Route path={`${path}/deviceDebugging`} component={DeviceDebugging}></Route>

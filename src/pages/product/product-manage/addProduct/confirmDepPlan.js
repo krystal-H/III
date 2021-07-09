@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Tabs } from 'antd';
-import "./makeProduct.scss";
+import "./addProduct.scss";
 import SwitchTab from './switchTab'
 
 const { TabPane } = Tabs;
