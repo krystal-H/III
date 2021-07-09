@@ -19,6 +19,10 @@ const Product = loadable( () => import('../product'));
 const RouteComponentLi ={
     '总览':Overview,
     '产品':Product,
+    '设备':Overview,
+    'APP':Product,
+    '数据服务':Overview,
+    '开发Studio':Product,
 }
 
 const mapStateToProps = state => {
@@ -60,8 +64,8 @@ export default class Open extends Component {
         }
     }
     render () {
-        const { match,routes ,developerInfo,newMessageNums,menulist} = this.props;
-        const {collapsed} = this.state, {path} = match
+        const { match ,developerInfo,newMessageNums,menulist} = this.props;
+        const {collapsed} = this.state, {path} = match;
         return (
             <OutsideWrapper>
                 <section className="page-header-wrapper">
@@ -98,21 +102,26 @@ export default class Open extends Component {
 
                                 {
                                     menulist.map(({
-                                        menuname,
-                                        path,
-                                        ...rest
+                                        menuname,path, ...rest
                                     },index)=>{
                                         const RouteComponent = RouteComponentLi[menuname];
                                         if(RouteComponent){
                                             return <Route key={index} path={path} 
                                                     render={props => <RouteComponent {...props} {...rest} />}
                                                 ></Route>
-
                                         }
                                     })
                                 }
-                                <Redirect from={`${path}/userCenter`} to="/userCenter"></Redirect>
-                                <Redirect to={`${path}/home`}></Redirect>
+
+                                {/* <Route key={1} path={'/open/home'} 
+                                    render={props => <Overview {...props} />}
+                                ></Route>
+
+                                <Route key={2} path={'/open/product'} 
+                                    render={props => <Product {...props} />}
+                                ></Route> */}
+
+                                {/* <Redirect to={`${path}/home`}></Redirect> */}
                             </Switch>
                         </div>
                     </section>

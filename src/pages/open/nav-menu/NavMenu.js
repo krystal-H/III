@@ -18,7 +18,7 @@ import './NavMenu.scss';
 const { SubMenu } = Menu;
 
 function getNavList(menus){
-    console.log(444,menus)
+    // console.log(444,menus)
     return menus.map(({
         menuicon,menuname,path,childmenus=[]
         },index)=>{
