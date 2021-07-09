@@ -65,7 +65,7 @@ export default class MakeProductModal extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      stepcurrent: 2, // 步骤
+      stepcurrent: 0, // 步骤
       category: '', // 产品品类
       currentIndex: 0, // 一级选中品类
       currentIndex2: null, // 二级品类
@@ -76,7 +76,7 @@ export default class MakeProductModal extends Component {
   // 下一步
   clickNext = (index, e) => {
     if (index === 2) { // 表单提交
-      this.refSetupProduct.onFinish()
+      this.refSetupProduct.formRef.current.submit()
     } else {
       this.setState({ stepcurrent: ++index });
     }
