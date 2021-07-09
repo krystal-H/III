@@ -16,19 +16,8 @@ export default function ProtocolDelete() {
     const tabChange = (e) => {
         setCurrentTab(e.target.value)
     }
-    //tab切换
-    // const getTemp = () => {
-    //     if (currentTab == 'one') {
-    //         return <Test></Test>
-    //     } else if (currentTab == 'two') {
-    //         return <EventTemp></EventTemp>
-    //     } else if (currentTab == 'three') {
-    //         return <ServeTemp />
-    //     }
-    // }
     const renderTabBar = (props, DefaultTabBar) => {
         const tabInfo = [];
-        console.log(props, '=====')
         props.panes.forEach(item => {
             tabInfo.push({
                 key: item.key,
@@ -39,20 +28,18 @@ export default function ProtocolDelete() {
             <div className='addcus-tab'> <Radio.Group buttonStyle="solid" optionType="button" value={currentTab} onChange={tabChange} options={optionsWithDisabled} /></div>
         )
     }
-    return <div className='edit-protocol-wrap'>
-        {/* <div className='addcus-tab'> <Radio.Group buttonStyle="solid" optionType="button" value={currentTab} onChange={tabChange} options={optionsWithDisabled} /></div> */}
-        <Tabs activeKey={currentTab} defaultActiveKey="one" renderTabBar={renderTabBar}>
-            <TabPane tab="Tab 1" key="one">
-                <NumberTemp></NumberTemp>
-            </TabPane>
-            <TabPane tab="Tab 2" key="two">
-                <EventTemp></EventTemp>
-            </TabPane>
-            <TabPane tab="Tab 3" key="three">
-                <ServeTemp />
-            </TabPane>
-        </Tabs>
-    </div>
+    return (<div className='edit-left-protocol-wrap'> <Tabs activeKey={currentTab} defaultActiveKey="one" renderTabBar={renderTabBar}>
+        <TabPane tab="Tab 1" key="one">
+            <NumberTemp></NumberTemp>
+        </TabPane>
+        <TabPane tab="Tab 2" key="two">
+            <EventTemp></EventTemp>
+        </TabPane>
+        <TabPane tab="Tab 3" key="three">
+            <ServeTemp />
+        </TabPane>
+    </Tabs>
+    </div>)
 }
 function BoolTemp() {
     const onFinish = (values) => {
@@ -204,15 +191,19 @@ function NumberTemp() {
         value: 'a',
         label: '布尔型',
     }, {
-        value: 'n',
+        value: 'b',
         label: '枚举型',
     }, {
-        value: 'b',
+        value: 'c',
         label: '字符型',
     }, {
         value: 'd',
         label: '数值型',
     }]
+    //数据类型改变
+    const onTypeChange = (value) => {
+        console.log(value, '改变')
+    }
     return (
         <Form
             name="numberT"
@@ -227,7 +218,7 @@ function NumberTemp() {
         >
             <Form.Item
                 label="功能点名称："
-                name="username"
+                name="gn"
                 rules={[
                     {
                         required: true,
@@ -239,14 +230,23 @@ function NumberTemp() {
 
             <Form.Item
                 label="标识符"
-                name="password"
+                name="bs"
             ><Input />
+            </Form.Item>
+            <Form.Item label="数据长度">
+                <Space>
+                    <Form.Item
+                        noStyle
+                        name="cd"
+                    ><Input /></Form.Item>
+                    <span>字节</span>
+                </Space>
             </Form.Item>
             <Form.Item
                 label="数据类型："
-                name="password"
+                name="sjty"
             >
-                <Select allowClear >
+                <Select allowClear onChange={onTypeChange}>
                     {
                         dataOptions.map(item => (
                             <Option key={item.value} value={item.value}>{item.label}</Option>
@@ -254,48 +254,127 @@ function NumberTemp() {
                     }
                 </Select>
             </Form.Item>
-            <Form.Item label="数值范围">
-                <div className='number-input-wrap'>
-                    <Form.Item
-                        name={['address', 'province1']}
-                        noStyle
-                        rules={[{ required: true, message: 'Province is required' }]}
-                    >
-                        <Input style={{ width: '40%' }} />
-                    </Form.Item>
-                    <span style={{ margin: '0 10px' }}>至</span>
-                    <Form.Item
-                        name={['address', 'street1']}
-                        noStyle
-                        rules={[{ required: true, message: 'Street is required' }]}
-                    >
-                        <Input style={{ width: '40%' }} />
-                    </Form.Item>
-                </div>
-            </Form.Item>
             <Form.Item
-                label="数据间隔"
-                name="username"
+                noStyle
+                shouldUpdate={(prevValues, currentValues) => prevValues.sjty !== currentValues.sjty}
             >
-                <Input />
-            </Form.Item>
-
-            <Form.Item name="gender" label="倍数" rules={[{ required: true }]}>
-                <Select allowClear >
-                    <Option value="male">100</Option>
-                    <Option value="female">female</Option>
-                </Select>
-            </Form.Item>
-            <Form.Item name="gender" label="单位" >
-                <Select allowClear >
-                    <Option value="male">male</Option>
-                    <Option value="female">female</Option>
-                    <Option value="other">other</Option>
-                </Select>
-            </Form.Item>
-            <Form.Item label="枚举值">
-                <div className='number-input-wrap'>
-                </div>
+                {({ getFieldValue }) => {
+                    if (getFieldValue('sjty') === 'a') {
+                        return (<>
+                            <Form.Item
+                                label="布尔值"
+                                rules={[{ required: true }]}
+                            >
+                                <Form.Item
+                                    name="year"
+                                    label="0"
+                                >
+                                    <Input placeholder="参数描述" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="month"
+                                    label="1"
+                                >
+                                    <Input placeholder="参数描述" />
+                                </Form.Item>
+                            </Form.Item>
+                        </>)
+                    }
+                    if (getFieldValue('sjty') === 'b') {
+                        return (<>
+                            <Form.Item
+                                label="数据类型："
+                            >
+                                <div className='peotocols-enums-wrap'>
+                                    <div className='peotocols-enums-wrap-title'>
+                                        <div className='peotocols-enums-wrap-title-colomn'>参数值</div>
+                                        <div>-</div>
+                                        <div className='peotocols-enums-wrap-title-colomn'>参数描述</div>
+                                    </div>
+                                    <div>
+                                        <Form.List name="users">
+                                            {(fields, { add, remove }) => (
+                                                <>
+                                                    {fields.map(({ key, name, fieldKey, ...restField }) => (
+                                                        <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                                            <Form.Item
+                                                                {...restField}
+                                                                name={[name, 'first']}
+                                                                fieldKey={[fieldKey, 'first']}
+                                                                rules={[{ required: true, message: 'Missing first name' }]}
+                                                                noStyle
+                                                            >
+                                                                <Input />
+                                                            </Form.Item>
+                                                            <span>-</span>
+                                                            <Form.Item
+                                                                {...restField}
+                                                                name={[name, 'last']}
+                                                                fieldKey={[fieldKey, 'last']}
+                                                                noStyle
+                                                                rules={[{ required: true, message: 'Missing last name' }]}
+                                                            >
+                                                                <Input />
+                                                            </Form.Item>
+                                                            <MinusCircleOutlined onClick={() => remove(name)} />
+                                                        </Space>
+                                                    ))}
+                                                    <Form.Item>
+                                                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                            新加
+                                                        </Button>
+                                                    </Form.Item>
+                                                </>
+                                            )}
+                                        </Form.List>
+                                    </div>
+                                </div>
+                            </Form.Item>
+                        </>)
+                    }
+                    if (getFieldValue('sjty') === 'd') {
+                        return (<>
+                            <Form.Item label="数值范围">
+                                <div className='number-input-wrap'>
+                                    <Form.Item
+                                        name={['address', 'province1']}
+                                        noStyle
+                                        rules={[{ required: true, message: 'Province is required' }]}
+                                    >
+                                        <Input style={{ width: '40%' }} />
+                                    </Form.Item>
+                                    <span style={{ margin: '0 10px' }}>至</span>
+                                    <Form.Item
+                                        name={['address', 'street1']}
+                                        noStyle
+                                        rules={[{ required: true, message: 'Street is required' }]}
+                                    >
+                                        <Input style={{ width: '40%' }} />
+                                    </Form.Item>
+                                </div>
+                            </Form.Item>
+                            <Form.Item
+                                label='数值间隔'
+                                name="jg"
+                            ><Input /></Form.Item>
+                            <Form.Item name="bs" label="倍数" >
+                                <Select allowClear >
+                                    <Option value="male">1</Option>
+                                    <Option value="female">2</Option>
+                                </Select>
+                            </Form.Item>
+                            <Form.Item name="dw" label="单位" >
+                                <Select allowClear >
+                                    <Option value="male">male</Option>
+                                    <Option value="female">female</Option>
+                                    <Option value="other">other</Option>
+                                </Select>
+                            </Form.Item>
+                        </>)
+                    }
+                    return null
+                }
+                }
             </Form.Item>
             <Form.Item
                 label="数据传输类型："
@@ -315,7 +394,6 @@ function EventTemp() {
     const onFinish = (values) => {
         console.log('Success:', values);
     }
-
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     }
