@@ -59,9 +59,7 @@ class SetupProduct extends Component {
 
         <Form.Item label="产品型号" name="type"
           rules={[
-
-            // [^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g
-            { pattern: new RegExp(/^[\u4E00-\u9FA5A-Za-z0-9_]+$/, "g"), message: '请输入产品型号，支持中英文、数字' }
+            { pattern: new RegExp(/^[\u4E00-\u9FA5A-Za-z0-9]+$/, "g"), message: '请输入产品型号，支持中英文、数字' }
           ]}>
           <Input placeholder="请输入产品型号，支持中英文、数字" />
         </Form.Item>
