@@ -58,11 +58,6 @@ export default class Open extends Component {
         if(this.props.menulist.length==0){
             this.props.getMenuList();
         }
-
-        setTimeout(()=>{
-            console.log(11111,this.props.menulist)
-
-        },3000)
     }
     render () {
         const { match,routes ,developerInfo,newMessageNums,menulist} = this.props;
@@ -116,15 +111,6 @@ export default class Open extends Component {
                                         }
                                     })
                                 }
-
-                                {/* <Route key='首页' path={`${path}/home`}
-                                    render={props => <Overview {...props}></Overview>}
-                                ></Route>
-
-                                <Route key='产品' path={`${path}/product`}
-                                    render={props => <Product {...props} />}
-                                ></Route> */}
-
                                 <Redirect from={`${path}/userCenter`} to="/userCenter"></Redirect>
                                 <Redirect to={`${path}/home`}></Redirect>
                             </Switch>

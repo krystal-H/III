@@ -16,11 +16,12 @@ import {
 import './NavMenu.scss';
 
 const { SubMenu } = Menu;
-const muenList = JSON.parse(localStorage.getItem('menuList'))||[];
 
 function getNavList(menus){
-    return menus.map((itm,index)=>{
-        const {menuname,childmenus} = itm;
+    console.log(444,menus)
+    return menus.map(({
+        menuicon,menuname,path,childmenus=[]
+        },index)=>{
         if(childmenus.length>0){
             return <SubMenu key={menuname+index} icon={<MailOutlined />} title={menuname}>
                         {getNavList(childmenus)}
@@ -28,7 +29,7 @@ function getNavList(menus){
         }
         
         return <Menu.Item key={ menuname + index}>
-                    <Link to={`open/home`}>{menuname}</Link>
+                    <Link to={path}>{menuname}</Link>
                 </Menu.Item>
     })
 }
@@ -65,7 +66,7 @@ class NavMenu extends PureComponent {
     componentDidUpdate(propsold,stateold){   
     }
     render() {
-        let {collapsed,routes} = this.props;
+        let {collapsed,menulist} = this.props;
         const {defaultSelectedKeys, defaultOpenKeys} = this.state;
 
         return (
@@ -79,7 +80,7 @@ class NavMenu extends PureComponent {
                     inlineIndent={22}
                     forceSubMenuRender={true}
                 >
-                    {/* {getNavList(muenList)} */}
+                    {getNavList(menulist)}
                 </Menu>
             </div>
         );
