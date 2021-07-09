@@ -3,7 +3,6 @@ import { Switch,Route,Redirect } from 'react-router-dom';
 import loadable from '@loadable/component';
 
 import ProductList from './product-list/List';
-import {ProductInformation} from './add/ProductInformation';
 import ProductDetails from './product-details/ProductDetails';
 
 const ProductEdit = loadable( () => import('./product-edit/ProductEdit'));
@@ -14,7 +13,6 @@ export default function ProductManage({ match }) {
     return (
         <Switch>
             <Route path={`${path}/list`} component={ProductList}></Route>
-            {/* <Route path={`${path}/add`} component={ProductInformation}></Route> */}
             <Route path={`${path}/edit/:id`} component={ProductEdit}></Route>
             <Route path={`${path}/details/:id`} component={ProductDetails}></Route>
             <Route path={`${path}/deviceDebugging`} component={DeviceDebugging}></Route>

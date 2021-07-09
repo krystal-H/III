@@ -10,6 +10,10 @@ class SetupProduct extends Component {
 
     }
   }
+  componentDidMount() {
+    this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
+  }
+  formRef = React.createRef()
   onFinish = (values) => {
     console.log('Success:', values);
   };
@@ -20,6 +24,7 @@ class SetupProduct extends Component {
   render() {
     return (
       <Form
+        ref={this.formRef}
         name="basic"
         labelCol={{
           span: 4,
