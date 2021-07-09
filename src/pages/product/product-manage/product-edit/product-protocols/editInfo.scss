@@ -1,4 +1,4 @@
-.edit-protocol-wrap {
+.edit-left-protocol-wrap {
   .ant-tag {
     background-color: #fff;
     padding: 0 10px;
@@ -46,5 +46,8 @@
       padding: 0;
       height: 24px;
     }
+  }
+  .ant-radio-wrapper{
+    line-height: 30px;
   }
 }

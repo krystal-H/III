@@ -6,7 +6,7 @@ import './editInfo.scss'
 export default function ProtocolDelete({ dataType }) {
     useEffect(() => {
     }, [])
-    return <div className='edit-protocol-wrap'><EnumerTemp></EnumerTemp></div>
+    return <div className='edit-left-protocol-wrap'><EnumerTemp></EnumerTemp></div>
 }
 function BoolTemp() {
     const onFinish = (values) => {
