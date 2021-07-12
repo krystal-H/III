@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useImperativeHandle, forwardRef, useRef } from 'react'
 import moment from 'moment';
-import { Form, Input, Button, Space, Select, Radio, Tabs } from 'antd';
+import { Form, Input, Button, Space, Select, Radio, Tabs, Drawer } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import './editInfo.scss'
 const optionsWithDisabled = [
@@ -8,7 +8,7 @@ const optionsWithDisabled = [
     { label: '事件', value: 'two' },
     { label: '服务', value: 'three' },
 ]
-export default function ProtocolDelete() {
+export default function ProtocoLeft({ rightVisible, onCloseRight }) {
     const { TabPane } = Tabs;
     useEffect(() => {
     }, [])
@@ -16,6 +16,10 @@ export default function ProtocolDelete() {
     const tabChange = (e) => {
         setCurrentTab(e.target.value)
     }
+    const oneRef = useRef();
+    const twoRef = useRef();
+    const threeRef = useRef();
+    //tab自定义头部
     const renderTabBar = (props, DefaultTabBar) => {
         const tabInfo = [];
         props.panes.forEach(item => {
@@ -28,18 +32,53 @@ export default function ProtocolDelete() {
             <div className='addcus-tab'> <Radio.Group buttonStyle="solid" optionType="button" value={currentTab} onChange={tabChange} options={optionsWithDisabled} /></div>
         )
     }
-    return (<div className='edit-left-protocol-wrap'> <Tabs activeKey={currentTab} defaultActiveKey="one" renderTabBar={renderTabBar}>
-        <TabPane tab="Tab 1" key="one">
-            <NumberTemp></NumberTemp>
-        </TabPane>
-        <TabPane tab="Tab 2" key="two">
-            <EventTemp></EventTemp>
-        </TabPane>
-        <TabPane tab="Tab 3" key="three">
-            <ServeTemp />
-        </TabPane>
-    </Tabs>
-    </div>)
+    //提交数据
+    const subData = () => {
+        if (currentTab == 'one') {
+            oneRef.current.onFinish()
+        } else if (currentTab == 'two') {
+            twoRef.current.onFinish()
+        } else if (currentTab == 'three') {
+            threeRef.current.onFinish()
+        }
+    }
+    return (
+        <Drawer
+            title='新增自定义功能'
+            placement="right"
+            closable={false}
+            onClose={onCloseRight}
+            visible={rightVisible}
+            destroyOnClose={true}
+            width={393}
+            footer={
+                <div
+                    style={{
+                        textAlign: 'right',
+                    }}
+                >
+                    <Button onClick={onCloseRight} style={{ marginRight: 8 }}>
+                        取消
+                    </Button>
+                    <Button onClick={subData} type="primary">
+                        确定
+                    </Button>
+                </div>
+            }
+        >
+            <div className='edit-left-protocol-wrap'> <Tabs activeKey={currentTab} defaultActiveKey="one" renderTabBar={renderTabBar}>
+                <TabPane tab="Tab 1" key="one">
+                    <NumberTemp ref={oneRef} ></NumberTemp>
+                </TabPane>
+                <TabPane tab="Tab 2" key="two">
+                    <EventTemp ref={twoRef}></EventTemp>
+                </TabPane>
+                <TabPane tab="Tab 3" key="three">
+                    <ServeTemp ref={threeRef} />
+                </TabPane>
+            </Tabs>
+            </div>
+        </Drawer>)
 }
 function BoolTemp() {
     const onFinish = (values) => {
@@ -178,13 +217,17 @@ function EnumerTemp() {
     )
 }
 //属性组件
-function NumberTemp() {
+function NumberTemp(props, ref) {
     const [form] = Form.useForm();
-    const onFinish = (values) => {
-        console.log('Success:', values);
-    }
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+    const onFinish = () => {
+        form.validateFields().then(value => {
+            // 验证通过后进入
+            const { name, age } = value;
+            console.log(name, age); // dee 18
+        }).catch(err => {
+            // 验证不通过时进入
+            console.log(err);
+        });
     }
     //数据类型
     const dataOptions = [{
@@ -204,6 +247,9 @@ function NumberTemp() {
     const onTypeChange = (value) => {
         console.log(value, '改变')
     }
+    useImperativeHandle(ref, () => ({
+        onFinish: onFinish
+    }));
     return (
         <Form
             name="numberT"
@@ -214,7 +260,6 @@ function NumberTemp() {
                 span: 16,
             }}
             form={form}
-            onFinish={onFinish}
         >
             <Form.Item
                 label="功能点名称："
@@ -389,14 +434,21 @@ function NumberTemp() {
         </Form>
     )
 }
+NumberTemp = forwardRef(NumberTemp)
 //事件组件
-function EventTemp() {
-    const onFinish = (values) => {
-        console.log('Success:', values);
+function EventTemp(props, ref) {
+    const [form] = Form.useForm();
+    const onFinish = () => {
+        form.validateFields().then(value => {
+            // 验证通过后进入
+        }).catch(err => {
+            // 验证不通过时进入
+            console.log(err);
+        });
     }
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    }
+    useImperativeHandle(ref, () => ({
+        onFinish: onFinish
+    }));
     const eventTabOptions = [{ label: '故障', value: 'one' },
     { label: '告警', value: 'two' },
     { label: '信息', value: 'three' }]
@@ -422,11 +474,7 @@ function EventTemp() {
             wrapperCol={{
                 span: 16,
             }}
-            initialValues={{
-                remember: true,
-            }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            form={form}
         >
             <Form.Item
                 label="功能点名称："
@@ -495,15 +543,21 @@ function EventTemp() {
         </Form>
     )
 }
+EventTemp = forwardRef(EventTemp)
 //服务组件
-function ServeTemp() {
-    const onFinish = (values) => {
-        console.log('Success:', values);
+function ServeTemp(props, ref) {
+    const [form] = Form.useForm();
+    const onFinish = () => {
+        form.validateFields().then(value => {
+            // 验证通过后进入
+        }).catch(err => {
+            // 验证不通过时进入
+            console.log(err);
+        });
     }
-
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    }
+    useImperativeHandle(ref, () => ({
+        onFinish: onFinish
+    }));
     const eventTabOptions = [{ label: '故障', value: 'one' },
     { label: '告警', value: 'two' },
     { label: '信息', value: 'three' }]
@@ -529,11 +583,7 @@ function ServeTemp() {
             wrapperCol={{
                 span: 16,
             }}
-            initialValues={{
-                remember: true,
-            }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            form={form}
         >
             <Form.Item
                 label="功能点名称："
@@ -644,3 +694,4 @@ function ServeTemp() {
         </Form>
     )
 }
+ServeTemp = forwardRef(ServeTemp)

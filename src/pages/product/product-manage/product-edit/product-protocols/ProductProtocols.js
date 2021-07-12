@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import { Table, Button, Drawer } from 'antd';
 import './ProductProtocols.scss';
-import EditInfo from './editInfo'
+import EditcusFn from './editcusFn'
 import Addfunction from './addModal'
 import NewCusmFn from './addcusFn'
 export default function ProtocolDelete() {
@@ -23,24 +23,27 @@ export default function ProtocolDelete() {
 
     const [selectId, setSelectId] = useState(0);
     //编辑标准功能/新增自定义功能=======
-    const [isStarDia, setIsStarDia] = useState(true); //
-    const [editVisible, setEditVisible] = useState(false);
+    // const [isStarDia, setIsStarDia] = useState(true); //
+    const [rightVisible, setRightVisible] = useState(false);
+    const [rightEditVisible, setRightEditVisible] = useState(false);
     //编辑右边抽屉
-    const openEdit = () => {
-        setIsStarDia(true)
-        setEditVisible(true);
+    const openEditCus = () => {
+        setRightEditVisible(true)
+    };
+    //关闭编辑右边抽屉
+    const onCloseEditRight = () => {
+        setRightEditVisible(false)
     };
     //新增自定义功能抽屉
     const openCusmon = () => {
-        setIsStarDia(false)
-        setEditVisible(true);
+        setRightVisible(true);
     };
     //关闭抽屉
-    const onCloseEdit = () => {
-        setEditVisible(false);
+    const onCloseRight = () => {
+        setRightVisible(false);
     };
-    useEffect(() => {
-    }, [])
+
+
     //新增标准功能====
     const [isModalVisible, setIsModalVisible] = useState(false);
     const closeAdd = () => {
@@ -56,7 +59,7 @@ export default function ProtocolDelete() {
     return <div className='Protocol-wrap'>
         <div className='Protocol-label'>
             <div>独立MCU方案，需选择下载MCU开发资料包等，进行相应开发</div>
-            <a onClick={openEdit}>导出物模型</a>
+            <a onClick={openEditCus}>导出物模型</a>
         </div>
         <div className='Protocol-download'>
             <div>标准功能</div>
@@ -71,7 +74,7 @@ export default function ProtocolDelete() {
         </div>
         <div className='Protocol-download'>
             <div>标准功能</div>
-            <Button type="primary"onClick={openCusmon}>新建自定义功能</Button >
+            <Button type="primary" onClick={openCusmon}>新建自定义功能</Button >
         </div>
         <div >
             <Table
@@ -80,32 +83,9 @@ export default function ProtocolDelete() {
                 dataSource={dataSource}
             />
         </div>
-        <Drawer
-            title={isStarDia ? '编辑标准功能' : '新增自定义功能'}
-            placement="right"
-            closable={false}
-            onClose={onCloseEdit}
-            visible={editVisible}
-            width={393}
-            footer={
-                <div
-                    style={{
-                        textAlign: 'right',
-                    }}
-                >
-                    <Button onClick={onCloseEdit} style={{ marginRight: 8 }}>
-                        取消
-                    </Button>
-                    <Button onClick={onCloseEdit} type="primary">
-                        确定
-                    </Button>
-                </div>
-            }
-        >
-            <div>
-                {isStarDia ? <EditInfo selectId={selectId}></EditInfo> : <NewCusmFn></NewCusmFn>}
-            </div>
-        </Drawer>
+        <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight}></NewCusmFn>
+
+        <EditcusFn rightVisible={rightEditVisible} onCloseRight={onCloseEditRight}></EditcusFn>
         {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>}
     </div>
 }

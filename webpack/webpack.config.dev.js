@@ -8,10 +8,10 @@ const paths = require("./paths");
 const needMock = process.env.MOCK === "mock";
 
 
-const _environment = 'https://dp.clife.net';
+// const _environment = 'https://dp.clife.net';
 // const _environment = 'https://200.200.200.50';
 // const _environment = 'https://cms.clife.cn/';
-// const _environment = 'https://itest.clife.net/';
+const _environment = 'https://itest.clife.net/';
 
 
 const dev = {

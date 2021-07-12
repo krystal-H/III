@@ -1,21 +1,49 @@
-import React, { useEffect, useState } from 'react'
-import moment from 'moment';
-import { Form, Input, Button, Checkbox, Tag, Select, Space } from 'antd';
+import React, { useEffect, useState, useImperativeHandle, forwardRef, useRef } from 'react'
+import { Form, Input, Button, Drawer, Tag, Select, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import './editInfo.scss'
-export default function ProtocolDelete({ dataType }) {
+// import './editInfo.scss'
+export default function ProtocolDelete({ rightVisible, onCloseRight, dataType }) {
     useEffect(() => {
     }, [])
-    return <div className='edit-left-protocol-wrap'><EnumerTemp></EnumerTemp></div>
-}
-function BoolTemp() {
-    const onFinish = (values) => {
-        console.log('Success:', values);
-    }
 
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+    const [form] = Form.useForm();
+    const subData = () => {
+        form.validateFields().then(value => {
+            // 验证通过后进入
+            console.log(value); // dee 18
+        }).catch(err => {
+            // 验证不通过时进入
+            console.log(err);
+        });
     }
+    return (
+        <Drawer
+            title='编辑标准功能'
+            placement="right"
+            closable={false}
+            onClose={onCloseRight}
+            visible={rightVisible}
+            destroyOnClose={true}
+            width={393}
+            footer={
+                <div
+                    style={{
+                        textAlign: 'right',
+                    }}
+                >
+                    <Button onClick={onCloseRight} style={{ marginRight: 8 }}>
+                        取消
+                    </Button>
+                    <Button onClick={subData} type="primary">
+                        确定
+                    </Button>
+                </div>
+            }
+        >
+            <div className='edit-left-protocol-wrap'><EnumerTemp formS={form}></EnumerTemp></div>
+        </Drawer>)
+}
+function BoolTemp({ formS }) {
     return (
         <Form
             name="basic"
@@ -25,11 +53,7 @@ function BoolTemp() {
             wrapperCol={{
                 span: 16,
             }}
-            initialValues={{
-                remember: true,
-            }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            form={formS}
         >
             <Form.Item
                 label="功能点名称："
@@ -45,52 +69,23 @@ function BoolTemp() {
 
             <Form.Item
                 label="标识符"
-                name="password"
+                name="pasasword"
             ><span>switch</span>
             </Form.Item>
             <Form.Item
                 label="数据类型："
-                name="password"
+                name="passwordssss"
             ><span>switch</span>
             </Form.Item>
             <Form.Item
                 label="数据传输类型："
-                name="password"
+                name="passwordsas"
             ><span>可下发可上报</span>
             </Form.Item>
         </Form>
     )
 }
-function EnumerTemp() {
-    const [showAdd, setShowAdd] = useState(true)
-    const [tagArr, setTagArr] = useState([])
-    const { Search } = Input;
-    const onFinish = (values) => {
-        console.log('Success:', values);
-    }
-
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    }
-    //添加
-    const openAdd = () => {
-        setShowAdd(false)
-    }
-    //删除tag
-    const handleClose = (index) => {
-        let newTag = tagArr.filter(tag => {
-            return tag !== index
-        })
-        setTagArr(newTag)
-    }
-    //添加tag
-    const confirmAdd = (value) => {
-        setTagArr([...tagArr, value])
-        setShowAdd(true)
-    }
-    // useEffect(() => {
-    //     setTagArr(['Unremovable', 'Tag 2', 'Tag 3'])
-    // }, [])
+function EnumerTemp({ formS }) {
     return (
         <Form
             name="basic"
@@ -100,11 +95,7 @@ function EnumerTemp() {
             wrapperCol={{
                 span: 16,
             }}
-            initialValues={{
-                remember: true,
-            }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            form={formS}
         >
             <Form.Item
                 label="功能点名称："
@@ -128,30 +119,8 @@ function EnumerTemp() {
                 name="password"
             ><span>枚举型</span>
             </Form.Item>
-            {/* <Form.Item
-                label="枚举值"
-                name="password"
-            >
-                <div>{
-                    tagArr.map((item, index) => {
-                        return (<Tag onClose={() => handleClose(item)} key={index} closable>
-                            {item}
-                        </Tag>)
-                    })
-                }
-                    {
-                        showAdd ? (<Button type="primary" ghost onClick={openAdd}>
-                            添加
-                        </Button>) : (<Search
-                            allowClear
-                            enterButton="确定"
-                            size="middle"
-                            onSearch={confirmAdd}
-                        />)
-                    }</div>
-            </Form.Item> */}
             <Form.Item
-                label="数据类型："
+                label="枚举值："
             >
                 <div className='peotocols-enums-wrap'>
                     <div className='peotocols-enums-wrap-title'>
@@ -160,7 +129,7 @@ function EnumerTemp() {
                         <div className='peotocols-enums-wrap-title-colomn'>参数描述</div>
                     </div>
                     <div>
-                        <Form.List name="users">
+                        <Form.List name="usersdsa">
                             {(fields, { add, remove }) => (
                                 <>
                                     {fields.map(({ key, name, fieldKey, ...restField }) => (
@@ -182,12 +151,12 @@ function EnumerTemp() {
                                                 noStyle
                                                 rules={[{ required: true, message: 'Missing last name' }]}
                                             >
-                                                <Input  />
+                                                <Input />
                                             </Form.Item>
                                             <MinusCircleOutlined onClick={() => remove(name)} />
                                         </Space>
                                     ))}
-                                    <Form.Item>
+                                    <Form.Item className='enums-lise-nobottom'>
                                         <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
                                             新加
                                         </Button>
@@ -206,15 +175,7 @@ function EnumerTemp() {
         </Form>
     )
 }
-function NumberTemp() {
-    const [form] = Form.useForm();
-    const onFinish = (values) => {
-        console.log('Success:', values);
-    }
-
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    }
+function NumberTemp({ formS }) {
     return (
         <Form
             name="numberT"
@@ -224,8 +185,7 @@ function NumberTemp() {
             wrapperCol={{
                 span: 16,
             }}
-            form={form}
-            onFinish={onFinish}
+            form={formS}
         >
             <Form.Item
                 label="功能点名称："
@@ -247,8 +207,7 @@ function NumberTemp() {
             <Form.Item
                 label="数据类型："
                 name="password"
-            ><span>
-                    数值型</span>
+            ><span>数值型</span>
             </Form.Item>
             <Form.Item label="数值范围">
                 <div className='number-input-wrap'>
