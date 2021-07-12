@@ -79,7 +79,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
             />
           </TabPane>
           <TabPane tab="其他品类" key="2">
-            <div>
+            <div className='other-product-top'>
               <Search placeholder="搜索功能点名称" allowClear onSearch={onSearch} style={{ width: 465 }} />
               <Select
                 labelInValue
