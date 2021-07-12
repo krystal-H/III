@@ -54,8 +54,10 @@
             width: 0;
             background:$GrayBgColor;
             overflow: auto;
-    
             @include self-scroll-bar;
+            .right-wrapper-padding{
+                padding: $space;
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ $tabsWidth:140px;
 
 // 元素间隔 -- 设置padding，margin 可使用此变量为基准值 eg: $gap / 2  |  $gap  |   2 * $gap
 $gap:24px;
-
+$space:16px;
 $borderRadius:4px;
 
 /****************End******************/
@@ -30,6 +30,8 @@ $themeColor:#2F78FF;
 $fontColor: rgba(0,0,0,0.85);               // 字体颜色  -- 用于块儿中较为突出的部分
 $subFontColor: rgba(0,0,0,0.65);            // 子内容字体颜色  -- 用于块儿中次级内容
 $menuFontColor: rgba(71, 76, 88, 1);
+$userFontColor: rgba(102, 102, 102, 1);
+$usercurFontColor: rgba(38, 38, 38, 1);
 $grayFontColor: rgba(140, 140, 140, 1);     // 灰色字体颜色
 $disableFontColor: rgba(191, 191, 191, 1);  // 禁用状态字体颜色
 

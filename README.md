@@ -15,8 +15,6 @@
 
 此工程为源码目录，项目发布时，打包生成文件
 
-然后拷贝到发布目录 (http://200.200.200.40/svn/repositories/front/trunk/open-clife-4.0 ) ，*提交更新*。
-
 ```js
     // dll目录下无文件，或者修改了dll配置后
     npm run dll
@@ -26,9 +24,23 @@
 
 ### 发布
 
-开发环境： 在jenkins 的开发环境工程（ http://200.200.200.58:8080/jenkins/view/front-test/job/wCloud-v4-test/）中构建项目即可；注意在提交更新后，稍*等一两分钟再构建*，立即构建大概率还是用的旧代码。
-测试环境： 需要由测试人员提单，然后运维更新。需要向测试人员提供*工程名*和*更新说明*
-开发环境： 同上由测试人员提单更新
+开发环境(https://dp.clife.net/)
+测试环境(https://itest.clife.net/)
+生产环境(https://cms.clife.cn/，https://open.clife.cn/)
+
+： dp  和 itest 环境的发布是打包提交到coding上后，对应构建计划里点击构建  即可完成发布；
+生产环境在构建计划构建后 生成对应的 制品库，再将制品库相关信息发给开发发布负责人（汪超）代为发布。
+
+####  制品信息模板
+
+制品地址：
+https://clife-devops-generic.pkg.coding.net/clifeiot/web-publish-package/wcloud-open.zip?version=c571876820b5246ac34348581dcc4e3851ad98d3
+发布目录：wcloudopen
+制品名称：wcloud-open.zip
+发布内容：OTA升级
+
+（发布目录 默认是cms域名下的fault，若是open下则需要添加域名 比如： open/wCloud/v4  这样）
+
 
 ## mock数据
 
@@ -63,8 +75,9 @@ mock数据在 `src/mock` 下, `index.js`文件中加入需要模拟的接口，�
 
 ## 开发建议
 
-此部分需要持续补充···
-
+1、公共样式以“comm-”开头命名写在 common.scss 里；
+2、不用@装饰器；
+3、多用函数组件；
 
 
 

@@ -5,9 +5,8 @@ import Header from '../../open/header/Header';
 import {Link} from 'react-router-dom';
 import VerificationCodeInput from '../../../components/verification-code-input/VerificationCodeInput';
 import OutsideWrapper from '../../../components/outside-wrapper/OutsideWrapper'
-import {post,get,Paths} from '../../../api';
+import {post,Paths} from '../../../api';
 import {encryption,getVcodeImgUrl} from '../../../util/util';
-import { menuList } from '../../../configs/route.config';
 import IntroImg from '../../../assets/images/account/login-intro.png';
 import {getMenuList} from '../../user-center/store/ActionCreator';
 import './Login.scss'
@@ -27,7 +26,7 @@ class WrappedLoginForm extends Component {
             loading:true
           }).then(data => {
 			  this.props.getMenuList();
-			  window.location = window.location.origin + window.location.pathname + '#/open';
+			  window.location = window.location.origin + window.location.pathname + '#/open/home';
           }).catch(error => {
 			  let {needVeriCode} = error,
 			  	  {showVerifyCode} = this.state;

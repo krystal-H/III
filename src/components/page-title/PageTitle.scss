@@ -2,6 +2,8 @@
 
 // 页面标题样式
 .page-title{
+    margin: -$space;
+    margin-bottom: $space;
     padding: $gap / 2  $gap;
     background-color: $sectionBgColor;
     position: relative;

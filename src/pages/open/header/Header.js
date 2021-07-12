@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-
+import { connect } from 'react-redux';
 import {
     CaretDownOutlined,
     ClusterOutlined,
@@ -13,10 +13,8 @@ import {
 } from '@ant-design/icons';
 
 import { Modal, Radio } from 'antd';
-import {Link,withRouter} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {post,Paths} from '../../../api'
-import store from '../../../store'
-
 import DefaultUserIcon from '../../../assets/images/userIcon.png'
 
 import './Header.scss'
@@ -26,20 +24,20 @@ const LOGO_TEXT = '物联网云平台';
 export default class Header extends PureComponent  {
     
     logout = () => {
-        console.log(222,this.props)
-        return;
-
         post(Paths.logout,{},{loading:true}).then(() => {
             window.location = window.location.origin + window.location.pathname + '#/account/login';
-            localStorage.removeItem('menuList');//退出成功时，清除菜单缓存，只能放在跳转之后再执行。不然退出时就会出错
         })
     }
     render () {
-        const {onlyLogo,developerInfo={},newMessageNums={}} = this.props,
-            {email,account,isSubUser}= developerInfo,
+        const {onlyLogo,developerInfo={},newMessageNums={},menulist=[]} = this.props,
+            usermenu = menulist[0] || {},
+            {email,account}= developerInfo,
+            {childmenus=[]} = usermenu,
         {totalUnRead} = newMessageNums;
+
+        console.log(777,childmenus)
         return (
-            <header className="page-header">
+            <header className="mainpage-header">
                 <span className="logo">{LOGO_TEXT}</span>
                 {
                     !onlyLogo && 
@@ -54,74 +52,27 @@ export default class Header extends PureComponent  {
                             <img src={DefaultUserIcon} alt="用户头像" className="usericon"/>
                             <span className='username'>{email || account || '未知账号'}</span>
                             <CaretDownOutlined className='downicon'/>
-                        </div>
-
-
-
-                        {/* 用户中心入口 */}
-                        {/* <section className="user-icon-wrapper">
-                            <img src={DefaultUserIcon} alt="用户头像" className="user-img"/>
-                            <CaretDownOutlined />
-                            <div className="menus-wrapper">
-                                <div className="icon-base-info">
-                                    <span className="single-text" style={{flex:1}}>{email || account || '未获取到邮箱'}</span>
-                                    <span className="right"
-                                        onClick={this.logout}
-                                        >
-                                        <LogoutOutlined />
-                                        &nbsp;退出
-                                    </span>
-                                </div>
-                                <div className="user-menus">
-                                    <div className="menus-item">
-                                        <Link to="/userCenter/info" target="_blank">
-                                            <span>
-                                                <UserOutlined />
-                                                &nbsp;基本资料</span>
-                                        </Link>
+                            <div className='hoverbox'>
+                                <div className='comm-shadowbox menubox'>
+                                    <div className='userbox'>
+                                        {
+                                            childmenus.map(({
+                                                menuname,path,menuicon
+                                            },index)=>{
+                                                return <Link key={index} className="li" to={path} target="_blank">
+                                                                <UserOutlined />
+                                                                <span className='txt'>{menuname}</span>
+                                                        </Link>
+                                            })
+                                        }
                                     </div>
-                                    {
-                                        // 子账号（isSubUser：1）没有以下内容
-                                        (isSubUser === 0 )&& 
-                                        <React.Fragment>
-                                            <div className="menus-item">
-                                                <Link to="/userCenter/security" target="_blank">
-                                                    <span>
-                                                        <SafetyCertificateOutlined />
-                                                        &nbsp;安全设置</span>
-                                                </Link>
-                                            </div>
-                                            <div className="menus-item">
-                                                <Link to="/userCenter/visit" target="_blank">
-                                                    <span>
-                                                        <TeamOutlined />
-                                                        &nbsp;访问用户</span>
-                                                </Link>
-                                            </div>
-                                            <div className="menus-item">
-                                                <Link to="/userCenter/role" target="_blank">
-                                                    <span>
-                                                        <ClusterOutlined />
-                                                        &nbsp;用户角色</span>
-                                                </Link>
-                                            </div>
-                                            <div className="menus-item">
-                                                <Link to="/userCenter/log" target="_blank">
-                                                    <span>
-                                                        <SnippetsOutlined />
-                                                        &nbsp;操作日志</span>
-                                                </Link>
-                                            </div>
-                                        </React.Fragment>
-                                    }
+                                    <div className='logout'><span className='click' onClick={this.logout}>退出账号</span></div>
                                 </div>
                             </div>
-                        </section> */}
-                        
+                        </div>
                     </div>
                 }
             </header>
         );
     }
 }
-

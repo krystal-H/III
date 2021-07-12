@@ -1,10 +1,8 @@
-/* 项目开始开发时，所有的控件都由此处引入，项目的路由全都使用此文件控制，但是会导致 按路由模块懒加载时import的子组件还是会打包到主js中 ，所以放弃使用该文件控制整个项目路由 */
-/* 此文件需要保留，因为面包屑控件需要此文件；不过不再在这里引入模块组件 */
 
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import loadable from '@loadable/component';
-import { find, cloneDeep } from "lodash";
+import { find,remove } from "lodash";
 /*Open是业务入口页面*/
 import Open from '../pages/open/Open';
 import LogicDevelop from "../pages/logicDevelop";
@@ -17,7 +15,7 @@ const UserCenter = loadable(() => import('../pages/user-center/UserCenter'))
 /*数据服务-数据分析页面 */
 const DataAnalysis = loadable(() => import('../pages/data-analysis/DataAnalysisi'))
 
-/*左侧菜单导航全权限路由*/
+/* 左侧菜单、用户中心 导航全权限路由*/
 export const navRoutes = [
     {
         menuname: '总览',
@@ -124,8 +122,36 @@ export const navRoutes = [
                 path: '/open/studio/serve',
             }
         ]
-    }
+    },{
+        menuname:'用户中心',
+        path: '/userCenter',
+        menuicon: '',
+        childmenus:[
+            {
+                menuname: '基本资料',
+                path: '/userCenter/baseInfo',
+
+            },
+            {
+                menuname: '安全设置',
+                path: '/userCenter/security',
+            },
+            {
+                menuname:'访问用户',
+                path: '/userCenter/visitUser',
+            },
+            {
+                menuname:'用户角色',
+                path: '/userCenter/role',
+            },
+            {
+                menuname:'操作日志',
+                path: '/userCenter/log',
+            },
+        ]
+    },
 ]
+/* 平台主结构路由*/
 export const mainRoutes = [
     {
         path: '/open',
@@ -155,6 +181,8 @@ export const mainRoutes = [
         redirect: '/account'
     }
 ];
+
+/* 模拟后台返回的权限*/
 export const menuList = [
     {
         menuname: '总览',
@@ -272,37 +300,37 @@ export const menuList = [
         ],
         items: [],
     },
-    // {
-    //     menuname:'用户中心',
-    //     childmenus:[
-    //         {
-    //             menuname:'基本资料',
-    //             childmenus:[],
-    //             items:[],
-    //         },
-    //         {
-    //             menuname:'安全设置',
-    //             childmenus:[],
-    //             items:[],
-    //         },
-    //         {
-    //             menuname:'访问用户',
-    //             childmenus:[],
-    //             items:[],
-    //         },
-    //         {
-    //             menuname:'用户角色',
-    //             childmenus:[],
-    //             items:[],
-    //         },
-    //         {
-    //             menuname:'操作日志',
-    //             childmenus:[],
-    //             items:[],
-    //         },
-    //     ],
-    //     items:[],
-    // },
+    {
+        menuname:'用户中心',
+        childmenus:[
+            {
+                menuname:'基本资料',
+                childmenus:[],
+                items:[],
+            },
+            {
+                menuname:'安全设置',
+                childmenus:[],
+                items:[],
+            },
+            {
+                menuname:'访问用户',
+                childmenus:[],
+                items:[],
+            },
+            {
+                menuname:'用户角色',
+                childmenus:[],
+                items:[],
+            },
+            {
+                menuname:'操作日志',
+                childmenus:[],
+                items:[],
+            },
+        ],
+        items:[],
+    },
 ]
 
 
@@ -336,12 +364,9 @@ export function RouteWithSubRoutes(route) {
     return <Redirect to={redirect}></Redirect>
 }
 
-
-
+/* 获得有权限的菜单路由 和 相关页面内的tab元素权限*/
 export function getNavRoutes(menu) {
-
     let _navRoutes = navRoutes;
-
     function authorityMenu(menus) {
         let result = menus.map(({
             menuname,
@@ -360,6 +385,11 @@ export function getNavRoutes(menu) {
         _navRoutes = navRoutes;
         return result
     }
-    return authorityMenu(menu)
+    let _routes = authorityMenu(menu);
+    const userMenu = remove(_routes,({menuname})=>menuname=='用户中心')
+    return {
+        navMenu:_routes,//左侧菜单
+        userMenu        //用户中心菜单
+    }
 }
 
