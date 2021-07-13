@@ -1,16 +1,6 @@
 @import '../../../../assets/css/variables.scss';
 
 .eidt-wrapper {
-  //   .edit-content-wrapper {
-  //     padding: $gap;
-
-  //     &.no-padding {
-  //       padding: 0;
-  //     }
-
-  //     .link-items {}
-  //   }
-
   .product_title_wrap {
     height: 158px;
     background: #FFFFFF;
@@ -23,6 +13,28 @@
         margin-top: 26px;
         display: flex;
         justify-content: space-between;
+
+        .product_title_baseinfo_name-left {
+          display: flex;
+          align-items: center;
+
+          h3 {
+            font-size: 20px;
+            color: rgba(0, 0, 0, 0.85);
+            line-height: 28px;
+            height: 28px;
+            margin-right: 11px;
+          }
+
+          div {
+            padding: 2px 4px;
+            line-height: 100%;
+            border: 1px solid #D8DBE3;
+            font-size: 12px;
+            font-weight: 400;
+            color: #8E9197;
+          }
+        }
 
         a {
           height: 17px;

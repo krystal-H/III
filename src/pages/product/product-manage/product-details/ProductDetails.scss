@@ -1,11 +1,25 @@
 @import '../../../../assets/css/variables.scss';
 
-.eidt-wrapper{
-    .edit-content-wrapper{
-        padding: $gap;
+// .eidt-wrapper{
+//     .edit-content-wrapper{
+//         padding: $gap;
 
-        &.no-padding{
-            padding: 0;
-        }
-    }
+//         &.no-padding{
+//             padding: 0;
+//         }
+//     }
+// }
+.product-detail-wrap {
+  margin: 16px;
+  background: #FFFFFF;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+
+  .ant-tabs-nav-wrap {
+    padding: 0 22px;
+  }
+
+  .ant-tabs-content {
+    padding: 0 22px;
+  }
 }

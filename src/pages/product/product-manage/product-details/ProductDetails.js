@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react'
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
-import {getProductBaseInfo,getProtocolLists} from '../store/ActionCreator';
+import { getProductBaseInfo, getProtocolLists } from '../store/ActionCreator';
 import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
 // import ProductInfo from '../../../../components/product-components/product-info/ProductInfo';
 import PageTitle from '../../../../components/page-title/PageTitle';
 import ProductTabs from './product-tabs/ProductTabs';
 
 import './ProductDetails.scss'
-
+import '../product-edit/ProductEdit.scss'
 const mapStateToProps = state => {
     return {
-        productBaseInfo: state.getIn(['product','productBaseInfo']).toJS(),
-        protocolLists:state.getIn(['product','productProtocolLists']).toJS()
+        productBaseInfo: state.getIn(['product', 'productBaseInfo']).toJS(),
+        protocolLists: state.getIn(['product', 'productProtocolLists']).toJS()
     }
 }
 
@@ -26,17 +26,17 @@ const mapDispatchToProps = dispatch => {
 // 获取路由中的ID参数
 const getProductIdFromPath = (match) => +match.params.id;
 
-function ProductDetails ({productBaseInfo,match,getProductBaseInfo,getProtocolLists,protocolLists}) {
+function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtocolLists, protocolLists }) {
 
     let productIdInRoutePath = getProductIdFromPath(match);
 
-    useEffect( () => {
+    useEffect(() => {
         // 产品ID更新后，重新获取数据
         if (productIdInRoutePath) {
             getProductBaseInfo(productIdInRoutePath)
             getProtocolLists(productIdInRoutePath)
         }
-    },[getProductBaseInfo, getProtocolLists,productIdInRoutePath])
+    }, [getProductBaseInfo, getProtocolLists, productIdInRoutePath])
 
     if (!productIdInRoutePath) {
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
@@ -44,9 +44,42 @@ function ProductDetails ({productBaseInfo,match,getProductBaseInfo,getProtocolLi
 
     return (
         <div className="eidt-wrapper">
-            {/* <ProductInfo info={productBaseInfo}></ProductInfo> */}
-            <PageTitle title={productBaseInfo.productName}></PageTitle>
-            <div className={'edit-content-wrapper no-padding'}>
+            <div className='product_title_wrap'>
+                <PageTitle title='开发流程' />
+                {/* <ProductLinks productId={productIdInRoutePath}></ProductLinks> */}
+                <div className='product_title_baseinfo'>
+                    <div className='product_title_baseinfo_name'>
+                        <div className='product_title_baseinfo_name-left'>
+                            <h3 >睡眠监测器</h3>
+                            <div>免开发方案</div>
+                        </div>
+                        <a>编辑</a>
+                    </div>
+                    <div className='product_title_baseinfo_list'>
+                        <div>
+                            <div>品类：</div>
+                            <div>睡眠监测</div>
+                        </div>
+                        <div>
+                            <div>产品ID：</div>
+                            <div>睡眠监测</div>
+                        </div>
+                        <div>
+                            <div>通讯协议：</div>
+                            <div>睡眠监测</div>
+                        </div>
+                        <div>
+                            <div>产品编码：</div>
+                            <div>睡眠监测</div>
+                        </div>
+                        <div>
+                            <div>产品密钥：</div>
+                            <div>睡眠监测</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className='product-detail-wrap'>
                 <ProductTabs productId={productIdInRoutePath} protocolLists={protocolLists} productBaseInfo={productBaseInfo}
                 ></ProductTabs>
             </div>
