@@ -8,14 +8,12 @@
         line-height: 34px;
         font-weight: 500;
         @include text(20px, $fontColor);
-        box-shadow: 0px 2px 6px 0px $shadow;
     }
     .page-header {
         height: 78px;
-        margin: 16px;
+        margin: 16px 0;
         @include flex();
         background: $GrayBgColor;
-        box-shadow: 0px 2px 6px 0px $shadow;
         border-radius: 2px;
         &-left {
             @include flex(flex-start, center);
@@ -42,8 +40,6 @@
     // table表格
     .bg-wrapper {
         padding: 22px;
-        margin: 0 16px;
-        box-shadow: 0px 2px 6px 0px $shadow;
         border-radius: 2px;
         .page-table-wrapper {
             background-color: $sectionBgColor;

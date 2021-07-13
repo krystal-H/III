@@ -209,7 +209,7 @@ class List extends PureComponent {
     return (
       <section className="page-wrapper">
         <PageTitle title="我的智能产品" />
-        <div className="page-header">
+        <div className="page-header comm-shadowbox">
           <div className="page-header-left">
             <Search placeholder="产品名称/ID/型号" maxLength={20} onSearch={value => this.searchProduct(value)} style={{ width: 465, margin: '0 22px' }} />
             <Select defaultValue="all" style={{ width: 120 }} onChange={this.handleChange}>
@@ -223,7 +223,7 @@ class List extends PureComponent {
           </div>
         </div>
         {/* table */}
-        <div className="bg-wrapper flex1 flex-column">
+        <div className="bg-wrapper flex1 flex-column comm-shadowbox">
           <div className="page-table-wrapper flex-column flex1">
             <Table
               rowKey='productId'
