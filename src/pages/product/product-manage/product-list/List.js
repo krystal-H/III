@@ -8,6 +8,7 @@ import { productStatusText } from '@src/configs/text-map';
 import ProductIcon from '../../../../components/product-components/product-icon/ProductIcon';
 import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
 import { Notification } from '../../../../components/Notification';
+import PageTitle from '../../../../components/page-title/PageTitle';
 import { post, Paths } from '../../../../api';
 import AddProductModal from '../addProduct/addProduct'
 
@@ -207,7 +208,7 @@ class List extends PureComponent {
       { list, pager } = productList
     return (
       <section className="page-wrapper">
-        <p className="page-title">我的智能产品</p>
+        <PageTitle title="我的智能产品" />
         <div className="page-header">
           <div className="page-header-left">
             <Search placeholder="产品名称/ID/型号" maxLength={20} onSearch={value => this.searchProduct(value)} style={{ width: 465, margin: '0 22px' }} />
