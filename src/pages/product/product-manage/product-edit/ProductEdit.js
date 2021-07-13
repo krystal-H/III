@@ -107,7 +107,10 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
                     {/* <ProductLinks productId={productIdInRoutePath}></ProductLinks> */}
                     <div className='product_title_baseinfo'>
                         <div className='product_title_baseinfo_name'>
-                            <div>睡眠监测器</div>
+                            <div className='product_title_baseinfo_name-left'>
+                                <h3 >睡眠监测器</h3>
+                                <div>免开发方案</div>
+                            </div>
                             <a>编辑</a>
                         </div>
                         <div className='product_title_baseinfo_list'>

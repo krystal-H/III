@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import { post,Paths } from '../../../../../api';
-import ProduceInfo from '../../product-edit/product-info/ProductInfo';
+// import ProduceInfo from '../../product-edit/product-info/ProductInfo';
 import ProductProtocols from '../../product-edit/product-protocols/ProductProtocols';
 import FirmwareManagement from '../firmware-management/FirmwareManagement';
 import DebuggingTool from '../../deviceDebugging/deviceDebuggerTest/StartTest';
@@ -14,6 +14,8 @@ import RemoteConfig from '../remote-config/RemoteConfig';
 import LabelManage from '../label-manage/LabelManage';
 import TopicList from '../topic-list/TopicList'
 import PtotocalTag from '../protocal-tag/PtotocalTag';
+import ProductInfo from '../info';
+import FnDefintion from '../function-definition';
 
 import {getUrlParam} from '../../../../../util/util';
 import {
@@ -49,8 +51,10 @@ export default class ProductTabs  extends Component {
         }
     }
     callback = (steps) => {
+        // return
         let {productId} = this.props;
-        window.location.hash = `#/open/base/product/details/${productId}?step=${steps}`;
+        window.location.hash = `#/open/product/proManage/details/${productId}?step=${steps}`;
+        return
         if(steps=='4'){
             let accountList = [],
             macList = [];
@@ -82,12 +86,15 @@ export default class ProductTabs  extends Component {
         let {productId,productBaseInfo,protocolLists} = this.props;
         let { authorityType, accessModeId } = productBaseInfo;
         return (
-            <div className="product_tabs">
+            <div>
                 <Tabs defaultActiveKey={this.state.steps} onChange={value => this.callback(value)}>
                     <TabPane key={'1'} tab={'基本信息'}>
-                        <ProduceInfo  productId={productId} canOperate={false}/>
+                        <ProductInfo  productId={productId}/>
                     </TabPane>
-                    <TabPane key={'14'} tab={'物标签'}>
+                    <TabPane key='2' tab={'功能定义'}>
+                        <FnDefintion></FnDefintion>
+                    </TabPane>
+                    {/* <TabPane key={'14'} tab={'物标签'}>
                         <PtotocalTag productId={productId} />
                     </TabPane>
                     <TabPane key={'13'} tab={'topic列表'}>
@@ -125,14 +132,13 @@ export default class ProductTabs  extends Component {
                         <SceneLink productId={productId} canOperate={true} noNeedTitle={true}/>
                     </TabPane>
                     {
-                        // authorityType !== null && authorityType !== 0 &&  {/*取消限制初级鉴权等级没有设备注册的页面*/}
                         <TabPane key={'8'} tab={'设备注册'}>
                             <DeviceRegister productId={productId} productBaseInfo={productBaseInfo} />
                         </TabPane>
                     }
                     <TabPane key={'9'} tab={'商业化信息'}>
                         <CommercailInfo productId={productId}/>
-                    </TabPane>
+                    </TabPane> */}
                 </Tabs>
             </div>
         )

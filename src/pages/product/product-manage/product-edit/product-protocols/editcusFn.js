@@ -120,53 +120,49 @@ function EnumerTemp({ formS }) {
             ><span>枚举型</span>
             </Form.Item>
             <Form.Item
-                label="枚举值："
-            >
-                <div className='peotocols-enums-wrap'>
-                    <div className='peotocols-enums-wrap-title'>
-                        <div className='peotocols-enums-wrap-title-colomn'>参数值</div>
-                        <div>-</div>
-                        <div className='peotocols-enums-wrap-title-colomn'>参数描述</div>
-                    </div>
-                    <div>
-                        <Form.List name="usersdsa">
-                            {(fields, { add, remove }) => (
-                                <>
-                                    {fields.map(({ key, name, fieldKey, ...restField }) => (
-                                        <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                            <Form.Item
-                                                {...restField}
-                                                name={[name, 'first']}
-                                                fieldKey={[fieldKey, 'first']}
-                                                rules={[{ required: true, message: 'Missing first name' }]}
-                                                noStyle
-                                            >
-                                                <Input />
-                                            </Form.Item>
-                                            <span>-</span>
-                                            <Form.Item
-                                                {...restField}
-                                                name={[name, 'last']}
-                                                fieldKey={[fieldKey, 'last']}
-                                                noStyle
-                                                rules={[{ required: true, message: 'Missing last name' }]}
-                                            >
-                                                <Input />
-                                            </Form.Item>
-                                            <MinusCircleOutlined onClick={() => remove(name)} />
-                                        </Space>
-                                    ))}
-                                    <Form.Item className='enums-lise-nobottom'>
-                                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                            新加
-                                        </Button>
-                                    </Form.Item>
-                                </>
-                            )}
-                        </Form.List>
-                    </div>
-                </div>
+                label="枚举型:"
+                name="enumus_text"
+                className='enums-lise-nobottom'
+            ><span style={{ marginRight: '50px' }}>参数值</span>-<span style={{ marginLeft: '30px' }}>参数描述</span>
             </Form.Item>
+
+            <div className='right-list-wrap' >
+                <Form.List name="userss">
+                    {(fields, { add, remove }) => (
+                        <>
+                            {fields.map(({ key, name, fieldKey, ...restField }) => (
+                                <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, 'first']}
+                                        fieldKey={[fieldKey, 'first']}
+                                        className='enums-lise-nobottom'
+                                        noStyle
+                                    >
+                                        <Input />
+                                    </Form.Item>
+                                    <span>-</span>
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, 'last']}
+                                        fieldKey={[fieldKey, 'last']}
+                                        className='enums-lise-nobottom'
+                                        noStyle
+                                    >
+                                        <Input />
+                                    </Form.Item>
+                                    <MinusCircleOutlined onClick={() => remove(name)} />
+                                </Space>
+                            ))}
+                            <Form.Item>
+                                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                    新加
+                                </Button>
+                            </Form.Item>
+                        </>
+                    )}
+                </Form.List>
+            </div>
             <Form.Item
                 label="数据传输类型："
                 name="password"
