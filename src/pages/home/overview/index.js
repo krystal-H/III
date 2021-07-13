@@ -28,28 +28,20 @@ import dataservice3 from './../../../assets/images/overImage/dataservice3.png';
 import help1 from './../../../assets/images/overImage/help1.png';
 import help2 from './../../../assets/images/overImage/help2.png';
 import help3 from './../../../assets/images/overImage/help3.png';
+
+import banner from './../../../assets/images/overImage/banner.png';
 export default function OverviewWrap() {
-    const contentStyle = {
-        height: 'auto',
-        color: '#fff',
-        textAlign: 'center',
-        background: '#364d79',
-        width: '100%'
-    };
     useEffect(()=>{
     },[])
     return (
         <div className='over-view'>
-            <div className='over-view-banner'>
+            <div className='comm-shadowbox over-view-banner'>
                 <Carousel autoplay>
-                    <div >
-                        <img style={contentStyle} src='https://img0.baidu.com/it/u=993093081,3581344450&fm=26&fmt=auto&gp=0.jpg' />
+                    <div className='imgdiv'>
+                        <img src={banner} />
                     </div>
-                    <div >
-                        <img style={contentStyle} src='https://img0.baidu.com/it/u=993093081,3581344450&fm=26&fmt=auto&gp=0.jpg' />
-                    </div>
-                    <div >
-                        <img style={contentStyle} src='https://img0.baidu.com/it/u=993093081,3581344450&fm=26&fmt=auto&gp=0.jpg' />
+                    <div className='imgdiv'>
+                        <img src={banner} />
                     </div>
                 </Carousel>
             </div>
