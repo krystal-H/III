@@ -6,26 +6,39 @@
         margin-bottom: 25px;
         @include text(12px, $_666Color);
     }
-    // 已选模组
+    // 
     .module-box {
+        .module-header {
+            @include flex();
+            .replace-btn {
+                cursor: pointer;
+                padding: 7px 16px;
+                line-height: 17px;
+                @include text(12px, $_fff);
+                background: $themeColor;
+                border-radius: 4px;
+            }
+        }
         .module-tip {
             font-weight: bold;
             @include text(14px, $_323Color);
         }
         .module-cont {
             margin: 18px 0px;
-            background: $GrayBgColor;
             border-radius: 4px;
             border: $_border;
-            @include flex(flex-start);
-            &-l {
+            @include flex(space-between, flex-start);
+            .flex-s {
+                @include flex(flex-start);
+            }
+            &-left {
+                margin: 12px;
+                margin-right: 16px;
+                border-radius: 4px;
                 border: 1px solid $_9E9;
                 @include wh(127px, 127px);
-                margin: 12px;
-                border-radius: 4px;
-                margin-right: 16px;
             }
-            &-r {
+            &-right {
                 height: 127px;
                 @include flex(space-around, flex-start, column);
                 .flex {
@@ -45,7 +58,23 @@
                    cursor: pointer;
                    @include text(12px, $_206);
                }
-            }  
+            }
+            .module-right-box {
+                padding-top: 16px;
+                padding-right: 30px;
+                .price {
+                    font-weight: bold;
+                    @include text(18px, $_323Color);
+                }
+                .apply-btn {
+                    cursor: pointer;
+                    margin-top: 12px;
+                    padding: 6px 16px;
+                    border-radius: 4px;
+                    border: 1px solid #2F78FF;
+                    @include text(12px, #2F78FF);
+                }
+            }
         }
         // margin
         .mar-t-b {
@@ -83,7 +112,7 @@
                     @include wh(323px, 8px);
                 }
             }
-            .img-tip {
+            &-icon {
                 max-width: 34px;
                 max-height: 34px;
                 margin-bottom: 8px;
