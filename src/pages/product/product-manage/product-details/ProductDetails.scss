@@ -1,4 +1,4 @@
-@import '../../../../assets/css/variables.scss';
+// @import '../../../../assets/css/variables.scss';
 
 // .eidt-wrapper{
 //     .edit-content-wrapper{
@@ -10,9 +10,9 @@
 //     }
 // }
 .product-detail-wrap {
-  margin: 16px;
+  //   margin: 16px;
+  margin-top: 16px;
   background: #FFFFFF;
-  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.12);
   border-radius: 2px;
 
   .ant-tabs-nav-wrap {

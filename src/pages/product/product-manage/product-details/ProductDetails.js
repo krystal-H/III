@@ -41,45 +41,34 @@ function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtoco
     if (!productIdInRoutePath) {
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
-
+    const titleCom = (<div className='product_title_baseinfo_list'>
+        <div>
+            <div>品类：</div>
+            <div>睡眠监测</div>
+        </div>
+        <div>
+            <div>产品ID：</div>
+            <div>睡眠监测</div>
+        </div>
+        <div>
+            <div>通讯协议：</div>
+            <div>睡眠监测</div>
+        </div>
+        <div>
+            <div>产品编码：</div>
+            <div>睡眠监测</div>
+        </div>
+        <div>
+            <div>产品密钥：</div>
+            <div>睡眠监测</div>
+        </div>
+    </div>)
     return (
         <div className="eidt-wrapper">
-            <div className='product_title_wrap'>
-                <PageTitle title='开发流程' />
-                {/* <ProductLinks productId={productIdInRoutePath}></ProductLinks> */}
-                <div className='product_title_baseinfo'>
-                    <div className='product_title_baseinfo_name'>
-                        <div className='product_title_baseinfo_name-left'>
-                            <h3 >睡眠监测器</h3>
-                            <div>免开发方案</div>
-                        </div>
-                        <a>编辑</a>
-                    </div>
-                    <div className='product_title_baseinfo_list'>
-                        <div>
-                            <div>品类：</div>
-                            <div>睡眠监测</div>
-                        </div>
-                        <div>
-                            <div>产品ID：</div>
-                            <div>睡眠监测</div>
-                        </div>
-                        <div>
-                            <div>通讯协议：</div>
-                            <div>睡眠监测</div>
-                        </div>
-                        <div>
-                            <div>产品编码：</div>
-                            <div>睡眠监测</div>
-                        </div>
-                        <div>
-                            <div>产品密钥：</div>
-                            <div>睡眠监测</div>
-                        </div>
-                    </div>
-                </div>
+            <div>
+                <PageTitle title='开发流程' titleTag='免开发方案' btnTxt='编辑' backTitle='开发流程' children={titleCom} />
             </div>
-            <div className='product-detail-wrap'>
+            <div className='comm-shadowbox product-detail-wrap'>
                 <ProductTabs productId={productIdInRoutePath} protocolLists={protocolLists} productBaseInfo={productBaseInfo}
                 ></ProductTabs>
             </div>
