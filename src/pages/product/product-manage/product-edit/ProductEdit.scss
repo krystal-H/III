@@ -45,35 +45,7 @@
         }
       }
 
-      .product_title_baseinfo_list {
-        display: flex;
-        margin-top: 20px;
-
-        >div {
-          margin-right: 86px;
-          display: flex;
-
-          >div {
-
-
-            &:first-child {
-              height: 17px;
-              font-size: 12px;
-              font-weight: 400;
-              color: #323232;
-              line-height: 17px;
-            }
-
-            &:last-child {
-              height: 17px;
-              font-size: 12px;
-              font-weight: 400;
-              color: #666666;
-              line-height: 17px;
-            }
-          }
-        }
-      }
+      
     }
   }
 
@@ -93,5 +65,34 @@
     border-top: 1px solid #EEEFF1;
     text-align: center;
     padding: 22px 0;
+  }
+}
+.product_title_baseinfo_list {
+  display: flex;
+  margin-top: 20px;
+
+  >div {
+    margin-right: 86px;
+    display: flex;
+
+    >div {
+
+
+      &:first-child {
+        height: 17px;
+        font-size: 12px;
+        font-weight: 400;
+        color: #323232;
+        line-height: 17px;
+      }
+
+      &:last-child {
+        height: 17px;
+        font-size: 12px;
+        font-weight: 400;
+        color: #666666;
+        line-height: 17px;
+      }
+    }
   }
 }
