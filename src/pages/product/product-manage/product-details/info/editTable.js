@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Button, Space } from 'antd';
 const originData = [];
 
@@ -50,34 +50,32 @@ export default function EditableTable() {
     const [form] = Form.useForm();
     const [data, setData] = useState(originData);
     const [editingKey, setEditingKey] = useState('');
-    const [actionData,setActionData] = useState({actionType:0,actionRecord:{},actionLoading:false}) //actionType 0,没有操作，1 在测试环境操作,2 在生产环境操作,3 删除操作
+    const [actionData, setActionData] = useState({ actionType: 0, actionRecord: {}, actionLoading: false }) //actionType 0,没有操作，1 在测试环境操作,2 在生产环境操作,3 删除操作
     const isEditing = (record) => record.key === editingKey;
     useEffect(() => {
-
     }, [])
     const edit = (record) => {
         form.setFieldsValue({
             name: '',
             age: '',
-            address: '',
             ...record,
         });
         setEditingKey(record.key);
     };
-
     const cancel = () => {
         setEditingKey('');
     };
+
     //打开 发布、启动、停止、删除 弹窗
-    const openActionModal = async (type,record) => {
-        setActionData( preData => {
-            return {
-                ...preData,
-                actionType:type,
-                actionRecord:{...record},
-            }
-        })
-    }
+    // const openActionModal = async (type, record) => {
+    //     setActionData(preData => {
+    //         return {
+    //             ...preData,
+    //             actionType: type,
+    //             actionRecord: { ...record },
+    //         }
+    //     })
+    // }
     const save = async (key) => {
         try {
             const row = await form.validateFields();
@@ -98,8 +96,20 @@ export default function EditableTable() {
             console.log('Validate Failed:', errInfo);
         }
     };
-    const delData=(key)=>{
-
+    //新增
+    const handleEv = () => {
+        if (editingKey) {
+            return
+        }
+        let datas = JSON.parse(JSON.stringify(data))
+        let item = {
+            key: `${datas.length + 1}`,
+            name: `面对疾风吧`,
+            age: 9999,
+        }
+        datas.push(item)
+        setData(datas)
+        edit(item)
     }
     const columns = [
         {
@@ -120,7 +130,7 @@ export default function EditableTable() {
                 return editable ? (
                     <span>
                         <a
-                            href="javascript:;"
+                            href="#!"
                             onClick={() => save(record.key)}
                             style={{
                                 marginRight: 8,
@@ -129,7 +139,7 @@ export default function EditableTable() {
                             保存
                         </a>
                         <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                            <a>取消</a>
+                            <a href="#!">取消</a>
                         </Popconfirm>
                     </span>
                 ) : (
@@ -137,7 +147,7 @@ export default function EditableTable() {
                         <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
                             编辑
                         </Typography.Link>
-                        <Typography.Link disabled={editingKey !== ''} onClick={() => openActionModal(3,record)}>
+                        <Typography.Link disabled={editingKey !== ''}>
                             删除
                         </Typography.Link>
                     </Space>
@@ -154,13 +164,14 @@ export default function EditableTable() {
             ...col,
             onCell: (record) => ({
                 record,
-                inputType: col.dataIndex === 'age' ? 'number' : 'text',
+                inputType: 'text',
                 dataIndex: col.dataIndex,
                 title: col.title,
                 editing: isEditing(record),
             }),
         };
     });
+
     return (
         <>
             <Form form={form} component={false}>
@@ -176,7 +187,7 @@ export default function EditableTable() {
                     pagination={false}
                 />
             </Form>
-            <Button type="primary" ghost className='edit-table-btn'>添加标签</Button>
+            <Button type="primary" ghost className='edit-table-btn' onClick={() => { handleEv() }}>添加标签</Button>
         </>
     );
 };
