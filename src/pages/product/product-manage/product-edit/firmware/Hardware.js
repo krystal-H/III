@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { Button, Tabs, Table } from 'antd';
 import "./hardware.scss";
 import { CaretRightOutlined } from '@ant-design/icons';
+import ReplaceModule from './replaceModule';
 
 export default class Hardware extends Component {
     constructor(props) {
@@ -48,19 +49,36 @@ export default class Hardware extends Component {
                 value2: 'Wi-Fi模组',
             }
         ];
+        this.state = {
+            isModalVisible: true,
+            selectedId: '1'
+        }
+    }
+    // 弹窗确定
+    handleModalOk = (id) => {
+        console.log('确定选中的id', id)
+        this.setState({ isModalVisible: false })
+    }
+    // 弹窗取消
+    handleModalCancel = () => {
+        console.log('取消')
+        this.setState({ isModalVisible: false })
+    }
+    // 更换模组
+    replace = () => {
+        this.setState({ isModalVisible: true })
     }
     render() {
+        const { isModalVisible, selectedId } = this.state
         return (
             <div className="hardware-page">
                 <div className="hardware-wrap">
-                    <div className="desc">
-                        免开发方案，只需选择推荐模组、以及配置固件信息，快速实现硬件智能化。
-                    </div>
+                    <div className="desc">免开发方案，只需选择推荐模组、以及配置固件信息，快速实现硬件智能化。</div>
                     {/* 已选模组 */}
                     <div className="module-box">
                         <div className="module-header">
                             <div className="module-tip">已选模组</div>
-                            <div className="replace-btn">更换模组</div>
+                            <div className="replace-btn" onClick={this.replace}>更换模组</div>
                         </div>
                         <div className="module-cont">
                             <div className="flex-s">
@@ -116,6 +134,15 @@ export default class Hardware extends Component {
                         </div>
                     </div>
                 </div>
+                {/* 更换模组 */}
+                {
+                    isModalVisible &&
+                    <ReplaceModule
+                        isModalVisible={isModalVisible}
+                        handleOk={this.handleModalOk}
+                        handleCancel={this.handleModalCancel}
+                        selectedId={selectedId} />
+                }
             </div>
         )
     }
