@@ -41,9 +41,9 @@
 }
 
 .over-view {
-  padding: 16px;
+  // padding: 16px;
   background-color: #FFFFFF;
-
+  margin-bottom: 40px;
   .over-view-banner {
     .ant-carousel .slick-dots-bottom {
       bottom: 20px;
@@ -172,6 +172,9 @@
               &:hover {
                 background: #F0F1F3;
               }
+              &:last-child{
+                margin-right: 0;
+              }
 
               .over-view-productmn-content-img {
                 width: 64px;
@@ -281,13 +284,17 @@
             }
 
             >div {
-              width: 138px;
+              // width: 138px;
+              flex: 1;
               height: 56px;
               font-size: 12px;
               font-weight: 400;
               color: #666666;
               line-height: 22px;
               margin-right: 14px;
+              &:last-child{
+                margin-right: 0;
+              }
 
               div {
                 &:last-child {
