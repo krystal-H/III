@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Button, Tabs, Table } from 'antd';
+import { Button, Tabs, Table, Tooltip } from 'antd';
 import "./hardware.scss";
-import { CaretRightOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import ReplaceModule from './replaceModule';
 import ModuleDetail from './moduleDetail';
 import FreeApplyModal from './freeApply';
@@ -34,12 +34,12 @@ export default class Hardware extends Component {
             {
                 title: '操作',
                 render: (text, record, index) => (
-                    // <div className="table-operation" onClick={(e) => this.modifyFirmware(record.value2, e)}>
-                    //     修改固件
-                    // </div>
-                    <div className="table-operation" onClick={(e) => this.goReplaceFirmware(record.value2, e)}>
-                        更换固件
+                    <div className="table-operation" onClick={(e) => this.modifyFirmware(record.value2, e)}>
+                        修改固件
                     </div>
+                    // <div className="table-operation" onClick={(e) => this.goReplaceFirmware(record.value2, e)}>
+                    //     更换固件
+                    // </div>
                 )
             }
         ];
@@ -69,9 +69,9 @@ export default class Hardware extends Component {
         console.log(val, '-----')
         this.setState({ modifyFirmwareVisible: true })
     }
-    handleCancelFirmware = () => {
-        this.setState({ modifyFirmwareVisible: false })
-    }
+    // handleCancelFirmware = () => {
+    //     this.setState({ modifyFirmwareVisible: false })
+    // }
     // 更换固件
     goReplaceFirmware = () => {
         this.setState({ replaceFirmwareVisible: true })
@@ -89,28 +89,28 @@ export default class Hardware extends Component {
         } else if (type === 'firmware') {
             this.setState({ replaceFirmwareVisible: false })
         }
-        
+
     }
     // 更换模组
-    replace = () => {
-        this.setState({ replaceModalVisible: true })
-    }
+    // replace = () => {
+    //     this.setState({ replaceModalVisible: true })
+    // }
     // 获取模组详情
     getDetail = () => {
         this.setState({ detailVisible: true })
     }
     // 关闭抽屉
-    onCloseDrawer = () => {
-        this.setState({ detailVisible: false })
-    }
+    // onCloseDrawer = () => {
+    //     this.setState({ detailVisible: false })
+    // }
     // 免费申请
-    onFreeApply = () => {
-        this.setState({ freeApplyVisible: true })
-    }
+    // onFreeApply = () => {
+    //     this.setState({ freeApplyVisible: true })
+    // }
     // 关闭免费申请
-    handleFreeApply = () => {
-        this.setState({ freeApplyVisible: false })
-    }
+    // handleFreeApply = () => {
+    //     this.setState({ freeApplyVisible: false })
+    // }
     render() {
         const { replaceModalVisible, selectedId, detailVisible, freeApplyVisible, modifyFirmwareVisible, replaceFirmwareVisible } = this.state
         return (
@@ -121,7 +121,7 @@ export default class Hardware extends Component {
                     <div className="module-box">
                         <div className="module-header">
                             <div className="module-tip">已选模组</div>
-                            <div className="replace-btn" onClick={this.replace}>更换模组</div>
+                            <div className="replace-btn" onClick={() => { this.setState({ replaceModalVisible: true }) }}>更换模组</div>
                         </div>
                         <div className="module-cont">
                             <div className="flex-s">
@@ -141,20 +141,22 @@ export default class Hardware extends Component {
                             </div>
                             <div className="module-right-box">
                                 <div className="price">¥20.14/个</div>
-                                <div className="apply-btn" onClick={this.onFreeApply}>免费申请</div>
+                                <div className="apply-btn" onClick={() => { this.setState({ freeApplyVisible: true }) }}>免费申请</div>
                             </div>
                         </div>
                     </div>
                     {/* 已生成固件 */}
                     <div className="module-box">
-                        {/* <div className="module-tip mar-t-b">已生成固件</div>
-                        <Table columns={this.columns} dataSource={this.dataSource} pagination={false} size="small" /> */}
-                        <div className="no-match-firmware">
+                        {/* 有固件信息 */}
+                        <div className="module-tip mar-t-b">已生成固件</div>
+                        <Table columns={this.columns} dataSource={this.dataSource} pagination={false} size="small" />
+                        {/* 无固件信息 */}
+                        {/* <div className="no-match-firmware">
                             <div className="no-match-firmware-img">
                                 <img src={require('../../../../../assets/images/product/firmware-icon.png')} alt="" />
                             </div>
                             <div className="no-match-firmware-tip">您选择的模组暂无通用固件程序，请自行开发模组固件。</div>
-                        </div>
+                        </div> */}
                     </div>
                     {/* 开发调试 */}
                     <div className="module-box">
@@ -163,7 +165,15 @@ export default class Hardware extends Component {
                             <div className="flex-c">
                                 <img className="debug-icon" src={require('../../../../../assets/images/product/pcb.png')} alt="" />
                                 <div>设计PCB</div>
-                                <div className="blue">参考电路原理图</div>
+                                {/* <div className="blue">参考电路原理图</div> */}
+                                <div className="blue">
+                                    下载MCU开发资料包
+                                    <Tooltip
+                                        title={'MCU' ? '包含MCU SDK、串口协议、模组调试助手等' : '包含模组 SDK、Bin文件等'}
+                                        placement="top">
+                                        <QuestionCircleOutlined className="tooltip-icon" />
+                                    </Tooltip>
+                                </div>
                             </div>
                             <div className="line">
                                 <img src={require('../../../../../assets/images/product/arrowLine.png')} alt="" />
@@ -172,7 +182,7 @@ export default class Hardware extends Component {
                                 <img className="debug-icon" src={require('../../../../../assets/images/product/func.png')} alt="" />
                                 <div>功能测试</div>
                                 <div className="mar8">（请先完成第四步中配网以及通信安全机制的配置）</div>
-                                <div className="blue">进入调试验证</div>
+                                {/* <div className="blue">进入调试验证</div> */}
                             </div>
                             <div className="line">
                                 <img src={require('../../../../../assets/images/product/arrowLine.png')} alt="" />
@@ -198,21 +208,21 @@ export default class Hardware extends Component {
                 {/* 模组详情 */}
                 <ModuleDetail
                     visible={detailVisible}
-                    onCloseDrawer={this.onCloseDrawer} />
+                    onCloseDrawer={() => { this.setState({ detailVisible: false }) }} />
 
                 {/* 免费申请 */}
                 {
                     freeApplyVisible &&
                     <FreeApplyModal
                         freeApplyVisible={freeApplyVisible}
-                        handleFreeApply={this.handleFreeApply} />
+                        handleFreeApply={() => { this.setState({ freeApplyVisible: false }) }} />
                 }
                 {/* 修改固件 */}
                 {
                     modifyFirmwareVisible &&
                     <ModifyFirmwareModal
                         modifyFirmwareVisible={modifyFirmwareVisible}
-                        handleCancelFirmware={this.handleCancelFirmware} />
+                        handleCancelFirmware={() => { this.setState({ modifyFirmwareVisible: false }) }} />
                 }
                 {/* 更换固件 */}
                 {replaceFirmwareVisible &&

@@ -136,6 +136,11 @@
                 cursor: pointer;
                 color: $_206;
                 margin-top: 8px;
+                .tooltip-icon {
+                    color: $_8C8;
+                    margin-left: 5px;
+                    @include wh(14px, 14px);
+                }
             }
             .mar8 {
                 margin-top: 8px;
