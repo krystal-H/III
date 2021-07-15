@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Modal, Input, Form, Row, Col } from 'antd';
 import './freeApply.scss'
 
-export default function FreeApply({ freeApplyVisible, handleFreeApply }) {
+export default function FreeApplyModal({ freeApplyVisible, handleFreeApply }) {
   const [form] = Form.useForm()
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
@@ -90,13 +90,13 @@ export default function FreeApply({ freeApplyVisible, handleFreeApply }) {
             <Input placeholder="请输入联系人名称" />
           </Form.Item>
           <Form.Item
-            name="contact"
+            name="contact2"
             label="联系方式"
             rules={[{ required: true, message: '请输入联系方式', }]}>
             <Input placeholder="请输入联系方式" />
           </Form.Item>
           <Form.Item
-            name="contact"
+            name="address"
             label="邮寄地址"
             rules={[{ required: true, message: '请输入联系邮寄地址', },]}>
             <Input placeholder="请输入联系邮寄地址" />

@@ -3,15 +3,15 @@
 .free-apply-modal {
   &-top {
     .confirm-tip {
-      @include text(12px, #666666);
+      @include text(12px, $_666Color);
       margin-bottom: 22px;
     }
     .f-module-box {
-      background: #fafafa;
+      background: $_faf;
       border-radius: 4px;
       margin-bottom: 22px;
       .f-module-title {
-        @include text(14px, #323232);
+        @include text(14px, $_323Color);
         padding: 22px;
         border-bottom: $_border;
       }
@@ -20,17 +20,16 @@
       }
       .firmware-msg {
         font-weight: bold;
-        // padding: 22px;
-        @include text(12px, #323232);
+        @include text(12px, $_323Color);
       }
       .ant-form-item {
         margin-bottom: 5px;
       }
       .txt-color label{
-        @include text(12px, #323232);
+        @include text(12px, $_323Color);
       }
       .txt-color .ant-form-item-control-input-content {
-        @include text(12px, #666666);
+        @include text(12px, $_666Color);
       }
     }
   }

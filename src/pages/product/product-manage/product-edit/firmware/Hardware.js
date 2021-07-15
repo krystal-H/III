@@ -5,6 +5,7 @@ import { CaretRightOutlined } from '@ant-design/icons';
 import ReplaceModule from './replaceModule';
 import ModuleDetail from './moduleDetail';
 import FreeApplyModal from './freeApply';
+import ModifyFirmwareModal from './modifyFirmware';
 
 export default class Hardware extends Component {
     constructor(props) {
@@ -33,7 +34,7 @@ export default class Hardware extends Component {
             {
                 title: '操作',
                 render: (text, record, index) => (
-                    <div className="table-operation">
+                    <div className="table-operation" onClick={(e) => this.modifyFirmware(record.value2, e)}>
                         修改固件
                     </div>
                 )
@@ -56,7 +57,16 @@ export default class Hardware extends Component {
             selectedId: '1', // 模组的id
             detailVisible: false, // 模组详情
             freeApplyVisible: false, // 免费申请
+            modifyFirmwareVisible: false, // 修改固件
         }
+    }
+    // 修改固件
+    modifyFirmware = (val, e) => {
+        console.log(val, '-----')
+        this.setState({ modifyFirmwareVisible: true })
+    }
+    handleCancelFirmware = () => {
+        this.setState({ modifyFirmwareVisible: false })
     }
     // 弹窗确定
     handleModalOk = (id) => {
@@ -89,7 +99,7 @@ export default class Hardware extends Component {
         this.setState({ freeApplyVisible: false })
     }
     render() {
-        const { isModalVisible, selectedId, detailVisible, freeApplyVisible } = this.state
+        const { isModalVisible, selectedId, detailVisible, freeApplyVisible, modifyFirmwareVisible } = this.state
         return (
             <div className="hardware-page">
                 <div className="hardware-wrap">
@@ -110,7 +120,9 @@ export default class Hardware extends Component {
                                         <div className="desc-item"><span className="desc-item-title">尺寸：</span>23×18×4mm</div>
                                         <div className="desc-item"><span className="desc-item-title">适用：</span>小家电，三表，路灯等</div>
                                     </div>
-                                    <div className="desc-item"><span className="desc-item-title">特性：</span>1.支持Wi-Fi通信技术；2.支持Wi-Fi SmartLink配网配网方式；3.通信通讯速率为4800bps</div>
+                                    <div className="desc-item">
+                                        <span className="desc-item-title">特性：</span>1.支持Wi-Fi通信技术；2.支持Wi-Fi SmartLink配网配网方式；3.通信通讯速率为4800bps
+                                    </div>
                                     <div className="more" onClick={this.getDetail}>更多<CaretRightOutlined /></div>
                                 </div>
                             </div>
@@ -155,17 +167,19 @@ export default class Hardware extends Component {
                     </div>
                 </div>
                 {/* 更换模组 */}
-                <ReplaceModule
-                    isModalVisible={isModalVisible}
-                    handleOk={this.handleModalOk}
-                    handleCancel={this.handleModalCancel}
-                    selectedId={selectedId} />
+                {isModalVisible &&
+                    <ReplaceModule
+                        isModalVisible={isModalVisible}
+                        handleOk={this.handleModalOk}
+                        handleCancel={this.handleModalCancel}
+                        selectedId={selectedId} />
+                }
 
                 {/* 模组详情 */}
                 <ModuleDetail
                     visible={detailVisible}
                     onCloseDrawer={this.onCloseDrawer} />
-                    
+
                 {/* 免费申请 */}
                 {
                     freeApplyVisible &&
@@ -173,6 +187,18 @@ export default class Hardware extends Component {
                         freeApplyVisible={freeApplyVisible}
                         handleFreeApply={this.handleFreeApply} />
                 }
+
+                {/* 修改固件 */}
+                {
+                    modifyFirmwareVisible &&
+                    <ModifyFirmwareModal
+                        modifyFirmwareVisible={modifyFirmwareVisible}
+                        handleCancelFirmware={this.handleCancelFirmware}/>
+                }
+
+                {/* 更换固件 */}
+
+
             </div>
         )
     }
