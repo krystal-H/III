@@ -1,0 +1,19 @@
+@charset 'utf-8';
+
+.modify-firmware-modal {
+  @include flex(space-between, flex-start);
+  &-left {
+    .modify-firmware-title {
+      font-weight: bold;
+      @include text(14px, $_323Color);
+    }
+    .ant-form-item-label {
+      @include text(12px, $_323Color);
+    }
+  }
+  &-right {
+    @include wh(227px, 404px);
+    background: #f8f9fb;
+    border-radius: 4px;
+  }
+}
