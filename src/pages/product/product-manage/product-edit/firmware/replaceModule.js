@@ -3,7 +3,7 @@ import { Modal, Input, Table } from 'antd';
 import './replaceModule.scss'
 const { Search } = Input;
 
-export default function ReplaceModule({ isModalVisible, handleOk, handleCancel, selectedId }) {
+export default function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, handleCancel, selectedId }) {
   const [selectionType] = useState('radio');
   const columns = [
     { title: '模组', dataIndex: 'name' },
@@ -16,6 +16,11 @@ export default function ReplaceModule({ isModalVisible, handleOk, handleCancel, 
       render: (text, record, index) => <a>详情</a>
     }
   ];
+  const columns2 = [
+    { title: '方案', dataIndex: 'name' },
+    { title: '版本', dataIndex: 'id' },
+    { title: '适用说明', dataIndex: '' }
+  ]
   const [dataSource, setdataSource] = useState([
     {
       name: 'a',
@@ -39,17 +44,21 @@ export default function ReplaceModule({ isModalVisible, handleOk, handleCancel, 
       setSelectedRowKeys(selectedRowKeys)
     }
   };
-  useEffect(() => {})
+  useEffect(() => { })
 
   return (
     <Modal
-      title="更换模组"
-      visible={isModalVisible}
+      title={title}
+      visible={replaceModalVisible}
       onOk={() => handleOk(selectedRowKeys)}
-      onCancel={handleCancel}
+      onCancel={() => handleCancel(type)}
       maskClosable={false}
       width={857}
       wrapClassName="replace-module-modal">
+      {
+        desc && <div className="replace-firmware-desc">{desc}</div>
+      }
+      
       {/* 搜索 */}
       <Search
         className="search-input"
@@ -57,7 +66,7 @@ export default function ReplaceModule({ isModalVisible, handleOk, handleCancel, 
         allowClear
         onSearch={onSearch}
         style={{ width: 674 }} />
-        
+
       {/* table */}
       <Table
         rowSelection={{
@@ -66,7 +75,7 @@ export default function ReplaceModule({ isModalVisible, handleOk, handleCancel, 
           ...rowSelection,
         }}
         rowKey="id"
-        columns={columns}
+        columns={type === 'module' ? columns : columns2}
         dataSource={dataSource}
         pagination={false} />
     </Modal>

@@ -34,8 +34,11 @@ export default class Hardware extends Component {
             {
                 title: '操作',
                 render: (text, record, index) => (
-                    <div className="table-operation" onClick={(e) => this.modifyFirmware(record.value2, e)}>
-                        修改固件
+                    // <div className="table-operation" onClick={(e) => this.modifyFirmware(record.value2, e)}>
+                    //     修改固件
+                    // </div>
+                    <div className="table-operation" onClick={(e) => this.goReplaceFirmware(record.value2, e)}>
+                        更换固件
                     </div>
                 )
             }
@@ -53,11 +56,12 @@ export default class Hardware extends Component {
             }
         ];
         this.state = {
-            isModalVisible: false,
+            replaceModalVisible: false,
             selectedId: '1', // 模组的id
             detailVisible: false, // 模组详情
             freeApplyVisible: false, // 免费申请
             modifyFirmwareVisible: false, // 修改固件
+            replaceFirmwareVisible: false, // 更换固件
         }
     }
     // 修改固件
@@ -68,19 +72,28 @@ export default class Hardware extends Component {
     handleCancelFirmware = () => {
         this.setState({ modifyFirmwareVisible: false })
     }
+    // 更换固件
+    goReplaceFirmware = () => {
+        this.setState({ replaceFirmwareVisible: true })
+    }
     // 弹窗确定
     handleModalOk = (id) => {
         console.log('确定选中的id', id)
-        this.setState({ isModalVisible: false })
+        this.setState({ replaceModalVisible: false })
     }
     // 弹窗取消
-    handleModalCancel = () => {
+    handleModalCancel = (type) => {
         console.log('取消')
-        this.setState({ isModalVisible: false })
+        if (type === 'module') {
+            this.setState({ replaceModalVisible: false })
+        } else if (type === 'firmware') {
+            this.setState({ replaceFirmwareVisible: false })
+        }
+        
     }
     // 更换模组
     replace = () => {
-        this.setState({ isModalVisible: true })
+        this.setState({ replaceModalVisible: true })
     }
     // 获取模组详情
     getDetail = () => {
@@ -99,7 +112,7 @@ export default class Hardware extends Component {
         this.setState({ freeApplyVisible: false })
     }
     render() {
-        const { isModalVisible, selectedId, detailVisible, freeApplyVisible, modifyFirmwareVisible } = this.state
+        const { replaceModalVisible, selectedId, detailVisible, freeApplyVisible, modifyFirmwareVisible, replaceFirmwareVisible } = this.state
         return (
             <div className="hardware-page">
                 <div className="hardware-wrap">
@@ -134,8 +147,14 @@ export default class Hardware extends Component {
                     </div>
                     {/* 已生成固件 */}
                     <div className="module-box">
-                        <div className="module-tip mar-t-b">已生成固件</div>
-                        <Table columns={this.columns} dataSource={this.dataSource} pagination={false} size="small" />
+                        {/* <div className="module-tip mar-t-b">已生成固件</div>
+                        <Table columns={this.columns} dataSource={this.dataSource} pagination={false} size="small" /> */}
+                        <div className="no-match-firmware">
+                            <div className="no-match-firmware-img">
+                                <img src={require('../../../../../assets/images/product/firmware-icon.png')} alt="" />
+                            </div>
+                            <div className="no-match-firmware-tip">您选择的模组暂无通用固件程序，请自行开发模组固件。</div>
+                        </div>
                     </div>
                     {/* 开发调试 */}
                     <div className="module-box">
@@ -167,14 +186,15 @@ export default class Hardware extends Component {
                     </div>
                 </div>
                 {/* 更换模组 */}
-                {isModalVisible &&
+                {replaceModalVisible &&
                     <ReplaceModule
-                        isModalVisible={isModalVisible}
+                        title="更换模组"
+                        type="module"
+                        replaceModalVisible={replaceModalVisible}
                         handleOk={this.handleModalOk}
                         handleCancel={this.handleModalCancel}
                         selectedId={selectedId} />
                 }
-
                 {/* 模组详情 */}
                 <ModuleDetail
                     visible={detailVisible}
@@ -187,17 +207,24 @@ export default class Hardware extends Component {
                         freeApplyVisible={freeApplyVisible}
                         handleFreeApply={this.handleFreeApply} />
                 }
-
                 {/* 修改固件 */}
                 {
                     modifyFirmwareVisible &&
                     <ModifyFirmwareModal
                         modifyFirmwareVisible={modifyFirmwareVisible}
-                        handleCancelFirmware={this.handleCancelFirmware}/>
+                        handleCancelFirmware={this.handleCancelFirmware} />
                 }
-
                 {/* 更换固件 */}
-
+                {replaceFirmwareVisible &&
+                    <ReplaceModule
+                        title="更换固件"
+                        type="firmware"
+                        desc="clife为您提供经检测认证的通用固件，会直接在您采购的模组内烧录完成，并自动分配设备编码。通讯模组通用固件包含连接clife和数据透传功能。产品功能固件需要您自行研发。"
+                        replaceModalVisible={replaceFirmwareVisible}
+                        handleOk={this.handleModalOk}
+                        handleCancel={this.handleModalCancel}
+                        selectedId={selectedId} />
+                }
 
             </div>
         )
