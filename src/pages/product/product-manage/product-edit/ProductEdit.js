@@ -123,10 +123,11 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
     return (
         <React.Fragment>
             <div className="eidt-wrapper">
-                <div >
-                    <PageTitle title='开发流程' titleTag='免开发方案' btnTxt='编辑' backTitle='开发流程' children={titleCom} />
-                </div>
-
+                <PageTitle title='开发流程' titleTag='免开发方案' btnTxt='编辑' backTitle='开发流程'  >
+                    
+                    {titleCom}
+                    
+                </PageTitle>
                 <div className='product-main-wrap'>
                     <div className='product-main-wrap_step'>
                         <Steps current={current}>
