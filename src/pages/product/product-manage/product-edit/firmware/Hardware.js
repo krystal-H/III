@@ -147,8 +147,14 @@ export default class Hardware extends Component {
                     </div>
                     {/* 已生成固件 */}
                     <div className="module-box">
-                        <div className="module-tip mar-t-b">已生成固件</div>
-                        <Table columns={this.columns} dataSource={this.dataSource} pagination={false} size="small" />
+                        {/* <div className="module-tip mar-t-b">已生成固件</div>
+                        <Table columns={this.columns} dataSource={this.dataSource} pagination={false} size="small" /> */}
+                        <div className="no-match-firmware">
+                            <div className="no-match-firmware-img">
+                                <img src={require('../../../../../assets/images/product/firmware-icon.png')} alt="" />
+                            </div>
+                            <div className="no-match-firmware-tip">您选择的模组暂无通用固件程序，请自行开发模组固件。</div>
+                        </div>
                     </div>
                     {/* 开发调试 */}
                     <div className="module-box">
