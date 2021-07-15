@@ -6,23 +6,27 @@ const ProductManage = loadable(() => import('./product-manage'));
 const Device = loadable(() => import('./device/Device'));
 const Application = loadable(() => import('./application/Application'));
 
-export default function Product({match,muenList}) {
-    let {path} = match;
+const routes = {
+    '产品管理':ProductManage,
+    '设备注册':ProductManage,
+    '固件升级':ProductManage,
+    '规则引擎':ProductManage,
+    '云端定时':ProductManage,
+    '远程配置':ProductManage,
+}
+
+export default function Product({match:{path},childmenus}) {
     return (
         <Switch>
-            {/* {
-                muenList.map((item,index)=>{
-                    if(item.menuname=='产品'){
-                        return <Route key='产品' path={`${path}/product`} component={Product}></Route>
-                    }else if(item.menuname=='设备'){
-                        return <Route key='设备' path={`${path}/device`} component={Device}></Route>
-                    }else if(item.menuname=='应用'){
-                        return <Route key='应用' path={`${path}/application`} component={Application}></Route>
-                    }
-                })
+            {
+                childmenus.map(({
+                        menuname,
+                        items=[],
+                        path
+                    },i) => <Route key={i} path={path} component={routes[menuname]} authItem={items}></Route>
+                )
             }
-            <Redirect to={`${path}/${muenList[0].url}`} /> */}
-            <Route key='产品管理' path={`${path}/proManage`} component={ProductManage}></Route>
+            <Redirect to={childmenus[0].path} /> 
         </Switch>
     )
 }

@@ -36,21 +36,21 @@ export const navRoutes = [
             },
             {
                 menuname: '固件升级',
-                path: '/open/product/proManage',
+                path: '/open/product/otaUpdate',
 
             },
             {
                 menuname: '规则引擎',
-                path: '/open/product/devRegist',
+                path: '/open/product/ruleEngine',
             },
             {
                 menuname: '云端定时',
-                path: '/open/product/proManage',
+                path: '/open/product/cloudTimer',
 
             },
             {
                 menuname: '远程配置',
-                path: '/open/product/devRegist',
+                path: '/open/product/remoteCofg',
             },
         ]
     }, {
@@ -65,26 +65,26 @@ export const navRoutes = [
             },
             {
                 menuname: '设备秘钥',
-                path: '/open/product/deviceRegist',
+                path: '/open/device/devSecret',
             },
             {
                 menuname: '设备分组',
-                path: '/open/product/proManage',
+                path: '/open/device/devGroup',
 
             },
             {
                 menuname: '设备消息',
-                path: '/open/product/devRegist',
+                path: '/open/device/devMsg',
             }
         ]
     }, {
         menuname: 'APP',
-        path: '/open/APP',
+        path: '/open/app',
         menuicon: 'app',
         childmenus: [
             {
                 menuname: 'APP开发',
-                path: '/open/APP',
+                path: '/open/app',
             }
         ]
     }, {
