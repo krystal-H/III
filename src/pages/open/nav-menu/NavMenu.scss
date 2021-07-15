@@ -1,19 +1,19 @@
 
-@import '../../../assets/css/variables.scss';
-
 .menu-wapper{
     height: 100%;
     width: 100%;
-    padding-top: 45px;
-    position: absolute;
-    top: 0;
-    left: 0;
+    overflow: auto;
     z-index: 9;
     background-color: #EEEFF1;
+    @include self-scroll-bar;
     
     .self-menu{
         height: 100%;
         .ant-menu-item{
+            a{
+                color: #474C58;
+            }
+            
             margin: 0;
         }
         background-color: #EEEFF1;
@@ -22,6 +22,62 @@
             .ant-menu-submenu-title{
                 padding: 0 22px !important;
             }
+        }
+        .ant-menu-sub.ant-menu-inline{
+            background-color: #EEEFF1;
+        }
+        .ant-menu-item-selected  {
+            background-color: #DBE2F2;
+            a{color: #1890ff;}
+        }
+
+        .ant-menu-item.ant-menu-item-active{
+            background-color: #F2F5FD;
+        }
+    }
+    .selficon{
+        display: inline-block;
+        height: 14px;
+        width: 14px;
+        // background: no-repeat center pink;
+        background-size: auto 100%;
+        &.zonglan{
+            background-image: url(../../../assets/images/icon/zonglan.png);
+        }
+        &.chanpin{
+            background-image: url(../../../assets/images/icon/chanpin.png);
+        }
+        &.shebei{
+            background-image: url(../../../assets/images/icon/shebei.png);
+        }
+        &.app{
+            background-image: url(../../../assets/images/icon/app.png);
+        }
+        &.shujufw{
+            background-image: url(../../../assets/images/icon/shujufw.png);
+        }
+        &.studio{
+            background-image: url(../../../assets/images/icon/studio.png);
+        }
+    }
+    .ant-menu-item-selected,.ant-menu-submenu-selected{
+        .selficon.zonglan{
+            background-image: url(../../../assets/images/icon/cur-zonglan.png);
+        }
+        .selficon.chanpin{
+            background-image: url(../../../assets/images/icon/cur-chanpin.png);
+        }
+        .selficon.shebei{
+            background-image: url(../../../assets/images/icon/cur-shebei.png);
+        }
+        .selficon.app{
+            background-image: url(../../../assets/images/icon/cur-app.png);
+        }
+        .selficon.shujufw{
+            background-image: url(../../../assets/images/icon/cur-shujufw.png);
+        }
+        .selficon.studio{
+            background-image: url(../../../assets/images/icon/cur-studio.png);
         }
     }
 }

@@ -20,11 +20,11 @@ export const navRoutes = [
     {
         menuname: '总览',
         path: '/open/home',
-        menuicon: '',
+        menuicon: 'zonglan',
     }, {
         menuname: '产品',
         path: '/open/product',
-        menuicon: '',
+        menuicon: 'chanpin',
         childmenus: [
             {
                 menuname: '产品管理',
@@ -56,7 +56,7 @@ export const navRoutes = [
     }, {
         menuname: '设备',
         path: '/open/device',
-        menuicon: '',
+        menuicon: 'shebei',
         childmenus: [
             {
                 menuname: '设备管理',
@@ -80,7 +80,7 @@ export const navRoutes = [
     }, {
         menuname: 'APP',
         path: '/open/APP',
-        menuicon: '',
+        menuicon: 'app',
         childmenus: [
             {
                 menuname: 'APP开发',
@@ -90,7 +90,7 @@ export const navRoutes = [
     }, {
         menuname: '数据服务',
         path: '/open/serve',
-        menuicon: '',
+        menuicon: 'shujufw',
         childmenus: [
             {
                 menuname: '设备分析',
@@ -110,7 +110,7 @@ export const navRoutes = [
     }, {
         menuname: '开发Studio',
         path: '/open/studio',
-        menuicon: '',
+        menuicon: 'studio',
         childmenus: [
             {
                 menuname: '项目管理',
@@ -125,7 +125,7 @@ export const navRoutes = [
     },{
         menuname:'用户中心',
         path: '/userCenter',
-        menuicon: '',
+        menuicon: 'yonghuzx',
         childmenus:[
             {
                 menuname: '基本资料',
