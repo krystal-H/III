@@ -1,6 +1,10 @@
 @charset 'utf-8';
 
 .replace-module-modal {
+  .replace-firmware-desc {
+    @include text(12px, $_666Color);
+    margin-bottom: 24px;
+  }
   .search-input {
     margin-bottom: 24px;
   }
