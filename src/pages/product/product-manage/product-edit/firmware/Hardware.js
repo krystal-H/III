@@ -61,7 +61,7 @@ export default class Hardware extends Component {
             detailVisible: false, // 模组详情
             freeApplyVisible: false, // 免费申请
             modifyFirmwareVisible: false, // 修改固件
-            replaceFirmwareVisible: true, // 更换固件
+            replaceFirmwareVisible: false, // 更换固件
         }
     }
     // 修改固件
