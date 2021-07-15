@@ -5,6 +5,7 @@ import './ProductProtocols.scss';
 import EditcusFn from './editcusFn'
 import Addfunction from './addModal'
 import NewCusmFn from './addcusFn'
+import downpng from './../../../../../assets/images/product/download.png';
 export default function ProtocolDelete() {
     const columns = [
         { title: 'DP ID', dataIndex: 'name' },
@@ -59,7 +60,11 @@ export default function ProtocolDelete() {
     return <div className='Protocol-wrap'>
         <div className='Protocol-label'>
             <div>独立MCU方案，需选择下载MCU开发资料包等，进行相应开发</div>
-            <a onClick={openEditCus}>导出物模型</a>
+            <div className='Protocol-download'>
+                <a>导出物模型</a>
+                <img src={downpng} />
+            </div>
+
         </div>
         <div className='Protocol-download'>
             <div>标准功能</div>
@@ -73,8 +78,13 @@ export default function ProtocolDelete() {
             />
         </div>
         <div className='Protocol-download'>
-            <div>标准功能</div>
-            <Button type="primary" onClick={openCusmon}>新建自定义功能</Button >
+            <div>自定义功能</div>
+            <div>
+                <a>导出协议</a>
+                <img src={downpng} style={{marginRight:'15px'}}/>
+                <Button type="primary" onClick={openCusmon}>新建自定义功能</Button >
+            </div>
+
         </div>
         <div >
             <Table

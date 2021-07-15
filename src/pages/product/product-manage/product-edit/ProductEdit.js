@@ -146,7 +146,7 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
                 </div>
                 <div className='product-main-footer'>
                     {current > 0 && (
-                        <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+                        <Button style={{ margin: '0 8px' }} onClick={() => prev()} type="primary" ghost>
                             上一步
                         </Button>
                     )}
@@ -158,7 +158,7 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
 
                     {current === stepList.length - 1 && (
                         <Button type="primary" onClick={() => message.success('Processing complete!')}>
-                            Done
+                            发布产品
                         </Button>
                     )}
                 </div>

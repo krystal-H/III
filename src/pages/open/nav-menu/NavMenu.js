@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react'
 import {Link, withRouter} from 'react-router-dom';
-import { Icon as LegacyIcon } from '@ant-design/compatible';
 import { Menu } from 'antd';
 import MyIcon from '../../../components/my-icon/MyIcon';
 import {isEqual} from 'lodash';
-import {
+import Icon,{
     AppstoreOutlined,
     MenuUnfoldOutlined,
     MenuFoldOutlined,
@@ -23,12 +22,17 @@ function getNavList(menus){
         menuicon,menuname,path,childmenus=[]
         },index)=>{
         if(childmenus.length>0){
-            return <SubMenu key={menuname+index} icon={<MailOutlined />} title={menuname}>
+            return <SubMenu key={menuname+index} icon={
+                <span className={`selficon ${menuicon}`}></span>
+            } title={menuname}>
                         {getNavList(childmenus)}
                     </SubMenu>
         }
-        
-        return <Menu.Item key={ menuname + index}>
+        return <Menu.Item key={ menuname + index} 
+                    icon={
+                        menuicon &&
+                        <span className={`selficon ${menuicon}`}></span> || null
+                    }>
                     <Link to={path}>{menuname}</Link>
                 </Menu.Item>
     })

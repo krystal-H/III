@@ -72,15 +72,17 @@ export default class Open extends Component {
                     <Header developerInfo={developerInfo} newMessageNums={newMessageNums} menulist={userMenu} ></Header>
                 </section>
                 <div className="page-content-wrapper">
-                    <div className={`left-menus${collapsed?' collap':''}`}> 
-                        {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                            className: 'trigger-coll',
-                            onClick: this.setCollapsed,
-                        })}
+                    <div className={`left-menus${collapsed?' collap':''}`}>
                         <NavMenu menulist={navMenu} collapsed={collapsed} ></NavMenu>
+                        <div className='trigger-coll' onClick={this.setCollapsed}>
+                            <span className='icon'>{
+                                collapsed && <MenuUnfoldOutlined/> || <MenuFoldOutlined/>
+                            }</span>
+                            {!collapsed && '收起菜单'}
+                        </div>
                     </div>
-                    <section className="right-wrapper flex-column">
-                        <div className="flex1 right-wrapper-padding">
+                    <section className="right-wrapper">
+                        <div className="right-wrapper-contentbox">
                             <Switch>
                                 {/* {
                                     muenList.map((item,index)=>{

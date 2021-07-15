@@ -1,7 +1,3 @@
-@import '../../assets/css/variables.scss';
-@import '../../assets/css/tools.scss';
-
-
 .body-container{
     display: flex;
     flex-direction: column;
@@ -25,7 +21,6 @@
         height: 0;
         display: flex;
         flex-direction: row;
-
         &.content-flex-column{
             flex-direction: column;
         }
@@ -35,13 +30,23 @@
             height: 100%;
             width: $menuWidth;
             position: relative;
+            padding-bottom: 45px;
             .trigger-coll{
+                cursor: pointer;
+                width: 100%;
+                padding: 0 22px;
+                overflow: hidden;
+                .icon{
+                    font-size: 16px;
+                    margin-right: 10px;
+                    @include hover-active();
+                }
+                height: 45px;
+                line-height: 45px;
+                background-color: #EEEFF1;
                 position: absolute;
-                top: 14px;
-                left:22px;
-                font-size: 18px;
-                @include hover-active();
-                z-index: 10;
+                bottom: 0;
+                left: 0;
             }
             &.collap{
                 width: $menuCollWidth;
@@ -52,12 +57,17 @@
         .right-wrapper{
             flex: 1;
             width: 0;
+            height: 100%;
             background:$GrayBgColor;
-            overflow: auto;
-            @include self-scroll-bar;
-            .right-wrapper-padding{
+            .right-wrapper-contentbox{
+                height: 100%;
                 padding: $space;
+                overflow-x: hidden;
+                overflow-y: auto;
+                @include self-scroll-bar;
+
             }
+            
         }
     }
 }

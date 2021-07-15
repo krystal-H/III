@@ -20,11 +20,11 @@ export const navRoutes = [
     {
         menuname: '总览',
         path: '/open/home',
-        menuicon: '',
+        menuicon: 'zonglan',
     }, {
         menuname: '产品',
         path: '/open/product',
-        menuicon: '',
+        menuicon: 'chanpin',
         childmenus: [
             {
                 menuname: '产品管理',
@@ -36,27 +36,27 @@ export const navRoutes = [
             },
             {
                 menuname: '固件升级',
-                path: '/open/product/proManage',
+                path: '/open/product/otaUpdate',
 
             },
             {
                 menuname: '规则引擎',
-                path: '/open/product/devRegist',
+                path: '/open/product/ruleEngine',
             },
             {
                 menuname: '云端定时',
-                path: '/open/product/proManage',
+                path: '/open/product/cloudTimer',
 
             },
             {
                 menuname: '远程配置',
-                path: '/open/product/devRegist',
+                path: '/open/product/remoteCofg',
             },
         ]
     }, {
         menuname: '设备',
         path: '/open/device',
-        menuicon: '',
+        menuicon: 'shebei',
         childmenus: [
             {
                 menuname: '设备管理',
@@ -65,32 +65,32 @@ export const navRoutes = [
             },
             {
                 menuname: '设备秘钥',
-                path: '/open/product/deviceRegist',
+                path: '/open/device/devSecret',
             },
             {
                 menuname: '设备分组',
-                path: '/open/product/proManage',
+                path: '/open/device/devGroup',
 
             },
             {
                 menuname: '设备消息',
-                path: '/open/product/devRegist',
+                path: '/open/device/devMsg',
             }
         ]
     }, {
         menuname: 'APP',
-        path: '/open/APP',
-        menuicon: '',
+        path: '/open/app',
+        menuicon: 'app',
         childmenus: [
             {
                 menuname: 'APP开发',
-                path: '/open/APP',
+                path: '/open/app',
             }
         ]
     }, {
         menuname: '数据服务',
         path: '/open/serve',
-        menuicon: '',
+        menuicon: 'shujufw',
         childmenus: [
             {
                 menuname: '设备分析',
@@ -110,7 +110,7 @@ export const navRoutes = [
     }, {
         menuname: '开发Studio',
         path: '/open/studio',
-        menuicon: '',
+        menuicon: 'studio',
         childmenus: [
             {
                 menuname: '项目管理',
@@ -125,7 +125,7 @@ export const navRoutes = [
     },{
         menuname:'用户中心',
         path: '/userCenter',
-        menuicon: '',
+        menuicon: 'yonghuzx',
         childmenus:[
             {
                 menuname: '基本资料',
