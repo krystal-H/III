@@ -9,7 +9,7 @@ import OutsideWrapper  from '../../components/outside-wrapper/OutsideWrapper';
 import Header from './header/Header';
 import NavMenu from './nav-menu/NavMenu';
 import { MenuUnfoldOutlined, MenuFoldOutlined, } from '@ant-design/icons';
-
+import _ from 'lodash';
 // 模块懒加载
 // const BigDataProduct = loadable( () => import('../big-data-product/BigDataProduct'));
 // const DevelopCenter = loadable( () => import('../develop-center/DevelopCenter'));
@@ -52,6 +52,7 @@ export default class Open extends Component {
     }
     
     componentDidMount(){
+        console.log('---lodash---',_)
         // 请求用户信息
         this.props.getDeveloperInfo();
         this.props.getNewMessageNums();

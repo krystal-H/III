@@ -252,17 +252,17 @@ export const menuList = [
         ],
         items: [],
     },
-    {
-        menuname: 'APP',
-        childmenus: [
-            {
-                menuname: 'APP开发',
-                childmenus: [],
-                items: ['基本信息', '关联产品', '版本发布'],
-            },
-        ],
-        items: [],
-    },
+    // {
+    //     menuname: 'APP',
+    //     childmenus: [
+    //         {
+    //             menuname: 'APP开发',
+    //             childmenus: [],
+    //             items: ['基本信息', '关联产品', '版本发布'],
+    //         },
+    //     ],
+    //     items: [],
+    // },
     {
         menuname: '数据服务',
         childmenus: [
@@ -374,6 +374,7 @@ export function getNavRoutes(menu) {
             childmenus = [],
             items = [],
         }) => {
+            console.log(555,find)
             let _nav = find(_navRoutes, ['menuname', menuname]);
 
             if (childmenus.length > 0) {
