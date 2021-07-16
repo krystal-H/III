@@ -278,15 +278,6 @@ function NumberTemp(props, ref) {
                 name="bs"
             ><Input />
             </Form.Item>
-            {/* <Form.Item label="数据长度">
-                <Space>
-                    <Form.Item
-                        noStyle
-                        name="cd"
-                    ><Input /></Form.Item>
-                    <span>字节</span>
-                </Space>
-            </Form.Item> */}
             <Form.Item
                 label="数据类型："
                 name="sjty"

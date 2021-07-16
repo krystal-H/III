@@ -33,10 +33,19 @@ export default function ProtocolDelete() {
     // const [isStarDia, setIsStarDia] = useState(true); //
     const [rightVisible, setRightVisible] = useState(false);
     const [rightEditVisible, setRightEditVisible] = useState(false);
+    const [destoryDom, setDestoryDom] = useState(true);
     //编辑右边抽屉
     const openEditCus = () => {
-        setRightEditVisible(true)
+        setDestoryDom(true)
+        setTimeout(() => {
+            setRightEditVisible(true)
+        }, 0)
+
     };
+    //编辑抽屉关闭回调
+    const onDestData = () => {
+        setDestoryDom(false)
+    }
     //关闭编辑右边抽屉
     const onCloseEditRight = () => {
         setRightEditVisible(false)
@@ -86,7 +95,7 @@ export default function ProtocolDelete() {
         <div className='Protocol-download'>
             <div>自定义功能</div>
             <div>
-                <a>导出协议</a>
+                <a onClick={openEditCus}>导出协议</a>
                 <img src={downpng} style={{ marginRight: '15px' }} />
                 <Button type="primary" onClick={openCusmon}>新建自定义功能</Button >
             </div>
@@ -100,8 +109,8 @@ export default function ProtocolDelete() {
             />
         </div>
         <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight}></NewCusmFn>
+        {destoryDom && <EditcusFn rightVisible={rightEditVisible} onCloseRight={onCloseEditRight} destData={onDestData}></EditcusFn>}
 
-        <EditcusFn rightVisible={rightEditVisible} onCloseRight={onCloseEditRight}></EditcusFn>
         {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>}
     </div>
 }

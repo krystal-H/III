@@ -2,7 +2,7 @@ import React, { useEffect, useState, useImperativeHandle, forwardRef, useRef } f
 import { Form, Input, Button, Drawer, Tag, Select, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 // import './editInfo.scss'
-export default function ProtocolDelete({ rightVisible, onCloseRight, dataType }) {
+export default function ProtocolDelete({ rightVisible, onCloseRight, destData}) {
     useEffect(() => {
     }, [])
 
@@ -16,6 +16,12 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, dataType })
             console.log(err);
         });
     }
+    //销毁dom
+    const afterVisibleChange=(visible)=>{
+        if(!visible){
+            destData()
+        }
+    }
     return (
         <Drawer
             title='编辑标准功能'
@@ -23,6 +29,7 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, dataType })
             closable={false}
             onClose={onCloseRight}
             visible={rightVisible}
+            afterVisibleChange={afterVisibleChange}
             destroyOnClose={true}
             width={393}
             footer={
@@ -123,7 +130,7 @@ function EnumerTemp({ formS }) {
                 label="枚举型:"
                 name="enumus_text"
                 className='enums-lise-nobottom'
-            ><span style={{ marginRight: '50px' }}>参数值</span>-<span style={{ marginLeft: '30px' }}>参数描述</span>
+            ><><span style={{ marginRight: '50px' }}>参数值</span>-<span style={{ marginLeft: '30px' }}>参数描述</span></>
             </Form.Item>
 
             <div className='right-list-wrap' >
