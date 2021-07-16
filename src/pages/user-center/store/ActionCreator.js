@@ -34,6 +34,7 @@ export const getMenuList = () => {
   return (dispatch,getState) => {
     get(Paths.getGroupMenuList,{version:1.1}).then((res) => {
         // let data = res.data;
+        console.log(111111,menuList,getNavRoutes)
         let data = getNavRoutes(menuList);
         console.log('---routesMenu--',data)
         let action = updateMuenList(data);

@@ -368,6 +368,7 @@ export function RouteWithSubRoutes(route) {
 export function getNavRoutes(menu) {
     let _navRoutes = navRoutes;
     function authorityMenu(menus) {
+        console.log(222,menus)
         let result = menus.map(({
             menuname,
             childmenus = [],
