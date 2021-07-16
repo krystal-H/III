@@ -83,7 +83,7 @@ class RuleInfo extends Component {
         let { ruleFormData, form } = this.props;
         if(!ruleFormData.productId) { return }//没有productId属性 代表是新增且没有保存（点击过下一步）过，次时不需要初始化表单 否则出错
         let { setFieldsValue } = form;
-        console.log(777,ruleFormData);
+        // console.log(777,ruleFormData);
         let { productId,deviceIds,triggerMode,connType} = ruleFormData;
         let values = { productId, deviceIds, triggerMode };
         this.setState({productId,triggerMode,ruletype:connType||"0"},()=>{

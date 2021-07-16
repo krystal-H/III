@@ -34,8 +34,6 @@ export default class Header extends PureComponent  {
             {email,account}= developerInfo,
             {childmenus=[]} = usermenu,
         {totalUnRead} = newMessageNums;
-
-        console.log(777,childmenus)
         return (
             <header className="mainpage-header">
                 <span className="logo">{LOGO_TEXT}</span>

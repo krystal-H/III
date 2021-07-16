@@ -252,17 +252,17 @@ export const menuList = [
         ],
         items: [],
     },
-    // {
-    //     menuname: 'APP',
-    //     childmenus: [
-    //         {
-    //             menuname: 'APP开发',
-    //             childmenus: [],
-    //             items: ['基本信息', '关联产品', '版本发布'],
-    //         },
-    //     ],
-    //     items: [],
-    // },
+    {
+        menuname: 'APP',
+        childmenus: [
+            {
+                menuname: 'APP开发',
+                childmenus: [],
+                items: ['基本信息', '关联产品', '版本发布'],
+            },
+        ],
+        items: [],
+    },
     {
         menuname: '数据服务',
         childmenus: [
@@ -368,27 +368,24 @@ export function RouteWithSubRoutes(route) {
 export function getNavRoutes(menu) {
     let _navRoutes = navRoutes;
     function authorityMenu(menus) {
-        console.log(222,menus)
         let result = menus.map(({
             menuname,
             childmenus = [],
             items = [],
         }) => {
-            console.log(555,find)
-            let _nav = find(_navRoutes, ['menuname', menuname]);
-
+            let _nav = find(_navRoutes,(o)=>o.menuname === menuname);
+        
             if (childmenus.length > 0) {
                 _navRoutes = _nav.childmenus;
                 _nav.childmenus = authorityMenu(childmenus)
             }
             return { ..._nav, items }
-
         })
         _navRoutes = navRoutes;
         return result
     }
     let _routes = authorityMenu(menu);
-    const userMenu = remove(_routes,({menuname})=>menuname=='用户中心')
+    const userMenu = remove(_routes,({menuname})=>menuname==='用户中心')
     return {
         navMenu:_routes,//左侧菜单
         userMenu        //用户中心菜单
