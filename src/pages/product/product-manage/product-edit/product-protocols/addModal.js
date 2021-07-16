@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select } from 'antd';
 import './addModal.scss';
-
+const columns = [
+  { title: '功能类型', dataIndex: 'id' },
+  { title: '功能点名称', dataIndex: 'id' },
+  { title: '标识符', dataIndex: 'remark' },
+  { title: '参数名称', dataIndex: 'remark' },
+  { title: '参数标识', dataIndex: 'remark' },
+  {
+    title: '数据传输类型', dataIndex: 'createTime'
+  },
+  { title: '数据类型', dataIndex: 'remark' },
+  { title: '数据属性', dataIndex: 'remark' }
+];
 export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
 
   const { TabPane } = Tabs, { Search } = Input, { Option } = Select;
@@ -20,38 +31,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
   }
   const [tableData, setTableData] = useState([])
   const [otherData, setOtherData] = useState([])
-  const columns = [
-    {
-      title: '功能名称',
-      dataIndex: 'name',
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: '标识符',
-      dataIndex: 'name',
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: '数据传输类型',
-      dataIndex: 'name',
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: '数据长度',
-      dataIndex: 'name',
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: '状态',
-      dataIndex: 'name',
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: '数据属性',
-      dataIndex: 'name',
-      render: (text) => <a>{text}</a>,
-    },
-  ];
+
 
   useEffect(() => {
   }, [])
@@ -64,7 +44,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
       <Modal title="新增标准功能" visible={isModalVisible} onOk={closeAdd} onCancel={CancelAdd} width='900px' wrapClassName='add-protocols-wrap'>
 
         <Tabs defaultActiveKey="1" onChange={callback}>
-          <TabPane tab="睡眠监测" key="1">
+          <TabPane tab="本品类" key="1">
             <div className='add-protocols-count'>
               {`已选择${selectedRowKeys.length}项`}
             </div>

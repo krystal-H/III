@@ -9,15 +9,22 @@ import downpng from './../../../../../assets/images/product/download.png';
 export default function ProtocolDelete() {
     const columns = [
         { title: 'DP ID', dataIndex: 'name' },
-        { title: '功能名称', dataIndex: 'id' },
+        { title: '功能类型', dataIndex: 'id' },
+        { title: '功能点名称', dataIndex: 'id' },
         { title: '标识符', dataIndex: 'remark' },
+        { title: '参数名称', dataIndex: 'remark' },
+        { title: '参数标识', dataIndex: 'remark' },
         {
             title: '数据传输类型', dataIndex: 'createTime',
             render: text => <span>{text && moment(text).add(8, 'h').format('YYYY-MM-DD HH:mm:ss') || '--'}</span>
         },
-        { title: '状态', dataIndex: 'remark' },
+        { title: '数据类型', dataIndex: 'remark' },
         { title: '数据属性', dataIndex: 'remark' },
-        { title: '操作', dataIndex: 'remark' },
+        {
+            title: '操作', dataIndex: 'remark', render: (text, record) => (
+                <><Button type="link">编辑</Button><Button type="link">删除</Button></>
+            ),
+        },
     ];
     const [dataSource, setdataSource] = useState([]);
 
@@ -80,7 +87,7 @@ export default function ProtocolDelete() {
             <div>自定义功能</div>
             <div>
                 <a>导出协议</a>
-                <img src={downpng} style={{marginRight:'15px'}}/>
+                <img src={downpng} style={{ marginRight: '15px' }} />
                 <Button type="primary" onClick={openCusmon}>新建自定义功能</Button >
             </div>
 
