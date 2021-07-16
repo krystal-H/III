@@ -79,7 +79,13 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
     })
     const [current, setcurrent] = useState(origincurrent);
     //下一步
+    const [isContinue, setIsContinue] = useState(false);
     const next = () => {
+        // setIsContinue(true)
+        setcurrent(current + 1);
+    };
+    const nextStep = () => {
+        setIsContinue(false)
         setcurrent(current + 1);
     };
     //上一步
@@ -137,11 +143,11 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
                         </Steps>
                     </div>
                     <Switch>
-                        <Route path={`${path}/protocols`} render={(props) => <ProductProtocols {...props} canOperate={canOperate} productId={productIdInRoutePath}></ProductProtocols>}></Route>
-                        <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel {...props} canOperate={canOperate} getProductBaseInfo={getProductBaseInfo} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
-                        <Route path={`${path}/projectSelect`} render={(props) => <Hardware {...props} canOperate={canOperate} productId={productIdInRoutePath}></Hardware>}></Route>
-                        <Route path={`${path}/service`} render={(props) => <ProductServices {...props} canOperate={canOperate} productId={productIdInRoutePath}></ProductServices>}></Route>
-                        <Route path={`${path}/validation`} render={(props) => <Validation {...props} canOperate={canOperate} productId={productIdInRoutePath}></Validation>}></Route>
+                        <Route path={`${path}/protocols`} render={(props) => <ProductProtocols nextAction={nextStep} isContinue={isContinue} {...props} canOperate={canOperate} productId={productIdInRoutePath}></ProductProtocols>}></Route>
+                        <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel nextAction={nextStep} isContinue={isContinue} {...props} canOperate={canOperate} getProductBaseInfo={getProductBaseInfo} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
+                        <Route path={`${path}/projectSelect`} render={(props) => <Hardware nextAction={nextStep} isContinue={isContinue} {...props} canOperate={canOperate} productId={productIdInRoutePath}></Hardware>}></Route>
+                        <Route path={`${path}/service`} render={(props) => <ProductServices nextAction={nextStep} isContinue={isContinue} {...props} canOperate={canOperate} productId={productIdInRoutePath}></ProductServices>}></Route>
+                        <Route path={`${path}/validation`} render={(props) => <Validation nextAction={nextStep} isContinue={isContinue} {...props} canOperate={canOperate} productId={productIdInRoutePath}></Validation>}></Route>
                         <Redirect to={`${path}/protocols`} />
                     </Switch>
                 </div>

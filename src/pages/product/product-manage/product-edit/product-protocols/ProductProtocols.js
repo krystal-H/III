@@ -6,7 +6,8 @@ import EditcusFn from './editcusFn'
 import Addfunction from './addModal'
 import NewCusmFn from './addcusFn'
 import downpng from './../../../../../assets/images/product/download.png';
-export default function ProtocolDelete() {
+export default function ProtocolDelete({isContinue,nextAction}) {
+
     const columns = [
         { title: 'DP ID', dataIndex: 'name' },
         { title: '功能类型', dataIndex: 'id' },
@@ -27,7 +28,6 @@ export default function ProtocolDelete() {
         },
     ];
     const [dataSource, setdataSource] = useState([]);
-
     const [selectId, setSelectId] = useState(0);
     //编辑标准功能/新增自定义功能=======
     // const [isStarDia, setIsStarDia] = useState(true); //
@@ -58,8 +58,6 @@ export default function ProtocolDelete() {
     const onCloseRight = () => {
         setRightVisible(false);
     };
-
-
     //新增标准功能====
     const [isModalVisible, setIsModalVisible] = useState(false);
     const closeAdd = () => {
@@ -72,6 +70,15 @@ export default function ProtocolDelete() {
         setIsModalVisible(true)
     }
     //===========
+    useEffect(()=>{
+        if(isContinue){
+            subNextConFirm()
+        }
+    },[isContinue])
+    const subNextConFirm=()=>{
+        // console.log('处罚了========')
+        nextAction()
+    }
     return <div className='Protocol-wrap'>
         <div className='Protocol-label'>
             <div>独立MCU方案，需选择下载MCU开发资料包等，进行相应开发</div>
