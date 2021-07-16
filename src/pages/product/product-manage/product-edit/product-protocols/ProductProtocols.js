@@ -15,7 +15,6 @@ export default function ProtocolDelete() {
             title: '数据传输类型', dataIndex: 'createTime',
             render: text => <span>{text && moment(text).add(8, 'h').format('YYYY-MM-DD HH:mm:ss') || '--'}</span>
         },
-        { title: '数据长度', dataIndex: 'remark' },
         { title: '状态', dataIndex: 'remark' },
         { title: '数据属性', dataIndex: 'remark' },
         { title: '操作', dataIndex: 'remark' },

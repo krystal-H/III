@@ -128,7 +128,7 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
                     {titleCom}
                     
                 </PageTitle>
-                <div className='product-main-wrap'>
+                <div className='product-main-wrap comm-shadowbox'>
                     <div className='product-main-wrap_step'>
                         <Steps current={current}>
                             {stepList.map(item => (

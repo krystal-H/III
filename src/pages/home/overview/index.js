@@ -47,7 +47,7 @@ export default function OverviewWrap() {
             </div>
             <div className='over-view-content'>
                 <div className='over-view-content-left'>
-                    <div className='over-view-boxshadow over-view-statistical'>
+                    <div className='over-view-boxshadow over-view-statistical comm-shadowbox'>
                         <div>
                             <div className='over-view-statistical-label'>接入产品数</div>
                             <div className='over-view-statistical-number'>12</div>
@@ -65,7 +65,7 @@ export default function OverviewWrap() {
                             <div className=' over-view-statistical-number_err'>12</div>
                         </div>
                     </div>
-                    <div className='over-view-boxshadow over-view-productmn' >
+                    <div className='over-view-boxshadow over-view-productmn comm-shadowbox' >
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>产品管理</div>
@@ -122,7 +122,7 @@ export default function OverviewWrap() {
                             </div>
                         </div>
                     </div>
-                    <div className='over-view-boxshadow over-view-device'>
+                    <div className='over-view-boxshadow over-view-device comm-shadowbox'>
                         <div className='over-view-device-title'>我的设备</div>
                         <div className='over-view-device-content'>
                             <div className='over-view-device-content-item'>
@@ -202,7 +202,7 @@ export default function OverviewWrap() {
                             </div>
                         </div>
                     </div>
-                    <div className='over-view-boxshadow over-view-productmn' >
+                    <div className='over-view-boxshadow over-view-productmn comm-shadowbox' >
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>APP开发</div>
@@ -222,7 +222,7 @@ export default function OverviewWrap() {
                     </div>
                 </div>
                 <div className='over-view-content-right'>
-                    <div className='over-view-boxshadow over-view-unified-wrap' >
+                    <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >
                         <div>
                             <div>快捷入口</div>
                         </div>
@@ -241,7 +241,7 @@ export default function OverviewWrap() {
                             </div>
                         </div>
                     </div>
-                    <div className='over-view-boxshadow over-view-unified-wrap' >
+                    <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >
                         <div>
                             <div>产品管理</div>
                             <a>更多</a>
@@ -258,7 +258,7 @@ export default function OverviewWrap() {
                             </div>
                         </div>
                     </div>
-                    <div className='over-view-boxshadow over-view-unified-wrap' >
+                    <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >
                         <div>
                             <div>新建产品</div>
                         </div>
@@ -283,7 +283,7 @@ export default function OverviewWrap() {
                             </div>
                         </div>
                     </div>
-                    <div className='over-view-boxshadow over-view-unified-wrap' >
+                    <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >
                         <div>
                             <div>数据服务</div>
                         </div>
@@ -308,7 +308,7 @@ export default function OverviewWrap() {
                             </div>
                         </div>
                     </div>
-                    <div className='over-view-boxshadow over-view-unified-wrap' >
+                    <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >
                         <div>
                             <div>帮助</div>
                         </div>
