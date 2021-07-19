@@ -4,6 +4,7 @@ import { Input, Button, Table, Divider, Modal, Tooltip, Tag } from 'antd';
 import ActionConfirmModal from './../../../components/action-confirm-modal/ActionConfirmModal';
 import {AddUserInfo} from './AddUserInfo';
 import {Notification} from '../../../components/Notification';
+import PageTitle from '../../../components/page-title/PageTitle';
 import './userVisit.scss'
 import moment from 'moment';
 
@@ -198,37 +199,35 @@ export default class UserVisit extends Component {
         let { loading, userName, addUserVisible, startModalVisible, forbiddenModalVisible, deleteModalVisible, deleteInputValue,userList, pager } = this.state;
         return (
            <div className='user-visit-box'>
-                <header className="page-content-header">
-                    <h3 className="page-name">访问用户</h3>
-                    <div>
-                        <div className='searchBox'>
-                            <Input.Search placeholder="请输入用户名查找"
-                                enterButton
-                                maxLength={20}
-                                onSearch={value => this.searchProduct(value)} 
-                            />
-                        </div>
-                        <div className='butFloatRight'>
-                            <Button className='but-add' type="primary" onClick={this.addUser}>创建用户</Button>
-                        </div>
-                    </div>
-                </header>
-                <div className='commonContentBox'>
-                    <div className='centent'>
-                        <Table 
-                            rowKey="userId"
-                            columns={this.columns} 
-                            dataSource={userList} 
-                            pagination={{
-                                defaultCurrent:pager.pageIndex, 
-                                total:pager.totalRows, 
-                                hideOnSinglePage:false,
-                                onChange:this.pagerIndex,
-                                current: pager.pageIndex
-                            }} 
-                            loading={loading} 
+               <PageTitle title="访问用户">
+                <div className="user-page-content-header">
+                    <div className='searchBox'>
+                        <Input.Search placeholder="请输入用户名查找"
+                            enterButton
+                            maxLength={20}
+                            onSearch={value => this.searchProduct(value)} 
                         />
                     </div>
+                    <div className='butFloatRight'>
+                        <Button className='but-add' type="primary" onClick={this.addUser}>创建用户</Button>
+                    </div>
+                </div>
+               </PageTitle>
+                
+                <div className='comm-shadowbox'>
+                    <Table 
+                        rowKey="userId"
+                        columns={this.columns} 
+                        dataSource={userList} 
+                        pagination={{
+                            defaultCurrent:pager.pageIndex, 
+                            total:pager.totalRows, 
+                            hideOnSinglePage:false,
+                            onChange:this.pagerIndex,
+                            current: pager.pageIndex
+                        }} 
+                        loading={loading} 
+                    />
                 </div>
                 <Modal
                     title="创建用户"

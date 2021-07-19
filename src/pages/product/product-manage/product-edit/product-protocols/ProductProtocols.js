@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,forwardRef ,useImperativeHandle,useRef} from 'react'
 import moment from 'moment';
 import { Table, Button, Drawer } from 'antd';
 import './ProductProtocols.scss';
@@ -6,7 +6,7 @@ import EditcusFn from './editcusFn'
 import Addfunction from './addModal'
 import NewCusmFn from './addcusFn'
 import downpng from './../../../../../assets/images/product/download.png';
-export default function ProtocolDelete({isContinue,nextAction}) {
+function ProtocolFn({nextStep},ref) {
 
     const columns = [
         { title: 'DP ID', dataIndex: 'name' },
@@ -69,17 +69,15 @@ export default function ProtocolDelete({isContinue,nextAction}) {
     const openAdd = () => {
         setIsModalVisible(true)
     }
-    //===========
-    useEffect(()=>{
-        if(isContinue){
-            subNextConFirm()
-        }
-    },[isContinue])
+    //验证函数
     const subNextConFirm=()=>{
-        // console.log('处罚了========')
-        nextAction()
+        nextStep()
     }
-    return <div className='Protocol-wrap'>
+    useImperativeHandle(ref, () => ({
+        onFinish: subNextConFirm
+    }));
+    const ref11=useRef()
+    return <div className='Protocol-wrap' ref={ref11}>
         <div className='Protocol-label'>
             <div>独立MCU方案，需选择下载MCU开发资料包等，进行相应开发</div>
             <div className='Protocol-download'>
@@ -121,3 +119,6 @@ export default function ProtocolDelete({isContinue,nextAction}) {
         {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>}
     </div>
 }
+export default  ProtocolFn= forwardRef(ProtocolFn)
+
+

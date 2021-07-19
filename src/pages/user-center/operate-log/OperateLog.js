@@ -4,7 +4,6 @@ import '@ant-design/compatible/assets/index.css';
 import { Input, Button, Select, DatePicker, Table } from 'antd';
 
 import PageTitle from '../../../components/page-title/PageTitle';
-import AloneSection from '../../../components/alone-section/AloneSection';
 import moment from 'moment';
 
 import './OperateLog.scss'
@@ -213,10 +212,10 @@ export default class VisitLog extends Component {
 		return (
 			<div>
 				<div>
-					<PageTitle noback={true} title="操作日志"></PageTitle>
+					<PageTitle title="操作日志"></PageTitle>
 
 				</div>
-				<AloneSection title="">
+				<div className='comm-shadowbox'>
 					<div className="search-area lineSearchBox">
 						<SearchFormWrapper searchLog={this.searchLog}></SearchFormWrapper>
 					</div>
@@ -234,7 +233,7 @@ export default class VisitLog extends Component {
 								}} 
 							   dataSource={logsList} />
 					</div>
-				</AloneSection>
+				</div>
 			</div>
 		)
 	}

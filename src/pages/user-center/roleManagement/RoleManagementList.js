@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Input, Button, Table, Tag, Card, Divider, Popconfirm } from 'antd';
-import moment from 'moment';
 import {get, Paths} from '../../../api';
 import './roleManagement.scss';
 import { deleteRole } from '../store/ActionCreator';
 import { DateTool } from '../../../util/util';
 import { Notification } from './../../../components/Notification';
-
+import PageTitle from '../../../components/page-title/PageTitle';
 
 const mapStateToProps = state => {
     return {
@@ -126,9 +125,8 @@ export default class RoleManagementList extends Component {
         let { loading, roleList, pager } = this.state;
         return (
             <div className='role-management'>
-                <header className="page-content-header">
-                    <h3 className="page-name">用户角色</h3>
-                    <div>
+                <PageTitle title="用户角色">
+                    <div className="user-page-content-header">
                         <div className="searchBox">
                             <Input.Search placeholder="请输入用户角色名查找" maxLength={20} onSearch={value => this.searchProduct(value)} enterButton />
                         </div>
@@ -136,7 +134,7 @@ export default class RoleManagementList extends Component {
                             <Button type="primary" onClick={this.addRole}>创建用户角色</Button>
                         </div>
                     </div>
-                </header>
+                </PageTitle>
                 <Card>
                     <Table 
                         rowKey='roleId'

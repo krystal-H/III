@@ -1,23 +1,12 @@
 import React, { PureComponent } from 'react'
 import {Link, withRouter} from 'react-router-dom';
 import { Menu } from 'antd';
-import MyIcon from '../../../components/my-icon/MyIcon';
-import {isEqual} from 'lodash';
-import Icon,{
-    AppstoreOutlined,
-    MenuUnfoldOutlined,
-    MenuFoldOutlined,
-    PieChartOutlined,
-    DesktopOutlined,
-    ContainerOutlined,
-    MailOutlined,
-  } from '@ant-design/icons';
 import './NavMenu.scss';
 
 const { SubMenu } = Menu;
 
 function getNavList(menus){
-    // console.log(444,menus)
+    
     return menus.map(({
         menuicon,menuname,path,childmenus=[]
         },index)=>{
@@ -45,8 +34,10 @@ class NavMenu extends PureComponent {
     }
 
     componentWillMount(){
-        // const {routes, history , muenList} = this.props;
+        // const { history , menulist} = this.props;
+        
         // let pathname = history.location.pathname;
+        // console.log(333,this.props.history)
 
         // if (pathname === '/open' && muenList[0] && muenList[0].menus && muenList[0].menus[0]) { // 登录入口进来时开始渲染此组件时，pathname为 /open
         //     pathname += `/${muenList[0].url}/${muenList[0].menus[0].url}`
@@ -65,9 +56,18 @@ class NavMenu extends PureComponent {
         // })
     }
     componentDidMount(){
-        
+        // console.log('---DidMount--',this.props.history)
+        this.props.history.listen(({pathname}) => {
+            console.log('--listen--',pathname)
+
+         })
     }
-    componentDidUpdate(propsold,stateold){   
+    componentDidUpdate(oldprops,oldstate){  
+        const { history , menulist} = this.props;
+        
+        let pathname = history.location.pathname;
+        // console.log(333,pathname,menulist,oldprops.history.location.pathname)
+
     }
     render() {
         let {collapsed,menulist} = this.props;
@@ -77,7 +77,7 @@ class NavMenu extends PureComponent {
             <div className="menu-wapper">
                 <Menu
                     className="self-menu"
-                    // defaultSelectedKeys={defaultSelectedKeys}
+                    // defaultSelectedKeys={['总览0']}
                     // defaultOpenKeys={defaultOpenKeys}
                     mode="inline"
                     inlineCollapsed={collapsed}

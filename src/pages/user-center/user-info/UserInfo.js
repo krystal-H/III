@@ -100,63 +100,66 @@ class BaseInfo extends Component {
             {developerInfo,getDeveloperInfo} = this.props,
             {id,email,createTime,userRole,parentAccount,account} = developerInfo;
 
-        return (
-            isSubUser ? 
-            // 子账号页面
-            <React.Fragment>
-                <PageTitle noback={true} title="基本资料"></PageTitle>
-                <AloneSection title="基本信息">
-                    <div className="alone-section-content-default base-info">
-                        <div className="p-flex">
-                            <span className="flex-item">
-                                <span className="title">登录账号：</span>
-                                {account}
-                            </span>
-                            <span className="flex-item">
-                                <span className="title">所属主帐号：</span>
-                                {parentAccount}
-                            </span>
-                            <span className="flex-item">
-                                <span className="title">账户角色：</span>
-                                {userRole}
-                            </span>
-                            <span className="flex-item">
-                                <span className="title">创建时间：</span>
-                                {createTime ? DateTool.utcToDev(createTime) : ''}
-                            </span>
-                        </div>
+        return <div className='page-userbaseinfo'>
+                <PageTitle title="基本资料" />
+                {
+                    isSubUser ? 
+                    // 子账号页面
+                    <div>
+                        <AloneSection title="基本信息" className='comm-shadowbox'>
+                            <div className="alone-section-content-default base-info">
+                                <div className="p-flex">
+                                    <span className="flex-item">
+                                        <span className="title">登录账号：</span>
+                                        {account}
+                                    </span>
+                                    <span className="flex-item">
+                                        <span className="title">所属主帐号：</span>
+                                        {parentAccount}
+                                    </span>
+                                    <span className="flex-item">
+                                        <span className="title">账户角色：</span>
+                                        {userRole}
+                                    </span>
+                                    <span className="flex-item">
+                                        <span className="title">创建时间：</span>
+                                        {createTime ? DateTool.utcToDev(createTime) : ''}
+                                    </span>
+                                </div>
+                            </div>
+                        </AloneSection>
+                        <TreeStructureDisplay userCategory='1' productResource={productResource} dataObjRightsList={dataObjRightsList} dataDimensionRightsList={dataDimensionRightsList} />
                     </div>
-                </AloneSection>
-                <TreeStructureDisplay userCategory='1' productResource={productResource} dataObjRightsList={dataObjRightsList} dataDimensionRightsList={dataDimensionRightsList} />
-            </React.Fragment>
-            // 主账号页面
-            :<React.Fragment>
-                <PageTitle noback={true} title="基本资料"></PageTitle>
-                <AloneSection title="基本信息">
-                    <div className="alone-section-content-default base-info">
-                        <div className="p-flex">
-                            <span className="flex-item">
-                                <span className="title">开发者ID：</span>
-                                {id}
-                            </span>
-                            <span className="flex-item">
-                                <span className="title">电子邮箱：</span>
-                                {email}
-                            </span>
-                            <span className="flex-item">
-                                <span className="title">注册时间：</span>
-                                {createTime ? DateTool.utcToDev(createTime) : ''}
-                            </span>
-                        </div>
+                    // 主账号页面
+                    :<div>
+                        <AloneSection title="基本信息" className='comm-shadowbox'>
+                            <div className="alone-section-content-default base-info">
+                                <div className="p-flex">
+                                    <span className="flex-item">
+                                        <span className="title">开发者ID：</span>
+                                        {id}
+                                    </span>
+                                    <span className="flex-item">
+                                        <span className="title">电子邮箱：</span>
+                                        {email}
+                                    </span>
+                                    <span className="flex-item">
+                                        <span className="title">注册时间：</span>
+                                        {createTime ? DateTool.utcToDev(createTime) : ''}
+                                    </span>
+                                </div>
+                            </div>
+                        </AloneSection>
+                        <AloneSection title="联系信息" className='comm-shadowbox'>
+                            <div className="alone-section-content-default form-wrapper">
+                                <ContactInformation getDeveloperInfo={getDeveloperInfo} developerInfo={developerInfo}></ContactInformation>
+                            </div>
+                        </AloneSection>
                     </div>
-                </AloneSection>
-                <AloneSection title="联系信息">
-                    <div className="alone-section-content-default form-wrapper">
-                        <ContactInformation getDeveloperInfo={getDeveloperInfo} developerInfo={developerInfo}></ContactInformation>
-                    </div>
-                </AloneSection>
-            </React.Fragment>
-        )
+
+                }
+            
+            </div>
     }
 }
 
