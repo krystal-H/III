@@ -3,7 +3,7 @@ import { Carousel, } from 'antd';
 import {
     RightOutlined,
 } from '@ant-design/icons';
-import { post, Paths ,get} from '../../../api';
+import { post, Paths, get } from '../../../api';
 import './index.scss';
 //==产品管理图片
 import projectmn1 from './../../../assets/images/overImage/project1.png';
@@ -31,28 +31,39 @@ import help2 from './../../../assets/images/overImage/help2.png';
 import help3 from './../../../assets/images/overImage/help3.png';
 import banner from './../../../assets/images/overImage/banner.png';
 export default function OverviewWrap() {
-    useEffect(()=>{
+    useEffect(() => {
         getBannerList()
-    },[])
-    const getBannerList=()=>{
-        get(Paths.homeBanner).then((res) => {
+    }, [])
+    const [bannerArr, setBannerArr] = useState([])
+    const getBannerList = () => {
+        get('http://10.6.50.78:7771/cover/getBannerList').then((res) => {
+            console.log(res, '========')
+            if (res.code == 0) {
+                setBannerArr(res.data)
+            }
             // let addProductList = res.data.list;
             // if(addProductList&&addProductList.length&&addProductList.length>0){
             //     this.setState({addProductList});
             // }
-           
         });
     }
     return (
         <div className='over-view'>
             <div className='comm-shadowbox over-view-banner'>
                 <Carousel autoplay>
-                    <div className='imgdiv'>
+                    {
+                        bannerArr.map((item, index) => {
+                            return <div className='imgdiv' key={index}>
+                                <img src={item.imageUrl} />
+                            </div>
+                        })
+                    }
+                    {/* <div className='imgdiv'>
                         <img src={banner} />
                     </div>
                     <div className='imgdiv'>
                         <img src={banner} />
-                    </div>
+                    </div> */}
                 </Carousel>
             </div>
             <div className='over-view-content'>
@@ -253,7 +264,7 @@ export default function OverviewWrap() {
                     </div>
                     <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >
                         <div>
-                            <div>产品管理</div>
+                            <div>消息中心</div>
                             <a>更多</a>
                         </div>
                         <div className='over-view-message hover-commons-unite'>
