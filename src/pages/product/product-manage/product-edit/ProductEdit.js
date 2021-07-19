@@ -75,38 +75,18 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
             origincurrent = index
         }
     })
-    //当前tab
     const [current, setcurrent] = useState(origincurrent);
-    //
-    const refOne = useRef()
-    const refTwo = useRef()
-    const [refThree, setRefThree] = useState('');
-    const [refFour, setRefFour] = useState('');
-
-    // const refArr = {
-    //     active_0: useRef(),
-    //     active_1: useRef(),
-    //     active_2: useRef(),
-    //     active_3: useRef(),
-    //     active_4: useRef(),
-    // }
+    const refArr = {
+        active_0: useRef(),
+        active_1: useRef(),
+        active_2: useRef(),
+        active_3: useRef(),
+        active_4: useRef(),
+    }
     //下一步
     const [isContinue, setIsContinue] = useState(false);
     const next = () => {
-        // if (current < 2) {
-        //     refArr['active_' + current].current.onFinish()
-        // }
-        if (current == 0) {
-            refOne.current.onFinish()
-        } else if (current == 1) {
-            refTwo.current.onFinish()
-        } else if (current == 2) {
-            console.log(refThree,'aaaa')
-            // refThree.onFinish()
-        } else if (current == 3) {
-            refFour.onFinish()
-        }
-        // console.log(refArr['active_' + current], '====',refThree)
+        refArr['active_' + current].current.onFinish()
     };
     const nextStep = useCallback(() => {
         setcurrent(current + 1)
@@ -120,6 +100,7 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
         if (location.pathname.split('/')[6] != stepList[current].content) {
             history.push(match.url + '/' + stepList[current].content);
         }
+
     }, [current])
     if (!productIdInRoutePath) {
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
@@ -163,10 +144,10 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
                         </Steps>
                     </div>
                     <Switch>
-                        <Route path={`${path}/protocols`} render={(props) => <ProductProtocols ref={refOne} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ProductProtocols>}></Route>
-                        <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel ref={refTwo} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} getProductBaseInfo={getProductBaseInfo} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
-                        <Route path={`${path}/projectSelect`} render={(props) => <Hardware onRef={(ref) => { setRefThree(ref) }} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></Hardware>}></Route>
-                        <Route path={`${path}/service`} render={(props) => <ProductServices onRef={(ref) => { setRefFour(ref) }} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ProductServices>}></Route>
+                        <Route path={`${path}/protocols`} render={(props) => <ProductProtocols ref={refArr.active_0} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ProductProtocols>}></Route>
+                        <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel ref={refArr.active_1} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} getProductBaseInfo={getProductBaseInfo} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
+                        <Route path={`${path}/projectSelect`} render={(props) => <Hardware ref={refArr.active_2} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></Hardware>}></Route>
+                        <Route path={`${path}/service`} render={(props) => <ProductServices ref={refArr.active_3} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ProductServices>}></Route>
                         <Route path={`${path}/validation`} render={(props) => <Validation ref={refArr.active_4} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></Validation>}></Route>
                         <Redirect to={`${path}/protocols`} />
                     </Switch>
