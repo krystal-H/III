@@ -56,7 +56,7 @@ class NavMenu extends PureComponent {
         // })
     }
     componentDidMount(){
-        console.log('---DidMount--',this.props.history)
+        // console.log('---DidMount--',this.props.history)
         this.props.history.listen(({pathname}) => {
             console.log('--listen--',pathname)
 
@@ -66,7 +66,7 @@ class NavMenu extends PureComponent {
         const { history , menulist} = this.props;
         
         let pathname = history.location.pathname;
-        console.log(333,pathname,menulist,oldprops.history.location.pathname)
+        // console.log(333,pathname,menulist,oldprops.history.location.pathname)
 
     }
     render() {

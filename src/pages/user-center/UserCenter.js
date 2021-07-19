@@ -10,29 +10,29 @@ import UserVisit from './user-visit/UserVisit';
 import UserLook from './user-visit/UserLook';
 import OperateLog from './operate-log/OperateLog';
 import SecuritySetting from './security-setting/SecuritySetting';
-import CaseManage from './case-manage/CaseManage';
-import Authorize from './authorize/Authorize';
-import DataAsset from './dataasset/Dataasset';
-import DataAssetDetail from './dataasset/dataAssetDetail';
 
-
-
-
-
-import {PrivateRoute} from '../../configs/route.config';
 import OutsideWrapper from '../../components/outside-wrapper/OutsideWrapper'
 import Header from '../../pages/open/header/Header'
-import PageTabs from '../../components/page-tabs/PageTabs'
+import NavMenu from '../../pages/open/nav-menu/NavMenu';
 
 import {getNewMessageNums} from '../message-center/store/ActionCreator'
-import {getDeveloperInfo} from './store/ActionCreator';
+import {getDeveloperInfo,getMenuList} from './store/ActionCreator';
 
 import './UserCenter.scss'
 
+
+const RouteComponentLi ={
+    '基本资料':UserInfo,
+    '安全设置':SecuritySetting,
+    '访问用户':UserVisit,
+    '用户角色':RoleManagement,
+    '操作日志':OperateLog,
+}
 const mapStateToProps = state => {
     return {
         developerInfo: state.getIn(['userCenter', 'developerInfo']).toJS(),
-        newMessageNums: state.getIn(['message', 'newMessageNums']).toJS()
+        newMessageNums: state.getIn(['message', 'newMessageNums']).toJS(),
+        menulist: state.getIn(['userCenter', 'menulist']).toJS(),
     }
 }
 
@@ -40,15 +40,15 @@ const mapDispatchToProps = dispatch => {
     return {
         getNewMessageNums: () => dispatch(getNewMessageNums()),
         getDeveloperInfo: () => dispatch(getDeveloperInfo()),
+        getMenuList: () => dispatch(getMenuList()),
     }
 }
-
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class UserCenter extends Component {
     componentDidMount () {
-        let {newMessageNums,getNewMessageNums,getDeveloperInfo,developerInfo} = this.props;
-
+        let {newMessageNums,getNewMessageNums,getDeveloperInfo,developerInfo,getMenuList} = this.props;
+        getMenuList();
         if (isEmpty(newMessageNums)) {
             getNewMessageNums()
         }
@@ -58,33 +58,42 @@ export default class UserCenter extends Component {
         }
     }
     render() {
-        let {developerInfo,newMessageNums,match,getDeveloperInfo} = this.props,
+        let {developerInfo,newMessageNums,match,getDeveloperInfo,menulist:{userMenu=[]}} = this.props,
             {path} = match,
-            isOk = !(developerInfo.isSubUser === 1);
-
+            {childmenus=[]} = userMenu[0] || {},
+            isOk = !(developerInfo.isSubUser === 1);//非子账号
+        console.log(55555,this.props.menulist)
         return (
             <OutsideWrapper>
                 <div className="page-header-wrapper">
-                    <Header newMessageNums={newMessageNums} developerInfo={developerInfo} noCollapsed={true}></Header>
+                    <Header newMessageNums={newMessageNums} developerInfo={developerInfo} ></Header>
                 </div>
                 <div className="page-content-wrapper">
-                    <PageTabs developerInfo={developerInfo}></PageTabs>
-                    <section className="right-wrapper flex-column">
-                        <div className="flex1 scroll-y">
+                    <div className={'left-menus'}>
+                        <NavMenu menulist={userMenu} ></NavMenu>
+                    </div>
+                    <section className="right-wrapper">
+                        <div className="right-wrapper-contentbox">
                             <Switch>
-                                    <Route path={`${path}/info`} component={UserInfo}></Route>
-                                    <Route path={`${path}/security`} render={props => <SecuritySetting {...props} developerInfo={developerInfo} getDeveloperInfo={getDeveloperInfo}></SecuritySetting>}></Route>
-                                    <PrivateRoute component={RoleManagement} path={`${path}/role`} redirect={`${path}/info`} isOk={isOk}></PrivateRoute>
-                                    <PrivateRoute component={UserVisit} path={`${path}/visit`} redirect={`${path}/info`} isOk={isOk}></PrivateRoute>
-                                    <PrivateRoute component={UserLook} path={`${path}/look`} redirect={`${path}/info`} isOk={isOk}></PrivateRoute>
-                                    <PrivateRoute component={AddRole} path={`${path}/add`} redirect={`${path}/info`} isOk={isOk}></PrivateRoute>
-                                    <PrivateRoute component={OperateLog} path={`${path}/log`} redirect={`${path}/info`} isOk={isOk}></PrivateRoute>
-
-                                    <PrivateRoute component={CaseManage} path={`${path}/case`} redirect={`${path}/info`} isOk={isOk}></PrivateRoute>
-                                    <PrivateRoute component={Authorize} path={`${path}/authorize`} redirect={`${path}/info`} isOk={isOk}></PrivateRoute>
-                                    <PrivateRoute component={DataAsset} path={`${path}/dataasset`} redirect={`${path}/info`} isOk={isOk}></PrivateRoute>
-                                    <PrivateRoute component={DataAssetDetail} path={`${path}/assetdetail/:id/:readOnly`} redirect={`${path}/info`} isOk={isOk} developerInfo={developerInfo}></PrivateRoute>
-                                    <Redirect to={`${path}/info`}></Redirect>
+                                {
+                                    childmenus.map(({
+                                        menuname,path, ...rest
+                                    },index)=>{
+                                        const RouteComponent = RouteComponentLi[menuname];
+                                        if(RouteComponent){
+                                            return <Route key={index} path={path} 
+                                                    render={props => <RouteComponent developerInfo={developerInfo} getDeveloperInfo={getDeveloperInfo} {...props} {...rest} />}
+                                                ></Route>
+                                        }
+                                    })
+                                }
+                                {
+                                    isOk&&<Route path={`${path}/look`} component={UserLook}></Route>
+                                }
+                                {
+                                    isOk&&<Route path={`${path}/add`} component={AddRole}></Route>
+                                }
+                                {childmenus[0]&&<Redirect to={childmenus[0].path}></Redirect>}
                             </Switch>
                         </div>
                     </section>

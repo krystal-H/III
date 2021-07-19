@@ -8,7 +8,7 @@ const defaultState = fromJS({
     },
     menulist:{
       navMenu:[],
-      userMenu:[{}]
+      userMenu:[]
     },
     instanceList:[],
 });
