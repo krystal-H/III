@@ -29,7 +29,7 @@ export default function NetworkInfo({ networkModalVisible, cancelHandle }) {
       wrapClassName="replace-module-modal">
       <div className="network-info-modal">
         <Form
-          ref={form}
+          form={form}
           onFinish={onFinish}
           labelCol={{ span: 5 }}
           wrapperCol={{ span: 19 }}>
@@ -105,8 +105,7 @@ export default function NetworkInfo({ networkModalVisible, cancelHandle }) {
             }
           </Form.Item>
         </Form>
-
-      </div>
+      </div> 
     </Modal>
   )
 }
