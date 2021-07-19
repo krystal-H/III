@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Switch,Redirect,Route } from 'react-router-dom';
 
-import Serviceselect from './service-select/ServiceSelect';
+import ServiceConfig from './service-config/service-config';
 import AppControl from './app-control/AppControl';
 import CloudTime from './cloud-time/CloudTime';
 import SceneLink from './scene-link/SceneLink';
@@ -15,11 +15,11 @@ export default class ProductServices extends Component {
         
         return (
             <Switch>
-                <Route path={`${path}/serviceselect`} render={(props) => <Serviceselect {...props} productId={productId}></Serviceselect>}></Route>
+                <Route path={`${path}/serviceConfig`} render={(props) => <ServiceConfig {...props} productId={productId}></ServiceConfig>}></Route>
                 <Route path={`${path}/appcontrol`} render={(props) => <AppControl {...props} canOperate={canOperate} productId={productId}></AppControl>}></Route>
                 <Route path={`${path}/cloudtime`} render={(props) => <CloudTime {...props} canOperate={canOperate} productId={productId}></CloudTime>}></Route>
                 <Route path={`${path}/scenelink`} render={(props) => <SceneLink {...props} canOperate={canOperate} productId={productId}></SceneLink>}></Route>
-                <Redirect to={`${path}/serviceselect`}></Redirect>
+                <Redirect to={`${path}/serviceConfig`}></Redirect>
             </Switch>
         )
     }

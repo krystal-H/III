@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState ,useImperativeHandle,forwardRef} from 'react'
 import { Button } from 'antd';
-import moment from 'moment';
 import GrayDebugg from './grayDebugg'
 import ChangeModal from './changeModal'
 import './index.scss'
-export default function ProtocolDelete() {
+function confirmModel({nextStep},ref) {
     useEffect(() => {
     }, [])
     //灰色测试
@@ -29,6 +28,12 @@ export default function ProtocolDelete() {
     const openChange = () => {
         setIsChangeModalVisible(true)
     }
+    const subNextConFirm=()=>{
+        nextStep()
+    }
+    useImperativeHandle(ref, () => ({
+        onFinish: subNextConFirm
+    }));
     return <div className='confirm-pannel'>
         <div className='confirm-pannel-title'>
             <div>已选面板：</div>
@@ -84,3 +89,5 @@ export default function ProtocolDelete() {
         }
     </div>
 }
+
+export default  confirmModel = forwardRef(confirmModel)
