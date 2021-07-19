@@ -1,6 +1,6 @@
-export const urlPrefix = '/v5/web/open';//是正式接口
+// export const urlPrefix = '/v5/web/open';//是正式接口
 // const urlPrefix = '/v1/web/open';//本地调试
-
+export const urlPrefix='/v6/web' //邓悦的本地地址
 let fileTourl = "/v4/web/tencentcloud/upload";
 if(window.location.hostname == "open.clife.cn" || window.location.hostname == "cms.clife.cn"){
     fileTourl = "https://cms.clife.cn/v4/web/tencentcloud/upload"
@@ -463,7 +463,8 @@ let Paths = {
     otaValiGetinfo:'/device/version/5/validate/getInfo',
 
     
-
+    //总览页
+    homeBanner:'/cover/getBannerList'
     
     
     

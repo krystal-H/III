@@ -3,6 +3,7 @@ import { Carousel, } from 'antd';
 import {
     RightOutlined,
 } from '@ant-design/icons';
+import { post, Paths ,get} from '../../../api';
 import './index.scss';
 //==产品管理图片
 import projectmn1 from './../../../assets/images/overImage/project1.png';
@@ -28,11 +29,20 @@ import dataservice3 from './../../../assets/images/overImage/dataservice3.png';
 import help1 from './../../../assets/images/overImage/help1.png';
 import help2 from './../../../assets/images/overImage/help2.png';
 import help3 from './../../../assets/images/overImage/help3.png';
-
 import banner from './../../../assets/images/overImage/banner.png';
 export default function OverviewWrap() {
     useEffect(()=>{
+        getBannerList()
     },[])
+    const getBannerList=()=>{
+        get(Paths.homeBanner).then((res) => {
+            // let addProductList = res.data.list;
+            // if(addProductList&&addProductList.length&&addProductList.length>0){
+            //     this.setState({addProductList});
+            // }
+           
+        });
+    }
     return (
         <div className='over-view'>
             <div className='comm-shadowbox over-view-banner'>

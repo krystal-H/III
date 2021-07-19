@@ -7,7 +7,6 @@ import Addfunction from './addModal'
 import NewCusmFn from './addcusFn'
 import downpng from './../../../../../assets/images/product/download.png';
 function ProtocolFn({nextStep},ref) {
-
     const columns = [
         { title: 'DP ID', dataIndex: 'name' },
         { title: '功能类型', dataIndex: 'id' },

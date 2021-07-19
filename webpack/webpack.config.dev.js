@@ -47,6 +47,12 @@ const dev = {
         changeOrigin: true,
         secure: false,
       },
+      "/v6/web": {
+        target: 'http://10.6.50.78:7771',
+        // target: "http://10.8.80.120:8080",
+        changeOrigin: true,
+        secure: false,
+      },
     },
     // proxy: {//后台本地
     //   '/v1/web/': {
