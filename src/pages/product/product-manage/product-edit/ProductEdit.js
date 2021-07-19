@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { Switch, Redirect, Route, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Steps, Button, message } from 'antd';
@@ -46,8 +46,6 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
         { mode } = productBaseInfo,
         canOperate = (mode === 0);
 
-    // let history = useHistory();
-
     const { Step } = Steps;
     const stepList = [
         {
@@ -78,22 +76,25 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
         }
     })
     const [current, setcurrent] = useState(origincurrent);
+    const refArr = {
+        active_0: useRef(),
+        active_1: useRef(),
+        active_2: useRef(),
+        active_3: useRef(),
+        active_4: useRef(),
+    }
     //下一步
     const [isContinue, setIsContinue] = useState(false);
     const next = () => {
-        // setIsContinue(true)
-        setcurrent(current + 1);
+        refArr['active_' + current].current.onFinish()
     };
-    const nextStep = () => {
-        setIsContinue(false)
-        setcurrent(current + 1);
-    };
+    const nextStep = useCallback(() => {
+        setcurrent(current + 1)
+    });
     //上一步
     const prev = () => {
         setcurrent(current - 1);
     };
-    useEffect(() => {
-    }, [productIdInRoutePath])
     //tab切换
     useEffect(() => {
         if (location.pathname.split('/')[6] != stepList[current].content) {
@@ -105,34 +106,34 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
     const titleCom = (<div className='product_title_baseinfo_list'>
-    <div>
-        <div>品类：</div>
-        <div>睡眠监测</div>
-    </div>
-    <div>
-        <div>产品ID：</div>
-        <div>睡眠监测</div>
-    </div>
-    <div>
-        <div>通讯协议：</div>
-        <div>睡眠监测</div>
-    </div>
-    <div>
-        <div>产品编码：</div>
-        <div>睡眠监测</div>
-    </div>
-    <div>
-        <div>产品密钥：</div>
-        <div>睡眠监测</div>
-    </div>
-</div>)
+        <div>
+            <div>品类：</div>
+            <div>睡眠监测</div>
+        </div>
+        <div>
+            <div>产品ID：</div>
+            <div>睡眠监测</div>
+        </div>
+        <div>
+            <div>通讯协议：</div>
+            <div>睡眠监测</div>
+        </div>
+        <div>
+            <div>产品编码：</div>
+            <div>睡眠监测</div>
+        </div>
+        <div>
+            <div>产品密钥：</div>
+            <div>睡眠监测</div>
+        </div>
+    </div>)
     return (
         <React.Fragment>
             <div className="eidt-wrapper">
                 <PageTitle title='开发流程' titleTag='免开发方案' btnTxt='编辑' backTitle='开发流程'  >
-                    
+
                     {titleCom}
-                    
+
                 </PageTitle>
                 <div className='product-main-wrap comm-shadowbox'>
                     <div className='product-main-wrap_step'>
@@ -143,11 +144,11 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
                         </Steps>
                     </div>
                     <Switch>
-                        <Route path={`${path}/protocols`} render={(props) => <ProductProtocols nextAction={nextStep} isContinue={isContinue} {...props} canOperate={canOperate} productId={productIdInRoutePath}></ProductProtocols>}></Route>
-                        <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel nextAction={nextStep} isContinue={isContinue} {...props} canOperate={canOperate} getProductBaseInfo={getProductBaseInfo} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
-                        <Route path={`${path}/projectSelect`} render={(props) => <Hardware nextAction={nextStep} isContinue={isContinue} {...props} canOperate={canOperate} productId={productIdInRoutePath}></Hardware>}></Route>
-                        <Route path={`${path}/service`} render={(props) => <ProductServices nextAction={nextStep} isContinue={isContinue} {...props} canOperate={canOperate} productId={productIdInRoutePath}></ProductServices>}></Route>
-                        <Route path={`${path}/validation`} render={(props) => <Validation nextAction={nextStep} isContinue={isContinue} {...props} canOperate={canOperate} productId={productIdInRoutePath}></Validation>}></Route>
+                        <Route path={`${path}/protocols`} render={(props) => <ProductProtocols ref={refArr.active_0} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ProductProtocols>}></Route>
+                        <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel ref={refArr.active_1} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} getProductBaseInfo={getProductBaseInfo} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
+                        <Route path={`${path}/projectSelect`} render={(props) => <Hardware ref={refArr.active_2} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></Hardware>}></Route>
+                        <Route path={`${path}/service`} render={(props) => <ProductServices ref={refArr.active_3} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ProductServices>}></Route>
+                        <Route path={`${path}/validation`} render={(props) => <Validation ref={refArr.active_4} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></Validation>}></Route>
                         <Redirect to={`${path}/protocols`} />
                     </Switch>
                 </div>
