@@ -4,6 +4,7 @@ import {
     RightOutlined,
 } from '@ant-design/icons';
 import { post, Paths, get } from '../../../api';
+import AddProductModal from '../../product/product-manage/addProduct/addProduct'
 import './index.scss';
 //==产品管理图片
 import projectmn1 from './../../../assets/images/overImage/project1.png';
@@ -34,18 +35,20 @@ export default function OverviewWrap() {
     useEffect(() => {
         getBannerList()
     }, [])
+    //轮播图
     const [bannerArr, setBannerArr] = useState([])
     const getBannerList = () => {
         get('http://10.6.50.78:7771/cover/getBannerList').then((res) => {
-            console.log(res, '========')
-            if (res.code == 0) {
-                setBannerArr(res.data)
-            }
-            // let addProductList = res.data.list;
-            // if(addProductList&&addProductList.length&&addProductList.length>0){
-            //     this.setState({addProductList});
-            // }
+            setBannerArr(res.data)
         });
+    }
+    //快捷入口
+    const [newProductModal, setNewProductModal] = useState(false)
+    const openNewProduct = () => {
+        setNewProductModal(true)
+    }
+    const closeNewProduct = () => {
+        setNewProductModal(false)
     }
     return (
         <div className='over-view'>
@@ -58,12 +61,6 @@ export default function OverviewWrap() {
                             </div>
                         })
                     }
-                    {/* <div className='imgdiv'>
-                        <img src={banner} />
-                    </div>
-                    <div className='imgdiv'>
-                        <img src={banner} />
-                    </div> */}
                 </Carousel>
             </div>
             <div className='over-view-content'>
@@ -249,7 +246,7 @@ export default function OverviewWrap() {
                         </div>
                         <div className='over-view-quick-entry'>
                             <div className='center-layout-wrap'>
-                                <div>
+                                <div onClick={openNewProduct}>
                                     <img src={quick1} />
                                     <div>创建产品</div>
                                 </div>
@@ -350,6 +347,13 @@ export default function OverviewWrap() {
                     </div>
                 </div>
             </div>
+            {
+                newProductModal &&
+                <AddProductModal
+                    visible={newProductModal}
+                    cancelHandle={closeNewProduct}>
+                </AddProductModal>
+            }
         </div>
     )
 }
