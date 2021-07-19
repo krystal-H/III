@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Image } from 'antd';
+import NetworkInfo from './networkInfo';
 
 import './service-config.scss';
-import calculat from '../../../../../logicDevelop/DrawView/store/nodeConfig/calculat';
 
 const requiredList = [
   {
@@ -59,6 +59,7 @@ const optionalList = [
 ]
 
 export default function ServiceSelect() {
+  const [networkVisible, setNetworkVisible] = useState(false)
   return (
     <div className="service-config-page">
       <div className="desc">免开发方案，只需选择推荐模组、以及配置固件信息，快速实现硬件智能化。</div>
@@ -79,7 +80,7 @@ export default function ServiceSelect() {
               <div className="config-card-right">
                 <div className="config-card-right-title">{item.title}</div>
                 <div className="config-card-right-desc">{item.desc}</div>
-                <div className="config-card-right-btn">{!item.isConfiged ? '配置' : '修改'}</div>
+                <div className="config-card-right-btn" onClick={() => {setNetworkVisible(true)}}>{!item.isConfiged ? '配置' : '修改'}</div>
               </div>
               {
                 item.isConfiged && <div className="configured-logo">已配置</div>
@@ -114,6 +115,13 @@ export default function ServiceSelect() {
           )
         }
       </div>
+      {/* 配网信息 */}
+      {
+        networkVisible && 
+        <NetworkInfo 
+        networkModalVisible={networkVisible}
+        cancelHandle={() => { setNetworkVisible(false) }}/>
+      }
     </div>
   )
 }
