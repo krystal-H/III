@@ -12,7 +12,6 @@ class NavMenu extends PureComponent {
         selectedKeys:[],
     }
     componentDidMount(){
-        const { menulist} = this.props;
         this.props.history.listen( ({pathname})=>{
             this.setCurMenu(pathname)
         } )

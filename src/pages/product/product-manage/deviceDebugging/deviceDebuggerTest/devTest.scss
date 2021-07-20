@@ -617,10 +617,6 @@ $borderColor: #e8e8e8;
             color: $themeColor;
             border-color: $themeColor;
         }
-        .add:hover{
-            // color: $themeColor;
-            // border-color: $themeColor;
-        }
         .instructions{
             font-size: $explainFontSize;
             padding: 12px 50px 12px 12px;
@@ -699,10 +695,6 @@ $borderColor: #e8e8e8;
                 padding-left: 10px;
             }
         }
-        .accountAdd:hover{
-            // color: $themeColor;
-            // border-color: $themeColor;
-        }
         .accountAddDom{
             .accountBox{
                 height: 54px;
@@ -778,178 +770,6 @@ $borderColor: #e8e8e8;
     }
 }
 
-//设备调试
-.deviceDebugging{
-    padding: $gap;
-    background-color:#fff;
-    .title{
-        .titleName, .titleOperation{
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .titleName{
-            font-size: 16px;
-            font-weight: 700;
-        }
-        .titleOperation{
-            img{
-                width: 24px;
-                height: 24px;
-                margin: 0 10px 0 30px;
-            }
-            span{
-                vertical-align: middle;
-                color: $themeColor;
-            }
-        }
-    }
-    .content{
-        margin-top: 10px;
-        position: relative;
-        .message, .setUp{
-            display: inline-block;
-            position: absolute;
-        }
-        .message{
-            right: 100px;
-        }
-        .setUp{
-            right: 40px;
-        }
-        .tabs_1, .tabs_2{
-            .linkState{
-                padding: 8px $gap;
-                border: 1px solid #C2E0AD;
-                border-radius: $borderRadius;
-                background-color: #F6FFEC;
-            }
-            .drop_down_box{
-                position: relative;
-                padding: $gap 0;
-                .dropDown{
-                    display: inline-block;
-                    margin-right: 30px;
-                    .dropDown_name{
-                        padding-right: 10px;
-                    }
-                }
-            }
-            .resetFilterBox{
-                .reset, .filter, .empty{
-                    display: inline-block;
-                    margin-right: 30px;
-                }
-                .reset, .empty{
-                    padding: 5px 18px;
-                    border:1px solid $borderColor;
-                    border-radius: $borderRadius;
-                    cursor: pointer;
-                }
-                .reset:hover, .empty:hover{
-                    background-color: $borderColor;
-                }
-            }
-            .messageData, .plaintextData, .errorData{
-                height: 249px;
-            }
-            .messageList{
-                height: 352px;
-            }
-            .messageList,.messageData, .plaintextData, .errorData{
-                border-bottom: 1px solid $borderColor;
-                .msgTitle{
-                    position: relative;
-                    padding: 15px;
-                    span{
-                        font-size: $subTitleFontSize;
-                        font-weight: 700;
-                    }
-                    .butCopy, .butDelete{
-                        display: inline-block;
-                        position: absolute;
-                        padding: 5px 12px;
-                        border: 1px solid $borderColor;
-                        border-radius: $borderRadius;
-                    }
-                    .butCopy{
-                        right: 10px;
-                    }
-                    .butDelete{
-                        right: 80px;
-                    }
-                }
-                .msgListBox, .msgParseList{
-                    display: inline-block;
-                    height: 100%;
-                }
-                .msgListBox{
-                    width: 60%;
-                    border-right: 1px solid $borderColor;
-                }
-                .msgParseList{
-                    width: 40%;
-                }
-            }
-        }
-        .tabs_1{
-            .export{
-                position: absolute;
-                right: 0;
-                top: 26px;
-                color: $themeColor;
-                cursor: pointer;
-                img{
-                    height: 16px;
-                    width: 16px;
-                    margin-right: 8px;
-                }
-            }
-            .message_content_box{
-                margin-top: $gap;
-                border: 1px solid $borderColor;
-                border-bottom: none;
-                height: 1100px;
-                background-color: #fff;
-                
-            }
-        }
-        .tabs_2{
-            .message_box{
-                margin-top: $gap;
-                border: 1px solid $borderColor;
-                border-right:none;
-                height: 1100px;
-                background-color: #fff;
-                .productList, .operationBut, .messageList_box{
-                    float: left;
-                    height: 100%;
-                    border-right: 1px solid $borderColor;
-                }
-                .productList{
-                    width: 20%;
-                }
-                .operationBut{
-                    width: 10%;
-                    .operation{
-                        margin: 0 auto;
-                        width: 80%;
-                        padding: 5px 12px;
-                        border: 1px solid $borderColor;
-                        border-radius: $borderRadius;
-                    }
-                }
-                .messageList_box{
-                    position: relative;
-                    width: 70%;
-                    .msgListBox{
-                        width: 100%;
-                        border-right: none;
-                    }
-                }
-            }
-        }
-    }
-}
 
 .devDebuggingBox{
     .title{
