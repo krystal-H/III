@@ -64,6 +64,13 @@ export default class Hardware extends Component {
             replaceFirmwareVisible: false, // 更换固件
         }
     }
+    componentDidMount() {
+        this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
+    }
+    onFinish = (values) => {
+        console.log('验证是否通过:', values);
+        this.props.nextStep()
+    };
     // 修改固件
     modifyFirmware = (val, e) => {
         console.log(val, '-----')

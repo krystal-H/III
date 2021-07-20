@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Image } from 'antd';
 import NetworkInfo from './networkInfo';
 
@@ -58,8 +58,15 @@ const optionalList = [
   }
 ]
 
-export default function ServiceSelect() {
+function ServiceSelect({ nextStep }, ref) {
   const [networkVisible, setNetworkVisible] = useState(false)
+  //验证函数
+  const subNextConFirm = () => {
+    nextStep()
+  }
+  useImperativeHandle(ref, () => ({
+    onFinish: subNextConFirm
+  }));
   return (
     <div className="service-config-page">
       <div className="desc">免开发方案，只需选择推荐模组、以及配置固件信息，快速实现硬件智能化。</div>
@@ -80,7 +87,7 @@ export default function ServiceSelect() {
               <div className="config-card-right">
                 <div className="config-card-right-title">{item.title}</div>
                 <div className="config-card-right-desc">{item.desc}</div>
-                <div className="config-card-right-btn" onClick={() => {setNetworkVisible(true)}}>{!item.isConfiged ? '配置' : '修改'}</div>
+                <div className="config-card-right-btn" onClick={() => { setNetworkVisible(true) }}>{!item.isConfiged ? '配置' : '修改'}</div>
               </div>
               {
                 item.isConfiged && <div className="configured-logo">已配置</div>
@@ -117,11 +124,13 @@ export default function ServiceSelect() {
       </div>
       {/* 配网信息 */}
       {
-        networkVisible && 
-        <NetworkInfo 
-        networkModalVisible={networkVisible}
-        cancelHandle={() => { setNetworkVisible(false) }}/>
+        networkVisible &&
+        <NetworkInfo
+          networkModalVisible={networkVisible}
+          cancelHandle={() => { setNetworkVisible(false) }} />
       }
     </div>
   )
 }
+
+export default ServiceSelect= forwardRef(ServiceSelect)

@@ -17,7 +17,7 @@ export default function NetworkInfo({ networkModalVisible, cancelHandle }) {
   const onOk = () => {
     form.submit()
   }
-  
+
   return (
     <Modal
       title="配网信息"
@@ -105,7 +105,7 @@ export default function NetworkInfo({ networkModalVisible, cancelHandle }) {
             }
           </Form.Item>
         </Form>
-      </div> 
+      </div>
     </Modal>
   )
 }

@@ -13,7 +13,7 @@
   .flex {
     @include flex(flex-start, center);
     .upload-img {
-      .ant-upload.ant-upload-select-picture-card {
+      .ant-upload.ant-upload-select-picture-card, .ant-upload-list-picture-card-container {
         @include wh(150px, 267px);
       }
     }
