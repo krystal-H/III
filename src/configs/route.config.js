@@ -15,95 +15,117 @@ const UserCenter = loadable(() => import('../pages/user-center/UserCenter'))
 /*数据服务-数据分析页面 */
 const DataAnalysis = loadable(() => import('../pages/data-analysis/DataAnalysisi'))
 
-/* 左侧菜单、用户中心 导航全权限路由*/
+/* 左侧菜单、用户中心 导航全权限路由
+    menuid 仅用于前端遍历key  和 判断选中的高亮菜单匹配地址栏的路由
+
+*/
 export const navRoutes = [
     {
         menuname: '总览',
         path: '/open/home',
         menuicon: 'zonglan',
+        menuid:'0'
     }, {
         menuname: '产品',
         path: '/open/product',
         menuicon: 'chanpin',
+        menuid:'1',
         childmenus: [
             {
                 menuname: '产品管理',
                 path: '/open/product/proManage',
+                menuid:'1-0',
             },
             {
                 menuname: '设备注册',
                 path: '/open/product/devRegist',
+                menuid:'1-1',
             },
             {
                 menuname: '固件升级',
                 path: '/open/product/otaUpdate',
+                menuid:'1-2',
 
             },
             {
                 menuname: '规则引擎',
                 path: '/open/product/ruleEngine',
+                menuid:'1-3',
             },
             {
                 menuname: '云端定时',
                 path: '/open/product/cloudTimer',
+                menuid:'1-4',
 
             },
             {
                 menuname: '远程配置',
                 path: '/open/product/remoteCofg',
+                menuid:'1-5',
             }, 
         ]
     }, {
         menuname: '设备',
         path: '/open/device',
         menuicon: 'shebei',
+        menuid:'2',
         childmenus: [
             {
                 menuname: '设备管理',
                 path: '/open/device/devManage',
+                menuid:'2-0',
 
             },
             {
                 menuname: '设备秘钥',
                 path: '/open/device/devSecret',
+                menuid:'2-1',
             },
             {
                 menuname: '设备分组',
                 path: '/open/device/devGroup',
+                menuid:'2-2',
 
             },
             {
                 menuname: '设备消息',
                 path: '/open/device/devMsg',
+                menuid:'2-3',
             }
         ]
     }, {
         menuname: 'APP',
         path: '/open/app',
         menuicon: 'app',
+        menuid:'3',
         childmenus: [
             {
                 menuname: 'APP开发',
                 path: '/open/app',
+                menuid:'3-0',
             }
         ]
     }, {
         menuname: '数据服务',
         path: '/open/serve',
         menuicon: 'shujufw',
+        menuid:'4',
         childmenus: [
             {
                 menuname: '设备分析',
                 path: '/open/serve/device',
+                menuid:'4-0',
 
             },
             {
                 menuname: '用户分析',
                 path: '/open/serve/user',
+                menuid:'4-1',
             },
             {
                 menuname: '数据订阅',
                 path: '/open/serve/dataSub',
+                menuid:'4-2',
 
             }
         ]
@@ -111,42 +133,51 @@ export const navRoutes = [
         menuname: '开发Studio',
         path: '/open/studio',
         menuicon: 'studio',
+        menuid:'5',
         childmenus: [
             {
                 menuname: '项目管理',
                 path: '/open/studio/project',
+                menuid:'5-0',
 
             },
             {
                 menuname: '服务开发',
                 path: '/open/studio/serve',
+                menuid:'5-1',
             }
         ]
     },{
         menuname:'用户中心',
         path: '/userCenter',
         menuicon: 'yonghuzx',
+        menuid:'用户中心',
         childmenus:[
             {
                 menuname: '基本资料',
                 path: '/userCenter/baseInfo',
+                menuid:'基本资料',
 
             },
             {
                 menuname: '安全设置',
                 path: '/userCenter/security',
+                menuid:'安全设置',
             },
             {
                 menuname:'访问用户',
                 path: '/userCenter/visitUser',
+                menuid:'访问用户',
             },
             {
                 menuname:'用户角色',
                 path: '/userCenter/role',
+                menuid:'用户角色',
             },
             {
                 menuname:'操作日志',
                 path: '/userCenter/log',
+                menuid:'操作日志',
             },
         ]
     },

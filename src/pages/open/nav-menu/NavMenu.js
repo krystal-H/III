@@ -5,86 +5,111 @@ import './NavMenu.scss';
 
 const { SubMenu } = Menu;
 
-function getNavList(menus){
-    
-    return menus.map(({
-        menuicon,menuname,path,childmenus=[]
-        },index)=>{
-        if(childmenus.length>0){
-            return <SubMenu key={menuname+index} icon={
-                <span className={`selficon ${menuicon}`}></span>
-            } title={menuname}>
-                        {getNavList(childmenus)}
-                    </SubMenu>
-        }
-        return <Menu.Item key={ menuname + index} 
-                    icon={
-                        menuicon &&
-                        <span className={`selficon ${menuicon}`}></span> || null
-                    }>
-                    <Link to={path}>{menuname}</Link>
-                </Menu.Item>
-    })
-}
 
 class NavMenu extends PureComponent {
     state = {
-        defaultSelectedKeys: ['1'],
-        defaultOpenKeys: ['sub1'],
-    }
-
-    componentWillMount(){
-        // const { history , menulist} = this.props;
-        
-        // let pathname = history.location.pathname;
-        // console.log(333,this.props.history)
-
-        // if (pathname === '/open' && muenList[0] && muenList[0].menus && muenList[0].menus[0]) { // 登录入口进来时开始渲染此组件时，pathname为 /open
-        //     pathname += `/${muenList[0].url}/${muenList[0].menus[0].url}`
-        // }
-        
-        // routes.map((item, index) => {
-        //     item.routes && item.routes.map(inner => {
-        //         if(pathname.indexOf(item.path) >= 0 && pathname.indexOf(inner.path) >= 0){
-              
-        //             this.setState({
-        //                 defaultOpenKeys: [`${item.menuId}`],
-        //                 defaultSelectedKeys: [`${inner.menuId}`]
-        //             })
-        //         }
-        //     })
-        // })
+        openKeys:[],
+        selectedKeys:[],
     }
     componentDidMount(){
-        // console.log('---DidMount--',this.props.history)
-        this.props.history.listen(({pathname}) => {
-            console.log('--listen--',pathname)
-
-         })
+        const { menulist} = this.props;
+        this.props.history.listen( ({pathname})=>{
+            this.setCurMenu(pathname)
+        } )
     }
-    componentDidUpdate(oldprops,oldstate){  
-        const { history , menulist} = this.props;
+    getNavList = menus=>{
+    
+        return menus.map(({
+            menuicon,menuname,path,childmenus=[],menuid
+            },index)=>{
+            if(childmenus.length>0){
+                return <SubMenu key={menuid||menuname} 
+                                icon={<span className={`selficon ${menuicon}`}></span>} 
+                                title={menuname}
+                                onTitleClick={({key})=>{this.titleClick(key)}}
+                        >
+                            {this.getNavList(childmenus)}
+                        </SubMenu>
+            }
+            return <Menu.Item key={menuid||menuname} 
+                        icon={
+                            menuicon &&
+                            <span className={`selficon ${menuicon}`}></span> || null
+                        }>
+                        <Link to={path}>{menuname}</Link>
+                    </Menu.Item>
+        })
+    }
+    setCurMenu= pathname => {//根据地址栏路由 设置高亮菜单，用于所有有导致地址栏变化的情况（第一次加载、刷新、返回按钮、菜单点击）
+        const {menulist,history} = this.props;
+        const {openKeys} = this.state;
+        const pathurl = pathname || history.location.pathname;
+        for(let i=0;i<menulist.length;i++){
+            let { childmenus=[],path,menuid,menuname } = menulist[i];
+            let keyid = menuid || menuname;
+            if(childmenus.length>0){
+                for(let j=0;j<childmenus.length;j++){
+                    let {path,menuid,menuname } = childmenus[j];
+                    if(pathurl.indexOf(path)>-1){
+                        this.setState({
+                            selectedKeys:[menuid||menuname],
+                            openKeys:Array.from(new Set([...openKeys,keyid]))
+                        })
+                        return
+                    }
+                }
+            }else{
+                if(pathurl.indexOf(path)>-1){
+                    this.setState({selectedKeys:[keyid],});
+                    if(openKeys.length==0){
+                        for(let i=0;i<menulist.length;i++){
+                            let { childmenus=[],menuid,menuname } = menulist[i];
+                            if(childmenus.length>0){ //将第一个有子菜单的父菜单展开
+                                this.setState({openKeys:[menuid || menuname]});
+                                return;
+                            }
+                        }
+                    }
+                    return
+                }
+            }
+        }
+    }
+    titleClick= key =>{
+        const {openKeys} = this.state;
+        let newopenkey = [...openKeys];
+        const kindex = openKeys.indexOf(key);
+        if(kindex>-1){
+            newopenkey.splice(kindex,1)
+        }else{
+            newopenkey.push(key)
+        }
+        this.setState({
+            openKeys:newopenkey
+        })
         
-        let pathname = history.location.pathname;
-        // console.log(333,pathname,menulist,oldprops.history.location.pathname)
-
+    }
+    componentDidUpdate(oldprops){  
+        const {menulist} = this.props;
+        if(oldprops.menulist.length==0 && menulist.length>0){//第一次接收到 menulist 时
+            this.setCurMenu();
+        }
     }
     render() {
-        let {collapsed,menulist} = this.props;
-        const {defaultSelectedKeys, defaultOpenKeys} = this.state;
-
+        const {collapsed,menulist} = this.props;
+        const {openKeys,selectedKeys,} = this.state;
         return (
             <div className="menu-wapper">
                 <Menu
                     className="self-menu"
-                    // defaultSelectedKeys={['总览0']}
-                    // defaultOpenKeys={defaultOpenKeys}
                     mode="inline"
                     inlineCollapsed={collapsed}
                     inlineIndent={22}
                     forceSubMenuRender={true}
+                    openKeys={openKeys}
+                    selectedKeys={selectedKeys}
                 >
-                    {getNavList(menulist)}
+                    {this.getNavList(menulist)}
                 </Menu>
             </div>
         );
