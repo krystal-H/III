@@ -40,6 +40,7 @@
           @include text(12px, #666666);
         }
         &-btn {
+          cursor: pointer;
           padding: 7px 16px;
           border-radius: 4px;
           border: 1px solid #2f78ff;

@@ -1,0 +1,37 @@
+@charset 'utf-8';
+
+.communication-security-modal {
+  .tip-desc {
+    padding-left: 16px;
+    @include flex(flex-start);
+    @include text(14px, #1890ff);
+    height: 37px;
+    background: #e6f7ff;
+    border-radius: 4px;
+    border: 1px solid #bae7ff;
+  }
+  .tip-text {
+    margin-left: 8px;
+    @include text(12px, #000000);
+  }
+  .ant-form {
+    margin-top: 20px;
+  }
+  .upload-file {
+    .file-upload-desc {
+      display: none;
+    }
+    .ant-row {
+      position: relative;
+      .download-btn {
+        cursor: pointer;
+        position: absolute;
+        right: 225px;
+        top: 5px;
+      }
+    }
+  }
+  .download-tool {
+    @include flex(center);
+  }
+}

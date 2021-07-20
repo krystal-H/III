@@ -1,6 +1,7 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Image } from 'antd';
 import NetworkInfo from './networkInfo';
+import CommunicateSecurity from './communicationSecurity';
 
 import './service-config.scss';
 
@@ -60,6 +61,7 @@ const optionalList = [
 
 function ServiceSelect({ nextStep }, ref) {
   const [networkVisible, setNetworkVisible] = useState(false)
+  const [securityVisible, setSecurityVisible] = useState(false)
   //验证函数
   const subNextConFirm = () => {
     nextStep()
@@ -67,6 +69,20 @@ function ServiceSelect({ nextStep }, ref) {
   useImperativeHandle(ref, () => ({
     onFinish: subNextConFirm
   }));
+
+  const showModal = (type) => {
+    console.log(type)
+    switch (type) {
+      case 'network':
+        setNetworkVisible(true)
+        break;
+      case 'security':
+        setSecurityVisible(true)
+        break;
+      default:
+        break;
+    }
+  }
   return (
     <div className="service-config-page">
       <div className="desc">免开发方案，只需选择推荐模组、以及配置固件信息，快速实现硬件智能化。</div>
@@ -87,7 +103,7 @@ function ServiceSelect({ nextStep }, ref) {
               <div className="config-card-right">
                 <div className="config-card-right-title">{item.title}</div>
                 <div className="config-card-right-desc">{item.desc}</div>
-                <div className="config-card-right-btn" onClick={() => { setNetworkVisible(true) }}>{!item.isConfiged ? '配置' : '修改'}</div>
+                <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>{!item.isConfiged ? '配置' : '修改'}</div>
               </div>
               {
                 item.isConfiged && <div className="configured-logo">已配置</div>
@@ -129,8 +145,15 @@ function ServiceSelect({ nextStep }, ref) {
           networkModalVisible={networkVisible}
           cancelHandle={() => { setNetworkVisible(false) }} />
       }
+      {/* 通信安全机制 */}
+      {
+        securityVisible &&
+        <CommunicateSecurity
+          securityVisible={securityVisible}
+          cancelHandle={() => { setSecurityVisible(false) }} />
+      }
     </div>
   )
 }
 
-export default ServiceSelect= forwardRef(ServiceSelect)
+export default ServiceSelect = forwardRef(ServiceSelect)

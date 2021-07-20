@@ -22,7 +22,7 @@ export default function NetworkInfo({ networkModalVisible, cancelHandle }) {
     <Modal
       title="配网信息"
       visible={networkModalVisible}
-      width={740}
+      width={875}
       onOk={onOk}
       onCancel={cancelHandle}
       maskClosable={false}
