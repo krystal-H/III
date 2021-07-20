@@ -464,9 +464,11 @@ let Paths = {
     
     //总览页
     homeBanner:'/cover/getBannerList',//banner图
-    messageList:'/cover/getSystemNotice' 
-    
-    
+    messageList:'/cover/getSystemNotice' ,//消息列表
+    appList:'/appInfoManage/getAppInfoList' ,//app列表
+    devWarnCount:'/deviceCount/deviceWarningCount' ,//设备报警统计
+    devSecreCount:'/deviceCount/deviceSecretKeyCount' ,//设备密钥统计
+    devMnCount:'/deviceCount/deviceManageCount' ,//设备管理统计
     
     
 };

@@ -1,9 +1,11 @@
 import React, { useEffect, useCallback, useState } from 'react'
 import { Carousel, } from 'antd';
+import { useHistory } from 'react-router-dom';
 import {
     RightOutlined,
 } from '@ant-design/icons';
 import { post, Paths, get } from '../../../api';
+import moment from 'moment';
 import AddProductModal from '../../product/product-manage/addProduct/addProduct'
 import './index.scss';
 //==产品管理图片
@@ -36,24 +38,65 @@ export default function OverviewWrap() {
     useEffect(() => {
         getBannerList()
         getMessageList()
+        getAppList()
+        getDevOneList()
+        getDevTwoList()
+        getDevThreeList()
     }, [])
+    let history = useHistory();
     //轮播图
     const [bannerArr, setBannerArr] = useState([])
     const getBannerList = () => {
-        get('http://10.6.50.78:7771/cover/getBannerList').then((res) => {
+        post('http://10.6.50.78:7771/cover/getBannerList').then((res) => {
             setBannerArr(res.data)
         });
     }
     //消息列表
     const [messageList, setMessageList] = useState([])
     const getMessageList = () => {
-        get('http://10.6.50.78:7771/cover/getSystemNotice?developerId=1').then((res) => {
+        post('http://10.6.50.78:7771/cover/getSystemNotice?developerId=1').then((res) => {
             if (res.data.length > 3) {
                 setMessageList(res.data.slice(0, 3))
             } else {
                 setMessageList(res.data)
             }
 
+        });
+    }
+    const goMoreMessAge = () => {
+        history.push('/messageCenter/list');
+    }
+    //app列表
+    const [appList, setAppList] = useState([])
+    const getAppList = () => {
+        post('http://10.6.50.78:7771/appInfoManage/getAppInfoList?developerId=1').then((res) => {
+            if (res.data.length > 3) {
+                setAppList(res.data.slice(0, 3))
+            } else {
+                setAppList(res.data)
+            }
+
+        });
+    }
+    //设备列表
+    const [devOneList, setDevOneList] = useState({
+        exception: 0, total: 0, totalActive: 0, todayActive: 0
+    })
+    const getDevOneList = () => {
+        post('http://10.6.50.78:7771/deviceCount/deviceManageCount?developerId=1').then((res) => {
+            setDevOneList(res.data)
+        });
+    }
+    const [devTwoList, setDevTwoList] = useState({ burn: 0, total: 0, active: 0, unactive: 0 })
+    const getDevTwoList = () => {
+        post('http://10.6.50.78:7771/deviceCount/deviceSecretKeyCount?developerId=1').then((res) => {
+            setDevTwoList(res.data)
+        });
+    }
+    const [devThreeList, setDevThreeList] = useState({ processed: 0, lastWarnTime: "-", pending: 0, send: 0 })
+    const getDevThreeList = () => {
+        post('http://10.6.50.78:7771/deviceCount/deviceWarningCount?developerId=1').then((res) => {
+            setDevThreeList(res.data)
         });
     }
     //快捷入口
@@ -104,7 +147,8 @@ export default function OverviewWrap() {
                                 <a>进入</a>
                             </div>
                             <div className='over-view-productmn-content'>
-                                <div >
+                                <div className='over-no-data'><img src={noData} /> <div>暂无产品</div></div>
+                                {/* <div >
                                     <div className='over-view-productmn-content-img center-layout-wrap'><img src={projectmn1} /></div>
                                     <div className='over-view-productmn-content-content'>
                                         <div>睡眠监测器</div>
@@ -127,7 +171,7 @@ export default function OverviewWrap() {
                                         <div>开发中</div>
                                         <div>更新时间2021-06-06</div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
 
@@ -167,69 +211,69 @@ export default function OverviewWrap() {
                                 </div>
                                 <div>
                                     <div>当前异常数</div>
-                                    <div>0</div>
+                                    <div>{devOneList.exception}</div>
                                 </div>
                                 <div>
                                     <div>累计设备总数</div>
-                                    <div>0</div>
+                                    <div>{devOneList.total}</div>
                                 </div>
                                 <div>
                                     <div>累计入网总数</div>
-                                    <div>0</div>
+                                    <div>{devOneList.totalActive}</div>
                                 </div>
                                 <div>
                                     <div>今日入网总数</div>
-                                    <div>0</div>
+                                    <div>{devOneList.todayActive}</div>
                                 </div>
                             </div>
                             <div className='over-view-device-content-item'>
                                 <div >
                                     <div className='over-view-device-content-item-label'>
-                                        设备管理
+                                        设备密钥
                                         <RightOutlined />
                                     </div>
                                     <div></div>
                                 </div>
                                 <div>
-                                    <div>当前异常数</div>
-                                    <div>0</div>
+                                    <div>通用ID/密钥对</div>
+                                    <div>{devTwoList.total}</div>
                                 </div>
                                 <div>
-                                    <div>累计设备总数</div>
-                                    <div>0</div>
+                                    <div>已烧录使用</div>
+                                    <div>{devTwoList.burn}</div>
                                 </div>
                                 <div>
-                                    <div>累计入网总数</div>
-                                    <div>0</div>
+                                    <div>已入网设备</div>
+                                    <div>{devTwoList.active}</div>
                                 </div>
                                 <div>
-                                    <div>今日入网总数</div>
-                                    <div>0</div>
+                                    <div>未入网设备</div>
+                                    <div>{devTwoList.unactive}</div>
                                 </div>
                             </div>
                             <div className='over-view-device-content-item'>
                                 <div >
                                     <div className='over-view-device-content-item-label'>
-                                        设备管理
+                                        设备告警
                                         <RightOutlined />
                                     </div>
                                     <div></div>
                                 </div>
                                 <div>
-                                    <div>当前异常数</div>
-                                    <div>0</div>
+                                    <div>待处理告警</div>
+                                    <div>{devThreeList.pending}</div>
                                 </div>
                                 <div>
-                                    <div>累计设备总数</div>
-                                    <div>0</div>
+                                    <div>已处理告警</div>
+                                    <div>{devThreeList.processed}</div>
                                 </div>
                                 <div>
-                                    <div>累计入网总数</div>
-                                    <div>0</div>
+                                    <div>已发送告警</div>
+                                    <div>{devThreeList.send}</div>
                                 </div>
                                 <div>
-                                    <div>今日入网总数</div>
-                                    <div>0</div>
+                                    <div>最近告警时间</div>
+                                    <div>{devThreeList.lastWarnTime}</div>
                                 </div>
                             </div>
                         </div>
@@ -240,14 +284,20 @@ export default function OverviewWrap() {
                                 <div>APP开发</div>
                                 <a>进入</a>
                             </div>
-                            <div className='over-view-productmn-content'>
-                                <div className='over-view-productmn-content-two'>
-                                    <div className='over-view-productmn-content-img center-layout-wrap'><img src={projectmn1} /></div>
-                                    <div className='over-view-productmn-content-content'>
-                                        <div>睡眠监测器</div>
-                                        <div className='over-view-productmn-content-content-time'>更新时间2021-06-06</div>
-                                    </div>
-                                </div>
+                            <div className='over-view-productmn-content' style={{ height: '80px' }}>
+                                {
+                                    appList.length ? (appList.map((item, index) => {
+                                        return (<div className='over-view-productmn-content-item over-view-productmn-content-two' key={index}>
+                                            <div className='over-view-productmn-content-img center-layout-wrap'><img src={projectmn1} /></div>
+                                            <div className='over-view-productmn-content-content'>
+                                                <div>{item.appName}</div>
+                                                <div className='over-view-productmn-content-content-time'>更新时间{moment(item.updateTime).format('YYYY-MM-DD')}</div>
+                                            </div>
+                                        </div>)
+                                    })) : <div className='over-no-data'><img src={noData} /> <div>暂无App</div></div>
+
+                                }
+
                             </div>
                         </div>
 
@@ -276,11 +326,11 @@ export default function OverviewWrap() {
                     <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >
                         <div>
                             <div>消息中心</div>
-                            <a>更多</a>
+                            <a onClick={goMoreMessAge}>更多</a>
                         </div>
                         <div className='over-view-message hover-commons-unite'>
                             {
-                                messageList.length ? (messageList.map((item, index) => {
+                                messageList.length == 2 ? (messageList.map((item, index) => {
                                     return (<div className='over-view-message-item' key={index}>【{item.noticeTitle} 】{item.point}</div>)
                                 })) : <div className='over-no-data'><img src={noData} /> <div>暂无消息</div></div>
 
