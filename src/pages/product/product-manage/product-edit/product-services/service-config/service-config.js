@@ -2,6 +2,7 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'rea
 import { Image } from 'antd';
 import NetworkInfo from './networkInfo';
 import CommunicateSecurity from './communicationSecurity';
+import ConfigFirmware from './configFirmware';
 
 import './service-config.scss';
 
@@ -62,6 +63,7 @@ const optionalList = [
 function ServiceSelect({ nextStep }, ref) {
   const [networkVisible, setNetworkVisible] = useState(false)
   const [securityVisible, setSecurityVisible] = useState(false)
+  const [firmwareVisible, setFirmwareVisible] = useState(true)
   //验证函数
   const subNextConFirm = () => {
     nextStep()
@@ -78,6 +80,9 @@ function ServiceSelect({ nextStep }, ref) {
         break;
       case 'security':
         setSecurityVisible(true)
+        break;
+      case 'addFirmware':
+        setFirmwareVisible(true)
         break;
       default:
         break;
@@ -129,7 +134,7 @@ function ServiceSelect({ nextStep }, ref) {
               <div className="config-card-right">
                 <div className="config-card-right-title">{item.title}</div>
                 <div className="config-card-right-desc">{item.desc}</div>
-                <div className="config-card-right-btn">{!item.isConfiged ? '配置' : '修改'}</div>
+                <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>{!item.isConfiged ? '配置' : '修改'}</div>
               </div>
               {
                 item.isConfiged && <div className="configured-logo">已配置</div>
@@ -151,6 +156,13 @@ function ServiceSelect({ nextStep }, ref) {
         <CommunicateSecurity
           securityVisible={securityVisible}
           cancelHandle={() => { setSecurityVisible(false) }} />
+      }
+      {/* 配置产品固件模块 */}
+      {
+        firmwareVisible &&
+        <ConfigFirmware
+          firmwareVisible={firmwareVisible}
+          cancelHandle={() => { setFirmwareVisible(false) }} />
       }
     </div>
   )

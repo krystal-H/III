@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Modal, Input, Table, Form, Select, Upload } from 'antd';
+import { Modal, Input, Form, Select } from 'antd';
 import { UploadFileHooks } from '../../../../../../components/upload-file';
 import './networkInfo.scss';
 
