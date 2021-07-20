@@ -473,3 +473,28 @@
     box-shadow: 0px 2px 6px 0px $shadow;
     background-color: #fff;
 }
+
+//公共按钮样式---蓝色边框---有默认样式
+.commonButBox{
+    text-align: center;
+    margin: $gap 0;
+}
+.commonButs{
+    display: inline-block;
+    padding: 4px 20px;
+    background-color: $themeColor;
+    border: 1px solid $themeColor;
+    border-radius: $borderRadius;
+    color: #fff;
+    cursor: pointer;
+    a{
+        color: #fff;
+    }
+}
+.commonButs:hover{
+    background-color: #6eb1ff;
+    border-color: #6eb1ff;
+    a{
+        color: #fff;
+    }
+}
