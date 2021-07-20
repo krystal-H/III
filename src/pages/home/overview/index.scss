@@ -44,14 +44,17 @@
   // padding: 16px;
   background-color: #FFFFFF;
   margin-bottom: 40px;
+
   .over-view-banner {
     .ant-carousel .slick-dots-bottom {
       bottom: 20px;
     }
-    .imgdiv{
+
+    .imgdiv {
       padding-top: 15.3%;
       position: relative;
-      img{
+
+      img {
         position: absolute;
         width: 100%;
         height: 100%;
@@ -61,7 +64,7 @@
 
     }
 
-    
+
   }
 
   .over-view-content {
@@ -172,7 +175,8 @@
               &:hover {
                 background: #F0F1F3;
               }
-              &:last-child{
+
+              &:last-child {
                 margin-right: 0;
               }
 
@@ -292,7 +296,8 @@
               color: #666666;
               line-height: 22px;
               margin-right: 14px;
-              &:last-child{
+
+              &:last-child {
                 margin-right: 0;
               }
 
@@ -372,9 +377,11 @@
       }
 
       .over-view-message {
-        padding: 0 24px 22px 15px;
-
-        >div {
+        padding: 0 24px 22px 22px;
+        // height: 139px;
+        height: 118px;
+        box-sizing: border-box;
+        .over-view-message-item {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -384,6 +391,8 @@
           font-weight: 400;
           color: #666666;
           line-height: 17px;
+
+          
         }
       }
 
@@ -494,5 +503,16 @@
   div:hover {
     color: #2F78FF !important;
     cursor: pointer;
+  }
+}
+
+.over-no-data {
+  text-align: center;
+  margin: 20px 0;
+  div {
+    font-size: 12px;
+    font-weight: 400;
+    color: #9B9B9B;
+    line-height: 17px;
   }
 }

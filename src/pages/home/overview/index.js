@@ -31,15 +31,29 @@ import help1 from './../../../assets/images/overImage/help1.png';
 import help2 from './../../../assets/images/overImage/help2.png';
 import help3 from './../../../assets/images/overImage/help3.png';
 import banner from './../../../assets/images/overImage/banner.png';
+import noData from './../../../assets/images/overImage/noData.png';
 export default function OverviewWrap() {
     useEffect(() => {
         getBannerList()
+        getMessageList()
     }, [])
     //轮播图
     const [bannerArr, setBannerArr] = useState([])
     const getBannerList = () => {
         get('http://10.6.50.78:7771/cover/getBannerList').then((res) => {
             setBannerArr(res.data)
+        });
+    }
+    //消息列表
+    const [messageList, setMessageList] = useState([])
+    const getMessageList = () => {
+        get('http://10.6.50.78:7771/cover/getSystemNotice?developerId=1').then((res) => {
+            if (res.data.length > 3) {
+                setMessageList(res.data.slice(0, 3))
+            } else {
+                setMessageList(res.data)
+            }
+
         });
     }
     //快捷入口
@@ -265,15 +279,12 @@ export default function OverviewWrap() {
                             <a>更多</a>
                         </div>
                         <div className='over-view-message hover-commons-unite'>
-                            <div>
-                                【公告信息】这是一条信息内容简介一条信息内容简介【公告信息】这是一条信息内容简介一条信息内容简介【公告信息】这是一条信息内容简介一条信息内容简介绍…
-                            </div>
-                            <div>
-                                【公告信息】这是一条信息内容简介一条信息内容简介【公告信息】这是一条信息内容简介一条信息内容简介【公告信息】这是一条信息内容简介一条信息内容简介绍…
-                            </div>
-                            <div>
-                                【公告信息】这是一条信息内容简介一条信息内容简介【公告信息】这是一条信息内容简介一条信息内容简介【公告信息】这是一条信息内容简介一条信息内容简介绍…
-                            </div>
+                            {
+                                messageList.length ? (messageList.map((item, index) => {
+                                    return (<div className='over-view-message-item' key={index}>【{item.noticeTitle} 】{item.point}</div>)
+                                })) : <div className='over-no-data'><img src={noData} /> <div>暂无消息</div></div>
+
+                            }
                         </div>
                     </div>
                     <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >
