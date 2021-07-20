@@ -463,7 +463,8 @@ let Paths = {
 
     
     //总览页
-    homeBanner:'/cover/getBannerList'
+    homeBanner:'/cover/getBannerList',//banner图
+    messageList:'/cover/getSystemNotice' 
     
     
     
