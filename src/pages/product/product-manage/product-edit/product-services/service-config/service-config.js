@@ -63,7 +63,7 @@ const optionalList = [
 function ServiceSelect({ nextStep }, ref) {
   const [networkVisible, setNetworkVisible] = useState(false)
   const [securityVisible, setSecurityVisible] = useState(false)
-  const [firmwareVisible, setFirmwareVisible] = useState(true)
+  const [firmwareVisible, setFirmwareVisible] = useState(false)
   //验证函数
   const subNextConFirm = () => {
     nextStep()
