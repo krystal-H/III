@@ -33,13 +33,19 @@ function ConfigFirmware({ firmwareVisible, cancelHandle }) {
             <Form.Item
               label="配置固件模块标识"
               name='first'
-              rules={[{ required: true, message: '请输入英文字符' }]}>
+              rules={[
+                { required: true, message: '请输入英文字符' },
+                { pattern: new RegExp(/^[a-zA-Z]+$/, "g"), message: '请输入英文字符' }
+              ]}>
               <Input placeholder="请输入英文字符" />
             </Form.Item>
             <Form.Item
               label="配置固件模块名称"
               name='last'
-              rules={[{ required: true, message: '请输入中文名称' }]}>
+              rules={[
+                { required: true, message: '请输入中文名称' },
+                { pattern: new RegExp(/^[\u2E80-\u9FFF]+$/, "g"), message: '请输入中文产品名称' }
+              ]}>
               <Input placeholder="请输入中文名称" />
             </Form.Item>
           </div>
@@ -47,27 +53,31 @@ function ConfigFirmware({ firmwareVisible, cancelHandle }) {
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, fieldKey, ...restField }) => (
-                  <>
-                    <div className="form-item-block" key={key}>
-                      <Form.Item
-                        label="配置固件模块标识"
-                        {...restField}
-                        name={[name, 'first']}
-                        fieldKey={[fieldKey, 'first']}
-                        rules={[{ required: true, message: '请输入英文字符' }]}>
-                        <Input placeholder="请输入英文字符" />
-                      </Form.Item>
-                      <Form.Item
-                        label="配置固件模块名称"
-                        {...restField}
-                        name={[name, 'last']}
-                        fieldKey={[fieldKey, 'last']}
-                        rules={[{ required: true, message: '请输入中文名称' }]}>
-                        <Input placeholder="请输入中文名称" />
-                      </Form.Item>
-                      <div className="delete-btn" onClick={() => remove(name)}><DeleteOutlined />&nbsp;&nbsp;删除</div>
-                    </div>
-                  </>
+                  <div className="form-item-block" key={key}>
+                    <Form.Item
+                      label="配置固件模块标识"
+                      {...restField}
+                      name={[name, 'first']}
+                      fieldKey={[fieldKey, 'first']}
+                      rules={[
+                        { required: true, message: '请输入英文字符' },
+                        { pattern: new RegExp(/^[a-zA-Z]+$/, "g"), message: '请输入英文字符' }
+                      ]}>
+                      <Input placeholder="请输入英文字符" />
+                    </Form.Item>
+                    <Form.Item
+                      label="配置固件模块名称"
+                      {...restField}
+                      name={[name, 'last']}
+                      fieldKey={[fieldKey, 'last']}
+                      rules={[
+                        { required: true, message: '请输入中文名称' },
+                        { pattern: new RegExp(/^[\u2E80-\u9FFF]+$/, "g"), message: '请输入中文产品名称' }
+                      ]}>
+                      <Input placeholder="请输入中文名称" />
+                    </Form.Item>
+                    <div className="delete-btn" onClick={() => remove(name)}><DeleteOutlined />&nbsp;&nbsp;删除</div>
+                  </div>
                 ))}
                 <div className="add-btn" onClick={() => add()}>新增</div>
               </>

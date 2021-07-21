@@ -1,0 +1,15 @@
+@charset 'utf-8';
+
+.join-gateway-modal {
+  .title {
+    margin-bottom: 22px;
+    line-height: 22px;
+    @include text(12px, #666666);
+    .concat {
+      color: #206FFF;
+    }
+  }
+  .icon {
+    color: #8C8C8C;
+  }
+}

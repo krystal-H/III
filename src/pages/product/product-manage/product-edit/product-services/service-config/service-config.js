@@ -3,6 +3,7 @@ import { Image } from 'antd';
 import NetworkInfo from './networkInfo';
 import CommunicateSecurity from './communicationSecurity';
 import ConfigFirmware from './configFirmware';
+import JoinGateway from './joinGateway'
 
 import './service-config.scss';
 
@@ -28,12 +29,12 @@ const optionalList = [
     isConfiged: false,
     type: 'addFirmware'
   },
-  {
-    title: '加入网关',
-    desc: '设备申请加入clife网关，应用到更加丰富的行业方案和场景市场。',
-    isConfiged: false,
-    type: 'gateway'
-  },
+  // { // 产品说暂时不做
+  //   title: '加入网关',
+  //   desc: '设备申请加入clife网关，应用到更加丰富的行业方案和场景市场。',
+  //   isConfiged: false,
+  //   type: 'gateway'
+  // },
   {
     title: '固件升级',
     desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
@@ -64,6 +65,7 @@ function ServiceSelect({ nextStep }, ref) {
   const [networkVisible, setNetworkVisible] = useState(false)
   const [securityVisible, setSecurityVisible] = useState(false)
   const [firmwareVisible, setFirmwareVisible] = useState(false)
+  const [gatewayVisible, setGatewayVisible] = useState(false)
   //验证函数
   const subNextConFirm = () => {
     nextStep()
@@ -84,6 +86,9 @@ function ServiceSelect({ nextStep }, ref) {
       case 'addFirmware':
         setFirmwareVisible(true)
         break;
+      case 'gateway':
+        setGatewayVisible(true)
+        break
       default:
         break;
     }
@@ -163,6 +168,13 @@ function ServiceSelect({ nextStep }, ref) {
         <ConfigFirmware
           firmwareVisible={firmwareVisible}
           cancelHandle={() => { setFirmwareVisible(false) }} />
+      }
+      {/* 加入网关 - 产品说暂时不做，先隐藏*/}
+      {
+        gatewayVisible &&
+        <JoinGateway
+          gatewayVisible={gatewayVisible}
+          cancelHandle={() => { setGatewayVisible(false) }} />
       }
     </div>
   )
