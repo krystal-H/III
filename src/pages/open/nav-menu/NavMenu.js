@@ -105,7 +105,7 @@ class NavMenu extends PureComponent {
                     inlineCollapsed={collapsed}
                     inlineIndent={22}
                     forceSubMenuRender={true}
-                    openKeys={openKeys}
+                    // openKeys={openKeys}
                     selectedKeys={selectedKeys}
                 >
                     {this.getNavList(menulist)}

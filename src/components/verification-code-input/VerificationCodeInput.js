@@ -1,10 +1,10 @@
 import React from 'react'
 import { Input, Row, Col, Tooltip,Form } from 'antd';
 
-export default function VerificationCodeInput({imgSrc,refreshVeriCode}) {
+export default function VerificationCodeInput({imgSrc,refreshVeriCode,className}) {
    
     return (
-        <Form.Item name='veriCode' rules={[{ required: true, message: '请输入验证码' },{len:4,message:'验证码长度为4'}]}>
+        <Form.Item className={className} name='veriCode' rules={[{ required: true, message: '请输入验证码' },{len:4,message:'验证码长度为4'}]}>
             <Row>
                 <Col span={15}>
                     <Input placeholder="请输入验证码" />
