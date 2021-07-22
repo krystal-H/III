@@ -5,6 +5,7 @@ import CommunicateSecurity from './communicationSecurity';
 import ConfigFirmware from './configFirmware';
 import JoinGateway from './joinGateway';
 import ConfigFirmwareDetail from './configFirmwareDetail';
+import { Link } from 'react-router-dom';
 
 import './service-config.scss';
 
@@ -146,12 +147,30 @@ function ServiceSelect({ nextStep }, ref) {
                 <div className="config-card-right-title">{item.title}</div>
                 <div className="config-card-right-desc">{item.desc}</div>
                 <div className="flex-start">
-                  <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
-                    {(!item.isConfiged || item.type === 'addFirmware') ? '配置' : '修改'}
-                  </div>
+                  {/* 未配置的判断 */}
                   {
-                    item.type === 'addFirmware' && item.isConfiged &&
-                    <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
+                    !item.isConfiged ?
+                      item.type === 'firmwareUpdate' ?
+                        <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
+                          <Link to="/open/product/otaUpdate" target="_blank">配置</Link>
+                        </div> :
+                        item.type === 'cloud' ?
+                          <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
+                            <Link to="/open/product/cloudTimer" target="_blank">配置</Link>
+                          </div> :
+                          <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
+                      : ''
+                  }
+                  {/* 配置的判断 */}
+                  {
+                    item.isConfiged ?
+                      item.type === 'addFirmware' ?
+                        <>
+                          <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
+                          <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
+                        </> :
+                        <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>修改</div>
+                      : ''
                   }
                 </div>
               </div>
@@ -189,13 +208,13 @@ function ServiceSelect({ nextStep }, ref) {
         <ConfigFirmwareDetail
           firmwareDetailVisible={firmwareDetailVisible}
           cancelHandle={() => { setFirmwareDetailVisible(false) }}
-          showAddFirmware={() => { 
+          showAddFirmware={() => {
             setFirmwareVisible(true)
-            setFirmwareDetailVisible(false) 
+            setFirmwareDetailVisible(false)
           }}
-          showEditFirmware={(val) => { 
-            setFirmwareVisible(true) 
-            setFirmwareDetailVisible(false) 
+          showEditFirmware={(val) => {
+            setFirmwareVisible(true)
+            setFirmwareDetailVisible(false)
           }} />
       }
       {/* 加入网关 - 产品说暂时不做，先隐藏*/}
