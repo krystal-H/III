@@ -218,12 +218,12 @@ function ServiceSelect({ nextStep }, ref) {
           }} />
       }
       {/* 加入网关 - 产品说暂时不做，先隐藏*/}
-      {
+      {/* {
         gatewayVisible &&
         <JoinGateway
           gatewayVisible={gatewayVisible}
           cancelHandle={() => { setGatewayVisible(false) }} />
-      }
+      } */}
     </div>
   )
 }
