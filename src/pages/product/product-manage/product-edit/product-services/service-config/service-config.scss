@@ -19,7 +19,7 @@
       margin-right: 14px;
       @include wh(350px, 132px);
       border-radius: 4px;
-      border: 1px solid $_border;
+      border: $_border;
       @include flex(flex-start);
       padding: 16px 32px 16px 12px;
       position: relative;
@@ -45,6 +45,16 @@
           border-radius: 4px;
           border: 1px solid $themeColor;
           @include text(12px, $themeColor);
+        }
+        &-add {
+          height: 28px;
+          @include text(12px, $_fff);
+        }
+        .flex-start {
+          @include flex(flex-start);
+          .mar6 {
+            margin-left: 6px;
+          }
         }
       }
       .configured-logo {

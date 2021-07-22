@@ -3,7 +3,8 @@ import { Image } from 'antd';
 import NetworkInfo from './networkInfo';
 import CommunicateSecurity from './communicationSecurity';
 import ConfigFirmware from './configFirmware';
-import JoinGateway from './joinGateway'
+import JoinGateway from './joinGateway';
+import ConfigFirmwareDetail from './configFirmwareDetail';
 
 import './service-config.scss';
 
@@ -26,7 +27,7 @@ const optionalList = [
   {
     title: '配置产品固件模块',
     desc: '支持配置OTA升级模块，比如区分控制板、驱动板、显示板等不同模块',
-    isConfiged: false,
+    isConfiged: true,
     type: 'addFirmware'
   },
   // { // 产品说暂时不做
@@ -66,6 +67,7 @@ function ServiceSelect({ nextStep }, ref) {
   const [securityVisible, setSecurityVisible] = useState(false)
   const [firmwareVisible, setFirmwareVisible] = useState(false)
   const [gatewayVisible, setGatewayVisible] = useState(false)
+  const [firmwareDetailVisible, setFirmwareDetailVisible] = useState(false)
   //验证函数
   const subNextConFirm = () => {
     nextStep()
@@ -92,6 +94,10 @@ function ServiceSelect({ nextStep }, ref) {
       default:
         break;
     }
+  }
+  // 固件模块详情列表
+  const showFirmwareDetail = () => {
+    setFirmwareDetailVisible(true)
   }
   return (
     <div className="service-config-page">
@@ -139,7 +145,15 @@ function ServiceSelect({ nextStep }, ref) {
               <div className="config-card-right">
                 <div className="config-card-right-title">{item.title}</div>
                 <div className="config-card-right-desc">{item.desc}</div>
-                <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>{!item.isConfiged ? '配置' : '修改'}</div>
+                <div className="flex-start">
+                  <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
+                    {(!item.isConfiged || item.type === 'addFirmware') ? '配置' : '修改'}
+                  </div>
+                  {
+                    item.type === 'addFirmware' && item.isConfiged &&
+                    <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
+                  }
+                </div>
               </div>
               {
                 item.isConfiged && <div className="configured-logo">已配置</div>
@@ -168,6 +182,21 @@ function ServiceSelect({ nextStep }, ref) {
         <ConfigFirmware
           firmwareVisible={firmwareVisible}
           cancelHandle={() => { setFirmwareVisible(false) }} />
+      }
+      {/* 配置产品固件模块详情 */}
+      {
+        firmwareDetailVisible &&
+        <ConfigFirmwareDetail
+          firmwareDetailVisible={firmwareDetailVisible}
+          cancelHandle={() => { setFirmwareDetailVisible(false) }}
+          showAddFirmware={() => { 
+            setFirmwareVisible(true)
+            setFirmwareDetailVisible(false) 
+          }}
+          showEditFirmware={(val) => { 
+            setFirmwareVisible(true) 
+            setFirmwareDetailVisible(false) 
+          }} />
       }
       {/* 加入网关 - 产品说暂时不做，先隐藏*/}
       {
