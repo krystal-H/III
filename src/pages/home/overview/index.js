@@ -42,6 +42,8 @@ export default function OverviewWrap() {
         getDevOneList()
         getDevTwoList()
         getDevThreeList()
+        getProductCount()
+        getProductList()
     }, [])
     let history = useHistory();
     //轮播图
@@ -65,6 +67,10 @@ export default function OverviewWrap() {
     }
     const goMoreMessAge = () => {
         history.push('/messageCenter/list');
+    }
+    const goMessageDetail = (id) => {
+        history.push(`/messageCenter/detail/${id}`);
+
     }
     //app列表
     const [appList, setAppList] = useState([])
@@ -99,6 +105,33 @@ export default function OverviewWrap() {
             setDevThreeList(res.data)
         });
     }
+    //产品统计
+    const [productCount, setProductCount] = useState({ online: 0, fault: 0, total: 0, devTotal: 0 })
+    const getProductCount = () => {
+        post('http://10.6.50.78:7771/cover/getDeviceProductCount?developerId=1').then((res) => {
+            setProductCount(res.data)
+        });
+    }
+    const [produList, setProductList] = useState([])
+    const getProductList = () => {
+        post('http://10.6.50.78:7771/productManage/getProductList?developerId=1').then((res) => {
+            if (res.data.length > 3) {
+                setProductList(res.data.slice(0, 3))
+            } else {
+                setProductList(res.data)
+            }
+        });
+    }
+    const productStatuFilter=(value)=>{
+        // (0开发模式 ,1生产模式，2-审核中)
+        if(value == 1){
+            return '生产模式'
+        }
+        if(value == 2){
+            return '审核中'
+        }
+        return '开发模式'
+    }
     //快捷入口
     const [newProductModal, setNewProductModal] = useState(false)
     const openNewProduct = () => {
@@ -125,19 +158,19 @@ export default function OverviewWrap() {
                     <div className='over-view-boxshadow over-view-statistical comm-shadowbox'>
                         <div>
                             <div className='over-view-statistical-label'>接入产品数</div>
-                            <div className='over-view-statistical-number'>12</div>
+                            <div className='over-view-statistical-number'>{productCount.total}</div>
                         </div>
                         <div>
-                            <div className='over-view-statistical-label'>接入产品数</div>
-                            <div className='over-view-statistical-number'>12</div>
+                            <div className='over-view-statistical-label'>开发中产品数</div>
+                            <div className='over-view-statistical-number'>{productCount.devTotal}</div>
                         </div>
                         <div>
-                            <div className='over-view-statistical-label'>接入产品数</div>
-                            <div className='over-view-statistical-number'>12</div>
+                            <div className='over-view-statistical-label'>在线设备数</div>
+                            <div className='over-view-statistical-number'>{productCount.online}</div>
                         </div>
                         <div>
                             <div className='over-view-statistical-label'>故障设备数</div>
-                            <div className=' over-view-statistical-number_err'>12</div>
+                            <div className=' over-view-statistical-number_err'>{productCount.fault}</div>
                         </div>
                     </div>
                     <div className='over-view-boxshadow over-view-productmn comm-shadowbox' >
@@ -147,7 +180,25 @@ export default function OverviewWrap() {
                                 <a>进入</a>
                             </div>
                             <div className='over-view-productmn-content'>
-                                <div className='over-no-data'><img src={noData} /> <div>暂无产品</div></div>
+                                {
+                                    produList.length ? (produList.map((item, index) => {
+                                        return (<div className='over-view-productmn-content-item' key={index}>
+                                            <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.productIcon} /></div>
+                                            <div className='over-view-productmn-content-content'>
+                                                <div>{item.productName}</div>
+                                                <div>{productStatuFilter(item.mode)}</div>
+                                                <div>更新时间{moment(item.modifyTime).format('YYYY-MM-DD')}</div>
+                                            </div>
+                                            {/* <div className='over-view-productmn-content-img center-layout-wrap'><img src={projectmn1} /></div>
+                                            <div className='over-view-productmn-content-content'>
+                                                <div>{item.appName}</div>
+                                                <div className='over-view-productmn-content-content-time'>更新时间{moment(item.updateTime).format('YYYY-MM-DD')}</div>
+                                            </div> */}
+                                        </div>)
+                                    })) : <div className='over-no-data'><img src={noData} /> <div>暂无产品</div></div>
+
+                                }
+                                {/* <div className='over-no-data'><img src={noData} /> <div>暂无产品</div></div> */}
                                 {/* <div >
                                     <div className='over-view-productmn-content-img center-layout-wrap'><img src={projectmn1} /></div>
                                     <div className='over-view-productmn-content-content'>
@@ -330,8 +381,8 @@ export default function OverviewWrap() {
                         </div>
                         <div className='over-view-message hover-commons-unite'>
                             {
-                                messageList.length == 2 ? (messageList.map((item, index) => {
-                                    return (<div className='over-view-message-item' key={index}>【{item.noticeTitle} 】{item.point}</div>)
+                                messageList.length ? (messageList.map((item, index) => {
+                                    return (<div className='over-view-message-item' onClick={() => { goMessageDetail(item.noticeId) }} key={index}>【{item.noticeTitle} 】{item.point}</div>)
                                 })) : <div className='over-no-data'><img src={noData} /> <div>暂无消息</div></div>
 
                             }

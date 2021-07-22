@@ -469,8 +469,8 @@ let Paths = {
     devWarnCount:'/deviceCount/deviceWarningCount' ,//设备报警统计
     devSecreCount:'/deviceCount/deviceSecretKeyCount' ,//设备密钥统计
     devMnCount:'/deviceCount/deviceManageCount' ,//设备管理统计
-    
-    
+    productCount:'/cover/getDeviceProductCount' ,//产品统计
+    productList:'/productManage/getProductList' ,//产品列表
 };
 
 // 拼接 /v1/web/open

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Form,Input, Button } from 'antd';
+import { UserOutlined,LockOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import Header from '../../open/header/Header';
 import {Link} from 'react-router-dom';
@@ -57,14 +58,15 @@ class WrappedLoginForm extends Component {
       return (
           <Form className="login-form" onFinish={this.onFinish}>
             <Form.Item name='username' rules={[{ required: true, message: '请输入用户名' }]}>
-                <Input placeholder="请输入用户名" />
+                <Input className='iconinput' placeholder="请输入用户名" prefix={<UserOutlined />}/>
             </Form.Item>
             <Form.Item name='password' rules={[{ required: true, message: '请输入密码' }]}>
-				<Input.Password placeholder="请输入密码" />
+				<Input.Password className='iconinput' placeholder="请输入密码"  prefix={<LockOutlined />} />
             </Form.Item>
             {
                 showVerifyCode &&
-                  <VerificationCodeInput 
+                  <VerificationCodeInput
+				  	className='vcode'
 					imgSrc={vcodeImageUrl}
 					refreshVeriCode={this.refreshVeriCode}
 				/>

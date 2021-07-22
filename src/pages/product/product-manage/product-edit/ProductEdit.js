@@ -41,7 +41,7 @@ const getProductIdFromPath = (match) => +match.params.id;
 function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, history }) {
     let { path } = match,
         { pathname = '' } = location,
-        showTitle = !NOT_SHOW.test(pathname),
+        // showTitle = !NOT_SHOW.test(pathname),
         productIdInRoutePath = getProductIdFromPath(match),
         { mode } = productBaseInfo,
         canOperate = (mode === 0);
