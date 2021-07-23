@@ -189,40 +189,10 @@ export default function OverviewWrap() {
                                                 <div>{productStatuFilter(item.mode)}</div>
                                                 <div>更新时间{moment(item.modifyTime).format('YYYY-MM-DD')}</div>
                                             </div>
-                                            {/* <div className='over-view-productmn-content-img center-layout-wrap'><img src={projectmn1} /></div>
-                                            <div className='over-view-productmn-content-content'>
-                                                <div>{item.appName}</div>
-                                                <div className='over-view-productmn-content-content-time'>更新时间{moment(item.updateTime).format('YYYY-MM-DD')}</div>
-                                            </div> */}
                                         </div>)
                                     })) : <div className='over-no-data'><img src={noData} /> <div>暂无产品</div></div>
 
                                 }
-                                {/* <div className='over-no-data'><img src={noData} /> <div>暂无产品</div></div> */}
-                                {/* <div >
-                                    <div className='over-view-productmn-content-img center-layout-wrap'><img src={projectmn1} /></div>
-                                    <div className='over-view-productmn-content-content'>
-                                        <div>睡眠监测器</div>
-                                        <div>开发中</div>
-                                        <div>更新时间2021-06-06</div>
-                                    </div>
-                                </div>
-                                <div >
-                                    <div className='over-view-productmn-content-img center-layout-wrap'><img src={projectmn1} /></div>
-                                    <div className='over-view-productmn-content-content'>
-                                        <div>睡眠监测器</div>
-                                        <div>开发中</div>
-                                        <div>更新时间2021-06-06</div>
-                                    </div>
-                                </div>
-                                <div >
-                                    <div className='over-view-productmn-content-img center-layout-wrap'><img src={projectmn1} /></div>
-                                    <div className='over-view-productmn-content-content'>
-                                        <div>睡眠监测器</div>
-                                        <div>开发中</div>
-                                        <div>更新时间2021-06-06</div>
-                                    </div>
-                                </div> */}
                             </div>
                         </div>
 
