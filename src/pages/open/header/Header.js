@@ -1,18 +1,9 @@
 import React,{PureComponent} from 'react'
-import { connect } from 'react-redux';
 import {
     CaretDownOutlined,
-    ClusterOutlined,
-    LogoutOutlined,
-    SafetyCertificateOutlined,
-    SnippetsOutlined,
-    SoundOutlined,
-    TeamOutlined,
     UserOutlined,
     BellOutlined
 } from '@ant-design/icons';
-
-import { Modal, Radio } from 'antd';
 import {Link} from 'react-router-dom';
 import {post,Paths} from '../../../api'
 import DefaultUserIcon from '../../../assets/images/userIcon.png'

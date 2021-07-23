@@ -24,7 +24,7 @@ class WrappedLoginForm extends Component {
           // 对密码进行加密
           _values.password = encryption(_values.password)
           post(Paths.loginCheck,_values,{
-            loading:true
+            loading:true,needJson: true
           }).then(data => {
 			  this.props.getMenuList();
 			  window.location = window.location.origin + window.location.pathname + '#/open/home';
@@ -57,7 +57,7 @@ class WrappedLoginForm extends Component {
 
       return (
           <Form className="login-form" onFinish={this.onFinish}>
-            <Form.Item name='username' rules={[{ required: true, message: '请输入用户名' }]}>
+            <Form.Item name='userName' rules={[{ required: true, message: '请输入用户名' }]}>
                 <Input className='iconinput' placeholder="请输入用户名" prefix={<UserOutlined />}/>
             </Form.Item>
             <Form.Item name='password' rules={[{ required: true, message: '请输入密码' }]}>

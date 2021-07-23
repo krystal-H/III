@@ -1,9 +1,8 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import FullScreenFlexWrapper from '../full-screen-flex-wrapper/FullScreenFlexWrapper';
 import VerificationCodeInput from '../../../components/verification-code-input/VerificationCodeInput';
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
-import { Input, Button, Checkbox, notification, Modal } from 'antd';
+// import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Checkbox, notification, Modal,Form } from 'antd';
 import {Link} from 'react-router-dom';
 import {post,Paths,get} from '../../../api'
 import { encryption ,getVcodeImgUrl,getUrlParam,psdPattern} from '../../../util/util';
@@ -14,7 +13,7 @@ import mailOkImage from '../../../assets/images/account/email-auth-ok.png';
 import mailErrorImage from '../../../assets/images/account/email-auth-error.png';
 import mailMap from '../../../configs/mail.manage';
 
-class RegisterForm extends Component {
+class RegisterForm extends PureComponent {
     state = {
         vCodeImgUrl:getVcodeImgUrl(),
         serviceAgreeVisible:false
@@ -139,8 +138,6 @@ class RegisterForm extends Component {
     }
 }
 
-const RegisterFormWrapper = Form.create({name:'register-form'})(RegisterForm)
-
 function ServiceAgreeMentModal({visible,onCancel}) {
     return (
         <Modal
@@ -235,7 +232,7 @@ function ServiceAgreeMentModal({visible,onCancel}) {
     )
 }
 
-export default class Register extends Component {
+export default class Register extends PureComponent {
 
     constructor (props) {
         super(props);
@@ -424,7 +421,7 @@ export default class Register extends Component {
                             <div className="sub-title">
                                 欢迎注册C-Life物联网云平台
                             </div>
-                            <RegisterFormWrapper email={email} registerEmailGuide={this.registerEmailGuide}></RegisterFormWrapper>
+                            <RegisterForm email={email} registerEmailGuide={this.registerEmailGuide}></RegisterForm>
                             <div className="right-top">
                                 <span className="tip">已有C-Life云帐号? </span> <Link to="/account/login">快速登录</Link>
                             </div>

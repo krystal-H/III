@@ -1,6 +1,5 @@
-export const urlPrefix = '/v5/web/open';//是正式接口
-// const urlPrefix = '/v1/web/open';//本地调试
-let fileTourl = "/v4/web/tencentcloud/upload";
+export const urlPrefix = '/v5x/web/open';//接口统一公共路径
+let fileTourl = "/v4/web/tencentcloud/upload"; //上传腾讯云接口，生产环境上用跨域的绝对路径
 if(window.location.hostname == "open.clife.cn" || window.location.hostname == "cms.clife.cn"){
     fileTourl = "https://cms.clife.cn/v4/web/tencentcloud/upload"
 }
@@ -14,7 +13,7 @@ let Paths = {
     upFileUrl:fileTourl,
 
     /* 用户中心*/
-    loginCheck: '/common/admin/loginCheck',
+    loginCheck: '/common/login',
     logout: '/common/admin/logout',
     verifyCodeUrl : '/common/admin/getImgVeriCode',
     register:'/public/account/register',

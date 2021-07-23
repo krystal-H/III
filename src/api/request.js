@@ -180,29 +180,45 @@ function _axios(configs) {
 
   if (method === "get") {
     delete _configs.data;
-  }
-
-  if (method === "post" && needFormData) {
-    let _data = objToFormdata(data);
+  }else{
+    let _data = JSON.stringify(data),
+        _contype = "application/json";
+    if(needFormData){
+      _data = objToFormdata(data);
+      _contype = "multipart/form-data";
+    }
     _configs = Object.assign(_configs, {
       data: _data,
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": _contype,
       },
     });
+    delete _configs.needFormData;
+    delete _configs.needJson;
   }
-  delete _configs.needFormData;
+  
 
-  if (method === "post" && needJson) {
-    let _data = JSON.stringify(data);
-    _configs = Object.assign(_configs, {
-      data: _data,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
-  delete _configs.needJson;
+  // if (method === "post" && needFormData) {
+  //   let _data = objToFormdata(data);
+  //   _configs = Object.assign(_configs, {
+  //     data: _data,
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //     },
+  //   });
+  // }
+  // delete _configs.needFormData;
+
+  // if (method === "post" && needJson) {
+  //   let _data = JSON.stringify(data);
+  //   _configs = Object.assign(_configs, {
+  //     data: _data,
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   });
+  // }
+  // delete _configs.needJson;
 
   //TODO: 添加“安全防护”相关内容？？？
 
@@ -217,10 +233,6 @@ function _axios(configs) {
  * @param {Object} configs 可选 | axios配置项，可配置内容同官网
  */
 function get(url, data = {}, options = {}, configs = {}) {
-  if (!data.superInstanceId ) {
-    data.superInstanceId  = localStorage.getItem("superInstanceId");
-  }
-
   return _axios({
     url,
     params: data,
@@ -237,9 +249,6 @@ function get(url, data = {}, options = {}, configs = {}) {
  * @param {Object} configs 可选 | axios配置项，可配置内容同官网
  */
 function post(url, data = {}, options = {}, configs = {}) {
-  if (!data.superInstanceId ) {
-    data.superInstanceId  = localStorage.getItem("superInstanceId");
-  }
   return _axios({
     url,
     method: "post",

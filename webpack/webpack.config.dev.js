@@ -30,18 +30,12 @@ const dev = {
       }
     },
     proxy: {
-      "/v1/web/": {
-        // target:_environment,
-        target: 'http://10.6.34.37:8080',
-        changeOrigin: true,
-        secure: false,
-      },
       "/v4/web/": {
         target: _environment,
         changeOrigin: true,
         secure: false,
       },
-      "/v5/web/": {
+      "/v5x/web/": {
         target: _environment,
         // target: "http://10.8.80.120:8080",
         changeOrigin: true,
@@ -54,20 +48,6 @@ const dev = {
         secure: false,
       },
     },
-    // proxy: {//后台本地
-    //   '/v1/web/': {
-    //     target: 'http://10.6.34.37:8080',
-    //     changeOrigin: true,
-    //     secure: false
-    //   }
-    // }
-    // proxy: {
-    //   '/v1/web/': {
-    //     target: 'https://pre.cms.clife.cn',
-    //     changeOrigin: true,
-    //     secure: false
-    //   }
-    // },
   },
 };
 
