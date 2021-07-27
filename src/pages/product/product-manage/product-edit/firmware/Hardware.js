@@ -102,6 +102,10 @@ export default class Hardware extends Component {
     // replace = () => {
     //     this.setState({ replaceModalVisible: true })
     // }
+    // 下载说明书
+    downInstructions = () => {
+        alert('暂无！')
+    }
     // 获取模组详情
     getDetail = () => {
         this.setState({ detailVisible: true })
@@ -143,7 +147,7 @@ export default class Hardware extends Component {
                                     <div className="desc-item">
                                         <span className="desc-item-title">特性：</span>1.支持Wi-Fi通信技术；2.支持Wi-Fi SmartLink配网配网方式；3.通信通讯速率为4800bps
                                     </div>
-                                    <div className="more" onClick={this.getDetail}>更多<CaretRightOutlined /></div>
+                                    <div className="more" onClick={this.downInstructions}>说明书<CaretRightOutlined /></div>
                                 </div>
                             </div>
                             <div className="module-right-box">
