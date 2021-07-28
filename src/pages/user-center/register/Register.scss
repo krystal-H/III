@@ -1,6 +1,5 @@
-@import '../../../assets/css/variables.scss';
-@import '../../../assets/css/tools.scss';
-.text-wrapper{
+
+.aggrement-text-wrapper{
 
     height: 500px;
     overflow-y: scroll;
@@ -11,7 +10,7 @@
         font-weight: 600;
     }
 
-    & > p{
+    & > p,.p{
         text-indent: $gap * 2;
     }
 
