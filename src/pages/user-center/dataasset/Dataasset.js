@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import {get,post, Paths} from '../../../api';
-import { Form } from '@ant-design/compatible';
+import {get, Paths} from '../../../api';
 import '@ant-design/compatible/assets/index.css';
 import { Input, Button, Table, Divider, Tooltip, Tag, Select } from 'antd';
 import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';

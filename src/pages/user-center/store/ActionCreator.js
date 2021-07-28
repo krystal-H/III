@@ -32,13 +32,18 @@ export const getDeveloperInfo= () => {
 //获取菜单
 export const getMenuList = () => {
   return (dispatch,getState) => {
-    get(Paths.getGroupMenuList,{version:1.1}).then((res) => {
-        // let data = res.data;
-        let data = getNavRoutes(menuList);
-        console.log('---routesMenu--',data)
-        let action = updateMuenList(data);
-        dispatch(action);
-    });
+    let data = getNavRoutes(menuList);
+    console.log('---routesMenu--',data)
+    let action = updateMuenList(data);
+    dispatch(action);
+    
+    // get(Paths.getGroupMenuList,{version:1.1}).then((res) => {
+    //     // let data = res.data;
+    //     let data = getNavRoutes(menuList);
+    //     console.log('---routesMenu--',data)
+    //     let action = updateMuenList(data);
+    //     dispatch(action);
+    // });
   }
 }
 export const updateMuenList= (data) => {
