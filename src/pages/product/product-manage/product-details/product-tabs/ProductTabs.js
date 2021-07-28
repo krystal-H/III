@@ -14,8 +14,10 @@ import RemoteConfig from '../remote-config/RemoteConfig';
 import LabelManage from '../label-manage/LabelManage';
 import TopicList from '../topic-list/TopicList'
 import PtotocalTag from '../protocal-tag/PtotocalTag';
+
 import ProductInfo from '../info';
 import FnDefintion from '../function-definition';
+import HardwareDep from '../hardware-dep'
 
 import {getUrlParam} from '../../../../../util/util';
 import {
@@ -93,6 +95,10 @@ export default class ProductTabs  extends Component {
                     </TabPane>
                     <TabPane key='2' tab={'功能定义'}>
                         <FnDefintion></FnDefintion>
+                    </TabPane>
+
+                    <TabPane key={'4'} tab={'硬件开发'}>
+                        <HardwareDep productId={productId}/>
                     </TabPane>
                     {/* <TabPane key={'14'} tab={'物标签'}>
                         <PtotocalTag productId={productId} />

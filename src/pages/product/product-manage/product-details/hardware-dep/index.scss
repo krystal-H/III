@@ -1,0 +1,141 @@
+@charset 'utf-8';
+
+.hardware-dev-page {
+  .desc {
+    margin-bottom: 25px;
+    @include text(12px, $_666Color);
+  }
+  .module-box {
+    // 无固件信息
+    .no-match-firmware {
+      margin-top: 62px;
+      margin-bottom: 75px;
+      @include flex(center, center, column);
+      &-img {
+        margin-bottom: 12px;
+        @include wh(42px, 30px);
+        img {
+          @include wh(100%, 100%);
+        }
+      }
+      &-tip {
+        @include text(12px, $_9b9);
+      }
+    }
+    .module-header {
+      @include flex();
+    }
+    .module-tip {
+      font-weight: bold;
+      @include text(14px, $_323Color);
+    }
+    .module-cont {
+      margin: 18px 0px;
+      border-radius: 4px;
+      border: $_border;
+      @include flex(space-between, flex-start);
+      .flex-s {
+        @include flex(flex-start);
+      }
+      &-left {
+        margin: 12px;
+        margin-right: 16px;
+        border-radius: 4px;
+        border: 1px solid $_9E9;
+        @include wh(127px, 127px);
+      }
+      &-right {
+        height: 127px;
+        @include flex(space-around, flex-start, column);
+        .flex {
+          @include flex();
+        }
+        .module-title {
+          @include text(14px, $_323Color);
+        }
+        .desc-item {
+          margin-right: 30px;
+          @include text(12px, $_666Color);
+          // &-title {
+          //   @include text(12px, $_323Color);
+          // }
+        }
+        .more {
+          cursor: pointer;
+          @include text(12px, $_206);
+        }
+      }
+      .module-right-box {
+        padding-top: 16px;
+        padding-right: 30px;
+        .price {
+          font-weight: bold;
+          @include text(18px, $_323Color);
+        }
+        .apply-btn {
+          cursor: pointer;
+          margin-top: 12px;
+          padding: 6px 16px;
+          border-radius: 4px;
+          border: 1px solid #2f78ff;
+          @include text(12px, #2f78ff);
+        }
+      }
+    }
+    // margin
+    .mar-t-b {
+      margin-top: 30px;
+      margin-bottom: 18px;
+    }
+    .mar30 {
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+    .ant-table-thead {
+      .ant-table-cell {
+        @include text(12px, $_323Color);
+      }
+    }
+    .ant-table-tbody {
+      .ant-table-cell {
+        @include text(12px, $_666Color);
+      }
+    }
+    .table-operation {
+      cursor: pointer;
+      color: $themeColor;
+    }
+    .debug {
+      @include flex(space-between, flex-start);
+      margin-left: 98px;
+      margin-right: 50px;
+      @include text(12px, $_323Color);
+      .flex-c {
+        @include flex(center, center, column);
+      }
+      .line {
+        img {
+          @include wh(323px, 8px);
+        }
+      }
+      &-icon {
+        max-width: 34px;
+        max-height: 34px;
+        margin-bottom: 8px;
+      }
+      .blue {
+        cursor: pointer;
+        color: $_206;
+        margin-top: 8px;
+        .tooltip-icon {
+          color: $_8C8;
+          margin-left: 5px;
+          @include wh(14px, 14px);
+        }
+      }
+      .mar8 {
+        margin-top: 8px;
+      }
+    }
+  }
+}
