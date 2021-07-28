@@ -18,6 +18,7 @@ import PtotocalTag from '../protocal-tag/PtotocalTag';
 import ProductInfo from '../info';
 import FnDefintion from '../function-definition';
 import HardwareDep from '../hardware-dep'
+import ServiceConfig from '../service-config'
 
 import {getUrlParam} from '../../../../../util/util';
 import {
@@ -99,6 +100,9 @@ export default class ProductTabs  extends Component {
 
                     <TabPane key={'4'} tab={'硬件开发'}>
                         <HardwareDep productId={productId}/>
+                    </TabPane>
+                    <TabPane key={'5'} tab={'服务配置'}>
+                        <ServiceConfig />
                     </TabPane>
                     {/* <TabPane key={'14'} tab={'物标签'}>
                         <PtotocalTag productId={productId} />

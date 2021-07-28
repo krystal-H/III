@@ -54,8 +54,6 @@ export default class Hardware extends Component {
     ];
     this.state = {
       selectedId: '1', // 模组的id
-      modifyFirmwareVisible: false, // 修改固件
-      replaceFirmwareVisible: false, // 更换固件
     }
   }
   componentDidMount() {
@@ -65,36 +63,12 @@ export default class Hardware extends Component {
     console.log('验证是否通过:', values);
     this.props.nextStep()
   };
-  // 修改固件
-  modifyFirmware = (val, e) => {
-    console.log(val, '-----')
-    this.setState({ modifyFirmwareVisible: true })
-  }
-  // 更换固件
-  goReplaceFirmware = () => {
-    this.setState({ replaceFirmwareVisible: true })
-  }
-  // 弹窗确定
-  handleModalOk = (id) => {
-    console.log('确定选中的id', id)
-    this.setState({ replaceModalVisible: false })
-  }
-  // 弹窗取消
-  handleModalCancel = (type) => {
-    console.log('取消')
-    if (type === 'module') {
-      this.setState({ replaceModalVisible: false })
-    } else if (type === 'firmware') {
-      this.setState({ replaceFirmwareVisible: false })
-    }
-  }
   // 下载说明书
   downInstructions = () => {
     alert('暂无说明书！')
   }
 
   render() {
-    const { selectedId, modifyFirmwareVisible, replaceFirmwareVisible } = this.state
     return (
       <div className="hardware-dev-page">
         <div className="hardware-wrap">
