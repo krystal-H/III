@@ -49,14 +49,14 @@ export default function OverviewWrap() {
     //轮播图
     const [bannerArr, setBannerArr] = useState([])
     const getBannerList = () => {
-        post('http://10.6.50.78:7771/cover/getBannerList').then((res) => {
+        post(Paths.homeBanner, { developerId: 1 }).then((res) => {
             setBannerArr(res.data)
         });
     }
     //消息列表
     const [messageList, setMessageList] = useState([])
     const getMessageList = () => {
-        post('http://10.6.50.78:7771/cover/getSystemNotice?developerId=1').then((res) => {
+        post(Paths.messageList, { developerId: 1 }).then((res) => {
             if (res.data.length > 3) {
                 setMessageList(res.data.slice(0, 3))
             } else {
@@ -75,7 +75,7 @@ export default function OverviewWrap() {
     //app列表
     const [appList, setAppList] = useState([])
     const getAppList = () => {
-        post('http://10.6.50.78:7771/appInfoManage/getAppInfoList?developerId=1').then((res) => {
+        post(Paths.appList, { developerId: 1 }).then((res) => {
             if (res.data.length > 3) {
                 setAppList(res.data.slice(0, 3))
             } else {
@@ -89,32 +89,32 @@ export default function OverviewWrap() {
         exception: 0, total: 0, totalActive: 0, todayActive: 0
     })
     const getDevOneList = () => {
-        post('http://10.6.50.78:7771/deviceCount/deviceManageCount?developerId=1').then((res) => {
+        post(Paths.devMnCount, { developerId: 1 }).then((res) => {
             setDevOneList(res.data)
         });
     }
     const [devTwoList, setDevTwoList] = useState({ burn: 0, total: 0, active: 0, unactive: 0 })
     const getDevTwoList = () => {
-        post('http://10.6.50.78:7771/deviceCount/deviceSecretKeyCount?developerId=1').then((res) => {
+        post(Paths.devSecreCount, { developerId: 1 }).then((res) => {
             setDevTwoList(res.data)
         });
     }
     const [devThreeList, setDevThreeList] = useState({ processed: 0, lastWarnTime: "-", pending: 0, send: 0 })
     const getDevThreeList = () => {
-        post('http://10.6.50.78:7771/deviceCount/deviceWarningCount?developerId=1').then((res) => {
+        post(Paths.devWarnCount, { developerId: 1 }).then((res) => {
             setDevThreeList(res.data)
         });
     }
     //产品统计
     const [productCount, setProductCount] = useState({ online: 0, fault: 0, total: 0, devTotal: 0 })
     const getProductCount = () => {
-        post('http://10.6.50.78:7771/cover/getDeviceProductCount?developerId=1').then((res) => {
+        post(Paths.productCount, { developerId: 1 }).then((res) => {
             setProductCount(res.data)
         });
     }
     const [produList, setProductList] = useState([])
     const getProductList = () => {
-        post('http://10.6.50.78:7771/productManage/getProductList?developerId=1').then((res) => {
+        post(Paths.productList, { developerId: 1 }).then((res) => {
             if (res.data.length > 3) {
                 setProductList(res.data.slice(0, 3))
             } else {
@@ -122,12 +122,12 @@ export default function OverviewWrap() {
             }
         });
     }
-    const productStatuFilter=(value)=>{
+    const productStatuFilter = (value) => {
         // (0开发模式 ,1生产模式，2-审核中)
-        if(value == 1){
+        if (value == 1) {
             return '生产模式'
         }
-        if(value == 2){
+        if (value == 2) {
             return '审核中'
         }
         return '开发模式'
@@ -145,11 +145,13 @@ export default function OverviewWrap() {
             <div className='comm-shadowbox over-view-banner'>
                 <Carousel autoplay>
                     {
-                        bannerArr.map((item, index) => {
+                        bannerArr.length ? (bannerArr.map((item, index) => {
                             return <div className='imgdiv' key={index}>
                                 <img src={item.imageUrl} />
                             </div>
-                        })
+                        })) : (<div className='imgdiv' >
+                            <img src={banner} />
+                        </div>)
                     }
                 </Carousel>
             </div>
