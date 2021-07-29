@@ -14,15 +14,16 @@ export default function RegisterForm({
     const [form] = Form.useForm();
     const onFinish = values => {
         // console.log(123,values)
-        let _values = {...values};
-        delete _values.passwordComfirm;
-        delete _values.agreement;
-
-        // 对密码进行加密
-        _values.password = encryption(_values.password)
+        const {email,password,veriCode} = values
+        const _values = {
+            email,
+            password:encryption(password),
+            userName:email,
+            verifyCode:veriCode
+        };
 
         post(Paths.register,_values,{loading:true,}).then(data => {
-            registerEmailGuide({ account:_values.account })
+            registerEmailGuide({ account:email })
         }).catch(error => {
             refreshVeriCode()
             resetPswAndCode()
@@ -45,7 +46,7 @@ export default function RegisterForm({
             
     return <div>
             <Form form={form} className="form-wrapper" onFinish={onFinish}>
-                <Form.Item name='account'
+                <Form.Item name='email'
                     rules={[
                         { required: true, message: '请输入注册邮箱' },
                         { type: 'email', message: '请输入正确格式的邮箱' },
