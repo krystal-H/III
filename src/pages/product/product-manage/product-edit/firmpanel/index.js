@@ -1,11 +1,13 @@
-import React, { useEffect, useState ,useImperativeHandle,forwardRef} from 'react'
+import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Button } from 'antd';
 import GrayDebugg from './grayDebugg'
 import ChangeModal from './changeModal'
 import './index.scss'
-function confirmModel({nextStep},ref) {
+function confirmModel({ nextStep }, ref) {
     useEffect(() => {
     }, [])
+    const { pathname } = useLocation()
     //灰色测试
     const [isGrayModalVisible, setIsGrayModalVisible] = useState(false);
     const CancelDebugg = () => {
@@ -28,7 +30,7 @@ function confirmModel({nextStep},ref) {
     const openChange = () => {
         setIsChangeModalVisible(true)
     }
-    const subNextConFirm=()=>{
+    const subNextConFirm = () => {
         nextStep()
     }
     useImperativeHandle(ref, () => ({
@@ -43,7 +45,10 @@ function confirmModel({nextStep},ref) {
             <div></div>
             <div>
                 <div className='confirm-pannel-content-left'>
-                    <Button type="primary" onClick={openDebugg}>灰度调试</Button>
+                    {
+                        pathname.indexOf('edit') > -1 && <Button type="primary" onClick={openDebugg}>灰度调试</Button>
+                    }
+
                     <Button type="primary" ghost onClick={openChange}>更换面板</Button>
                 </div>
                 <div className='confirm-pannel-content-right'>
@@ -90,4 +95,4 @@ function confirmModel({nextStep},ref) {
     </div>
 }
 
-export default  confirmModel = forwardRef(confirmModel)
+export default confirmModel = forwardRef(confirmModel)
