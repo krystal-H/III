@@ -1,6 +1,6 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Image } from 'antd';
-// import NetworkInfo from './networkInfo';
+import NetworkInfo from './networkInfo';
 // import CommunicateSecurity from './communicationSecurity';
 // import ConfigFirmware from './configFirmware';
 // import JoinGateway from './joinGateway';
@@ -63,7 +63,7 @@ const optionalList = [
   }
 ]
 
-function ServiceSelect({ nextStep }, ref) {
+function ServiceConfig({ nextStep }, ref) {
   const [networkVisible, setNetworkVisible] = useState(false)
   const [securityVisible, setSecurityVisible] = useState(false)
   const [firmwareVisible, setFirmwareVisible] = useState(false)
@@ -76,6 +76,11 @@ function ServiceSelect({ nextStep }, ref) {
   useImperativeHandle(ref, () => ({
     onFinish: subNextConFirm
   }));
+
+  // 查看配网信息
+  const checkNetwork = () => {
+    setNetworkVisible(true)
+  }
 
   const showModal = (type) => {
     console.log(type)
@@ -101,7 +106,7 @@ function ServiceSelect({ nextStep }, ref) {
     setFirmwareDetailVisible(true)
   }
   return (
-    <div className="service-config-page">
+    <div className="service-config-page2">
       <div className="desc">免开发方案，只需选择推荐模组、以及配置固件信息，快速实现硬件智能化。</div>
       {/* 必选配置 */}
       <div className="service-config-title">必选配置</div>
@@ -120,7 +125,7 @@ function ServiceSelect({ nextStep }, ref) {
               <div className="config-card-right">
                 <div className="config-card-right-title">{item.title}</div>
                 <div className="config-card-right-desc">{item.desc}</div>
-                <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>查看</div>
+                <div className="config-card-right-btn" onClick={() => { checkNetwork(item.type) }}>查看</div>
               </div>
               {
                 item.isConfiged && <div className="configured-logo">已配置</div>
@@ -182,12 +187,12 @@ function ServiceSelect({ nextStep }, ref) {
         }
       </div>
       {/* 配网信息 */}
-      {/* {
+      {
         networkVisible &&
         <NetworkInfo
           networkModalVisible={networkVisible}
           cancelHandle={() => { setNetworkVisible(false) }} />
-      } */}
+      }
       {/* 通信安全机制 */}
       {/* {
         securityVisible &&
@@ -228,4 +233,4 @@ function ServiceSelect({ nextStep }, ref) {
   )
 }
 
-export default ServiceSelect = forwardRef(ServiceSelect)
+export default ServiceConfig = forwardRef(ServiceConfig)
