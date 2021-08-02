@@ -18,10 +18,9 @@ let Paths = {
     logout: '/common/loginOut',
     verifyCodeUrl : '/common/getImgVeriCode',
     register:'/common/register',
+    registerConfirm : '/common/authConfirm',
+    resendRegisterEmail : '/common/resendEmail',
 
-    registerConfirm : '/public/account/registerConfirm',
-    
-    resendRegisterEmail : '/public/account/resendRegisterEmail',
     resetPassword:'/public/account/resetPassword',
     subResetPassword:'/reset/sub/resetPwd',
     forgetPasswordAuth : '/reset/forget/auth',
@@ -475,7 +474,7 @@ let Paths = {
     productList:'/productManage/getProductList' ,//产品列表
 };
 
-// 拼接 /v1/web/open
+// 拼接 urlPrefix
 Object.keys(Paths).forEach(key => {
     if(!NOT_NEED_PREFIX.includes(key)) {
         Paths[key] = urlPrefix + Paths[key]
