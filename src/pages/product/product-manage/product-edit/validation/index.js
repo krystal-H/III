@@ -1,35 +1,36 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react'
 import moment from 'moment';
 import { Table, Tabs, Input, Button } from 'antd';
 import DescWrapper from '../../../../../components/desc-wrapper/DescWrapper';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import History from './historyInfo';
 import './index.scss'
+import ReleaseProduct from './releaseProduct';
 
 const columns = [
     {
-      title: '序列号',
-      dataIndex: 'name',
-      key: 'name',
-      render: text => <a>{text}</a>,
+        title: '序列号',
+        dataIndex: 'name',
+        key: 'name',
+        render: text => <a>{text}</a>,
     },
     {
-      title: 'topic数据内容',
-      dataIndex: 'age',
-      key: 'age',
+        title: 'topic数据内容',
+        dataIndex: 'age',
+        key: 'age',
     },
     {
-      title: '物理地址',
-      dataIndex: 'address',
-      key: 'address',
+        title: '物理地址',
+        dataIndex: 'address',
+        key: 'address',
     },
     {
         title: 'DID',
         dataIndex: 'DID',
         key: 'DID',
-      }
-  ];
-export default function validation() {
+    }
+];
+function Validation({ nextStep }, ref) {
     const { TabPane } = Tabs;
     function callback(key) {
         console.log(key);
@@ -37,6 +38,15 @@ export default function validation() {
     const [data, setData] = useState([])
     const [inputValue, setInputValue] = useState('')
     const [inputAddress, setInputAddress] = useState('')
+    const [releaseVisible, setReleaseVisible] = useState(true) // 发布产品
+
+    // 展示发布产品弹窗
+    const showRelease = () => {
+        setReleaseVisible(true)
+    }
+    useImperativeHandle(ref, () => ({
+        showRelease
+    }))
 
     return <div id='product-edit-validation'>
         <div className='validation-top'>在调试工具的【添加调试设备】步骤，添加设备物理地址后，既默认此设备在clife平台注册，不受通信安全校验机制（如一机一码）的影响</div>
@@ -63,7 +73,7 @@ export default function validation() {
                                 </div>
                             </div>
                             <div>
-                            <Table columns={columns} dataSource={data} />
+                                <Table columns={columns} dataSource={data} />
                             </div>
                         </div>
                         <div className='right-content'>
@@ -77,6 +87,15 @@ export default function validation() {
                 </TabPane>
             </Tabs>
         </div>
-        {<History/>}
+        {<History />}
+        {/* 确认发布产品弹窗 */}
+        {
+            releaseVisible &&
+            <ReleaseProduct
+                releaseVisible={releaseVisible}
+                cancelHandle={() => { setReleaseVisible(false) }} />
+        }
     </div>
 }
+
+export default Validation = forwardRef(Validation)

@@ -92,6 +92,10 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
             refArr['active_' + current].current.onFinish()
         }
     };
+    // 发布产品
+    const releaseProduct = () => {
+        refArr['active_' + current].current.showRelease()
+    }
     const nextStep = useCallback(() => {
         setcurrent(current + 1)
     });
@@ -169,7 +173,7 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
                     )}
 
                     {current === stepList.length - 1 && (
-                        <Button type="primary" onClick={() => message.success('Processing complete!')}>
+                        <Button type="primary" onClick={() => releaseProduct()}>
                             发布产品
                         </Button>
                     )}

@@ -1,0 +1,9 @@
+@charset 'utf-8';
+
+.release-product-modal {
+  .release-item-title {
+    margin-bottom: 22px;
+    font-weight: bold;
+    @include text(14px, #323232);
+  }
+}
