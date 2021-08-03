@@ -14,11 +14,13 @@ import { MenuUnfoldOutlined, MenuFoldOutlined, } from '@ant-design/icons';
 // const DevelopCenter = loadable( () => import('../develop-center/DevelopCenter'));
 const Overview = loadable( () => import('../home/overview/index'));
 const Product = loadable( () => import('../product'));
+const Device = loadable( () => import('../device'));
+
 
 const RouteComponentLi ={
     '总览':Overview,
     '产品':Product,
-    '设备':Overview,
+    '设备':Device,
     'APP':Product,
     '数据服务':Overview,
     '开发Studio':Product,
