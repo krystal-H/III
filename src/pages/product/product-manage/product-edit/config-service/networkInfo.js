@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Modal, Input, Form, Select } from 'antd';
-import { UploadFileHooks } from '../../../../../../components/upload-file';
+import { UploadFileHooks } from '../../../../../components/upload-file';
 import './networkInfo.scss';
 
 const { Option } = Select;

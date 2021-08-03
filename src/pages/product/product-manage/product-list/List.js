@@ -49,7 +49,7 @@ class List extends PureComponent {
       copyLoading: false, // 复制loading
       copyInputValue: '', // 复制弹窗中输入的产品名称确认
 
-      isClicked: false // 制作产品按钮
+      isClicked: true // 制作产品按钮
     }
     this.columns = [
       {

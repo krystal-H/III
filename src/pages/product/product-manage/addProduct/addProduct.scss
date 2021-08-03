@@ -35,11 +35,13 @@
   }
   .level1-box {
     @include flex(flex-start);
+    flex-wrap: wrap;
     margin: 22px 0;
     &-item {
       cursor: pointer;
       text-align: center;
       margin-right: 14px;
+      margin-bottom: 14px;
       padding: 6px 16px;
       border-radius: 4px;
       border: $border;

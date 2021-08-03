@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Modal, Form, Radio, Row, Tooltip } from 'antd';
-import { UploadFileHooks } from '../../../../../../components/upload-file';
+import { UploadFileHooks } from '../../../../../components/upload-file';
 import { InfoCircleFilled } from '@ant-design/icons';
 
 import './communicationSecurity.scss'
