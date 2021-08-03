@@ -38,7 +38,7 @@ function Validation({ nextStep }, ref) {
     const [data, setData] = useState([])
     const [inputValue, setInputValue] = useState('')
     const [inputAddress, setInputAddress] = useState('')
-    const [releaseVisible, setReleaseVisible] = useState(true) // 发布产品
+    const [releaseVisible, setReleaseVisible] = useState(false) // 发布产品
 
     // 展示发布产品弹窗
     const showRelease = () => {
