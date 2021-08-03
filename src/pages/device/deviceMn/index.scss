@@ -1,0 +1,21 @@
+#device-manage {
+  .main-page-title {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .device-main {
+    padding: 22px;
+
+    .device-filter {
+      .device-filter-form {
+        >.ant-row {
+          margin-right: 40PX;
+          margin-bottom: 22px;
+        }
+      }
+
+    }
+  }
+
+}

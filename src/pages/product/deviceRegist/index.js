@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Select, Steps, Button, Input, Space, Table } from 'antd';
 import PageTitle from '../../../components/page-title/PageTitle';
 import stepImg from '../../../assets/images/product-regist.png';
+import CountNum from '../../../components/CountNum/index';
 import './index.scss'
 import RegistModel from './regist'
 const { Option } = Select;
@@ -11,6 +12,7 @@ export default function DeviceRegist() {
     const [deviceNameS, setDeviceNameS] = useState([])
     const [productCount, SetproductCount] = useState({})
     const [dataSource, setDataSource] = useState([])
+    const [countData, setCountData] = useState([{ label: '设备总数量', count: 0 }, { label: '已入网设备', count: 0 }, { label: '未入网设备', count: 0 }])
     const columns = [
         {
             title: '设备ID',
@@ -81,20 +83,7 @@ export default function DeviceRegist() {
                     <Step title="查看入网设备" description={<><span>Clife平台提供产品密钥验证、产品密钥&设备ID验证、设备ID&设备密钥验证多种安全通信机制。</span><a onClick={downFile}>下载密钥烧录工具</a></>} />
                 </Steps>
             </div>
-            <div className='comm-shadowbox device-count'>
-                <div className='device-count-item'>
-                    <div className='item-label'>设备总数量</div>
-                    <div className='item-number'>{productCount.total}</div>
-                </div>
-                <div className='device-count-item'>
-                    <div className='item-label'>已入网设备</div>
-                    <div className='item-number'>{productCount.devTotal}</div>
-                </div>
-                <div className='device-count-item'>
-                    <div className='item-label'>未入网设备</div>
-                    <div className='item-number'>{productCount.online}</div>
-                </div>
-            </div>
+            <CountNum data={countData} />
             <div className='comm-shadowbox device-content'>
                 <div className='content-top'>
                     <div className='content-top-left'>
