@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link} from 'react-router-dom';
 import { Input, Button, Table, Tag, Card, Divider, Popconfirm } from 'antd';
 import {get, Paths} from '../../../api';
 import './roleManagement.scss';
@@ -42,9 +43,14 @@ export default class RoleManagementList extends Component {
             },
             { title: '最新修改时间', dataIndex: 'modifyTime', key: 'modifyTime', render: text => <span>{DateTool.utcToDev(text)}</span> },
             { title: '操作', key: 'tags', dataIndex: 'tags',
-             render:(text, record) => (
+             render:(text, {roleId,roleName,remark,userCategory}) => (
                     <span>
-                        <a onClick={this.editRole.bind(this,record.roleId,record.roleName,record.remark,record.userCategory)}>编辑</a>
+                        <Link to={{
+                                    pathname:`/userCenter/role/add`,
+                                    search:`?roleId=${roleId}&roleName=${encodeURI(roleName)}&remark=${encodeURI(remark)}&userCategory=${userCategory}`
+                                }}
+                        >编辑
+                        </Link>
                         <Divider type="vertical" />
                         <Popconfirm 
                             title="你确定要删除该角色吗？"
@@ -60,7 +66,6 @@ export default class RoleManagementList extends Component {
             },
         ];
         this.pagerIndex = this.pagerIndex.bind(this);
-        this.addRole = this.addRole.bind(this);
     }
     //获取角色列表
     getList = (data={}) => {
@@ -95,27 +100,6 @@ export default class RoleManagementList extends Component {
             this.getList({pageIndex:1,pageRows:10,roleName:value});
         });
     }
-    //添加用户跳转
-    addRole(){
-        this.props.history.push({
-            pathname: '/userCenter/add',
-        });
-    }
-    //编辑
-    editRole = (roleId,roleName,remark,userCategory) => {
-        roleName =encodeURI(roleName);
-        remark = encodeURI(remark);
-        window.location.hash = `#/userCenter/add?roleId=${roleId}&roleName=${roleName}&remark=${remark}&userCategory=${userCategory}`;
-        // this.props.history.push({
-        //     pathname: '/userCenter/add',
-        //     state:{
-        //         roleId,
-        //         roleName,
-        //         remark,
-        //         userCategory
-        //     },
-        // });
-    }
     pagerIndex(pageIndex){
         this.setState({loading:true},()=>{
             this.getList({pageIndex,pageRows:10});
@@ -131,7 +115,10 @@ export default class RoleManagementList extends Component {
                             <Input.Search placeholder="请输入用户角色名查找" maxLength={20} onSearch={value => this.searchProduct(value)} enterButton />
                         </div>
                         <div className='butFloatRight'>
-                            <Button type="primary" onClick={this.addRole}>创建用户角色</Button>
+                            <Link to={{
+                                    pathname:`/userCenter/role/add`
+                                }}><Button type="primary">创建用户角色</Button>
+                            </Link>  
                         </div>
                     </div>
                 </PageTitle>
