@@ -61,7 +61,7 @@ export default class UserCenter extends Component {
         let {developerInfo,newMessageNums,match,getDeveloperInfo,menulist:{userMenu=[]}} = this.props,
             {path} = match,
             {childmenus=[]} = userMenu[0] || {},
-            isOk = !(developerInfo.isSubUser === 1);//非子账号
+            isNotSub = !(developerInfo.isSubUser === 1);//非子账号
         console.log(55555,this.props.menulist)
         return (
             <OutsideWrapper>
@@ -82,16 +82,16 @@ export default class UserCenter extends Component {
                                         const RouteComponent = RouteComponentLi[menuname];
                                         if(RouteComponent){
                                             return <Route key={index} path={path} 
-                                                    render={props => <RouteComponent developerInfo={developerInfo} getDeveloperInfo={getDeveloperInfo} {...props} {...rest} />}
+                                                    render={props => <RouteComponent developerInfo={developerInfo} getDeveloperInfo={getDeveloperInfo} isNotSub={isNotSub} {...props} {...rest} />}
                                                 ></Route>
                                         }
                                     })
                                 }
                                 {
-                                    isOk&&<Route path={`${path}/look`} component={UserLook}></Route>
+                                    isNotSub&&<Route path={`${path}/look`} component={UserLook}></Route>
                                 }
                                 {
-                                    isOk&&<Route path={`${path}/add`} component={AddRole}></Route>
+                                    isNotSub&&<Route path={`${path}/add`} component={AddRole}></Route>
                                 }
                                 {childmenus[0]&&<Redirect to={childmenus[0].path}></Redirect>}
                             </Switch>

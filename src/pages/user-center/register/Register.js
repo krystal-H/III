@@ -26,9 +26,13 @@ export default class Register extends PureComponent {
         }
     }
     componentDidMount(){
+        
+        console.log(111,location)
+        console.log(222,this.props)
+        
         const{ email,uuid }= this.state;
         if(email) {//从验证邮箱的地址进来的注册页面，则根据地址栏参数验证邮箱
-            get(Paths.registerConfirm,{ email, uuid },{ loading:true })
+            post(Paths.registerConfirm,{ email, uuid },{ loading:true })
             .then(() => {
                 this.setState({
                     registerConfirm:true
@@ -65,7 +69,7 @@ export default class Register extends PureComponent {
         })
     }
     resendEmail = (account) => {
-        const email = account || this.email
+        const email = account || this.state.email
         post(Paths.resendRegisterEmail,{email},{loading:true}).then(data => {
             notification.success({
                 message:'发送成功',

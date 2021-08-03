@@ -90,7 +90,6 @@ let Paths = {
     /* 云端定时功能 */
     getTimeServiceList: '/timerService/getList',
     updateTimeService: '/timerService/update',
-    getTimeService: '/timerService/get',
     saveTimeService: '/timerService/save',
 
     /* 场景配置服务 */

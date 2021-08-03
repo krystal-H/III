@@ -13,35 +13,34 @@ import { Icon as LegacyIcon } from '@ant-design/compatible';
 
 import './SecuritySetting.scss'
 
-export default function SecuritySetting ({developerInfo,getDeveloperInfo,match}) {
-    let {path} = match,
-        isOk = !(developerInfo.isSubUser === 1);//非子账号
+export default function SecuritySetting ({developerInfo,getDeveloperInfo,isNotSub,match}) {
+    const {path} = match;
     return (
         <Switch>
             <Route path={`${path}/setting`} 
-                render={routeProps => <Setting {...routeProps} developerInfo={developerInfo} getDeveloperInfo={getDeveloperInfo} />}
+                render={routeProps => <Setting {...routeProps} developerInfo={developerInfo} getDeveloperInfo={getDeveloperInfo} isNotSub={isNotSub} />}
             >
             </Route>
             {
-                isOk&&
+                isNotSub&&
                 <Route path={`${path}/resetPassword`} 
                     render={routeProps => <ResetPassword {...routeProps} developerInfo={developerInfo} />}
                 ></Route>
             }
             {
-                isOk&&
+                isNotSub&&
                 <Route path={`${path}/updateEmail`} 
                     render={routeProps => <UpdateEmail {...routeProps} developerInfo={developerInfo} />}
                 ></Route>
             }
             {
-                isOk&&
+                isNotSub&&
                 <Route path={`${path}/closeAccount`} 
                     render={routeProps => <CloseAccount {...routeProps} developerInfo={developerInfo} />}
                 ></Route>
             }
             {
-                isOk&&
+                isNotSub&&
                 <Route path={`${path}/subResetPassword`} 
                     render={routeProps => <SubResetPassword {...routeProps} developerInfo={developerInfo} />}
                 ></Route>
@@ -55,10 +54,10 @@ export default function SecuritySetting ({developerInfo,getDeveloperInfo,match})
 function Setting ({
     developerInfo,
     history,
-    getDeveloperInfo
+    getDeveloperInfo,
+    isNotSub
 }) {
-    let {id,secretId,secretKey,createTime,isSubUser,email,cancelStatus} = developerInfo,
-        _isSubUser = !!isSubUser;
+    let {id,secretId,secretKey,createTime,email,cancelStatus} = developerInfo;
 
     const [showid, setShowid] = useState(false);
     const [showkey, setShowkey] = useState(false);
@@ -134,12 +133,12 @@ function Setting ({
                     <div className="setting-btn-wrapper">
                         <div className="btns">
                             <span className="btn-has">已设置</span>
-                            <span onClick={() => goToItem(_isSubUser ? 'subResetPassword' : 'resetPassword')} className="btn-can-control">重置</span>
+                            <span onClick={() => goToItem(isNotSub ? 'resetPassword' : 'subResetPassword')} className="btn-can-control">重置</span>
                         </div>
                     </div>
                 </div>
                 {
-                    !_isSubUser && 
+                    isNotSub && 
                     <>
                         <div className="setting-item flex-row">
                             <div className="left-desc flex1">
