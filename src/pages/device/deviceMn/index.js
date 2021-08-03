@@ -6,8 +6,9 @@ import CountNum from '../../../components/CountNum/index';
 import './index.scss'
 const { Search } = Input;
 const { Option } = Select;
+const originCount=[{ label: '当前异常数', count: 0 }, { label: '累积设备总数', count: 0 }, { label: '累积入网总数', count: 0 }, { label: '今日入网总数', count: 0 }]
 export default function DeviceList() {
-    const [countData, setCountData] = useState([{ label: '当前异常数', count: 0 }, { label: '累积设备总数', count: 0 }, { label: '累积入网总数', count: 0 }, { label: '今日入网总数', count: 0 },])
+    const [countData, setCountData] = useState(originCount)
     const [form] = Form.useForm();
     const [dataSource, setDataSource] = useState([])
     const columns = [

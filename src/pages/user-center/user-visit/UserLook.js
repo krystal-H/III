@@ -3,7 +3,6 @@ import {get, Paths} from '../../../api';
 import { getUrlParam } from '../../../util/util';
 import BasicInformation from './BasicInformation';
 import {EditBasicInformation} from './EditBasicInformation';
-// import ActionConfirmModal from './../../../components/action-confirm-modal/ActionConfirmModal';
 import TreeStructureDisplay from '../../../components/tree-structure-display/TreeStructureDisplay';
 import {strToAsterisk} from '../../../util/util';
 import PageTitle from '../../../components/page-title/PageTitle';
