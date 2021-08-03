@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link} from 'react-router-dom';
 import {get, Paths} from '../../../api';
 import { Input, Button, Table, Divider, Modal, Tooltip, Tag } from 'antd';
 import ActionConfirmModal from './../../../components/action-confirm-modal/ActionConfirmModal';
@@ -49,18 +50,22 @@ export default class UserVisit extends Component {
             },
             { title: '创建时间', dataIndex: 'regTime', key: 'regTime', width:'160px', render: text => <span>{moment(text).add(8,'h').format('YYYY-MM-DD HH:mm:ss')}</span>},
             { title: '操作', key: 'action', width:'140px',
-                render: (text, record) => (
+                render: (text, {userId,userCategory,status,userName}) => (
                     <span>
-                        <a onClick={this.examine.bind(this,record.userId,record.userCategory)}>查看</a>
+                        <Link to={{
+                                pathname:`/userCenter/visitUser/detail`,
+                                search:`?userId=${userId}&userCategory=${userCategory}`
+                            }}>查看
+                        </Link>
                         <Divider type="vertical" />
                         {
-                            record.status==1?
-                            <a onClick={this.startOrForbidden.bind(this,1,record.userName,record.userId)} style={{color:'#FF3100'}} >停用</a>
+                            status==1?
+                            <a onClick={this.startOrForbidden.bind(this,1,userName,userId)} style={{color:'#FF3100'}} >停用</a>
                             :
-                            <a onClick={this.startOrForbidden.bind(this,0,record.userName,record.userId)}>启用</a>
+                            <a onClick={this.startOrForbidden.bind(this,0,userName,userId)}>启用</a>
                         }
                         <Divider type="vertical" />
-                        <a onClick={this.delete.bind(this,record.userId)}>删除</a>
+                        <a onClick={this.delete.bind(this,userId)}>删除</a>
                     </span>
                 ),
             },
@@ -93,9 +98,6 @@ export default class UserVisit extends Component {
             // this.getList({pageIndex,pageRows:10,userName});
             this.pagerIndex(1);
         });
-    }
-    examine = (id,userCategory) => {
-        window.location.hash = `#/userCenter/look?userId=${id}&userCategory=${userCategory}`;
     }
     //启动或停用
     startOrForbidden = (type,userName,userId) => {

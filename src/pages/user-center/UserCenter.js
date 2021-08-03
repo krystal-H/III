@@ -4,10 +4,8 @@ import {connect} from 'react-redux';
 import {isEmpty} from 'lodash';
 
 import UserInfo from './user-info/UserInfo';
-import RoleManagement from './roleManagement/RoleManagementList';
-import AddRole from './roleManagement/AddRole';
-import UserVisit from './user-visit/UserVisit';
-import UserLook from './user-visit/UserLook';
+import RoleManagement from './roleManagement/index';
+import UserVisit from './user-visit/index';
 import OperateLog from './operate-log/OperateLog';
 import SecuritySetting from './security-setting/SecuritySetting';
 
@@ -62,7 +60,7 @@ export default class UserCenter extends Component {
             {path} = match,
             {childmenus=[]} = userMenu[0] || {},
             isNotSub = !(developerInfo.isSubUser === 1);//非子账号
-        console.log(55555,this.props.menulist)
+        // console.log(55555,this.props.menulist)
         return (
             <OutsideWrapper>
                 <div className="page-header-wrapper">
@@ -86,12 +84,6 @@ export default class UserCenter extends Component {
                                                 ></Route>
                                         }
                                     })
-                                }
-                                {
-                                    isNotSub&&<Route path={`${path}/look`} component={UserLook}></Route>
-                                }
-                                {
-                                    isNotSub&&<Route path={`${path}/add`} component={AddRole}></Route>
                                 }
                                 {childmenus[0]&&<Redirect to={childmenus[0].path}></Redirect>}
                             </Switch>
