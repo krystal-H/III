@@ -6,13 +6,14 @@ const ProductManage = loadable(() => import('./product-manage'));
 const DeviceRegist = loadable(() => import('./deviceRegist'));
 const Device = loadable(() => import('./device/Device'));
 const Application = loadable(() => import('./application/Application'));
+const CloudTime = loadable(() => import('./cloudTime'))
 
 const routes = {
     '产品管理': ProductManage,
     '设备注册': DeviceRegist,
     '固件升级': ProductManage,
     '规则引擎': ProductManage,
-    '云端定时': ProductManage,
+    '云端定时': CloudTime,
     '远程配置': ProductManage,
 }
 
