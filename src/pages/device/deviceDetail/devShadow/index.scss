@@ -1,0 +1,27 @@
+#device-shadow {
+  .desc-wrapper {
+    align-items: center;
+    display: flex;
+
+    .list_text {
+      padding: 0;
+    }
+  }
+  .shadow-tab{
+    .ant-tabs-nav-wrap {
+        padding: 0;
+        height: 60px;
+      }
+    
+      .ant-tabs-content {
+        padding: 0;
+        min-height:0; 
+      }
+      .ant-radio-button-wrapper{
+        width: 92px;
+        height: 33px;
+        text-align: center;
+      }
+  }
+  
+}
