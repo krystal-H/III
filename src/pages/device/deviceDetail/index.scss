@@ -1,0 +1,37 @@
+#device-detail {
+  .device-top {
+    display: flex;
+    margin-top: 20px;
+
+    .device-top-item {
+      margin-right: 86px;
+      display: flex;
+      align-items: center;
+
+      .device-label {
+        height: 17px;
+        font-size: 12px;
+        font-weight: 400;
+        color: #323232;
+        line-height: 17px;
+      }
+
+      .device-text {
+        height: 17px;
+        font-size: 12px;
+        font-weight: 400;
+        color: #666666;
+        line-height: 17px;
+      }
+
+      .device-status {
+        border: 1px solid #D8DBE3;
+        padding: 3px 4px;
+        font-weight: 400;
+        color: #8E9197;
+        font-size: 12px;
+        margin-left: 10px;
+      }
+    }
+  }
+}

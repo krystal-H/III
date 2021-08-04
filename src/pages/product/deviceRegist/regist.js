@@ -6,21 +6,24 @@ import './index.scss'
 export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }) {
   const [form] = Form.useForm();
   const $el = useRef(null)
-  const normFile = (e) => {
-    console.log('Upload event:', e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  };
+  //提交数据
   const subData = () => {
-    form.validateFields().then(value => {
-      // 验证通过后进入
-      console.log(value,'==========aaaaaaaaa1'); 
-    }).catch(err => {
-      // 验证不通过时进入
-      console.log(err);
-    });
+    const fileList = $el.current.getFileListUrl()
+    if (fileList.length) {
+      form.validateFields(['upload']).then(value => {
+        // 验证通过后进入
+        console.log(value, '==========aaaaaaaaa1');
+      }).catch(err => {
+        // 验证不通过时进入
+      });
+    } else {
+      form.validateFields().then(value => {
+        // 验证通过后进入
+        console.log(value, '==========aaaaaaaaa1');
+      }).catch(err => {
+        // 验证不通过时进入
+      });
+    }
     return
     colseMoadl()
   }
@@ -30,7 +33,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
         <Form form={form} labelAlign='right'>
           <Form.Item
             name="select"
-            label="产品名称："
+            label="产品名称"
             rules={[{ required: true }]}
           >
             <Select >
@@ -42,12 +45,13 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
             <span></span>
           </Form.Item>
           <Form.Item
-            label="导入设备物理地址："
+            name="upload1"
+            label="导入设备物理地址"
+            rules={[{ required: true }]}
           >
             <Form.Item
               name="upload"
-              valuePropName="upload"
-              getValueFromEvent={normFile}
+              noStyle
             >
               <UploadFileHooks
                 ref={$el}
