@@ -38,6 +38,54 @@ let list1 = [
     key: 4,
     value: '厨房电器'
   },
+  // {
+  //   key: 1,
+  //   value: '家居安防'
+  // },
+  // {
+  //   key: 2,
+  //   value: '电工照明'
+  // },
+  // {
+  //   key: 3,
+  //   value: '大家电'
+  // },
+  // {
+  //   key: 4,
+  //   value: '厨房电器'
+  // },
+  // {
+  //   key: 1,
+  //   value: '家居安防'
+  // },
+  // {
+  //   key: 2,
+  //   value: '电工照明'
+  // },
+  // {
+  //   key: 3,
+  //   value: '大家电'
+  // },
+  // {
+  //   key: 4,
+  //   value: '厨房电器'
+  // },
+  // {
+  //   key: 1,
+  //   value: '家居安防'
+  // },
+  // {
+  //   key: 2,
+  //   value: '电工照明'
+  // },
+  // {
+  //   key: 3,
+  //   value: '大家电'
+  // },
+  // {
+  //   key: 4,
+  //   value: '厨房电器'
+  // },
 ]
 let list2 = [
   {
@@ -73,6 +121,9 @@ export default class MakeProductModal extends Component {
     }
     this.refSetupProduct = null
   }
+  componentDidMount() {
+    console.log('获取二级')
+  }
   // 下一步
   clickNext = (index, e) => {
     if (index === 2) { // 表单提交
@@ -100,6 +151,9 @@ export default class MakeProductModal extends Component {
   selectItem(index, type, item) {
     this.setState({ [type]: index });
     // 判断选择品类后，赋值，下一步可点 todo
+  }
+  selectedHandle = (val) => {
+    console.log(val, '-------')
   }
   render() {
     const { stepcurrent, currentIndex, currentIndex2, isDisabled } = this.state
@@ -135,10 +189,10 @@ export default class MakeProductModal extends Component {
                 allowClear
                 style={{ width: 674 }}
                 placeholder="搜索产品品类"
-                optionFilterProp="children"
                 filterOption={(input, option) =>
-                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
+                onSelect={val => this.selectedHandle(val)}
               >
                 <Option value="1">气体感应报警</Option>
                 <Option value="2">气体感应报警</Option>
