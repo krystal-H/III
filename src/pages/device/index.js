@@ -2,7 +2,7 @@ import React from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom';
 import loadable from '@loadable/component';
 
-const DeviceMn = loadable(() => import('./deviceMn'));
+const DeviceMn = loadable(() => import('./home'));
 
 const routes = {
     '设备管理': DeviceMn,
@@ -11,7 +11,7 @@ const routes = {
     '设备分组': DeviceMn,
 }
 
-export default function Product({ match: { path }, childmenus }) {
+export default function Device({ match: { path }, childmenus }) {
     return (
         <Switch>
             {
