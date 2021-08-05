@@ -28,7 +28,7 @@ export default function DeviceInfo({ match,history }) {
                 <div className='device-top-item'><label className='device-label'>所属分类：</label><span className='device-text'>405EE1100371</span></div>
             </div>
         </PageTitle>
-        <div className='comm-shadowbox device-content '>
+        <div className='comm-shadowbox common-tab device-content'>
             <Tabs defaultActiveKey={stepS} onChange={tabCallback}>
                 <TabPane key={'1'} tab={'基本信息'}>
                     <DevInfo />

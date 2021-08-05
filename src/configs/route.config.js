@@ -181,6 +181,11 @@ export const navRoutes = [
             },
         ]
     },
+    {
+        menuname:'工单',
+        path: '/open/repairOrder',
+        menuid:'10',
+    },
 ]
 /* 平台主结构路由*/
 export const mainRoutes = [

@@ -498,3 +498,27 @@
         color: #fff;
     }
 }
+
+.common-tab {
+    .ant-tabs-nav-wrap {
+      padding: 0 22px;
+      height: 60px;
+      .ant-tabs-tab-btn{
+        font-weight: 400;
+        color: #666666;
+      }
+      .ant-tabs-tab-active .ant-tabs-tab-btn{
+        font-weight: 500;
+        color: #2F78FF;
+      }
+      .ant-tabs-ink-bar{
+          background-color: #2F78FF;
+      }
+      .ant-tabs-tab + .ant-tabs-tab {
+          margin-left: 52px;
+      }
+    }
+    .ant-tabs-content{
+        padding: 6px 22px;
+    }
+  }
