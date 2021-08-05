@@ -1,31 +1,35 @@
-import React,{ Component} from 'react';
-import { Switch,Route,Redirect} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import loadable from '@loadable/component';
-import {connect} from 'react-redux';
-import {getDeveloperInfo,getMenuList} from '../user-center/store/ActionCreator';
-import {getNewMessageNums} from '../message-center/store/ActionCreator';
+import { connect } from 'react-redux';
+import { getDeveloperInfo, getMenuList } from '../user-center/store/ActionCreator';
+import { getNewMessageNums } from '../message-center/store/ActionCreator';
 
-import OutsideWrapper  from '../../components/outside-wrapper/OutsideWrapper';
+import OutsideWrapper from '../../components/outside-wrapper/OutsideWrapper';
 import Header from './header/Header';
 import NavMenu from './nav-menu/NavMenu';
 import { MenuUnfoldOutlined, MenuFoldOutlined, } from '@ant-design/icons';
 // 模块懒加载
 // const BigDataProduct = loadable( () => import('../big-data-product/BigDataProduct'));
 // const DevelopCenter = loadable( () => import('../develop-center/DevelopCenter'));
-const Overview = loadable( () => import('../home/overview/index'));
-const Product = loadable( () => import('../product'));
-const Device = loadable( () => import('../device'));
+const Overview = loadable(() => import('../home/overview/index'));
+const Product = loadable(() => import('../product'));
+const Device = loadable(() => import('../device'));
+const OrderHome = loadable(() => import('../repairOrder/home'));
 
-
-const RouteComponentLi ={
-    '总览':Overview,
-    '产品':Product,
-    '设备':Device,
-    'APP':Product,
-    '数据服务':Overview,
-    '开发Studio':Product,
+const RouteComponentLi = {
+    '总览': Overview,
+    '产品': Product,
+    '设备': Device,
+    'APP': Product,
+    '数据服务': Overview,
+    '开发Studio': Product,
 }
-
+const RepairOrder = [{
+    name: '工单主页',
+    compo: OrderHome,
+    path: '/open/repairOrder'
+}]
 const mapStateToProps = state => {
     return {
         developerInfo: state.getIn(['userCenter', 'developerInfo']).toJS(),
@@ -44,15 +48,15 @@ const mapDispatchToProps = dispatch => {
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Open extends Component {
     state = {
-        collapsed:false //左侧菜单收缩切换
+        collapsed: false //左侧菜单收缩切换
     }
     setCollapsed = () => {
         this.setState({
             collapsed: !this.state.collapsed
         })
     }
-    
-    componentDidMount(){
+
+    componentDidMount() {
         // 请求用户信息
         this.props.getDeveloperInfo();
         this.props.getNewMessageNums();
@@ -60,24 +64,24 @@ export default class Open extends Component {
             登录时候 getMenuList 过，但是登入后若页面刷则需要重新请求menulist，
             如果页面没刷新一直有muenList，则不用再请求
         */
-        if(this.props.menulist.navMenu.length==0){
+        if (this.props.menulist.navMenu.length == 0) {
             this.props.getMenuList();
         }
     }
-    render () {
-        const { match ,developerInfo,newMessageNums,menulist:{navMenu,userMenu}} = this.props;
-        const {collapsed} = this.state, {path} = match;
+    render() {
+        const { match, developerInfo, newMessageNums, menulist: { navMenu, userMenu } } = this.props;
+        const { collapsed } = this.state, { path } = match;
         return (
             <OutsideWrapper>
                 <section className="page-header-wrapper">
                     <Header developerInfo={developerInfo} newMessageNums={newMessageNums} menulist={userMenu} ></Header>
                 </section>
                 <div className="page-content-wrapper">
-                    <div className={`left-menus${collapsed?' collap':''}`}>
+                    <div className={`left-menus${collapsed ? ' collap' : ''}`}>
                         <NavMenu menulist={navMenu} collapsed={collapsed} ></NavMenu>
                         <div className='trigger-coll' onClick={this.setCollapsed}>
                             <span className='icon'>{
-                                collapsed && <MenuUnfoldOutlined/> || <MenuFoldOutlined/>
+                                collapsed && <MenuUnfoldOutlined /> || <MenuFoldOutlined />
                             }</span>
                             {!collapsed && '收起菜单'}
                         </div>
@@ -105,17 +109,25 @@ export default class Open extends Component {
 
                                 {
                                     navMenu.map(({
-                                        menuname,path, ...rest
-                                    },index)=>{
+                                        menuname, path, ...rest
+                                    }, index) => {
                                         const RouteComponent = RouteComponentLi[menuname];
-                                        if(RouteComponent){
-                                            return <Route key={index} path={path} 
-                                                    render={props => <RouteComponent {...props} {...rest} />}
-                                                ></Route>
+                                        if (RouteComponent) {
+                                            return <Route key={index} path={path}
+                                                render={props => <RouteComponent {...props} {...rest} />}
+                                            ></Route>
                                         }
                                     })
                                 }
-
+                                {
+                                    RepairOrder.map(({
+                                        compo, path
+                                    }, index) => {
+                                        return <Route key={index} path={path}
+                                        component={compo}
+                                        ></Route>
+                                    })
+                                }
                                 {/* <Route key={1} path={'/open/home'} 
                                     render={props => <Overview {...props} />}
                                 ></Route>
