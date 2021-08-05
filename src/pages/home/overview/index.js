@@ -70,7 +70,10 @@ export default function OverviewWrap() {
     }
     const goMessageDetail = (id) => {
         history.push(`/messageCenter/detail/${id}`);
-
+    }
+    //去工单
+    const goOrder=()=>{
+        history.push(`/open/repairOrder`);
     }
     //app列表
     const [appList, setAppList] = useState([])
@@ -419,7 +422,7 @@ export default function OverviewWrap() {
                                 <img src={help1} />
                                 <div>客服</div>
                             </div>
-                            <div>
+                            <div onClick={goOrder}>
                                 <img src={help2} />
                                 <div>工单</div>
                             </div>

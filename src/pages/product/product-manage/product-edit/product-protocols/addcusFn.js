@@ -429,6 +429,7 @@ function EventTemp(props, ref) {
     const [form] = Form.useForm();
     const onFinish = () => {
         form.validateFields().then(value => {
+            console.log(value,'======')
             // 验证通过后进入
         }).catch(err => {
             // 验证不通过时进入
@@ -479,7 +480,7 @@ function EventTemp(props, ref) {
 
             <Form.Item
                 label="标识符"
-                name="password"
+                name="password1"
             ><Input />
             </Form.Item>
             <Form.Item
@@ -489,7 +490,7 @@ function EventTemp(props, ref) {
                 <Radio.Group options={eventTabOptions} />
             </Form.Item>
             <Form.List
-                name="names"
+                name="arrs"
             >
                 {(fields, { add, remove }, { errors }) => (
                     <>

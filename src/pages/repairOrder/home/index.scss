@@ -1,0 +1,24 @@
+#order-home {
+  .order-home-footer {
+    text-align: center;
+    margin: 0 -22px;
+    margin-top: 16px;
+    padding-top: 40px;
+    border-top: 1px solid #EEEFF1;
+
+    button {
+      width: 92px;
+      height: 30px;
+    }
+  }
+
+  #order-home-sub {
+    .ant-form-item-label {
+      width: 140px;
+    }
+
+    .file-upload-desc {
+      display: none;
+    }
+  }
+}
