@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Select, Steps, Button, Input, Space, Table, Divider } from 'antd';
+import { Select, Steps, Button, Input, Table, Divider } from 'antd';
 import PageTitle from '../../../components/page-title/PageTitle';
 import stepImg from '../../../assets/images/product-regist.png';
 import { cloudStatus } from '../../../configs/text-map';
 import { setFuncDataType } from '../../../util/util';
+import { Paths, post } from '../../../api'
+import { CloudAddForm } from './CloudManageModals';
 import './index.scss'
 
 const { Option } = Select;
@@ -11,6 +13,10 @@ const { Step } = Steps;
 const { Search } = Input;
 
 export default function DeviceRegist() {
+    const [cloudAddVisible, setCloudAddVisible] = useState(true)
+    const [cloudEditVisible, setCloudEditVisible] = useState(false)
+    const [usedPropertys, setUsedPropertys] = useState([])
+
     const [dataSource, setDataSource] = useState([
         {
             key: 1,
@@ -117,7 +123,17 @@ export default function DeviceRegist() {
             ),
         }
     ];
-    useEffect(() => { }, [])
+    useEffect(() => {
+        getTimeList()
+    }, [])
+
+    //  获取云端定时列表
+    const getTimeList = () => {
+        // post(Paths.getTimeServiceList, { developerId: 1 }).then((res) => {
+        //     setDataSource(res.data)
+        // });
+    }
+
     //搜索
     const onSearch = value => console.log(value);
 
@@ -147,11 +163,19 @@ export default function DeviceRegist() {
                     <div className='content-top-left'>
                         <Search placeholder="请输入功能名称" onSearch={onSearch} enterButton style={{ width: 465 }} />
                     </div>
-                    <Button type="primary">创 建</Button>
+                    <Button type="primary" onClick={() => setCloudAddVisible(true)}>创 建</Button>
                 </div>
                 <Table dataSource={dataSource} columns={columns} />
             </div>
             {/* 创建 */}
+            {
+                cloudAddVisible &&
+                <CloudAddForm
+                    cloudAddVisible={cloudAddVisible}
+                    type="add"
+                    usedPropertys={usedPropertys}
+                    onCancel={() => setCloudAddVisible(false)}></CloudAddForm>
+            }
         </div>
     )
 }

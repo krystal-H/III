@@ -1,0 +1,33 @@
+@charset 'utf-8';
+
+.cloud-manage-modal {
+  .relation-agree-wrapper {
+    @include flex();
+    .select-area {
+      .ant-form-item {
+        // margin-bottom: 0;
+      }
+    }
+    .control-btns {
+      padding-top: 5px;
+      height: 56px;
+      @include flex(space-between, flex-start);
+      cursor: pointer;
+      .confirm-btn {
+        margin-left: 5px;
+        margin-right: 5px;
+        @include text(14px, #166AFF);
+      }
+      .del-btn {
+        @include text(14px, #F42C2C);
+      }
+    }
+  }
+  .add-btn {
+    // margin-top: 15px;
+    padding: 6px 16px;
+    border-radius: 4px;
+    @include text(12px, #2F78FF);
+    border: 1px solid #2f78ff;
+  }
+}
