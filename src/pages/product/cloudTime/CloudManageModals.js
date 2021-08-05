@@ -40,36 +40,52 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
         },
 
     ]
+
     useEffect(() => {
         console.log(selectedProtocolList)
     }, [selectedProtocolList])
+
+    useEffect(() => {
+        console.log(protocolItemIndex, 'protocolItemIndex--------')
+    }, [protocolItemIndex])
+
+    // 展示新增功能点
+    const showAddItem = () => {
+        setIsShowAddItem(true)
+    }
+    // 下拉选择协议
+    const changeProtocolItem = (index) => {
+        setProtocolItemIndex(index)
+    }
     // 确定选择协议
     const addProtocol = () => {
         if (protocolItemIndex === '') {
-            Notification({
-                type: 'error',
-                message: '参数缺失',
-                description: '请先选择一个控制协议字段'
-            })
-            return false;
+            return Notification({ type: 'error', message: '参数缺失', description: '请先选择一个控制协议字段' })
         }
         setSelectedProtocolList((prev) => {
             const preArr = cloneDeep(prev)
-            preArr.push(protocolItemIndex)
-            return uniq(preArr)
+            // 选出原始list下已经被选的，加入被选list,为了展示
+            const newAdd = initialList.filter(item => item.value === protocolItemIndex)
+            console.log([...preArr, ...newAdd], '*************')
+            return [...preArr, ...newAdd]
         })
-
         setIsShowAddItem(false)
+        setProtocolItemIndex('')
     }
-    // 协议下拉选项
+    // 协议下拉-选项   过滤掉选择过的协议
     const getOptions = () => {
-        // 剩余未选择的list返回
-        const remainList = []
-        return initialList.map((item, index) => {
-            return <Option key={index} value={item.value}>{item.value}</Option>
+        const protocolNames = dealProtocols() // 剩余未选择的list返回
+        console.log(protocolNames, 'protocolNames')
+        return protocolNames.map((item, index) => {
+            return <Option key={index} value={item}>{item}</Option>
         })
     }
-    // 过滤选择过的
+    // 处理协议差集数据
+    const dealProtocols = () => {// 原始的  差集   已选中的  return  剩余的
+        const _init = cloneDeep(initialList).map(item => item.value)
+        const _select = cloneDeep(selectedProtocolList).map(item => item.value)
+        return difference(_init, _select)
+    }
 
     return (
         <Modal
@@ -109,70 +125,59 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
                             <>
                                 关联协议
                                 <Tooltip
-                                    title={'MCU' ? '包含MCU SDK、串口协议、模组调试助手等' : '包含模组 SDK、Bin文件等'}
+                                    title={'仅支持可下发类型数据'}
                                     placement="top">
                                     <QuestionCircleOutlined className="tooltip-icon" />
                                 </Tooltip>
                             </>
                         }>
-                        <Form.List name="list">
-                            {(fields, { add, remove }) => (
-                                <>
-                                    {fields.map(({ key, name, fieldKey, ...restField }, index) => (
-                                        
-                                        // fields.length - 1 !== key && 
-                                        <div className="relation-agree-wrapper" key={key}>
-                                            <div className="select-area">
-                                                <Form.Item
-                                                    {...restField}
-                                                    name={[name, 'first']}
-                                                    fieldKey={[fieldKey, 'first']}
-                                                    rules={[
-                                                        { required: true, message: '请选择关联协议' },
-                                                        { pattern: new RegExp(/^[a-zA-Z]+$/, "g"), message: '请选择关联协议' }
-                                                    ]}>
-                                                    <Select value={protocolItemIndex}
-                                                        onChange={value => setProtocolItemIndex(value)}
-                                                        style={{ width: 290 }}>
-                                                        <Option key="" value=""></Option>
-                                                        {getOptions()}
-                                                    </Select>
-                                                </Form.Item>
-                                            </div>
-                                            <div className="control-btns">
-                                                <div className="confirm-btn" onClick={() => {
-                                                    console.log(fields, 'arrr', key, name, fieldKey, index)
-                                                    addProtocol()
-
-                                                }}>
-                                                    <CheckCircleOutlined />&nbsp;确定
+                        {/* 展示选择的协议 */}
+                        {
+                            selectedProtocolList.length > 0 &&
+                            <div className="protocol-item-area">
+                                {
+                                    selectedProtocolList.map((item, index) => {
+                                        return (
+                                            <div className="time-protocol-item" key={index}>
+                                                选择的选项-----{item.value}
+                                                {/* <p className="item-name">{item[0].propertyName}</p>
+                                                <div className="item-p-l">
+                                                    {
+                                                        item.map((_item, _index) => {
+                                                            return <p key={_index}>
+                                                                <span>{_item.property}</span>
+                                                                <span className="margin-l-16">{setFuncDataType(_item)}</span>
+                                                                <span className="margin-l-16">{this.getProtocolDes(_item)}</span>
+                                                            </p>
+                                                        })
+                                                    }
                                                 </div>
-                                                <div className="del-btn" onClick={() => remove(name)}>
-                                                    <DeleteOutlined />&nbsp;删除
-                                                </div>
+                                                <span style={{ top: '12px' }}
+                                                    onClick={() => this.deleteProtocol(item[0]._index)}
+                                                    className="re-select-property">删除</span> */}
                                             </div>
-                                        </div>
-                                        // }
-                                    ))}
-                                    {/* <div className="add-btn" onClick={() => add()}>新增</div> */}
-                                    <Button className="add-btn" onClick={() => {
-                                        setIsShowAddItem(true)
-                                        add()
-                                    }}>添加功能点</Button>
-                                </>
-                            )}
-                        </Form.List>
-                        {/* {
+                                        )
+                                    })
+                                }
+                            </div>
+                        }
+                        {/* 添加功能点固定 */}
+                        {
+                            isShowAddItem &&
                             <div className="relation-agree-wrapper">
                                 <div className="protocol-select-area">
-                                    <Select value={currentItem}
-                                        onChange={value => setCurrentItem(value)}
+                                    <Select
+                                        value={protocolItemIndex}
+                                        onChange={value => changeProtocolItem(value)}
                                         style={{ width: 290 }}>
-                                        <Option key="" value=""></Option>
+                                        <Option key="" value="">请选择需要相关的协议</Option>
+                                        {
+                                            getOptions()
+                                        }
                                     </Select>
                                 </div>
                                 <div className="control-btns">
-                                    <div className="confirm-btn">
+                                    <div className="confirm-btn" onClick={() => addProtocol()}>
                                         <CheckCircleOutlined />&nbsp;确定
                                     </div>
                                     <div className="del-btn">
@@ -180,9 +185,10 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
                                     </div>
                                 </div>
                             </div>
-                        } */}
-                        {/* <Button className="add-btn" >添加功能点</Button> */}
+                        }
+                        <Button className="add-btn" onClick={() => showAddItem()}>添加功能点</Button>
                     </Form.Item>
+
                 </Form>
             </div>
         </Modal>
