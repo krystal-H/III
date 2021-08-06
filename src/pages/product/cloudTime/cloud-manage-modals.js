@@ -8,7 +8,7 @@ import './cloud-manage-modals.scss'
 
 const { Option } = Select;
 
-export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
+export function CloudAddForm({ visible, onCancel, type }) {
     const [form] = Form.useForm()
 
     const [isShowAddItem, setIsShowAddItem] = useState(false)
@@ -41,6 +41,10 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
         },
 
     ]
+
+    useEffect(() => {
+        type === 'edit' && setSelectedProtocolList(initialList)
+    }, [])
 
     useEffect(() => {
         console.log(selectedProtocolList)
@@ -107,9 +111,9 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
 
     return (
         <Modal
-            title="添加云端定时功能"
+            title={type === 'add' ? "添加云端定时功能" : "编辑云端定时功能"}
             width={655}
-            visible={cloudAddVisible}
+            visible={visible}
             onOk={onOk}
             onCancel={onCancel}
             maskClosable={false}

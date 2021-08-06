@@ -91,6 +91,7 @@ let Paths = {
     getTimeServiceList: '/timerService/getList',
     updateTimeService: '/timerService/update',
     saveTimeService: '/timerService/save',
+    updateTimeServiceStatus: 'timerService/updateStatus', // 修改云端定时状态
 
     /* 场景配置服务 */
     getSceneFunctionList: '/scene/getSceneFunctionList',

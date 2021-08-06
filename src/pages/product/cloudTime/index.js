@@ -115,7 +115,7 @@ export default function DeviceRegist() {
                     {
                         record.status !== '1' ?
                             <React.Fragment>
-                                <a >编辑</a>
+                                <a onClick={() => { setCloudEditVisible(true) }}>编辑</a>
                                 <Divider type="vertical" />
                                 <a onClick={() => { operateHandle(1) }}>发布</a>
                                 <Divider type="vertical" />
@@ -195,13 +195,22 @@ export default function DeviceRegist() {
             {
                 cloudAddVisible &&
                 <CloudAddForm
-                    cloudAddVisible={cloudAddVisible}
+                    visible={cloudAddVisible}
                     type="add"
                     usedPropertys={usedPropertys}
                     onCancel={() => setCloudAddVisible(false)}></CloudAddForm>
             }
 
-            {/* 删除、发布 */}
+            {/* 编辑 */}
+            {
+                cloudEditVisible &&
+                <CloudAddForm
+                    visible={cloudEditVisible}
+                    type="edit"
+                    onCancel={() => setCloudEditVisible(false)} />
+            }
+
+            {/* 发布、删除、下线 */}
             {
                 cloudUpdateVisible &&
                 <CloudUpdate
