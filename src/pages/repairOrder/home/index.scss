@@ -29,6 +29,12 @@
 
 }
 
+.order-Cascader {
+  .ant-cascader-menu {
+    min-width: 306px;
+  }
+}
+
 .my-order-detail {
   .order-item {
     display: flex;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState,forwardRef ,useImperativeHandle,useRef} from 'react'
+import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef } from 'react'
 import moment from 'moment';
 import { Table, Button, Drawer } from 'antd';
 import './ProductProtocols.scss';
@@ -6,7 +6,21 @@ import EditcusFn from './editcusFn'
 import Addfunction from './addModal'
 import NewCusmFn from './addcusFn'
 import downpng from './../../../../../assets/images/product/download.png';
-function ProtocolFn({nextStep},ref) {
+import { post, Paths, get } from '../../../../../api';
+//处理数据
+function delaData(data) {
+    let newData=[]
+    data.forEach(item => {
+        funcParamList.forEach(item2 => {
+            let newItem=JSON.parse(JSON.stringify(item))
+            item2.nameSub=item2.name
+            delete item2.name
+            newData.push({...newItem,...item2})
+        })
+    })
+    return newData
+}
+function ProtocolFn({ nextStep }, ref) {
     const columns = [
         { title: 'DP ID', dataIndex: 'name' },
         { title: '功能类型', dataIndex: 'id' },
@@ -28,6 +42,15 @@ function ProtocolFn({nextStep},ref) {
     ];
     const [dataSource, setdataSource] = useState([]);
     const [selectId, setSelectId] = useState(0);
+    //获取列表
+    const getList = () => {
+        get('http://10.6.50.96:33331/physicalModel/func/list/1', {}).then((res) => {
+            delaData(res.data)
+        });
+    }
+    useEffect(() => {
+        // getList()
+    }, [])
     //编辑标准功能/新增自定义功能=======
     // const [isStarDia, setIsStarDia] = useState(true); //
     const [rightVisible, setRightVisible] = useState(false);
@@ -69,13 +92,13 @@ function ProtocolFn({nextStep},ref) {
         setIsModalVisible(true)
     }
     //验证函数
-    const subNextConFirm=()=>{
+    const subNextConFirm = () => {
         nextStep()
     }
     useImperativeHandle(ref, () => ({
         onFinish: subNextConFirm
     }));
-    const ref11=useRef()
+    const ref11 = useRef()
     return <div className='Protocol-wrap' ref={ref11}>
         <div className='Protocol-label'>
             <div>独立MCU方案，需选择下载MCU开发资料包等，进行相应开发</div>
@@ -118,6 +141,4 @@ function ProtocolFn({nextStep},ref) {
         {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>}
     </div>
 }
-export default  ProtocolFn= forwardRef(ProtocolFn)
-
-
+export default ProtocolFn = forwardRef(ProtocolFn)

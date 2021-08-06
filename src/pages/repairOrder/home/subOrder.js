@@ -58,7 +58,7 @@ export default function DeviceShadow() {
                 name="username"
                 rules={[{ required: true }]}
             >
-                <Cascader options={options} onChange={onChange} style={{ width: '612px' }} />
+                <Cascader options={options} onChange={onChange} style={{ width: '612px' }} popupClassName='order-Cascader'/>
             </Form.Item>
             <Form.Item
                 label="问题描述"
