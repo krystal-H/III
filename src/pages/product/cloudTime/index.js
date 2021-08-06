@@ -5,7 +5,8 @@ import stepImg from '../../../assets/images/product-regist.png';
 import { cloudStatus } from '../../../configs/text-map';
 import { setFuncDataType } from '../../../util/util';
 import { Paths, post } from '../../../api'
-import { CloudAddForm } from './CloudManageModals';
+import { CloudAddForm } from './cloud-manage-modals';
+import CloudUpdate from './cloud-update'
 import './index.scss'
 
 const { Option } = Select;
@@ -13,7 +14,11 @@ const { Step } = Steps;
 const { Search } = Input;
 
 export default function DeviceRegist() {
-    const [cloudAddVisible, setCloudAddVisible] = useState(true)
+
+    const [operate, setOperate] = useState(null)
+    const [cloudAddVisible, setCloudAddVisible] = useState(false) // 新建
+    const [cloudUpdateVisible, setCloudUpdateVisible] = useState(false) // 删除
+
     const [cloudEditVisible, setCloudEditVisible] = useState(false)
     const [usedPropertys, setUsedPropertys] = useState([])
 
@@ -112,17 +117,18 @@ export default function DeviceRegist() {
                             <React.Fragment>
                                 <a >编辑</a>
                                 <Divider type="vertical" />
-                                <a >发布</a>
+                                <a onClick={() => { operateHandle(1) }}>发布</a>
                                 <Divider type="vertical" />
-                                <a>删除</a>
+                                <a onClick={() => { operateHandle(2) }}>删除</a>
                             </React.Fragment>
                             :
-                            <a >下线</a>
+                            <a onClick={() => { operateHandle(3) }}>下线</a>
                     }
                 </span>
             ),
         }
     ];
+
     useEffect(() => {
         getTimeList()
     }, [])
@@ -136,6 +142,24 @@ export default function DeviceRegist() {
 
     //搜索
     const onSearch = value => console.log(value);
+
+    // table操作-发布、删除、下线
+    const operateHandle = (type) => {
+        setCloudUpdateVisible(true)
+        setOperate(type)
+    }
+
+    // 发布、删除、下线  弹框确定
+    const updateOkHandle = () => {
+        console.log('确定-调接口')
+        alert('确定-调接口')
+        setCloudUpdateVisible(false)
+    }
+
+    // 发布、删除、下线  弹框取消
+    const close = () => {
+        setCloudUpdateVisible(false)
+    }
 
     return (
         <div id='cloud-time'>
@@ -175,6 +199,16 @@ export default function DeviceRegist() {
                     type="add"
                     usedPropertys={usedPropertys}
                     onCancel={() => setCloudAddVisible(false)}></CloudAddForm>
+            }
+
+            {/* 删除、发布 */}
+            {
+                cloudUpdateVisible &&
+                <CloudUpdate
+                    visible={cloudUpdateVisible}
+                    operate={operate}
+                    updateOkHandle={() => updateOkHandle()}
+                    updateCancelHandle={() => close()} />
             }
         </div>
     )

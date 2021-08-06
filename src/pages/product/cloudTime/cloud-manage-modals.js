@@ -4,7 +4,7 @@ import { DeleteOutlined, QuestionCircleOutlined, CheckCircleOutlined } from '@an
 import { Notification } from '../../../components/Notification';
 import { cloneDeep, uniq, difference } from 'lodash'
 
-import './CloudManageModals.scss'
+import './cloud-manage-modals.scss'
 
 const { Option } = Select;
 
