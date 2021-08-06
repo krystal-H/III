@@ -53,10 +53,12 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
     const showAddItem = () => {
         setIsShowAddItem(true)
     }
+
     // 下拉选择协议
     const changeProtocolItem = (index) => {
         setProtocolItemIndex(index)
     }
+
     // 确定选择协议
     const addProtocol = () => {
         if (protocolItemIndex === '') {
@@ -72,6 +74,20 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
         setIsShowAddItem(false)
         setProtocolItemIndex('')
     }
+
+    // 删除添加协议
+    const hideAddItem = () => {
+        setIsShowAddItem(false)
+        setProtocolItemIndex('')
+    }
+
+    // 删除已经确认的协议
+    const deleteProtocol = (index) => {
+        const _selected = cloneDeep(selectedProtocolList)
+        _selected.splice(index, 1)
+        setSelectedProtocolList(_selected)
+    }
+
     // 协议下拉-选项   过滤掉选择过的协议
     const getOptions = () => {
         const protocolNames = dealProtocols() // 剩余未选择的list返回
@@ -80,6 +96,7 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
             return <Option key={index} value={item}>{item}</Option>
         })
     }
+
     // 处理协议差集数据
     const dealProtocols = () => {// 原始的  差集   已选中的  return  剩余的
         const _init = cloneDeep(initialList).map(item => item.value)
@@ -90,7 +107,7 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
     return (
         <Modal
             title="添加云端定时功能"
-            width={555}
+            width={655}
             visible={cloudAddVisible}
             onOk={onOk}
             onCancel={onCancel}
@@ -127,49 +144,46 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
                                 <Tooltip
                                     title={'仅支持可下发类型数据'}
                                     placement="top">
-                                    <QuestionCircleOutlined className="tooltip-icon" />
+                                    <QuestionCircleOutlined />
                                 </Tooltip>
                             </>
                         }>
+
                         {/* 展示选择的协议 */}
                         {
                             selectedProtocolList.length > 0 &&
-                            <div className="protocol-item-area">
+                            <div className="show-protocol-box">
                                 {
                                     selectedProtocolList.map((item, index) => {
                                         return (
-                                            <div className="time-protocol-item" key={index}>
-                                                选择的选项-----{item.value}
-                                                {/* <p className="item-name">{item[0].propertyName}</p>
-                                                <div className="item-p-l">
-                                                    {
-                                                        item.map((_item, _index) => {
-                                                            return <p key={_index}>
-                                                                <span>{_item.property}</span>
-                                                                <span className="margin-l-16">{setFuncDataType(_item)}</span>
-                                                                <span className="margin-l-16">{this.getProtocolDes(_item)}</span>
-                                                            </p>
-                                                        })
-                                                    }
+                                            <div className="protocol-bar" key={index}>
+                                                <p className="protocol-bar-title">选择的选项-----{item.value}</p>
+                                                <div>
+                                                    <span>CO_Null_Reset_asdfasdfdsafasdfklas</span>
+                                                    <span className="margin-l-16">布尔型</span>
+                                                    <span className="margin-l-16">0-1|1-2</span>
                                                 </div>
-                                                <span style={{ top: '12px' }}
-                                                    onClick={() => this.deleteProtocol(item[0]._index)}
-                                                    className="re-select-property">删除</span> */}
+                                                <span
+                                                    className="protocol-bar-del"
+                                                    onClick={() => deleteProtocol(index)}>
+                                                    <DeleteOutlined />&nbsp;删除
+                                                </span>
                                             </div>
                                         )
                                     })
                                 }
                             </div>
                         }
+
                         {/* 添加功能点固定 */}
                         {
                             isShowAddItem &&
-                            <div className="relation-agree-wrapper">
-                                <div className="protocol-select-area">
+                            <div className="select-protocol-box">
+                                <div>
                                     <Select
                                         value={protocolItemIndex}
                                         onChange={value => changeProtocolItem(value)}
-                                        style={{ width: 290 }}>
+                                        style={{ width: 365 }}>
                                         <Option key="" value="">请选择需要相关的协议</Option>
                                         {
                                             getOptions()
@@ -180,15 +194,15 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
                                     <div className="confirm-btn" onClick={() => addProtocol()}>
                                         <CheckCircleOutlined />&nbsp;确定
                                     </div>
-                                    <div className="del-btn">
+                                    <div className="del-btn" onClick={() => hideAddItem()}>
                                         <DeleteOutlined />&nbsp;删除
                                     </div>
                                 </div>
                             </div>
                         }
+
                         <Button className="add-btn" onClick={() => showAddItem()}>添加功能点</Button>
                     </Form.Item>
-
                 </Form>
             </div>
         </Modal>
