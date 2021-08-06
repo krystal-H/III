@@ -17,6 +17,7 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
 
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
+        console.log(selectedProtocolList, '******')
     };
     const onOk = () => {
         form.submit()
@@ -138,16 +139,10 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
                         </Select>
                     </Form.Item>
                     <Form.Item
-                        label={
-                            <>
-                                关联协议
-                                <Tooltip
-                                    title={'仅支持可下发类型数据'}
-                                    placement="top">
-                                    <QuestionCircleOutlined />
-                                </Tooltip>
-                            </>
-                        }>
+                        label={<>
+                            关联协议
+                            <Tooltip title={'仅支持可下发类型数据'} placement="top"> <QuestionCircleOutlined /> </Tooltip>
+                        </>}>
 
                         {/* 展示选择的协议 */}
                         {
@@ -160,8 +155,8 @@ export function CloudAddForm({ cloudAddVisible, onCancel, type }) {
                                                 <p className="protocol-bar-title">选择的选项-----{item.value}</p>
                                                 <div>
                                                     <span>CO_Null_Reset_asdfasdfdsafasdfklas</span>
-                                                    <span className="margin-l-16">布尔型</span>
-                                                    <span className="margin-l-16">0-1|1-2</span>
+                                                    <span>布尔型</span>
+                                                    <span>0-1|1-2</span>
                                                 </div>
                                                 <span
                                                     className="protocol-bar-del"
