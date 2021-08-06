@@ -1,20 +1,40 @@
 @charset 'utf-8';
 
-.network-info-modal {
+.network-detail-modal {
   &-title {
     margin-bottom: 20px;
     font-weight: bold;
-    @include text(14px, #323232);
+    @include text(14px, $_323Color);
     .tip {
-      @include text(12px, #666666);
+      @include text(12px, $_666Color);
       font-weight: normal;
     }
   }
-  .flex {
-    @include flex(flex-start, center);
-    .upload-img {
-      .ant-upload.ant-upload-select-picture-card, .ant-upload-list-picture-card-container {
-        @include wh(150px, 267px);
+  // 展示默认图片
+  .show-img-box {
+    .img-box {
+      @include wh(150px, 267px);
+      @include flex(center);
+      border: $_border;
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+  }
+  // 展示轮播图
+  .show-img-box2 {
+    .img-box {
+      @include flex(flex-start);
+      &-item {
+        margin: 0 8px 8px 0;
+        border: $_border;
+        @include flex(center);
+        @include wh(104px, 104px);
+        img {
+          max-width: 100%;
+          max-height: 100%;
+        }
       }
     }
   }
