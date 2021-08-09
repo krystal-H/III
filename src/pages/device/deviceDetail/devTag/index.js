@@ -48,13 +48,13 @@ const EditableCell = ({
     );
 };
 
-export default function EditableTable() {
+export default function EditableTable({}) {
     const [form] = Form.useForm();
     const [data, setData] = useState(originData);
     const [editingKey, setEditingKey] = useState('');
-    const [actionData, setActionData] = useState({ actionType: 0, actionRecord: {}, actionLoading: false }) //actionType 0,没有操作，1 在测试环境操作,2 在生产环境操作,3 删除操作
     const isEditing = (record) => record.key === editingKey;
     useEffect(() => {
+        getDetail()
     }, [])
     const edit = (record) => {
         form.setFieldsValue({
@@ -163,7 +163,11 @@ export default function EditableTable() {
             }),
         };
     });
-
+    const getDetail=(loading = true)=>{
+        post(Paths.getDeviceInfo, {'deviceId':devceId}, { loading }).then((res) => {
+            setData(res.data)
+        });
+    }
     return (
         <div id='device-tag'>
             <Form form={form} component={false}>

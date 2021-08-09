@@ -1,7 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { Descriptions, Divider } from 'antd';
+import { post, Paths, get } from '../../../../api';
 import './index.scss'
-export default function DeviceInfo() {
+export default function DeviceInfo({devceId}) {
+    const [data,setData]=useState({})
+    useEffect(()=>{
+        getDetail()
+    },[])
+    const getDetail=(loading = true)=>{
+        post(Paths.getDeviceInfo, {'deviceId':devceId}, { loading }).then((res) => {
+            setData(res.data)
+        });
+    }
     return (<div id='device-info'>
         <Descriptions title="设备信息">
             <Descriptions.Item label="设备信息">Zhou Maomao</Descriptions.Item>

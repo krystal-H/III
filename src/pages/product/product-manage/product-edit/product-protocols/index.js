@@ -1,10 +1,11 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef } from 'react'
 import moment from 'moment';
 import { Table, Button, Drawer } from 'antd';
-import './ProductProtocols.scss';
+import './index.scss';
 import EditcusFn from './editcusFn'
 import Addfunction from './addModal'
 import NewCusmFn from './addcusFn'
+// import TitleEdit from './titleEdit'
 import downpng from './../../../../../assets/images/product/download.png';
 import { post, Paths, get } from '../../../../../api';
 //处理数据
@@ -20,7 +21,7 @@ function delaData(data) {
     })
     return newData
 }
-function ProtocolFn({ nextStep }, ref) {
+function ProtocolFn({ nextStep,productId }, ref) {
     const columns = [
         { title: 'DP ID', dataIndex: 'name' },
         { title: '功能类型', dataIndex: 'id' },
@@ -46,7 +47,7 @@ function ProtocolFn({ nextStep }, ref) {
     const getList = () => {
         let url=Paths.standardFnList+'/11759'
         get(url, {}).then((res) => {
-            // delaData(res.data)
+            delaData(res.data)
         });
     }
     useEffect(() => {
@@ -106,6 +107,7 @@ function ProtocolFn({ nextStep }, ref) {
     useImperativeHandle(ref, () => ({
         onFinish: subNextConFirm
     }));
+    
     const ref11 = useRef()
     return <div className='Protocol-wrap' ref={ref11}>
         <div className='Protocol-label'>
@@ -144,6 +146,7 @@ function ProtocolFn({ nextStep }, ref) {
             />
         </div>
         <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight}></NewCusmFn>
+        {/* <TitleEdit titleVisible={titleVisible} onCloseTitle={onCloseTitle}></TitleEdit> */}
         {destoryDom && <EditcusFn rightVisible={rightEditVisible} onCloseRight={onCloseEditRight} destData={onDestData}></EditcusFn>}
 
         {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>}

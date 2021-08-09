@@ -13,7 +13,7 @@ export default function DeviceInfo({ match,history }) {
         let step = getUrlParam('step') || '1'
         return step
     }, []);
-
+    const devceId=match.params.id
     const tabCallback = value => {
         history.push(match.url + '?' + `step=${value}`);
     }
@@ -31,16 +31,16 @@ export default function DeviceInfo({ match,history }) {
         <div className='comm-shadowbox common-tab device-content'>
             <Tabs defaultActiveKey={stepS} onChange={tabCallback}>
                 <TabPane key={'1'} tab={'基本信息'}>
-                    <DevInfo />
+                    <DevInfo devceId={devceId}/>
                 </TabPane>
                 <TabPane key={'2'} tab={'设备标签'}>
-                    <DevTag />
+                    <DevTag devceId={devceId}/>
                 </TabPane>
                 <TabPane key={'3'} tab={'设备影子'}>
-                    <DevShadow />
+                    <DevShadow devceId={devceId}/>
                 </TabPane>
                 <TabPane key={'4'} tab={'远程配置'}>
-                    <DevSet />
+                    <DevSet devceId={devceId}/>
                 </TabPane>
             </Tabs>
         </div>
