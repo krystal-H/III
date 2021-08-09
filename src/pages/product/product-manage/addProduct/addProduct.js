@@ -3,6 +3,9 @@ import { Modal, Steps, Button, Select } from 'antd';
 import "./addProduct.scss";
 import ConfirmDepPlan from './confirmDepPlan';
 import SetupProduct from './setupProduct';
+import { Paths, post, get } from '../../../../api'
+import { cloneDeep, uniq, difference } from 'lodash'
+import { Notification } from '../../../../components/Notification';
 
 const { Step } = Steps;
 const { Option } = Select;
@@ -21,90 +24,6 @@ const stepList = [
     content: 'Last-content',
   },
 ];
-let list1 = [
-  {
-    key: 1,
-    value: '家居安防'
-  },
-  {
-    key: 2,
-    value: '电工照明'
-  },
-  {
-    key: 3,
-    value: '大家电'
-  },
-  {
-    key: 4,
-    value: '厨房电器'
-  },
-  // {
-  //   key: 1,
-  //   value: '家居安防'
-  // },
-  // {
-  //   key: 2,
-  //   value: '电工照明'
-  // },
-  // {
-  //   key: 3,
-  //   value: '大家电'
-  // },
-  // {
-  //   key: 4,
-  //   value: '厨房电器'
-  // },
-  // {
-  //   key: 1,
-  //   value: '家居安防'
-  // },
-  // {
-  //   key: 2,
-  //   value: '电工照明'
-  // },
-  // {
-  //   key: 3,
-  //   value: '大家电'
-  // },
-  // {
-  //   key: 4,
-  //   value: '厨房电器'
-  // },
-  // {
-  //   key: 1,
-  //   value: '家居安防'
-  // },
-  // {
-  //   key: 2,
-  //   value: '电工照明'
-  // },
-  // {
-  //   key: 3,
-  //   value: '大家电'
-  // },
-  // {
-  //   key: 4,
-  //   value: '厨房电器'
-  // },
-]
-let list2 = [
-  {
-    key: 1,
-    value: '气体感应报警1'
-  },
-  {
-    key: 2,
-    value: '气体感应报警11'
-  },
-  {
-    key: 3,
-    value: '气体感应报警111'
-  },
-  {
-    key: 4,
-    value: '气体感应报警1111'
-  },
-]
 const stepStyle = {
   cursor: 'pointer'
 }
@@ -115,18 +34,100 @@ export default class MakeProductModal extends Component {
     this.state = {
       stepcurrent: 0, // 步骤
       category: '', // 产品品类
-      currentIndex: 0, // 一级选中品类
-      currentIndex2: null, // 二级品类
+      currentIndex: 0, // 二级选中品类
+      currentIndex2: null, // 三级品类
       isDisabled: false, // 下一步按钮是否可点
+      thirdCategoryList: [], // 三级品类
+      secondCategoryList: [], // 二级品类
+      needShowThirdList: []
     }
     this.refSetupProduct = null
   }
+
   componentDidMount() {
-    console.log('获取二级')
+    this.getThirdCategory()
+    // 获取所有的二级品类
+    this.getSecondCategory()
   }
+
+  // 获取所有的三级品类
+  getThirdCategory = () => {
+    get('http://10.6.50.96:33330/deviceCategory/deviceType/all', {}).then(res => {
+      if (res.code === 0) {
+        this.setState({
+          thirdCategoryList: res.data
+        })
+      }
+    })
+  }
+
+  // 获取所有的二级品类
+  getSecondCategory = () => {
+    get('http://10.6.50.96:33330/deviceCategory/subCategory/all', {}).then(res => {
+      if (res.code === 0) {
+        this.setState({
+          secondCategoryList: res.data
+        })
+        res.data[0].deviceTypeList && this.setState({ needShowThirdList: res.data[0].deviceTypeList })
+      }
+    })
+  }
+
+  // 根据三级id查二级品类
+  getSecondById = (id) => {
+    get(`http://10.6.50.96:33330/deviceCategory/subCategory/deviceTypeId/${id}`, { }).then(res => {
+      if (res.code === 0) {
+        const secondList = cloneDeep(this.state.secondCategoryList)
+        const _index = secondList.findIndex(item => item.subCategoryId === res.data.subCategoryId)
+        this.setState({
+          currentIndex : _index,
+          needShowThirdList: res.data.deviceTypeList
+        }, () => {
+          const thirdList = cloneDeep(this.state.needShowThirdList)
+          const _index = thirdList.findIndex(item => item.deviceTypeId === id)
+          this.setState({
+            currentIndex2: _index
+          })
+        })
+      }
+    })
+  }
+
+  // 选择品类
+  selectCategory(index, type, currentItem) {
+    if (type === 'currentIndex') { // 点击二级品类循环查找需要显示的三级
+      const second = cloneDeep(this.state.secondCategoryList)
+      const needList = second.filter(item => item.subCategoryId === currentItem.subCategoryId )
+      this.setState({
+        needShowThirdList: needList[0] && needList[0].deviceTypeList
+      })
+    }
+    this.setState({ 
+      currentIndex2: null,
+      [type]: index,
+    })
+  }
+
+  // 搜索
+  searchHandle = (val) => {
+    if (val) this.getSecondById(val)
+  }
+  
   // 下一步
   clickNext = (index, e) => {
-    if (index === 2) { // 表单提交
+    if (index === 0) { // 选择品类
+      console.log(this.state.currentIndex2 ,'品类的索引' )
+      if (!this.state.currentIndex2) {
+        Notification({ description: '请选择对应品类！', type:'warn' })
+      }
+      let saveId = null
+      const third = cloneDeep(this.state.thirdCategoryList)
+      third.forEach((item, i ) => {
+        if (i === this.state.currentIndex2) {
+          saveId = item.deviceTypeId
+        }
+      })
+    } else if (index === 2) { // 表单提交
       this.refSetupProduct.formRef.current.submit()
     } else {
       this.setState({ stepcurrent: ++index });
@@ -136,27 +137,9 @@ export default class MakeProductModal extends Component {
   clickPrevious = (index, e) => {
     this.setState({ stepcurrent: --index });
   }
-  // 搜索
-  searchCont(e) {
-    e.target.value = e.target.value.trim();
-    if (e.target.value) {
-      this.setState({ category: e.target.value }, this.getList)
-    }
-  }
-  // 获取品类
-  getList() {
 
-  }
-  // 选择品类
-  selectItem(index, type, item) {
-    this.setState({ [type]: index });
-    // 判断选择品类后，赋值，下一步可点 todo
-  }
-  selectedHandle = (val) => {
-    console.log(val, '-------')
-  }
   render() {
-    const { stepcurrent, currentIndex, currentIndex2, isDisabled } = this.state
+    const { stepcurrent, currentIndex, currentIndex2, isDisabled, thirdCategoryList, secondCategoryList, needShowThirdList } = this.state
     const { cancelHandle, visible } = this.props
     return (
       <Modal
@@ -189,37 +172,36 @@ export default class MakeProductModal extends Component {
                 allowClear
                 style={{ width: 674 }}
                 placeholder="搜索产品品类"
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                }
-                onSelect={val => this.selectedHandle(val)}
+                filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                onSelect={val => this.searchHandle(val)}
               >
-                <Option value="1">气体感应报警</Option>
-                <Option value="2">气体感应报警</Option>
-                <Option value="3">气体感应报警</Option>
-                <Option value="4">气体感应报警</Option>
-                <Option value="5">气体感应报警</Option>
+                {
+                  thirdCategoryList && thirdCategoryList.length > 0 &&
+                  thirdCategoryList.map(item => (
+                    <Option key={item.deviceTypeId} value={item.deviceTypeId}>{item.deviceTypeName}</Option>
+                  ))
+                }
               </Select>
               <div>找不到想要的品类？&nbsp;&nbsp;&nbsp;<span className="submit-item">提交工单</span></div>
             </div>
-            {/* 一级品类 */}
+            {/* 二级品类 */}
             <div className="level1-box">
               {
-                list1 ? list1.map((item, index) => (
+                secondCategoryList ? secondCategoryList.map((item, index) => (
                   <div className={`level1-box-item ${currentIndex === index ? "onwActive" : ""}`}
-                    key={item.value}
-                    onClick={this.selectItem.bind(this, index, 'currentIndex', item)}>{item.value}</div>
+                    key={item.subCategoryId}
+                    onClick={this.selectCategory.bind(this, index, 'currentIndex', item)}>{item.subCategoryName}</div>
                 )) : null
               }
             </div>
-            {/* 二级品类 */}
+            {/* 三级品类 */}
             <div className="level2-box">
               {
-                list2 ? list2.map((item, index) => (
+                needShowThirdList ? needShowThirdList.map((item, index) => (
                   <div className={`level2-box-item ${currentIndex2 === index ? "twoActive" : ""}`}
-                    key={item.value}
-                    onClick={this.selectItem.bind(this, index, 'currentIndex2', item)}>
-                    {item.value}
+                    key={item.deviceTypeId}
+                    onClick={this.selectCategory.bind(this, index, 'currentIndex2', item)}>
+                    {item.deviceTypeName}
                     {currentIndex2 === index && <span className="selected-icon"></span>}
                   </div>
                 )) : null

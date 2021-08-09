@@ -50,6 +50,7 @@
   }
   .level2-box {
     @include flex(flex-start);
+    flex-wrap: wrap;
     border: $_border;
     padding: 22px;
     &-item {
