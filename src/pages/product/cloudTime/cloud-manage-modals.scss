@@ -6,7 +6,7 @@
     .protocol-bar {
       padding: 12px;
       min-height: 84px;
-      border: 1px solid #D9D9D9;
+      border: 1px solid $_D9D;
       position: relative;
       margin-bottom: 22px;
       &-title {
@@ -17,7 +17,7 @@
         position: absolute;
         top: 12px;
         right: 12px;
-        @include text(14px, #F42C2C);
+        @include text(14px, $_f42);
       }
     }
   }
@@ -31,10 +31,10 @@
       .confirm-btn {
         margin-left: 5px;
         margin-right: 10px;
-        @include text(14px, #166aff);
+        @include text(14px, $_166);
       }
       .del-btn {
-        @include text(14px, #f42c2c);
+        @include text(14px, $_f42);
       }
     }
   }
@@ -42,7 +42,7 @@
   .add-btn {
     padding: 6px 16px;
     border-radius: 4px;
-    @include text(12px, #2f78ff);
-    border: 1px solid #2f78ff;
+    @include text(12px, $themeColor);
+    border: 1px solid $themeColor;
   }
 }
