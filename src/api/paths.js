@@ -472,6 +472,12 @@ let Paths = {
     devMnCount:'/deviceCount/deviceManageCount' ,//设备管理统计
     productCount:'/cover/getDeviceProductCount' ,//产品统计
     productList:'/productManage/getProductList' ,//产品列表
+
+    // 产品发布前-定义功能
+    standardFnList:'/product/dev/show/func', //标准和自定义功能列表
+    PhysicalModelList:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
+    exportPhysicalModel:'/physicalModel/export/product',//产品-定义功能-导出物模型
+    PhysicalModelAdd:'/physicalModel/func/product/action',//产品-功能定义-物模型-功能-增
 };
 
 // 拼接 urlPrefix

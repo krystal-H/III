@@ -1,26 +1,26 @@
 import React,{Component} from 'react'
 import { post,Paths } from '../../../../../api';
 // import ProduceInfo from '../../product-edit/product-info/ProductInfo';
-import ProductProtocols from '../../product-edit/product-protocols/ProductProtocols';
-import FirmwareManagement from '../firmware-management/FirmwareManagement';
-import DebuggingTool from '../../deviceDebugging/deviceDebuggerTest/StartTest';
-import AppControl from '../../product-edit/product-services/app-control/AppControl';
-import CloudTime from '../../product-edit/product-services/cloud-time/CloudTime';
-import SceneLink from '../../product-edit/product-services/scene-link/SceneLink';
-import DeviceRegister from '../device-register';
-import CommercailInfo from '../basic-information/commercailinfo';
-import Firmware from '../basic-information/firmware';
-import RemoteConfig from '../remote-config/RemoteConfig';
-import LabelManage from '../label-manage/LabelManage';
-import TopicList from '../topic-list/TopicList'
-import PtotocalTag from '../protocal-tag/PtotocalTag';
+// import ProductProtocols from '../../product-edit/product-protocols/ProductProtocols';
+// import FirmwareManagement from '../firmware-management/FirmwareManagement';
+// import DebuggingTool from '../../deviceDebugging/deviceDebuggerTest/StartTest';
+// import AppControl from '../../product-edit/product-services/app-control/AppControl';
+// import CloudTime from '../../product-edit/product-services/cloud-time/CloudTime';
+// import SceneLink from '../../product-edit/product-services/scene-link/SceneLink';
+// import DeviceRegister from '../device-register';
+// import CommercailInfo from '../basic-information/commercailinfo';
+// import Firmware from '../basic-information/firmware';
+// import RemoteConfig from '../remote-config/RemoteConfig';
+// import LabelManage from '../label-manage/LabelManage';
+// import TopicList from '../topic-list/TopicList'
+// import PtotocalTag from '../protocal-tag/PtotocalTag';
 
 import ProductInfo from '../info';
 import FnDefintion from '../function-definition';
 import HardwareDep from '../hardware-dep'
 import ServiceConfig from '../service-config'
 import ConfirmModal from '../../product-edit/firmpanel/index'
-
+import RegiserProduct from '../regist-product'
 import {getUrlParam} from '../../../../../util/util';
 import {
     updateDeviceDebugAccountListAction,//更新账号列表
@@ -55,42 +55,14 @@ export default class ProductTabs  extends Component {
         }
     }
     callback = (steps) => {
-        // return
         let {productId} = this.props;
         window.location.hash = `#/open/product/proManage/details/${productId}?step=${steps}`;
-        return
-        if(steps=='4'){
-            let accountList = [],
-            macList = [];
-            this.setState({steps},()=>{
-                post(Paths.deviceDebugAccountGetList,{productId}).then((model) => {
-                    if(model.code==0){
-                        accountList = model.data;
-                        this.props.updateDeviceDebugAccountList(model);
-                        post(Paths.debugSecretList,{productId}).then((res) => {
-                            if(res.code==0){
-                                macList = res.data;
-                                this.props.updateDeviceDebugMacList(res);
-                                if(macList.length<1){
-                                    this.debugVisible.debugVisible();
-                                }
-                            }
-                        });
-                    }
-                });
-            });
-        }else{
-            if(this.debugVisible&&this.debugVisible.goout){
-                this.debugVisible.goout()
-            }
-            this.setState({steps});
-        }
     }
     render() {
         let {productId,productBaseInfo,protocolLists} = this.props;
         let { authorityType, accessModeId } = productBaseInfo;
         return (
-            <div>
+            <div className='comm-shadowbox common-tab'>
                 <Tabs defaultActiveKey={this.state.steps} onChange={value => this.callback(value)}>
                     <TabPane key={'1'} tab={'基本信息'}>
                         <ProductInfo  productId={productId}/>
@@ -107,51 +79,9 @@ export default class ProductTabs  extends Component {
                     <TabPane key={'5'} tab={'服务配置'}>
                         <ServiceConfig />
                     </TabPane>
-                    {/* <TabPane key={'14'} tab={'物标签'}>
-                        <PtotocalTag productId={productId} />
+                    <TabPane key={'7'} tab={'设备注册'}>
+                        <RegiserProduct />
                     </TabPane>
-                    <TabPane key={'13'} tab={'topic列表'}>
-                        <div style={{padding:'1px',background:'#e9e9e9'}}>
-                            <TopicList productIdHex={productBaseInfo.productIdHex || "${YourProductKey}"} type={0} canOperate={false}/>
-                        </div>
-                    </TabPane>
-                    <TabPane key={'2'} tab={'功能定义'}>
-                        <ProductProtocols productId={productId} canOperate={false}/>
-                    </TabPane>
-                    <TabPane key={'10'} tab={'硬件开发'}>
-                        <Firmware productId={productId}/>
-                    </TabPane>
-                    <TabPane key={'3'} tab={'固件管理'}>
-                    <FirmwareManagement productId={productId} />
-                    </TabPane>
-                    <TabPane key={'4'} tab={'调试工具'}>
-                        <div className="gray-bg-padding">
-                            <DebuggingTool productId={productId} onRef={ref => this.debugVisible = ref} />
-                        </div>
-                    </TabPane>
-                    <TabPane key={'11'} tab={'标签'}>
-                        <LabelManage productId={productId}/>
-                    </TabPane>
-                    <TabPane key={'12'} tab={'远程配置'}>
-                        <RemoteConfig productId={productId} protocolLists={protocolLists}/>
-                    </TabPane>
-                    <TabPane key={'5'} tab={'APP控制'}>
-                        <AppControl productId={productId} canOperate={true} noNeedTitle={true}/>
-                    </TabPane>
-                    <TabPane key={'6'} tab={'云端定时'}>
-                        <CloudTime productId={productId} canOperate={true} noNeedTitle={true}/>
-                    </TabPane>
-                    <TabPane key={'7'} tab={'场景服务'}>
-                        <SceneLink productId={productId} canOperate={true} noNeedTitle={true}/>
-                    </TabPane>
-                    {
-                        <TabPane key={'8'} tab={'设备注册'}>
-                            <DeviceRegister productId={productId} productBaseInfo={productBaseInfo} />
-                        </TabPane>
-                    }
-                    <TabPane key={'9'} tab={'商业化信息'}>
-                        <CommercailInfo productId={productId}/>
-                    </TabPane> */}
                 </Tabs>
             </div>
         )
