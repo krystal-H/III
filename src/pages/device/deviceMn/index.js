@@ -4,6 +4,7 @@ import { Form, Input, Select, Table, Button, Space, Typography } from 'antd';
 import PageTitle from '../../../components/page-title/PageTitle';
 import CountNum from '../../../components/CountNum/index';
 import { post, Paths, get } from '../../../api';
+import downpng from '../../../assets/images/product/download.png';
 import './index.scss'
 // import GroupDetailt from '../../product/device/device-group/groupDeviceList';
 const { Search } = Input;
@@ -138,6 +139,11 @@ export default function DeviceList() {
             )
         },
     ];
+    const exportFile=()=>{
+        post(Paths.exportDeviceList, {'user-id':1}).then((res) => {
+            
+        });
+    }
     return (<div id='device-manage'>
         <PageTitle title='设备管理'>
             <div className='top-select'>
@@ -221,6 +227,10 @@ export default function DeviceList() {
                         </Button>
                     </Form.Item>
                 </Form>
+            </div>
+            <div className='export-wrap'>
+                <a onClick={exportFile}>导出协议</a>
+                <img onClick={exportFile} src={downpng} style={{ marginRight: '15px' }} />
             </div>
             <div>
                 <Table rowKey='deviceId' dataSource={dataSource} columns={columns} />

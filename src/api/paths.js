@@ -207,7 +207,7 @@ let Paths = {
     addDeviceLabel:'/deviceLabel/add',//新增设备标签
     updateDeviceLabel:'/deviceLabel/update',//修改设备标签
     deleteDeviceLabel:'/deviceLabel/delete',//删除设备标签
-    exportDeviceList:'/deviceV5/export',//导出数据
+    exportDeviceList:'/deviceManage/exportDeviceList',//导出数据
     
 
 
