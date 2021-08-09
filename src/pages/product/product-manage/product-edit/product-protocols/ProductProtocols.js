@@ -44,12 +44,13 @@ function ProtocolFn({ nextStep }, ref) {
     const [selectId, setSelectId] = useState(0);
     //获取列表
     const getList = () => {
-        get('http://10.6.50.96:33331/physicalModel/func/list/1', {}).then((res) => {
-            delaData(res.data)
+        let url=Paths.standardFnList+'/11759'
+        get(url, {}).then((res) => {
+            // delaData(res.data)
         });
     }
     useEffect(() => {
-        // getList()
+        getList()
     }, [])
     //编辑标准功能/新增自定义功能=======
     // const [isStarDia, setIsStarDia] = useState(true); //
@@ -95,6 +96,13 @@ function ProtocolFn({ nextStep }, ref) {
     const subNextConFirm = () => {
         nextStep()
     }
+    //导出物模型
+    const exportFile=()=>{
+        let url=Paths.exportPhysicalModel+'/11759'
+        get(url, {}).then((res) => {
+            // delaData(res.data)
+        });
+    }
     useImperativeHandle(ref, () => ({
         onFinish: subNextConFirm
     }));
@@ -102,7 +110,7 @@ function ProtocolFn({ nextStep }, ref) {
     return <div className='Protocol-wrap' ref={ref11}>
         <div className='Protocol-label'>
             <div>独立MCU方案，需选择下载MCU开发资料包等，进行相应开发</div>
-            <div className='Protocol-download'>
+            <div className='Protocol-download' onClick={exportFile}>
                 <a>导出物模型</a>
                 <img src={downpng} />
             </div>
