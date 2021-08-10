@@ -17,6 +17,7 @@ import Hardware from './firmware/hardware';
 import ConfirmPanel from './firmpanel';
 import Validation from './validation'
 import ConfigService from './config-service/config-service';
+import TitleSet from './titleSet'
 
 
 // 此部分路由不需要展示产品信息
@@ -111,13 +112,16 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
 
     }, [current])
     if (!productIdInRoutePath) {
-        
+
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
     //标题修改
-    const [titleVisible,setTitleVisible]=useState(false)
-    const openTitle=()=>{
+    const [titleVisible, setTitleVisible] = useState(false)
+    const openTitle = () => {
         setTitleVisible(true)
+    }
+    const onCloseTitle = () => {
+        setTitleVisible(false)
     }
     const titleCom = (<div className='product_title_baseinfo_list'>
         <div>
@@ -144,7 +148,7 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
     return (
         <React.Fragment>
             <div className="eidt-wrapper">
-                <PageTitle title='开发流程' titleTag='免开发方案' btnTxt='编辑' backTitle='开发流程'  >
+                <PageTitle title='开发流程' titleTag='免开发方案' btnTxt='编辑' backTitle='开发流程' btnClickHandle={openTitle} >
 
                     {titleCom}
 
@@ -185,6 +189,7 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
                     )}
                 </div>
             </div>
+            <TitleSet titleVisible={titleVisible} onCloseTitle={onCloseTitle}></TitleSet>
         </React.Fragment>
     )
 }

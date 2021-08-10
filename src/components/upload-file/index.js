@@ -27,7 +27,7 @@ function getBase64(file) {
  * preferSize: 推荐尺寸 图片默认192px*192px
  * cb: 文件上传成功后的回调
  */
-function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false, preferSize = '192px*192px', cb }, uploadRef) {
+function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false, preferSize = '192px*192px', cb ,value, onChange}, uploadRef) {
     const [fileList, setFileList] = useState([]);
     const [previewVisible, setPreviewVisible] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
@@ -123,9 +123,13 @@ function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false
             }
             return file;
         });
+        // console.log(fileList,'===')
         if (isLtMaxSize(file) && fileList.length <= maxCount) {
+            console.log(1)
             setFileList(fileList);
             if (file.status === 'done') {
+                onChange(fileList)
+                // alert(1)
                 cb && typeof cb === 'function' && cb();
             }
         }
@@ -162,6 +166,7 @@ function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false
         const newFileList = fileList.slice();
         newFileList.splice(index, 1);
         setFileList(newFileList);
+        onChange(newFileList)
     }
     return (
         <div className="upload-wrapper">

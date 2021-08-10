@@ -12,6 +12,35 @@ export default function DeviceInfo({devceId}) {
             setData(res.data)
         });
     }
+    //过滤函数
+    const fliterFn = (type, value) => {
+        let result = null
+        switch (type) {
+            case 'productClass':
+                if (!isNaN(value)) {
+                    result = value == 1 ? '网关设备' : '普通设备'
+                }
+                break;
+            case 'internetStatus':
+                if (!isNaN(value)) {
+                    result = value == 1 ? '已入网' : '未入网'
+                }
+                break;
+            case 'onlineStatus':
+                if (!isNaN(value)) {
+                    result = value == 1 ? '在线' : '离线'
+                }
+                break;
+            case 'faultStatus':
+                if (!isNaN(value)) {
+                    result = value == 1 ? '正常运行' : '故障'
+                }
+                break;
+            default:
+                return ''
+        }
+        return result
+    }
     return (<div id='device-info'>
         <Descriptions title="设备信息">
             <Descriptions.Item label="设备ID">{data.deviceUniqueId}</Descriptions.Item>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Button, Space } from 'antd';
+import { post, Paths, get } from '../../../../api';
 import './index.scss'
 const originData = [];
 
@@ -48,7 +49,7 @@ const EditableCell = ({
     );
 };
 
-export default function EditableTable({}) {
+export default function EditableTable({devceId }) {
     const [form] = Form.useForm();
     const [data, setData] = useState(originData);
     const [editingKey, setEditingKey] = useState('');
