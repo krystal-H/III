@@ -43,6 +43,16 @@ let Paths = {
     getProductBaseInfo: '/product/getProduct',
     updateProductBaseInfo: '/product/update',
 
+    // 新建产品品类信息
+    getThirdCategory: '/deviceCategory/deviceType/all', // 获取所有的三级品类
+    getSecondCategory: '/deviceCategory/subCategory/all', // 二级品类
+    getSecondById: '/deviceCategory/subCategory/deviceTypeId', // 根据三级品类id查二级
+
+    // 确定方案
+    getScheme: '/scheme/list/deviceType', // 获取方案数据
+    getPhysicalModelId: '/physicalModel/func/list', // 获取功能点
+
+
     /* 协议 */
     getProtocolTemplates: '/protoManage/getProtocolTemplatesByProductId',
     addProtocolTemplates: '/protoManage/saveProtocolTemplates',
@@ -88,7 +98,7 @@ let Paths = {
     saveLinkHelpImg: '/product/help/save',
 
     /* 云端定时功能 */
-    getTimeServiceList: '/timerService/getList',
+    getTimeServiceList: '/timerService/getList', // 获取列表
     updateTimeService: '/timerService/update',
     saveTimeService: '/timerService/save',
     updateTimeServiceStatus: 'timerService/updateStatus', // 修改云端定时状态

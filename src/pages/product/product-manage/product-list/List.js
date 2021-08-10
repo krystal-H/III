@@ -92,7 +92,7 @@ class List extends PureComponent {
     ]
   }
   componentDidMount() {
-    this.getProductList()
+    // this.getProductList()
   }
   // 搜索
   searchProduct = (value = '') => {

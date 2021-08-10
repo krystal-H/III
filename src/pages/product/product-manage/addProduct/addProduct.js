@@ -32,7 +32,7 @@ export default class MakeProductModal extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      stepcurrent: 0, // 步骤
+      stepcurrent: 1, // 步骤
       category: '', // 产品品类
       currentIndex: 0, // 二级选中品类
       currentIndex2: null, // 三级品类
@@ -52,7 +52,7 @@ export default class MakeProductModal extends Component {
 
   // 获取所有的三级品类
   getThirdCategory = () => {
-    get('http://10.6.50.96:33330/deviceCategory/deviceType/all', {}).then(res => {
+    get(Paths.getThirdCategory, {}).then(res => {
       if (res.code === 0) {
         this.setState({
           thirdCategoryList: res.data
@@ -63,7 +63,7 @@ export default class MakeProductModal extends Component {
 
   // 获取所有的二级品类
   getSecondCategory = () => {
-    get('http://10.6.50.96:33330/deviceCategory/subCategory/all', {}).then(res => {
+    get(Paths.getSecondCategory, {}).then(res => {
       if (res.code === 0) {
         this.setState({
           secondCategoryList: res.data
@@ -75,7 +75,7 @@ export default class MakeProductModal extends Component {
 
   // 根据三级id查二级品类
   getSecondById = (id) => {
-    get(`http://10.6.50.96:33330/deviceCategory/subCategory/deviceTypeId/${id}`, { }).then(res => {
+    get(`${Paths.getSecondById}/${id}`, { }).then(res => {
       if (res.code === 0) {
         const secondList = cloneDeep(this.state.secondCategoryList)
         const _index = secondList.findIndex(item => item.subCategoryId === res.data.subCategoryId)
@@ -116,17 +116,18 @@ export default class MakeProductModal extends Component {
   // 下一步
   clickNext = (index, e) => {
     if (index === 0) { // 选择品类
-      console.log(this.state.currentIndex2 ,'品类的索引' )
-      if (!this.state.currentIndex2) {
-        Notification({ description: '请选择对应品类！', type:'warn' })
-      }
-      let saveId = null
-      const third = cloneDeep(this.state.thirdCategoryList)
-      third.forEach((item, i ) => {
-        if (i === this.state.currentIndex2) {
-          saveId = item.deviceTypeId
-        }
-      })
+      // console.log(this.state.currentIndex2 ,'品类的索引' )
+      // if (!this.state.currentIndex2) {
+      //   Notification({ description: '请选择对应品类！', type:'warn' })
+      // }
+      // let saveId = null
+      // const third = cloneDeep(this.state.thirdCategoryList)
+      // third.forEach((item, i ) => {
+      //   if (i === this.state.currentIndex2) {
+      //     saveId = item.deviceTypeId
+      //   }
+      // })
+      this.setState({ stepcurrent: ++index });
     } else if (index === 2) { // 表单提交
       this.refSetupProduct.formRef.current.submit()
     } else {

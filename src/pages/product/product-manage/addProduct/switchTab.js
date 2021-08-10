@@ -1,17 +1,22 @@
 import React, { Component } from 'react'
-import { Button, Tabs, Table } from 'antd';
+import { Button, Tabs, Table } from 'antd'
+import { Paths, post, get } from '../../../../api'
 
-const { TabPane } = Tabs;
+const { TabPane } = Tabs
 
 class SwitchTab extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      planActiveKey: '1',
+      planActiveKey: '0',
       btnIndex: 0,
       summaryText: '', // 概述
       propertyText: '', // 特点
       suitableText: '', // 适合
+      picture: '', // 图片
+      currentSchemList: [],
+      currentPhysicalModelId: '', // 物模型id
+      dataSource: []
     }
     this.columns = [
       {
@@ -20,48 +25,77 @@ class SwitchTab extends Component {
       },
       {
         title: '标识符',
-        dataIndex: 'age',
+        dataIndex: 'identifier',
       },
       {
         title: '数据类型',
         dataIndex: 'address',
       }
     ];
-    this.dataSource = [];
   }
+
   componentDidMount() {
     this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
-    this.getInitMsg()
   }
+
+  //props发生变化时触发
+  componentWillReceiveProps(props) {
+    this.setState({
+      currentSchemList: props.btnList,
+      currentPhysicalModelId: props.btnList[0].physicalModelId
+    }, () => {
+      this.getPlanMsg(0)
+      this.getPhysicalModelId(this.state.currentPhysicalModelId)
+    })
+  }
+
   // 切换tab
   handleChange(activeKey) {
     this.setState({ planActiveKey: activeKey })
+    // 获取物模型id，获取功能点数据
+    this.getPhysicalModelId(this.props.btnList[activeKey].physicalModelId)
   }
+
   // 切换方案下的按钮
   changeBtn(index, type, item, e) {
-    this.setState({ btnIndex: index, planActiveKey: '1' }, this.getPlanMsg)
+    this.setState({
+      btnIndex: index,
+      planActiveKey: '0'
+    }, () => {
+      this.getPlanMsg(index)
+    })
   }
+
+  // 获取功能点
+  getPhysicalModelId(physicalModelId) {
+    get(`${Paths.getPhysicalModelId}/${physicalModelId}`, {}).then(res => {
+      console.log(res, '******')
+      if (res.code === 0) {
+        this.setState({
+          dataSource: res.data.standard
+        })
+      } else {
+        this.setState({ dataSource: [] })
+      }
+    })
+  }
+
   // 获取对应方案的信息
-  getInitMsg() {
+  getPlanMsg(index) {
     this.setState({
-      summaryText: '通信模组负责与云端信息的交互，通过串口与主控板（即MCU）进行通信，需要在MCU上进行协议解析与外设控制的开发。',
-      propertyText: '独立MCU能提供更丰富的系统资源。',
-      suitableText: '复杂的智能硬件设备。'
+      summaryText: this.state.currentSchemList[index].summarize || '',
+      propertyText: this.state.currentSchemList[index].feature || '',
+      suitableText: this.state.currentSchemList[index].illustrate || ''
     })
   }
-  getPlanMsg(){
-    this.setState({
-      summaryText: '无需开发，选择clife推荐模组，配置相关固件信息，采购使用即可，极速实现硬件智能化。', // 概述
-      propertyText: '无需开发', // 特点
-      suitableText: '功能简单的硬件设备。', // 适合
-    })
-  }
+
   // 重置tab选中项，父组件调用
   resetIndex() {
-    this.setState({ btnIndex: 0, planActiveKey: '1' })
+    this.setState({ btnIndex: 0, planActiveKey: '0' })
   }
+
   render() {
-    let { btnIndex, planActiveKey, summaryText, propertyText, suitableText } = this.state
+    let { btnIndex, planActiveKey, summaryText, propertyText, suitableText, picture, dataSource } = this.state
     let { tip, btnList } = this.props
     return (
       <div className="dep-plan-block">
@@ -69,15 +103,17 @@ class SwitchTab extends Component {
         {
           btnList ? btnList.map((item, index) => (
             <Button className={`dep-btn ${btnIndex === index ? "active-btn" : ""}`}
-              key={item.key}
-              onClick={(e) => this.changeBtn(index, 'btnIndex', item, e)}>{item.value}</Button>
+              key={item.schemaId}
+              onClick={(e) => this.changeBtn(index, 'btnIndex', item, e)}>{item.name}</Button>
           )) : null
         }
         <div className="dep-plan-cont">
           <Tabs activeKey={planActiveKey} tabPosition="left" onChange={activeKey => this.handleChange(activeKey)}>
-            <TabPane tab="方案简介" key="1">
+            <TabPane tab="方案简介" key="0">
               <div className="dep-brief">
-                <div className="dep-brief-img"></div>
+                <div className="dep-brief-img">
+                  <img src={picture} alt="图片" />
+                </div>
                 <div className="flex1 dep-brief-cont-box">
                   <div className="dep-brief-cont">
                     <p className="dep-brief-cont-title">概述：</p>
@@ -94,12 +130,12 @@ class SwitchTab extends Component {
                 </div>
               </div>
             </TabPane>
-            <TabPane tab="方案功能点" key="2">
+            <TabPane tab="方案功能点" key="1">
               <div className="pad20">
-                <Table columns={this.columns} dataSource={this.dataSource} pagination={false} size="small" />
+                <Table columns={this.columns} dataSource={dataSource} pagination={false} size="small" />
               </div>
             </TabPane>
-            <TabPane tab="方案控制面板" key="3">
+            <TabPane tab="方案控制面板" key="2">
               <div className="dep-brief">
                 <div className="dep-brief-img"></div>
               </div>
