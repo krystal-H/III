@@ -1,5 +1,5 @@
 import * as ActionTypes from './ActionTypes';
-import {get,Paths} from '../../../api';
+import {get,post,Paths} from '../../../api';
 import { fromJS } from 'immutable';
 import {menuList,getNavRoutes} from '../../../configs/route.config'
 
@@ -19,8 +19,8 @@ export const updateDeveloperInfo= (info) => {
 
 export const getDeveloperInfo= () => {
   return (dispatch,getState) => {
-    get(Paths.getDeveloperInfo,{},{
-      needVersion:1.1,
+    post(Paths.getDeveloperInfo,{},{
+      // needVersion:1.1,
       loading: true
     }).then((res) => {
       let info = res.data,

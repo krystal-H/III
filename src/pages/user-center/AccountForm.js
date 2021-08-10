@@ -24,7 +24,7 @@ class EmailAuthWordForm extends Component {
         form.validateFields((err, values) => {
           if (!err) {
             let _values = {...values},
-                path = Paths.forgetPasswordAuth,
+                path = Paths.resetAuth,
                 data = _values;
 
             if (type === 2) {
