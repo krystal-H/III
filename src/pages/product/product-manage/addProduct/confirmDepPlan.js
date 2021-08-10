@@ -11,9 +11,10 @@ class SwitchFreeDep extends Component {
     super(props)
     this.state = {
       currentActiveKey: '1',
-      btnList: [], // 免开发
+      btnList1: [], // 免开发
       btnList2: [], // MCU
       btnList3: [], // Soc
+      thirdCategoryId: props.thirdCategoryId
     }
     this.refSwitchTab = null
   }
@@ -22,23 +23,29 @@ class SwitchFreeDep extends Component {
     this.getScheme()
   }
 
+  // thirdCategoryId
+  componentWillReceiveProps(props) {
+    console.log(props, '确定方案接受的子组件')
+  }
+
   // 获取方案数据
   getScheme() {
-    get(`${Paths.getScheme}/2`, {}).then(res => {
+    get(`${Paths.getScheme}/${this.state.thirdCategoryId}`, {}).then(res => {
       for (let key in res.data) {
-        switch (key) {
-          case '1':
-            this.setState({ btnList: res.data[key] })
-            break;
-          case '2':
-            this.setState({ btnList2: res.data[key] })
-            break;
-          case '3':
-            this.setState({ btnList3: res.data[key] })
-            break;
-          default:
-            break;
-        }
+        this.setState({ [`btnList${key}`]: res.data[key] })
+        // switch (key) {
+        //   case '1':
+        //     this.setState({ [`btnList${key}`]: res.data[key] })
+        //     break;
+        //   case '2':
+        //     this.setState({ btnList2: res.data[key] })
+        //     break;
+        //   case '3':
+        //     this.setState({ btnList3: res.data[key] })
+        //     break;
+        //   default:
+        //     break;
+        // }
       }
     })
   }
@@ -51,17 +58,18 @@ class SwitchFreeDep extends Component {
       return { currentActiveKey: activeKey };
     });
   };
+
   render() {
-    const { currentActiveKey, btnList, btnList2, btnList3 } = this.state
+    const { currentActiveKey, btnList1, btnList2, btnList3 } = this.state
     return (
       <Tabs activeKey={currentActiveKey} defaultActiveKey="1" onChange={(activeKey) => this.handleChange(activeKey)}>
         {/* 免开发方案 */}
         {
-          btnList.length > 0 &&
+          btnList1.length > 0 &&
           <TabPane tab="免开发方案" key="1">
             <SwitchTab
               tip="免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。"
-              btnList={btnList}
+              btnList={btnList1}
               onRef={ref => { this.refSwitchTab = ref }} />
           </TabPane>
         }
@@ -90,7 +98,7 @@ class SwitchFreeDep extends Component {
 
         {/* 无配置方案 */}
         {
-          btnList.length === btnList2.length === btnList3.length === 0 &&
+          btnList1.length === btnList2.length === btnList3.length === 0 &&
           <div>
             暂无数据
           </div>
