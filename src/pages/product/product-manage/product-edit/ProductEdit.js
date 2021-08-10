@@ -8,7 +8,7 @@ import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
 import ProductLinks from './product-links/ProductLinks';
 import './ProductEdit.scss'
 
-import ProductProtocols from './product-protocols/ProductProtocols';
+import ProductProtocols from './product-protocols/index.js';
 import { CommercialInfo } from './commercialInformation/CommercialInfo';
 import ApplyRelease from './commercialInformation/ApplyRelease';
 import ProductInfo from './product-info/ProductInfo';
@@ -111,7 +111,13 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
 
     }, [current])
     if (!productIdInRoutePath) {
+        
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
+    }
+    //标题修改
+    const [titleVisible,setTitleVisible]=useState(false)
+    const openTitle=()=>{
+        setTitleVisible(true)
     }
     const titleCom = (<div className='product_title_baseinfo_list'>
         <div>

@@ -210,14 +210,14 @@ let Paths = {
     
     getUserProduct:'/deviceInfo/getProduct',//获取账号下的产品
     getDeviceStat:'/deviceInfo/deviceStat',//获取设备入网统计
-    getDeviceList:'/deviceInfo/getDeviveList',//获取联网设备列表
-    getDeviceInfo:'/deviceInfo/get',//获取设备详情
+    getDeviceList:'/deviceManage/getDeviceList',//获取联网设备列表
+    getDeviceInfo:'/deviceManage/getDeviceDetailInfo',//获取设备详情
     getDeviceLabelList:'/deviceLabel/getList',//获取设备标签列表
     getLabelBaseList:'/deviceLabel/getDownList',//获取标签库列表
     addDeviceLabel:'/deviceLabel/add',//新增设备标签
     updateDeviceLabel:'/deviceLabel/update',//修改设备标签
     deleteDeviceLabel:'/deviceLabel/delete',//删除设备标签
-    exportDeviceList:'/deviceV5/export',//导出数据
+    exportDeviceList:'/deviceManage/exportDeviceList',//导出数据
     
 
 
@@ -488,6 +488,9 @@ let Paths = {
     PhysicalModelList:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
     exportPhysicalModel:'/physicalModel/export/product',//产品-定义功能-导出物模型
     PhysicalModelAdd:'/physicalModel/func/product/action',//产品-功能定义-物模型-功能-增
+
+    // //设备-设备管理
+    // getDeviceList
 };
 
 // 拼接 urlPrefix

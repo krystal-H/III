@@ -1,73 +1,149 @@
-import React, { useState } from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { Form, Input, Select, Table , Button, Space, Typography } from 'antd';
+import React, { useState, useEffect } from 'react'
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
+import { Form, Input, Select, Table, Button, Space, Typography } from 'antd';
 import PageTitle from '../../../components/page-title/PageTitle';
 import CountNum from '../../../components/CountNum/index';
+import { post, Paths, get } from '../../../api';
+import downpng from '../../../assets/images/product/download.png';
 import './index.scss'
+// import GroupDetailt from '../../product/device/device-group/groupDeviceList';
 const { Search } = Input;
 const { Option } = Select;
-const originCount=[{ label: '当前异常数', count: 0 }, { label: '累积设备总数', count: 0 }, { label: '累积入网总数', count: 0 }, { label: '今日入网总数', count: 0 }]
+const originCount = [{ label: '当前异常数', count: 0 }, { label: '累积设备总数', count: 0 }, { label: '累积入网总数', count: 0 }, { label: '今日入网总数', count: 0 }]
 export default function DeviceList() {
+    const history = useHistory();
     const [countData, setCountData] = useState(originCount)
     const [form] = Form.useForm();
     const [dataSource, setDataSource] = useState([])
+    useEffect(() => {
+        getList()
+    }, [])
+    // 设备列表
+    const getList = (params = {}, loading = true) => {
+        post(Paths.getDeviceList, params, { loading }).then((res) => {
+            
+            setDataSource(res.data.list)
+        });
+    }
+    //搜索
+    const searchList = () => {
+        const value = form.getFieldsValue();
+        getList(value)
+    }
+    //清除搜索条件
+    const clearForm = () => {
+        form.resetFields();
+    }
+    //去详情
+    const GroupDetailt = (id) => {
+        history.push(`/open/device/devManage/detail/${id}?step=1`);
+    }
+    //过滤函数
+    const fliterFn = (type, value) => {
+        let result = null
+        switch (type) {
+            case 'productClass':
+                if (!isNaN(value)) {
+                    result = value == 1 ? '网关设备' : '普通设备'
+                }
+                break;
+            case 'internetStatus':
+                if (!isNaN(value)) {
+                    result = value == 1 ? '已入网' : '未入网'
+                }
+                break;
+            case 'onlineStatus':
+                if (!isNaN(value)) {
+                    result = value == 1 ? '在线' : '离线'
+                }
+                break;
+            case 'faultStatus':
+                if (!isNaN(value)) {
+                    result = value == 1 ? '正常运行' : '故障'
+                }
+                break;
+            default:
+                return ''
+        }
+        return result
+    }
     const columns = [
         {
             title: '设备ID',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'deviceId',
+            key: 'deviceId',
         },
         {
             title: '物理地址',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'deviceMac',
+            key: 'deviceMac',
         },
         {
             title: '产品名称',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'productName',
+            key: 'productName',
         },
         {
             title: '分类',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'productType',
+            key: 'productType',
         },
         {
             title: '标签',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'labelInfo',
+            key: 'labelInfo',
         },
         {
             title: '所属分组',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'groupName',
+            key: 'groupName',
         },
         {
             title: '类型',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'productClass',
+            key: 'productClass',
+            render: (text, record, index) => (
+                <span >{fliterFn('productClass', record.productClass)}</span>
+            )
         },
         {
             title: '入网状态',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'internetStatus',
+            key: 'internetStatus',
+            render: (text, record, index) => (
+                <span >{fliterFn('internetStatus', text)}</span>
+            )
         },
         {
             title: '在线状态',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'onlineStatus',
+            key: 'onlineStatus',
+            render: (text, record, index) => (
+                <span >{fliterFn('onlineStatus', text)}</span>
+            )
         },
         {
             title: '故障状态',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'faultStatus',
+            key: 'faultStatus',
+            render: (text, record, index) => (
+                <span >{fliterFn('faultStatus', text)}</span>
+            )
         },
         {
             title: '操作',
-            dataIndex: 'name',
-            key: 'name',
+            render: (text, record) => (
+                <Space size="middle">
+                    <a onClick={() => { GroupDetailt(record.deviceId) }}>查看</a>
+                </Space>
+            )
         },
     ];
+    const exportFile=()=>{
+        post(Paths.exportDeviceList, {'user-id':1}).then((res) => {
+            
+        });
+    }
     return (<div id='device-manage'>
         <PageTitle title='设备管理'>
             <div className='top-select'>
@@ -83,19 +159,17 @@ export default function DeviceList() {
                     <Form.Item label="设备ID/物理地址">
                         <Input.Group compact>
                             <Form.Item
-                                name={['address', 'province']}
+                                name='infoType'
                                 noStyle
-                                rules={[{ required: true, message: 'Province is required' }]}
                             >
                                 <Select style={{ width: '102px' }}>
-                                    <Option value="Zhejiang">Zhejiang</Option>
-                                    <Option value="Jiangsu">Jiangsu</Option>
+                                    <Option value="1">设备ID</Option>
+                                    <Option value="2">物理地址</Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item
-                                name={['address', 'street']}
+                                name='field'
                                 noStyle
-                                rules={[{ required: true, message: 'Street is required' }]}
                             >
                                 <Input style={{ width: '228px' }} />
                             </Form.Item>
@@ -103,62 +177,63 @@ export default function DeviceList() {
                     </Form.Item>
                     <Form.Item label="设备标签">
                         <Form.Item
-                            name="year"
+                            name="labelKey"
                             style={{ display: 'inline-block', width: '174px', marginRight: '2px' }}
                         >
-                            <Input />
+                            <Input placeholder='请输入标签Key' />
                         </Form.Item>
                         <Form.Item
-                            name="month"
+                            name="labelValue"
                             style={{ display: 'inline-block', width: '221px' }}
                         >
-                            <Input />
+                            <Input placeholder='请输入标签Value' />
                         </Form.Item>
                     </Form.Item>
-                    <Form.Item name="gender" label="入网状态" >
+                    <Form.Item name="innet" label="入网状态" >
                         <Select
                             allowClear
                             style={{ width: '102px' }}
                         >
-                            <Option value="male">male</Option>
-                            <Option value="female">female</Option>
-                            <Option value="other">other</Option>
+                            <Option value={true}>是</Option>
+                            <Option value={false}>否</Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item name="gender" label="在线状态" >
+                    <Form.Item name="online" label="在线状态" >
                         <Select
                             allowClear
                             style={{ width: '102px' }}
                         >
-                            <Option value="male">male</Option>
-                            <Option value="female">female</Option>
-                            <Option value="other">other</Option>
+                            <Option value={true}>是</Option>
+                            <Option value={false}>否</Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item name="gender" label="故障状态" >
+                    <Form.Item name="fault" label="故障状态" >
                         <Select
                             allowClear
                             style={{ width: '102px' }}
                         >
-                            <Option value="male">male</Option>
-                            <Option value="female">female</Option>
-                            <Option value="other">other</Option>
+                            <Option value={true}>是</Option>
+                            <Option value={false}>否</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item label=" " colon={false} style={{ marginRight: '2px' }}>
-                        <Button type="primary" >
+                        <Button type="primary" onClick={searchList}>
                             查询
                         </Button>
                     </Form.Item>
                     <Form.Item label=" " colon={false} style={{ marginRight: '0px' }}>
-                        <Button  >
+                        <Button onClick={clearForm}>
                             重置
                         </Button>
                     </Form.Item>
                 </Form>
             </div>
+            <div className='export-wrap'>
+                <a onClick={exportFile}>导出协议</a>
+                <img onClick={exportFile} src={downpng} style={{ marginRight: '15px' }} />
+            </div>
             <div>
-                <Table dataSource={dataSource} columns={columns} />
+                <Table rowKey='deviceId' dataSource={dataSource} columns={columns} />
             </div>
         </div>
     </div>)
