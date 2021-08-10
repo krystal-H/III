@@ -1,43 +1,23 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Descriptions, Divider } from 'antd';
 import { post, Paths, get } from '../../../../api';
 import './index.scss'
-export default function DeviceInfo({devceId}) {
-    const [data,setData]=useState({})
-    useEffect(()=>{
+export default function DeviceInfo({ devceId }) {
+    const [data, setData] = useState({})
+    useEffect(() => {
         getDetail()
-    },[])
-    const getDetail=(loading = true)=>{
-        post(Paths.getDeviceInfo, {'deviceId':devceId}, { loading }).then((res) => {
+    }, [])
+    const getDetail = (loading = true) => {
+        // Paths.getDeviceInfo
+        post(Paths.getDeviceInfo, { 'deviceId': devceId }, { loading }).then((res) => {
             setData(res.data)
         });
     }
     //过滤函数
-    const fliterFn = (type, value) => {
+    const fliterFn = (value) => {
         let result = null
-        switch (type) {
-            case 'productClass':
-                if (!isNaN(value)) {
-                    result = value == 1 ? '网关设备' : '普通设备'
-                }
-                break;
-            case 'internetStatus':
-                if (!isNaN(value)) {
-                    result = value == 1 ? '已入网' : '未入网'
-                }
-                break;
-            case 'onlineStatus':
-                if (!isNaN(value)) {
-                    result = value == 1 ? '在线' : '离线'
-                }
-                break;
-            case 'faultStatus':
-                if (!isNaN(value)) {
-                    result = value == 1 ? '正常运行' : '故障'
-                }
-                break;
-            default:
-                return ''
+        if (typeof value == 'number') {
+            result = value == 1 ? '网关设备' : '普通设备'
         }
         return result
     }
@@ -65,7 +45,7 @@ export default function DeviceInfo({devceId}) {
             <Descriptions.Item label="产品ID">{data.productId}</Descriptions.Item>
             <Descriptions.Item label="所属分类">{data.productType}</Descriptions.Item>
 
-            <Descriptions.Item label="产品类型">{data.productClass}</Descriptions.Item>
+            <Descriptions.Item label="产品类型">{fliterFn(data.productClass)}</Descriptions.Item>
             <Descriptions.Item label="产品编码">{data.productCode}</Descriptions.Item>
             <Descriptions.Item label="产品密钥">{data.productKey}</Descriptions.Item>
 

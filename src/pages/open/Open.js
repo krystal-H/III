@@ -15,6 +15,7 @@ import { MenuUnfoldOutlined, MenuFoldOutlined, } from '@ant-design/icons';
 const Overview = loadable(() => import('../home/overview/index'));
 const Product = loadable(() => import('../product'));
 const Device = loadable(() => import('../device'));
+const DataSevice = loadable(() => import('../data-sevice'));
 const OrderHome = loadable(() => import('../repairOrder/home'));
 
 const RouteComponentLi = {
@@ -22,7 +23,7 @@ const RouteComponentLi = {
     '产品': Product,
     '设备': Device,
     'APP': Product,
-    '数据服务': Overview,
+    '数据服务': DataSevice,
     '开发Studio': Product,
 }
 const RepairOrder = [{
