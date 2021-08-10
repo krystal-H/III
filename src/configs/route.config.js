@@ -98,13 +98,13 @@ export const navRoutes = [
         path: '/open/app',
         menuicon: 'app',
         menuid:'3',
-        childmenus: [
-            {
-                menuname: 'APP开发',
-                path: '/open/app',
-                menuid:'3-0',
-            }
-        ]
+        // childmenus: [
+        //     {
+        //         menuname: 'APP开发',
+        //         path: '/open/app',
+        //         menuid:'3-0',
+        //     }
+        // ]
     }, {
         menuname: '数据服务',
         path: '/open/serve',
@@ -290,14 +290,13 @@ export const menuList = [
     },
     {
         menuname: 'APP',
-        childmenus: [
-            {
-                menuname: 'APP开发',
-                childmenus: [],
-                items: ['基本信息', '关联产品', '版本发布'],
-            },
-        ],
-        items: [],
+        // childmenus: [
+        //     {
+        //         menuname: 'APP开发',
+        //         childmenus: [],
+        //     },
+        // ],
+        items: ['基本信息', '关联产品', '版本发布'],
     },
     {
         menuname: '数据服务',

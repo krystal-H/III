@@ -1,92 +1,92 @@
-@import './../../../../assets/css/variables.scss';
+@charset 'utf-8';
 
 .application-wrapper {
     height: 100%;
     min-height: 520px;
-    .application-header {
+    .application-content-wrapper {
+        background: #ffffff;
+        box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.12);
+        border-radius: 2px;
+        padding: 22px;
         .application-search {
-            padding:0 20px;
             height: 38px;
-            background-color: $sectionBgColor;
+            margin-bottom: 22px;
             .application-header-input-wrapper {
                 width: 40%;
             }
         }
-    }
-    .application-content-wrapper {
-        padding: $gap;
         .application-content {
             height: 100%;
-            padding: 20px 32px;
-            background-color: $sectionBgColor;
+            &-tip {
+                @include flex(flex-start);
+                padding: 10px 16px;
+                margin-bottom: 22px;
+                background: #e6f7ff;
+                border-radius: 4px;
+                border: 1px solid #bae7ff;
+                @include text(12px, #000000);
+                .icon {
+                    @include text(14px, #1890ff);
+                    padding-right: 8px;
+                }
+            }
             .lists-wrapper {
-                justify-content: flex-start;
-                align-content: flex-start;
+                width: 100%;
+                @include flex(flex-start, flex-start);
                 flex-wrap: wrap;
-                padding: $gap;
                 .list-item {
-                    margin: 0 $gap $gap $gap;
-                    width: 46%;
-                    height: 45%;
+                    @include wh(32%, 27%);
+                    margin: 0 14px 14px 0;
                     background-color: $sectionBgColor;
                     border-radius: $borderRadius;
                     border: 1px solid rgba(217, 217, 217, 1);
-                    font-weight: 400;
                     color: rgba(0, 0, 0, 0.45);
                     .application-item-card {
                         position: relative;
                         height: 100%;
-                        padding: 16px $gap 0 $gap;
+                        padding: 16px 12px;
                         .application-info {
-                            padding-left: 20px;
-                            justify-content: space-around;
-                            .name {
-                                display: block;
-                                font-size: 20px;
-                                font-family: PingFangSC-Medium, PingFang SC serif;
+                            padding-left: 12px;
+                            @include text(12px, #666666);
+                            @include flex(flex-start, flex-start, column);
+                            &-title {
+                                margin-bottom: 10px;
+                                font-size: 14px;
                                 font-weight: 600;
-                                color: rgba(0, 0, 0, 0.85);
+                                color: #323232;
                                 line-height: 24px;
                             }
-                            .name:hover {
-                                color: $themeColor;
+                            &-title:hover {
+                                color: #2F78FF;
                             }
-                            .type {
-                                font-size: 14px;
-                                font-family: PingFangSC-Regular, PingFang SC serif;
-                                font-weight: 400;
-                                color: rgba(0, 0, 0, 0.45);
-                                line-height: 22px;
+                            &-bar {
+                                margin-bottom: 10px;
+                                .title {
+                                    color: #323232;
+                                }
                             }
                             .application-desc {
-                                word-break: break-all;
-                                min-height: 46px;
-                                font-size: 14px;
-                                font-family: HelveticaNeue sans-serif;
-                                color: rgba(0, 0, 0, 0.45);
-                                display: -webkit-box;
-                                -webkit-box-orient: vertical;
-                                -webkit-line-clamp: 2;
-                                overflow: hidden;
+                                line-height: normal;
+                                @include limit-line(2);
                             }
                         }
                         .del-app {
+                            @include text(14px, #F42C2C);
                             display: none;
                             position: absolute;
                             bottom: 0;
                             left: 0;
                             width: 100%;
-                            height: 40px;
-                            line-height: 40px;
+                            height: 25px;
+                            line-height: 23px;
                             text-align: center;
                             cursor: pointer;
                             background-color: $sectionBgColor;
-                            border-top: 1px solid #E9E9E9;
+                            border-top: 1px solid #e9e9e9;
                         }
                         &:hover {
                             .del-app {
                                 display: block;
-                                color: $themeColor;;
                             }
                         }
                     }
@@ -103,49 +103,62 @@
         }
     }
 }
-
-@media screen and (max-height: 769px) {
+@media screen and (max-width: 1367px) {
     .application-wrapper {
         .application-content-wrapper {
-            padding: 1/2*$gap;
             .application-content {
-                height: 100%;
-                padding: 6px 12px;
-                background-color: $sectionBgColor;
                 .lists-wrapper {
-                    padding: 1/2*$gap;
                     .list-item {
-                        margin: 0 1/2*$gap 1/4*$gap 1/2*$gap;
-                        width: 45%;
-                        height: 48%;
-                        .application-item-card {
-                            padding: 8px 12px 0 8px;
-                            .icon-wrapper {
-                                width: 80px;
-                                height: 80px;
-                            }
+                        &:nth-last-child(1),  &:nth-last-child(2), &:nth-last-child(3){
+                            margin-bottom: 0;
                         }
-                    }
-                }
-                .application-list-pagination {
-                    height: max-content;
-                    padding: 0 $gap 1/3*$gap 0;
-                    .self-pa {
-                        float: right;
-                        width: max-content;
                     }
                 }
             }
         }
     }
 }
+// @media screen and (max-height: 769px) {
+//     .application-wrapper {
+//         .application-content-wrapper {
+//             padding: 1/2 * $gap;
+//             .application-content {
+//                 height: 100%;
+//                 padding: 6px 12px;
+//                 background-color: $sectionBgColor;
+//                 .lists-wrapper {
+//                     .list-item {
+//                         width: 45%;
+//                         height: 48%;
+//                         .application-item-card {
+//                             padding: 16px 12px;
+//                             .icon-wrapper {
+//                                 @include wh(64px, 64px);
+//                             }
+//                         }
+//                     }
+//                 }
+//                 .application-list-pagination {
+//                     height: max-content;
+//                     padding: 0 $gap 1/3 * $gap 0;
+//                     .self-pa {
+//                         float: right;
+//                         width: max-content;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
 
 .add-application-wrapper {
     .application-form {
-        .android-input, .ios-input {
+        .android-input,
+        .ios-input {
             margin-bottom: 0;
         }
-        .app-img-desc, .app-type-desc {
+        .app-img-desc,
+        .app-type-desc {
             font-size: 13px;
             font-family: PingFangSC-Regular, PingFang SC sans-serif;
             font-weight: 400;

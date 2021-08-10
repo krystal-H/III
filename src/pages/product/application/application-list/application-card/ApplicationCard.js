@@ -21,18 +21,24 @@ export default function ApplicationCard(props) {
             <ProductIcon icon={appIconLow} />
             <div className="application-info flex-column flex1">
                 <Link key="detail" to={'/open/base/application/details/' + appId} target="_blank">
-                    <span className="name">{appName}</span>
+                    <div className="application-info-title">{appName}</div>
                 </Link>
-                <div className="application-id">
-                    APPID：{appId}
+                <div className="application-info-bar">
+                    <span className="title">APPID：</span>{appId}
                 </div>
-                <span className="type">应用类型：{Number(appType) === 0 ? '移动应用' : '小程序'}</span>
-                <div title={appDesc} className="application-desc">
-                    {appDesc}
+                <div className="application-info-bar">
+                    <span className="title">应用类型：</span>{Number(appType) === 0 ? '移动应用' : '小程序'}
                 </div>
+                <div className="application-info-bar application-desc">
+                    <span className="title">应用简介：</span>{appDesc}
+                </div>
+                {/* <span className="type">应用类型：{Number(appType) === 0 ? '移动应用' : '小程序'}</span> */}
+                {/* <div title={appDesc} className="application-desc">
+                    应用简介：{appDesc}
+                </div> */}
             </div>
             <div className="del-app" onClick={() => setDelDialog(true)}>
-                <MyIcon type="icon-delete" style={{ fontSize: 18 }} />
+                <MyIcon type="icon-delete" style={{ fontSize: 16 }} />
                 <span>删除</span>
             </div>
             {delDialog && <ActionConfirmModal

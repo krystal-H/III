@@ -16,12 +16,13 @@ const Overview = loadable(() => import('../home/overview/index'));
 const Product = loadable(() => import('../product'));
 const Device = loadable(() => import('../device'));
 const OrderHome = loadable(() => import('../repairOrder/home'));
+const Application = loadable(() => import('../product/application/Application.js'))
 
 const RouteComponentLi = {
     '总览': Overview,
     '产品': Product,
     '设备': Device,
-    'APP': Product,
+    'APP': Application,
     '数据服务': Overview,
     '开发Studio': Product,
 }

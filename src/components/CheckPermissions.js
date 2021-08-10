@@ -27,7 +27,7 @@ export function CheckPermissions (name) {
 }
 //递归查询
 function check (menuList,name) {
-    menuList.map((item,index) => {
+    menuList && menuList.map((item,index) => {
         if(item.menuname==name){
             tag = true;
         }else{
