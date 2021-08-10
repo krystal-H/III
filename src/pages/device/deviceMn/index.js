@@ -21,8 +21,12 @@ export default function DeviceList() {
     // 设备列表
     const getList = (params = {}, loading = true) => {
         post(Paths.getDeviceList, params, { loading }).then((res) => {
-            
             setDataSource(res.data.list)
+        });
+    }
+    //产品种类列表
+    const getList2 = (params = {}, loading = true) => {
+        post(Paths.getDeviceList, params, { loading }).then((res) => {
         });
     }
     //搜索
@@ -139,8 +143,11 @@ export default function DeviceList() {
             )
         },
     ];
+    //导出
     const exportFile=()=>{
-        post(Paths.exportDeviceList, {'user-id':1}).then((res) => {
+        // window.location.href = Paths.exportDeviceList;
+        // return
+        post(Paths.exportDeviceList, {}).then((res) => {
             
         });
     }
