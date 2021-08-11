@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
 import ProductIcon from '../../../../../components/product-components/product-icon/ProductIcon';
 import MyIcon from '../../../../../components/my-icon/MyIcon';
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
+import { withRouter } from 'react-router-dom';
 
-export default function ApplicationCard(props) {
+function ApplicationCard(props) {
     const [delDialog, setDelDialog] = useState(false);
     let { appId, appIconLow, appName, appType, appDesc } = props.Info;
 
@@ -16,13 +16,16 @@ export default function ApplicationCard(props) {
         setDelDialog(false);
     };
 
+    // 跳转详情
+    const goDetail = () => {
+        props.history.push(`/open/app/details/${appId}`)
+    }
+
     return (
         <div className="application-item-card flex-row">
             <ProductIcon icon={appIconLow} />
             <div className="application-info flex-column flex1">
-                <Link key="detail" to={'/open/base/application/details/' + appId} target="_blank">
-                    <div className="application-info-title">{appName}</div>
-                </Link>
+                <div className="application-info-title" onClick={() => goDetail()}>{appName}</div>
                 <div className="application-info-bar">
                     <span className="title">APPID：</span>{appId}
                 </div>
@@ -32,10 +35,6 @@ export default function ApplicationCard(props) {
                 <div className="application-info-bar application-desc">
                     <span className="title">应用简介：</span>{appDesc}
                 </div>
-                {/* <span className="type">应用类型：{Number(appType) === 0 ? '移动应用' : '小程序'}</span> */}
-                {/* <div title={appDesc} className="application-desc">
-                    应用简介：{appDesc}
-                </div> */}
             </div>
             <div className="del-app" onClick={() => setDelDialog(true)}>
                 <MyIcon type="icon-delete" style={{ fontSize: 16 }} />
@@ -54,3 +53,5 @@ export default function ApplicationCard(props) {
         </div>
     )
 }
+
+export default withRouter(ApplicationCard)

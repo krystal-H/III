@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Icon as LegacyIcon } from '@ant-design/compatible';
+
 import { Pagination, Tabs, Button, Row, Col, Table } from 'antd';
 import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
 import { Notification } from '../../../../components/Notification';
@@ -16,6 +16,8 @@ import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
 import { CheckPermissions } from '../../../../components/CheckPermissions';
 import MyIcon from '../../../../components/my-icon/MyIcon';
 import { EditApplicationForm } from './form/editApplicationForm';
+import { withRouter } from 'react-router-dom';
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons'
 
 import './style.scss';
 
@@ -41,7 +43,7 @@ const texts = [{
     targetName: 'V1.1.3',
 }];
 
-export default class ApplicationDetail extends PureComponent {
+class ApplicationDetail extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -73,10 +75,10 @@ export default class ApplicationDetail extends PureComponent {
             showSecret: false,
             relationProductList: { listAndroid: [], listIos: [] }, // 已关联的产品列表
             versionList: { list: [], pager: {} }, // 版本列表
-            relationProductJurisdiction: CheckPermissions('关联产品'),
-            versionPublishJurisdiction: CheckPermissions('发布版本'),
+            relationProductJurisdiction: '关联产品', // CheckPermissions('关联产品'),
+            versionPublishJurisdiction: '发布版本', // CheckPermissions('发布版本'),
             showEditAppForm: true,
-            relationedProductIds:{}
+            relationedProductIds: {}
         }
     }
 
@@ -129,9 +131,9 @@ export default class ApplicationDetail extends PureComponent {
             const code = res.code;
             if (code === REQUEST_SUCCESS) {
                 Notification({
-                    message:'创建成功',
-                    description:'创建应用版本成功',
-                    type:'success'
+                    message: '创建成功',
+                    description: '创建应用版本成功',
+                    type: 'success'
                 });
                 this.setState((preState) => {
                     let { showAppVersionDialog } = preState;
@@ -161,8 +163,8 @@ export default class ApplicationDetail extends PureComponent {
             const code = res.code;
             if (code === REQUEST_SUCCESS) {
                 Notification({
-                    description:app,
-                    type:'warn'
+                    description: app,
+                    type: 'warn'
                 });
                 this.setState((preState) => {
                     let { showEditAppForm } = preState;
@@ -189,10 +191,10 @@ export default class ApplicationDetail extends PureComponent {
                     listAndroid: [],
                     listIos: [],
                 },
-                relationedProductIds = {android:[],ios:[]};
+                    relationedProductIds = { android: [], ios: [] };
 
                 data.list && data.list.length > 0 && data.list.forEach((item) => {
-                    let { appVersionType,productId } = item;
+                    let { appVersionType, productId } = item;
                     if (appVersionType === 1) {
                         relationProductList.listAndroid.push(item);
                         relationedProductIds.android.push(productId)
@@ -207,7 +209,7 @@ export default class ApplicationDetail extends PureComponent {
                     }
                 });
                 this.setState(() => {
-                    return { relationProductList,relationedProductIds };
+                    return { relationProductList, relationedProductIds };
                 });
             }
         });
@@ -237,7 +239,7 @@ export default class ApplicationDetail extends PureComponent {
                         currentAppType: !androidPkg && iosBundleId ? 2 : 1,
                     };
                 });
-                if (appType === 0|| appType === 2) {
+                if (appType === 0 || appType === 2) {
                     this._getRelaProducts(appId);
                     this._getVersionList({
                         ...initPager,
@@ -323,19 +325,19 @@ export default class ApplicationDetail extends PureComponent {
         let relationProductListType = currentAppType === 1 ? relationProductList.listAndroid : relationProductList.listIos;
         // let list = relationProductListType.map(item => item.productId);
         post(Paths.updateRelaProduct, {
-            productIds: [ ...productIds].join(','),
+            productIds: [...productIds].join(','),
             appId: Number(appId),
             appVersionType: Number(currentAppType),
-        }, { loading: true, needJson: true,noInstance:true }).then((res) => {
+        }, { loading: true, needJson: true, noInstance: true }).then((res) => {
             const code = res.code;
             if (code === REQUEST_SUCCESS) {
                 this.setState((preState) => {
                     return { showAddProductRelationDialog: !preState.showAddProductRelationDialog };
                 }, () => {
                     Notification({
-                        message:'关联成功',
-                        description:'产品关联成功',
-                        type:'success'
+                        message: '关联成功',
+                        description: '产品关联成功',
+                        type: 'success'
                     });
                     this._getRelaProducts(appId);
                 });
@@ -379,23 +381,23 @@ export default class ApplicationDetail extends PureComponent {
         if (appType.value === 0) {
             appTypeAndroidHTML = (
                 <Button onClick={() => this.handleChange('currentAppType', 1)}
-                        type={currentAppType === 1 ? 'primary' : 'default'}
-                        ghost={currentAppType === 1}
+                    type={currentAppType === 1 ? 'primary' : 'default'}
+                    ghost={currentAppType === 1}
                 >Android端</Button>
             )
-        
+
 
             appTypeIosHTML = (
                 <Button onClick={() => this.handleChange('currentAppType', 2)}
-                        type={currentAppType === 2 ? 'primary' : 'default'}
-                        ghost={currentAppType === 2}
+                    type={currentAppType === 2 ? 'primary' : 'default'}
+                    ghost={currentAppType === 2}
                 >iOS端</Button>
             )
-            
+
         } else {
             weChatHTML = (
                 <Button type={'primary'}
-                        ghost
+                    ghost
                 >小程序</Button>
             );
         }
@@ -404,11 +406,11 @@ export default class ApplicationDetail extends PureComponent {
 
     addNewVersion = () => {
         let { versionList } = this.state,
-            {appVersionMaxNum = 0 , currentNum = 0} = versionList;
+            { appVersionMaxNum = 0, currentNum = 0 } = versionList;
 
         if (currentNum >= appVersionMaxNum) {
             Notification({
-                description:`最多只能创建${appVersionMaxNum}个应用版本`
+                description: `最多只能创建${appVersionMaxNum}个应用版本`
             })
             return;
         }
@@ -465,11 +467,11 @@ export default class ApplicationDetail extends PureComponent {
                 return (
                     <div>
                         <a href="javascript:"
-                           onClick={() => this.getAppVersionDetail(record.appVersionId)}
+                            onClick={() => this.getAppVersionDetail(record.appVersionId)}
                         >编辑</a>
                         <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                         <a href="javascript:"
-                           onClick={() => this.showDialog('showDeleteDialog', 'curAppVersionId', record.appVersionId, 'versionTargetName', record.appName)}
+                            onClick={() => this.showDialog('showDeleteDialog', 'curAppVersionId', record.appVersionId, 'versionTargetName', record.appName)}
                         >删除</a>
                     </div>
                 )
@@ -506,25 +508,28 @@ export default class ApplicationDetail extends PureComponent {
         return (
             <section className="application-detail-wrapper flex-column">
                 <header className="application-detail-header">
-                    <PageTitle noback={true} title="应用详情" />
-                    <DetailInHeader className="clearfix">
-                        <span className="fl app-name">应用名称：{appName.value}</span>
-                        <span className="fl app-id">APPID：{appId.value}</span>
-                        <span className="fl app-secret">
-                            APPSecret：{appSecretText}
-                            <LegacyIcon type={showSecretType} className="icon-display" style={{ fontSize: '18px' }}
-                                  theme="twoTone"
-                                  twoToneColor="#2874FF" onClick={() => this.changeState('showSecret')} />
-                        </span>
-                    </DetailInHeader>
+                    <PageTitle btnTxt='编辑' backTitle='应用详情'>
+                        <DetailInHeader className="clearfix">
+                            <span className="fl app-name">应用名称：{appName.value}</span>
+                            <span className="fl app-id">APPID：{appId.value}</span>
+                            <span className="fl app-secret">
+                                APPSecret：{appSecretText}
+                                {
+                                    showSecret ?
+                                        <EyeInvisibleOutlined className="eye-icon" onClick={() => this.changeState('showSecret')} /> :
+                                        <EyeOutlined className="eye-icon" onClick={() => this.changeState('showSecret')} />
+                                }
+                            </span>
+                        </DetailInHeader>
+                    </PageTitle>
                 </header>
                 <div className="antd-content flex-column flex1">
                     <Tabs defaultActiveKey="0" onChange={(activeKey) => this.handleChange('currentTab', activeKey)}
-                          tabBarStyle={{ background: "#fff", padding: "0 24px" }}>
+                        tabBarStyle={{ background: "#fff", padding: "0 24px" }}>
                         <TabPane tab="基础信息" key="0">
                             {showEditAppForm ? <div className="application-detail-content flex1">
                                 <Button type="primary" className="edit-app"
-                                        onClick={() => this.changeState('showEditAppForm')}>
+                                    onClick={() => this.changeState('showEditAppForm')}>
                                     编辑应用
                                 </Button>
                                 <Row gutter={8} className="detail-line">
@@ -589,10 +594,11 @@ export default class ApplicationDetail extends PureComponent {
                                     </Col>
                                     <Col span={21} className="detail-right">
                                         {appSecretText}
-                                        <LegacyIcon type={showSecretType} className="icon-display"
-                                              style={{ fontSize: '18px' }}
-                                              theme="twoTone"
-                                              twoToneColor="#2874FF" onClick={() => this.changeState('showSecret')} />
+                                        {
+                                            showSecret ?
+                                                <EyeInvisibleOutlined className="eye-icon" onClick={() => this.changeState('showSecret')} /> :
+                                                <EyeOutlined className="eye-icon" onClick={() => this.changeState('showSecret')} />
+                                        }
                                         <span className="secret-desc">由系统自动分配的密码</span>
                                     </Col>
                                 </Row>
@@ -632,12 +638,12 @@ export default class ApplicationDetail extends PureComponent {
                                                 {appTypeHTML.weChatHTML}
                                             </div>
                                             <Button type="primary" className="add-relation"
-                                                    // disabled={addBtn}
-                                                    onClick={() => this.showDialog('showAddProductRelationDialog')}>添加</Button>
+                                                // disabled={addBtn}
+                                                onClick={() => this.showDialog('showAddProductRelationDialog')}>添加</Button>
                                         </div>
                                         {(true) ?
                                             <ul className={`product-list flex1`}>
-                                                {(relationProductListType && relationProductListType.length > 0 )? relationProductListType.map((item, index) => {
+                                                {(relationProductListType && relationProductListType.length > 0) ? relationProductListType.map((item, index) => {
                                                     let { productId, productName, productIcon } = item;
                                                     return <li key={index} className="list-item flex-column">
                                                         <i className="product-pic">
@@ -650,8 +656,8 @@ export default class ApplicationDetail extends PureComponent {
                                                             {productId}
                                                         </div>
                                                         <a href="javascript:"
-                                                           onClick={() => this.showDialog('showDeleteDialog', 'curProductID', productId, 'targetName', productName)}
-                                                           className="delete-product-relation">
+                                                            onClick={() => this.showDialog('showDeleteDialog', 'curProductID', productId, 'targetName', productName)}
+                                                            className="delete-product-relation">
                                                             <MyIcon style={{ fontSize: 20 }} type="icon-shanchu" />
                                                         </a>
                                                     </li>
@@ -668,9 +674,9 @@ export default class ApplicationDetail extends PureComponent {
                                         <div className="add-version-wrapper">
                                             <h5>版本历史</h5>
                                             <Button className="add-version" type="primary"
-                                                    onClick={this.addNewVersion}>
+                                                onClick={this.addNewVersion}>
                                                 创建应用版本</Button>
-                                        </div> 
+                                        </div>
                                         // : <div className="add-version-wrapper">
                                         //     <h5>版本历史</h5>
                                         //     <Button className="add-version" type="primary" disabled>
@@ -719,3 +725,5 @@ export default class ApplicationDetail extends PureComponent {
         );
     }
 }
+
+export default withRouter(ApplicationDetail)
