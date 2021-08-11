@@ -186,7 +186,7 @@ export default class MessageCenter extends Component {
                 <div className="page-header-wrapper">
                     <Header newMessageNums={newMessageNums} developerInfo={developerInfo} noCollapsed={true}></Header>
                 </div>
-                <div className="page-content-wrapper">
+                <div className="page-content-wrapper message-main">
                     <PageTabs Nums={[0,totalUnRead || 0,0]} clickHandles={this.pageTabClickHandles}></PageTabs>
                     <section className="right-wrapper flex-column">
                         <PageTitle noback={true} title="消息中心"></PageTitle>

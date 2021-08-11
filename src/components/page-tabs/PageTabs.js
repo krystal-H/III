@@ -19,7 +19,7 @@ export default function PageTabs({developerInfo,Nums=[],clickHandles = []}) {
     let {title,tabs,notRoute} = configs,
         {titleIcon,titleText} = title,
         hash = window.location.hash;
-
+    // return(1)
     return (
         <div className="page-tabs-wrapper">
             
