@@ -60,7 +60,7 @@ class AccountFlowTemplate extends Component {
     componentDidMount(){
         let {email,uuid,needEmailComfirm,updateEmailComfirm} = this.state,
             {cType} = this.props, 
-            path = Paths.authConfirm,
+            path = Paths.registerConfirm,
             data = {
                 account:email,
                 uuid,
@@ -68,7 +68,7 @@ class AccountFlowTemplate extends Component {
             };
         
         if (updateEmailComfirm) {
-            path = Paths.resetEmailConfirm
+            path = Paths.registerConfirm
             data = {
                 account:email,
                 uuid
@@ -126,7 +126,7 @@ class AccountFlowTemplate extends Component {
             data = {};
         
         if (cType === 1) {
-            path = Paths.resendForgetPasswordEmail
+            path = Paths.resendRegisterEmail
             data = {
                 account:email
             }

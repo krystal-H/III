@@ -1,0 +1,51 @@
+#device-analysis {
+  .main-page-title {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .filter-wrap {
+    height: 78px;
+    display: flex;
+    align-items: center;
+    padding-left: 22px;
+
+    .ant-radio-group {
+      margin-right: 22px;
+    }
+
+    .ant-radio-button-wrapper {
+      padding: 0;
+      width: 76px;
+      text-align: center;
+    }
+  }
+
+  .main-echart {
+    padding: 22px;
+    margin-top: 16px;
+
+    h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #323232;
+      line-height: 20px;
+    }
+
+    .comm-shadowbox {
+      box-shadow: none;
+      height: 64px;
+      margin-bottom: 23px;
+
+      .device-count-item {
+        height: 64px;
+        margin-left: 0;
+      }
+    }
+
+    .echart-download {
+      text-align: right;
+      margin-bottom: 12px;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import * as ActionTypes from './ActionTypes';
-import {get,Paths} from '../../../api';
+import {post,Paths} from '../../../api';
 import { fromJS } from 'immutable';
 
 
@@ -12,8 +12,8 @@ export const updateNewMessageNums= (data) => {
 
 export const getNewMessageNums= () => {
   return (dispatch,getState) => {
-    get(Paths.getUnreadQuantity,{},{
-      needVersion:1.1
+    post(Paths.getUnreadQuantity,{},{
+      // needVersion:1.1
     }).then((res) => {
       let data = res.data,
           action = updateNewMessageNums(data);

@@ -319,53 +319,53 @@ export const menuList = [
         ],
         items: [],
     },
-    {
-        menuname: '开发Studio',
-        childmenus: [
-            {
-                menuname: '项目管理',
-                childmenus: [],
-                items: [],
-            },
-            {
-                menuname: '服务开发',
-                childmenus: [],
-                items: [],
-            }
-        ],
-        items: [],
-    },
-    {
-        menuname:'用户中心',
-        childmenus:[
-            {
-                menuname:'基本资料',
-                childmenus:[],
-                items:[],
-            },
-            {
-                menuname:'安全设置',
-                childmenus:[],
-                items:[],
-            },
-            {
-                menuname:'访问用户',
-                childmenus:[],
-                items:[],
-            },
-            {
-                menuname:'用户角色',
-                childmenus:[],
-                items:[],
-            },
-            {
-                menuname:'操作日志',
-                childmenus:[],
-                items:[],
-            },
-        ],
-        items:[],
-    },
+    // {
+    //     menuname: '开发Studio',
+    //     childmenus: [
+    //         {
+    //             menuname: '项目管理',
+    //             childmenus: [],
+    //             items: [],
+    //         },
+    //         {
+    //             menuname: '服务开发',
+    //             childmenus: [],
+    //             items: [],
+    //         }
+    //     ],
+    //     items: [],
+    // },
+    // {
+    //     menuname:'用户中心',
+    //     childmenus:[
+    //         {
+    //             menuname:'基本资料',
+    //             childmenus:[],
+    //             items:[],
+    //         },
+    //         {
+    //             menuname:'安全设置',
+    //             childmenus:[],
+    //             items:[],
+    //         },
+    //         {
+    //             menuname:'访问用户',
+    //             childmenus:[],
+    //             items:[],
+    //         },
+    //         {
+    //             menuname:'用户角色',
+    //             childmenus:[],
+    //             items:[],
+    //         },
+    //         {
+    //             menuname:'操作日志',
+    //             childmenus:[],
+    //             items:[],
+    //         },
+    //     ],
+    //     items:[],
+    // },
 ]
 
 
@@ -401,6 +401,7 @@ export function RouteWithSubRoutes(route) {
 
 /* 获得有权限的菜单路由 和 相关页面内的tab元素权限*/
 export function getNavRoutes(menu) {
+    console.log(222,JSON.stringify(menuList))
     let _navRoutes = navRoutes;
     function authorityMenu(menus) {
         let result = menus.map(({
