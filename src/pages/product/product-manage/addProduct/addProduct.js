@@ -133,7 +133,7 @@ export default class MakeProductModal extends Component {
           })
         }
       })
-    } else if (index === 1) { // 确定方案
+    // } else if (index === 1) { // 确定方案
       
     }else if (index === 2) { // 建立产品信息
       this.refSetupProduct.formRef.current.submit()
