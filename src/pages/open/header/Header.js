@@ -6,6 +6,7 @@ import {
 } from '@ant-design/icons';
 import {Link} from 'react-router-dom';
 import {post,Paths} from '../../../api'
+import {userNavRoutes} from '../../../configs/route.config';
 import DefaultUserIcon from '../../../assets/images/userIcon.png'
 
 import './Header.scss'
@@ -20,11 +21,11 @@ export default class Header extends PureComponent  {
         })
     }
     render () {
-        console.log(444,this.props.menulist)
-        const {onlyLogo,developerInfo={},newMessageNums={},userMenu={}} = this.props,
+        const {onlyLogo,developerInfo={},newMessageNums={}} = this.props,
             {email,account}= developerInfo,
-            {childmenus=[]} = userMenu,
-        {totalUnRead} = newMessageNums;
+            {childmenus} = userNavRoutes[0],
+            {totalUnRead} = newMessageNums;
+        
         return (
             <header className="mainpage-header">
                 <span className="logo">{LOGO_TEXT}</span>

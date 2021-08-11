@@ -6,10 +6,7 @@ const defaultState = fromJS({
     developerInfo : {
 
     },
-    menulist:{
-      navMenu:[],
-      userMenu:[]
-    },
+    menulist:[],
     instanceList:[],
 });
 

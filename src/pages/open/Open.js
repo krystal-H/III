@@ -66,21 +66,21 @@ export default class Open extends Component {
             登录时候 getMenuList 过，但是登入后若页面刷则需要重新请求menulist，
             如果页面没刷新一直有muenList，则不用再请求
         */
-        if (this.props.menulist.navMenu.length == 0) {
+        if (this.props.menulist.length == 0) {
             this.props.getMenuList();
         }
     }
     render() {
-        const { match, developerInfo, newMessageNums, menulist: { navMenu, userMenu } } = this.props;
+        const { match, developerInfo, newMessageNums, menulist} = this.props;
         const { collapsed } = this.state, { path } = match;
         return (
             <OutsideWrapper>
                 <section className="page-header-wrapper">
-                    <Header developerInfo={developerInfo} newMessageNums={newMessageNums} userMenu={userMenu} ></Header>
+                    <Header developerInfo={developerInfo} newMessageNums={newMessageNums} ></Header>
                 </section>
                 <div className="page-content-wrapper">
                     <div className={`left-menus${collapsed ? ' collap' : ''}`}>
-                        <NavMenu menulist={navMenu} collapsed={collapsed} ></NavMenu>
+                        <NavMenu menulist={menulist} collapsed={collapsed} ></NavMenu>
                         <div className='trigger-coll' onClick={this.setCollapsed}>
                             <span className='icon'>{
                                 collapsed && <MenuUnfoldOutlined /> || <MenuFoldOutlined />
@@ -110,7 +110,7 @@ export default class Open extends Component {
                                 } */}
 
                                 {
-                                    navMenu.map(({
+                                    menulist.map(({
                                         menuname, path, ...rest
                                     }, index) => {
                                         const RouteComponent = RouteComponentLi[menuname];

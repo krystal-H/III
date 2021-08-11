@@ -16,7 +16,9 @@ const UserCenter = loadable(() => import('../pages/user-center/UserCenter'))
 const DataAnalysis = loadable(() => import('../pages/data-analysis/DataAnalysisi'))
 
 /* 左侧菜单、用户中心 导航全权限路由
-    menuid 仅用于前端遍历key  和 判断选中的高亮菜单匹配地址栏的路由
+    * menuid 仅用于前端遍历key  和 判断选中的高亮菜单匹配地址栏的路由
+    * 开发Studio 暂时不开放
+    * 用户中心 由前端控制 不从接口获取
 
 */
 export const navRoutes = [
@@ -140,7 +142,11 @@ export const navRoutes = [
                 menuid:'5-1',
             }
         ]
-    },{
+    }
+]
+
+export const userNavRoutes = [
+    {
         menuname:'用户中心',
         path: '/userCenter',
         menuicon: 'yonghuzx',
@@ -173,8 +179,9 @@ export const navRoutes = [
                 menuid:'操作日志',
             },
         ]
-    },
+    }
 ]
+
 /* 平台主结构路由*/
 export const mainRoutes = [
     {
@@ -301,53 +308,6 @@ export const menuList = [
         ],
         items: [],
     },
-    // {
-    //     menuname: '开发Studio',
-    //     childmenus: [
-    //         {
-    //             menuname: '项目管理',
-    //             childmenus: [],
-    //             items: [],
-    //         },
-    //         {
-    //             menuname: '服务开发',
-    //             childmenus: [],
-    //             items: [],
-    //         }
-    //     ],
-    //     items: [],
-    // },
-    {
-        menuname:'用户中心',
-        childmenus:[
-            {
-                menuname:'基本资料',
-                childmenus:[],
-                items:[],
-            },
-            {
-                menuname:'安全设置',
-                childmenus:[],
-                items:[],
-            },
-            {
-                menuname:'访问用户',
-                childmenus:[],
-                items:[],
-            },
-            {
-                menuname:'用户角色',
-                childmenus:[],
-                items:[],
-            },
-            {
-                menuname:'操作日志',
-                childmenus:[],
-                items:[],
-            },
-        ],
-        items:[],
-    },
 ]
 
 
@@ -381,7 +341,7 @@ export function RouteWithSubRoutes(route) {
     return <Redirect to={redirect}></Redirect>
 }
 
-/* 获得有权限的菜单路由 和 相关页面内的tab元素权限 *  用户中心菜单改为前端控制，不在权限配置内  **/
+/* 获得有权限的菜单路由 和 相关页面内的tab元素权限 *  用户中心菜单改为前端控制，不在此处权限配置内  **/
 export function getNavRoutes(menu) {
     let _navRoutes = navRoutes;
     function authorityMenu(menus) {
@@ -402,10 +362,6 @@ export function getNavRoutes(menu) {
         return result
     }
     const _routes = authorityMenu(menu);
-    const userMenu = find(navRoutes,({menuname})=>menuname==='用户中心');
-    return {
-        navMenu:_routes,//左侧菜单
-        userMenu        //用户中心菜单
-    }
+    return _routes
 }
 
