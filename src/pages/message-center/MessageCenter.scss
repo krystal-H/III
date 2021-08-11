@@ -11,7 +11,12 @@
 .table-wrapper{
     padding-top: 0;
 }
-
+.message-main{
+    .main-page-title{
+        margin: 0;
+        margin-bottom: 16px
+    }
+}
 .message-detail-wrapper{
     padding: $gap;
     position: relative;
