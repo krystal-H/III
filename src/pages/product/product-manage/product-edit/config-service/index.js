@@ -7,7 +7,7 @@ import JoinGateway from './joinGateway';
 import ConfigFirmwareDetail from './configFirmwareDetail';
 import { Link } from 'react-router-dom';
 
-import './config-service.scss';
+import './index.scss';
 
 const requiredList = [
   {
