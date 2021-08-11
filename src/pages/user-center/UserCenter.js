@@ -56,9 +56,9 @@ export default class UserCenter extends Component {
         }
     }
     render() {
-        let {developerInfo,newMessageNums,match,getDeveloperInfo,menulist:{userMenu=[]}} = this.props,
+        let {developerInfo,newMessageNums,match,getDeveloperInfo,menulist:{userMenu={}}} = this.props,
             {path} = match,
-            {childmenus=[]} = userMenu[0] || {},
+            {childmenus=[]} = userMenu,
             isNotSub = !(developerInfo.isSubUser === 1);//非子账号
         // console.log(55555,this.props.menulist)
         return (
@@ -68,7 +68,7 @@ export default class UserCenter extends Component {
                 </div>
                 <div className="page-content-wrapper">
                     <div className={'left-menus'}>
-                        <NavMenu menulist={userMenu} ></NavMenu>
+                        <NavMenu menulist={[userMenu]} ></NavMenu>
                     </div>
                     <section className="right-wrapper">
                         <div className="right-wrapper-contentbox">
