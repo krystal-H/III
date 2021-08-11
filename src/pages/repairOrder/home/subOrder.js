@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useImperativeHandle,forwardRef,useEffect } from 'react'
 import { Tabs, Form, Input, Button, Cascader } from 'antd';
 import { UploadFileHooks } from '../../../components/upload-file';
+import { post, Paths, get } from '../../../api';
 const { TextArea } = Input;
 const options = [
     {
@@ -36,18 +37,33 @@ const options = [
         ],
     },
 ];
-export default function DeviceShadow() {
+export default function DeviceShadow(props,ref) {
     const [form] = Form.useForm();
+    useEffect(()=>{
+        getType()
+    },[])
+    const getType = (loading = true) => {
+        // Paths.getDeviceInfo
+        post('http://10.6.50.121:33331/workOrder/getWorkOrderDictionary', { }, { loading }).then((res) => {
+        });
+    }
     const $el = useRef(null)
     function onChange(value) {
         console.log(value);
     }
-    // useEffect(() => {
-    //     let fathDom = document.getElementById('order-home-sub')
-    //     let childDOm = fathDom.getElementsByClassName("ant-upload-text")[0]
-    //     childDOm.text=''
-    //     console.log(fathDom, childDOm)
-    // }, [])
+    const subOrder=()=>{
+        form.validateFields().then(value => {
+            // 验证通过后进入
+            // const { name, age } = value;
+            console.log(value,'==='); // dee 18
+        }).catch(err => {
+            // 验证不通过时进入
+            console.log(err);
+        });
+    }
+    useImperativeHandle(ref, () => ({
+        subOrder
+    }));
     return (<div id='order-home-sub'>
         <Form
             name="basic"
@@ -62,21 +78,15 @@ export default function DeviceShadow() {
             </Form.Item>
             <Form.Item
                 label="问题描述"
-                name="usernam1e"
+                name="problemDesc"
                 rules={[{ required: true }]}
             >
                 <TextArea rows={4} style={{ width: '612px' }} />
             </Form.Item>
             <Form.Item
                 label="上传问题图片/视频"
-                name="usernam1e"
+                name="image"
             >
-                {/* <UploadFileHooks
-                    ref={$el}
-                    maxCount={1}
-                    preferSize={'750*1334'}
-                    format='.gif,.jpeg,.jpg,.png'
-                    maxSize={0.5} /> */}
                 <UploadFileHooks
                     ref={$el}
                     maxCount={10}
@@ -94,3 +104,4 @@ export default function DeviceShadow() {
         </Form>
     </div>)
 }
+DeviceShadow = forwardRef(DeviceShadow)
