@@ -158,7 +158,7 @@ export default class Application extends PureComponent {
             return
         }
 
-        window.location.hash = '/open/base/application/add';
+        window.location.hash = '/open/app/add';
     }
 
     render() {
@@ -173,7 +173,7 @@ export default class Application extends PureComponent {
         );
         return (
             <section className="application-wrapper flex-column">
-                <PageTitle noback={true} title="应用管理" />
+                <PageTitle title="应用管理" />
                 <div className="application-content-wrapper flex-column flex1">
                     {/* 搜索 */}
                     <div className="application-search">
