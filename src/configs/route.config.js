@@ -98,13 +98,6 @@ export const navRoutes = [
         path: '/open/app',
         menuicon: 'app',
         menuid:'3',
-        // childmenus: [
-        //     {
-        //         menuname: 'APP开发',
-        //         path: '/open/app',
-        //         menuid:'3-0',
-        //     }
-        // ]
     }, {
         menuname: '数据服务',
         path: '/open/serve',
@@ -180,11 +173,6 @@ export const navRoutes = [
                 menuid:'操作日志',
             },
         ]
-    },
-    {
-        menuname:'工单',
-        path: '/open/repairOrder',
-        menuid:'10',
     },
 ]
 /* 平台主结构路由*/
@@ -290,12 +278,6 @@ export const menuList = [
     },
     {
         menuname: 'APP',
-        // childmenus: [
-        //     {
-        //         menuname: 'APP开发',
-        //         childmenus: [],
-        //     },
-        // ],
         items: ['基本信息', '关联产品', '版本发布'],
     },
     {
@@ -335,37 +317,37 @@ export const menuList = [
     //     ],
     //     items: [],
     // },
-    // {
-    //     menuname:'用户中心',
-    //     childmenus:[
-    //         {
-    //             menuname:'基本资料',
-    //             childmenus:[],
-    //             items:[],
-    //         },
-    //         {
-    //             menuname:'安全设置',
-    //             childmenus:[],
-    //             items:[],
-    //         },
-    //         {
-    //             menuname:'访问用户',
-    //             childmenus:[],
-    //             items:[],
-    //         },
-    //         {
-    //             menuname:'用户角色',
-    //             childmenus:[],
-    //             items:[],
-    //         },
-    //         {
-    //             menuname:'操作日志',
-    //             childmenus:[],
-    //             items:[],
-    //         },
-    //     ],
-    //     items:[],
-    // },
+    {
+        menuname:'用户中心',
+        childmenus:[
+            {
+                menuname:'基本资料',
+                childmenus:[],
+                items:[],
+            },
+            {
+                menuname:'安全设置',
+                childmenus:[],
+                items:[],
+            },
+            {
+                menuname:'访问用户',
+                childmenus:[],
+                items:[],
+            },
+            {
+                menuname:'用户角色',
+                childmenus:[],
+                items:[],
+            },
+            {
+                menuname:'操作日志',
+                childmenus:[],
+                items:[],
+            },
+        ],
+        items:[],
+    },
 ]
 
 
@@ -399,9 +381,8 @@ export function RouteWithSubRoutes(route) {
     return <Redirect to={redirect}></Redirect>
 }
 
-/* 获得有权限的菜单路由 和 相关页面内的tab元素权限*/
+/* 获得有权限的菜单路由 和 相关页面内的tab元素权限 *  用户中心菜单改为前端控制，不在权限配置内  **/
 export function getNavRoutes(menu) {
-    console.log(222,JSON.stringify(menuList))
     let _navRoutes = navRoutes;
     function authorityMenu(menus) {
         let result = menus.map(({
@@ -420,8 +401,8 @@ export function getNavRoutes(menu) {
         _navRoutes = navRoutes;
         return result
     }
-    let _routes = authorityMenu(menu);
-    const userMenu = remove(_routes,({menuname})=>menuname==='用户中心')
+    const _routes = authorityMenu(menu);
+    const userMenu = find(navRoutes,({menuname})=>menuname==='用户中心');
     return {
         navMenu:_routes,//左侧菜单
         userMenu        //用户中心菜单

@@ -20,10 +20,10 @@ export default class Header extends PureComponent  {
         })
     }
     render () {
-        const {onlyLogo,developerInfo={},newMessageNums={},menulist=[]} = this.props,
-            usermenu = menulist[0] || {},
+        console.log(444,this.props.menulist)
+        const {onlyLogo,developerInfo={},newMessageNums={},userMenu={}} = this.props,
             {email,account}= developerInfo,
-            {childmenus=[]} = usermenu,
+            {childmenus=[]} = userMenu,
         {totalUnRead} = newMessageNums;
         return (
             <header className="mainpage-header">

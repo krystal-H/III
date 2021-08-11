@@ -24,7 +24,7 @@ class WrappedLoginForm extends Component {
           // 对密码进行加密
           _values.password = encryption(_values.password)
           post(Paths.loginCheck,_values,{
-            loading:true,needJson: true
+            loading:true,
           }).then(data => {
 			  this.props.getMenuList();
 			  window.location = window.location.origin + window.location.pathname + '#/open/home';

@@ -21,18 +21,15 @@ let Paths = {
     registerConfirm : '/common/authConfirm',
     resendRegisterEmail : '/common/resendEmail',
     subResetPassword:'/common/sub/resetPwd',
-    // forgetPasswordAuth : '/common/forgetPwd',
-    // resendForgetPasswordEmail : '/common/resendEmail',
     resetAuth: '/common/forgetPwd',
-    // authConfirm : '/common/authConfirm',
     resetEmail : '/common/resetEmail',
-    // resetEmailConfirm : '/common/authConfirm',
     setPassword : '/common/setPassWord',
     getDeveloperInfo : '/common/getUserInfo',
     upDeveloperInfo : '/common/updateUserInfo',
     getRightsOneself : '/common/getSubInfo',
     cancelAccount : '/common/cancelAccount',
     withdraw : '/common/withdraw',
+    getGroupMenuList: '/common/getMenus',//获取账号权限菜单
 
     /* 产品信息 */
     getProductList: '/product/listAllProductAndAccreditInfo',
@@ -240,7 +237,7 @@ let Paths = {
      */
     getRolePage: '/role/getRolePage',//获取角色分页列表
     deleteRole: '/role/deleteRole',//获取角色分页列表
-    getGroupMenuList: '/rolePlus/getGroupMenuList',//获取账号权限列表
+    
     saveRole: '/rolePlus/saveRole',//获取账号权限列表
 
 

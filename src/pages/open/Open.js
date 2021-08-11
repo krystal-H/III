@@ -25,7 +25,7 @@ const RouteComponentLi = {
     '设备': Device,
     'APP': Application,
     '数据服务': DataSevice,
-    '开发Studio': Product,
+    // '开发Studio': , 暂时取消 开发Studio 20210810
 }
 const RepairOrder = [{
     name: '工单主页',
@@ -76,7 +76,7 @@ export default class Open extends Component {
         return (
             <OutsideWrapper>
                 <section className="page-header-wrapper">
-                    <Header developerInfo={developerInfo} newMessageNums={newMessageNums} menulist={userMenu} ></Header>
+                    <Header developerInfo={developerInfo} newMessageNums={newMessageNums} userMenu={userMenu} ></Header>
                 </section>
                 <div className="page-content-wrapper">
                     <div className={`left-menus${collapsed ? ' collap' : ''}`}>
