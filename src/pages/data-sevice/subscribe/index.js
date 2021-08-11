@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Select, Steps, Button, Input, Space, Table } from 'antd';
 import PageTitle from '../../../components/page-title/PageTitle';
 import stepImg from '../../../assets/images/product-regist.png';
+import AddSubScribe from './addModal'
 import './index.scss'
 const { Option } = Select;
 const { Step } = Steps;
@@ -49,7 +50,7 @@ export default function DeviceRegist() {
     }
     //搜索
     const onSearch = value => console.log(value);
-    //注册
+    //新增订阅
     const [modelVis, setModelVis] = useState(false)
     const openRegist = () => {
         setModelVis(true)
@@ -94,9 +95,9 @@ export default function DeviceRegist() {
                 </div>
                 <Table dataSource={dataSource} columns={columns} />
             </div>
-            {/* {
-                modelVis && <RegistModel isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl}></RegistModel>
-            } */}
+            {
+                modelVis && <AddSubScribe isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl}></AddSubScribe>
+            }
         </div>
     )
 }
