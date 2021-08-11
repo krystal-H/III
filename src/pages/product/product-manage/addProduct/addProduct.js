@@ -41,7 +41,7 @@ export default class MakeProductModal extends Component {
       secondCategoryList: [], // 二级品类
       needShowThirdList: [],
 
-      thirdCategoryId: '' // 第一步选择的三级品类id
+      thirdCategoryId: '', // 第一步选择的三级品类id
     }
     this.refSetupProduct = null
   }
@@ -77,7 +77,7 @@ export default class MakeProductModal extends Component {
 
   // 根据三级id查二级品类
   getSecondById = (id) => {
-    get(`${Paths.getSecondById}/${id}`, {}).then(res => {
+    post(Paths.getSecondById, { deviceTypeId: id }).then(res => {
       if (res.code === 0) {
         const secondList = cloneDeep(this.state.secondCategoryList)
         const _index = secondList.findIndex(item => item.subCategoryId === res.data.subCategoryId)
@@ -129,12 +129,13 @@ export default class MakeProductModal extends Component {
           this.setState({
             thirdCategoryId: item.deviceTypeId
           }, () => {
-            console.log('传给确定方案品类deviceTypeId', this.state.thirdCategoryId)
             this.setState({ stepcurrent: ++index });
           })
         }
       })
-    } else if (index === 2) { // 建立产品信息
+    } else if (index === 1) { // 确定方案
+      
+    }else if (index === 2) { // 建立产品信息
       this.refSetupProduct.formRef.current.submit()
     } else {
       this.setState({ stepcurrent: ++index });

@@ -23,19 +23,18 @@ class SwitchFreeDep extends Component {
     this.getScheme()
   }
 
-  // thirdCategoryId
-  componentWillReceiveProps(props) {
-    console.log(props, '确定方案接受的子组件')
-  }
+  // componentDidUpdate(oldprops) {
+  //   console.log(oldprops, '55555')
+  // }
 
   // 获取方案数据
   getScheme() {
-    get(`${Paths.getScheme}/${this.state.thirdCategoryId}`, {}).then(res => {
+    post(Paths.getScheme, { deviceTypeId: this.state.thirdCategoryId }).then(res => {
       for (let key in res.data) {
         this.setState({ [`btnList${key}`]: res.data[key] })
         // switch (key) {
         //   case '1':
-        //     this.setState({ [`btnList${key}`]: res.data[key] })
+        //     this.setState({ btnList1: res.data[key] })
         //     break;
         //   case '2':
         //     this.setState({ btnList2: res.data[key] })

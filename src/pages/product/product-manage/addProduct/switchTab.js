@@ -36,31 +36,31 @@ class SwitchTab extends Component {
 
   componentDidMount() {
     this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
-  }
 
-  //props发生变化时触发
-  componentWillReceiveProps(props) {
     this.setState({
-      currentSchemList: props.btnList,
-      currentPhysicalModelId: props.btnList[0].physicalModelId
+      currentSchemList: this.props.btnList,
+      currentPhysicalModelId: this.props.btnList[0].physicalModelId
     }, () => {
       this.getPlanMsg(0)
-      this.getPhysicalModelId(this.state.currentPhysicalModelId)
     })
   }
 
   // 切换tab
   handleChange(activeKey) {
+    console.log(activeKey, this.props.btnList, '切换tab')
     this.setState({ planActiveKey: activeKey })
     // 获取物模型id，获取功能点数据
-    this.getPhysicalModelId(this.props.btnList[activeKey].physicalModelId)
+    if (activeKey == 1) {
+      this.getPhysicalModelId(this.state.currentPhysicalModelId)
+    }
   }
 
   // 切换方案下的按钮
   changeBtn(index, type, item, e) {
     this.setState({
       btnIndex: index,
-      planActiveKey: '0'
+      planActiveKey: '0',
+      currentPhysicalModelId: item.physicalModelId
     }, () => {
       this.getPlanMsg(index)
     })
@@ -68,15 +68,12 @@ class SwitchTab extends Component {
 
   // 获取功能点
   getPhysicalModelId(physicalModelId) {
-    get(`${Paths.getPhysicalModelId}/${physicalModelId}`, {}).then(res => {
-      console.log(res, '******')
-      if (res.code === 0) {
-        this.setState({
-          dataSource: res.data.standard
-        })
-      } else {
-        this.setState({ dataSource: [] })
-      }
+    post(Paths.getPhysicalModelId, { id: physicalModelId }).then(res => {
+      this.setState({ dataSource: res.data })
+    }, () => {
+      this.setState({
+        dataSource: []
+      })
     })
   }
 
@@ -132,7 +129,7 @@ class SwitchTab extends Component {
             </TabPane>
             <TabPane tab="方案功能点" key="1">
               <div className="pad20">
-                <Table columns={this.columns} dataSource={dataSource} pagination={false} size="small" />
+                <Table columns={this.columns} dataSource={dataSource} rowKey="identifier" pagination={false} size="small" />
               </div>
             </TabPane>
             <TabPane tab="方案控制面板" key="2">
