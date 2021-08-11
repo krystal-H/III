@@ -16,7 +16,7 @@ import PageTitle from '../../../../components/page-title/PageTitle';
 import Hardware from './firmware/hardware';
 import ConfirmPanel from './firmpanel';
 import Validation from './validation'
-import ConfigService from './config-service/config-service';
+import ConfigService from './config-service';
 import TitleSet from './titleSet'
 
 

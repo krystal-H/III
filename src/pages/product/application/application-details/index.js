@@ -466,11 +466,11 @@ class ApplicationDetail extends PureComponent {
             render: (text, record) => {
                 return (
                     <div>
-                        <a href="javascript:"
+                        <a href="#"
                             onClick={() => this.getAppVersionDetail(record.appVersionId)}
                         >编辑</a>
                         <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                        <a href="javascript:"
+                        <a href="#"
                             onClick={() => this.showDialog('showDeleteDialog', 'curAppVersionId', record.appVersionId, 'versionTargetName', record.appName)}
                         >删除</a>
                     </div>
@@ -508,7 +508,7 @@ class ApplicationDetail extends PureComponent {
         return (
             <section className="application-detail-wrapper flex-column">
                 <header className="application-detail-header">
-                    <PageTitle btnTxt='编辑' backTitle='应用详情'>
+                    <PageTitle backTitle='应用详情'>
                         <DetailInHeader className="clearfix">
                             <span className="fl app-name">应用名称：{appName.value}</span>
                             <span className="fl app-id">APPID：{appId.value}</span>

@@ -73,7 +73,7 @@ export default function DeviceRegist() {
             <div className='comm-shadowbox setp-ttip'>
                 <div className='step-title'>
                     <img src={stepImg} />
-                    <span>注册设备步骤</span>
+                    <span>数据订阅步骤</span>
                 </div>
                 <Steps current={-1} initial={0}>
                     <Step title="选择产品" description="可根据产品订阅以及设备性能标签，选择需要的数据对象。" />

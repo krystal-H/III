@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Descriptions, Divider } from 'antd';
+import { Descriptions, Divider, Icon } from 'antd';
 import { post, Paths, get } from '../../../../api';
+import { strToAsterisk, DateTool } from '../../../../util/util';
+import {
+    EyeInvisibleTwoTone,
+    EyeTwoTone,
+} from '@ant-design/icons';
 import './index.scss'
 export default function DeviceInfo({ devceId }) {
     const [data, setData] = useState({})
@@ -21,10 +26,24 @@ export default function DeviceInfo({ devceId }) {
         }
         return result
     }
+    const [showSecret, setShowSecret] = useState(false)
+    const changeState = () => {
+        setShowSecret(!showSecret)
+    }
+    const showText = (value) => {
+        value = showSecret ? value : strToAsterisk(value, 10)
+        return value
+    }
     return (<div id='device-info'>
         <Descriptions title="设备信息">
             <Descriptions.Item label="设备ID">{data.deviceUniqueId}</Descriptions.Item>
-            <Descriptions.Item label="设备秘钥">{data.deviceSecret}</Descriptions.Item>
+            <Descriptions.Item label="设备秘钥">{showText(data.deviceSecret)}
+                <span onClick={changeState}>
+                    {
+                        showSecret ? <EyeInvisibleTwoTone /> : <EyeTwoTone />
+                    }
+                </span>
+            </Descriptions.Item>
             <Descriptions.Item label="物理地址">{data.deviceMac}</Descriptions.Item>
 
             <Descriptions.Item label="入网时间">{data.connectTime}</Descriptions.Item>
@@ -47,7 +66,13 @@ export default function DeviceInfo({ devceId }) {
 
             <Descriptions.Item label="产品类型">{fliterFn(data.productClass)}</Descriptions.Item>
             <Descriptions.Item label="产品编码">{data.productCode}</Descriptions.Item>
-            <Descriptions.Item label="产品密钥">{data.productKey}</Descriptions.Item>
+            <Descriptions.Item label="产品密钥">{showText(data.productKey)}
+                <span onClick={changeState}>
+                    {
+                        showSecret ? <EyeInvisibleTwoTone /> : <EyeTwoTone />
+                    }
+                </span>
+            </Descriptions.Item>
 
         </Descriptions>
     </div>)
