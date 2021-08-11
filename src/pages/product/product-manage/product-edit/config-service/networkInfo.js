@@ -94,12 +94,14 @@ export default function NetworkInfo({ networkModalVisible, cancelHandle }) {
             label="图片轮播帮助信息"
             name="default3"
             className="upload-img"
-            rules={[{ required: true, message: 'Please input your username!' }]}>
+            labelCol={{ span: 4 }}
+            wrapperCol={{ span: 20 }}
+            rules={[{ required: true, message: '请上传轮播图片' }]}>
             {
               <UploadFileHooks
                 ref={$imgel3}
                 maxCount={5}
-                preferSize={'90*90'}
+                preferSize={'150*267'}
                 format='.gif,.jpeg,.jpg,.png'
                 maxSize={0.5} />
             }

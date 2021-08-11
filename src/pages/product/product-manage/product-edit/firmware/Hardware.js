@@ -136,7 +136,9 @@ export default class Hardware extends Component {
                         </div>
                         <div className="module-cont">
                             <div className="flex-s">
-                                <div className="module-cont-left">图片</div>
+                                <div className="module-cont-left">
+                                    <img src={require('../../../../../assets/images/commonDefault/hardware.png')} alt="" />
+                                </div>
                                 <div className="module-cont-right">
                                     <div className="module-title">WR3L Wi-Fi模组</div>
                                     <div className="flex">

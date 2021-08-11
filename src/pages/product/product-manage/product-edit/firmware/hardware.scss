@@ -52,6 +52,9 @@
                 border-radius: 4px;
                 border: 1px solid $_9E9;
                 @include wh(127px, 127px);
+                img{
+                    @include wh(100%, 100%);
+                }
             }
             &-right {
                 height: 127px;
