@@ -17,7 +17,6 @@ class NavMenu extends PureComponent {
         } )
     }
     getNavList = menus=>{
-    
         return menus.map(({
             menuicon,menuname,path,childmenus=[],menuid
             },index)=>{

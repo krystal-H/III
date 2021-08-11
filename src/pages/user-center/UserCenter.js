@@ -9,13 +9,13 @@ import UserVisit from './user-visit/index';
 import OperateLog from './operate-log/OperateLog';
 import SecuritySetting from './security-setting/SecuritySetting';
 
-import OutsideWrapper from '../../components/outside-wrapper/OutsideWrapper'
+import OutsideWrapper from '../../components/outside-wrapper/OutsideWrapper';
 import Header from '../../pages/open/header/Header'
 import NavMenu from '../../pages/open/nav-menu/NavMenu';
 
-import {getNewMessageNums} from '../message-center/store/ActionCreator'
-import {getDeveloperInfo,getMenuList} from './store/ActionCreator';
-
+import {getNewMessageNums} from '../message-center/store/ActionCreator';
+import {getDeveloperInfo} from './store/ActionCreator';
+import {userNavRoutes} from '../../configs/route.config';
 import './UserCenter.scss'
 
 
@@ -30,7 +30,6 @@ const mapStateToProps = state => {
     return {
         developerInfo: state.getIn(['userCenter', 'developerInfo']).toJS(),
         newMessageNums: state.getIn(['message', 'newMessageNums']).toJS(),
-        menulist: state.getIn(['userCenter', 'menulist']).toJS(),
     }
 }
 
@@ -38,15 +37,14 @@ const mapDispatchToProps = dispatch => {
     return {
         getNewMessageNums: () => dispatch(getNewMessageNums()),
         getDeveloperInfo: () => dispatch(getDeveloperInfo()),
-        getMenuList: () => dispatch(getMenuList()),
     }
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class UserCenter extends Component {
     componentDidMount () {
-        let {newMessageNums,getNewMessageNums,getDeveloperInfo,developerInfo,getMenuList} = this.props;
-        getMenuList();
+        let {newMessageNums,getNewMessageNums,getDeveloperInfo,developerInfo} = this.props;
+        
         if (isEmpty(newMessageNums)) {
             getNewMessageNums()
         }
@@ -56,19 +54,17 @@ export default class UserCenter extends Component {
         }
     }
     render() {
-        let {developerInfo,newMessageNums,match,getDeveloperInfo,menulist:{userMenu={}}} = this.props,
-            {path} = match,
-            {childmenus=[]} = userMenu,
+        let {developerInfo,newMessageNums,getDeveloperInfo} = this.props;
+        let {childmenus} = userNavRoutes[0],
             isNotSub = !(developerInfo.isSubUser === 1);//非子账号
-        // console.log(55555,this.props.menulist)
         return (
             <OutsideWrapper>
                 <div className="page-header-wrapper">
-                    <Header newMessageNums={newMessageNums} developerInfo={developerInfo} ></Header>
+                    <Header developerInfo={developerInfo} newMessageNums={newMessageNums}></Header>
                 </div>
                 <div className="page-content-wrapper">
                     <div className={'left-menus'}>
-                        <NavMenu menulist={[userMenu]} ></NavMenu>
+                        <NavMenu menulist={userNavRoutes} ></NavMenu>
                     </div>
                     <section className="right-wrapper">
                         <div className="right-wrapper-contentbox">
