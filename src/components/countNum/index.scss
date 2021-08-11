@@ -10,7 +10,9 @@
       width: 170px;
       height: 56px;
       flex: 1;
-
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       &:first-child {
         margin-left: 22px;
       }

@@ -118,19 +118,18 @@ export default class MakeProductModal extends Component {
   // 下一步
   clickNext = (index, e) => {
     if (index === 0) { // 选择品类
-      console.log(this.state.currentIndex2, '选择品类的索引')
-      if (!this.state.currentIndex2 && this.state.currentIndex2 != 0) {
+      // console.log(this.state.currentIndex2, '选择品类的索引')
+      if (!this.state.currentIndex2 && this.state.currentIndex2 !== 0) {
         return Notification({ description: '请选择对应品类！', type: 'warn' })
       }
-      const third = cloneDeep(this.state.thirdCategoryList)
-      console.log(third, 'third-----')
-      third.forEach((item, i) => {
-        console.log(i, i == this.state.currentIndex2)
-        if (i == this.state.currentIndex2) {
-          console.log('****')
+      const need = cloneDeep(this.state.needShowThirdList)
+      need.forEach((item, i) => {
+        if (i === this.state.currentIndex2) {
+          console.log('选择的品类deviceTypeId', item.deviceTypeId)
           this.setState({
             thirdCategoryId: item.deviceTypeId
           }, () => {
+            console.log('传给确定方案品类deviceTypeId', this.state.thirdCategoryId)
             this.setState({ stepcurrent: ++index });
           })
         }

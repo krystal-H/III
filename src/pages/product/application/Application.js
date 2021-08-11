@@ -7,7 +7,6 @@ import ApplicationDetails from './application-details/index';
 
 export default function Application({ match }) {
     let { path } = match;
-
     return (
         <Switch>
             <Route path={`${path}/list`} component={ApplicationList} />

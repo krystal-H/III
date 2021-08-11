@@ -145,7 +145,7 @@ export default function DeviceList() {
     ];
     //导出
     const exportFile=()=>{
-        // window.location.href = Paths.exportDeviceList;
+        // window.open (Paths.exportDeviceList) ;
         // return
         post(Paths.exportDeviceList, {}).then((res) => {
             

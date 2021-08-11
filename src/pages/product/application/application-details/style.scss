@@ -1,18 +1,16 @@
-@import './../../../../assets/css/variables.scss';
+@charset 'utf-8';
 
 .application-detail-wrapper {
     height: 100%;
     min-height: 520px;
-    font-family: PingFangSC-Medium, PingFang SC sans-serif;
-    font-weight: 400;
-    color: rgba(0, 0, 0, 0.85);
-    font-size: 14px;
+    @include text(14px, $fontColor);
+    .eye-icon {
+        margin-left: 8px;
+        @include text(16px, #2F78FF);
+    }
     .application-detail-header {
         .app-name, .app-id, .app-secret {
             margin-right: 150px;
-        }
-        .icon-display {
-            margin-left: 10px;
         }
     }
     .antd-content {
@@ -36,8 +34,6 @@
             overflow: inherit;
             .application-detail-content {
                 position: relative;
-                //height: 100%;
-                margin: 0 $gap $gap $gap;
                 background-color: $sectionBgColor;
                 .edit-app {
                     position: absolute;
@@ -69,9 +65,6 @@
                             margin-left: 10px;
                             font-size: 12px;
                             color: rgba(0, 0, 0, 0.4);;
-                        }
-                        .icon-display {
-                            margin: 0 10px;
                         }
                     }
                 }
@@ -163,11 +156,13 @@
     }
 }
 
+// 添加产品关联
 .add-product-relation-modal {
     font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC sans-serif;
-    font-weight: 400;
-
+    .no-data-box {
+        padding: 60px;
+        margin: auto;
+    }
     .ant-modal-content {
         height: 100%;
         display: flex;

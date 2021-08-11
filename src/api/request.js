@@ -17,7 +17,10 @@ const instance = axios.create({
   headers: {
     "Content-Type": "application/x-www-form-urlencoded",
     "X-Requested-With": "XMLHttpRequest", // 此字段是为了未登录时能拿到特定code值而添加的
+<<<<<<< HEAD
     // 'dev-name':'dengyue'
+=======
+>>>>>>> 2d49f46f459a3fa4f00f1af2507c6fbca2ae124a
   },
   transformRequest: function (data, headers) {
     if (

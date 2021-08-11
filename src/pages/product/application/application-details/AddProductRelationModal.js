@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Input, Button, Modal, Checkbox } from 'antd';
+import { Input, Button, Modal, Checkbox, Empty } from 'antd';
 import { Notification } from '../../../../components/Notification';
 import { get, Paths, post } from '../../../../api';
-import { cloneDeep} from 'lodash';
+import { cloneDeep } from 'lodash';
 import { REQUEST_SUCCESS } from '../../../../configs/request.config';
 import ProductIcon from '../../../../components/product-components/product-icon/ProductIcon';
 
@@ -18,7 +18,7 @@ export default class AddProductRelationModal extends Component {
             checkedProductIds = list && list.map((item) => {
                 return item.productId;
             });
-    
+
         this.state = {
             checkedValues: checkedProductIds || [],
             searchValue: '',
@@ -32,7 +32,7 @@ export default class AddProductRelationModal extends Component {
     }
 
     getListAllProductAndAccreditInfo = (params) => {
-        let { appId,relationedProductIds,currentAppType } = this.props,
+        let { appId, relationedProductIds, currentAppType } = this.props,
             _relationedProductIds = (relationedProductIds && relationedProductIds[currentAppType === 1 ? 'android' : 'ios']) || [];
 
         get(Paths.getDevProductList, {
@@ -63,17 +63,17 @@ export default class AddProductRelationModal extends Component {
         let { relationProductList, currentAppType } = this.props;
         let list = currentAppType === 1 ? relationProductList.listAndroid : relationProductList.listIos;
         let relationProductIds = list && list.map((item) => {
-                return item.productId;
-            });
+            return item.productId;
+        });
         if (checkedValues.length === 0) {
             // if (relationProductIds.length !== 0) {
             //     checkedValues = relationProductIds;
             // } else {
-                Notification({
-                    description:'请选择需要关联的产品',
-                    type:'warn'
-                });
-                return;
+            Notification({
+                description: '请选择需要关联的产品',
+                type: 'warn'
+            });
+            return;
             // }
         }
         this.props.updateRelaProduct(checkedValues);
@@ -92,7 +92,7 @@ export default class AddProductRelationModal extends Component {
 
     handleSearch = (value) => {
         this.setState(() => {
-            return { searchValue: value,checkedValues:[] };
+            return { searchValue: value, checkedValues: [] };
         }, () => {
             this.getListAllProductAndAccreditInfo({
                 productName: value,
@@ -100,26 +100,26 @@ export default class AddProductRelationModal extends Component {
         });
     };
 
-    clickIconHandle = (e,productId) => {
+    clickIconHandle = (e, productId) => {
         e.stopPropagation()
-    
-        let {checkedValues} = this.state,
-        temp = cloneDeep(checkedValues),
-        _index = temp.indexOf(productId);
+
+        let { checkedValues } = this.state,
+            temp = cloneDeep(checkedValues),
+            _index = temp.indexOf(productId);
         if (_index === -1) {
             temp.push(productId)
         } else {
-            temp.splice(_index,1)
+            temp.splice(_index, 1)
         }
 
         this.setState({
-            checkedValues:temp
+            checkedValues: temp
         })
     }
 
     render() {
-        let { showAddProductRelationDialog} = this.props;
-        let { listAllProductAndAccreditInfo,checkedValues } = this.state;
+        let { showAddProductRelationDialog } = this.props;
+        let { listAllProductAndAccreditInfo, checkedValues } = this.state;
 
         return (
             <Modal
@@ -130,7 +130,7 @@ export default class AddProductRelationModal extends Component {
                 className="add-product-relation-modal"
                 onCancel={() => this.handleCancel('showAddProductRelationDialog')}
                 maskClosable={false}
-                style={{minWidth: 900}}
+                style={{ minWidth: 900 }}
                 footer={[
                     <Button key="submit" type="primary" onClick={this.handleSubmit}>
                         确认
@@ -151,12 +151,12 @@ export default class AddProductRelationModal extends Component {
                             enterButton
                         />
                     </div>
-                    <div className="mescroll-refresh flex1" style={{height:'max-content'}}>
-                        <Checkbox.Group style={{ width: '100%' }} 
-                                        // defaultValue={checkedProductIds}
-                                        value={checkedValues}
-                                        onChange={this.onChange}
-                                        >
+                    <div className="mescroll-refresh flex1" style={{ height: 'max-content' }}>
+                        <Checkbox.Group style={{ width: '100%' }}
+                            // defaultValue={checkedProductIds}
+                            value={checkedValues}
+                            onChange={this.onChange}
+                        >
                             <div id="mescroll" className="mescroll">
                                 <div id="dataList" className="data-list flex-row">
                                     {listAllProductAndAccreditInfo.list.length > 0 && listAllProductAndAccreditInfo.list.map((item, index) => {
@@ -164,9 +164,9 @@ export default class AddProductRelationModal extends Component {
                                         return (
                                             <div key={productId} className="list-item flex-column">
                                                 <i className="product-pic">
-                                                    <div style={{cursor:'pointer'}}
-                                                         onClick={(e) => this.clickIconHandle(e,productId)}>
-                                                                <ProductIcon icon={productIcon} />
+                                                    <div style={{ cursor: 'pointer' }}
+                                                        onClick={(e) => this.clickIconHandle(e, productId)}>
+                                                        <ProductIcon icon={productIcon} />
                                                     </div>
                                                     <div className="check-box">
                                                         <Checkbox
@@ -183,6 +183,12 @@ export default class AddProductRelationModal extends Component {
                                             </div>
                                         )
                                     })}
+                                    {
+                                        listAllProductAndAccreditInfo.list.length === 0 &&
+                                        <div className="no-data-box">
+                                            <Empty />
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </Checkbox.Group>

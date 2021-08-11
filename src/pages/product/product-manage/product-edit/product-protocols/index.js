@@ -10,15 +10,17 @@ import downpng from './../../../../../assets/images/product/download.png';
 import { post, Paths, get } from '../../../../../api';
 //处理数据
 function delaData(data) {
+    console.log(data,6666666666)
     let newData=[]
     data.forEach(item => {
-        funcParamList.forEach(item2 => {
+        item.funcParamList.forEach(item2 => {
             let newItem=JSON.parse(JSON.stringify(item))
             item2.nameSub=item2.name
             delete item2.name
             newData.push({...newItem,...item2})
         })
     })
+    console.log(newData,'========')
     return newData
 }
 function ProtocolFn({ nextStep,productId }, ref) {
@@ -46,8 +48,9 @@ function ProtocolFn({ nextStep,productId }, ref) {
     //获取列表
     const getList = () => {
         let url=Paths.standardFnList+'/11759'
-        get(url, {}).then((res) => {
-            delaData(res.data)
+        get('http://10.6.50.96:33330/product/dev/show/func/11759').then((res) => {
+            // console.log(res,'======')
+            delaData(res.standard)
         });
     }
     useEffect(() => {
