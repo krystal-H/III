@@ -98,7 +98,7 @@ class BaseInfo extends Component {
     render() {
         let {isSubUser,productResource,dataObjRightsList,dataDimensionRightsList} = this.state,
             {developerInfo,getDeveloperInfo} = this.props,
-            {id,email,createTime,userRole,parentAccount,account} = developerInfo;
+            {userId,email,createTime,userRole,parentAccount,account} = developerInfo;
 
         return <div className='page-userbaseinfo'>
                 <PageTitle title="基本资料" />
@@ -137,7 +137,7 @@ class BaseInfo extends Component {
                                 <div className="p-flex">
                                     <span className="flex-item">
                                         <span className="title">开发者ID：</span>
-                                        {id}
+                                        {userId}
                                     </span>
                                     <span className="flex-item">
                                         <span className="title">电子邮箱：</span>

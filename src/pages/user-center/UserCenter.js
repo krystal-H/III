@@ -54,9 +54,12 @@ export default class UserCenter extends Component {
         }
     }
     render() {
-        let {developerInfo,newMessageNums,getDeveloperInfo} = this.props;
-        let {childmenus} = userNavRoutes[0],
-            isNotSub = !(developerInfo.isSubUser === 1);//非子账号
+        const {developerInfo,newMessageNums,getDeveloperInfo} = this.props;
+        const isNotSub = !(developerInfo.isSubUser === 1);//非子账号
+        let childmenus = userNavRoutes[0].childmenus;
+        if(!isNotSub){
+            childmenus = childmenus.slice(0,2) // 子账号只有前两项  基本资料  安全设置  两个菜单
+        }
         return (
             <OutsideWrapper>
                 <div className="page-header-wrapper">
