@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { Tabs, Radio, Table, Drawer, Button, Divider } from 'antd';
 const { TabPane } = Tabs;
+import { post, Paths, get } from '../../../api';
 export default function DeviceShadow() {
     const [visible, setVisible] = useState(false);
     const [tableData, setTableData] = useState([
@@ -50,6 +51,13 @@ export default function DeviceShadow() {
             ),
         },
     ]
+    const getList=(load=true)=>{
+        post(Paths.WorkOrderList, {},{load}).then((res) => {
+        });
+    }
+    useEffect(()=>{
+        getList()
+    },[])
     return (<div id='order-home-self'>
         <Table dataSource={tableData} columns={columns} />
         <Drawer
