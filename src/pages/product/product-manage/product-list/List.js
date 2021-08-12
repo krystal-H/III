@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Input, Select, Button, Table, Pagination } from 'antd';
+import { Input, Select, Button, Table, Pagination,Modal } from 'antd';
 import { cloneDeep } from 'lodash';
 import { connect } from 'react-redux';
 import { productStatusText } from '@src/configs/text-map';
