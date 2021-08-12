@@ -81,7 +81,6 @@ export default Form.create({
                 try {
                     payload = JSON.parse(payload);
                 } catch (err) {
-                    console.log('eeeeee',err);
                     Notification({
                         description:'Payload数据请输入正确的json格式',
                     });

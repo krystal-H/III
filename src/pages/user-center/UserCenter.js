@@ -58,7 +58,7 @@ export default class UserCenter extends Component {
         const isNotSub = !(developerInfo.isSubUser === 1);//非子账号
         let childmenus = userNavRoutes[0].childmenus;
         if(!isNotSub){
-            childmenus = [childmenus[0],childmenus[1]] // 子账号只有前两项  基本资料  安全设置  两个菜单
+            childmenus = childmenus.slice(0,2) // 子账号只有前两项  基本资料  安全设置  两个菜单
         }
         return (
             <OutsideWrapper>
