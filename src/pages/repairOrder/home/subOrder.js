@@ -33,20 +33,34 @@ export default function DeviceShadow(props, ref) {
     function onChange(value) {
         console.log(value);
     }
-    const subOrder = (load=true) => {
+    const subOrder = (load = true) => {
         form.validateFields().then(value => {
             let image = value.image.reduce((all, cur) => {
                 all += cur.url
                 return all
             }, '')
+            
+            let problemTypeOneName, problemTypeTwoName
+            options.forEach(item => {
+                if(item.value == value.problemType[0]){
+                    problemTypeOneName=item.label
+                    item.children.forEach(item2=>{
+                        if(item2.value==value.problemType[1]){
+                            problemTypeTwoName=item2.label
+                        }
+                    })
+                }
+            })
             let data = {
                 phone: value.phone,
                 problemDesc: value.problemDesc,
                 image: image,
-                problemTypeOneLevel:value.problemType[0],
-                problemTypeTwoLevel:value.problemType[1]
+                problemTypeOneLevel: value.problemType[0],
+                problemTypeTwoLevel: value.problemType[1],
+                problemTypeOneName,
+                problemTypeTwoName
             }
-            post(Paths.subWorkOrder, data,{load}).then((res) => {
+            post(Paths.subWorkOrder, data, { load }).then((res) => {
                 form.resetFields();
                 // setOptions(res.data)
             });
@@ -62,7 +76,7 @@ export default function DeviceShadow(props, ref) {
         <Form
             name="basic"
             form={form}
-            initialValues={{image:[]}}
+            initialValues={{ image: [] }}
         >
             <Form.Item
                 label="选择内容分类"
@@ -86,9 +100,8 @@ export default function DeviceShadow(props, ref) {
                     style={{ width: '612px' }}
                     ref={$el}
                     maxCount={10}
-                    format='.jpg,.png,.gif,.dvi'
-                    maxSize={50}
-                    isNotImg={true}
+                    format='.jpg,.png,.gif'
+                    maxSize={5}
                 />
             </Form.Item>
             <Form.Item
