@@ -1,16 +1,10 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Tabs, Radio, Table, Drawer, Button, Divider } from 'antd';
 const { TabPane } = Tabs;
 import { post, Paths, get } from '../../../api';
 export default function DeviceShadow() {
     const [visible, setVisible] = useState(false);
     const [tableData, setTableData] = useState([
-        {
-            key: '2',
-            name: '胡彦祖',
-            age: 42,
-            address: '西湖区湖底公园1号',
-        },
     ])
     const [hasRead, setHasRead] = useState(false)
     const onClose = () => {
@@ -22,8 +16,8 @@ export default function DeviceShadow() {
     const columns = [
         {
             title: '订阅号',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'workOrderId',
+            key: 'workOrderId',
         },
         {
             title: '问题分类',
@@ -32,13 +26,13 @@ export default function DeviceShadow() {
         },
         {
             title: '提交时间',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'createTime',
+            key: 'createTime',
         },
         {
             title: '工单状态',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'status',
+            key: 'status',
         },
         {
             title: '操作',
@@ -51,15 +45,16 @@ export default function DeviceShadow() {
             ),
         },
     ]
-    const getList=(load=true)=>{
-        post(Paths.WorkOrderList, {},{load}).then((res) => {
+    const getList = (load = true) => {
+        post(Paths.WorkOrderList, {}, { load }).then((res) => {
+            setTableData(res.data.list)
         });
     }
-    useEffect(()=>{
+    useEffect(() => {
         getList()
-    },[])
+    }, [])
     return (<div id='order-home-self'>
-        <Table dataSource={tableData} columns={columns} />
+        <Table dataSource={tableData} columns={columns} rowKey='workOrderId'/>
         <Drawer
             title="工单详情"
             placement="right"
