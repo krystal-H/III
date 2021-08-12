@@ -27,13 +27,16 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
+const statusList = ['开发模式', '生产模式', '审核中']
+
 class List extends PureComponent {
   constructor(props) {
     super(props)
     this.defaultListParams = { // 产品列表相关默认请求参数
-      pageIndex: 1,
-      pageRows: 8,
-      productName: ''
+      current: 1,
+      size: 8,
+      productName: '',
+      mode: '', // 产品状态
     }
     this.state = {
       status: 'all', // 状态  后端需增加字段？？？？？？
@@ -49,7 +52,7 @@ class List extends PureComponent {
       copyLoading: false, // 复制loading
       copyInputValue: '', // 复制弹窗中输入的产品名称确认
 
-      isClicked: true // 制作产品按钮
+      isClicked: false // 制作产品按钮
     }
     this.columns = [
       {
@@ -92,35 +95,44 @@ class List extends PureComponent {
     ]
   }
   componentDidMount() {
-    // this.getProductList()
+    this.getProductListNew()
   }
+
+  // 获取产品列表
+  getProductListNew = () => {
+    post(Paths.getProductListNew, { ...this.state.listParams }).then(res => {
+      console.log(res)
+    })
+  }
+
   // 搜索
   searchProduct = (value = '') => {
-    value = value.trim();
-    let listParams = cloneDeep(this.state.listParams);
-    listParams.productName = value;
-    listParams.pageIndex = 1;
+    const listParams = cloneDeep(this.state.listParams);
+    listParams.productName = value.trim()
+    listParams.current = 1
     this.setState({
       listParams
-    }, this.getProductList)
+    }, () => { this.getProductListNew() })
   }
-  // 获取产品列表
-  getProductList() {
-    // this.props.getProductList({...this.state.listParams, status: this.state.status});
-    this.props.getProductList({ ...this.state.listParams });
-  }
+
   // select切换
   handleChange = (value) => {
-    this.setState({ status: value })
+    const listParams = cloneDeep(this.state.listParams)
+    listParams.mode = value
+    this.setState({
+      listParams
+    }, () => { this.getProductListNew() })
   }
+
   //分页页码改变
-  changePage = (pageIndex) => {
-    let newparams = { ...this.state.listParams };
-    newparams.pageIndex = pageIndex;
+  changePage = (current) => {
+    let newparams = { ...this.state.listParams }
+    newparams.current = current
     this.setState({
       listParams: newparams
-    }, this.getProductList)
+    }, () => { this.getProductListNew() })
   }
+
   // 继续开发  ——> detail 
   // 产品状态 mode：（0-开发中，1-已发布，2-审核中）
   clickProductInfo(mode, productId) {
@@ -130,6 +142,7 @@ class List extends PureComponent {
       pathname: `/open/product/proManage/${pathroute}/${productId}`
     });
   }
+
   // 列表 “删除”、“复制” 操作
   operateProduct(item, type) {
     let { mode } = item
@@ -146,6 +159,7 @@ class List extends PureComponent {
       [inputValue]: ''
     })
   }
+  
   // 删除弹窗 “确认” 操作
   deleteModalOKHandle = () => {
     let { selectedItem, deleteInputValue } = this.state
@@ -212,10 +226,12 @@ class List extends PureComponent {
         <div className="page-header comm-shadowbox">
           <div className="page-header-left">
             <Search placeholder="产品名称/ID/型号" maxLength={20} onSearch={value => this.searchProduct(value)} style={{ width: 465, margin: '0 22px' }} />
-            <Select defaultValue="all" style={{ width: 120 }} onChange={this.handleChange}>
-              <Option value="all">全部状态</Option>
-              <Option value="dev">开发中</Option>
-              <Option value="done">开发完成</Option>
+            <Select placeholder="产品状态" style={{ width: 120 }} onChange={this.handleChange}>
+              {
+                statusList.map((item, index) => (
+                  <Option value={index} key={item}>{item}</Option>
+                ))
+              }
             </Select>
           </div>
           <div className="page-header-right">
@@ -236,9 +252,9 @@ class List extends PureComponent {
                 pager && pager.totalRows > 0 ?
                   <Pagination className="self-pa"
                     total={pager.totalRows}
-                    current={listParams.pageIndex}
+                    current={listParams.current}
                     defaultCurrent={1}
-                    defaultPageSize={listParams.pageRows}
+                    defaultPageSize={listParams.size}
                     onChange={this.changePage}
                     showTotal={total => <span>共 <a>{total}</a> 条</span>}
                     showQuickJumper
@@ -293,8 +309,8 @@ class List extends PureComponent {
         }
         {/* 制作产品 */}
         {
-          isClicked && 
-          <AddProductModal 
+          isClicked &&
+          <AddProductModal
             visible={isClicked}
             cancelHandle={this.makeHandle.bind(this, true)}>
           </AddProductModal>
