@@ -2,17 +2,18 @@ import React, { useEffect, useState, useImperativeHandle, forwardRef, useRef } f
 import moment from 'moment';
 import { Form, Input, Button, Space, Select, Radio, Tabs, Drawer } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { post, Paths, get } from '../../../../../api';
 import './editInfo.scss'
 const optionsWithDisabled = [
-    { label: '属性', value: 'one' },
-    { label: '事件', value: 'two' },
-    { label: '服务', value: 'three' },
+    { label: '属性', value: 'properties' },
+    { label: '事件', value: 'events' },
+    { label: '服务', value: 'services' },
 ]
 export default function ProtocoLeft({ rightVisible, onCloseRight }) {
     const { TabPane } = Tabs;
     useEffect(() => {
     }, [])
-    const [currentTab, setCurrentTab] = useState('one')
+    const [currentTab, setCurrentTab] = useState('properties')
     const tabChange = (e) => {
         setCurrentTab(e.target.value)
     }
@@ -32,15 +33,25 @@ export default function ProtocoLeft({ rightVisible, onCloseRight }) {
             <div className='addcus-tab'> <Radio.Group buttonStyle="solid" optionType="button" value={currentTab} onChange={tabChange} options={optionsWithDisabled} /></div>
         )
     }
-    //提交数据
+    //获取提交数据
     const subData = () => {
-        if (currentTab == 'one') {
+        if (currentTab == 'properties') {
             oneRef.current.onFinish()
-        } else if (currentTab == 'two') {
+        } else if (currentTab == 'events') {
             twoRef.current.onFinish()
-        } else if (currentTab == 'three') {
+        } else if (currentTab == 'services') {
             threeRef.current.onFinish()
         }
+    }
+    //提交数据
+    const sentReq = (data) => {
+        console.log('数据', data)
+        data.funcType = currentTab
+        data.type = 'add'
+        data.productId = 11759
+        post(Paths.PhysicalModelAction, data).then((res) => {
+            onCloseRight()
+        });
     }
     return (
         <Drawer
@@ -66,14 +77,14 @@ export default function ProtocoLeft({ rightVisible, onCloseRight }) {
                 </div>
             }
         >
-            <div className='edit-left-protocol-wrap'> <Tabs activeKey={currentTab} defaultActiveKey="one" renderTabBar={renderTabBar}>
-                <TabPane tab="Tab 1" key="one">
-                    <NumberTemp ref={oneRef} ></NumberTemp>
+            <div className='edit-left-protocol-wrap'> <Tabs activeKey={currentTab} defaultActiveKey="properties" renderTabBar={renderTabBar}>
+                <TabPane tab="Tab 1" key="properties">
+                    <NumberTemp ref={oneRef} currentTab={currentTab} sentReq={sentReq}></NumberTemp>
                 </TabPane>
-                <TabPane tab="Tab 2" key="two">
+                <TabPane tab="Tab 2" key="events">
                     <EventTemp ref={twoRef}></EventTemp>
                 </TabPane>
-                <TabPane tab="Tab 3" key="three">
+                <TabPane tab="Tab 3" key="services">
                     <ServeTemp ref={threeRef} />
                 </TabPane>
             </Tabs>
@@ -217,35 +228,54 @@ function EnumerTemp() {
     )
 }
 //属性组件
-function NumberTemp(props, ref) {
+function NumberTemp({ currentTab, sentReq }, ref) {
     const [form] = Form.useForm();
-    const onFinish = () => {
-        form.validateFields().then(value => {
+    const onFinish = async () => {
+        try {
+            let value = await form.validateFields()
             // 验证通过后进入
-            const { name, age } = value;
-            console.log(name, age); // dee 18
-        }).catch(err => {
-            // 验证不通过时进入
-            console.log(err);
-        });
+            console.log(value, currentTab)
+            value = JSON.parse(JSON.stringify(value))
+            let origin = {}
+
+            origin.content = {}
+            if (value.type == 'bool') {
+                origin.content = value
+            } else if (value.type == 'enum') {
+                let specs = value.emusList.reduce((pre, cur) => {
+                    console.log(pre, cur.key,'======')
+                     pre[cur.key.toString()] = cur.value
+                     return pre
+                }, {})
+                value.specs = specs
+                origin.content = value
+            } else if (value.type == 'text') {
+
+            } else if (value.type == 'double') {
+                origin.content = value
+            }
+            sentReq(origin)
+        } catch (errInfo) {
+            console.log('Validate Failed:', errInfo);
+        }
     }
     //数据类型
     const dataOptions = [{
-        value: 'a',
+        value: 'bool',
         label: '布尔型',
     }, {
-        value: 'b',
+        value: 'enum',
         label: '枚举型',
     }, {
-        value: 'c',
+        value: 'text',
         label: '字符型',
     }, {
-        value: 'd',
+        value: 'double',
         label: '数值型',
     }]
     //数据类型改变
     const onTypeChange = (value) => {
-        console.log(value, '改变')
+        console.log(value)
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
@@ -263,7 +293,7 @@ function NumberTemp(props, ref) {
         >
             <Form.Item
                 label="功能点名称："
-                name="gn"
+                name='name'
                 rules={[
                     {
                         required: true,
@@ -275,40 +305,40 @@ function NumberTemp(props, ref) {
 
             <Form.Item
                 label="标识符"
-                name="bs"
+                name='identifier'
             ><Input />
             </Form.Item>
             <Form.Item
                 label="数据类型："
-                name="sjty"
+                name='type'
             >
                 <Select allowClear onChange={onTypeChange}>
                     {
                         dataOptions.map(item => (
-                            <Option key={item.value} value={item.value}>{item.label}</Option>
+                            <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
                         ))
                     }
                 </Select>
             </Form.Item>
             <Form.Item
                 noStyle
-                shouldUpdate={(prevValues, currentValues) => prevValues.sjty !== currentValues.sjty}
+                shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
             >
                 {({ getFieldValue }) => {
-                    if (getFieldValue('sjty') === 'a') {
+                    if (getFieldValue('type') === 'bool') {
                         return (<>
                             <Form.Item
                                 label="布尔值"
                                 rules={[{ required: true }]}
                             >
                                 <Form.Item
-                                    name="year"
+                                    name={['specs', '0']}
                                     label="0"
                                 >
                                     <Input placeholder="参数描述" />
                                 </Form.Item>
                                 <Form.Item
-                                    name="month"
+                                    name={['specs', '1']}
                                     label="1"
                                 >
                                     <Input placeholder="参数描述" />
@@ -316,7 +346,7 @@ function NumberTemp(props, ref) {
                             </Form.Item>
                         </>)
                     }
-                    if (getFieldValue('sjty') === 'b') {
+                    if (getFieldValue('type') === 'enum') {
                         return (
                             <>
                                 <Form.Item
@@ -327,15 +357,15 @@ function NumberTemp(props, ref) {
                                 </Form.Item>
 
                                 <div className='right-list-wrap' >
-                                    <Form.List name="userss">
+                                    <Form.List name="emusList">
                                         {(fields, { add, remove }) => (
                                             <>
                                                 {fields.map(({ key, name, fieldKey, ...restField }) => (
                                                     <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                                                         <Form.Item
                                                             {...restField}
-                                                            name={[name, 'first']}
-                                                            fieldKey={[fieldKey, 'first']}
+                                                            name={[name, 'key']}
+                                                            fieldKey={[fieldKey, 'key']}
                                                             className='enums-lise-nobottom'
                                                             noStyle
                                                         >
@@ -344,8 +374,8 @@ function NumberTemp(props, ref) {
                                                         <span>-</span>
                                                         <Form.Item
                                                             {...restField}
-                                                            name={[name, 'last']}
-                                                            fieldKey={[fieldKey, 'last']}
+                                                            name={[name, 'value']}
+                                                            fieldKey={[fieldKey, 'value']}
                                                             className='enums-lise-nobottom'
                                                             noStyle
                                                         >
@@ -366,12 +396,12 @@ function NumberTemp(props, ref) {
                             </>
                         )
                     }
-                    if (getFieldValue('sjty') === 'd') {
+                    if (getFieldValue('type') === 'double') {
                         return (<>
                             <Form.Item label="数值范围">
                                 <div className='number-input-wrap'>
                                     <Form.Item
-                                        name={['address', 'province1']}
+                                        name={['specs', 'min']}
                                         noStyle
                                         rules={[{ required: true, message: 'Province is required' }]}
                                     >
@@ -379,7 +409,7 @@ function NumberTemp(props, ref) {
                                     </Form.Item>
                                     <span style={{ margin: '0 10px' }}>至</span>
                                     <Form.Item
-                                        name={['address', 'street1']}
+                                        name={['specs', 'max']}
                                         noStyle
                                         rules={[{ required: true, message: 'Street is required' }]}
                                     >
@@ -391,13 +421,13 @@ function NumberTemp(props, ref) {
                                 label='数值间隔'
                                 name="jg"
                             ><Input /></Form.Item>
-                            <Form.Item name="bs" label="倍数" >
+                            <Form.Item name={['specs', 'multiple']} label="倍数" >
                                 <Select allowClear >
                                     <Option value="male">1</Option>
                                     <Option value="female">2</Option>
                                 </Select>
                             </Form.Item>
-                            <Form.Item name="dw" label="单位" >
+                            <Form.Item name={['specs', 'unit']} label="单位" >
                                 <Select allowClear >
                                     <Option value="male">male</Option>
                                     <Option value="female">female</Option>
@@ -429,7 +459,7 @@ function EventTemp(props, ref) {
     const [form] = Form.useForm();
     const onFinish = () => {
         form.validateFields().then(value => {
-            console.log(value,'======')
+            console.log(value, '======')
             // 验证通过后进入
         }).catch(err => {
             // 验证不通过时进入

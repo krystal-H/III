@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select } from 'antd';
+import { post, Paths, get } from '../../../../../api';
 import './addModal.scss';
 const columns = [
   { title: '功能类型', dataIndex: 'id' },
@@ -31,9 +32,13 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
   }
   const [tableData, setTableData] = useState([])
   const [otherData, setOtherData] = useState([])
-
+  const getOneList = () => {
+    post(Paths.searchModelList).then((res) => {
+    });
+  }
 
   useEffect(() => {
+    getOneList()
   }, [])
   //tab2
   const onSearch = (value) => {
