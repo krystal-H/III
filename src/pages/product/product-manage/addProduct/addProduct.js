@@ -6,6 +6,8 @@ import SetupProduct from './setupProduct';
 import { Paths, post, get } from '../../../../api'
 import { cloneDeep, uniq, difference } from 'lodash'
 import { Notification } from '../../../../components/Notification';
+import { connect } from 'react-redux';
+import { createProductCategoryAction } from "../store/ActionCreator";
 
 const { Step } = Steps;
 const { Option } = Select;
@@ -28,7 +30,20 @@ const stepStyle = {
   cursor: 'pointer'
 }
 
-export default class MakeProductModal extends Component {
+const mapStateToProps = state => {
+  console.log(state.getIn(['createProductCategory']), '步骤一页面取得值')
+  return {
+    createProductCategory: state.getIn(['createProductCategory'])
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    createCategory: param => dispatch(createProductCategoryAction(param)),
+  }
+}
+
+class MakeProductModal extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -43,6 +58,7 @@ export default class MakeProductModal extends Component {
 
       thirdCategoryId: '', // 第一步选择的三级品类id
     }
+    this.refScheme = null
     this.refSetupProduct = null
   }
 
@@ -126,6 +142,11 @@ export default class MakeProductModal extends Component {
       need.forEach((item, i) => {
         if (i === this.state.currentIndex2) {
           console.log('选择的品类deviceTypeId', item.deviceTypeId)
+          this.props.createCategory({
+            deviceTypeId: item.deviceTypeId,
+            deviceSubtypeId: item.defaultDeviceSubtype.deviceSubtypeId,
+            devSubKeyId: item.defaultDeviceSubtype.devSubKeyId
+          })
           this.setState({
             thirdCategoryId: item.deviceTypeId
           }, () => {
@@ -133,8 +154,10 @@ export default class MakeProductModal extends Component {
           })
         }
       })
-    // } else if (index === 1) { // 确定方案
-      
+    } else if (index === 1) { // 确定方案
+      console.log(this.refScheme, '*****')
+      this.refScheme.refSwitchTab.saveSchemeData()
+      this.setState({ stepcurrent: ++index });
     }else if (index === 2) { // 建立产品信息
       this.refSetupProduct.formRef.current.submit()
     } else {
@@ -220,6 +243,7 @@ export default class MakeProductModal extends Component {
           {/* 确定开发方案 */}
           {stepcurrent === 1 &&
             <ConfirmDepPlan
+              onRef={ref => this.refScheme = ref}
               thirdCategoryId={thirdCategoryId} />}
           {/* 建立产品信息 */}
           {stepcurrent === 2 &&
@@ -229,3 +253,5 @@ export default class MakeProductModal extends Component {
     )
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(MakeProductModal)

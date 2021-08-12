@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Checkbox, Radio, Select } from 'antd';
-import { Notification } from '../../../../components/Notification';
-import { Paths, post } from '../../../../api';
+import { Form, Input, Button, Checkbox, Radio, Select } from 'antd'
+import { Notification } from '../../../../components/Notification'
+import { Paths, post } from '../../../../api'
+import { connect } from 'react-redux'
+import {createProductFormAction} from '../store/ActionCreator'
 
 const { Option } = Select;
 const gatewayTypeList = [
@@ -26,6 +28,19 @@ const gatewayTypeList = [
     value: '超级开关/衣柜'
   }
 ]
+
+const mapStateToProps = state => {
+  console.log(state.getIn(['createProductForm']), '步骤3333333页面取得值')
+  return {
+    schememData: state.getIn(['createProductForm'])
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    createProductForm: params => dispatch(createProductFormAction(params))
+  }
+}
 
 class SetupProduct extends Component {
   formRef = React.createRef()
@@ -67,11 +82,13 @@ class SetupProduct extends Component {
 
   onFinish = (values) => {
     console.log('Success:', values);
-  };
+    this.props.createProductForm(values)
+  }
 
   onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
-  };
+  }
+
   render() {
     const { productBrandList, protocolList } = this.state
     return (
@@ -89,7 +106,6 @@ class SetupProduct extends Component {
           rules={[
             { required: true, message: '请输入产品名称' },
             { max: 20, message: '最大输入长度为20' },
-            // { pattern: new RegExp(/^[\u2E80-\u9FFF]+$/, "g"), message: '请输入中文产品名称' }
           ]}>
           <Input placeholder="请输入产品名称，不能超过20个字符" />
         </Form.Item>
@@ -120,7 +136,12 @@ class SetupProduct extends Component {
           <Radio.Group>
             {
               protocolList.length > 0 && protocolList.map(item => (
-                <Radio style={{ marginBottom: 8 }} value={item.bindTypeId} key={item.primaryId}>{item.bindTypeName}</Radio>
+                <Radio
+                  value={`${item.bindTypeId}#${item.bindTypeVersion}`}
+                  key={`${item.bindTypeId}#${item.bindTypeVersion}`}
+                  style={{ marginBottom: 8 }} >
+                  {item.bindTypeName}
+                </Radio>
               ))
             }
           </Radio.Group>
@@ -147,5 +168,4 @@ class SetupProduct extends Component {
     )
   }
 }
-
-export default SetupProduct
+export default connect(mapStateToProps, mapDispatchToProps)(SetupProduct)

@@ -1,8 +1,25 @@
 import React, { Component } from 'react'
 import { Button, Tabs, Table } from 'antd'
 import { Paths, post, get } from '../../../../api'
+import { createProductSchemeAction } from '../store/ActionCreator'
+import { connect } from 'react-redux'
+import { cloneDeep, uniq, difference } from 'lodash'
 
 const { TabPane } = Tabs
+
+const mapStateToProps = state => {
+  console.log(state.getIn(['createProductScheme']), '步骤二222222页面取得值')
+  return {
+    schememData: state.getIn(['createProductScheme'])
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    createSchemem: params => dispatch(createProductSchemeAction(params))
+  }
+}
+
 
 class SwitchTab extends Component {
   constructor(props) {
@@ -35,8 +52,9 @@ class SwitchTab extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props.createProductScheme, '步骤二222222页面取得值')
     this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
-
+    console.log(this.props.btnList, 'this.props.btnListthis.props.btnList')
     this.setState({
       currentSchemList: this.props.btnList,
       currentPhysicalModelId: this.props.btnList[0].physicalModelId
@@ -86,9 +104,24 @@ class SwitchTab extends Component {
     })
   }
 
+  // 保存方案数据
+  saveSchemeData() {
+    const currentList = cloneDeep(this.state.currentSchemList)
+    const need = currentList[this.state.btnIndex]
+    const params = {
+      schemeId: need.schemeId, // 方案id
+      schemeType: need.schemeType, // 方案类型
+      physicalModelId: need.physicalModelId, // 物模型id
+      panelId: need.panelId, // 面板id
+      moduleId: need.moduleId // 模组id
+    }
+    this.props.createSchemem(params)
+  }
+
   // 重置tab选中项，父组件调用
   resetIndex() {
-    this.setState({ btnIndex: 0, planActiveKey: '0' })
+    // btnIndex: 0, planActiveKey: '0' // 为了保存操作数据暂时不重置  btnIndex
+    this.setState({ planActiveKey: '0' })
   }
 
   render() {
@@ -100,7 +133,7 @@ class SwitchTab extends Component {
         {
           btnList ? btnList.map((item, index) => (
             <Button className={`dep-btn ${btnIndex === index ? "active-btn" : ""}`}
-              key={item.schemaId}
+              key={item.schemeId}
               onClick={(e) => this.changeBtn(index, 'btnIndex', item, e)}>{item.name}</Button>
           )) : null
         }
@@ -144,4 +177,4 @@ class SwitchTab extends Component {
   }
 }
 
-export default SwitchTab
+export default connect(mapStateToProps, mapDispatchToProps)(SwitchTab)

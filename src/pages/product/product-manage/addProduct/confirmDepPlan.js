@@ -20,6 +20,7 @@ class SwitchFreeDep extends Component {
   }
 
   componentDidMount() {
+    this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
     this.getScheme()
   }
 
