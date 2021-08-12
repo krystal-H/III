@@ -4,6 +4,36 @@ import { cloneDeep} from 'lodash';
 import * as ActionTypes from './ActionTypes';
 import { message } from 'antd';
 import { Notification } from '../../../../components/Notification';
+// --------------5.x
+// 创建产品-选择品类
+export const createProductCategoryAction = (info) => {
+  console.log(info, '步骤一存的数据')
+  return {
+    type: ActionTypes.CREATE_PRODUCT_CATEGORY,
+    info
+  }
+}
+
+// 创建产品-确定方案
+export const createProductSchemeAction = (info) => {
+  console.log(info, '步骤二二二存的数据')
+  return {
+    type: ActionTypes.CREATE_PRODUCT_SCHEME,
+    info
+  }
+}
+
+// 创建产品-建立产品信息
+export const createProductFormAction = (info) => {
+  console.log(info, '步骤三三三存的数据')
+  return {
+    type: ActionTypes.CREATE_PRODUCT_FORM,
+    info
+  }
+}
+
+// -----------------
+
 
 // 更新产品列表
 export const updateProductListAction = (list) => {

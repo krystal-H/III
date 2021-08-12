@@ -24,12 +24,23 @@ const defaultState = fromJS({
     hardwareType: null, //硬件类型： 0：MCU ; 1: SoC
     moduleItem: {}, // 选择模组
     commFreq: 10, // 上报频率
-    mcuCodeCheck:false // 是否有可导出的mcu sdk
+    mcuCodeCheck:false, // 是否有可导出的mcu sdk
+
+    createProductCategory: {}, // 创建产品-选择品类
+    createProductScheme: {}, // 创建产品-确定方案
+    createProductForm: {}, // 创建产品-建立产品信息
 });
 
 
 export default (state = defaultState, action) => {
   switch (action.type) {
+    case ActionTypes.CREATE_PRODUCT_CATEGORY:
+      return state.set('createProductCategory', action.info)
+    case ActionTypes.CREATE_PRODUCT_SCHEME:
+      return state.set('createProductScheme', action.info)
+    case ActionTypes.CREATE_PRODUCT_FORM:
+      return state.set('createProductForm', action.info)
+
     case ActionTypes.UPDATE_PRODUCT_LIST:
       return state.set('productList',action.list)
     case ActionTypes.UPDATE_PRODUCT_BASE_INFO:

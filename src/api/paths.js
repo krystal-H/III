@@ -38,14 +38,22 @@ let Paths = {
     getProductBaseInfo: '/product/getProduct',
     updateProductBaseInfo: '/product/update',
 
+    getProductListNew: '/product/list', // 获取产品列表
+
+
     // 新建产品品类信息
     getThirdCategory: '/deviceCategory/deviceType/all', // 获取所有的三级品类
     getSecondCategory: '/deviceCategory/subCategory/all', // 二级品类
     getSecondById: '/deviceCategory/subCategory/deviceTypeId', // 根据三级品类id查二级
+    confirmDeviceType: '/product/create/confirm/deviceTypeId', // 选择品类下一步
+    getProductBrand: '/productBrand/all', // 产品品牌
+    getCommunicationProtocol: '/module/type/all', // 通信协议
+    createProduct: '/product/create', // 创建产品
 
     // 确定方案
     getScheme: '/scheme/list/deviceType', // 获取方案数据
-    getPhysicalModelId: '/physicalModel/func/list', // 获取功能点
+    getPhysicalModelId: '/physicalModel/func', // 获取功能点
+    confirmScheme: 'product/create/confirm/scheme', // 创建方案下一步
 
 
     /* 协议 */
@@ -214,7 +222,6 @@ let Paths = {
     deleteDeviceLabel:'/deviceLabel/delete',//删除设备标签
     exportDeviceList:'/deviceManage/exportDeviceList',//导出数据
     
-
 
     /**
      * 账户-访问用户 start

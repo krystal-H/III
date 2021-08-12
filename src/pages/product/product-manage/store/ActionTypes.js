@@ -26,6 +26,14 @@ export const CLEAR_EXCEPTION_2 = "CLEAR_EXCEPTION_2";//清空异常数据数据
 export const COLAR_DEV_DATA1 = "COLAR_DEV_DATA1";//清空报文数据
 export const COLAR_DEV_DATA2 = "COLAR_DEV_DATA2";//清空报文数据 
 
+// --------------5.x
+// 创建产品
+export const CREATE_PRODUCT_CATEGORY = "CREATE_PRODUCT_CATEGORY" // 创建产品-选择品类
+export const CREATE_PRODUCT_SCHEME = "CREATE_PRODUCT_SCHEME" // 创建产品-确定方案
+export const CREATE_PRODUCT_FORM = "CREATE_PRODUCT_FORM" // 创建产品-建立产品信息
+
+// --------------
+
 /**
  * 新建产品 start
  * aize-2019-09-10

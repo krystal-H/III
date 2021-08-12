@@ -1,9 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Input, Select, Button, Table, Pagination } from 'antd';
-import './List.scss';
 import { cloneDeep } from 'lodash';
 import { connect } from 'react-redux';
-import { getProductListAction } from '../store/ActionCreator';
 import { productStatusText } from '@src/configs/text-map';
 import ProductIcon from '../../../../components/product-components/product-icon/ProductIcon';
 import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
@@ -12,34 +10,24 @@ import PageTitle from '../../../../components/page-title/PageTitle';
 import { post, Paths } from '../../../../api';
 import AddProductModal from '../addProduct/addProduct'
 
+import './List.scss';
+
 const { Search } = Input;
 const { Option } = Select;
 
-const mapStateToProps = state => {
-  return {
-    productList: state.getIn(['product', 'productList']).toJS()
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    getProductList: data => dispatch(getProductListAction(data)),
-  }
-}
-
-const statusList = ['开发模式', '生产模式', '审核中']
-
+const statusList = ['开发中', '已发布', '审核中']
 class List extends PureComponent {
   constructor(props) {
     super(props)
     this.defaultListParams = { // 产品列表相关默认请求参数
       current: 1,
-      size: 8,
+      size: 6,
       productName: '',
       mode: '', // 产品状态
     }
     this.state = {
-      status: 'all', // 状态  后端需增加字段？？？？？？
+      dataSource: [], // 产品列表
+      pager: {}, // 分页信息
       listParams: cloneDeep(this.defaultListParams), // 获取产品列表相关请求参数
 
       selectedItem: null, // 当前正在操作（复制/删除）的产品
@@ -52,7 +40,7 @@ class List extends PureComponent {
       copyLoading: false, // 复制loading
       copyInputValue: '', // 复制弹窗中输入的产品名称确认
 
-      isClicked: false // 制作产品按钮
+      isClicked: true // 制作产品按钮
     }
     this.columns = [
       {
@@ -64,17 +52,17 @@ class List extends PureComponent {
               <div className="pro-show-cont">
                 <div className="pro-show-cont-title">{text}</div>
                 <div className="pro-show-cont-item">产品ID：{record.productId}</div>
-                <div className="pro-show-cont-item">型号：adehfuweh</div>
+                <div className="pro-show-cont-item">型号：{record.productCode}</div>
               </div>
             </div>
           )
         }
       },
-      { title: "品类", dataIndex: "productClassName", key: "productClassName" },
-      { title: "智能化方案", dataIndex: "", key: "" },
-      { title: "通信协议", dataIndex: "bindTypeName", key: "bindTypeName" },
+      { title: "品类", dataIndex: "deviceType", key: "deviceType" },
+      { title: "智能化方案", dataIndex: "sechmeName", key: "sechmeName" },
+      { title: "通信协议", dataIndex: "bindTypeStr", key: "bindTypeStr" },
       {
-        title: "状态", dataIndex: "mode", key: "mode",
+        title: "状态", dataIndex: "status", key: "status",
         render: (text) => (<span className={`status status-${text}`}>{productStatusText['' + text] || ''}</span>)
       },
       {
@@ -82,7 +70,6 @@ class List extends PureComponent {
         render: (text, record, index) => (
           <div className="operation">
             <span className="continue" onClick={this.clickProductInfo.bind(this, record.mode, record.productId)}>继续开发</span>
-
             {
               record.mode !== 2 && <span className="copy mar25" onClick={this.operateProduct.bind(this, record, 'copyModalVisible')}>复制</span>
             }
@@ -101,7 +88,16 @@ class List extends PureComponent {
   // 获取产品列表
   getProductListNew = () => {
     post(Paths.getProductListNew, { ...this.state.listParams }).then(res => {
-      console.log(res)
+      const pager = {
+        current: res.data.current,
+        size: res.data.size,
+        pages: res.data.pages,
+        total: res.data.total
+      }
+      this.setState({
+        dataSource: res.data.records,
+        pager
+      })
     })
   }
 
@@ -124,7 +120,7 @@ class List extends PureComponent {
     }, () => { this.getProductListNew() })
   }
 
-  //分页页码改变
+  // 翻页
   changePage = (current) => {
     let newparams = { ...this.state.listParams }
     newparams.current = current
@@ -152,6 +148,7 @@ class List extends PureComponent {
       selectedItem: item
     })
   }
+
   // 弹窗 “取消” 操作
   modalCancelHandle(type = 'copyModalVisible', inputValue) {
     this.setState({
@@ -159,7 +156,7 @@ class List extends PureComponent {
       [inputValue]: ''
     })
   }
-  
+
   // 删除弹窗 “确认” 操作
   deleteModalOKHandle = () => {
     let { selectedItem, deleteInputValue } = this.state
@@ -178,9 +175,8 @@ class List extends PureComponent {
             deleteVisible: false,
             deleteInputValue: ''
           })
-          this.getProductList()
-        })
-        .finally(() => this.setState({ deleteLoading: false }))
+          this.getProductListNew()
+        }).finally(() => this.setState({ deleteLoading: false }))
     })
   }
   // 复制弹窗 “确认” 操作
@@ -200,33 +196,34 @@ class List extends PureComponent {
             listParams: cloneDeep(this.defaultListParams),
             copyModalVisible: false,
             copyInputValue: ''
-          }, this.getProductList)
+          }, () => { this.getProductListNew() })
         }).finally(() => { this.setState({ copyLoading: false }) })
     })
   }
+
   // 弹窗输入框change
   inputOnChangeHandle(type, e) {
     this.setState({
       [type]: e.target.value
     })
   }
+
   // 制作产品
   makeHandle = (isClicked = false) => {
     this.setState({
       isClicked: !isClicked
     })
   }
+
   render() {
-    const { listParams, selectedItem, deleteVisible, deleteLoading, deleteInputValue, copyModalVisible, copyLoading, copyInputValue, isClicked } = this.state
-    const { productList } = this.props,
-      { list, pager } = productList
+    const { listParams, selectedItem, deleteVisible, deleteLoading, deleteInputValue, copyModalVisible, copyLoading, copyInputValue, isClicked, dataSource, pager } = this.state
     return (
       <section className="page-wrapper">
         <PageTitle title="我的智能产品" />
         <div className="page-header comm-shadowbox">
           <div className="page-header-left">
             <Search placeholder="产品名称/ID/型号" maxLength={20} onSearch={value => this.searchProduct(value)} style={{ width: 465, margin: '0 22px' }} />
-            <Select placeholder="产品状态" style={{ width: 120 }} onChange={this.handleChange}>
+            <Select allowClear onChange={this.handleChange} placeholder="产品状态" style={{ width: 120 }}>
               {
                 statusList.map((item, index) => (
                   <Option value={index} key={item}>{item}</Option>
@@ -243,15 +240,15 @@ class List extends PureComponent {
           <div className="page-table-wrapper flex-column flex1">
             <Table
               rowKey='productId'
-              dataSource={list}
+              dataSource={dataSource}
               columns={this.columns}
               pagination={false}
             />
             <footer className="list-pagination">
               {
-                pager && pager.totalRows > 0 ?
+                pager && pager.pages > 0 ?
                   <Pagination className="self-pa"
-                    total={pager.totalRows}
+                    total={pager.total}
                     current={listParams.current}
                     defaultCurrent={1}
                     defaultPageSize={listParams.size}
@@ -320,4 +317,4 @@ class List extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(List)
+export default List
