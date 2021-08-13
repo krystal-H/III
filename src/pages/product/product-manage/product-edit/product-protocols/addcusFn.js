@@ -45,12 +45,13 @@ export default function ProtocoLeft({ rightVisible, onCloseRight }) {
     }
     //提交数据
     const sentReq = (data) => {
+        onCloseRight(66666666666)
         console.log('数据', data)
         data.funcType = currentTab
         data.type = 'add'
         data.productId = 11759
         post(Paths.PhysicalModelAction, data).then((res) => {
-            onCloseRight()
+            onCloseRight(true)
         });
     }
     return (
@@ -242,10 +243,15 @@ function NumberTemp({ currentTab, sentReq }, ref) {
             if (value.type == 'bool') {
                 origin.content = value
             } else if (value.type == 'enum') {
-                let specs = value.emusList.reduce((pre, cur) => {
-                    console.log(pre, cur.key,'======')
-                     pre[cur.key.toString()] = cur.value
-                     return pre
+                let emusList = value.emusList.filter(item => {
+                    if (item.key && item.value) {
+                        return item
+                    }
+                })
+                console.log(emusList,'=========')
+                let specs = emusList.reduce((pre, cur) => {
+                    pre[cur.key.toString()] = cur.value
+                    return pre
                 }, {})
                 value.specs = specs
                 origin.content = value

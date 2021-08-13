@@ -75,12 +75,47 @@
         }
       }
     }
-    .product-info-table{
-        .edit-table-btn{
-            width: 100%;
-            margin-top: 14px;
-            border-style: dashed;
+
+    .product-info-table {
+      .edit-table-btn {
+        width: 100%;
+        margin-top: 14px;
+        border-style: dashed;
+      }
+    }
+
+    .product-business-wrap {
+      display: flex;
+      margin-top: 20px;
+
+      .business-left-item {
+        display: flex;
+        // align-items: center;
+        margin-bottom: 18px;
+
+        .item-label {
+          font-size: 12px;
+          font-weight: 400;
+          color: #323232;
+          line-height: 17px;
+          word-break: keep-all
         }
+
+        .item-text {
+          font-size: 12px;
+          font-weight: 400;
+          color: #666666;
+          line-height: 17px;
+        }
+      }
+
+      .product-business-wrap-left {
+        width: 500px;
+      }
+
+      .product-business-wrap-right {
+        flex: 1;
+      }
     }
   }
 }
