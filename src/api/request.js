@@ -17,7 +17,6 @@ const instance = axios.create({
   headers: {
     "Content-Type": "application/x-www-form-urlencoded",
     "X-Requested-With": "XMLHttpRequest", // 此字段是为了未登录时能拿到特定code值而添加的
-    'dev-name':'ljy'
   },
   transformRequest: function (data, headers) {
     if (
@@ -78,7 +77,7 @@ instance.interceptors.response.use(
       // 有数据返回时，判断code值
       let { code, msg } = data;
       if (code !== undefined && code !== 0) {
-        if(code === 100010110) { // 未登录的特定code
+        if (code === 100010110) { // 未登录的特定code
           // 未登录的特定code
           // 打开登录提示框
           store.dispatch(changeLoginModalStatu(true));
@@ -175,16 +174,16 @@ function _axios(configs) {
 
   // 如果需要去除superInstanceId 参数
   if (_configs.noInstance) {
-    delete _configs[dataName].superInstanceId ;
+    delete _configs[dataName].superInstanceId;
     delete _configs.noInstance;
   }
 
   if (method === "get") {
     delete _configs.data;
-  }else{
+  } else {
     let _data = JSON.stringify(data),
-        _contype = "application/json";
-    if(needFormData){
+      _contype = "application/json";
+    if (needFormData) {
       _data = objToFormdata(data);
       _contype = "multipart/form-data";
     }
@@ -197,7 +196,7 @@ function _axios(configs) {
     delete _configs.needFormData;
     delete _configs.needJson;
   }
-  
+
 
   // if (method === "post" && needFormData) {
   //   let _data = objToFormdata(data);

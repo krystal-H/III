@@ -494,6 +494,11 @@ let Paths = {
 
     // //设备-设备管理
     // getDeviceList
+    //工单
+    getWorkOrderDictionary:'/workOrder/getWorkOrderDictionary',//工单-字典
+    subWorkOrder :'/workOrder/createWorkOrder',//新增工单
+    WorkOrderList:'/workOrder/getHistoryWorkOrderList',//工单列表
+    WorkOrderDetail:'/workOrder/getWorkOrder',//工单详情
 };
 
 // 拼接 urlPrefix
