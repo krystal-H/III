@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Input, Select, Button, Table, Pagination,Modal } from 'antd';
+import { Input, Select, Button, Table, Pagination, Modal } from 'antd';
 import { cloneDeep } from 'lodash';
 import { connect } from 'react-redux';
 import { productStatusText } from '@src/configs/text-map';
@@ -40,9 +40,9 @@ class List extends PureComponent {
       copyLoading: false, // 复制loading
       copyInputValue: '', // 复制弹窗中输入的产品名称确认
 
-      isClicked: true, // 制作产品按钮
+      isClicked: false, // 创建产品按钮
 
-      oldProIngVisiable:false,//开发中的旧产品提示框
+      oldProIngVisiable: false,//开发中的旧产品提示框
     }
     this.columns = [
       {
@@ -61,7 +61,7 @@ class List extends PureComponent {
         }
       },
       { title: "品类", dataIndex: "deviceType", key: "deviceType" },
-      { title: "智能化方案", dataIndex: "sechmeName", key: "sechmeName" },
+      { title: "智能化方案", dataIndex: "schemeName", key: "schemeName" },
       { title: "通信协议", dataIndex: "bindTypeStr", key: "bindTypeStr" },
       {
         title: "状态", dataIndex: "status", key: "status",
@@ -71,18 +71,20 @@ class List extends PureComponent {
         title: "操作", key: "",
         render: (text, record, index) => (
           <div className="operation">
-            <span className="continue" onClick={this.clickProductInfo.bind(this, record)}>{record.status == 1?'开发详情':'继续开发'}</span>
+            <span className="continue" onClick={this.clickProductInfo.bind(this, record)}>{record.status === 1 ? '开发详情' : '继续开发'}</span>
             {
-              record.mode !== 2 && <span className="copy mar25" onClick={this.operateProduct.bind(this, record, 'copyModalVisible')}>复制</span>
-            }
-            {
-              record.mode !== 2 && <span className="delete" onClick={this.operateProduct.bind(this, record, 'deleteVisible')}>删除</span>
+              record.mode !== 2 &&
+              <>
+                <span className="copy mar25" onClick={this.operateProduct.bind(this, record, 'copyModalVisible')}>复制</span>
+                <span className="delete" onClick={this.operateProduct.bind(this, record, 'deleteVisible')}>删除</span>
+              </>
             }
           </div>
-        ),
+        )
       }
     ]
   }
+
   componentDidMount() {
     this.getProductListNew()
   }
@@ -133,17 +135,17 @@ class List extends PureComponent {
 
   // 继续开发  ——> detail 
   // 产品状态 statusStr -开发中，1-已发布，2-审核中）
-  clickProductInfo({status, productId, isOldProduct}) {
+  clickProductInfo({ status, productId, isOldProduct }) {
     //未发布的老产品禁止操作 弹窗提示
-    if(isOldProduct && status !== 1 ){
-      this.toggleOldProVisiable();
-      return;
+    if (isOldProduct && status !== 1) {
+      this.toggleOldProVisiable()
+      return
     }
     //否则 老产品跳到老的详情页面 detail；新产品根据状态跳到详情页details 或者 编辑页edit
     let pathroute = 'details';
-    if(status !== 1){
+    if (status !== 1) {
       pathroute = 'edit';
-    }else if(isOldProduct){
+    } else if (isOldProduct) {
       pathroute = 'detail';
     }
     this.props.history.push({
@@ -178,17 +180,16 @@ class List extends PureComponent {
       return Notification({ type: 'warn', message: '异常操作', description: '请输入"delete"来确认删除！' })
     }
     this.setState({ deleteLoading: true }, () => {
-      post(Paths.delectProduct, { productId }, { needVersion: 1.1 })
+      post(Paths.deleteProductNew, { productId })
         .then(data => {
-          if (data.code === 0) {
-            Notification({ type: 'success', description: '删除成功！' });
-          }
+          Notification({ type: 'success', description: '删除成功！' })
           this.setState({
             deleteVisible: false,
             deleteInputValue: ''
           })
           this.getProductListNew()
-        }).finally(() => this.setState({ deleteLoading: false }))
+        })
+        .finally(() => this.setState({ deleteLoading: false }))
     })
   }
   // 复制弹窗 “确认” 操作
@@ -201,7 +202,7 @@ class List extends PureComponent {
       return Notification({ type: 'warn', message: '异常操作', description: '请输入产品名称！' })
     }
     this.setState({ copyLoading: true }, () => {
-      post(Paths.copyProduct, { productId, productName: _value }, { needVersion: 1.1 })
+      post(Paths.copyProductNew, { productId, productName: _value })
         .then(data => {
           if (data.code === 0) { Notification({ type: 'success', description: '复制成功！' }); }
           this.setState({ // 清空查询参数，重新请求列表
@@ -220,20 +221,24 @@ class List extends PureComponent {
     })
   }
 
-  // 制作产品
-  makeHandle = (isClicked = false) => {
+  // 创建产品
+  createProduct = (isClicked = false) => {
     this.setState({
       isClicked: !isClicked
     })
   }
-  toggleOldProVisiable=()=>{
+  toggleOldProVisiable = () => {
     this.setState({
-      oldProIngVisiable:!this.state.oldProIngVisiable
+      oldProIngVisiable: !this.state.oldProIngVisiable
     })
   }
 
+  changeVisible = () => {
+    this.setState({ isClicked: false })
+  }
+
   render() {
-    const { listParams, selectedItem, deleteVisible, deleteLoading, deleteInputValue, copyModalVisible, copyLoading, copyInputValue, isClicked, dataSource, pager,oldProIngVisiable } = this.state
+    const { listParams, selectedItem, deleteVisible, deleteLoading, deleteInputValue, copyModalVisible, copyLoading, copyInputValue, isClicked, dataSource, pager, oldProIngVisiable } = this.state
     return (
       <section className="page-wrapper">
         <PageTitle title="我的智能产品" />
@@ -249,7 +254,7 @@ class List extends PureComponent {
             </Select>
           </div>
           <div className="page-header-right">
-            <Button type="primary" onClick={this.makeHandle.bind(this, false)}>制作产品</Button>
+            <Button type="primary" onClick={this.createProduct.bind(this, false)}>创建产品</Button>
           </div>
         </div>
         {/* table */}
@@ -321,19 +326,21 @@ class List extends PureComponent {
               placeholder="新产品名称" />
           </ActionConfirmModal>
         }
-        {/* 制作产品 */}
+        {/* 创建产品 */}
         {
           isClicked &&
           <AddProductModal
             visible={isClicked}
-            cancelHandle={this.makeHandle.bind(this, true)}>
+            cancelHandle={this.createProduct.bind(this, true)}
+            getProductListNew={() => { this.getProductListNew() }}
+          >
           </AddProductModal>
         }
 
-      {/* 开发中的旧产品 弹窗提示 */}
-      <Modal title="更新升级" visible={oldProIngVisiable} onOk={this.toggleOldProVisiable} onCancel={this.toggleOldProVisiable}>
-        <p> clife平台全新升级，老版本的开发中状态产品，需要在新平台重新创建</p>
-      </Modal>
+        {/* 开发中的旧产品 弹窗提示 */}
+        <Modal title="更新升级" visible={oldProIngVisiable} onOk={this.toggleOldProVisiable} onCancel={this.toggleOldProVisiable}>
+          <p> clife平台全新升级，老版本的开发中状态产品，需要在新平台重新创建</p>
+        </Modal>
       </section>
     )
   }
