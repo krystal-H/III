@@ -3,48 +3,38 @@ import { Form, Input, Button, Checkbox, Radio, Select } from 'antd'
 import { Notification } from '../../../../components/Notification'
 import { Paths, post } from '../../../../api'
 import { connect } from 'react-redux'
-import {createProductFormAction} from '../store/ActionCreator'
+import { createProductFormAction, 
+  createProductCategoryAction, 
+  createProductSchemeAction, 
+  createProductSchemekeyAction, 
+  createProductSchemeBtnKeyAction } from '../store/ActionCreator'
 
 const { Option } = Select;
-const gatewayTypeList = [
-  {
-    key: 1,
-    value: 'Wifi'
-  },
-  {
-    key: 2,
-    value: '蓝牙'
-  },
-  {
-    key: 3,
-    value: 'zigbee2.0'
-  },
-  {
-    key: 4,
-    value: 'zigbee3.0'
-  },
-  {
-    key: 5,
-    value: '超级开关/衣柜'
-  }
-]
+const gatewayTypeList = ['Wifi', '蓝牙', 'zigbee2.0', 'zigbee3.0', '超级开关/衣柜']
 
 const mapStateToProps = state => {
-  console.log(state.getIn(['createProductForm']), '步骤3333333页面取得值')
+  // console.log(state.getIn(['product', 'createProductForm']), '步骤3333333页面取得值')
   return {
-    schememData: state.getIn(['createProductForm'])
+    createProductCategory: state.getIn(['product', 'createProductCategory']),
+    schememData: state.getIn(['product', 'createProductScheme']),
+    saveProductForm: state.getIn(['product', 'createProductForm'])
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    createProductForm: params => dispatch(createProductFormAction(params))
+    createProductForm: params => dispatch(createProductFormAction(params)),
+    createProduct_Category: params => dispatch(createProductCategoryAction(params)),
+    createProductScheme: params => dispatch(createProductSchemeAction(params)),
+    createProductSchemekey: params => dispatch(createProductSchemekeyAction(params)),
+    createProductSchemeBtnKey: params => dispatch(createProductSchemeBtnKeyAction(params)),
   }
 }
 
 class SetupProduct extends Component {
   formRef = React.createRef()
   constructor(props) {
+    // console.log(props, '***********')
     super(props)
     this.state = {
       productBrandList: [], // 产品品牌
@@ -80,9 +70,32 @@ class SetupProduct extends Component {
     })
   }
 
+  // 保存后重置数据
+  resetData = () => {
+    this.props.createProductForm({})
+    this.props.createProduct_Category({})
+    this.props.createProductScheme({})
+    this.props.createProductSchemekey('1')
+    this.props.createProductSchemeBtnKey(0)
+  }
+
   onFinish = (values) => {
     console.log('Success:', values);
     this.props.createProductForm(values)
+    const params = {
+      ...this.props.createProductCategory,
+      ...this.props.schememData,
+      ...values
+    }
+    console.log('调用提交的接口', params)
+    post(Paths.createProduct, { ...params }).then(res => {
+      Notification({ description: '创建成功！', type: 'success' })
+      this.resetData()
+      this.props.handleCancel()
+      this.props.getProductListNew()
+    }, () => {
+      Notification({ description: '创建失败！', type: 'error' })
+    })
   }
 
   onFinishFailed = (errorInfo) => {
@@ -91,13 +104,17 @@ class SetupProduct extends Component {
 
   render() {
     const { productBrandList, protocolList } = this.state
+    const { saveProductForm } = this.props
     return (
       <Form
         ref={this.formRef}
         name="setupProduct"
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 19 }}
-        initialValues={{}}
+        initialValues={{
+          productName: saveProductForm.productName || '',
+          brandId: saveProductForm.brandId || ''
+        }}
         onFinish={this.onFinish}
         onFinishFailed={this.onFinishFailed}>
         <Form.Item
@@ -150,13 +167,10 @@ class SetupProduct extends Component {
           rules={[{ required: true, message: '网关子设备协议' }]}>
           <Radio.Group>
             {
-              gatewayTypeList.map(item => (
-                <Radio value={item.key} key={item.key}>{item.value}</Radio>
+              gatewayTypeList.map((item, index) => (
+                <Radio value={index + 1} key={item}>{item}</Radio>
               ))
             }
-            <Radio value="bie">bie</Radio>
-            <Radio value="红外">红外</Radio>
-            <Radio value="PLC">PLC</Radio>
           </Radio.Group>
         </Form.Item>
         <Form.Item name="portNumber" label="控制端口数"

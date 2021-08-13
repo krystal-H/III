@@ -1,32 +1,34 @@
 import React, { Component } from 'react'
 import { Button, Tabs, Table } from 'antd'
 import { Paths, post, get } from '../../../../api'
-import { createProductSchemeAction } from '../store/ActionCreator'
+import { createProductSchemeAction, createProductSchemeBtnKeyAction } from '../store/ActionCreator'
 import { connect } from 'react-redux'
 import { cloneDeep, uniq, difference } from 'lodash'
 
 const { TabPane } = Tabs
 
 const mapStateToProps = state => {
-  console.log(state.getIn(['createProductScheme']), '步骤二222222页面取得值')
+  // console.log(state.getIn(['product', 'createProductScheme']), '步骤二222222页面取得值')
+  // console.log('页面的btnindex', state.getIn(['product', 'createProductSchemeBtnKey']))
   return {
-    schememData: state.getIn(['createProductScheme'])
+    schememData: state.getIn(['product', 'createProductScheme']),
+    btnkey: state.getIn(['product', 'createProductSchemeBtnKey'])
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    createSchemem: params => dispatch(createProductSchemeAction(params))
+    createSchemem: params => dispatch(createProductSchemeAction(params)),
+    changeBtnIndex: params => dispatch(createProductSchemeBtnKeyAction(params))
   }
 }
-
 
 class SwitchTab extends Component {
   constructor(props) {
     super(props)
     this.state = {
       planActiveKey: '0',
-      btnIndex: 0,
+      btnIndex: props.btnkey,
       summaryText: '', // 概述
       propertyText: '', // 特点
       suitableText: '', // 适合
@@ -52,7 +54,7 @@ class SwitchTab extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.createProductScheme, '步骤二222222页面取得值')
+    // console.log(this.props.schememData, '步骤二222222页面取得值')
     this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
     console.log(this.props.btnList, 'this.props.btnListthis.props.btnList')
     this.setState({
@@ -65,7 +67,7 @@ class SwitchTab extends Component {
 
   // 切换tab
   handleChange(activeKey) {
-    console.log(activeKey, this.props.btnList, '切换tab')
+    // console.log(activeKey, this.props.btnList, '切换tab')
     this.setState({ planActiveKey: activeKey })
     // 获取物模型id，获取功能点数据
     if (activeKey == 1) {
@@ -80,6 +82,7 @@ class SwitchTab extends Component {
       planActiveKey: '0',
       currentPhysicalModelId: item.physicalModelId
     }, () => {
+      this.props.changeBtnIndex(index)
       this.getPlanMsg(index)
     })
   }
@@ -110,7 +113,7 @@ class SwitchTab extends Component {
     const need = currentList[this.state.btnIndex]
     const params = {
       schemeId: need.schemeId, // 方案id
-      schemeType: need.schemeType, // 方案类型
+      schemeTypeId: need.schemeTypeId, // 方案类型id
       physicalModelId: need.physicalModelId, // 物模型id
       panelId: need.panelId, // 面板id
       moduleId: need.moduleId // 模组id

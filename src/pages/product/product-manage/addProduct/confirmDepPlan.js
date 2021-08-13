@@ -1,16 +1,31 @@
 import React, { Component } from 'react'
 import { Tabs } from 'antd'
-import "./addProduct.scss"
-import { Paths, post, get } from '../../../../api'
+import { connect } from 'react-redux'
+import {createProductSchemekeyAction} from '../store/ActionCreator'
+import { Paths, post } from '../../../../api'
 import SwitchTab from './switchTab'
 
+import "./addProduct.scss"
+
 const { TabPane } = Tabs;
+
+const mapStateToProps = state => {
+  return {
+    activeKey: state.getIn(['product', 'createProductSchemekey'])
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    changeKey: params => dispatch(createProductSchemekeyAction(params)) 
+  }
+}
 
 class SwitchFreeDep extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentActiveKey: '1',
+      currentActiveKey: props.activeKey,
       btnList1: [], // 免开发
       btnList2: [], // MCU
       btnList3: [], // Soc
@@ -24,28 +39,11 @@ class SwitchFreeDep extends Component {
     this.getScheme()
   }
 
-  // componentDidUpdate(oldprops) {
-  //   console.log(oldprops, '55555')
-  // }
-
   // 获取方案数据
   getScheme() {
     post(Paths.getScheme, { deviceTypeId: this.state.thirdCategoryId }).then(res => {
       for (let key in res.data) {
         this.setState({ [`btnList${key}`]: res.data[key] })
-        // switch (key) {
-        //   case '1':
-        //     this.setState({ btnList1: res.data[key] })
-        //     break;
-        //   case '2':
-        //     this.setState({ btnList2: res.data[key] })
-        //     break;
-        //   case '3':
-        //     this.setState({ btnList3: res.data[key] })
-        //     break;
-        //   default:
-        //     break;
-        // }
       }
     })
   }
@@ -55,9 +53,11 @@ class SwitchFreeDep extends Component {
     // 调用子组件方法重置tab选中
     this.refSwitchTab.resetIndex()
     this.setState(() => {
-      return { currentActiveKey: activeKey };
-    });
-  };
+      return { currentActiveKey: activeKey }
+    })
+    // 修改store中存的值
+    this.props.changeKey(activeKey)
+  }
 
   render() {
     const { currentActiveKey, btnList1, btnList2, btnList3 } = this.state
@@ -108,4 +108,4 @@ class SwitchFreeDep extends Component {
   }
 }
 
-export default SwitchFreeDep
+export default connect(mapStateToProps, mapDispatchToProps)(SwitchFreeDep)

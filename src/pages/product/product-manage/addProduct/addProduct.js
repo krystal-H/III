@@ -31,9 +31,9 @@ const stepStyle = {
 }
 
 const mapStateToProps = state => {
-  console.log(state.getIn(['createProductCategory']), '步骤一页面取得值')
+  // console.log(state.getIn(['createProductCategory']), '步骤一页面取得值')
   return {
-    createProductCategory: state.getIn(['createProductCategory'])
+    createProductCategory: state.getIn(['product', 'createProductCategory']),
   }
 }
 
@@ -48,7 +48,6 @@ class MakeProductModal extends Component {
     super(props)
     this.state = {
       stepcurrent: 0, // 步骤
-      category: '', // 产品品类
       currentIndex: 0, // 二级选中品类
       currentIndex2: null, // 三级品类
       isDisabled: false, // 下一步按钮是否可点
@@ -63,8 +62,9 @@ class MakeProductModal extends Component {
   }
 
   componentDidMount() {
+    this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
+
     this.getThirdCategory()
-    // 获取所有的二级品类
     this.getSecondCategory()
   }
 
@@ -131,37 +131,39 @@ class MakeProductModal extends Component {
     if (val) this.getSecondById(val)
   }
 
+  // step1  选择品类数据处理
+  judgeStep1 = (index) => {
+    // console.log(this.state.currentIndex2, '选择品类的索引')
+    if (!this.state.currentIndex2 && this.state.currentIndex2 !== 0) {
+      return Notification({ description: '请选择对应品类！', type: 'warn' })
+    }
+    const need = cloneDeep(this.state.needShowThirdList)
+    need.forEach((item, i) => {
+      if (i === this.state.currentIndex2) {
+        // console.log('选择的品类deviceTypeId', item.deviceTypeId)
+        this.props.createCategory({
+          deviceTypeId: item.deviceTypeId,
+          deviceSubtypeId: item.defaultDeviceSubtype.deviceSubtypeId,
+          devSubKeyId: item.defaultDeviceSubtype.devSubKeyId
+        })
+        this.setState({
+          thirdCategoryId: item.deviceTypeId
+        }, () => {
+          this.setState({ stepcurrent: ++index });
+        })
+      }
+    })
+  }
+
   // 下一步
   clickNext = (index, e) => {
     if (index === 0) { // 选择品类
-      // console.log(this.state.currentIndex2, '选择品类的索引')
-      if (!this.state.currentIndex2 && this.state.currentIndex2 !== 0) {
-        return Notification({ description: '请选择对应品类！', type: 'warn' })
-      }
-      const need = cloneDeep(this.state.needShowThirdList)
-      need.forEach((item, i) => {
-        if (i === this.state.currentIndex2) {
-          console.log('选择的品类deviceTypeId', item.deviceTypeId)
-          this.props.createCategory({
-            deviceTypeId: item.deviceTypeId,
-            deviceSubtypeId: item.defaultDeviceSubtype.deviceSubtypeId,
-            devSubKeyId: item.defaultDeviceSubtype.devSubKeyId
-          })
-          this.setState({
-            thirdCategoryId: item.deviceTypeId
-          }, () => {
-            this.setState({ stepcurrent: ++index });
-          })
-        }
-      })
+      this.judgeStep1(index)
     } else if (index === 1) { // 确定方案
-      console.log(this.refScheme, '*****')
       this.refScheme.refSwitchTab.saveSchemeData()
       this.setState({ stepcurrent: ++index });
-    }else if (index === 2) { // 建立产品信息
+    } else if (index === 2) { // 建立产品信息
       this.refSetupProduct.formRef.current.submit()
-    } else {
-      this.setState({ stepcurrent: ++index });
     }
   }
 
@@ -172,7 +174,7 @@ class MakeProductModal extends Component {
 
   render() {
     const { stepcurrent, currentIndex, currentIndex2, isDisabled, thirdCategoryList, secondCategoryList, needShowThirdList, thirdCategoryId } = this.state
-    const { cancelHandle, visible } = this.props
+    const { cancelHandle, visible, getProductListNew } = this.props
     return (
       <Modal
         title="创建产品"
@@ -247,7 +249,11 @@ class MakeProductModal extends Component {
               thirdCategoryId={thirdCategoryId} />}
           {/* 建立产品信息 */}
           {stepcurrent === 2 &&
-            <SetupProduct onRef={ref => this.refSetupProduct = ref} />}
+            <SetupProduct
+              onRef={ref => this.refSetupProduct = ref}
+              handleCancel={cancelHandle}
+              getProductListNew={getProductListNew}/>
+          }
         </div>
       </Modal>
     )
