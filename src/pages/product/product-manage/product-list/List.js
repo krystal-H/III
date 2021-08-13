@@ -40,7 +40,9 @@ class List extends PureComponent {
       copyLoading: false, // 复制loading
       copyInputValue: '', // 复制弹窗中输入的产品名称确认
 
-      isClicked: true // 制作产品按钮
+      isClicked: true, // 制作产品按钮
+
+      oldProIngVisiable:false,//开发中的旧产品提示框
     }
     this.columns = [
       {
@@ -69,7 +71,7 @@ class List extends PureComponent {
         title: "操作", key: "",
         render: (text, record, index) => (
           <div className="operation">
-            <span className="continue" onClick={this.clickProductInfo.bind(this, record.mode, record.productId)}>继续开发</span>
+            <span className="continue" onClick={this.clickProductInfo.bind(this, record)}>{record.status == 1?'开发详情':'继续开发'}</span>
             {
               record.mode !== 2 && <span className="copy mar25" onClick={this.operateProduct.bind(this, record, 'copyModalVisible')}>复制</span>
             }
@@ -130,10 +132,20 @@ class List extends PureComponent {
   }
 
   // 继续开发  ——> detail 
-  // 产品状态 mode：（0-开发中，1-已发布，2-审核中）
-  clickProductInfo(mode, productId) {
+  // 产品状态 statusStr -开发中，1-已发布，2-审核中）
+  clickProductInfo({status, productId, isOldProduct}) {
+    //未发布的老产品禁止操作 弹窗提示
+    if(isOldProduct && status !== 1 ){
+      this.toggleOldProVisiable();
+      return;
+    }
+    //否则 老产品跳到老的详情页面 detail；新产品根据状态跳到详情页details 或者 编辑页edit
     let pathroute = 'details';
-    if (mode !== 1) { pathroute = 'edit'; }
+    if(status !== 1){
+      pathroute = 'edit';
+    }else if(isOldProduct){
+      pathroute = 'detail';
+    }
     this.props.history.push({
       pathname: `/open/product/proManage/${pathroute}/${productId}`
     });
@@ -214,9 +226,14 @@ class List extends PureComponent {
       isClicked: !isClicked
     })
   }
+  toggleOldProVisiable=()=>{
+    this.setState({
+      oldProIngVisiable:!this.state.oldProIngVisiable
+    })
+  }
 
   render() {
-    const { listParams, selectedItem, deleteVisible, deleteLoading, deleteInputValue, copyModalVisible, copyLoading, copyInputValue, isClicked, dataSource, pager } = this.state
+    const { listParams, selectedItem, deleteVisible, deleteLoading, deleteInputValue, copyModalVisible, copyLoading, copyInputValue, isClicked, dataSource, pager,oldProIngVisiable } = this.state
     return (
       <section className="page-wrapper">
         <PageTitle title="我的智能产品" />
@@ -312,6 +329,11 @@ class List extends PureComponent {
             cancelHandle={this.makeHandle.bind(this, true)}>
           </AddProductModal>
         }
+
+      {/* 开发中的旧产品 弹窗提示 */}
+      <Modal title="更新升级" visible={oldProIngVisiable} onOk={this.toggleOldProVisiable} onCancel={this.toggleOldProVisiable}>
+        <p> clife平台全新升级，老版本的开发中状态产品，需要在新平台重新创建</p>
+      </Modal>
       </section>
     )
   }
