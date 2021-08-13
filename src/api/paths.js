@@ -38,8 +38,10 @@ let Paths = {
     getProductBaseInfo: '/product/getProduct',
     updateProductBaseInfo: '/product/update',
 
+    // 5.x产品列表功能
     getProductListNew: '/product/list', // 获取产品列表
-
+    deleteProductNew: '/product/delete', // 删除产品
+    copyProductNew: '/product/copy', // 复制产品
 
     // 新建产品品类信息
     getThirdCategory: '/deviceCategory/deviceType/all', // 获取所有的三级品类
