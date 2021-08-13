@@ -489,10 +489,16 @@ let Paths = {
     standardFnList:'/product/dev/show/func', //标准和自定义功能列表
     PhysicalModelList:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
     exportPhysicalModel:'/physicalModel/export/product',//产品-定义功能-导出物模型
-    PhysicalModelAdd:'/physicalModel/func/product/action',//产品-功能定义-物模型-功能-增
+    PhysicalModelAction:'/physicalModel/func/product/action',//产品-功能定义-物模型-功能-增
+    searchModelList:'/physicalModel/func/search',//产品-功能定义-创建物模型-查询模型列表
 
     // //设备-设备管理
     // getDeviceList
+    //工单
+    getWorkOrderDictionary:'/workOrder/getWorkOrderDictionary',//工单-字典
+    subWorkOrder :'/workOrder/createWorkOrder',//新增工单
+    WorkOrderList:'/workOrder/getHistoryWorkOrderList',//工单列表
+    WorkOrderDetail:'/workOrder/getWorkOrder',//工单详情
 };
 
 // 拼接 urlPrefix

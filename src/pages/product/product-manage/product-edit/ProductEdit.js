@@ -18,6 +18,7 @@ import ConfirmPanel from './firmpanel';
 import Validation from './validation'
 import ConfigService from './config-service';
 import TitleSet from './titleSet'
+import { MyContext } from './context'
 
 
 // 此部分路由不需要展示产品信息
@@ -161,14 +162,16 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
                             ))}
                         </Steps>
                     </div>
-                    <Switch>
-                        <Route path={`${path}/protocols`} render={(props) => <ProductProtocols ref={refArr.active_0} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ProductProtocols>}></Route>
-                        <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel ref={refArr.active_1} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} getProductBaseInfo={getProductBaseInfo} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
-                        <Route path={`${path}/projectSelect`} render={(props) => <Hardware ref={ref => refArr.active_2 = ref} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></Hardware>}></Route>
-                        <Route path={`${path}/configService`} render={(props) => <ConfigService ref={refArr.active_3} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ConfigService>}></Route>
-                        <Route path={`${path}/validation`} render={(props) => <Validation ref={refArr.active_4} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></Validation>}></Route>
-                        <Redirect to={`${path}/protocols`} />
-                    </Switch>
+                    <MyContext.Provider value={{ productIdInRoutePath }}>
+                        <Switch>
+                            <Route path={`${path}/protocols`} render={(props) => <ProductProtocols ref={refArr.active_0} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ProductProtocols>}></Route>
+                            <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel ref={refArr.active_1} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} getProductBaseInfo={getProductBaseInfo} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
+                            <Route path={`${path}/projectSelect`} render={(props) => <Hardware ref={ref => refArr.active_2 = ref} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></Hardware>}></Route>
+                            <Route path={`${path}/configService`} render={(props) => <ConfigService ref={refArr.active_3} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ConfigService>}></Route>
+                            <Route path={`${path}/validation`} render={(props) => <Validation ref={refArr.active_4} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></Validation>}></Route>
+                            <Redirect to={`${path}/protocols`} />
+                        </Switch>
+                    </MyContext.Provider>
                 </div>
                 <div className='product-main-footer'>
                     {current > 0 && (

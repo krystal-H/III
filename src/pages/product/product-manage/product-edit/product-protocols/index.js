@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef } from 'react'
+import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef, useContext } from 'react'
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
 import moment from 'moment';
 import { Table, Button, Drawer, Space } from 'antd';
@@ -9,6 +9,7 @@ import NewCusmFn from './addcusFn'
 // import TitleEdit from './titleEdit'
 import downpng from './../../../../../assets/images/product/download.png';
 import { post, Paths, get } from '../../../../../api';
+import { MyContext } from '../context'
 //处理数据
 function delaData(data) {
     let newData = []
@@ -22,6 +23,8 @@ function delaData(data) {
     return newData
 }
 function ProtocolFn({ nextStep, productId }, ref) {
+    // const { productIdInRoutePath } = useContext(MyContext)
+    // alert(productIdInRoutePath)
     //删除弹窗
     const [isDelVisible, setIsDelVisible] = useState(false)
     const [delData, setDelData] = useState({})
@@ -40,7 +43,7 @@ function ProtocolFn({ nextStep, productId }, ref) {
     const filterFn = (type, data) => {
         let result = null
         switch (type) {
-            case '数值':
+            case 'double':
                 result = `数值范围：${data.min}-${data.max},间距：${data.type},倍数：${data.type},单位：${data.type}`
                 break;
             case '布尔':
@@ -70,7 +73,7 @@ function ProtocolFn({ nextStep, productId }, ref) {
             render: text => <span>1</span>
         },
         { title: '数据类型', dataIndex: 'dataType' },
-        { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record.dataType, record)}</span> },
+        { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record.dataTypeEN, record)}</span> },
         {
             title: '操作', render: (text, record) => (
                 <Space size="middle"><Button type="link" onClick={() => { openEditCus(record) }}>编辑</Button>
@@ -110,7 +113,10 @@ function ProtocolFn({ nextStep, productId }, ref) {
         setRightVisible(true);
     };
     //关闭抽屉
-    const onCloseRight = () => {
+    const onCloseRight = (isRefresh) => {
+        if (isRefresh) {
+            getList()
+        }
         setRightVisible(false);
     };
     //新增标准功能====
@@ -170,7 +176,7 @@ function ProtocolFn({ nextStep, productId }, ref) {
         <div className='Protocol-download'>
             <div>自定义功能</div>
             <div>
-                <a onClick={openEditCus}>导出协议</a>
+                <a >导出协议</a>
                 <img src={downpng} style={{ marginRight: '15px' }} />
                 <Button type="primary" onClick={openCusmon}>新建自定义功能</Button >
             </div>
