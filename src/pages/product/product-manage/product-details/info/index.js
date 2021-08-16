@@ -1,9 +1,22 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Input, Button, Select, Table } from 'antd';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import './index.scss'
 import EditableTable from './editTable';
-export default function ChangeModal() {
+import { post, Paths, get } from '../../../../../api';
+export default function productInfo() {
+    useEffect(() => {
+        getBusinessInfo()
+    }, [])
+    const [businessInfo, setBusinessInfo] = useState({})
+    const getBusinessInfo = () => {
+        post(Paths.getPublishProductBusinessInfo, { productId: 1 }).then((res) => {
+            setBusinessInfo(res.data)
+        });
+    }
+    const downFile=(url)=>{
+
+    }
     return (<div id='product-info'>
         <div className='product-info-item'>
             <h3 className='product-info-title'>产品信息</h3>
@@ -69,10 +82,54 @@ export default function ChangeModal() {
             </div>
         </div>
         <div className='product-info-item'>
-            <h3 className='product-info-title'>标准功能<LabelTip tip="产品标签是您给产品自定义的标识，您可以使用标签功能实现产品的分类统一管理。"></LabelTip></h3>
+            <h3 className='product-info-title'>标签<LabelTip tip="产品标签是您给产品自定义的标识，您可以使用标签功能实现产品的分类统一管理。"></LabelTip></h3>
             <div className='product-info-table'>
-                <EditableTable/>
-
+                <EditableTable />
+            </div>
+        </div>
+        <div className='product-info-item'>
+            <h3 className='product-info-title'>商业化信息</h3>
+            <div className='product-business-wrap'>
+                <div className='product-business-wrap-left'>
+                    <div className='business-left-item'>
+                        <div className='item-label'>产品所属公司名称：</div>
+                        <div className='item-text'>{businessInfo.supplier}</div>
+                    </div>
+                    <div className='business-left-item'>
+                        <div className='item-label'>产品联系人：</div>
+                        <div className='item-text'>{businessInfo.contact}</div>
+                    </div>
+                    <div className='business-left-item'>
+                        <div className='item-label'>联系方式：</div>
+                        <div className='item-text'>{businessInfo.tel}</div>
+                    </div>
+                    <div className='business-left-item'>
+                        <div className='item-label'>产品尺寸：</div>
+                        <div className='item-text'>{businessInfo.size}</div>
+                    </div>
+                    <div className='business-left-item'>
+                        <div className='item-label'>产品重量：</div>
+                        <div className='item-text'>{businessInfo.weight}</div>
+                    </div>
+                </div>
+                <div className='product-business-wrap-right'>
+                    <div className='business-left-item'>
+                        <div className='item-label'>产品参数：</div>
+                        <div className='item-text'>{businessInfo.productParam}</div>
+                    </div>
+                    <div className='business-left-item'>
+                        <div className='item-label'>产品介绍：</div>
+                        <div className='item-text'>{businessInfo.introduction}</div>
+                    </div>
+                    <div className='business-left-item'>
+                        <div className='item-label'>产品说明书：</div>
+                        {
+                           businessInfo.instruction ?  JSON.parse(businessInfo.instruction).map((item,index)=>{
+                            return (<a key={index} onClick={()=>{downFile(item.filesrc)}}>{item.filename}</a>)
+                           }) : null
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     </div>)

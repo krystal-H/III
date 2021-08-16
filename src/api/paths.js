@@ -202,7 +202,13 @@ let Paths = {
      * 产品-基本信息 start
      * aize-2019-09-18
      */
-    getPublishProductInfo: '/product/getPublishProductInfo',///product/getPublishProductInfo
+    getPublishProductBusinessInfo: '/product/commerce/info/show',//产品-基本信息-商业化信息
+    getPublishProductFn:'',//功能定义
+    getPublishProductLabelList:'/label/list',//标签列表
+    getPublishProductLabelAdd:'/label/create',//新增标签
+    getPublishProductLabelDel:'/label/delete',//删除标签
+    getPublishProductLabelEdit:'/label/update',//编辑标签
+
 
     /*产品-标签*/
     getProductLabelList:'/label/getList',
@@ -268,6 +274,8 @@ let Paths = {
     getLabelByProductId: '/data/push/config/getLabelByProductId',
     createSubscription: '/data/push/config/create'+version,
     saveSubscription: '/data/push/config/save'+version,
+    subscribeList:'/datapush/getSubscriptConfList', //数据订阅列表
+
 
     /**
      * 基础产品--应用 start

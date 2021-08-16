@@ -99,8 +99,8 @@ export default function DeviceShadow() {
                     <div className='order-item-label'>上传问题图片/视频：</div>
                     <div className='order-item-text'>
                         {
-                            detailInfo.image.problemTypeOneName((item,index)=>{
-                                return <a></a>
+                            detailInfo.image && detailInfo.image.split(',').map((item,index)=>{
+                                return <img key={index}/>
                             })
                         }
                     </div>

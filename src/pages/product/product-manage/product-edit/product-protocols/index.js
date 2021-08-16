@@ -114,6 +114,8 @@ function ProtocolFn({ nextStep, productId }, ref) {
     };
     //关闭抽屉
     const onCloseRight = (isRefresh) => {
+        // alert(isRefresh)
+        console.log(isRefresh,999)
         if (isRefresh) {
             getList()
         }
@@ -190,7 +192,7 @@ function ProtocolFn({ nextStep, productId }, ref) {
             />
         </div>
         {/* 新增自定义 */}
-        <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight}></NewCusmFn>
+        <NewCusmFn rightVisible={rightVisible} onCloseRight={ onCloseRight}></NewCusmFn>
         {/* 编辑操作 */}
         {destoryDom && <EditcusFn rightVisible={rightEditVisible} onCloseRight={onCloseEditRight} destData={onDestData}></EditcusFn>}
         {/* 新增标准 */}

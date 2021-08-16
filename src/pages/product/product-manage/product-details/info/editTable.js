@@ -1,15 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Button, Space } from 'antd';
-const originData = [];
-
-for (let i = 0; i < 5; i++) {
-    originData.push({
-        key: i.toString(),
-        name: `Edrward ${i}`,
-        age: 32,
-        address: `London Park no. ${i}`,
-    });
-}
+import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
+import { post, Paths, get } from '../../../../../api';
+// import DelModal from './actionOp'
+import './index.scss'
 
 const EditableCell = ({
     editing,
@@ -29,6 +23,7 @@ const EditableCell = ({
                     name={dataIndex}
                     style={{
                         margin: 0,
+                        style: '100%'
                     }}
                     rules={[
                         {
@@ -46,66 +41,102 @@ const EditableCell = ({
     );
 };
 
-export default function EditableTable() {
+export default function EditableTable({ devceId }) {
     const [form] = Form.useForm();
-    const [data, setData] = useState(originData);
+    const [data, setData] = useState([]);
+    const [operate, setOperate] = useState(null)
+    const [delData, setDelData] = useState({})
     const [editingKey, setEditingKey] = useState('');
-    const [actionData, setActionData] = useState({ actionType: 0, actionRecord: {}, actionLoading: false }) //actionType 0,没有操作，1 在测试环境操作,2 在生产环境操作,3 删除操作
-    const isEditing = (record) => record.key === editingKey;
+    const [delLabelId, setDelLabelId] = useState(null)
+    const isEditing = (record) => record.id === editingKey;
+    const [cloudUpdateVisible, setCloudUpdateVisible] = useState(false) // 删除
     useEffect(() => {
+        getDetail()
     }, [])
+    // table操作-发布、删除、下线
+    const operateHandle = (data) => {
+        setDelData(data)
+        setCloudUpdateVisible(true)
+    }
+
+    // 删除弹框确定
+    const updateOkHandle = () => {
+        post(Paths.getPublishProductLabelDel, { id: data.id }).then((res) => {
+            setCloudUpdateVisible(false)
+            getDetail()
+        });
+
+    }
+
+    // 删除 弹框取消
+    const close = () => {
+        setCloudUpdateVisible(false)
+    }
     const edit = (record) => {
         form.setFieldsValue({
             name: '',
             age: '',
             ...record,
         });
-        setEditingKey(record.key);
+        setEditingKey(record.id);
     };
-    const cancel = () => {
-        setEditingKey('');
-    };
-
-    //打开 发布、启动、停止、删除 弹窗
-    // const openActionModal = async (type, record) => {
-    //     setActionData(preData => {
-    //         return {
-    //             ...preData,
-    //             actionType: type,
-    //             actionRecord: { ...record },
-    //         }
-    //     })
-    // }
-    const save = async (key) => {
+    //新增请求
+    const addReq = (row, loading = true) => {
+        row.targetid = 1
+        row.labelType=1
+        post(Paths.getPublishProductLabelAdd, row, { loading }).then((res) => {
+            setEditingKey('');
+            getDetail()
+        }).catch(err => {
+            setEditingKey('');
+            getDetail()
+        });
+    }
+    //编辑请求
+    const editReq = (row, loading = true) => {
+        // row.deviceId = devceId
+        post(Paths.getPublishProductLabelEdit, row, { loading }).then((res) => {
+            setEditingKey('');
+            getDetail()
+        }).catch(err => {
+            setEditingKey('');
+            getDetail()
+        });
+    }
+    const save = async (itemData) => {
         try {
             const row = await form.validateFields();
-            const newData = [...data];
-            const index = newData.findIndex((item) => key === item.key);
-
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, { ...item, ...row });
-                setData(newData);
-                setEditingKey('');
+            if (itemData.id) {
+                row.id = itemData.id
+                editReq(row)
             } else {
-                newData.push(row);
-                setData(newData);
-                setEditingKey('');
+                addReq(row)
             }
+
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
         }
     };
     //新增
     const handleEv = () => {
+        let coutinueAc = false
         if (editingKey) {
+            coutinueAc = true
+        }
+        data.map(item => {
+            if (!item.id) {
+                coutinueAc = true
+            }
+        })
+        if (coutinueAc) {
             return
         }
         let datas = JSON.parse(JSON.stringify(data))
         let item = {
             key: `${datas.length + 1}`,
-            name: `面对疾风吧`,
-            age: 9999,
+            labelKey: ``,
+            labelValue: '',
+            id: 0
         }
         datas.push(item)
         setData(datas)
@@ -114,12 +145,12 @@ export default function EditableTable() {
     const columns = [
         {
             title: '标签Key',
-            dataIndex: 'name',
+            dataIndex: 'labelKey',
             editable: true,
         },
         {
             title: '标签Value',
-            dataIndex: 'age',
+            dataIndex: 'labelValue',
             editable: true,
         },
         {
@@ -130,24 +161,20 @@ export default function EditableTable() {
                 return editable ? (
                     <span>
                         <a
-                            href="#!"
-                            onClick={() => save(record.key)}
+                            onClick={() => save(record)}
                             style={{
                                 marginRight: 8,
                             }}
                         >
                             保存
                         </a>
-                        <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                            <a href="#!">取消</a>
-                        </Popconfirm>
                     </span>
                 ) : (
                     <Space>
                         <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
                             编辑
                         </Typography.Link>
-                        <Typography.Link disabled={editingKey !== ''}>
+                        <Typography.Link disabled={editingKey !== ''} onClick={() => { operateHandle(record) }}>
                             删除
                         </Typography.Link>
                     </Space>
@@ -171,9 +198,14 @@ export default function EditableTable() {
             }),
         };
     });
-
+    //请求标签列表
+    const getDetail = (loading = true) => {
+        post(Paths.getPublishProductLabelList, { 'targetid': 1 }, { loading }).then((res) => {
+            setData(res.data)
+        });
+    }
     return (
-        <>
+        <div id='device-tag'>
             <Form form={form} component={false}>
                 <Table
                     components={{
@@ -184,12 +216,24 @@ export default function EditableTable() {
                     dataSource={data}
                     columns={mergedColumns}
                     rowClassName="editable-row"
+                    rowKey='id'
                     pagination={false}
                 />
             </Form>
             <Button type="primary" ghost className='edit-table-btn' onClick={() => { handleEv() }}>添加标签</Button>
-        </>
+            {
+                cloudUpdateVisible && <ActionConfirmModal
+                    visible={cloudUpdateVisible}
+                    modalOKHandle={updateOkHandle}
+                    modalCancelHandle={close}
+                    targetName={delData.funcName}
+                    title='删除'
+                    descGray={true}
+                    needWarnIcon={true}
+                    descText='确定删除此功能'
+                ></ActionConfirmModal>
+            }
+
+        </div>
     );
 };
-
-// ReactDOM.render(<EditableTable />, mountNode);

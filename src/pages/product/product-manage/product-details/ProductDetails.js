@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux';
 
 import { getProductBaseInfo, getProtocolLists } from '../store/ActionCreator';
@@ -9,6 +9,7 @@ import ProductTabs from './product-tabs/ProductTabs';
 
 import './ProductDetails.scss'
 import '../product-edit/ProductEdit.scss'
+import { post, Paths, get } from './../../../../api';
 const mapStateToProps = state => {
     return {
         productBaseInfo: state.getIn(['product', 'productBaseInfo']).toJS(),
@@ -30,13 +31,22 @@ function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtoco
 
     let productIdInRoutePath = getProductIdFromPath(match);
 
+    // useEffect(() => {
+    //     // 产品ID更新后，重新获取数据
+    //     if (productIdInRoutePath) {
+    //         getProductBaseInfo(productIdInRoutePath)
+    //         getProtocolLists(productIdInRoutePath)
+    //     }
+    // }, [getProductBaseInfo, getProtocolLists, productIdInRoutePath])
     useEffect(() => {
-        // 产品ID更新后，重新获取数据
-        if (productIdInRoutePath) {
-            getProductBaseInfo(productIdInRoutePath)
-            getProtocolLists(productIdInRoutePath)
-        }
-    }, [getProductBaseInfo, getProtocolLists, productIdInRoutePath])
+        getDetail()
+    }, [])
+    const [data, setData] = useState({})
+    const getDetail = () => {
+        post(Paths.getPublishProductInfo, { productId: 1 }).then((res) => {
+            setData(res.data)
+        });
+    }
 
     if (!productIdInRoutePath) {
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
@@ -48,11 +58,11 @@ function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtoco
         </div>
         <div>
             <div>产品ID：</div>
-            <div>睡眠监测</div>
+            <div>{data.productId}</div>
         </div>
         <div>
             <div>通讯协议：</div>
-            <div>睡眠监测</div>
+            <div>{}</div>
         </div>
         <div>
             <div>产品编码：</div>
