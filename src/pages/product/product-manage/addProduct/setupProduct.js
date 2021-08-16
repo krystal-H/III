@@ -3,17 +3,19 @@ import { Form, Input, Button, Checkbox, Radio, Select } from 'antd'
 import { Notification } from '../../../../components/Notification'
 import { Paths, post } from '../../../../api'
 import { connect } from 'react-redux'
-import { createProductFormAction, 
-  createProductCategoryAction, 
-  createProductSchemeAction, 
-  createProductSchemekeyAction, 
-  createProductSchemeBtnKeyAction } from '../store/ActionCreator'
+import {
+  createProductFormAction,
+  createProductCategoryAction,
+  createProductSchemeAction,
+  createProductSchemekeyAction,
+  createProductSchemeBtnKeyAction
+} from '../store/ActionCreator'
 
 const { Option } = Select;
 const gatewayTypeList = ['Wifi', '蓝牙', 'zigbee2.0', 'zigbee3.0', '超级开关/衣柜']
 
 const mapStateToProps = state => {
-  // console.log(state.getIn(['product', 'createProductForm']), '步骤3333333页面取得值')
+  // console.log(state.getIn(['product', 'createProductCategory']), '步骤3333333页面取得值')
   return {
     createProductCategory: state.getIn(['product', 'createProductCategory']),
     schememData: state.getIn(['product', 'createProductScheme']),
@@ -90,8 +92,8 @@ class SetupProduct extends Component {
     console.log('调用提交的接口', params)
     post(Paths.createProduct, { ...params }).then(res => {
       Notification({ description: '创建成功！', type: 'success' })
-      this.resetData()
       this.props.handleCancel()
+      this.resetData()
       this.props.getProductListNew()
     }, () => {
       Notification({ description: '创建失败！', type: 'error' })
@@ -163,21 +165,27 @@ class SetupProduct extends Component {
             }
           </Radio.Group>
         </Form.Item>
-        <Form.Item name="gatewayType" label="网关子设备协议"
-          rules={[{ required: true, message: '网关子设备协议' }]}>
-          <Radio.Group>
-            {
-              gatewayTypeList.map((item, index) => (
-                <Radio value={index + 1} key={item}>{item}</Radio>
-              ))
-            }
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item name="portNumber" label="控制端口数"
-          rules={[{ required: true, pattern: new RegExp(/^[0-9]+$/, "g"), message: '请输入控制端口数，支持数字' }]}
-        >
-          <Input placeholder="请输入控制端口数，支持数字" />
-        </Form.Item>
+        {
+          this.props.createProductCategory.deviceTypeName.indexOf('网关') !== -1 &&
+          <Form.Item name="gatewayType" label="网关子设备协议"
+            rules={[{ required: true, message: '网关子设备协议' }]}>
+            <Radio.Group>
+              {
+                gatewayTypeList.map((item, index) => (
+                  <Radio value={index + 1} key={item}>{item}</Radio>
+                ))
+              }
+            </Radio.Group>
+          </Form.Item>
+        }
+        {
+          this.props.createProductCategory.controlClass == 1 &&
+          <Form.Item name="portNumber" label="控制端口数"
+            rules={[{ required: true, pattern: new RegExp(/^[0-9]+$/, "g"), message: '请输入控制端口数，支持数字' }]}
+          >
+            <Input placeholder="请输入控制端口数，支持数字" />
+          </Form.Item>
+        }
       </Form>
     )
   }

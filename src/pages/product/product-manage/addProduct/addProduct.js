@@ -145,7 +145,9 @@ class MakeProductModal extends Component {
         this.props.createCategory({
           deviceTypeId: item.deviceTypeId,
           deviceSubtypeId: item.defaultDeviceSubtype.deviceSubtypeId,
-          devSubKeyId: item.defaultDeviceSubtype.devSubKeyId
+          devSubKeyId: item.defaultDeviceSubtype.devSubKeyId,
+          controlClass: item.defaultDeviceSubtype.controlClass, // 0/1   1显示控制端口数
+          deviceTypeName: item.deviceTypeName
         })
         this.setState({
           thirdCategoryId: item.deviceTypeId

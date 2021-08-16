@@ -111,6 +111,7 @@ class SwitchTab extends Component {
   saveSchemeData() {
     const currentList = cloneDeep(this.state.currentSchemList)
     const need = currentList[this.state.btnIndex]
+    console.log(need, 'select scheme')
     const params = {
       schemeId: need.schemeId, // 方案id
       schemeTypeId: need.schemeTypeId, // 方案类型id
