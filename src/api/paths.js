@@ -275,6 +275,8 @@ let Paths = {
     createSubscription: '/data/push/config/create'+version,
     saveSubscription: '/data/push/config/save'+version,
     subscribeList:'/datapush/getSubscriptConfList', //数据订阅列表
+    subscribeStart:'/datapush/enabled',//启动数据订阅
+    subscribeClose:'/datapush/stop',//停用数据订阅
 
 
     /**
@@ -512,6 +514,10 @@ let Paths = {
     subWorkOrder :'/workOrder/createWorkOrder',//新增工单
     WorkOrderList:'/workOrder/getHistoryWorkOrderList',//工单列表
     WorkOrderDetail:'/workOrder/getWorkOrder',//工单详情
+
+    //数据服务
+    deviceDataAn:'/summary/device/dashboard',//设备分析
+    userDataAn:'/summary/account/dashboard',//用户分析
 };
 
 // 拼接 urlPrefix

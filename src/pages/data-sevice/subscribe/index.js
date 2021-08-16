@@ -4,7 +4,10 @@ import PageTitle from '../../../components/page-title/PageTitle';
 import stepImg from '../../../assets/images/product-regist.png';
 import AddSubScribe from './addModal'
 import { post, Paths, get } from '../../../api';
+import ActionModal from './actionOp'
+import SubInfo from './detail'
 import './index.scss'
+import moment from 'moment';
 const { Option } = Select;
 const { Step } = Steps;
 const { Search } = Input;
@@ -13,6 +16,46 @@ export default function DeviceRegist() {
     const [deviceNameS, setDeviceNameS] = useState([])
     const [productCount, SetproductCount] = useState({})
     const [dataSource, setDataSource] = useState([])
+    const [pager, setPager] = useState({ pageStartRow: 1, totalRows: 0, pageRows: 10 })
+    // const [searchParams,setSearchParams]=useState({})
+    // table操作-发布、删除、下线
+    const [tableAcVisible, setTableAcVisible] = useState(false)
+    const [operate, setOperate] = useState(null)
+    const [selectRow, setSelectRow] = useState({})
+    const operateHandle = (type, data) => {
+        setTableAcVisible(true)
+        setSelectRow(data)
+        setOperate(type)
+
+    }
+    const closeAction = () => {
+        setTableAcVisible(false)
+    }
+    const updateOkHandle = (load = true) => {
+        if (operate == 1) {
+            let url = Paths.subscribeStart + '?urlConfId=' + selectRow.urlConfId
+            post(url, {}, { load }).then((res) => {
+                setTableAcVisible(false)
+                getList()
+            });
+        } else {
+            let url = Paths.subscribeClose + '?urlConfId=' + selectRow.urlConfId
+            post(url, params, { load }).then((res) => {
+                setTableAcVisible(false)
+                getList()
+            });
+        }
+    }
+    //==========
+    //====详情
+    const [rightVisible, setRightVisible] = useState(false)
+    const openInfo = (data) => {
+        setRightVisible(true)
+    }
+    const onCloseRight = () => {
+        setRightVisible(false)
+    }
+    //===============
     const columns = [
         {
             title: '订阅ID',
@@ -39,6 +82,7 @@ export default function DeviceRegist() {
             title: '订阅更新时间',
             dataIndex: 'updateTime',
             key: 'updateTime',
+            render: text => <span>{text && moment(text).add(8, 'h').format('YYYY-MM-DD HH:mm:ss') || '--'}</span>
         }, {
             title: '状态',
             dataIndex: 'pushState',
@@ -51,31 +95,65 @@ export default function DeviceRegist() {
             title: '操作',
             render: (text, record) => (
                 <Space size="middle">
-                    <a>查看</a>
-                    <a>编辑</a>
-                    <a>停用</a>
-                    <a>启动</a>
+                    <a onClick={() => { openInfo(record) }}>查看</a>
+                    <a onClick={() => { openInfo(record) }}>编辑</a>
+                    {
+                        record.pushState ? (<a onClick={() => { operateHandle(2, record) }}>停用</a>) :
+                            (<a onClick={() => { operateHandle(1, record) }}>启动</a>)
+                    }
                 </Space>
             )
         },
     ];
     useEffect(() => {
         getList()
-    }, [])
+    }, [pager.pageRows, pager.pageStartRow])
     const downFile = () => {
         alert(10)
     }
+
     //搜索
     const onSearch = () => {
-        getList()
+        if (pager.pageStartRow == 1) {
+            getList()
+        } else {
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { pageStartRow: 1 })
+            })
+        }
     };
     //获取列表
     const getList = (load = true) => {
-        let params = form.getFieldsValue();
+        let params = {
+            devicePushUrlConf: form.getFieldsValue(),
+            pager: pager
+        }
+        // setSearchParams(params.devicePushUrlConf)
         post(Paths.subscribeList, params, { load }).then((res) => {
             setDataSource(res.data.list)
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { totalRows: res.data.pager.totalRows })
+            })
         });
     }
+    //页码改变
+    const pagerChange = (pageStartRow, pageRows) => {
+        if (pageRows == pager.pageRows) {
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { pageStartRow, pageRows })
+            })
+        } else {
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { pageStartRow: 1, pageRows })
+            })
+        }
+
+    }
+
     //新增订阅
     const [modelVis, setModelVis] = useState(false)
     const openRegist = () => {
@@ -111,13 +189,6 @@ export default function DeviceRegist() {
             <div className='comm-shadowbox device-content'>
                 <div className='content-top'>
                     <div className='content-top-left'>
-                        {/* <span>订阅方式：</span>
-                        <Select style={{ width: 200 }} allowClear>
-                            <Option value="0">API数据PUSH形式 </Option>
-                            <Option value="1">MQTT主题订阅</Option>
-                        </Select>
-                        <span style={{ marginLeft: '53px' }}>订阅名称：</span>
-                        <Search onSearch={onSearch} enterButton style={{ width: 465 }} /> */}
                         <Form className='device-filter-form' form={form} layout='inline'>
                             <Form.Item name="push_way" label="订阅方式" >
                                 <Select
@@ -144,11 +215,29 @@ export default function DeviceRegist() {
                     </div>
                     <Button type="primary" onClick={openRegist}>添加订阅</Button>
                 </div>
-                <Table rowKey='urlConfId' dataSource={dataSource} columns={columns} />
+                <Table rowKey='urlConfId' dataSource={dataSource} columns={columns} pagination={{
+                    defaultCurrent: 1,
+                    current: pager.pageStartRow,
+                    onChange: pagerChange,
+                    pageSize: pager.pageRows,
+                    total: pager.totalRows,
+                    showQuickJumper: true,
+                    pageSizeOptions: [10]
+                }} />
             </div>
             {
                 modelVis && <AddSubScribe isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl}></AddSubScribe>
             }
+            {
+                tableAcVisible &&
+                <ActionModal
+                    visible={tableAcVisible}
+                    operate={operate}
+                    actionObj={selectRow}
+                    updateOkHandle={() => updateOkHandle()}
+                    updateCancelHandle={() => closeAction()} />
+            }
+            <SubInfo rightVisible={rightVisible} onCloseRight={onCloseRight} />
         </div>
     )
 }

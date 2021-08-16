@@ -15,7 +15,7 @@ export default function productInfo() {
         });
     }
     const downFile=(url)=>{
-
+        window.open(url)
     }
     return (<div id='product-info'>
         <div className='product-info-item'>

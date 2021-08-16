@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Button, Space } from 'antd';
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
 import { post, Paths, get } from '../../../../../api';
+
 // import DelModal from './actionOp'
 import './index.scss'
 
@@ -50,6 +52,8 @@ export default function EditableTable({ devceId }) {
     const [delLabelId, setDelLabelId] = useState(null)
     const isEditing = (record) => record.id === editingKey;
     const [cloudUpdateVisible, setCloudUpdateVisible] = useState(false) // 删除
+    const { pathname } = useLocation();
+    // console.log(pathname,'===')
     useEffect(() => {
         getDetail()
     }, [])
@@ -61,7 +65,7 @@ export default function EditableTable({ devceId }) {
 
     // 删除弹框确定
     const updateOkHandle = () => {
-        post(Paths.getPublishProductLabelDel, { id: data.id }).then((res) => {
+        post(Paths.getPublishProductLabelDel, { id: delData.id }).then((res) => {
             setCloudUpdateVisible(false)
             getDetail()
         });
@@ -82,8 +86,9 @@ export default function EditableTable({ devceId }) {
     };
     //新增请求
     const addReq = (row, loading = true) => {
+        let id=pathname.split('/').slice(-1)
         row.targetid = 1
-        row.labelType=1
+        row.labelType = 1
         post(Paths.getPublishProductLabelAdd, row, { loading }).then((res) => {
             setEditingKey('');
             getDetail()

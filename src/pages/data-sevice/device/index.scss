@@ -48,4 +48,44 @@
       margin-bottom: 12px;
     }
   }
+
+  .echart-count-tab {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    margin: 16px 0;
+
+    >div {
+      font-weight: 400;
+      width: 170px;
+      height: 56px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      .item-label {
+        height: 22px;
+        font-size: 12px;
+        color: #666666;
+        line-height: 22px;
+      }
+
+      .item-number {
+        color: #323232;
+        width: 22px;
+        font-size: 20px;
+        line-height: 32px;
+      }
+    }
+
+    .current-tab {
+      .item-number {
+        font-size: 20px;
+        font-weight: 400;
+        color: #3079FF;
+        line-height: 32px;
+      }
+    }
+  }
 }
