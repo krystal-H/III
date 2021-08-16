@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Input, Select, Button, Table, Pagination, Modal } from 'antd';
 import { cloneDeep } from 'lodash';
 import { connect } from 'react-redux';
-import { productStatusText } from '@src/configs/text-map';
+import { productStatusText } from '../../../../../src/configs/text-map';
 import ProductIcon from '../../../../components/product-components/product-icon/ProductIcon';
 import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
 import { Notification } from '../../../../components/Notification';
@@ -73,7 +73,7 @@ class List extends PureComponent {
           <div className="operation">
             <span className="continue" onClick={this.clickProductInfo.bind(this, record)}>{record.status === 1 ? '开发详情' : '继续开发'}</span>
             {
-              record.mode !== 2 &&
+              record.status !== 2 &&
               <>
                 <span className="copy mar25" onClick={this.operateProduct.bind(this, record, 'copyModalVisible')}>复制</span>
                 <span className="delete" onClick={this.operateProduct.bind(this, record, 'deleteVisible')}>删除</span>

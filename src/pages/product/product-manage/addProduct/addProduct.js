@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { Modal, Steps, Button, Select } from 'antd';
-import "./addProduct.scss";
 import ConfirmDepPlan from './confirmDepPlan';
 import SetupProduct from './setupProduct';
 import { Paths, post, get } from '../../../../api'
-import { cloneDeep, uniq, difference } from 'lodash'
+import { cloneDeep } from 'lodash'
 import { Notification } from '../../../../components/Notification';
 import { connect } from 'react-redux';
 import { createProductCategoryAction } from "../store/ActionCreator";
+import { withRouter } from 'react-router-dom';
+import "./addProduct.scss";
 
 const { Step } = Steps;
 const { Option } = Select;
@@ -172,6 +173,13 @@ class MakeProductModal extends Component {
     this.setState({ stepcurrent: --index });
   }
 
+  // 跳转工单
+  goOrder = () => {
+    this.props.history.push({
+      pathname: `/open/repairOrder`
+    });
+  }
+
   render() {
     const { stepcurrent, currentIndex, currentIndex2, isDisabled, thirdCategoryList, secondCategoryList, needShowThirdList, thirdCategoryId } = this.state
     const { cancelHandle, visible, getProductListNew } = this.props
@@ -216,7 +224,9 @@ class MakeProductModal extends Component {
                   ))
                 }
               </Select>
-              <div>找不到想要的品类？&nbsp;&nbsp;&nbsp;<span className="submit-item">提交工单</span></div>
+              <div>找不到想要的品类？&nbsp;&nbsp;&nbsp;
+                <span className="submit-item" style={stepStyle} onClick={() => this.goOrder()}>提交工单</span>
+              </div>
             </div>
             {/* 二级品类 */}
             <div className="level1-box">
@@ -252,7 +262,7 @@ class MakeProductModal extends Component {
             <SetupProduct
               onRef={ref => this.refSetupProduct = ref}
               handleCancel={cancelHandle}
-              getProductListNew={getProductListNew}/>
+              getProductListNew={getProductListNew} />
           }
         </div>
       </Modal>
@@ -260,4 +270,4 @@ class MakeProductModal extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MakeProductModal)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MakeProductModal))
