@@ -38,8 +38,10 @@ let Paths = {
     getProductBaseInfo: '/product/getProduct',
     updateProductBaseInfo: '/product/update',
 
+    // 5.x产品列表功能
     getProductListNew: '/product/list', // 获取产品列表
-
+    deleteProductNew: '/product/delete', // 删除产品
+    copyProductNew: '/product/copy', // 复制产品
 
     // 新建产品品类信息
     getThirdCategory: '/deviceCategory/deviceType/all', // 获取所有的三级品类
@@ -54,6 +56,9 @@ let Paths = {
     getScheme: '/scheme/list/deviceType', // 获取方案数据
     getPhysicalModelId: '/physicalModel/func', // 获取功能点
     confirmScheme: 'product/create/confirm/scheme', // 创建方案下一步
+
+    // 继续开发-发布产品
+    publishProduct: '/product/publish', // 继续开发-发布产品
 
 
     /* 协议 */
@@ -197,7 +202,13 @@ let Paths = {
      * 产品-基本信息 start
      * aize-2019-09-18
      */
-    getPublishProductInfo: '/product/getPublishProductInfo',///product/getPublishProductInfo
+    getPublishProductBusinessInfo: '/product/commerce/info/show',//产品-基本信息-商业化信息
+    getPublishProductFn:'',//功能定义
+    getPublishProductLabelList:'/label/list',//标签列表
+    getPublishProductLabelAdd:'/label/create',//新增标签
+    getPublishProductLabelDel:'/label/delete',//删除标签
+    getPublishProductLabelEdit:'/label/update',//编辑标签
+
 
     /*产品-标签*/
     getProductLabelList:'/label/getList',
@@ -263,6 +274,8 @@ let Paths = {
     getLabelByProductId: '/data/push/config/getLabelByProductId',
     createSubscription: '/data/push/config/create'+version,
     saveSubscription: '/data/push/config/save'+version,
+    subscribeList:'/datapush/getSubscriptConfList', //数据订阅列表
+
 
     /**
      * 基础产品--应用 start

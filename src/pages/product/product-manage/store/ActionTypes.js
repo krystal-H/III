@@ -31,6 +31,8 @@ export const COLAR_DEV_DATA2 = "COLAR_DEV_DATA2";//清空报文数据
 export const CREATE_PRODUCT_CATEGORY = "CREATE_PRODUCT_CATEGORY" // 创建产品-选择品类
 export const CREATE_PRODUCT_SCHEME = "CREATE_PRODUCT_SCHEME" // 创建产品-确定方案
 export const CREATE_PRODUCT_FORM = "CREATE_PRODUCT_FORM" // 创建产品-建立产品信息
+export const CREATE_PRODUCT_SCHEMEKEY = "CREATE_PRODUCT_SCHEMEKEY" // 大方案索引
+export const CREATE_PRODUCT_BTNKEY = "CREATE_PRODUCT_BTNKEY" // 子方案索引
 
 // --------------
 

@@ -29,6 +29,8 @@ const defaultState = fromJS({
     createProductCategory: {}, // 创建产品-选择品类
     createProductScheme: {}, // 创建产品-确定方案
     createProductForm: {}, // 创建产品-建立产品信息
+    createProductSchemekey: '1',
+    createProductSchemeBtnKey: 0
 });
 
 
@@ -40,6 +42,10 @@ export default (state = defaultState, action) => {
       return state.set('createProductScheme', action.info)
     case ActionTypes.CREATE_PRODUCT_FORM:
       return state.set('createProductForm', action.info)
+    case ActionTypes.CREATE_PRODUCT_SCHEMEKEY:
+      return state.set('createProductSchemekey', action.data)
+    case ActionTypes.CREATE_PRODUCT_BTNKEY:
+      return state.set('createProductSchemeBtnKey', action.data)
 
     case ActionTypes.UPDATE_PRODUCT_LIST:
       return state.set('productList',action.list)

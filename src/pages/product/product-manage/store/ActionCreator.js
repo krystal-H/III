@@ -7,7 +7,7 @@ import { Notification } from '../../../../components/Notification';
 // --------------5.x
 // 创建产品-选择品类
 export const createProductCategoryAction = (info) => {
-  console.log(info, '步骤一存的数据')
+  // console.log(info, '步骤一存的数据')
   return {
     type: ActionTypes.CREATE_PRODUCT_CATEGORY,
     info
@@ -16,7 +16,7 @@ export const createProductCategoryAction = (info) => {
 
 // 创建产品-确定方案
 export const createProductSchemeAction = (info) => {
-  console.log(info, '步骤二二二存的数据')
+  // console.log(info, '步骤二二二存的数据')
   return {
     type: ActionTypes.CREATE_PRODUCT_SCHEME,
     info
@@ -25,10 +25,26 @@ export const createProductSchemeAction = (info) => {
 
 // 创建产品-建立产品信息
 export const createProductFormAction = (info) => {
-  console.log(info, '步骤三三三存的数据')
+  // console.log(info, '步骤三三三存的数据')
   return {
     type: ActionTypes.CREATE_PRODUCT_FORM,
     info
+  }
+}
+
+// 大方案索引
+export const createProductSchemekeyAction = (data) => {
+  return {
+    type: ActionTypes.CREATE_PRODUCT_SCHEMEKEY,
+    data
+  }
+}
+
+// 子方案索引
+export const createProductSchemeBtnKeyAction = (data) => {
+  return {
+    type: ActionTypes.CREATE_PRODUCT_BTNKEY,
+    data
   }
 }
 
