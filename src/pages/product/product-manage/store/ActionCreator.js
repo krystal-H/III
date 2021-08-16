@@ -94,7 +94,7 @@ export const updateProtocolLists= (list) => {
 // 获取产品协议列表
 export const getProtocolLists = (productId) => {
   return (dispatch,getState) => {
-    get(Paths.getProtocolList,{
+    post(Paths.getProtocolList,{
       productId
     },{
       needVersion:1.2,

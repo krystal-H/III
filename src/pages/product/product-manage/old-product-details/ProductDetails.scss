@@ -1,0 +1,332 @@
+
+.old-pro-detail{
+    .content-wrapper{
+        .alone-section-wrapper{
+            margin: 0;
+            .alone-section-title{
+                font-size: 14px;
+                padding: 0;
+                border: 0;
+                height: 30px;
+                line-height:30px ;
+            }
+        }
+    }
+    h4,h3{
+        margin-bottom: 12px;
+        font-weight: 500;
+        font-size: 14px !important;
+    }
+    h3{
+        font-weight: 600 !important;
+    }
+
+    .product-protocol-wrapper{
+        position: relative;
+        
+        .protocol-name{
+            font-size: 16px;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.65)
+        }
+    
+        .ant-tabs{
+            padding: $gap;
+            .ant-tabs-top-bar{
+                background: #fff;
+                margin: 0;
+                padding: $gap/2 $gap 0;
+            }
+    
+            .standard-protocols,.self-protocols{
+                padding: $gap;
+                background-color: $sectionBgColor;
+            }
+    
+            .self-protocols{
+                margin-top: $gap;
+            }
+        
+            .float-right{
+                float: right;
+            }
+    
+            .protocol-content-table{
+                margin-top: $gap;
+            }
+            
+        }
+        
+        .protocol-script{
+            padding: $gap;
+            margin-top: $gap;
+            background-color: $sectionBgColor;
+    
+            .protocol-script-content{
+                margin-top: $gap;
+                border-bottom: 1px solid #e8e8e8;
+                .protocol-script-title{
+                    color: rgba(0, 0, 0, 0.85);
+                    font-size: 14px;
+                    font-weight: 500;
+                    text-align: left;
+                    padding: 16px 16px;
+                    background: #fafafa;
+                    border-bottom: 1px solid #e8e8e8;
+                }
+    
+                .protocol-script-example{
+                    padding: $gap;
+    
+                    span{
+                        line-height: 32px;
+                    }
+    
+                    .protocol-script-btn{
+                        float: right;
+                    }
+                }
+            }
+        }
+    
+        .export-wrapper{
+            position: absolute;
+            top: 40px;
+            right: $gap*2;
+            color:rgba(47,120,255,1);
+            line-height:21px;
+            height: 21px;
+            z-index: 2;
+            cursor: pointer;
+    
+            &:hover{
+                color:rgb(15, 94, 240);
+                top: 38px;     
+            }
+        }
+    }
+    
+    .debugger-modal{
+        .debugger-modal-footer{
+            display: flex;
+            justify-content: center;
+        }
+    
+        .debugger-modal-edit, .debugger-modal-result{
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 5px;
+        }
+    
+        .debugger-modal-edit{
+            width: 580px;
+            .debugger-modal-fun{
+               margin-bottom: 5px;
+            }
+        }
+    
+        .debugger-modal-input{
+            padding: 5px;
+            background: #e8e8e8;
+            &.edit textarea{
+                height: 300px;
+            }
+            &.input textarea{
+                height: 150px;
+            }
+            .data-type{
+                padding: 10px 15px;
+            }
+        }
+        .debugger-modal-title{
+            padding: 5px 20px;
+            display: flex;
+            justify-content: space-between;
+            background: #f2f2f2;
+        }
+    
+        .debugger-modal-result{
+            width: 455px;
+            textarea{
+                height: 420px;
+            }
+        }
+    
+        .attention{
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 5px;
+        }
+    }
+
+
+
+    .product_info{
+        .commonContentBox{
+            margin: 0;
+            .title{
+                padding: 0;
+                font-size: 14px;
+                border-bottom: 0;
+            }
+            
+            .links{
+                color: $themeColor;
+                cursor: pointer;
+                margin-bottom: 8px;
+            }
+            .common_title{
+                padding: 0;
+            }
+            .strategy{
+                position: relative;
+                display: inline-block;
+                // margin: 0 1%;
+                width: 220px;
+                height: 260px;
+                border: $grayBorder;
+                border-radius: $borderRadius;
+                overflow: hidden;
+                .strategy-content{
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    .strategy-img{
+                        display: block;
+                        margin: 15px auto;
+                        width: 80px;
+                        height: 80px;
+                        border: $grayBorder;
+                        border-radius: 10px;
+                    }
+                    .moduleTypeName{
+                        text-align: center;
+                    }
+                    .moduleDetails{
+                        margin: 5px 15px ;
+                        text-align: left;
+                    }
+                    .moduleLink{
+                        position: absolute;
+                        color: $themeColor;
+                        cursor: pointer;
+                        bottom: 10px;
+                        left: 10px;
+                    }
+                }
+            }
+            .table, .download{
+                display: inline-block;
+                vertical-align: top;
+            }
+            .table{
+                margin: 0 30px;
+                width: 40%;
+                table{
+                    width: 100%;
+                    tr{
+                        border: 1px solid #ddd;
+                        td{
+                            width: 50%;
+                            padding: 12px 15px;
+                            input{
+                                height: 24px;
+                                margin-left: -10px;
+                                padding: 0 10px;
+                                border: 1px solid #ddd;
+                                border-radius: $borderRadius;
+                            }
+                        }    
+                    }
+                }
+            }
+            .download{
+                width: 30%;
+                table{
+                    width: 100%;
+                    td{
+                        padding: 6px 0;
+                    }   
+                }
+                .commonButBox{
+                    margin: 12px 0;
+                }
+                .explain{
+                    text-align: center;
+                    cursor: pointer;
+                    font-size: 14px;
+                    color: #2F78FF;
+                }
+            }
+            .update_box{
+                // display: inline-block;
+                float: right;
+                cursor: pointer;
+                .update,.createTime{
+    
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+                .update{
+                    margin-left: 10px;
+                    padding: 5px 20px;
+                    background-color: #2F78FF;
+                    color: #fff;
+                    border-radius: $borderRadius;
+                }
+                .under_review{
+                    background-color: $grayBorderColor;
+                }
+            }
+        }
+        .introductionBar{
+            display: inline-block;
+            vertical-align: top;
+            .protitle, .content{
+                display: inline-block;
+            }
+            .protitle{
+                width: 30%;
+                vertical-align: top;
+                text-align: right;
+            }
+            .content{
+                width: 70%;
+            }
+            .productPic{
+                width: 60px;
+                height: 60px;
+                margin: 20px 20px 0 0;
+            }
+            .common_title_input{
+                word-break: break-all;
+                .common_content{
+                    max-width: 70%;
+                }
+            }
+        }
+        
+    }
+
+
+    .commercialInfo{
+        .marginFR{
+            margin: $gap 0;
+        }
+        .explain{
+            font-size: 12px;
+            font-weight: normal;
+            padding-left: 30px;
+        }
+        .input{
+            width: 500px;
+        }
+        .fromModification{
+            float: right;
+            color: $warnColor;
+            font-size: 14px;
+        }
+    }
+}

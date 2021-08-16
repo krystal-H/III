@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import { getProductBaseInfo, getProtocolLists } from '../store/ActionCreator';
 import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
-// import ProductInfo from '../../../../components/product-components/product-info/ProductInfo';
 import PageTitle from '../../../../components/page-title/PageTitle';
 import ProductTabs from './product-tabs/ProductTabs';
 
