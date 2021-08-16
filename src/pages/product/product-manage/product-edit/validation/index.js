@@ -30,7 +30,7 @@ const columns = [
         key: 'DID',
     }
 ];
-function Validation({ nextStep }, ref) {
+function Validation({ nextStep, productId }, ref) {
     const { TabPane } = Tabs;
     function callback(key) {
         console.log(key);
@@ -92,6 +92,7 @@ function Validation({ nextStep }, ref) {
         {
             releaseVisible &&
             <ReleaseProduct
+                productId={productId}
                 releaseVisible={releaseVisible}
                 cancelHandle={() => { setReleaseVisible(false) }} />
         }

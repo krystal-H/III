@@ -57,6 +57,9 @@ let Paths = {
     getPhysicalModelId: '/physicalModel/func', // 获取功能点
     confirmScheme: 'product/create/confirm/scheme', // 创建方案下一步
 
+    // 继续开发-发布产品
+    publishProduct: '/product/publish', // 继续开发-发布产品
+
 
     /* 协议 */
     getProtocolTemplates: '/protoManage/getProtocolTemplatesByProductId',
