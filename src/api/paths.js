@@ -277,7 +277,7 @@ let Paths = {
     subscribeList:'/datapush/getSubscriptConfList', //数据订阅列表
     subscribeStart:'/datapush/enabled',//启动数据订阅
     subscribeClose:'/datapush/stop',//停用数据订阅
-
+    subscribeDetail:'/datapush/getByUrlConfId',//订阅详情
 
     /**
      * 基础产品--应用 start

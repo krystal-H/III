@@ -1,11 +1,27 @@
 .subscrbe-info{
     .subscrbe-c{
         .subscrbe-t{
-
+            font-size: 14px;
+            font-weight: 600;
+            color: #323232;
+            line-height: 20px;
+            margin-bottom: 22px;
         }
         .subscrbe-item{
             display: flex;
-            
+            margin-bottom: 22px;
+            .item-label{
+                font-size: 12px;
+                font-weight: 400;
+                color: #323232;
+                line-height: 17px;
+            }
+            .item-value{
+                font-size: 12px;
+                font-weight: 400;
+                color: #666666;
+                line-height: 17px;
+            }
         }
     }
 }

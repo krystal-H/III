@@ -8,6 +8,7 @@ import ActionModal from './actionOp'
 import SubInfo from './detail'
 import './index.scss'
 import moment from 'moment';
+import { data } from '_browserslist@4.16.6@browserslist';
 const { Option } = Select;
 const { Step } = Steps;
 const { Search } = Input;
@@ -50,6 +51,8 @@ export default function DeviceRegist() {
     //====详情
     const [rightVisible, setRightVisible] = useState(false)
     const openInfo = (data) => {
+        console.log(data,99)
+        setSelectRow(data)
         setRightVisible(true)
     }
     const onCloseRight = () => {
@@ -237,7 +240,10 @@ export default function DeviceRegist() {
                     updateOkHandle={() => updateOkHandle()}
                     updateCancelHandle={() => closeAction()} />
             }
-            <SubInfo rightVisible={rightVisible} onCloseRight={onCloseRight} />
+            {
+                rightVisible && <SubInfo rightVisible={rightVisible} onCloseRight={onCloseRight} id={selectRow.urlConfId}/>
+            }
+            
         </div>
     )
 }
