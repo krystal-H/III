@@ -7,7 +7,7 @@ import { get, post, Paths } from '../../../api';
 import { Notification } from '../../../components/Notification';
 import { DateTool, uniqueItemInArrayByKey, checkFileTypeAndSize } from '../../../util/util';
 import { cloneDeep } from 'lodash'
-import AddConfigData from './addConfigData'
+// import AddConfigData from './addConfigData'
 
 import './remoteConfigModals.scss'
 
@@ -120,7 +120,7 @@ export function RemoteConfigAddModal({ visible, onCancel }) {
                                 { required: true, message: '请输入任务名称' },
                                 { max: 20, message: '最大输入长度为20' },
                             ]}>
-                            <Input placeholder="请输入任务名称，不能超过20个字符" />
+                            <Input style={{ width: '100%' }} placeholder="请输入任务名称，不能超过20个字符" />
                         </Form.Item>
                         <Form.Item
                             label="任务说明"
