@@ -518,6 +518,9 @@ let Paths = {
     //数据服务
     deviceDataAn:'/summary/device/dashboard',//设备分析
     userDataAn:'/summary/account/dashboard',//用户分析
+
+    //公共接口
+    getProductType:'/productManage/getSelectList',//产品下拉列表
 };
 
 // 拼接 urlPrefix
