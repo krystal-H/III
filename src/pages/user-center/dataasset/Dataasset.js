@@ -136,7 +136,7 @@ export default class Dataasset extends Component {
 
                 <AloneSection title="数据资产列表">
                     <div className="alone-section-content-default">
-                        <div className='searchBox'>
+                        <div className='comm-searchBox'>
                             <div className='searchCriteria'>
                                 <Select className='sele' placeholder="请选择数据资产源类型" onChange= {this.cngSearchType} value={searchType} > 
                                    {typeList.map((item)=>{

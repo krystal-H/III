@@ -4,7 +4,6 @@ import loadable from '@loadable/component';
 
 const ProductManage = loadable(() => import('./product-manage'));
 const DeviceRegist = loadable(() => import('./deviceRegist'));
-const Device = loadable(() => import('./device/Device'));
 const Application = loadable(() => import('./application/Application'));
 const CloudTime = loadable(() => import('./cloudTime'))
 

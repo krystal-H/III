@@ -111,7 +111,7 @@ export default class RoleManagementList extends Component {
             <div className='role-management'>
                 <PageTitle title="用户角色">
                     <div className="user-page-content-header">
-                        <div className="searchBox">
+                        <div className="comm-searchBox">
                             <Input.Search placeholder="请输入用户角色名查找" maxLength={20} onSearch={value => this.searchProduct(value)} enterButton />
                         </div>
                         <div className='butFloatRight'>

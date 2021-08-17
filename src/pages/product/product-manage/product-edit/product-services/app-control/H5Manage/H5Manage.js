@@ -600,7 +600,7 @@ export default class H5Manage extends Component {
                     </div> */}
                     <div className="page-manage">
                         <div className="tool-area">
-                            <div className="searchBox">
+                            <div className="comm-searchBox">
                                 <Search enterButton
                                     value={projectName}
                                     onChange={e => this.SearchInputHandle(e.target.value)}

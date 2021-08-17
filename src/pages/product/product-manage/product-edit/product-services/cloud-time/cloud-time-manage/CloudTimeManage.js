@@ -264,7 +264,7 @@ export default class CloudManage extends Component {
                     <h3>定时功能</h3>
                     <div className="page-manage">
                         <div className="tool-area">
-                            <div className="searchBox">
+                            <div className="comm-searchBox">
                                 <Search enterButton maxLength={20} onSearch={value => this.SearchInputHandle(value)} placeholder="请输入功能名称查找"></Search>
                             </div>
                             {

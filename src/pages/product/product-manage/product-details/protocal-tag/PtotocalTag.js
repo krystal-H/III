@@ -97,7 +97,7 @@ export default class PtotocalTag  extends Component {
                                     })}
                             </Select>
                             <span>标签名：</span>
-                            <div className='searchBox'>
+                            <div className='comm-searchBox'>
                                 <Search placeholder="请输入物标签名" value={labelName} onChange= {this.cngSearchName}
                                     enterButton
                                     maxLength={20}

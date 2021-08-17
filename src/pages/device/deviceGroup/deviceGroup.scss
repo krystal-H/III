@@ -1,26 +1,17 @@
-@import './../../../../assets/css/variables.scss';
 
-.devicegroup-box{
-    .page-content-header{
-        height: max-content;
-        background-color: $sectionBgColor;
-        padding: $gap * 2/3 $gap;
-        margin-bottom: $gap;
-        .page-title{
-            padding-left: 0;
-        }
-        .page-name{
-            height:28px;
-            font-size: $titleFontSize;
-            font-family:PingFangSC-Medium;
-            font-weight:500;
-            color:rgba(0,0,0,0.85);
-            line-height:28px;
-        }
-        .input-wrapper{
-            width: 40%;
+.page-devicegroup{
+    .searchbox{
+        padding: 23px 22px;
+        .btn{
+            float: right;
         }
     }
+    .tablebox{
+        margin: 16px 0;
+        padding: 18px 22px;
+
+    }
+    
     .title-content{
         background-color: #fff;
         padding: $gap;

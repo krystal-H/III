@@ -294,7 +294,7 @@ export default class FirmwareManagement  extends Component {
                     </div>
                     <div className='fonction_fence'>
                         <span>固件标识：</span>
-                        <div className='searchBox'>
+                        <div className='comm-searchBox'>
                             <Search placeholder="请输入固件" onSearch={value => this.search(value)} enterButton />
                         </div>
                         <Button className='button' onClick={this.addFirmware} type="primary">添加固件</Button>

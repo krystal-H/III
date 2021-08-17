@@ -383,7 +383,7 @@ export default class H5Manage extends Component {
                     <h3>H5页面</h3>
                     <div className="page-manage">
                         <div className="tool-area">
-                            <div className="searchBox">
+                            <div className="comm-searchBox">
                                 <Search enterButton
                                     value={projectName}
                                     onChange={e => this.SearchInputHandle(e.target.value)}

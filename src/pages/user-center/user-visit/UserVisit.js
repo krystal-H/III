@@ -203,7 +203,7 @@ export default class UserVisit extends Component {
            <div className='user-visit-box'>
                <PageTitle title="访问用户">
                 <div className="user-page-content-header">
-                    <div className='searchBox'>
+                    <div className='comm-searchBox'>
                         <Input.Search placeholder="请输入用户名查找"
                             enterButton
                             maxLength={20}

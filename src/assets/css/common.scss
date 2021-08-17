@@ -304,13 +304,13 @@
 }
 /*
 搜索栏-单行-盒子
-<div className='searchBox'>
+<div className='comm-searchBox'>
     <Input.Search placeholder="请输入用户名查找"
         className='inputSearch'
     />
 </div>
 */
-.searchBox{
+.comm-searchBox{
     display: inline-block;
     vertical-align: middle;
     .ant-input-search{
@@ -522,3 +522,18 @@
         padding: 6px 22px;
     }
   }
+
+.comm-table{
+    .ant-table-thead tr th{
+        background-color: #FAFAFA;
+        color: #323232;
+    }
+    .ant-table-thead tr th::before{
+        display: none;
+    }
+    .ant-table-tbody tr td,.ant-table-thead tr th{
+        border-bottom: 1px solid #E9E9E9;
+        
+    }
+
+}

@@ -147,7 +147,7 @@ export default class Authorize extends Component {
             <div className='dataflow-page'>
                 <PageTitle noback={true} title="数据流转" />
                  <header className="page-content-header">
-                     <div className='searchBox'>
+                     <div className='comm-searchBox'>
                          <Input.Search placeholder="请输入规则名查找"
                              enterButton
                              maxLength={20}

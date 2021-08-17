@@ -177,7 +177,7 @@ export default class Application extends PureComponent {
                 <div className="application-content-wrapper flex-column flex1">
                     {/* 搜索 */}
                     <div className="application-search">
-                        <div className="application-header-input-wrapper searchBox">
+                        <div className="application-header-input-wrapper comm-searchBox">
                             <Search placeholder="请输入应用名称查找"
                                 enterButton
                                 maxLength={100}

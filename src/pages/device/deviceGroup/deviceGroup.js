@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import {get,post, Paths} from '../../../../api';
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
+import {get,post, Paths} from '../../../api';
 import { Input, Button, Table, Divider, Modal } from 'antd';
-import { Notification } from '../../../../components/Notification';
-import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
-import {AddForm} from './addForm';
-import PageTitle from '../../../../components/page-title/PageTitle';
+import { Notification } from '../../../components/Notification';
+import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
+// import {AddForm} from './addForm';
+import PageTitle from '../../../components/page-title/PageTitle';
 import './deviceGroup.scss'
 import moment from 'moment';
 
@@ -123,40 +121,38 @@ export default class DeviceGroup extends Component {
     render() {
         let { loading, addCaseVisible,caseList, pager,id,name } = this.state;
         return (
-           <div className='devicegroup-box'>
-                <header className="page-content-header">
-                    <PageTitle noback={true} title="设备分组管理" />
-                    <div>
-                        <div className='searchBox'>
-                            <Input.Search placeholder="请输入分组名查找"
-                                enterButton
-                                maxLength={20}
-                                onSearch={value => this.searchCase(value)} 
-                            />
-                        </div>
-                        <div className='butFloatRight'>
-                            <Button className='but-add' type="primary" onClick={this.addCase}>新增分组</Button>
-                           
-                        </div>
-                    </div>
-                </header>
-                <div className='commonContentBox'>
-                    <div className='centent'>
-                        <Table 
-                            rowKey="id"
-                            columns={this.columns} 
-                            dataSource={caseList} 
-                            pagination={{
-                                defaultCurrent:pager.pageIndex, 
-                                total:pager.totalRows, 
-                                hideOnSinglePage:false,
-                                onChange:this.pagerIndex,
-                                current: pager.pageIndex
-                            }} 
-                            loading={loading} 
+           <div className='page-devicegroup'>
+                
+                <PageTitle noback={true} title="设备分组" />
+
+                <div className='comm-shadowbox searchbox'>
+                    <div className='comm-searchBox'>
+                        <Input.Search placeholder="请输入分组名查找"
+                            enterButton
+                            maxLength={20}
+                            onSearch={value => this.searchCase(value)} 
                         />
                     </div>
+                    <Button className='btn' type="primary" onClick={this.addCase}>新增分组</Button>
                 </div>
+
+                <div className='comm-shadowbox tablebox'>
+                    <Table className='comm-table'
+                        rowKey="id"
+                        columns={this.columns} 
+                        dataSource={caseList} 
+                        pagination={{
+                            defaultCurrent:pager.pageIndex, 
+                            total:pager.totalRows, 
+                            hideOnSinglePage:false,
+                            onChange:this.pagerIndex,
+                            current: pager.pageIndex
+                        }} 
+                        loading={loading} 
+                    />
+                </div>
+
+                
 
                 <Modal
                     title="新增分组"
@@ -167,7 +163,7 @@ export default class DeviceGroup extends Component {
                     maskClosable={false}
                     className="self-modal"
                 >
-                    <AddForm onRef={ref => this.addFormRefs = ref} ></AddForm>
+                    {/* <AddForm onRef={ref => this.addFormRefs = ref} ></AddForm> */}
                 </Modal>
 
                 <ActionConfirmModal

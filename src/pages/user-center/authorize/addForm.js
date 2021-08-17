@@ -193,7 +193,7 @@ class CaseAddForm extends Component {
                         }
                     </Form.Item>
                     <div className='searchlistbox'>
-                        <Input.Group compact className='searchbox'>
+                        <Input.Group compact className='comm-searchBox'>
                             <Select style={{ width: '25%' }} defaultValue={0} onChange={this.cngSearchType}>
                                 <Option value={0}>账户名</Option>
                                 <Option value={1}>产品名</Option>

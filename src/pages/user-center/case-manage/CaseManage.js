@@ -174,7 +174,7 @@ export default class CaseManage extends Component {
                 <header className="page-content-header">
                     <h3 className="page-name">实例管理</h3>
                     <div>
-                        <div className='searchBox'>
+                        <div className='comm-searchBox'>
                             <Input.Search placeholder="请输入实例名查找"
                                 enterButton
                                 maxLength={20}
