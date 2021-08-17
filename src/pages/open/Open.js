@@ -71,8 +71,8 @@ export default class Open extends Component {
         }
     }
     render() {
-        const { match, developerInfo, newMessageNums, menulist} = this.props;
-        const { collapsed } = this.state, { path } = match;
+        const { developerInfo, newMessageNums, menulist} = this.props;
+        const { collapsed } = this.state;
         return (
             <OutsideWrapper>
                 <section className="page-header-wrapper">

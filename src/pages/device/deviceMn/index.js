@@ -17,6 +17,7 @@ export default function DeviceList() {
     const [dataSource, setDataSource] = useState([])
     useEffect(() => {
         getList()
+        getProductType()
     }, [])
     // 设备列表
     const getList = (params = {}, loading = true) => {
@@ -25,8 +26,8 @@ export default function DeviceList() {
         });
     }
     //产品种类列表
-    const getList2 = (params = {}, loading = true) => {
-        post(Paths.getDeviceList, params, { loading }).then((res) => {
+    const getProductType = () => {
+        post(Paths.getProductType).then((res) => {
         });
     }
     //搜索

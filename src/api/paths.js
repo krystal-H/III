@@ -277,7 +277,7 @@ let Paths = {
     subscribeList:'/datapush/getSubscriptConfList', //数据订阅列表
     subscribeStart:'/datapush/enabled',//启动数据订阅
     subscribeClose:'/datapush/stop',//停用数据订阅
-
+    subscribeDetail:'/datapush/getByUrlConfId',//订阅详情
 
     /**
      * 基础产品--应用 start
@@ -518,6 +518,9 @@ let Paths = {
     //数据服务
     deviceDataAn:'/summary/device/dashboard',//设备分析
     userDataAn:'/summary/account/dashboard',//用户分析
+
+    //公共接口
+    getProductType:'/productManage/getSelectList',//产品下拉列表
 };
 
 // 拼接 urlPrefix

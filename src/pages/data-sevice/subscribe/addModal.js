@@ -108,13 +108,13 @@ function StepContentTwo(props, ref) {
         <div className='product-title'>已选择产品：睡眠监测器Light2.0</div>
         <div className='select-tip'>选择协议类型</div>
         <Tabs defaultActiveKey="1" >
-            <TabPane tab="免开发方案" key="1">
+            <TabPane tab="属性" key="1">
                 Content of Tab Pane 1
             </TabPane>
-            <TabPane tab="独立MCU方案" key="2">
+            <TabPane tab="事件" key="2">
                 Content of Tab Pane 2
             </TabPane>
-            <TabPane tab="SoC方案" key="3">
+            <TabPane tab="服务" key="3">
                 Content of Tab Pane 3
             </TabPane>
         </Tabs>

@@ -523,17 +523,11 @@
     }
   }
 
-.comm-table{
-    .ant-table-thead tr th{
-        background-color: #FAFAFA;
-        color: #323232;
-    }
-    .ant-table-thead tr th::before{
-        display: none;
-    }
-    .ant-table-tbody tr td,.ant-table-thead tr th{
-        border-bottom: 1px solid #E9E9E9;
-        
-    }
-
+.ant-table-thead tr th::before{
+    display: none;
 }
+
+// .ant-table-tbody tr td,.ant-table-thead tr th{
+//     border-bottom: 1px solid #E9E9E9;
+    
+// }
