@@ -31,7 +31,7 @@ const stepList = [
 export function RemoteConfigAddModal({ visible, onCancel }) {
     const refConfig = useRef()
     const [form] = Form.useForm()
-    const [stepcurrent, setStepcurrent] = useState(1)
+    const [stepcurrent, setStepcurrent] = useState(0)
 
     const onOk = () => {
         form.submit()
@@ -137,12 +137,12 @@ export function RemoteConfigAddModal({ visible, onCancel }) {
                 }
 
                 {/* 添加配置数据 */}
-                {
+                {/* {
                     stepcurrent === 1 &&
                     <AddConfigData
                     ref={refConfig}
                     nextStep={nextStep}/>
-                }
+                } */}
             </div>
         </Modal>
     )

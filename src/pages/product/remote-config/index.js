@@ -38,7 +38,7 @@ function RemoteConfig() {
     const [form] = Form.useForm()
     const [formLayout, setFormLayout] = useState('inline')
     const [configProtoclList, setConfigProtoclList] = useState([])
-    const [addVisible, setAddVisible] = useState(true)
+    const [addVisible, setAddVisible] = useState(false)
     const [editData, setEditData] = useState(null)
     const [remoteConfigPager, setRemoteConfigPager] = useState({ pageIndex: 1 })
     const [deleteParams, setDeleteParams] = useState({ deletevisible: false, deleteItem: null, deleteLoading: false })
