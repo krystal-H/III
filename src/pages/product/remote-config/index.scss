@@ -1,13 +1,12 @@
 @charset 'utf-8';
 
-#cloud-time {
+#remote-config {
   .main-page-title {
     @include flex();
   }
-
   .setp-tip {
-    height: 184px;
-    background: #F4FBFF;
+    // height: 184px;
+    background: #f4fbff;
     padding: 22px;
     margin-bottom: 16px;
 
@@ -23,7 +22,6 @@
         line-height: 20px;
         margin-left: 3px;
       }
-
     }
 
     .ant-steps-item-description {
@@ -42,7 +40,7 @@
     }
 
     .ant-steps-item-title::after {
-      background-color: #C4CEE0;
+      background-color: #c4cee0;
     }
 
     .ant-steps-icon {
@@ -65,28 +63,6 @@
         display: flex;
         align-items: center;
       }
-    }
-  }
-}
-
-.device-regist {
-  padding: 0 20px;
-
-  .ant-form-item-label {
-    width: 135px;
-  }
-
-  .upload-wrapper .upload .file-upload-desc {
-    display: none;
-  }
-
-  .ant-form-item-control-input-content {
-    display: flex;
-
-    .down-model {
-      position: relative;
-      left: -78px;
-      top: 5px;
     }
   }
 }

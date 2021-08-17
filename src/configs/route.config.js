@@ -62,7 +62,7 @@ export const navRoutes = [
             },
             {
                 menuname: '远程配置',
-                path: '/open/product/remoteCofg',
+                path: '/open/product/remoteCofig',
                 menuid:'1-5',
             }, 
         ]
