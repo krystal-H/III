@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
-import { Modal, Button, Input, Table, Select, InputNumber, Divider } from 'antd'
-import { DateTool, setFuncDataType, addKeyToTableData, createArrayByLength } from '../../../util/util'
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { Input, Table, Select, InputNumber } from 'antd'
+import { setFuncDataType } from '../../../util/util'
 import { Notification } from '../../../components/Notification'
 import { cloneDeep } from 'lodash'
 
@@ -170,8 +170,7 @@ function AddConfigData({ nextStep }, ref) {
   const [protocolSendData, setProtocolSendData] = useState(configProtoclList.map(item => item.defaultPropertyValue || ''))
   const [protocolFormat, setProtocolFormat] = useState(0)
 
-
-  // 下一步验证
+  // 下一步验证  需要后续修改
   const validData = () => {
     console.log(nextStep, ref)
     let temp = []
@@ -352,4 +351,4 @@ function AddConfigData({ nextStep }, ref) {
   )
 }
 
-export default AddConfigData = forwardRef(AddConfigData)
+export default forwardRef(AddConfigData)

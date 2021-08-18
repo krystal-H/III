@@ -269,7 +269,7 @@ function ChooseUpdateDevice({ }) {
       <div className="transfer-icon" onClick={leftToRight}></div>
       {/* 右侧 */}
       <div className="device-block">
-        <p className="device-block-tip">已选中：3条</p>
+        <p className="device-block-tip">已选中：{selectDeviceIndexToAdd.length || 0}条</p>
         <div className="device-block-item">
           <Search enterButton="查 找"
             ref={rightSearchInput}

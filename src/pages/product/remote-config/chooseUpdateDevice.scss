@@ -8,7 +8,7 @@
       @include text(12px, #323232);
     }
     &-item {
-      @include wh(390px, 580px);
+      @include wh(390px, 500px);
       padding: 22px;
       border-radius: 4px;
       border: 1px solid #e9e9e9;
