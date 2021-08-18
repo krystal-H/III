@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import { Carousel, } from 'antd';
+import { Carousel, Button } from 'antd';
 import { useHistory } from 'react-router-dom';
 import {
     RightOutlined,
@@ -72,7 +72,7 @@ export default function OverviewWrap() {
         history.push(`/messageCenter/detail/${id}`);
     }
     //去工单
-    const goOrder=()=>{
+    const goOrder = () => {
         history.push(`/open/repairOrder`);
     }
     //app列表
@@ -143,8 +143,33 @@ export default function OverviewWrap() {
     const closeNewProduct = () => {
         setNewProductModal(false)
     }
+    //引导图
+    const [currentTip, setCurrentTip] = useState(0)
+    const [showDialog,setShowDialog]=useState(false)
+    const changeTip = () => {
+        let anchorElement = document.getElementById('show-shadow');
+        if (anchorElement) {
+            anchorElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        setCurrentTip(currentTip + 1)
+        if(currentTip >= 5){
+            setShowDialog(false)
+            
+        }
+    }
+    useEffect(()=>{
+        if(!localStorage.getItem('IS_SECOND_USER')){
+            localStorage.setItem('IS_SECOND_USER',1)
+            setCurrentTip(1)
+            setShowDialog(true)
+        }
+    },[])
     return (
         <div className='over-view'>
+            {
+               showDialog &&  <div className='Guide-the-figure-dia'></div>
+            }
+            
             <div className='comm-shadowbox over-view-banner'>
                 <Carousel autoplay>
                     {
@@ -160,7 +185,7 @@ export default function OverviewWrap() {
             </div>
             <div className='over-view-content'>
                 <div className='over-view-content-left'>
-                    <div className='over-view-boxshadow over-view-statistical comm-shadowbox'>
+                    <div className='over-view-boxshadow over-view-statistical comm-shadowbox' id={1 == currentTip ? 'show-shadow' : ''}>
                         <div>
                             <div className='over-view-statistical-label'>接入产品数</div>
                             <div className='over-view-statistical-number'>{productCount.total}</div>
@@ -177,8 +202,16 @@ export default function OverviewWrap() {
                             <div className='over-view-statistical-label'>故障设备数</div>
                             <div className=' over-view-statistical-number_err'>{productCount.fault}</div>
                         </div>
+                        <div className='Guide-the-figure-content'>
+                            <div className='tip' >
+                                <span>总览数据</span>
+                                <div>快速查看创建的产品及设备，点击数字查看相关信息</div>
+                            </div>
+                            <Button onClick={ changeTip}>下一步</Button>
+                        </div>
                     </div>
-                    <div className='over-view-boxshadow over-view-productmn comm-shadowbox' >
+
+                    <div className='over-view-boxshadow over-view-productmn comm-shadowbox' id={2 == currentTip ? 'show-shadow' : ''}>
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>产品管理</div>
@@ -223,8 +256,15 @@ export default function OverviewWrap() {
                                 <div>远程配置</div>
                             </div>
                         </div>
+                        <div className='Guide-the-figure-content'>
+                            <div className='tip' >
+                                <span>产品管理</span>
+                                <div>展示最新创建的产品及产品管理快捷入口，点击可查看详情</div>
+                            </div>
+                            <Button onClick={changeTip}>下一步</Button>
+                        </div>
                     </div>
-                    <div className='over-view-boxshadow over-view-device comm-shadowbox'>
+                    <div className='over-view-boxshadow over-view-device comm-shadowbox' id={3 == currentTip ? 'show-shadow' : ''}>
                         <div className='over-view-device-title'>我的设备</div>
                         <div className='over-view-device-content'>
                             <div className='over-view-device-content-item'>
@@ -303,8 +343,15 @@ export default function OverviewWrap() {
                                 </div>
                             </div>
                         </div>
+                        <div className='Guide-the-figure-content-top'>
+                            <div className='tip' >
+                                <span>设备管理</span>
+                                <div>预览设备全部数据，点击设备管理、设备密钥、设备告警</div>
+                            </div>
+                            <Button onClick={changeTip}>下一步</Button>
+                        </div>
                     </div>
-                    <div className='over-view-boxshadow over-view-productmn comm-shadowbox' >
+                    <div className='over-view-boxshadow over-view-productmn comm-shadowbox' id={4 == currentTip ? 'show-shadow' : ''} >
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>APP开发</div>
@@ -326,11 +373,17 @@ export default function OverviewWrap() {
 
                             </div>
                         </div>
-
+                        <div className='Guide-the-figure-content-top'>
+                            <div className='tip' >
+                                <span>App管理</span>
+                                <div>展示最新开发应用，点击可查看详情</div>
+                            </div>
+                            <Button onClick={changeTip}>下一步</Button>
+                        </div>
                     </div>
                 </div>
                 <div className='over-view-content-right'>
-                    <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >
+                    <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' id={5 == currentTip ? 'show-shadow' : ''}>
                         <div>
                             <div>快捷入口</div>
                         </div>
@@ -347,6 +400,13 @@ export default function OverviewWrap() {
                                     <div>控制台</div>
                                 </div>
                             </div>
+                        </div>
+                        <div className='Guide-the-figure-content'>
+                            <div className='tip' >
+                                <span>快捷入口</span>
+                                <div>您可以点击这里快速创建产品或进入控制台</div>
+                            </div>
+                            <Button onClick={changeTip}>完成</Button>
                         </div>
                     </div>
                     <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >

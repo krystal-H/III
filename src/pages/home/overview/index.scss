@@ -384,6 +384,7 @@
         height: 132px;
         overflow: hidden;
         box-sizing: border-box;
+
         .over-view-message-item {
           overflow: hidden;
           text-overflow: ellipsis;
@@ -395,7 +396,7 @@
           color: #666666;
           line-height: 17px;
 
-          
+
         }
       }
 
@@ -513,11 +514,142 @@
   text-align: center;
   // margin: 20px 0;
   width: 100%;
+
   // height: 100px;
   div {
     font-size: 12px;
     font-weight: 400;
     color: #9B9B9B;
     line-height: 17px;
+  }
+}
+
+
+
+.Guide-the-figure-dia {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: #001529;
+  overflow: hidden;
+  left: 0;
+  top: 0;
+  opacity: 0.2;
+  z-index: 10;
+}
+
+#show-shadow {
+  position: relative;
+  z-index: 9999;
+  border-radius: 10px;
+  pointer-events: none;
+  .Guide-the-figure-content {
+    display: block;
+  }
+
+  .Guide-the-figure-content-top {
+    display: flex;
+  }
+}
+
+.Guide-the-figure-content {
+  position: absolute;
+  width: 100%;
+  top: calc(100% + 30px);
+  left: 20px;
+  display: none;
+
+  .tip {
+    width: 269px;
+    // background: #2F78FF;
+    background-image: linear-gradient(to left,#159fff, #2f78ff);/* 自右向左 */
+    color: #fff;
+    padding: 10px 20px;
+    line-height: 20px;
+    font-size: 12px;
+    border-radius: 10px;
+
+    span {
+      font-size: 16px;
+      line-height: 26px;
+    }
+  }
+
+  .tip:after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 0px;
+    width: 16px;
+    height: 16px;
+    border-width: 0;
+    border-style: solid;
+    border-color: transparent;
+    border-right-width: 10px;
+    border-right-color: #2F78FF;
+    border-radius: 0 32px 0 0;
+    color: #dddddd;
+  }
+
+  button {
+    width: 134px;
+    height: 42px;
+    border-radius: 21px;
+    margin-top: 15px;
+    background: #FFFFFF;
+    color: #2F78FF;
+    outline: none;
+    pointer-events:auto
+  }
+}
+
+.Guide-the-figure-content-top {
+  position: absolute;
+  width: 100%;
+  top: -120px;
+  left: 20px;
+  display: none;
+
+  .tip {
+    width: 269px;
+    background: #2F78FF;
+    color: #fff;
+    padding: 10px 20px;
+    line-height: 20px;
+    font-size: 12px;
+    border-radius: 10px;
+
+    span {
+      font-size: 16px;
+      line-height: 26px;
+    }
+  }
+
+  .tip:before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    width: 16px;
+    height: 16px;
+    border-width: 0;
+    border-style: solid;
+    border-color: transparent;
+    border-right-width: 10px;
+    border-radius: 0 0 32px 0;
+    color: #dddddd;
+    border-right-color: #2F78FF;
+  }
+
+  button {
+    width: 134px;
+    height: 42px;
+    border-radius: 21px;
+    margin-top: 15px;
+    background: #FFFFFF;
+    color: #2F78FF;
+    outline: none;
+    margin-left: 30px;
+    pointer-events:auto
   }
 }
