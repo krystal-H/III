@@ -7,9 +7,10 @@ import { get, post, Paths } from '../../../api';
 import { Notification } from '../../../components/Notification';
 import { DateTool, uniqueItemInArrayByKey, checkFileTypeAndSize } from '../../../util/util';
 import { cloneDeep } from 'lodash'
-// import AddConfigData from './addConfigData'
+import AddConfigData from './addConfigData'
+import ChooseUpdateDevice from './chooseUpdateDevice'
 
-import './remoteConfigModals.scss'
+import './createTaskModal.scss'
 
 
 const { TextArea, Search } = Input;
@@ -28,10 +29,10 @@ const stepList = [
     }
 ]
 
-export function RemoteConfigAddModal({ visible, onCancel }) {
+function CreateTask({ visible, onCancel }) {
     const refConfig = useRef()
     const [form] = Form.useForm()
-    const [stepcurrent, setStepcurrent] = useState(0)
+    const [stepcurrent, setStepcurrent] = useState(2)
 
     const onOk = () => {
         form.submit()
@@ -63,6 +64,8 @@ export function RemoteConfigAddModal({ visible, onCancel }) {
         } else if (index === 1) { // 添加配置数据
             console.log(refConfig, 'refConfig')
             refConfig.current.onFinish()
+        } else if (index === 2) { // 选择配置更新的设备
+
         }
     }
 
@@ -137,16 +140,22 @@ export function RemoteConfigAddModal({ visible, onCancel }) {
                 }
 
                 {/* 添加配置数据 */}
-                {/* {
+                {
                     stepcurrent === 1 &&
                     <AddConfigData
-                    ref={refConfig}
-                    nextStep={nextStep}/>
-                } */}
+                        ref={refConfig}
+                        nextStep={nextStep} />
+                }
+
+                {/* 选择配置更新的设备 */}
+                {
+                    stepcurrent === 2 &&
+                    <ChooseUpdateDevice />
+                }
+
             </div>
         </Modal>
     )
 }
 
-
-
+export default CreateTask

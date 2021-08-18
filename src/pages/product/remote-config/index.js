@@ -8,7 +8,7 @@ import stepImg from '../../../assets/images/remote-config.png'
 import DescWrapper from '../../../components/desc-wrapper/DescWrapper'
 import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal'
 import { cloneDeep } from 'lodash'
-import { RemoteConfigAddModal as AddModal, RemoteConfigDetailModal as DetailModal, RemoteErrorLogModal } from './remoteConfigModals';
+import CreateTaskModal from './createTaskModal'
 import './index.scss'
 
 const { Option } = Select;
@@ -36,16 +36,16 @@ const statusTextForDevice = ['', '执行中', '执行成功', '执行失败']
 
 function RemoteConfig() {
     const [form] = Form.useForm()
-    const [formLayout, setFormLayout] = useState('inline')
+    const [formLayout] = useState('inline')
     const [configProtoclList, setConfigProtoclList] = useState([])
-    const [addVisible, setAddVisible] = useState(false)
+    const [addVisible, setAddVisible] = useState(true)
     const [editData, setEditData] = useState(null)
     const [remoteConfigPager, setRemoteConfigPager] = useState({ pageIndex: 1 })
     const [deleteParams, setDeleteParams] = useState({ deletevisible: false, deleteItem: null, deleteLoading: false })
     const [dataSource, setDataSource] = useState([
         {
             taskId: '1',
-            taskExplain: '任务说明哈哈1任务说明哈哈1任务说明哈哈1任务说明哈哈1任务说明哈哈1任务说明哈哈1任务说明哈哈1任务说明哈哈1任务说明哈哈1任务说明哈哈1',
+            taskExplain: '任务说明哈哈1任务说明哈哈1任务说明哈哈1任务说明哈哈1任务说明哈哈1任务说明哈哈1任务说明哈哈1',
             deviceTotal: '20',
             status: '1',
             execTime: null,
@@ -319,13 +319,14 @@ function RemoteConfig() {
             </div>
             {/* 创建任务 */}
             {
-                addVisible && <AddModal
+                addVisible &&
+                <CreateTaskModal
                     visible={addVisible}
                     onCancel={() => { setAddVisible(false); setEditData(null) }}
                     editData={editData}
                     configProtoclList={configProtoclList}
                     isDeviceRomote={isDeviceRomote}
-                ></AddModal>
+                ></CreateTaskModal>
             }
 
             {/* 删除弹窗 */}
