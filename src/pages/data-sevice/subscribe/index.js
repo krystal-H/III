@@ -8,7 +8,6 @@ import ActionModal from './actionOp'
 import SubInfo from './detail'
 import './index.scss'
 import moment from 'moment';
-import { data } from '_browserslist@4.16.6@browserslist';
 const { Option } = Select;
 const { Step } = Steps;
 const { Search } = Input;
