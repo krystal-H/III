@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react'
 import { Link } from 'react-router-dom';
 import { Descriptions ,Button,Table,Divider } from 'antd';
-import PageTitle from '../../../../components/page-title/PageTitle';
-import AloneSection from '../../../../components/alone-section/AloneSection';
-import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
+import PageTitle from '../../../components/page-title/PageTitle';
+import AloneSection from '../../../components/alone-section/AloneSection';
+import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
 import { cloneDeep } from 'lodash';
-import {get,post, Paths} from '../../../../api';
+import {get,post, Paths} from '../../../api';
 import moment from 'moment';
 import DeviceList from './groupDeviceList';
 import SearchProduct from './searchProduct';

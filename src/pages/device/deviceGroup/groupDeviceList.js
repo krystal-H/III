@@ -1,7 +1,7 @@
 import React, { PureComponent,useEffect } from 'react';
 import {Modal, Table,Radio,Form,Select,Upload,Button } from 'antd';
 import moment from 'moment';
-import {get,post, Paths} from '../../../../api';
+import {get,post, Paths} from '../../../api';
 import SearchProduct from './searchProduct';
 import './deviceGroup.scss';
 
