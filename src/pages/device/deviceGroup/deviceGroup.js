@@ -1,4 +1,4 @@
-import React, { Component,createRef } from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {get, Paths} from '../../../api';
 import { Input, Button, Table, Divider } from 'antd';
@@ -12,7 +12,6 @@ export default class DeviceGroup extends Component {
     
     constructor(props){
         super(props);
-        this.addFormRefs = createRef();
         this.state = {
             loading:true,// 列表加载
             caseList:[],

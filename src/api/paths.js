@@ -24,7 +24,7 @@ let Paths = {
     resetAuth: '/common/forgetPwd',
     resetEmail : '/common/resetEmail',
     setPassword : '/common/setPassWord',
-    getDeveloperInfo : '/common/getUserInfo',
+    getDeveloperInfo : '/user/getUserInfo',
     upDeveloperInfo : '/common/updateUserInfo',
     getRightsOneself : '/common/getSubInfo',
     cancelAccount : '/common/cancelAccount',

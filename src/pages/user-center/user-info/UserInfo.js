@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import {Switch,Redirect,Route} from 'react-router-dom'
 import {connect} from 'react-redux'
 import { get,Paths } from '../../../api'
 import { getDeveloperInfo } from '../store/ActionCreator'
@@ -27,31 +26,11 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-
 @connect(mapStateToProps, mapDispatchToProps)
-export default class UserInfo extends Component {
-
-    render() {
-        let {developerInfo,match,getDeveloperInfo} = this.props,
-        {path} = match;
-
-        return (
-            <Switch>
-                <Route path={`${path}/base`} render={routeProps => <BaseInfo {...routeProps} developerInfo={developerInfo} getDeveloperInfo={getDeveloperInfo}></BaseInfo>}></Route>
-                {/* 设置项相关的子路由，已迁移到security-setting组件下 */}
-                <Redirect to={`${path}/base`}></Redirect>
-            </Switch>
-        )
-    }
-}
-
-
-class BaseInfo extends Component {
+export default class BaseInfo extends Component {
     constructor (props) {
         super(props);
-        let {isSubUser} = this.props.developerInfo;
         this.state = {
-            isSubUser:!!isSubUser,
             productResource:[],
             dataObjRightsList:[],
             dataDimensionRightsList:[]
@@ -64,9 +43,6 @@ class BaseInfo extends Component {
         let {isSubUser} = this.props.developerInfo;
         if(prevProps.developerInfo.isSubUser !== isSubUser) {
             this.getSubRights()
-            this.setState({
-                isSubUser:!!isSubUser
-            })
         }
     }
     getSubRights = () => {
@@ -96,14 +72,14 @@ class BaseInfo extends Component {
         }
     }
     render() {
-        let {isSubUser,productResource,dataObjRightsList,dataDimensionRightsList} = this.state,
+        const {productResource,dataObjRightsList,dataDimensionRightsList} = this.state,
             {developerInfo,getDeveloperInfo} = this.props,
-            {userId,email,createTime,userRole,parentAccount,account} = developerInfo;
+            {userId,email,regTime,userRole,parentUserName,userName,isSubUser} = developerInfo;
 
         return <div className='page-userbaseinfo'>
                 <PageTitle title="基本资料" />
                 {
-                    isSubUser ? 
+                    !!isSubUser ? 
                     // 子账号页面
                     <div>
                         <AloneSection title="基本信息" className='comm-shadowbox'>
@@ -111,11 +87,11 @@ class BaseInfo extends Component {
                                 <div className="p-flex">
                                     <span className="flex-item">
                                         <span className="title">登录账号：</span>
-                                        {account}
+                                        {userName}
                                     </span>
                                     <span className="flex-item">
                                         <span className="title">所属主帐号：</span>
-                                        {parentAccount}
+                                        {parentUserName}
                                     </span>
                                     <span className="flex-item">
                                         <span className="title">账户角色：</span>
@@ -123,7 +99,7 @@ class BaseInfo extends Component {
                                     </span>
                                     <span className="flex-item">
                                         <span className="title">创建时间：</span>
-                                        {createTime ? DateTool.utcToDev(createTime) : ''}
+                                        {regTime ? DateTool.utcToDev(regTime) : ''}
                                     </span>
                                 </div>
                             </div>
@@ -145,7 +121,7 @@ class BaseInfo extends Component {
                                     </span>
                                     <span className="flex-item">
                                         <span className="title">注册时间：</span>
-                                        {createTime ? DateTool.utcToDev(createTime) : ''}
+                                        {regTime ? DateTool.utcToDev(regTime) : ''}
                                     </span>
                                 </div>
                             </div>
