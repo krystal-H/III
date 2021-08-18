@@ -144,8 +144,8 @@ export default function OverviewWrap() {
         setNewProductModal(false)
     }
     //引导图
-    const [currentTip, setCurrentTip] = useState(1)
-    const [showDialog,setShowDialog]=useState(true)
+    const [currentTip, setCurrentTip] = useState(0)
+    const [showDialog,setShowDialog]=useState(false)
     const changeTip = () => {
         let anchorElement = document.getElementById('show-shadow');
         if (anchorElement) {
@@ -154,14 +154,16 @@ export default function OverviewWrap() {
         setCurrentTip(currentTip + 1)
         if(currentTip >= 5){
             setShowDialog(false)
+            
         }
     }
-    // useEffect(()=>{
-    //     if(localStorage.getItem('IS_SECOND_USER')){
-
-    //     }
-    //     localStorage.getItem('IS_SECOND_USER')
-    // },[])
+    useEffect(()=>{
+        if(!localStorage.getItem('IS_SECOND_USER')){
+            localStorage.setItem('IS_SECOND_USER',1)
+            setCurrentTip(1)
+            setShowDialog(true)
+        }
+    },[])
     return (
         <div className='over-view'>
             {

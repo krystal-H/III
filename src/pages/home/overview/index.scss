@@ -561,7 +561,8 @@
 
   .tip {
     width: 269px;
-    background: #2F78FF;
+    // background: #2F78FF;
+    background-image: linear-gradient(to left,#159fff, #2f78ff);/* 自右向左 */
     color: #fff;
     padding: 10px 20px;
     line-height: 20px;

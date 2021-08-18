@@ -50,7 +50,7 @@ export default function DeviceRegist() {
     //====详情
     const [rightVisible, setRightVisible] = useState(false)
     const openInfo = (data) => {
-        console.log(data,99)
+        console.log(data, 99)
         setSelectRow(data)
         setRightVisible(true)
     }
@@ -110,9 +110,6 @@ export default function DeviceRegist() {
     useEffect(() => {
         getList()
     }, [pager.pageRows, pager.pageStartRow])
-    const downFile = () => {
-        alert(10)
-    }
 
     //搜索
     const onSearch = () => {
@@ -202,16 +199,23 @@ export default function DeviceRegist() {
                                 </Select>
                             </Form.Item>
                             <Form.Item
-                                name='subscription'
                                 label="订阅名称"
                             >
-                                <Input style={{ width: '228px' }} />
-                            </Form.Item>
-                            <Form.Item label=" " colon={false} style={{ marginRight: '2px' }}>
+                                <Form.Item
+                                    name='subscription'
+                                    noStyle
+                                >
+                                    <Input style={{ width: '228px' }} />
+                                </Form.Item>
                                 <Button type="primary" onClick={onSearch}>
                                     查询
                                 </Button>
                             </Form.Item>
+                            {/* <Form.Item label=" " colon={false} style={{ marginRight: '2px' }}>
+                                <Button type="primary" onClick={onSearch}>
+                                    查询
+                                </Button>
+                            </Form.Item> */}
                         </Form>
 
                     </div>
@@ -240,9 +244,9 @@ export default function DeviceRegist() {
                     updateCancelHandle={() => closeAction()} />
             }
             {
-                rightVisible && <SubInfo rightVisible={rightVisible} onCloseRight={onCloseRight} id={selectRow.urlConfId}/>
+                rightVisible && <SubInfo rightVisible={rightVisible} onCloseRight={onCloseRight} id={selectRow.urlConfId} />
             }
-            
+
         </div>
     )
 }

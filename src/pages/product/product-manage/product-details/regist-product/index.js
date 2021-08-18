@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { Select, Steps, Button, Input, Space, Table } from 'antd';
+import { Select, Steps, Button, Input, Space, Table, Form } from 'antd';
 import PageTitle from '../../../../../components/page-title/PageTitle';
 import stepImg from '../../../../../assets/images/product-regist.png';
 import CountNum from '../../../../../components/CountNum/index';
+import { netStatus } from '../../../../../configs/text-map';
+import { post, Paths, get } from '../../../../../api';
 import './index.scss'
 import RegistModel from './modelFn'
 const { Option } = Select;
 const { Step } = Steps;
 const { Search } = Input;
 export default function DeviceRegist() {
+    const [form] = Form.useForm();
     const [deviceNameS, setDeviceNameS] = useState([])
     const [productCount, SetproductCount] = useState({})
     const [dataSource, setDataSource] = useState([])
@@ -46,12 +49,17 @@ export default function DeviceRegist() {
             key: 'address',
         }
     ];
-    useEffect(() => { }, [])
-    const downFile = () => {
-        alert(10)
+    useEffect(() => {
+        getStatistical()
+    }, [])
+    //获取统计
+    const getStatistical = () => {
+        post(Paths.proReledCount).then((res) => {
+        });
     }
-    //搜索
-    const onSearch = value => console.log(value);
+    const downFile = () => {
+    }
+
     //注册
     const [modelVis, setModelVis] = useState(false)
     const openRegist = () => {
@@ -63,6 +71,47 @@ export default function DeviceRegist() {
     const colseMoadl = () => {
         setModelVis(false)
     }
+    //搜索
+    const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
+    useEffect(() => {
+        getList()
+    }, [pager.pageIndex, pager.pageRows])
+    //获取列表
+    const getList = (load = true) => {
+        let params = { ...form.getFieldsValue(), ...pager }
+        post(Paths.proReledRegist, params, { load }).then((res) => {
+            setDataSource(res.data.list)
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { totalRows: res.data.pager.totalRows })
+            })
+        });
+    }
+    //页码改变
+    const pagerChange = (pageIndex, pageRows) => {
+        if (pageRows == pager.pageRows) {
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { pageIndex, pageRows })
+            })
+        } else {
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { pageIndex: 1, pageRows })
+            })
+        }
+
+    }
+    const onSearch = () => {
+        if (pager.pageIndex == 1) {
+            getList()
+        } else {
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { pageIndex: 1 })
+            })
+        }
+    };
     return (
         <div id='product-device-regist'>
             <div className='comm-shadowbox setp-ttip'>
@@ -80,16 +129,45 @@ export default function DeviceRegist() {
             <div className='comm-shadowbox device-content'>
                 <div className='content-top'>
                     <div className='content-top-left'>
-                        <span>入网状态：</span>
-                        <Select defaultValue="lucy" style={{ width: 200 }} allowClear>
-                            <Option value="lucy">Lucy</Option>
-                        </Select>
-                        <span style={{ marginLeft: '53px' }}>设备ID：</span>
-                        <Search placeholder="请输入设备ID" onSearch={onSearch} enterButton style={{ width: 465 }} />
+                        <Form className='device-filter-form' form={form} layout='inline'>
+                            <Form.Item name="status" label="入网状态" >
+                                <Select
+                                    allowClear
+                                    style={{ width: '200px' }}
+                                >
+                                    {
+                                        netStatus.map(item => {
+                                            return (<Option value={item.key} key={item.key}>{item.value}</Option>)
+                                        })
+                                    }
+                                </Select>
+                            </Form.Item>
+                            <Form.Item
+                                label="请输入设备ID"
+                            >
+                                <Form.Item
+                                    name='id'
+                                    noStyle
+                                >
+                                    <Input style={{ width: '465px' }} placeholder="请输入设备ID" />
+                                </Form.Item>
+                                <Button type="primary" onClick={onSearch}>
+                                    查询
+                                </Button>
+                            </Form.Item>
+                        </Form>
                     </div>
                     <Button type="primary" onClick={openRegist}>注册设备</Button>
                 </div>
-                <Table dataSource={dataSource} columns={columns} />
+                <Table dataSource={dataSource} columns={columns} pagination={{
+                    defaultCurrent: 1,
+                    current: pager.pageIndex,
+                    onChange: pagerChange,
+                    pageSize: pager.pageRows,
+                    total: pager.totalRows,
+                    showQuickJumper: true,
+                    pageSizeOptions: [10]
+                }} />
             </div>
             {
                 modelVis && <RegistModel isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl}></RegistModel>

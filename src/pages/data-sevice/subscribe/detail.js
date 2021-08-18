@@ -6,22 +6,22 @@ const dataSource = []
 const columns = [
     {
         title: '数据名称',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'funcName',
+        key: 'funcName',
     },
     {
         title: '数据标识',
-        dataIndex: 'age',
-        key: 'age',
+        dataIndex: 'funcIdentifier',
+        key: 'funcIdentifier',
     },
     {
         title: '数据属性',
-        dataIndex: 'address',
-        key: 'address',
+        dataIndex: 'funcType',
+        key: 'funcType',
     },
 ];
 export default function ProtocolDelete({ rightVisible, onCloseRight,id }) {
-    const [data,setData]=useState({devicePushDataConfList:[]})
+    const [data,setData]=useState({subscriptDataList:[]})
     useEffect(() => {
         getDetail()
     }, [])
@@ -49,7 +49,7 @@ export default function ProtocolDelete({ rightVisible, onCloseRight,id }) {
                         <div className='item-value'>{data.subscription}</div>
                     </div>
                     <div className='subscrbe-t'>配置数据</div>
-                    <Table dataSource={data.devicePushDataConfList} columns={columns} />
+                    <Table dataSource={data.subscriptDataList} columns={columns} />
                     <div className='subscrbe-t' style={{marginTop:'22px'}}>订阅方式</div>
                     <div className='subscrbe-item'>
                         <div className='item-label'>订阅方式：</div>

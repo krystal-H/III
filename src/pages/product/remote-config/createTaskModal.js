@@ -1,20 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { UploadOutlined } from '@ant-design/icons';
-import { Modal, Button, Table, Select, InputNumber, Divider, Steps, Form, Input } from 'antd';
-import FlowChart from '../../../components/flow-chart/FlowChart';
-import { createArrayByLength } from '../../../util/util';
-import { get, post, Paths } from '../../../api';
-import { Notification } from '../../../components/Notification';
-import { DateTool, uniqueItemInArrayByKey, checkFileTypeAndSize } from '../../../util/util';
+import { Modal, Button, Table, Select, Steps, Form, Input } from 'antd'
+import { createArrayByLength } from '../../../util/util'
+import { get, post, Paths } from '../../../api'
+import { Notification } from '../../../components/Notification'
 import { cloneDeep } from 'lodash'
-// import AddConfigData from './addConfigData'
+import AddConfigData from './addConfigData'
+import ChooseUpdateDevice from './chooseUpdateDevice'
 
-import './remoteConfigModals.scss'
+import './createTaskModal.scss'
 
 
-const { TextArea, Search } = Input;
-const { Option } = Select;
-const { Step } = Steps;
+const { TextArea } = Input
+const { Option } = Select
+const { Step } = Steps
 
 const stepList = [
     {
@@ -28,10 +26,10 @@ const stepList = [
     }
 ]
 
-export function RemoteConfigAddModal({ visible, onCancel }) {
+function CreateTask({ visible, onCancel }) {
     const refConfig = useRef()
     const [form] = Form.useForm()
-    const [stepcurrent, setStepcurrent] = useState(0)
+    const [stepcurrent, setStepcurrent] = useState(2)
 
     const onOk = () => {
         form.submit()
@@ -48,21 +46,24 @@ export function RemoteConfigAddModal({ visible, onCancel }) {
     }
 
     // 上一步
-    const clickPrevious = (index) => {
-        setStepcurrent(--index)
+    const clickPrevious = () => {
+        setStepcurrent(stepcurrent - 1)
     }
 
     // 下一步
-    const nextStep = (index) => {
-        setStepcurrent(++index)
+    const nextStep = () => {
+        setStepcurrent(stepcurrent + 1)
     }
+    
     // 下一步前验证
-    const clickNext = (index) => {
-        if (index === 0) { // 填写任务说明
+    const clickNext = () => {
+        if (stepcurrent === 0) { // 填写任务说明
             onOk()
-        } else if (index === 1) { // 添加配置数据
+        } else if (stepcurrent === 1) { // 添加配置数据
             console.log(refConfig, 'refConfig')
             refConfig.current.onFinish()
+        } else if (stepcurrent === 2) { // 选择配置更新的设备
+
         }
     }
 
@@ -77,8 +78,8 @@ export function RemoteConfigAddModal({ visible, onCancel }) {
             onCancel={onCancel}
             wrapClassName={'remote-config-modal'}
             footer={[
-                stepcurrent !== 0 && <Button key="previous" onClick={(e) => clickPrevious(stepcurrent, e)}>上一步</Button>,
-                <Button type="primary" key="next" onClick={(e) => clickNext(stepcurrent, e)}>{stepcurrent === 2 ? '确认创建' : '下一步'}</Button>
+                stepcurrent !== 0 && <Button key="previous" onClick={() => clickPrevious()}>上一步</Button>,
+                <Button type="primary" key="next" onClick={() => clickNext()}>{stepcurrent === 2 ? '确认创建' : '下一步'}</Button>
             ]}>
             <div className="remote-config">
                 <div className="step-box">
@@ -137,16 +138,22 @@ export function RemoteConfigAddModal({ visible, onCancel }) {
                 }
 
                 {/* 添加配置数据 */}
-                {/* {
+                {
                     stepcurrent === 1 &&
                     <AddConfigData
-                    ref={refConfig}
-                    nextStep={nextStep}/>
-                } */}
+                        ref={refConfig}
+                        nextStep={nextStep} />
+                }
+
+                {/* 选择配置更新的设备 */}
+                {
+                    stepcurrent === 2 &&
+                    <ChooseUpdateDevice />
+                }
+
             </div>
         </Modal>
     )
 }
 
-
-
+export default CreateTask
