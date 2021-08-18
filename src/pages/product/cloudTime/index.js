@@ -13,7 +13,7 @@ const { Option } = Select;
 const { Step } = Steps;
 const { Search } = Input;
 
-export default function DeviceRegist() {
+export default function CloudTime() {
 
     const [operate, setOperate] = useState(null)
     const [cloudAddVisible, setCloudAddVisible] = useState(false) // 新建
@@ -170,7 +170,7 @@ export default function DeviceRegist() {
                     </Select>
                 </div>
             </PageTitle>
-            <div className='comm-shadowbox setp-ttip'>
+            <div className='comm-shadowbox setp-tip'>
                 <div className='step-title'>
                     <img src={stepImg} alt="" />
                     <span>云端定时步骤</span>
