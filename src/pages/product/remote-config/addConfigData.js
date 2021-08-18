@@ -174,7 +174,6 @@ function AddConfigData({ nextStep }, ref) {
   // 下一步验证
   const validData = () => {
     console.log(nextStep, ref)
-    debugger
     let temp = []
     if (protocolFormat !== 1) {
       if (selectedProtocols.length < 1) {
