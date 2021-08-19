@@ -41,7 +41,6 @@ export default function DeviceList() {
         if(selectType){
             params.productId=selectType
         }
-        // setSearchParams(params.devicePushUrlConf)
         post(Paths.getDeviceList, params, { load }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {

@@ -9,7 +9,6 @@ import './index.scss'
 import RegistModel from './modelFn'
 const { Option } = Select;
 const { Step } = Steps;
-const { Search } = Input;
 export default function DeviceRegist() {
     const [form] = Form.useForm();
     const [deviceNameS, setDeviceNameS] = useState([])

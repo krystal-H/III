@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Modal, Button, Input, Select, Upload, Form } from 'antd';
+import { Modal, Tooltip, Form } from 'antd';
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
 import { UploadFileHooks } from '../../../../../components/upload-file';
 import './index.scss'
@@ -22,7 +22,11 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
       <div className='device-regist'>
         <Form form={form} labelAlign='right'>
           <Form.Item label="验证方式：">
-            <span></span>
+            <Tooltip
+              title='设备通信时，需校验烧录的设备密钥和设备ID，安全性最高。'
+              placement="bottom">
+              一机一密
+            </Tooltip>
           </Form.Item>
           <Form.Item
             label="导入设备物理地址"
