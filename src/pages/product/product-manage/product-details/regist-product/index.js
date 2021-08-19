@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Select, Steps, Button, Input, Space, Table, Form } from 'antd';
-import PageTitle from '../../../../../components/page-title/PageTitle';
 import stepImg from '../../../../../assets/images/product-regist.png';
 import CountNum from '../../../../../components/CountNum/index';
 import { netStatus } from '../../../../../configs/text-map';
 import { post, Paths, get } from '../../../../../api';
+import { DateTool } from '../../../../../util/util';
 import './index.scss'
 import RegistModel from './modelFn'
 const { Option } = Select;
@@ -19,34 +19,36 @@ export default function DeviceRegist() {
     const columns = [
         {
             title: '设备ID',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'did',
+            key: 'did',
         },
         {
             title: '物理地址',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'physicalAddr',
+            key: 'physicalAddr',
         },
         {
             title: '通信验证方式',
-            dataIndex: 'address',
-            key: 'address',
-        }, {
-            title: '归属产品名称',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'authorityType',
+            key: 'authorityType',
         }, {
             title: '设备秘钥',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'deviceSecret',
+            key: 'deviceSecret',
         }, {
             title: '入网状态',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'status',
+            key: 'status',
+            render: (text) => (
+                <span >{text ? '已入网' : '未入网'}</span>
+            )
         }, {
             title: '入网时间',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'activeTime',
+            key: 'activeTime',
+            render(updateTime) {
+                return DateTool.utcToDev(updateTime);
+            }
         }
     ];
     useEffect(() => {
@@ -55,6 +57,9 @@ export default function DeviceRegist() {
     //获取统计
     const getStatistical = () => {
         post(Paths.proReledCount).then((res) => {
+            setCountData([{ label: '设备总数量', count: res.data.total },
+            { label: '已入网设备', count: res.data.activate },
+            { label: '未入网设备', count: res.data.unactivate }])
         });
     }
     const downFile = () => {
@@ -78,7 +83,7 @@ export default function DeviceRegist() {
     }, [pager.pageIndex, pager.pageRows])
     //获取列表
     const getList = (load = true) => {
-        let params = { ...form.getFieldsValue(), ...pager }
+        let params = { ...form.getFieldsValue(), ...pager, productId: 11549 }
         post(Paths.proReledRegist, params, { load }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {
@@ -103,7 +108,7 @@ export default function DeviceRegist() {
 
     }
     const onSearch = () => {
-        if (pager.pageIndex == 1) {
+        if (pager.pageIndex === 1) {
             getList()
         } else {
             setPager(pre => {
@@ -116,7 +121,7 @@ export default function DeviceRegist() {
         <div id='product-device-regist'>
             <div className='comm-shadowbox setp-ttip'>
                 <div className='step-title'>
-                    <img src={stepImg} />
+                    <img src={stepImg} alt='' />
                     <span>注册设备步骤</span>
                 </div>
                 <Steps current={-1} initial={0}>
@@ -159,14 +164,15 @@ export default function DeviceRegist() {
                     </div>
                     <Button type="primary" onClick={openRegist}>注册设备</Button>
                 </div>
-                <Table dataSource={dataSource} columns={columns} pagination={{
+                <Table rowKey='did' dataSource={dataSource} columns={columns} pagination={{
                     defaultCurrent: 1,
                     current: pager.pageIndex,
                     onChange: pagerChange,
                     pageSize: pager.pageRows,
                     total: pager.totalRows,
                     showQuickJumper: true,
-                    pageSizeOptions: [10]
+                    pageSizeOptions: [10],
+                    showTotal: () => <span>共 <a>{pager.totalRows}</a> 条</span>
                 }} />
             </div>
             {

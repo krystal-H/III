@@ -20,10 +20,9 @@ export const updateDeveloperInfo= (info) => {
 export const getDeveloperInfo= () => {
   return (dispatch,getState) => {
     post(Paths.getDeveloperInfo,{},{
-      // needVersion:1.1,
       loading: true
     }).then((res) => {
-      let info = res.data,
+      let info = res.userId?res:res.data,
           action = updateDeveloperInfo(info);
       dispatch(action);
     });

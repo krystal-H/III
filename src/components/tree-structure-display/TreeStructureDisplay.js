@@ -58,48 +58,47 @@ export default class TreeStructureDisplay extends Component {
             return item;
         });
     }
-    /**
-     * defaultExpandAll : 是否全量打开树结构
-     */ 
+    
+    
     render() {
         let { permissionsTabsKey } = this.state;
-        let {productResource,dataObjRightsList = [],dataDimensionRightsList = [],defaultExpandAll = [],apiInvokList = [],userCategory,projectAuthList=[]} = this.props;
+        let {productResource,dataObjRightsList = [],dataDimensionRightsList = [],apiInvokList = [],userCategory,projectAuthList=[]} = this.props;
         productResource = this.rightsList(productResource);
         dataObjRightsList = this.rightsList(dataObjRightsList);
         dataDimensionRightsList = this.rightsList(dataDimensionRightsList);
         apiInvokList = this.rightsList(apiInvokList);
         projectAuthList= this.rightsList(projectAuthList);
-        console.log("TreeStructureDisplay -> render -> defaultExpandAll", defaultExpandAll)
         return (<div className='treeStructureDisplay commonContentBox'>
                     <div className='title'>权限信息</div>
+                    <p className='annotation'>*注：蓝色为已配置的权限。</p>
                     <div className='centent'>
                         {
                             userCategory==1?<Tabs defaultActiveKey={permissionsTabsKey} onChange={this.callback}>
                                 <TabPane tab="产品服务权限" key="1">
                                     {/* 就是下面这个三目运算符，为什么写一行就会报错？？？ 我裂开了... */}
                                     { productResource.length>0?
-                                        <Tree showLine defaultExpandAll={defaultExpandAll} >
+                                        <Tree showLine defaultExpandAll={true} >
                                             {this.renderTreeNodes(productResource)}
                                         </Tree>
                                         :<NoSourceWarn /> }
                                 </TabPane>
                                 <TabPane tab="数据对象权限" key="2">
                                     { dataObjRightsList.length>0?
-                                        <Tree showLine defaultExpandAll={defaultExpandAll} >
+                                        <Tree showLine defaultExpandAll={true} >
                                             {this.renderTreeNodes(dataObjRightsList)}
                                         </Tree>
                                         :<NoSourceWarn /> }
                                 </TabPane>
                                 <TabPane tab="数据维度权限" key="3">
                                     { dataDimensionRightsList.length>0?
-                                        <Tree showLine defaultExpandAll={defaultExpandAll} >
+                                        <Tree showLine defaultExpandAll={true} >
                                             {this.renderTreeNodes(dataDimensionRightsList)}
                                         </Tree>
                                         :<NoSourceWarn /> }
                                 </TabPane>
                                 <TabPane tab="项目权限" key="4">
                                     { projectAuthList.length>0?
-                                        <Tree showLine defaultExpandAll={defaultExpandAll} >
+                                        <Tree showLine defaultExpandAll={true} >
                                             {this.renderTreeNodes(projectAuthList)}
                                         </Tree>
                                         :<NoSourceWarn /> }
@@ -113,28 +112,28 @@ export default class TreeStructureDisplay extends Component {
                             <Tabs defaultActiveKey={permissionsTabsKey} onChange={this.callback}>
                                 <TabPane tab="数据对象权限" key="1">
                                     { dataObjRightsList.length>0?
-                                        <Tree showLine defaultExpandAll={defaultExpandAll} >
+                                        <Tree showLine defaultExpandAll={true} >
                                             {this.renderTreeNodes(dataObjRightsList)}
                                         </Tree>
                                         :<NoSourceWarn /> }
                                 </TabPane>
                                 <TabPane tab="数据维度权限" key="2">
                                     { dataDimensionRightsList.length>0?
-                                        <Tree showLine defaultExpandAll={defaultExpandAll} >
+                                        <Tree showLine defaultExpandAll={true} >
                                             {this.renderTreeNodes(dataDimensionRightsList)}
                                         </Tree>
                                         :<NoSourceWarn /> }
                                 </TabPane>
                                 <TabPane tab="API调用权限" key="3">
                                     { apiInvokList.length>0?
-                                        <Tree showLine defaultExpandAll={defaultExpandAll} >
+                                        <Tree showLine defaultExpandAll={true} >
                                             {this.renderTreeNodes(apiInvokList)}
                                         </Tree>
                                         :<NoSourceWarn /> }
                                 </TabPane>
                             </Tabs>
                         }
-                        <p className='annotation'>*注：蓝色为已配置的权限。</p>
+                        
                     </div>
                 </div>
         )

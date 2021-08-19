@@ -16,7 +16,7 @@ export default function DeviceRegist() {
     const [deviceNameS, setDeviceNameS] = useState([])
     const [productCount, SetproductCount] = useState({})
     const [dataSource, setDataSource] = useState([])
-    const [pager, setPager] = useState({ pageStartRow: 1, totalRows: 0, pageRows: 10 })
+    const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
     // const [searchParams,setSearchParams]=useState({})
     // table操作-发布、删除、下线
     const [tableAcVisible, setTableAcVisible] = useState(false)
@@ -109,16 +109,16 @@ export default function DeviceRegist() {
     ];
     useEffect(() => {
         getList()
-    }, [pager.pageRows, pager.pageStartRow])
+    }, [pager.pageRows, pager.pageIndex])
 
     //搜索
     const onSearch = () => {
-        if (pager.pageStartRow == 1) {
+        if (pager.pageIndex == 1) {
             getList()
         } else {
             setPager(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))
-                return Object.assign(obj, { pageStartRow: 1 })
+                return Object.assign(obj, { pageIndex: 1 })
             })
         }
     };
@@ -138,16 +138,16 @@ export default function DeviceRegist() {
         });
     }
     //页码改变
-    const pagerChange = (pageStartRow, pageRows) => {
+    const pagerChange = (pageIndex, pageRows) => {
         if (pageRows == pager.pageRows) {
             setPager(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))
-                return Object.assign(obj, { pageStartRow, pageRows })
+                return Object.assign(obj, { pageIndex, pageRows })
             })
         } else {
             setPager(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))
-                return Object.assign(obj, { pageStartRow: 1, pageRows })
+                return Object.assign(obj, { pageIndex: 1, pageRows })
             })
         }
 
@@ -176,7 +176,7 @@ export default function DeviceRegist() {
             </PageTitle>
             <div className='comm-shadowbox setp-ttip'>
                 <div className='step-title'>
-                    <img src={stepImg} />
+                    <img src={stepImg} alt=''/>
                     <span>数据订阅步骤</span>
                 </div>
                 <Steps current={-1} initial={0}>
@@ -223,12 +223,13 @@ export default function DeviceRegist() {
                 </div>
                 <Table rowKey='urlConfId' dataSource={dataSource} columns={columns} pagination={{
                     defaultCurrent: 1,
-                    current: pager.pageStartRow,
+                    current: pager.pageIndex,
                     onChange: pagerChange,
                     pageSize: pager.pageRows,
                     total: pager.totalRows,
                     showQuickJumper: true,
-                    pageSizeOptions: [10]
+                    pageSizeOptions: [10],
+                    showTotal: () => <span>共 <a>{pager.totalRows}</a> 条</span>
                 }} />
             </div>
             {
