@@ -32,7 +32,7 @@ export default function DeviceRegist() {
         setTableAcVisible(false)
     }
     const updateOkHandle = (load = true) => {
-        if (operate == 1) {
+        if (operate === 1) {
             let url = Paths.subscribeStart + '?urlConfId=' + selectRow.urlConfId
             post(url, {}, { load }).then((res) => {
                 setTableAcVisible(false)
@@ -40,7 +40,7 @@ export default function DeviceRegist() {
             });
         } else {
             let url = Paths.subscribeClose + '?urlConfId=' + selectRow.urlConfId
-            post(url, params, { load }).then((res) => {
+            post(url, {}, { load }).then((res) => {
                 setTableAcVisible(false)
                 getList()
             });
