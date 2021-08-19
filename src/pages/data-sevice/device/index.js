@@ -1,9 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom';
 import PageTitle from '../../../components/page-title/PageTitle';
-import { post, Paths, get } from '../../../api';
-import { Radio, DatePicker, Select, Table, Button, Space, Typography } from 'antd';
-import CountNum from '../../../components/CountNum/index';
+import { post, Paths } from '../../../api';
+import { Radio, DatePicker, Select, Table } from 'antd';
 import './index.scss'
 import dayjs from 'dayjs'
 
@@ -96,11 +95,11 @@ export default function Device() {
     }, [currentTab])
     const getData = (load = true) => {
         let params = {}
-        if (currentTime == 1) {
+        if (currentTime === '1') {
             params.endDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
             params.startDate = dayjs().subtract(8, 'day').format('YYYY-MM-DD')
 
-        } else if (currentTime == 2) {
+        } else if (currentTime === '2') {
             params.endDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
             params.startDate = dayjs().subtract(31, 'day').format('YYYY-MM-DD')
         }
@@ -130,13 +129,13 @@ export default function Device() {
         let xData = []
         data.forEach(item => {
             xTime.push(item.summaryDate)
-            if (currentTab == 0) {
+            if (currentTab === 0) {
                 xData.push(item.newNum)
-            } else if (currentTab == 1) {
+            } else if (currentTab === 1) {
                 xData.push(item.joinNum)
-            } else if (currentTab == 2) {
+            } else if (currentTab === 2) {
                 xData.push(item.activeNum)
-            } else if (currentTab == 3) {
+            } else if (currentTab === 3) {
                 xData.push(item.exceptionNum)
             }
 
@@ -210,7 +209,7 @@ export default function Device() {
         option && myChart.setOption(option);
     }
     const filterData = (index) => {
-        if (index == 4) {
+        if (index === 4) {
             return
         }
         setCurrentTab(index)
@@ -249,7 +248,7 @@ export default function Device() {
                     {
                         countData.map((item, index) => {
                             return (
-                                <div key={index} className='count-item' onClick={() => { filterData(index) }} className={currentTab == index ? 'current-tab' : ''}>
+                                <div key={index} className='count-item' onClick={() => { filterData(index) }} className={currentTab === index ? 'current-tab' : ''}>
                                     <div className='item-label'>{item.label}</div>
                                     <div className='item-number'>{item.count}</div>
                                 </div>
