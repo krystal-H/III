@@ -7,7 +7,7 @@ import UserInfo from './user-info/UserInfo';
 import RoleManagement from './roleManagement/index';
 import UserVisit from './user-visit/index';
 import OperateLog from './operate-log/OperateLog';
-import SecuritySetting from './security-setting/SecuritySetting';
+import SecuritySetting from './security-setting';
 
 import OutsideWrapper from '../../components/outside-wrapper/OutsideWrapper';
 import Header from '../../pages/open/header/Header'

@@ -395,7 +395,7 @@ let Paths = {
     //设备分组
     getGroupList:'/group/getList',
     getGroupListAuth:'/group/getGroupList',
-    updateGroup:'/group/addOrUpdate',
+    updateGroup:'/deviceGroup/addOrUpdate',
     deleteGroup:'/group/delete',
     getGroupDetail:'/group/get',
     getGroupDeviceList:'/group/getDeviceList',

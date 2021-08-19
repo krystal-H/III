@@ -73,13 +73,13 @@ export default class BaseInfo extends Component {
     }
     render() {
         const {productResource,dataObjRightsList,dataDimensionRightsList} = this.state,
-            {developerInfo,getDeveloperInfo} = this.props,
-            {userId,email,regTime,userRole,parentUserName,userName,isSubUser} = developerInfo;
+            {developerInfo,getDeveloperInfo,isNotSub} = this.props,
+            {userId,email,regTime,userRole,parentUserName,userName} = developerInfo;
 
         return <div className='page-userbaseinfo'>
                 <PageTitle title="基本资料" />
                 {
-                    !!isSubUser ? 
+                    !isNotSub ? 
                     // 子账号页面
                     <div>
                         <AloneSection title="基本信息" className='comm-shadowbox'>

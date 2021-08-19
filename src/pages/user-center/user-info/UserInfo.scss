@@ -11,13 +11,9 @@
         .title{
             color: $fontColor;
         }
-        
         .p-flex{
-            display: flex;
-            flex-direction: row;
-            justify-content: space-around;
-        
             .flex-item{
+                display: inline-block;
                 width: 33%;
                 color: $subFontColor;
             }

@@ -15,23 +15,16 @@ const formItemLayout = {
 export default class ContactInformation extends Component {
     constructor (props) {
         super(props);
-        this.formRef = createRef()
-        this.state={
-            loading:true
-
-        }
-        
+        this.formRef = createRef();
     }
     componentDidUpdate(prevProps) {
         if(prevProps.developerInfo.phone == undefined && this.props.developerInfo.phone){
             this.formRef.current.resetFields();
-            this.setState({loading:false})
         }
     }
     
     onFinish = values => {
         const { developerInfo:{userId} , getDeveloperInfo} = this.props;
-        this.setState({loading:false})
         post(Paths.upDeveloperInfo,{
             ...values,userId
         },{
@@ -42,14 +35,12 @@ export default class ContactInformation extends Component {
                 description:'用户信息更新成功！'
             })
             getDeveloperInfo()
-        }).finally(()=>{
-            this.setState({loading:false})
         })
     }
     render() {
         const {developerInfo:{phone,nickName} } = this.props;
         return (
-            <Spin spinning={this.state.loading}>
+           
                 <Form {...formItemLayout} onFinish={this.onFinish} initialValues={{phone,nickName}} ref={this.formRef}>
                     <Form.Item label="联系人" name='nickName' rules={[{pattern : /^[a-zA-Z0-9\u4e00-\u9fa5]{2,20}$/,message:'请输入2到20长度的汉字、字母和数字'}]}>
                         <Input placeholder="请输入联系人" />
@@ -64,7 +55,7 @@ export default class ContactInformation extends Component {
                     </Row>
                 </Form.Item>
             </Form>
-            </Spin>
+            
 
             
         );

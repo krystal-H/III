@@ -1,63 +1,19 @@
 import React,{useState} from 'react'
-import {Switch,Redirect,Route} from 'react-router-dom'
 import { get,Paths } from '../../../api'
-
-import ResetPassword from './reset-password/ResetPassword'
-import UpdateEmail from './update-email/UpdateEmail'
-import CloseAccount from './close-account/CloseAccount'
-import SubResetPassword from './SubResetPassword';
 
 import PageTitle from '../../../components/page-title/PageTitle';
 import { DateTool,strToAsterisk } from '../../../util/util';
-import { Icon as LegacyIcon } from '@ant-design/compatible';
 
-import './SecuritySetting.scss'
-
-export default function SecuritySetting ({developerInfo,getDeveloperInfo,isNotSub,match}) {
-    const {path} = match;
-    return (
-        <Switch>
-            <Route path={`${path}/setting`} 
-                render={routeProps => <Setting {...routeProps} developerInfo={developerInfo} getDeveloperInfo={getDeveloperInfo} isNotSub={isNotSub} />}
-            >
-            </Route>
-            {
-                isNotSub&&
-                <Route path={`${path}/resetPassword`} 
-                    render={routeProps => <ResetPassword {...routeProps} developerInfo={developerInfo} />}
-                ></Route>
-            }
-            {
-                isNotSub&&
-                <Route path={`${path}/updateEmail`} 
-                    render={routeProps => <UpdateEmail {...routeProps} developerInfo={developerInfo} />}
-                ></Route>
-            }
-            {
-                isNotSub&&
-                <Route path={`${path}/closeAccount`} 
-                    render={routeProps => <CloseAccount {...routeProps} developerInfo={developerInfo} />}
-                ></Route>
-            }
-            {
-                isNotSub&&
-                <Route path={`${path}/subResetPassword`} 
-                    render={routeProps => <SubResetPassword {...routeProps} developerInfo={developerInfo} />}
-                ></Route>
-            }
-            <Redirect to={`${path}/setting`}></Redirect>
-        </Switch>
-    )
-}
+import EyeIcon from '../../../components/eyeIcon';
 
 
-function Setting ({
+export default function Setting ({
     developerInfo,
     history,
     getDeveloperInfo,
     isNotSub
 }) {
-    let {id,secretId,secretKey,createTime,email,cancelStatus} = developerInfo;
+    let {userId,secretId,secretKey,regTime,email,status} = developerInfo;
 
     const [showid, setShowid] = useState(false);
     const [showkey, setShowkey] = useState(false);
@@ -89,35 +45,23 @@ function Setting ({
                             <div className="p-flex">
                                 <span className="flex-item">
                                     <span className="tit">开发者ID：</span>
-                                    {id}
+                                    {userId}
                                 </span>
                                 <span className="flex-item">
                                     <span className="tit">用户secretId：</span>
                                     {showid?secretId:strToAsterisk(secretId, 10)}
-                                    <LegacyIcon
-                                        type={showid?"eye":"eye-invisible"}
-                                        style={{ fontSize: "18px", marginLeft: "6px" }}
-                                        theme="twoTone"
-                                        twoToneColor="#2874FF"
-                                        onClick={ ()=>{setShowid(pri=>!pri)} }
-                                    />
+                                    <EyeIcon visiable={showid} clickBack={()=>{setShowid(pri=>!pri)} } />
                                 </span>
                                 <span className="flex-item">
                                     <span className="tit">用户SecretKey：</span>
                                     {showkey?secretKey:strToAsterisk(secretKey, 10)}
-                                    <LegacyIcon
-                                        type={showkey?"eye":"eye-invisible"}
-                                        style={{ fontSize: "18px", marginLeft: "6px" }}
-                                        theme="twoTone"
-                                        twoToneColor="#2874FF"
-                                        onClick={ ()=>{setShowkey(pri=>!pri)} }
-                                    />
+                                    <EyeIcon visiable={showkey} clickBack={()=>{setShowkey(pri=>!pri)} } />
                                 </span>
 
                                 
                                 <span className="flex-item">
                                     <span className="tit">创建时间：</span>
-                                    {createTime ? DateTool.utcToDev(createTime) : '--'}
+                                    {regTime ? DateTool.utcToDev(regTime) : '--'}
                                 </span>
                             </div>
                         </div>
@@ -164,7 +108,7 @@ function Setting ({
                             <div className="setting-btn-wrapper">
                                 <div className="btns">
                                     {
-                                        (cancelStatus == 1) ? 
+                                        (status == 4) ? 
                                         <span onClick={() => withDraw()} className="btn-can-control">撤销注销账户申请</span>
                                         : <span onClick={() => goToItem('closeAccount')} className="btn-can-control">注销账户</span>
                                     }
