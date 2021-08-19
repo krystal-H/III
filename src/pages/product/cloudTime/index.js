@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Select, Steps, Button, Input, Table, Divider } from 'antd';
-import PageTitle from '../../../components/page-title/PageTitle';
-import stepImg from '../../../assets/images/product-regist.png';
-import { cloudStatus } from '../../../configs/text-map';
-import { setFuncDataType } from '../../../util/util';
-import { Paths, post } from '../../../api'
-import { CloudAddForm } from './cloud-manage-modals';
+import { Select, Steps, Button, Input, Table, Divider } from 'antd'
+import PageTitle from '../../../components/page-title/PageTitle'
+import stepImg from '../../../assets/images/product-regist.png'
+import { cloudStatus } from '../../../configs/text-map'
+import { setFuncDataType } from '../../../util/util'
+import { Paths, post, get } from '../../../api'
+import { CloudAddForm } from './cloud-manage-modals'
 import CloudUpdate from './cloud-update'
+import { cloneDeep } from 'lodash'
 import './index.scss'
 
 const { Option } = Select;
@@ -14,37 +15,17 @@ const { Step } = Steps;
 const { Search } = Input;
 
 export default function CloudTime() {
-
     const [operate, setOperate] = useState(null)
     const [cloudAddVisible, setCloudAddVisible] = useState(false) // 新建
     const [cloudUpdateVisible, setCloudUpdateVisible] = useState(false) // 删除
 
+    const [allProductList, setAllProductList] = useState([])
+    const [currentProductId, setCurrentProductId] = useState('')
+    const [currentServiceName, setcurrentServiceName] = useState('')
+
     const [cloudEditVisible, setCloudEditVisible] = useState(false)
     const [usedPropertys, setUsedPropertys] = useState([])
 
-    const [dataSource, setDataSource] = useState([
-        {
-            key: 1,
-            name: 'a',
-            age: 1,
-            address: 'aaaaa',
-            status: '0'
-        },
-        {
-            key: 2,
-            name: 'b',
-            age: 11,
-            address: '111aaaaa',
-            status: '1'
-        },
-        {
-            key: 21,
-            name: '1b',
-            age: 111,
-            address: '111aaaaa',
-            status: '2'
-        }
-    ])
     const columns = [
         {
             title: '功能名称',
@@ -58,7 +39,7 @@ export default function CloudTime() {
             render: (text, record) => (
                 <div>
                     {
-                        record.timerServiceDetails && record.timerServiceDetails.map((item, index) => {
+                        record.timeServerDetails && record.timeServerDetails.map((item, index) => {
                             return <div key={index}>{item.propertyName}</div>
                         })
                     }
@@ -72,7 +53,7 @@ export default function CloudTime() {
             render: (text, record) => (
                 <div>
                     {
-                        record.timerServiceDetails && record.timerServiceDetails.map((item, index) => {
+                        record.timeServerDetails && record.timeServerDetails.map((item, index) => {
                             return <div key={index}>{item.property}</div>
                         })
                     }
@@ -80,17 +61,17 @@ export default function CloudTime() {
             )
         }, {
             title: '归属产品名称',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'productName',
+            key: 'productName',
         }, {
             title: '协议数据类型',
             dataIndex: 'functionDataType',
             key: 'functionDataType',
-            width: 160,
+            // width: 160,
             render: (text, record) => (
                 <div>
                     {
-                        record.timerServiceDetails && record.timerServiceDetails.map((item, index) => {
+                        record.timeServerDetails && record.timeServerDetails.map((item, index) => {
                             return <div key={index}>{setFuncDataType(item)}</div>
                         })
                     }
@@ -113,7 +94,7 @@ export default function CloudTime() {
             render: (text, record) => (
                 <span>
                     {
-                        record.status !== '1' ?
+                        record.status !== 1 ?
                             <React.Fragment>
                                 <a onClick={() => { setCloudEditVisible(true) }}>编辑</a>
                                 <Divider type="vertical" />
@@ -127,21 +108,56 @@ export default function CloudTime() {
                 </span>
             ),
         }
-    ];
+    ]
+    const [dataSource, setDataSource] = useState([])
+    const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 6 })
+
+    useEffect(() => {
+        getCloudGetProductList()
+    }, [])
 
     useEffect(() => {
         getTimeList()
-    }, [])
+    }, [pager.pageIndex, pager.pageRows, currentServiceName, currentProductId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    // 获取产品列表
+    const getCloudGetProductList = () => {
+        get(Paths.cloudGetProductList).then(res => {
+            setAllProductList(res.data)
+        }, () => setAllProductList([]))
+    }
 
     //  获取云端定时列表
     const getTimeList = () => {
-        // post(Paths.getTimeServiceList, { developerId: 1 }).then((res) => {
-        //     setDataSource(res.data)
-        // });
+        post(Paths.getTimeServiceList, {
+            serviceName: currentServiceName || '',
+            productId: currentProductId || '',
+            ...pager
+        }).then((res) => {
+            setDataSource(res.data.list)
+            setPager(pre => {
+                return Object.assign(cloneDeep(pre), { totalRows: res.data.pager.totalRows })
+            })
+        })
+    }
+
+    //页码改变
+    const pagerChange = (pageIndex, pageRows) => {
+        if (pageRows === pager.pageRows) {
+            setPager(pre => {
+                return Object.assign(cloneDeep(pre), { pageIndex, pageRows })
+            })
+        } else {
+            setPager(pre => {
+                return Object.assign(cloneDeep(pre), { pageIndex: 1, pageRows })
+            })
+        }
     }
 
     //搜索
-    const onSearch = value => console.log(value);
+    const onSearch = value => {
+        setcurrentServiceName(value)
+    }
 
     // table操作-发布、删除、下线
     const operateHandle = (type) => {
@@ -165,8 +181,13 @@ export default function CloudTime() {
         <div id='cloud-time'>
             <PageTitle title='云端定时'>
                 <div className='top-select'>
-                    <Select defaultValue="all" style={{ width: 200 }} allowClear>
-                        <Option value="all">全部产品</Option>
+                    <Select style={{ width: 200 }} allowClear
+                        onChange={val => setCurrentProductId(val)}>
+                        {
+                            allProductList && allProductList.map(item => (
+                                <Option key={item.productId} value={item.productId}>{item.productName}</Option>
+                            ))
+                        }
                     </Select>
                 </div>
             </PageTitle>
@@ -185,11 +206,20 @@ export default function CloudTime() {
             <div className='comm-shadowbox device-content'>
                 <div className='content-top'>
                     <div className='content-top-left'>
-                        <Search placeholder="请输入功能名称" onSearch={onSearch} enterButton style={{ width: 465 }} />
+                        <Search placeholder="请输入功能名称" onSearch={onSearch} allowClear enterButton style={{ width: 465 }} />
                     </div>
                     <Button type="primary" onClick={() => setCloudAddVisible(true)}>创 建</Button>
                 </div>
-                <Table dataSource={dataSource} columns={columns} />
+                <Table rowKey="serviceId" dataSource={dataSource} columns={columns}
+                    pagination={{
+                        defaultCurrent: 1,
+                        current: pager.pageIndex,
+                        onChange: pagerChange,
+                        pageSize: pager.pageRows,
+                        total: pager.totalRows,
+                        showQuickJumper: true,
+                        
+                    }} />
             </div>
             {/* 创建 */}
             {

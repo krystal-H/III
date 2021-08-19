@@ -59,6 +59,7 @@ let Paths = {
 
     // 继续开发-发布产品
     publishProduct: '/product/publish', // 继续开发-发布产品
+    saveProductSecurityConfig: '/productManage/saveProductSecurityConfig', // 服务配置-通信安全机制
 
 
     /* 协议 */
@@ -106,7 +107,8 @@ let Paths = {
     saveLinkHelpImg: '/product/help/save',
 
     /* 云端定时功能 */
-    getTimeServiceList: '/timerService/getList', // 获取列表
+    cloudGetProductList: '/productManage/getProductList', // 产品列表
+    getTimeServiceList: '/timeServer/getList', // 获取列表
     updateTimeService: '/timerService/update',
     saveTimeService: '/timerService/save',
     updateTimeServiceStatus: 'timerService/updateStatus', // 修改云端定时状态
