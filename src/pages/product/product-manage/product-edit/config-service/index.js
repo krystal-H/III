@@ -6,26 +6,10 @@ import ConfigFirmware from './configFirmware';
 import JoinGateway from './joinGateway';
 import ConfigFirmwareDetail from './configFirmwareDetail';
 import { Link } from 'react-router-dom';
+import { Paths, post, get } from '../../../../../api'
+import { cloneDeep } from 'lodash'
 
 import './index.scss';
-
-const requiredList = [
-  {
-    title: '配网信息',
-    desc: '选择设备联网方式，设置配网引导图，相关指引等',
-    isConfiged: false,
-    type: 'network',
-    url: require('../../../../../assets/images/commonDefault/service-network.png')
-  },
-  {
-    title: '通信安全机制',
-    desc: '配置设备通信的安全机制，兼顾客户的便利以及安全需求',
-    isConfiged: true,
-    type: 'security',
-    url: require('../../../../../assets/images/commonDefault/service-security.png')
-
-  }
-]
 
 const optionalList = [
   {
@@ -72,7 +56,27 @@ const optionalList = [
   }
 ]
 
-function ServiceSelect({ nextStep }, ref) {
+function ServiceSelect({ productId, nextStep }, ref) {
+  const [requiredList, setRequiredList] = useState([
+    {
+      title: '配网信息',
+      desc: '选择设备联网方式，设置配网引导图，相关指引等',
+      isConfiged: false,
+      type: 'network',
+      url: require('../../../../../assets/images/commonDefault/service-network.png')
+    },
+    {
+      title: '通信安全机制',
+      desc: '配置设备通信的安全机制，兼顾客户的便利以及安全需求',
+      isConfiged: false,
+      type: 'security',
+      url: require('../../../../../assets/images/commonDefault/service-security.png')
+
+    }
+  ])
+  const [productConfig, setProductConfig] = useState('') // 配网信息
+  const [productExtend, setProductExtend] = useState('') // 通信安全
+
   const [networkVisible, setNetworkVisible] = useState(false)
   const [securityVisible, setSecurityVisible] = useState(false)
   const [firmwareVisible, setFirmwareVisible] = useState(false)
@@ -84,7 +88,33 @@ function ServiceSelect({ nextStep }, ref) {
   }
   useImperativeHandle(ref, () => ({
     onFinish: subNextConFirm
-  }));
+  }))
+
+  // 是否配置过  配网信息、通信安全机制
+  const isConfigedFunc = () => {
+    setSecurityVisible(false)
+    post(Paths.getSecurityConfigStatus, { productId }).then(res => {
+      const list = cloneDeep(requiredList)
+      if (res.data.gatewayConfigflag) { // 配网信息配置过
+        list[0].isConfiged = true
+        setRequiredList(list)
+        setProductConfig(res.data.productConfig.authorityType)
+      }
+      if (res.data.securityConfigflag) { // 通信安全配置过
+        list[1].isConfiged = true
+        setRequiredList(list)
+        setProductExtend(res.data.productExtend.authorityType)
+      }
+    })
+  }
+
+  useEffect(() => {
+    isConfigedFunc()
+  }, [])
+
+  useEffect(() => {
+    console.log(requiredList)
+  }, [requiredList])
 
   const showModal = (type) => {
     console.log(type)
@@ -116,7 +146,7 @@ function ServiceSelect({ nextStep }, ref) {
       <div className="service-config-title">必选配置</div>
       <div className="service-config-cont">
         {
-          requiredList.map((item, index) =>
+          requiredList && requiredList.map((item, index) =>
             <div className="config-card" key={index}>
               <div className="config-card-left">
                 <img src={item.url} alt="图片" />
@@ -140,7 +170,7 @@ function ServiceSelect({ nextStep }, ref) {
           optionalList.map((item, index) =>
             <div className="config-card" key={index}>
               <div className="config-card-left">
-              <img src={item.url} alt="图片" />
+                <img src={item.url} alt="图片" />
               </div>
               <div className="config-card-right">
                 <div className="config-card-right-title">{item.title}</div>
@@ -192,6 +222,9 @@ function ServiceSelect({ nextStep }, ref) {
         securityVisible &&
         <CommunicateSecurity
           securityVisible={securityVisible}
+          productId={productId}
+          productExtend={productExtend}
+          isConfigedFunc={isConfigedFunc}
           cancelHandle={() => { setSecurityVisible(false) }} />
       }
       {/* 配置产品固件模块 */}

@@ -175,10 +175,10 @@ export default function OverviewWrap() {
                     {
                         bannerArr.length ? (bannerArr.map((item, index) => {
                             return <div className='imgdiv' key={index}>
-                                <img src={item.imageUrl} />
+                                <img src={item.imageUrl} alt=''/>
                             </div>
                         })) : (<div className='imgdiv' >
-                            <img src={banner} />
+                            <img src={banner} alt=''/>
                         </div>)
                     }
                 </Carousel>
@@ -211,7 +211,7 @@ export default function OverviewWrap() {
                         </div>
                     </div>
 
-                    <div className='over-view-boxshadow over-view-productmn comm-shadowbox' id={2 == currentTip ? 'show-shadow' : ''}>
+                    <div className='over-view-boxshadow over-view-productmn comm-shadowbox' id={2 === currentTip ? 'show-shadow' : ''}>
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>产品管理</div>
@@ -264,7 +264,7 @@ export default function OverviewWrap() {
                             <Button onClick={changeTip}>下一步</Button>
                         </div>
                     </div>
-                    <div className='over-view-boxshadow over-view-device comm-shadowbox' id={3 == currentTip ? 'show-shadow' : ''}>
+                    <div className='over-view-boxshadow over-view-device comm-shadowbox' id={3 === currentTip ? 'show-shadow' : ''}>
                         <div className='over-view-device-title'>我的设备</div>
                         <div className='over-view-device-content'>
                             <div className='over-view-device-content-item'>
@@ -351,7 +351,7 @@ export default function OverviewWrap() {
                             <Button onClick={changeTip}>下一步</Button>
                         </div>
                     </div>
-                    <div className='over-view-boxshadow over-view-productmn comm-shadowbox' id={4 == currentTip ? 'show-shadow' : ''} >
+                    <div className='over-view-boxshadow over-view-productmn comm-shadowbox' id={4 === currentTip ? 'show-shadow' : ''} >
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>APP开发</div>
@@ -383,7 +383,7 @@ export default function OverviewWrap() {
                     </div>
                 </div>
                 <div className='over-view-content-right'>
-                    <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' id={5 == currentTip ? 'show-shadow' : ''}>
+                    <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' id={5 === currentTip ? 'show-shadow' : ''}>
                         <div>
                             <div>快捷入口</div>
                         </div>
@@ -418,7 +418,7 @@ export default function OverviewWrap() {
                             {
                                 messageList.length ? (messageList.map((item, index) => {
                                     return (<div className='over-view-message-item' onClick={() => { goMessageDetail(item.noticeId) }} key={index}>【{item.noticeTitle} 】{item.point}</div>)
-                                })) : <div className='over-no-data'><img src={noData} /> <div>暂无消息</div></div>
+                                })) : <div className='over-no-data'><img src={noData} alt=''/> <div>暂无消息</div></div>
 
                             }
                         </div>
@@ -429,15 +429,15 @@ export default function OverviewWrap() {
                         </div>
                         <div className='over-view-new-product'>
                             <div className='over-view-new-product-img'>
-                                <img src={newproduct1} />
-                                <img src={processimg} />
-                                <img src={newproduct2} />
-                                <img src={processimg} />
-                                <img src={newproduct3} />
-                                <img src={processimg} />
-                                <img src={newproduct4} />
-                                <img src={processimg} />
-                                <img src={newproduct5} />
+                                <img src={newproduct1} alt=''/>
+                                <img src={processimg} alt=''/>
+                                <img src={newproduct2} alt=''/>
+                                <img src={processimg} alt=''/>
+                                <img src={newproduct3} alt=''/>
+                                <img src={processimg} alt=''/>
+                                <img src={newproduct4} alt=''/>
+                                <img src={processimg} alt=''/>
+                                <img src={newproduct5} alt=''/>
                             </div>
                             <div className='over-view-new-product-text'>
                                 <div>1.定义功能</div>
@@ -455,19 +455,19 @@ export default function OverviewWrap() {
                         <div className='over-view-data-service'>
                             <div className='center-layout-wrap'>
                                 <div>
-                                    <img src={dataservice1} />
+                                    <img src={dataservice1} alt=''/>
                                     <div>设备分析</div>
                                 </div>
                             </div>
                             <div className='center-layout-wrap'>
                                 <div>
-                                    <img src={dataservice2} />
+                                    <img src={dataservice2} alt=''/>
                                     <div>用户分析</div>
                                 </div>
                             </div>
                             <div className='center-layout-wrap'>
                                 <div>
-                                    <img src={dataservice3} />
+                                    <img src={dataservice3} alt=''/>
                                     <div>数据订阅</div>
                                 </div>
                             </div>
@@ -479,15 +479,15 @@ export default function OverviewWrap() {
                         </div>
                         <div className='over-view-help hover-commons-unite'>
                             <div>
-                                <img src={help1} />
+                                <img src={help1} alt=''/>
                                 <div>客服</div>
                             </div>
                             <div onClick={goOrder}>
-                                <img src={help2} />
+                                <img src={help2} alt=''/>
                                 <div>工单</div>
                             </div>
                             <div>
-                                <img src={help3} />
+                                <img src={help3} alt=''/>
                                 <div>帮助文档</div>
                             </div>
                         </div>

@@ -21,17 +21,17 @@
     .file-upload-desc {
       display: none;
     }
-    .ant-row {
-      position: relative;
-      .download-btn {
-        cursor: pointer;
-        position: absolute;
-        right: 225px;
-        top: 5px;
-      }
-    }
+    // .ant-row {
+    //   position: relative;
+    //   .download-btn {
+    //     cursor: pointer;
+    //     position: absolute;
+    //     right: 225px;
+    //     top: 5px;
+    //   }
+    // }
   }
-  .download-tool {
-    @include flex(center);
-  }
+  // .download-tool {
+  //   @include flex(center)
+  // }
 }
