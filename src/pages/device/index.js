@@ -4,11 +4,12 @@ import loadable from '@loadable/component';
 
 const DeviceMn = loadable(() => import('./home'));
 const DeviceGroup = loadable(() => import('./deviceGroup'));
+const DeviceWarn = loadable(() => import('./deviceWarning'));
 
 const routes = {
     '设备管理': DeviceMn,
-    // '设备密钥': DeviceMn, //暂时不开放 20210816
-    '设备消息': DeviceMn,//即：设备告警
+    // '设备密钥': null, //暂时不开放 20210816
+    '设备消息': DeviceWarn,//即：设备告警
     '设备分组': DeviceGroup,
 }
 

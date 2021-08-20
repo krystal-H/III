@@ -1,0 +1,45 @@
+
+.page-devwarnlist{
+   .countbox{
+       margin-bottom: $space;
+       padding: $boxpadd 25% $boxpadd $boxpadd;
+       display: flex;
+       justify-content: space-between;
+       .num{
+           display: inline-block;
+           margin-top: 14px;
+           font-size: 24px;
+           font-weight: 500;
+       }
+       .num.time{
+           font-size: 16px;
+           margin-top: 20px;
+       }
+   }
+
+    .searchrulebox{
+        padding-bottom: 16px;
+        .btn{
+            float: right;
+        }
+    }
+
+   
+}
+
+.page-warninginfo-modal{
+    .detail-label{
+        text-align: right;
+        font-weight: 500;
+    }
+}
+
+// .page-devwarn-config-modal{
+
+// }
+
+
+
+
+
+
