@@ -9,7 +9,7 @@ const { Option } = Select
 const guidePic = require('../../../../../assets/images/commonDefault/service-guidePage.png')
 const errorPic = require('../../../../../assets/images/commonDefault/service-bindFailPage.png')
 
-export default function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, productConfig, cancelHandle }) {
+function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited, cancelHandle }) {
   const [form] = Form.useForm()
   const formRef = useRef()
   const imgRef = useRef()
@@ -23,6 +23,19 @@ export default function NetworkInfo({ networkModalVisible, productId, isGateWayD
     post(Paths.getNetDataByProductId, { productId })
       .then(res => {
         setNetData(res.data)
+        // form.resetFields()
+        // formRef.current.setFieldsValue(res.data)
+        formRef.current.setFieldsValue({
+          baseTypeId: res.data.baseTypeId,
+          guidePage: res.data.guidePage.guidePage,
+          bindFailPage: res.data.guidePage.bindFailPage,
+          imageUrlList: res.data.helpPage.imageUrls
+        })
+        setGuidePage(res.data.guidePage.guidePage)
+        setBindFailPage(res.data.guidePage.bindFailPage)
+        imgRef.current.setFileList(res.data.helpPage.imageUrls.filter(item => item).map(item => {
+          return { url: item, status: 'done' }
+        }))
       })
   }
 
@@ -32,15 +45,16 @@ export default function NetworkInfo({ networkModalVisible, productId, isGateWayD
 
   // 保存配网信息
   const onFinish = (values) => {
-    const imageUrlList = values.imageUrlList && values.imageUrlList.map(item => {
-      return item.url
+    const imageUrlList = values.imageUrlList && values.imageUrlList.filter(item => item).map(item => {
+      return item.url || item
     })
     values.productId = productId
     values.imageUrlList = imageUrlList || [] // 帮助页轮播图片集合
     values.isGateWayDevice = isGateWayDevice || '' // 是否网关设备
     values.guidePage = values.guidePage || '' // 引导图
     values.bindFailPage = values.bindFailPage || '' // 失败图
-    post(Paths.saveNetworkConfig, { ...values }).then(res => {
+    console.log('提交的数据****', values)
+    post(Paths.saveNetworkConfig, { ...values }, {loading: true}).then(res => {
       Notification({ description: '操作成功！', type: 'success' })
       cancelHandle()
     })
@@ -111,7 +125,16 @@ export default function NetworkInfo({ networkModalVisible, productId, isGateWayD
           form={form}
           onFinish={onFinish}
           labelCol={{ span: 5 }}
-          wrapperCol={{ span: 19 }}>
+          wrapperCol={{ span: 19 }}
+          initialValues={{
+            // baseTypeId: netData.baseTypeId || '',
+            // ssid: netData.ssid || '',
+            // radiocastName: netData.radiocastName || '',
+            // guidePage: netData.guidePage || '',
+            // bindFailPage: netData.bindFailPage || '',
+            // imageUrlList: netData.imageUrlList || []
+          }}
+        >
           <div className="network-info-modal-title">配网方式</div>
           <Form.Item
             label="已选通信协议">
@@ -224,3 +247,5 @@ export default function NetworkInfo({ networkModalVisible, productId, isGateWayD
     </Modal>
   )
 }
+
+export default NetworkInfo

@@ -65,7 +65,6 @@ let Paths = {
     saveNetworkConfig: '/productManage/saveProductConfig', // 服务配置-保存配网信息
     getNetDataByProductId: '/productManage/getNetDataByProductId', // 服务配置-获取配网方式
 
-
     /* 协议 */
     getProtocolTemplates: '/protoManage/getProtocolTemplatesByProductId',
     addProtocolTemplates: '/protoManage/saveProtocolTemplates',
