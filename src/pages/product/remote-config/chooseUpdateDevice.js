@@ -13,9 +13,8 @@ const { Search } = Input;
 const { TabPane } = Tabs
 
 
-function ChooseUpdateDevice({ }) {
-  const [deviceSelectType, setDeviceSelectType] = useState(1)
-  const [currentActiveKey, setcurrentActiveKey] = useState('1')
+function ChooseUpdateDevice() {
+  const [currentActiveKey, setcurrentActiveKey] = useState('2')
   const [searchLoading, setSearchLoading] = useState(false)
   const [searchedDeviceInfoList, setSearchedDeviceInfoList] = useState([])
   const [allDeviceInfo, setAllDeviceInfo] = useState({ curDeviceInfoList: [], allDeviceInfoList: [], allDeviceInfoPager: { pageIndex: 1, currPageRows: 7 } })
@@ -108,7 +107,7 @@ function ChooseUpdateDevice({ }) {
     onChange: leftSelectChange,
   }
 
-  // 获取设备列表
+  // 获取左侧列表
   const getAllDeviceInfo = (_pageIndex) => {
     // get(Paths.getAllDeviceInfo, {
     //   productId: '',
@@ -180,10 +179,13 @@ function ChooseUpdateDevice({ }) {
     console.log(key)
   }
 
-  // 左侧查询
+  // 左侧搜索
   const leftDeviceSearch = value => {
     setSearchLoading(true)
-    get(Paths.getDeviceInfoByIdOrMacAddress, {}).then(data => {
+    get(Paths.getDeviceInfoByIdOrMacAddress, {
+      productId: '',
+      query: value
+    }).then(data => {
       let temp = data.data;
       temp.key = temp.deviceUniqueId;
       if (data.data) {
@@ -192,22 +194,6 @@ function ChooseUpdateDevice({ }) {
       }
     }).finally(() => {
       setSearchLoading(false)
-    })
-  }
-
-  // 穿梭
-  const leftToRight = () => {
-    let _list = allDeviceInfoList
-    let toAdd = _list.filter(item => selectDeviceIndexToAdd.includes(item.deviceUniqueId)),
-      temp = uniqueItemInArrayByKey([...rightAllList, ...toAdd], 'deviceUniqueId');
-
-    if (rightSearchInput) {
-      rightSearchInput.current.input.value = ''
-    }
-
-    setRightDeviceList({
-      rightAllList: temp,
-      rightTempList: temp
     })
   }
 
@@ -225,6 +211,22 @@ function ChooseUpdateDevice({ }) {
     setRightDeviceList({
       ...rightDeviceList,
       rightTempList: _temp
+    })
+  }
+
+  // 穿梭
+  const leftToRight = () => {
+    let _list = allDeviceInfoList
+    let toAdd = _list.filter(item => selectDeviceIndexToAdd.includes(item.deviceUniqueId)),
+      temp = uniqueItemInArrayByKey([...rightAllList, ...toAdd], 'deviceUniqueId');
+
+    if (rightSearchInput) {
+      rightSearchInput.current.input.value = ''
+    }
+
+    setRightDeviceList({
+      rightAllList: temp,
+      rightTempList: temp
     })
   }
 
