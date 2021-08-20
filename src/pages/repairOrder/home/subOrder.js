@@ -1,5 +1,5 @@
 import React, { useState, useRef, useImperativeHandle, forwardRef, useEffect } from 'react'
-import { Tabs, Form, Input, Button, Cascader } from 'antd';
+import {  Form, Input, Button, Cascader } from 'antd';
 import { UploadFileHooks } from '../../../components/upload-file';
 import { post, Paths, get } from '../../../api';
 const { TextArea } = Input;
@@ -35,17 +35,20 @@ export default function DeviceShadow(props, ref) {
     }
     const subOrder = (load = true) => {
         form.validateFields().then(value => {
-            let image = value.image.reduce((all, cur) => {
-                all += cur.url
-                return all
-            }, '')
-            
+            let image =''
+            value.image.forEach((item,index)=>{
+                if(index === value.image.length-1){
+                    image+=item.url
+                }else{
+                    image+=item.url+','
+                }
+            })
             let problemTypeOneName, problemTypeTwoName
             options.forEach(item => {
-                if(item.value == value.problemType[0]){
+                if(item.value === value.problemType[0]){
                     problemTypeOneName=item.label
                     item.children.forEach(item2=>{
-                        if(item2.value==value.problemType[1]){
+                        if(item2.value===value.problemType[1]){
                             problemTypeTwoName=item2.label
                         }
                     })
