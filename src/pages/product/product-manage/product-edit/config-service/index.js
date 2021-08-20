@@ -215,6 +215,8 @@ function ServiceSelect({ productId, nextStep }, ref) {
         networkVisible &&
         <NetworkInfo
           networkModalVisible={networkVisible}
+          productId={productId}
+          productConfig={productConfig}
           cancelHandle={() => { setNetworkVisible(false) }} />
       }
       {/* 通信安全机制 */}
