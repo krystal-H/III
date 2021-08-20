@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Modal, Input, Form, Select, Upload, Button } from 'antd'
+import { Modal, Input, Form, Select, Button } from 'antd'
 import { UploadFileHooks } from '../../../../../components/upload-file'
-import { Paths, post, get } from '../../../../../api'
-import UploadFile from '../../../../../components/upFile/UploadFile'
+import { Paths, post } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
 import './networkInfo.scss'
 
@@ -10,41 +9,40 @@ const { Option } = Select
 const guidePic = require('../../../../../assets/images/commonDefault/service-guidePage.png')
 const errorPic = require('../../../../../assets/images/commonDefault/service-bindFailPage.png')
 
-export default function NetworkInfo({ networkModalVisible, productId, productConfig, cancelHandle }) {
+export default function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, productConfig, cancelHandle }) {
   const [form] = Form.useForm()
   const formRef = useRef()
-  const $imgel3 = useRef()
+  const imgRef = useRef()
 
   const [guidePage, setGuidePage] = useState('')
   const [bindFailPage, setBindFailPage] = useState('')
-  const [isGateWayDevice, setIsGateWayDevice] = useState(false) // （0-普通设备，1-网关设备）
+  const [netData, setNetData] = useState({})
 
-  // 判断是否为网关设备
-  const judgeIsGateWay = () => {
-    post(Paths.getProductExtendInfo, { productId }).then(res => {
-      console.log(res)
-    })
+  // 获取配网方式
+  const getNetDataByProductId = () => {
+    post(Paths.getNetDataByProductId, { productId })
+      .then(res => {
+        setNetData(res.data)
+      })
   }
 
   useEffect(() => {
-    judgeIsGateWay()
-  }, [])
+    getNetDataByProductId()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-
+  // 保存配网信息
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-    return
-    post(Paths.saveNetworkConfig, {
-      productId,
-      gatewayType: '', // 网关通信技术的类型(1-Wifi; 2-蓝牙; 3-zigbee2.0; 4-zigbee3.0;5-超级开关/衣柜)
-      isGateWayDevice: '', // 是否网关设备
-      ssid: '', // ssid
-      radiocastName: '', //广播名
-      imageUrlList: [], // 帮助页轮播图片集合
-      guidePage: '', // 引导图
-      bindFailPage: '', // 失败图
-    }).then(res => {
-
+    const imageUrlList = values.imageUrlList && values.imageUrlList.map(item => {
+      return item.url
+    })
+    values.productId = productId
+    values.imageUrlList = imageUrlList || [] // 帮助页轮播图片集合
+    values.isGateWayDevice = isGateWayDevice || '' // 是否网关设备
+    values.guidePage = values.guidePage || '' // 引导图
+    values.bindFailPage = values.bindFailPage || '' // 失败图
+    post(Paths.saveNetworkConfig, { ...values }).then(res => {
+      Notification({ description: '操作成功！', type: 'success' })
+      cancelHandle()
     })
   }
 
@@ -117,30 +115,40 @@ export default function NetworkInfo({ networkModalVisible, productId, productCon
           <div className="network-info-modal-title">配网方式</div>
           <Form.Item
             label="已选通信协议">
-            <span>WiFi</span>
+            <span>{netData.bindTypeName}</span>
           </Form.Item>
           <Form.Item
             label="配网方式"
-            name="username"
+            name="baseTypeId"
             rules={[{ required: true, message: '请选择配网方式！' }]}>
             <Select style={{ width: 380 }}>
-              <Option value="Option1-1">Option1-1</Option>
-              <Option value="Option1-2">Option1-2</Option>
+              {
+                netData.bindTypeList && netData.bindTypeList.map(item => (
+                  <Option key={item.baseTypeId} value={item.baseTypeId}>{item.baseTypeName}</Option>
+                ))
+              }
             </Select>
           </Form.Item>
-          <Form.Item
-            label="AP-SSID"
-            name="ssid"
-            rules={[{ required: true, message: '请输入AP-SSID！' }]}>
-            <Input style={{ width: 380 }} />
-          </Form.Item>
-
-          <Form.Item
-            label="广播名"
-            name="radiocastName"
-            rules={[{ required: true, message: '请输入广播名！' }]}>
-            <Input style={{ width: 380 }} />
-          </Form.Item>
+          {/* 通信是WIFI */}
+          {
+            netData.bindTypeId === 1 &&
+            <Form.Item
+              label="AP-SSID"
+              name="ssid"
+              rules={[{ required: true, message: '请输入AP-SSID！' }]}>
+              <Input style={{ width: 380 }} />
+            </Form.Item>
+          }
+          {/* 通信是wifi、蓝牙 */}
+          {
+            (netData.bindTypeId === 1 || netData.bindTypeId === 2) &&
+            <Form.Item
+              label="广播名"
+              name="radiocastName"
+              rules={[{ required: true, message: '请输入广播名！' }]}>
+              <Input style={{ width: 380 }} />
+            </Form.Item>
+          }
           <div className="network-info-modal-title">配网图片引导<span className="tip">（需产品支持WiFi或蓝牙配置能力）</span></div>
           <div className="flex">
             <Form.Item
@@ -148,8 +156,7 @@ export default function NetworkInfo({ networkModalVisible, productId, productCon
               name="guidePage"
               labelCol={{ span: 10 }}
               wrapperCol={{ span: 10 }}
-              className="upload-img"
-              rules={[{ message: '请上传默认联网指引图片！' }]}>
+              className="upload-img">
               {
                 <div className="native-upload">
                   <div className="img-wrap">
@@ -175,8 +182,7 @@ export default function NetworkInfo({ networkModalVisible, productId, productCon
               name="bindFailPage"
               labelCol={{ span: 10 }}
               wrapperCol={{ span: 10 }}
-              className="upload-img"
-              rules={[{ message: '请上传默认默认联网失败提示！' }]}>
+              className="upload-img">
               {
                 <div className="native-upload">
                   <div className="img-wrap">
@@ -203,11 +209,10 @@ export default function NetworkInfo({ networkModalVisible, productId, productCon
             name="imageUrlList"
             className="upload-img"
             labelCol={{ span: 5 }}
-            wrapperCol={{ span: 20 }}
-            rules={[{ message: '请上传轮播图片' }]}>
+            wrapperCol={{ span: 20 }}>
             {
               <UploadFileHooks
-                ref={$imgel3}
+                ref={imgRef}
                 maxCount={5}
                 preferSize={'150*267'}
                 format='.gif,.jpeg,.jpg,.png'

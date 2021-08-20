@@ -6,14 +6,15 @@ import { Paths, post, get } from '../../../../../api'
 import './communicationSecurity.scss'
 import { Notification } from '../../../../../components/Notification';
 
-function CommunicateSecurity({ securityVisible, productId, cancelHandle, isConfigedFunc, productExtend }) {
+function CommunicateSecurity({ securityVisible, productId, cancelHandle, isGateWayDevice, isConfigedFunc, productExtend }) {
   const [form] = Form.useForm()
   const [radioVal, setRadioVal] = useState('0')
 
   const onFinish = (values) => {
     post(Paths.saveProductSecurityConfig, {
       productId,
-      authorityType: Number(radioVal)
+      authorityType: Number(radioVal),
+      isGateWayDevice: isGateWayDevice || ''
     }).then(res => {
       Notification({ description: '操作成功！', type: 'success' })
       isConfigedFunc()

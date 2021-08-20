@@ -1,11 +1,10 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { Image } from 'antd';
-import NetworkInfo from './networkInfo';
-import CommunicateSecurity from './communicationSecurity';
-import ConfigFirmware from './configFirmware';
-import JoinGateway from './joinGateway';
-import ConfigFirmwareDetail from './configFirmwareDetail';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
+import NetworkInfo from './networkInfo'
+import CommunicateSecurity from './communicationSecurity'
+import ConfigFirmware from './configFirmware'
+import JoinGateway from './joinGateway'
+import ConfigFirmwareDetail from './configFirmwareDetail'
+import { Link } from 'react-router-dom'
 import { Paths, post, get } from '../../../../../api'
 import { cloneDeep } from 'lodash'
 
@@ -82,6 +81,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [firmwareVisible, setFirmwareVisible] = useState(false)
   const [gatewayVisible, setGatewayVisible] = useState(false)
   const [firmwareDetailVisible, setFirmwareDetailVisible] = useState(false)
+  const [isGateWayDevice, setIsGateWayDevice] = useState('') // （0-普通设备，1-网关设备）
   //验证函数
   const subNextConFirm = () => {
     nextStep()
@@ -108,9 +108,18 @@ function ServiceSelect({ productId, nextStep }, ref) {
     })
   }
 
+  // 判断是否为网关设备
+  const judgeIsGateWay = () => {
+    post(Paths.getProductExtendInfo, { productId })
+      .then(res => {
+        setIsGateWayDevice(res.data.productClassId)
+      })
+  }
+
   useEffect(() => {
     isConfigedFunc()
-  }, [])
+    judgeIsGateWay()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     console.log(requiredList)
@@ -216,8 +225,13 @@ function ServiceSelect({ productId, nextStep }, ref) {
         <NetworkInfo
           networkModalVisible={networkVisible}
           productId={productId}
+          isGateWayDevice={isGateWayDevice}
           productConfig={productConfig}
-          cancelHandle={() => { setNetworkVisible(false) }} />
+          cancelHandle={() => {
+            setNetworkVisible(false)
+            isConfigedFunc()
+            judgeIsGateWay()
+          }} />
       }
       {/* 通信安全机制 */}
       {
@@ -225,6 +239,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
         <CommunicateSecurity
           securityVisible={securityVisible}
           productId={productId}
+          isGateWayDevice={isGateWayDevice}
           productExtend={productExtend}
           isConfigedFunc={isConfigedFunc}
           cancelHandle={() => { setSecurityVisible(false) }} />
