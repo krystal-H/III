@@ -96,7 +96,7 @@ function ProtocolFn({ nextStep, productId }, ref) {
     }, [])
     //编辑标准功能/新增自定义功能=======
     // const [isStarDia, setIsStarDia] = useState(true); //
-    const [rightVisible, setRightVisible] = useState(false);
+    const [rightVisible, setRightVisible] = useState(true); //新增自定义功能
     const [rightEditVisible, setRightEditVisible] = useState(false);
     const [destoryDom, setDestoryDom] = useState(true);
 

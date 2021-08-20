@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Tabs, Radio, Table, Drawer, Button, Divider } from 'antd';
+import { Tabs, Radio, Table, Drawer, Image, Divider } from 'antd';
 const { TabPane } = Tabs;
 import { post, Paths, get } from '../../../api';
+import { DateTool } from '../../../util/util';
 export default function DeviceShadow() {
     const [visible, setVisible] = useState(false);
     const [tableData, setTableData] = useState([
@@ -35,6 +36,9 @@ export default function DeviceShadow() {
             title: '提交时间',
             dataIndex: 'createTime',
             key: 'createTime',
+            render(updateTime) {
+                return DateTool.utcToDev(updateTime);
+            }
         },
         {
             title: '工单状态',
@@ -99,8 +103,8 @@ export default function DeviceShadow() {
                     <div className='order-item-label'>上传问题图片/视频：</div>
                     <div className='order-item-text'>
                         {
-                            detailInfo.image && detailInfo.image.split(',').map((item,index)=>{
-                                return <img key={index}/>
+                            detailInfo.image && detailInfo.image.split(',').map((item, index) => {
+                                return <Image key={index} src={item} width={100} />
                             })
                         }
                     </div>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef, useRef } from 'react'
-import moment from 'moment';
 import { Form, Input, Button, Space, Select, Radio, Tabs, Drawer } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { post, Paths, get } from '../../../../../api';
@@ -9,6 +8,20 @@ const optionsWithDisabled = [
     { label: '事件', value: 'events' },
     { label: '服务', value: 'services' },
 ]
+//数据类型
+const dataOptions = [{
+    value: 'bool',
+    label: '布尔型',
+}, {
+    value: 'enum',
+    label: '枚举型',
+}, {
+    value: 'text',
+    label: '字符型',
+}, {
+    value: 'double',
+    label: '数值型',
+}]
 export default function ProtocoLeft({ rightVisible, onCloseRight }) {
     const { TabPane } = Tabs;
     useEffect(() => {
@@ -248,7 +261,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                         return item
                     }
                 })
-                console.log(emusList,'=========')
+                console.log(emusList, '=========')
                 let specs = emusList.reduce((pre, cur) => {
                     pre[cur.key.toString()] = cur.value
                     return pre
@@ -265,20 +278,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
             console.log('Validate Failed:', errInfo);
         }
     }
-    //数据类型
-    const dataOptions = [{
-        value: 'bool',
-        label: '布尔型',
-    }, {
-        value: 'enum',
-        label: '枚举型',
-    }, {
-        value: 'text',
-        label: '字符型',
-    }, {
-        value: 'double',
-        label: '数值型',
-    }]
+
     //数据类型改变
     const onTypeChange = (value) => {
         console.log(value)
@@ -463,6 +463,8 @@ NumberTemp = forwardRef(NumberTemp)
 //事件组件
 function EventTemp(props, ref) {
     const [form] = Form.useForm();
+    const [childrenDrawer, setChildrenDrawer] = useState(false)
+    const paramsRef=useRef(null)
     const onFinish = () => {
         form.validateFields().then(value => {
             console.log(value, '======')
@@ -478,95 +480,94 @@ function EventTemp(props, ref) {
     const eventTabOptions = [{ label: '故障', value: 'one' },
     { label: '告警', value: 'two' },
     { label: '信息', value: 'three' }]
-    const formItemLayout = {
-        labelCol: {
-            span: 8,
-        },
-        wrapperCol: {
-            span: 16,
-        },
-    };
-    const formItemLayoutWithOutLabel = {
-        wrapperCol: {
-            span: 16, offset: 8
-        },
-    };
+    const addParams = () => {
+        setChildrenDrawer(true)
+    }
+    //关闭新增参数
+    const onCloseRight=()=>{
+        setChildrenDrawer(false)
+    }
+    //提交新增参数
+    const subParamData=()=>{
+        paramsRef.current.onFinish()
+        
+    }
+    //接收参数
+    const sentAddData=(data)=>{
+        setChildrenDrawer(false)
+    }
     return (
-        <Form
-            name="basic"
-            labelCol={{
-                span: 8,
-            }}
-            wrapperCol={{
-                span: 16,
-            }}
-            form={form}
-        >
-            <Form.Item
-                label="功能点名称："
-                name="username"
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
+        <>
+            <Form
+                name="basic"
+                labelCol={{
+                    span: 8,
+                }}
+                wrapperCol={{
+                    span: 16,
+                }}
+                form={form}
             >
-                <Input />
-            </Form.Item>
+                <Form.Item
+                    label="功能点名称："
+                    name="username"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
 
-            <Form.Item
-                label="标识符"
-                name="password1"
-            ><Input />
-            </Form.Item>
-            <Form.Item
-                label="事件类型："
-                name="password"
+                <Form.Item
+                    label="标识符"
+                    name="password1"
+                ><Input />
+                </Form.Item>
+                <Form.Item
+                    label="事件类型："
+                    name="password"
+                >
+                    <Radio.Group options={eventTabOptions} />
+                </Form.Item>
+                <Form.Item
+                    label="事件类型："
+                    name="password"
+                >
+                    <Button
+                        type="dashed"
+                        onClick={addParams}
+                        style={{ width: '60%' }}
+                        icon={<PlusOutlined />}
+                    >
+                        添加参数
+                    </Button>
+                </Form.Item>
+            </Form>
+            <Drawer
+                title="新增参数"
+                width={393}
+                closable={false}
+                visible={childrenDrawer}
+                footer={
+                    <div
+                        style={{
+                            textAlign: 'right',
+                        }}
+                    >
+                        <Button onClick={onCloseRight} style={{ marginRight: 8 }}>
+                            取消
+                        </Button>
+                        <Button onClick={subParamData} type="primary">
+                            确定
+                        </Button>
+                    </div>
+                }
             >
-                <Radio.Group options={eventTabOptions} />
-            </Form.Item>
-            <Form.List
-                name="arrs"
-            >
-                {(fields, { add, remove }, { errors }) => (
-                    <>
-                        {fields.map((field, index) => (
-                            <Form.Item
-                                {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                                label={index === 0 ? '输出参数' : ''}
-                                required={false}
-                                key={field.key}
-                            >
-                                <Form.Item
-                                    {...field}
-                                    validateTrigger={['onChange', 'onBlur']}
-                                    noStyle
-                                >
-                                    <Input placeholder="passenger name" style={{ width: '80%', marginRight: '10px' }} />
-                                </Form.Item>
-                                {fields.length ? (
-                                    <MinusCircleOutlined
-                                        className="dynamic-delete-button"
-                                        onClick={() => remove(field.name)}
-                                    />
-                                ) : null}
-                            </Form.Item>
-                        ))}
-                        <Form.Item {...(fields.length === 0 ? formItemLayout : formItemLayoutWithOutLabel)} label={fields.length === 0 ? '输出参数' : ''}>
-                            <Button
-                                type="dashed"
-                                onClick={() => add()}
-                                style={{ width: '60%' }}
-                                icon={<PlusOutlined />}
-                            >
-                                添加参数
-                            </Button>
-                            <Form.ErrorList errors={errors} />
-                        </Form.Item>
-                    </>
-                )}
-            </Form.List>
-        </Form>
+                <AddParams sentAddData={sentAddData} ref={paramsRef}/>
+            </Drawer>
+        </>
     )
 }
 EventTemp = forwardRef(EventTemp)
@@ -721,3 +722,176 @@ function ServeTemp(props, ref) {
     )
 }
 ServeTemp = forwardRef(ServeTemp)
+
+function AddParams({sentAddData}, ref) {
+    const [form] = Form.useForm();
+    const onFinish = () => {
+        form.validateFields().then(value => {
+            console.log(value, '======')
+            sentAddData(value)
+            // 验证通过后进入
+        }).catch(err => {
+            // 验证不通过时进入
+            console.log(err);
+        });
+    }
+    useImperativeHandle(ref, () => ({
+        onFinish: onFinish
+    }));
+    return (
+        <Form form={form}>
+            <Form.Item
+                label="参数名称："
+                name="name"
+                rules={[
+                    {
+                        required: true,
+                    },
+                ]}
+            >
+                <Input />
+            </Form.Item>
+
+            <Form.Item
+                label="参数标识"
+                name="identifier"
+            ><Input />
+            </Form.Item>
+            <Form.Item
+                label="数据类型："
+                name='type'
+            >
+                <Select allowClear>
+                    {
+                        dataOptions.map(item => (
+                            <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
+                        ))
+                    }
+                </Select>
+            </Form.Item>
+            <Form.Item
+                noStyle
+                shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
+            >
+                {({ getFieldValue }) => {
+                    if (getFieldValue('type') === 'bool') {
+                        return (<>
+                            <Form.Item
+                                label="布尔值"
+                                rules={[{ required: true }]}
+                            >
+                                <Form.Item
+                                    name={['specs', '0']}
+                                    label="0"
+                                >
+                                    <Input placeholder="参数描述" />
+                                </Form.Item>
+                                <Form.Item
+                                    name={['specs', '1']}
+                                    label="1"
+                                >
+                                    <Input placeholder="参数描述" />
+                                </Form.Item>
+                            </Form.Item>
+                        </>)
+                    }
+                    if (getFieldValue('type') === 'enum') {
+                        return (
+                            <>
+                                <Form.Item
+                                    label="枚举型:"
+                                    name="enumus_text"
+                                    className='enums-lise-nobottom'
+                                ><span style={{ marginRight: '50px' }}>参数值</span>-<span style={{ marginLeft: '30px' }}>参数描述</span>
+                                </Form.Item>
+
+                                <div className='right-list-wrap' >
+                                    <Form.List name="emusList">
+                                        {(fields, { add, remove }) => (
+                                            <>
+                                                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                                                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                                        <Form.Item
+                                                            {...restField}
+                                                            name={[name, 'key']}
+                                                            fieldKey={[fieldKey, 'key']}
+                                                            className='enums-lise-nobottom'
+                                                            noStyle
+                                                        >
+                                                            <Input />
+                                                        </Form.Item>
+                                                        <span>-</span>
+                                                        <Form.Item
+                                                            {...restField}
+                                                            name={[name, 'value']}
+                                                            fieldKey={[fieldKey, 'value']}
+                                                            className='enums-lise-nobottom'
+                                                            noStyle
+                                                        >
+                                                            <Input />
+                                                        </Form.Item>
+                                                        <MinusCircleOutlined onClick={() => remove(name)} />
+                                                    </Space>
+                                                ))}
+                                                <Form.Item>
+                                                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                        新加
+                                                    </Button>
+                                                </Form.Item>
+                                            </>
+                                        )}
+                                    </Form.List>
+                                </div>
+                            </>
+                        )
+                    }
+                    if (getFieldValue('type') === 'double') {
+                        return (<>
+                            <Form.Item label="数值范围">
+                                <div className='number-input-wrap'>
+                                    <Form.Item
+                                        name={['specs', 'min']}
+                                        noStyle
+                                        rules={[{ required: true, message: 'Province is required' }]}
+                                    >
+                                        <Input style={{ width: '40%' }} />
+                                    </Form.Item>
+                                    <span style={{ margin: '0 10px' }}>至</span>
+                                    <Form.Item
+                                        name={['specs', 'max']}
+                                        noStyle
+                                        rules={[{ required: true, message: 'Street is required' }]}
+                                    >
+                                        <Input style={{ width: '40%' }} />
+                                    </Form.Item>
+                                </div>
+                            </Form.Item>
+                            <Form.Item
+                                label='数值间隔'
+                                name="interval"
+                            ><Input /></Form.Item>
+                            <Form.Item name={['specs', 'multiple']} label="倍数" >
+                                <Select allowClear >
+                                    <Option value="male">1</Option>
+                                    <Option value="female">2</Option>
+                                </Select>
+                            </Form.Item>
+                            <Form.Item name={['specs', 'unit']} label="单位" >
+                                <Select allowClear >
+                                    <Option value="male">male</Option>
+                                    <Option value="female">female</Option>
+                                    <Option value="other">other</Option>
+                                </Select>
+                            </Form.Item>
+                        </>)
+                    }
+                    return null
+                }
+                }
+            </Form.Item>
+
+        </Form>
+    )
+
+}
+AddParams = forwardRef(AddParams)

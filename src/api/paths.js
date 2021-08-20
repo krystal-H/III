@@ -336,16 +336,16 @@ let Paths = {
     getSeniorDeviceList: '/device/register/senior/list',
 
     //设备告警
-    getDeviceWarningTotal: '/warning/info/total',
-    getWarningList: '/warning/info/getList',
+    getDeviceWarningTotal: '/device/warning/info/summary',
+    getWarningList: '/device/warning/info/list',
     saveWarningConfig: '/warning/rule/add',
-    getWarningConfigLi: '/warning/rule/getList',
-    delWarningConfig: '/warning/rule/delete',
-    startWarningConfigLi: '/warning/rule/startRule',
-    stopWarningConfig: '/warning/rule/stopRule',
-    getWarningConfigDetail: '/warning/rule/get',
-    getWarningInfo: '/warning/info/get',
-    dealWithWarning: '/warning/info/deal',
+    getWarningConfigLi: '/device/warning/rule/list',
+    delWarningConfig: '/device/warning/rule/delete',
+    startWarningConfigLi: '/device/warning/rule/start',
+    stopWarningConfig: '/device/warning/rule/stop',
+    getWarningConfigDetail: '/device/warning/rule/get',
+    getWarningInfo: '/device/warning/info/get',
+    dealWithWarning: '/device/warning/info/update',
     reflushWarningDeviceIds: '/warning/info/flush',
 
     
