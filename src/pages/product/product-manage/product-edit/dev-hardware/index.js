@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import { Button, Tabs, Table, Tooltip } from 'antd';
-import "./hardware.scss";
-import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import ReplaceModule from './replaceModule';
-import ModuleDetail from './moduleDetail';
-import FreeApplyModal from './freeApply';
-import ModifyFirmwareModal from './modifyFirmware';
+import { Button, Tabs, Table, Tooltip } from 'antd'
+import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons'
+import ReplaceModule from './replaceModule'
+import ModuleDetail from './moduleDetail'
+import FreeApplyModal from './freeApply'
+import ModifyFirmwareModal from './modifyFirmware'
+import { Paths, post, get } from '../../../../../api'
+import { cloneDeep } from 'lodash'
+import "./index.scss"
 
 export default class Hardware extends Component {
     constructor(props) {
@@ -66,6 +68,17 @@ export default class Hardware extends Component {
     }
     componentDidMount() {
         this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
+        this.getMoudleInfo()
+
+    }
+    // 
+    getMoudleInfo = () => {
+        post(Paths.getMoudleInfo, {
+            productId: this.props.productId,
+            moduleId: 30
+        }).then(res => {
+            console.log(res)
+        })
     }
     onFinish = (values) => {
         console.log('验证是否通过:', values);

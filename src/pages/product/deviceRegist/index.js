@@ -49,12 +49,12 @@ export default function DeviceRegist() {
         getList()
     }, [pager.pageIndex, pager.pageRows, selectType])
     //获取列表
-    const getList = (load = true) => {
+    const getList = (loading = true) => {
         let params = { ...form.getFieldsValue(), ...pager }
         if (selectType) {
             params.productId = selectType
         }
-        post(Paths.proReledRegist, params, { load }).then((res) => {
+        post(Paths.proReledRegist, params, { loading }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))

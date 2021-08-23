@@ -94,13 +94,13 @@ export default function Device() {
             initData(tableData)
         }
     }, [currentTab])
-    const getData = (load = true) => {
+    const getData = (loading = true) => {
         let params = {}
         if (currentTime == 1) {
             params.endDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
             params.startDate = dayjs().subtract(8, 'day').format('YYYY-MM-DD')
 
-        } else if (currentTime == 2) {
+        } else if (currentTime === 2) {
             params.endDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
             params.startDate = dayjs().subtract(31, 'day').format('YYYY-MM-DD')
         }
@@ -108,7 +108,7 @@ export default function Device() {
             params.endDate = value[1].format('YYYY-MM-DD')
             params.startDate = value[0].format('YYYY-MM-DD')
         }
-        post(Paths.userDataAn, params, { load }).then((res) => {
+        post(Paths.userDataAn, params, { loading }).then((res) => {
             initData(res.data.summaryList)
             dealCount(res.data)
             setTableData(res.data.summaryList)

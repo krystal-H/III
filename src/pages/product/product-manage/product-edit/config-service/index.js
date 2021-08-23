@@ -1,11 +1,10 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { Image } from 'antd';
-import NetworkInfo from './networkInfo';
-import CommunicateSecurity from './communicationSecurity';
-import ConfigFirmware from './configFirmware';
-import JoinGateway from './joinGateway';
-import ConfigFirmwareDetail from './configFirmwareDetail';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
+import NetworkInfo from './networkInfo'
+import CommunicateSecurity from './communicationSecurity'
+import ConfigFirmware from './configFirmware'
+import JoinGateway from './joinGateway'
+import ConfigFirmwareDetail from './configFirmwareDetail'
+import { Link } from 'react-router-dom'
 import { Paths, post, get } from '../../../../../api'
 import { cloneDeep } from 'lodash'
 
@@ -15,7 +14,7 @@ const optionalList = [
   {
     title: '配置产品固件模块',
     desc: '支持配置OTA升级模块，比如区分控制板、驱动板、显示板等不同模块',
-    isConfiged: true,
+    isConfiged: false,
     type: 'addFirmware',
     url: require('../../../../../assets/images/commonDefault/service-hardware.png')
   },
@@ -74,7 +73,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
 
     }
   ])
-  const [productConfig, setProductConfig] = useState('') // 配网信息
+  const [productConfig, setProductConfig] = useState('') // 配网信息信息
   const [productExtend, setProductExtend] = useState('') // 通信安全
 
   const [networkVisible, setNetworkVisible] = useState(false)
@@ -82,6 +81,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [firmwareVisible, setFirmwareVisible] = useState(false)
   const [gatewayVisible, setGatewayVisible] = useState(false)
   const [firmwareDetailVisible, setFirmwareDetailVisible] = useState(false)
+  const [isGateWayDevice, setIsGateWayDevice] = useState('') // （0-普通设备，1-网关设备）
   //验证函数
   const subNextConFirm = () => {
     nextStep()
@@ -93,12 +93,12 @@ function ServiceSelect({ productId, nextStep }, ref) {
   // 是否配置过  配网信息、通信安全机制
   const isConfigedFunc = () => {
     setSecurityVisible(false)
-    post(Paths.getSecurityConfigStatus, { productId }).then(res => {
+    post(Paths.getSecurityConfigStatus, { productId }, {loading: true}).then(res => {
       const list = cloneDeep(requiredList)
       if (res.data.gatewayConfigflag) { // 配网信息配置过
         list[0].isConfiged = true
         setRequiredList(list)
-        setProductConfig(res.data.productConfig.authorityType)
+        setProductConfig(res.data.productConfig)
       }
       if (res.data.securityConfigflag) { // 通信安全配置过
         list[1].isConfiged = true
@@ -108,9 +108,18 @@ function ServiceSelect({ productId, nextStep }, ref) {
     })
   }
 
+  // 判断是否为网关设备
+  const judgeIsGateWay = () => {
+    post(Paths.getProductExtendInfo, { productId }, {loading: true})
+      .then(res => {
+        setIsGateWayDevice(res.data.productClassId)
+      })
+  }
+
   useEffect(() => {
     isConfigedFunc()
-  }, [])
+    judgeIsGateWay()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     console.log(requiredList)
@@ -135,10 +144,12 @@ function ServiceSelect({ productId, nextStep }, ref) {
         break;
     }
   }
+  
   // 固件模块详情列表
   const showFirmwareDetail = () => {
     setFirmwareDetailVisible(true)
   }
+
   return (
     <div className="service-config-page">
       <div className="desc">免开发方案，只需选择推荐模组、以及配置固件信息，快速实现硬件智能化。</div>
@@ -215,7 +226,15 @@ function ServiceSelect({ productId, nextStep }, ref) {
         networkVisible &&
         <NetworkInfo
           networkModalVisible={networkVisible}
-          cancelHandle={() => { setNetworkVisible(false) }} />
+          productId={productId}
+          isGateWayDevice={isGateWayDevice}
+          // productConfig={productConfig}
+          isedited={requiredList[0].isConfiged}
+          cancelHandle={() => {
+            setNetworkVisible(false)
+            isConfigedFunc()
+            judgeIsGateWay()
+          }} />
       }
       {/* 通信安全机制 */}
       {
@@ -223,6 +242,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
         <CommunicateSecurity
           securityVisible={securityVisible}
           productId={productId}
+          isGateWayDevice={isGateWayDevice}
           productExtend={productExtend}
           isConfigedFunc={isConfigedFunc}
           cancelHandle={() => { setSecurityVisible(false) }} />

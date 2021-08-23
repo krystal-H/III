@@ -59,8 +59,16 @@ let Paths = {
 
     // 继续开发-发布产品
     publishProduct: '/product/publish', // 继续开发-发布产品
+    getSecurityConfigStatus: '/productManage/getConfigBaseInfoByProductId', // 服务配置-获取标志
     saveProductSecurityConfig: '/productManage/saveProductSecurityConfig', // 服务配置-通信安全机制
+    getProductExtendInfo: '/productManage/getProductExtendInfo', // 服务配置-配网信息  是否为网关设备
+    saveNetworkConfig: '/productManage/saveProductConfig', // 服务配置-保存配网信息
+    getNetDataByProductId: '/productManage/getNetDataByProductId', // 服务配置-获取配网方式
 
+    // 继续开发-开发硬件
+    getMoudleInfo: '/product/dev/show/module',
+    xx: '/module/list/scheme',
+    
 
     /* 协议 */
     getProtocolTemplates: '/protoManage/getProtocolTemplatesByProductId',
