@@ -44,7 +44,7 @@ function addForm({
             </Item>
 
             <Item label="分组描述" name='remark' rules={[
-                { max: 30, message: '最大输入长度为50' },
+                { max: 50, message: '最大输入长度为50' },
             ]}>
                 <TextArea placeholder="分组描述" showCount maxLength={50} rows={4} />
             </Item>

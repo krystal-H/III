@@ -13,6 +13,13 @@ const initPager = {
     pageRows: 10,
     pageIndex: 1
 };
+const initialData = {
+    id: undefined,
+    status:undefined,
+    name:"",
+    remark:"",
+    content:"",
+}
 
 //告警消息列表
 const WarningList = props=>{
@@ -100,9 +107,10 @@ const WarningConfigList = props=>{
     const [operateId, setOperateId] = useState([]);//当前操作的告警配置 [id,name,删除还是停止]
     const [name, setName] = useState("");//搜索名 规则列表
     const [configVisible, setConfigVisible] = useState(false);// 新增/编辑 规则弹窗是否显示
-    const [editData, setEditData] = useState(null);// 当前要编辑的规则数据对象,null 代表是新增规则
+    const [editData, setEditData] = useState(initialData);// 当前要编辑的规则数据对象,initialData代表 新增
 
     useEffect(() => {
+        console.log('getlist')
         getWarningList(initPager);
     }, []);
     
@@ -170,10 +178,9 @@ const WarningConfigList = props=>{
     }
     const closeEditMod = ()=>{
         setConfigVisible(false)
-        setEditData(null)
 
     }
-    const openEditMod = (data = null)=>{
+    const openEditMod = (data)=>{
         setConfigVisible(true);
         setEditData(data)
     }
@@ -188,7 +195,7 @@ const WarningConfigList = props=>{
                     onSearch={searchRule} 
                 />
             </div>
-            <Button className='btn' onClick={openEditMod} type="primary">新增</Button>
+            <Button className='btn' onClick={()=>{openEditMod(initialData)} } type="primary">新增</Button>
         </div>
         <Table 
             rowKey="id"
@@ -216,7 +223,7 @@ const WarningConfigList = props=>{
         <ConfigModal
             visible ={configVisible}
             closeEditMod={closeEditMod}
-            editData={editData}
+            editData={{...editData}}
         
         
         />

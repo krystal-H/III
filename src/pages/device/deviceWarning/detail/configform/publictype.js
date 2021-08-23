@@ -1,101 +1,69 @@
-import React, { Component } from 'react';
-import { Form ,Input,Radio} from 'antd';
+import React, {  memo, forwardRef,useEffect ,useState } from 'react';
+import { Input,Form,Radio} from 'antd';
+import DoubleBtns from '../../../../../components/double-btns/DoubleBtns';
+const { TextArea } = Input;
+const { Item } = Form;
+const formlayout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 12 },
+};
 
-class Publictype extends Component {
+function pubForm({
+    setStepCur,
+    formdata
+},_ref){
+    const [form] = Form.useForm();
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            warningWay:'0'
+    const [warningWay, setWarningWay] = useState("0");
+
+    useEffect( () => {
+        // console.log("---form1--",formdata)
+        if(formdata.warningTitle){
+            setWarningWay(formdata.warningWay)
+            form.setFieldsValue({...formdata})
+        }else{
+            // form.resetFields()
         }
-    }
-    componentDidMount() {
-        this.props.onRef(this);
-        let { piublicFormData, form } = this.props;
-        if(piublicFormData.warningTitle){
-            let { setFieldsValue } = form;
-            this.setState({warningWay:piublicFormData.warningWay},()=>{
-                setFieldsValue({...piublicFormData});
-            })
-        }
+
+       
+
+    },[formdata])
+
+    const onFinish=(values)=>{
+        // console.log("---finish1---",form.getFieldsValue())
     }
 
-    handleSubmit = e => {
-        // e.preventDefault();
-        const { validateFieldsAndScroll } = this.props.form;
-        const { savPublicWay} = this.props;
-        validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                let piublicFormData = {...values};
-                savPublicWay({piublicFormData});
-            }
-        });
-    };
-    warningWayChanged=(e)=>{
-        this.setState({warningWay:e.target.value});
-    }
+    
 
-    render() {
-        let formlayout = {
-            labelCol: { span: 4 },
-            wrapperCol: { span: 15 },
-        };
-        let { getFieldDecorator } = this.props.form;
-        let { warningWay } = this.state;
-        return ( 
-            <Form  {...formlayout} >
-               
-                <Form.Item label="触发告警" >
-                    {getFieldDecorator('warningWay', {
-                        rules: [{ required: true, message: '请选择告警方式'}],
-                        initialValue:"0"
-                    })(<Radio.Group onChange={this.warningWayChanged}>
+    return <div>
+            <Form ref={_ref} form={form} {...formlayout} onFinish={onFinish}>
+                <Item label="触发告警" name='warningWay' rules={[{ required: true, message: '请选择告警方式'}]} initialValue="0">
+                   <Radio.Group onChange={ e=>{setWarningWay(e.target.value)}}>
                         <Radio value="0">站内消息</Radio>
                         <Radio value="1">站内消息+邮件</Radio>
                     </Radio.Group>
-                    )
-                    }
-                </Form.Item>
-                <Form.Item label="消息标题">
-                    {getFieldDecorator('warningTitle', {
-                        rules: [{ required: true, message: '请输入消息标题'},
-                                { max: 50, message: '最大输入长度为50' }],
-                    })(<Input placeholder="请输入消息标题" />)
-                    }
-                </Form.Item>
+                </Item>
+                <Item label="消息标题" name='warningTitle' rules={[{ required: true, message: '请输入消息标题'},{ max: 50, message: '最大输入长度为50' }]} >
+                    <Input placeholder="请输入消息标题" />
+                </Item>
                 {warningWay=="1" &&
-                    <Form.Item label="邮件地址">
-                        {getFieldDecorator('emailAddress', {
-                            rules: [{ required: true, message: '请输入邮件地址'},
-                                    { max: 100, message: '最大输入长度为100' }],
-                        })(<Input placeholder="请输入邮件地址" />)
-                        }
-                    </Form.Item>
+                    <Item label="邮件地址" name='emailAddress' rules={[{ required: true, message: '请输入邮件地址'},{ max: 100, message: '最大输入长度为100' }]} >
+                        <Input placeholder="请输入邮件地址" />
+                    </Item>
                 }
-                <Form.Item label="告警内容">
-                    {getFieldDecorator('warningDetails', {
-                        rules: [{ required: true, message: '请输入告警内容'},
-                                { max: 100, message: '最大输入长度为100' }],
-                        initialValue:'您好，{pruductname}，{time}出现配置规则下的异常，请在站内消息查看详情！'
-                    })(<Input.TextArea placeholder="请输入告警内容" rows='3' disabled={true}/>)
-                    }
-                </Form.Item>
-                <Form.Item label="发送频率" >
-                    {getFieldDecorator('waringFreq', {
-                        rules: [{ required: true}],
-                        initialValue:"0"
-                    })(<Radio.Group >
+                <Item label="告警内容" name='warningDetails' initialValue="您好，{pruductname}，{time}出现配置规则下的异常，请在站内消息查看详情！">
+                    <TextArea rows='3' disabled={true} />
+                </Item>
+                <Item label="发送频率" name='waringFreq' required initialValue="0">
+                    <Radio.Group >
                         <Radio value="0">首次发送后，相同故障间隔6小时发送一次，最高单日发送4次&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Radio>
                         <Radio value="1">首次发送后，相同故障间隔24小时发送一次</Radio>
                     </Radio.Group>
-                    )
-                    }
-                </Form.Item>
+                </Item>
             </Form>
-        )
-    }
+            <DoubleBtns nextText={'提交'} preHandle={()=>setStepCur(1)} nextHandle={form.submit} />
+        </div>
+
 }
 
-export const PublictypeForm = Form.create({
-    name: 'publictypeForm',
-})(Publictype);
+export default memo(forwardRef(pubForm));
