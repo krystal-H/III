@@ -31,16 +31,16 @@ export default function DeviceRegist() {
     const closeAction = () => {
         setTableAcVisible(false)
     }
-    const updateOkHandle = (load = true) => {
+    const updateOkHandle = (loading = true) => {
         if (operate === 1) {
             let url = Paths.subscribeStart + '?urlConfId=' + selectRow.urlConfId
-            post(url, {}, { load }).then((res) => {
+            post(url, {}, { loading }).then((res) => {
                 setTableAcVisible(false)
                 getList()
             });
         } else {
             let url = Paths.subscribeClose + '?urlConfId=' + selectRow.urlConfId
-            post(url, {}, { load }).then((res) => {
+            post(url, {}, { loading }).then((res) => {
                 setTableAcVisible(false)
                 getList()
             });
@@ -123,13 +123,13 @@ export default function DeviceRegist() {
         }
     };
     //获取列表
-    const getList = (load = true) => {
+    const getList = (loading = true) => {
         let params = {
             devicePushUrlConf: form.getFieldsValue(),
             pager: pager
         }
         // setSearchParams(params.devicePushUrlConf)
-        post(Paths.subscribeList, params, { load }).then((res) => {
+        post(Paths.subscribeList, params, { loading }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))

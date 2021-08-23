@@ -61,8 +61,8 @@ export default function DeviceShadow() {
             ),
         },
     ]
-    const getList = (load = true) => {
-        post(Paths.WorkOrderList, {}, { load }).then((res) => {
+    const getList = (loading = true) => {
+        post(Paths.WorkOrderList, {}, { loading }).then((res) => {
             setTableData(res.data.list)
         });
     }

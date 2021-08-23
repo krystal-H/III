@@ -81,7 +81,7 @@ export default function DeviceRegist() {
         getList()
     }, [pager.pageIndex, pager.pageRows])
     //获取列表
-    const getList = (load = true) => {
+    const getList = (loading = true) => {
         let params = { ...form.getFieldsValue(), ...pager, productId: 11549 }
         post(Paths.proReledRegist, params, { load }).then((res) => {
             setDataSource(res.data.list)
