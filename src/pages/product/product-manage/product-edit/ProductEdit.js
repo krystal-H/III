@@ -13,7 +13,7 @@ import { CommercialInfo } from './commercialInformation/CommercialInfo';
 import ApplyRelease from './commercialInformation/ApplyRelease';
 import ProductInfo from './product-info/ProductInfo';
 import PageTitle from '../../../../components/page-title/PageTitle';
-import Hardware from './firmware/hardware';
+import Hardware from './dev-hardware';
 import ConfirmPanel from './firmpanel';
 import Validation from './validation'
 import ConfigService from './config-service';
