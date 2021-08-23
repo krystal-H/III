@@ -33,7 +33,7 @@ export default function DeviceList() {
         setSelectType(value)
     }
     //获取列表
-    const getList = (load = true) => {
+    const getList = (loading = true) => {
         let params = {
             ...form.getFieldsValue(),
             ...pager,
@@ -41,7 +41,7 @@ export default function DeviceList() {
         if(selectType){
             params.productId=selectType
         }
-        post(Paths.getDeviceList, params, { load }).then((res) => {
+        post(Paths.getDeviceList, params, { loading }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))

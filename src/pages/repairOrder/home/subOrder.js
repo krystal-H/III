@@ -33,7 +33,7 @@ export default function DeviceShadow(props, ref) {
     function onChange(value) {
         console.log(value);
     }
-    const subOrder = (load = true) => {
+    const subOrder = (loading = true) => {
         form.validateFields().then(value => {
             let image =''
             value.image.forEach((item,index)=>{
@@ -63,7 +63,7 @@ export default function DeviceShadow(props, ref) {
                 problemTypeOneName,
                 problemTypeTwoName
             }
-            post(Paths.subWorkOrder, data, { load }).then((res) => {
+            post(Paths.subWorkOrder, data, { loading }).then((res) => {
                 form.resetFields();
                 // setOptions(res.data)
             });
