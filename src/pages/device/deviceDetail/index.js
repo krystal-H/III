@@ -1,13 +1,14 @@
-import React, { useState, useEffect,useMemo  } from 'react'
-import PageTitle from '../../../components/page-title/PageTitle';
-import './index.scss'
-import { Tabs } from 'antd';
-const { TabPane } = Tabs;
 import DevInfo from './info'
 import DevTag from './devTag'
 import DevShadow from './devShadow'
 import DevSet from './onlineSet'
 import { getUrlParam } from '../../../util/util';
+import React, { useState, useEffect,useMemo  } from 'react'
+import PageTitle from '../../../components/page-title/PageTitle';
+import './index.scss'
+import { Tabs } from 'antd';
+const { TabPane } = Tabs;
+
 export default function DeviceInfo({ match,history }) {
     const stepS = useMemo(() => {
         let step = getUrlParam('step') || '1'

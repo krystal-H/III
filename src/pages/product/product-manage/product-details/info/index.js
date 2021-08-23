@@ -22,7 +22,7 @@ export default function productInfo() {
             <h3 className='product-info-title'>产品信息</h3>
             <div className='product-info-content'>
                 <div className='product-info-conten-wrap'>
-                    <img className='product-top-left-img' />
+                    <img className='product-top-left-img' alt=''/>
                     <div className='product-info-content-text'>
                         <div>
                             <span>产品型号：</span>
@@ -60,7 +60,7 @@ export default function productInfo() {
                 </div>
                 <div className='product-info-conten-wrap' style={{ paddingTop: '12px' }}>
                     <div className='product-top-right-text'>配网方式：</div>
-                    <img className='product-top-right-img' />
+                    <img className='product-top-right-img' alt=''/>
                 </div>
             </div>
         </div>
@@ -69,11 +69,11 @@ export default function productInfo() {
             <div className='product-info-content'>
                 <div className='product-info-conten-wrap'>
                     <span className='middle-text'>配网引导图：</span>
-                    <img className='middle-img' />
+                    <img className='middle-img' alt=''/>
                 </div>
                 <div className='product-info-conten-wrap'>
                     <span className='middle-text'>失败引导图：</span>
-                    <img className='middle-img' />
+                    <img className='middle-img' alt=''/>
                 </div>
                 <div className='product-info-conten-wrap'>
                     <span className='middle-text'>帮助轮播图：</span>
