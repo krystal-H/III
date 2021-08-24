@@ -1,7 +1,7 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Image } from 'antd';
 import NetworkInfo from './networkInfo';
-// import CommunicateSecurity from './communicationSecurity';
+import CommunicateSecurity from './communicationSecurity'
 // import ConfigFirmware from './configFirmware';
 // import JoinGateway from './joinGateway';
 // import ConfigFirmwareDetail from './configFirmwareDetail';
@@ -71,7 +71,7 @@ const optionalList = [
   }
 ]
 
-function ServiceConfig({ nextStep }, ref) {
+function ServiceConfig({ productId, nextStep }, ref) {
   const [networkVisible, setNetworkVisible] = useState(false)
   const [securityVisible, setSecurityVisible] = useState(false)
   const [firmwareVisible, setFirmwareVisible] = useState(false)
@@ -188,16 +188,17 @@ function ServiceConfig({ nextStep }, ref) {
       {
         networkVisible &&
         <NetworkInfo
+          productId={productId}
           networkModalVisible={networkVisible}
           cancelHandle={() => { setNetworkVisible(false) }} />
       }
       {/* 通信安全机制 */}
-      {/* {
+      {
         securityVisible &&
         <CommunicateSecurity
           securityVisible={securityVisible}
           cancelHandle={() => { setSecurityVisible(false) }} />
-      } */}
+      }
       {/* 配置产品固件模块 */}
       {/* {
         firmwareVisible &&
