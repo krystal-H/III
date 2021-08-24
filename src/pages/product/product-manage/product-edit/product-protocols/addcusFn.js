@@ -4,6 +4,7 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { post, Paths, get } from '../../../../../api';
 
 import './editInfo.scss'
+import { CloseOutlined } from '@ant-design/icons';
 //tab
 const optionsWithDisabled = [
     { label: '属性', value: 'properties' },
@@ -29,7 +30,7 @@ const eventTabOptions = [
     { label: '故障', value: 'fault' },
     { label: '告警', value: 'alarm' },
     { label: '信息', value: 'info' }]
-export default function ProtocoLeft({ rightVisible, onCloseRight }) {
+export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList }) {
     const { TabPane } = Tabs;
     useEffect(() => {
     }, [])
@@ -69,9 +70,11 @@ export default function ProtocoLeft({ rightVisible, onCloseRight }) {
         data.type = 'add'
         data.productId = 11759
         data.content.standard = false
+        console.log(data, '要提交的数据')
         data.content = JSON.stringify(data.content)
+
         post(Paths.PhysicalModelAction, data).then((res) => {
-            // onCloseRight(true)
+            onRefreshList()
         });
     }
     return (
@@ -103,7 +106,7 @@ export default function ProtocoLeft({ rightVisible, onCloseRight }) {
                     <NumberTemp ref={oneRef} currentTab={currentTab} sentReq={sentReq}></NumberTemp>
                 </TabPane>
                 <TabPane tab="Tab 2" key="events">
-                    <EventTemp ref={twoRef} sentReq={sentReq}></EventTemp>
+                    <EventTemp ref={twoRef} sentReq={sentReq} key="events"></EventTemp>
                 </TabPane>
                 <TabPane tab="Tab 3" key="services">
                     <ServeTemp ref={threeRef} sentReq={sentReq} />
@@ -138,11 +141,16 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                 value.specs = specs
                 origin.content = value
             } else if (value.type === 'text') {
-
+                origin.content = value
             } else if (value.type === 'double') {
                 origin.content = value
             }
-            console.log(origin, '发送')
+            origin.content.dataType = {
+                type: origin.content.type,
+                specs: origin.content.specs
+            }
+            delete origin.content.type
+            delete origin.content.specs
             sentReq(origin)
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
@@ -182,6 +190,11 @@ function NumberTemp({ currentTab, sentReq }, ref) {
             <Form.Item
                 label="标识符"
                 name='identifier'
+                rules={[
+                    {
+                        required: true,
+                    },
+                ]}
             ><Input />
             </Form.Item>
             <Form.Item
@@ -280,7 +293,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                                     <Form.Item
                                         name={['specs', 'min']}
                                         noStyle
-                                        rules={[{ required: true }]}
+                                        rules={[{ required: true, message: '请输入最小值' }]}
                                     >
                                         <Input style={{ width: '40%' }} />
                                     </Form.Item>
@@ -288,7 +301,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                                     <Form.Item
                                         name={['specs', 'max']}
                                         noStyle
-                                        rules={[{ required: true }]}
+                                        rules={[{ required: true, message: '请输入最小值' }]}
                                     >
                                         <Input style={{ width: '40%' }} />
                                     </Form.Item>
@@ -301,8 +314,9 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                             ><Input /></Form.Item>
                             <Form.Item name={['specs', 'multiple']} label="倍数" >
                                 <Select allowClear >
-                                    <Select.Option value="male">1</Select.Option>
-                                    <Select.Option value="female">2</Select.Option>
+                                    <Select.Option value="10">10</Select.Option>
+                                    <Select.Option value="100">100</Select.Option>
+                                    <Select.Option value="1000">1000</Select.Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item name={['specs', 'unit']} label="单位" >
@@ -334,42 +348,50 @@ function NumberTemp({ currentTab, sentReq }, ref) {
 }
 NumberTemp = forwardRef(NumberTemp)
 //事件组件
+let testCount = 0
+let paramsWrap = []
 function EventTemp({ currentTab, sentReq }, ref) {
     const [form] = Form.useForm();
-    const [childrenDrawer, setChildrenDrawer] = useState(false)
-    const paramsRef = useRef(null)
 
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
     }));
+    const [isCheck, setIsCheck] = useState(0)
+    //验证回调
+    function sentAddData(data2) {
+        let data = JSON.parse(JSON.stringify(data2))
+        testCount++
+        if (data) {
+            paramsWrap.push(data)
+        }
+        if (testCount === newParamsList.length) {
+            if (paramsWrap.length === testCount) {
+                let value = form.getFieldsValue()
+                value = JSON.parse(JSON.stringify(value))
+                let origin = {}
+                value.outputData = paramsWrap
+                origin.content = value
+                sentReq(origin)
+            }
+
+        }
+    }
+    //==================
+    const [newParamsList, setNewParamsList] = useState([])
     const addParams = () => {
-        setChildrenDrawer(true)
-    }
-    //关闭新增参数
-    const onCloseRight = () => {
-        setChildrenDrawer(false)
-    }
-    //提交新增参数
-    const subParamData = () => {
-        paramsRef.current.onFinish()
-    }
-    //接收参数
-    const [paramsArr, setParamsArr] = useState([])
-    const sentAddData = (data) => {
-        console.log(data)
-        setParamsArr(pre => {
-            let oriArr = JSON.parse(JSON.stringify(pre))
-            oriArr.push(data)
-            return oriArr
+        setNewParamsList(pre => {
+            let obj = JSON.parse(JSON.stringify(pre))
+            obj.push({})
+            return obj
         })
     }
+    //触发验证及提交
     const onFinish = async () => {
-        let value = await form.validateFields()
-        value = JSON.parse(JSON.stringify(value))
-        let origin = {}
-        value.outputData = paramsArr
-        origin.content = value
-        sentReq(origin)
+        paramsWrap = []
+        testCount = 0
+        form.validateFields().then(value => {
+            setIsCheck(isCheck + 1)
+        })
     }
     return (
         <>
@@ -424,69 +446,70 @@ function EventTemp({ currentTab, sentReq }, ref) {
                     </Button>
                 </Form.Item>
             </Form>
-            <div className='receive-wrap'>
 
-            </div>
-            <Drawer
-                title="新增参数"
-                width={393}
-                closable={false}
-                visible={childrenDrawer}
-                footer={
-                    <div
-                        style={{
-                            textAlign: 'right',
-                        }}
-                    >
-                        <Button onClick={onCloseRight} style={{ marginRight: 8 }}>
-                            取消
-                        </Button>
-                        <Button onClick={subParamData} type="primary">
-                            确定
-                        </Button>
-                    </div>
-                }
-            >
-                <AddParams sentAddData={sentAddData} ref={paramsRef} type={true} />
-            </Drawer>
+            {
+                newParamsList.map((item, key) => {
+                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true} key={'params' + key} data={item} />
+                })
+            }
         </>
     )
 }
 EventTemp = forwardRef(EventTemp)
 //服务组件
-function ServeTemp({sentReq}, ref) {
+let seviceCount = 0
+let inputparamsWrap = []
+let outputparamsWrap = []
+function ServeTemp({ sentReq }, ref) {
     const [form] = Form.useForm();
-    const paramsRef=useRef('')
-    // const [currentPar]
-    const [childrenDrawer, setChildrenDrawer] = useState(false)
-    const addParams = () => {
-        setChildrenDrawer(true)
-    }
-    //关闭新增参数
-    const onCloseRight = () => {
-        setChildrenDrawer(false)
-    }
-    //提交新增参数
-    const subParamData = () => {
-        paramsRef.current.onFinish()
+    const [inputList, setInputList] = useState([])
+    const [outputList, setOutputList] = useState([])
+    const [isCheck, setIsCheck] = useState(0)
+    //添加输入框
+    const addinput = (isIn) => {
+        if (isIn) {
+            setInputList(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                obj.push({})
+                return obj
+            })
+        } else {
+            setOutputList(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                obj.push({})
+                return obj
+            })
+        }
     }
     //接收参数
-    const [paramsArr, setParamsArr] = useState([])
-    const sentAddData = (data) => {
-        console.log(data)
-        setParamsArr(pre => {
-            let oriArr = JSON.parse(JSON.stringify(pre))
-            oriArr.push(data)
-            return oriArr
-        })
+    const sentAddData = (data2, type) => {
+        let data = JSON.parse(JSON.stringify(data2))
+        seviceCount++
+        if (type && data) {
+            inputparamsWrap.push(data)
+        } else if (data) {
+            outputparamsWrap.push(data)
+        }
+        if (seviceCount === (inputList.length + outputList.length)) {
+            if ((inputparamsWrap.length + outputparamsWrap.length) === seviceCount) {
+                let value = form.getFieldsValue()
+                value = JSON.parse(JSON.stringify(value))
+                let origin = {}
+                value.outputData = outputparamsWrap
+                value.inputData = inputparamsWrap
+                origin.content = value
+                sentReq(origin)
+            }
+
+        }
     }
     const onFinish = async () => {
-        let value = await form.validateFields()
-        value = JSON.parse(JSON.stringify(value))
-        let origin = {}
-        value.outputData = paramsArr
-        origin.content = value
-        sentReq(origin)
+        seviceCount = 0
+        inputparamsWrap = []
+        outputparamsWrap = []
+        form.validateFields().then(value => {
+            setIsCheck(isCheck + 1)
+        })
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
@@ -517,26 +540,28 @@ function ServeTemp({sentReq}, ref) {
                 <Form.Item
                     label="标识符"
                     name="identifier"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
                 ><Input />
                 </Form.Item>
+            </Form>
+            <Form
+                labelCol={{
+                    span: 8,
+                }}
+                wrapperCol={{
+                    span: 16,
+                }}
+            >
                 <Form.Item
                     label="输入参数："
                 >
                     <Button
                         type="dashed"
-                        onClick={addParams}
-                        style={{ width: '60%' }}
-                        icon={<PlusOutlined />}
-                    >
-                        添加参数
-                    </Button>
-                </Form.Item>
-                <Form.Item
-                    label="输出参数："
-                >
-                    <Button
-                        type="dashed"
-                        onClick={addParams}
+                        onClick={() => { addinput(true) }}
                         style={{ width: '60%' }}
                         icon={<PlusOutlined />}
                     >
@@ -544,76 +569,95 @@ function ServeTemp({sentReq}, ref) {
                     </Button>
                 </Form.Item>
             </Form>
-            <Drawer
-                title="新增参数"
-                width={393}
-                closable={false}
-                visible={childrenDrawer}
-                footer={
-                    <div
-                        style={{
-                            textAlign: 'right',
-                        }}
-                    >
-                        <Button onClick={onCloseRight} style={{ marginRight: 8 }}>
-                            取消
-                        </Button>
-                        <Button onClick={subParamData} type="primary">
-                            确定
-                        </Button>
-                    </div>
-                }
+            {
+                inputList.map((item, key) => {
+                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true} index={'input' + key} data={item} />
+                })
+            }
+            <Form
+                labelCol={{
+                    span: 8,
+                }}
+                wrapperCol={{
+                    span: 16,
+                }}
             >
-                <AddParams sentAddData={sentAddData} ref={paramsRef} type={true} />
-            </Drawer>
+                <Form.Item
+                    label="输出参数："
+                >
+                    <Button
+                        type="dashed"
+                        onClick={() => { addinput(false) }}
+                        style={{ width: '60%' }}
+                        icon={<PlusOutlined />}
+                    >
+                        添加参数
+                    </Button>
+                </Form.Item>
+            </Form>
+            {
+                outputList.map((item, key) => {
+                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={false} index={'outputt' + key} data={item} />
+                })
+            }
         </>
     )
 }
 ServeTemp = forwardRef(ServeTemp)
 //添加参数
-function AddParams({ sentAddData, type }, ref) {
+function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
     const [form] = Form.useForm();
-    const onFinish = async () => {
-        let value = await form.validateFields()
-        // 验证通过后进入
-        value = JSON.parse(JSON.stringify(value))
-        let origin = {}
-
-        origin.content = {}
-        if (value.type === 'bool') {
-            origin.content = value
-        } else if (value.type === 'enum') {
-            let emusList = value.emusList.filter(item => {
-                if (item.key && item.value) {
-                    return item
-                }
-            })
-            let specs = emusList.reduce((pre, cur) => {
-                pre[cur.key.toString()] = cur.value
-                return pre
-            }, {})
-            value.specs = specs
-            origin.content = value
-        } else if (value.type === 'text') {
-
-        } else if (value.type === 'double') {
-            origin.content = value
+    useEffect(() => {
+        if (isCheck) {
+            onFinish()
         }
-        sentAddData(origin.content)
+    }, [isCheck])
+    const onFinish = async () => {
+        form.validateFields().then(value => {
+            value = JSON.parse(JSON.stringify(value))
+            let origin = {}
+            origin.content = {}
+            if (value.type === 'bool') {
+                origin.content = value
+            } else if (value.type === 'enum') {
+                let emusList = value.emusList.filter(item => {
+                    if (item.key && item.value) {
+                        return item
+                    }
+                })
+                let specs = emusList.reduce((pre, cur) => {
+                    pre[cur.key.toString()] = cur.value
+                    return pre
+                }, {})
+                value.specs = specs
+                origin.content = value
+            } else if (value.type === 'text') {
+                origin.content = value
+            } else if (value.type === 'double') {
+                origin.content = value
+            }
+            origin.content.dataType = {
+                type: origin.content.type,
+                specs: origin.content.specs
+            }
+            delete origin.content.type
+            delete origin.content.specs
+            sentAddData(origin.content, type)
+        }).catch(err => {
+            sentAddData(false)
+        })
     }
-    useImperativeHandle(ref, () => ({
-        onFinish: onFinish
-    }));
     return (
-        <Form form={form}
-            labelCol={{
-                span: 8,
-            }}
-            wrapperCol={{
-                span: 16,
-            }}>
-            {
-                type &&
+        <div className='add-tempele-wrap add-params-wrap'>
+            <Form form={form}
+                initialValues={data}
+                labelCol={{
+                    span: 8,
+                }}
+                wrapperCol={{
+                    span: 16,
+                }}>
+
                 <Form.Item
                     label="参数名称："
                     name="name"
@@ -625,10 +669,7 @@ function AddParams({ sentAddData, type }, ref) {
                 >
                     <Input />
                 </Form.Item>
-
-            }
-            {
-                type && <Form.Item
+                <Form.Item
                     label="参数标识"
                     name="identifier"
                     rules={[
@@ -638,183 +679,148 @@ function AddParams({ sentAddData, type }, ref) {
                     ]}
                 ><Input />
                 </Form.Item>
-            }
 
-
-            <Form.Item
-                label="数据类型："
-                name='type'
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
-            >
-                <Select allowClear>
-                    {
-                        dataOptions.map(item => (
-                            <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
-                        ))
-                    }
-                </Select>
-            </Form.Item>
-            <Form.Item
-                noStyle
-                shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
-            >
-                {({ getFieldValue }) => {
-                    if (getFieldValue('type') === 'bool') {
-                        return (<>
-                            <Form.Item
-                                label="布尔值"
-                                rules={[{ required: true }]}
-                            >
+                <Form.Item
+                    label="数据类型："
+                    name='type'
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <Select allowClear>
+                        {
+                            dataOptions.map(item => (
+                                <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
+                            ))
+                        }
+                    </Select>
+                </Form.Item>
+                <Form.Item
+                    noStyle
+                    shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
+                >
+                    {({ getFieldValue }) => {
+                        if (getFieldValue('type') === 'bool') {
+                            return (<>
                                 <Form.Item
-                                    name={['specs', '0']}
-                                    label="0"
+                                    label="布尔值"
+                                    rules={[{ required: true }]}
                                 >
-                                    <Input placeholder="参数描述" />
+                                    <Form.Item
+                                        name={['specs', '0']}
+                                        label="0"
+                                    >
+                                        <Input placeholder="参数描述" />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name={['specs', '1']}
+                                        label="1"
+                                    >
+                                        <Input placeholder="参数描述" />
+                                    </Form.Item>
+                                </Form.Item>
+                            </>)
+                        }
+                        if (getFieldValue('type') === 'enum') {
+                            return (
+                                <>
+                                    <Form.Item
+                                        label="枚举型:"
+                                        name="enumus_text"
+                                        className='enums-lise-nobottom'
+                                    ><span style={{ marginRight: '50px' }}>参数值</span>-<span style={{ marginLeft: '30px' }}>参数描述</span>
+                                    </Form.Item>
+
+                                    <div className='right-list-wrap' >
+                                        <Form.List name="emusList">
+                                            {(fields, { add, remove }) => (
+                                                <>
+                                                    {fields.map(({ key, name, fieldKey, ...restField }) => (
+                                                        <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                                            <Form.Item
+                                                                {...restField}
+                                                                name={[name, 'key']}
+                                                                fieldKey={[fieldKey, 'key']}
+                                                                className='enums-lise-nobottom'
+                                                                noStyle
+                                                            >
+                                                                <Input />
+                                                            </Form.Item>
+                                                            <span>-</span>
+                                                            <Form.Item
+                                                                {...restField}
+                                                                name={[name, 'value']}
+                                                                fieldKey={[fieldKey, 'value']}
+                                                                className='enums-lise-nobottom'
+                                                                noStyle
+                                                            >
+                                                                <Input />
+                                                            </Form.Item>
+                                                            <MinusCircleOutlined onClick={() => remove(name)} />
+                                                        </Space>
+                                                    ))}
+                                                    <Form.Item>
+                                                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                            新加
+                                                        </Button>
+                                                    </Form.Item>
+                                                </>
+                                            )}
+                                        </Form.List>
+                                    </div>
+                                </>
+                            )
+                        }
+                        if (getFieldValue('type') === 'double') {
+                            return (<>
+                                <Form.Item label="数值范围">
+                                    <div className='number-input-wrap'>
+                                        <Form.Item
+                                            name={['specs', 'min']}
+                                            noStyle
+                                            rules={[{ required: true ,message:'请输入最小值'}]}
+                                        >
+                                            <Input style={{ width: '40%' }} />
+                                        </Form.Item>
+                                        <span style={{ margin: '0 10px' }}>至</span>
+                                        <Form.Item
+                                            name={['specs', 'max']}
+                                            noStyle
+                                            rules={[{ required: true,message:'请输入最大值' }]}
+                                        >
+                                            <Input style={{ width: '40%' }} />
+                                        </Form.Item>
+                                    </div>
                                 </Form.Item>
                                 <Form.Item
-                                    name={['specs', '1']}
-                                    label="1"
-                                >
-                                    <Input placeholder="参数描述" />
+                                    label='数值间隔'
+                                    name={['specs', 'interval']}
+                                    rules={[{ required: true }]}
+                                ><Input /></Form.Item>
+                                <Form.Item name={['specs', 'multiple']} label="倍数" >
+                                    <Select allowClear >
+                                        <Select.Option value="10">10</Select.Option>
+                                        <Select.Option value="100">100</Select.Option>
+                                        <Select.Option value="1000">1000</Select.Option>
+                                    </Select>
                                 </Form.Item>
-                            </Form.Item>
-                        </>)
-                    }
-                    if (getFieldValue('type') === 'enum') {
-                        return (
-                            <>
-                                <Form.Item
-                                    label="枚举型:"
-                                    name="enumus_text"
-                                    className='enums-lise-nobottom'
-                                ><span style={{ marginRight: '50px' }}>参数值</span>-<span style={{ marginLeft: '30px' }}>参数描述</span>
+                                <Form.Item name={['specs', 'unit']} label="单位" >
+                                    <Select allowClear >
+                                        <Select.Option value="male">male</Select.Option>
+                                        <Select.Option value="female">female</Select.Option>
+                                        <Select.Option value="other">other</Select.Option>
+                                    </Select>
                                 </Form.Item>
-
-                                <div className='right-list-wrap' >
-                                    <Form.List name="emusList">
-                                        {(fields, { add, remove }) => (
-                                            <>
-                                                {fields.map(({ key, name, fieldKey, ...restField }) => (
-                                                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                                        <Form.Item
-                                                            {...restField}
-                                                            name={[name, 'key']}
-                                                            fieldKey={[fieldKey, 'key']}
-                                                            className='enums-lise-nobottom'
-                                                            noStyle
-                                                        >
-                                                            <Input />
-                                                        </Form.Item>
-                                                        <span>-</span>
-                                                        <Form.Item
-                                                            {...restField}
-                                                            name={[name, 'value']}
-                                                            fieldKey={[fieldKey, 'value']}
-                                                            className='enums-lise-nobottom'
-                                                            noStyle
-                                                        >
-                                                            <Input />
-                                                        </Form.Item>
-                                                        <MinusCircleOutlined onClick={() => remove(name)} />
-                                                    </Space>
-                                                ))}
-                                                <Form.Item>
-                                                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                                        新加
-                                                    </Button>
-                                                </Form.Item>
-                                            </>
-                                        )}
-                                    </Form.List>
-                                </div>
-                            </>
-                        )
+                            </>)
+                        }
+                        return null
                     }
-                    if (getFieldValue('type') === 'double') {
-                        return (<>
-                            <Form.Item label="数值范围">
-                                <div className='number-input-wrap'>
-                                    <Form.Item
-                                        name={['specs', 'min']}
-                                        noStyle
-                                        rules={[{ required: true }]}
-                                    >
-                                        <Input style={{ width: '40%' }} />
-                                    </Form.Item>
-                                    <span style={{ margin: '0 10px' }}>至</span>
-                                    <Form.Item
-                                        name={['specs', 'max']}
-                                        noStyle
-                                        rules={[{ required: true }]}
-                                    >
-                                        <Input style={{ width: '40%' }} />
-                                    </Form.Item>
-                                </div>
-                            </Form.Item>
-                            <Form.Item
-                                label='数值间隔'
-                                name={['specs', 'interval']}
-                                rules={[{ required: true }]}
-                            ><Input /></Form.Item>
-                            <Form.Item name={['specs', 'multiple']} label="倍数" >
-                                <Select allowClear >
-                                    <Select.Option value="male">1</Select.Option>
-                                    <Select.Option value="female">2</Select.Option>
-                                </Select>
-                            </Form.Item>
-                            <Form.Item name={['specs', 'unit']} label="单位" >
-                                <Select allowClear >
-                                    <Select.Option value="male">male</Select.Option>
-                                    <Select.Option value="female">female</Select.Option>
-                                    <Select.Option value="other">other</Select.Option>
-                                </Select>
-                            </Form.Item>
-                        </>)
                     }
-                    return null
-                }
-                }
-            </Form.Item>
+                </Form.Item>
 
-        </Form>
-    )
+            </Form>
+        </div>)
 
-}
-AddParams = forwardRef(AddParams)
-//展示
-function ShowParams({ data }) {
-    const getDom = () => {
-        let dom = ''
-        if (data.type === 1) {
-
-        } else if (data.type === 2) {
-
-        } else if (data.type === 2) {
-
-        } else if (data.type === 2) {
-
-        }
-        return
-    }
-    return (
-        <>
-            <div>
-                <div>参数名称：</div>
-                <div></div>
-            </div>
-            <div>
-                <div>参数标识：</div>
-                <div></div>
-            </div>
-            <div>
-                <div>数据类型：</div>
-                <div></div>
-            </div>
-
-        </>
-    )
 }

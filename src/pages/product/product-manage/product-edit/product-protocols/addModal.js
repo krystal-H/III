@@ -2,38 +2,39 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select } from 'antd';
 import { post, Paths, get } from '../../../../../api';
 import './addModal.scss';
-const filterFn = (type, data) => {
+const filterFn = (data) => {
   let result = null
+  let type = data.dataTypeEN
   switch (type) {
     case 'double':
-      
-      result = `数值范围：${data.propertyMap.min}-${data.propertyMap.max},间距：${data.type},倍数：${data.type},单位：${data.propertyMap.unit}`
+      result = `数值范围：${data.propertyMap.min}-${data.propertyMap.max},间距：${data.propertyMap.interval},倍数：${data.propertyMap.multiple},单位：${data.propertyMap.unit}`
       break;
-    case '布尔':
-      console.log(data,'=====')
-      result = `0：${data.type},1：${data.type}`
+    case 'bool':
+
+      result = `0：${data.propertyMap[0]},1：${data.propertyMap[1]}`
       break;
-    case '枚举':
+    case 'enum':
       let value = ''
       for (let key in data.propertyMap) {
-        value += data.propertyMap[key] + ','
+        value += data.propertyMap[key] + '，'
       }
       result = `枚举值：${value}`
       break;
     default:
       return ''
   }
+
   return result
 }
 //处理数据
 function delaData(data) {
   let newData = []
   data.forEach(item => {
-      if (!item.funcParamList || !item.funcParamList.length) return
-      item.funcParamList.forEach(item2 => {
-          let newItem = JSON.parse(JSON.stringify(item))
-          newData.push({ ...newItem, ...item2 })
-      })
+    if (!item.funcParamList || !item.funcParamList.length) return
+    item.funcParamList.forEach(item2 => {
+      let newItem = JSON.parse(JSON.stringify(item))
+      newData.push({ ...newItem, ...item2 })
+    })
   })
   return newData
 }
@@ -44,11 +45,10 @@ const columns = [
   { title: '参数名称', dataIndex: 'name' },
   { title: '参数标识', dataIndex: 'identifier' },
   {
-    title: '数据传输类型', dataIndex: 'createTime',
-    render: text => <span></span>
+    title: '数据传输类型', dataIndex: 'dataTransferType',
   },
   { title: '数据类型', dataIndex: 'dataTypCN' },
-  { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record.dataTypeEN, record)}</span> }
+  { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn( record)}</span> }
 ];
 export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
 
@@ -68,7 +68,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
   }
   const [tableData, setTableData] = useState([])
   const [otherData, setOtherData] = useState([])
-  
+
   const getOneList = () => {
     post(Paths.PhysicalModelList, { deviceTypeId: 2 }).then((res) => {
       setTableData(delaData(res.data))
