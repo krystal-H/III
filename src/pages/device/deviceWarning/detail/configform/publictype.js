@@ -10,26 +10,24 @@ const formlayout = {
 
 function pubForm({
     setStepCur,
+    commitAll,
     formdata
 },_ref){
     const [form] = Form.useForm();
 
-    const [warningWay, setWarningWay] = useState("0");
+    const [warningWay, setWarningWay] = useState(formdata.warningWay);
 
     useEffect( () => {
         // console.log("---form1--",formdata)
         if(formdata.warningTitle){
-            setWarningWay(formdata.warningWay)
             form.setFieldsValue({...formdata})
         }else{
-            // form.resetFields()
+            form.resetFields()
         }
-
-       
-
-    },[formdata])
+    },[formdata.warningTitle])
 
     const onFinish=(values)=>{
+        commitAll()
         // console.log("---finish1---",form.getFieldsValue())
     }
 

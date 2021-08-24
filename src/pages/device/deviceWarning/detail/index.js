@@ -4,7 +4,6 @@ import BaseInfoForm from './configform/baseinfo';
 import RuleForm from './configform/rule';
 import PublictypeForm from './configform/publictype';
 import {Paths, post } from '../../../../api';
-import DoubleBtns from '../../../../components/double-btns/DoubleBtns';
 const {Step} = Steps;
 const {TabPane} = Tabs;
 export default ({
@@ -12,13 +11,13 @@ export default ({
     closeEditMod,
     editData
 })=>{
-    const { id,name,status } = editData;
+    const { id,name } = editData;
 
     const [baseFormData, setBaseFormData] = useState({});
     const [ruleFormData, setRuleFormData] = useState({});
     const [pubFormData, setPubFormData] = useState({});
 
-    const [stepcurrent, setStepcurrent] = useState(2);
+    const [stepcurrent, setStepcurrent] = useState(0);
 
     useEffect( () => {
         console.log(777,editData)
@@ -43,10 +42,19 @@ export default ({
         setBaseFormData({});
         setRuleFormData({});
         setPubFormData({});
-        
-        console.log("---ref---",ref0.current.getFieldsValue())
+    }
 
+    const commitAll=()=>{
+        let baseFormData = ref0.current.getFieldsValue(),
+            ruleFormData = ref1.current.formDataToData,
+            piublicFormData = ref2.current.getFieldsValue();
+        let otherobj = {...ruleFormData, ...piublicFormData };
+        let content = JSON.stringify(otherobj);
+        let params = { ...baseFormData, id, content };
 
+        post(Paths.saveWarningConfig, params, { loading: true }).then(res => {
+            closeEditMod()
+        });
     }
     
 
@@ -73,7 +81,7 @@ export default ({
                             <RuleForm ref={ref1} setStepCur={setStepCur} formdata={ruleFormData}/>
                         </TabPane>
                         <TabPane tab="通知方式"  key={'2'}>
-                            <PublictypeForm ref={ref2} setStepCur={setStepCur} formdata={pubFormData}/>
+                            <PublictypeForm ref={ref2} setStepCur={setStepCur} commitAll={commitAll} formdata={pubFormData}/>
                         </TabPane>
                     </Tabs> 
 

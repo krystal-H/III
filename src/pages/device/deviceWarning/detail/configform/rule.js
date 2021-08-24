@@ -1,4 +1,4 @@
-import React, {  memo, forwardRef,useState,useEffect } from 'react';
+import React, {  memo, forwardRef,useState,useEffect,useImperativeHandle } from 'react';
 import {Input,Form,Select,Row,Col,Radio} from 'antd';
 import {Paths, post,get } from '../../../../../api';
 import DoubleBtns from '../../../../../components/double-btns/DoubleBtns';
@@ -41,30 +41,129 @@ function ruleForm({
     const [propList, setPropList] = useState([]);//属性列表
     const [eventList, setEventList] = useState([]);//事件列表
 
-    const [triggerMode, setTriggerMode] = useState(undefined); //记录触发方式
-    const [productId, setProductId] = useState(undefined); //记录productId，因为 设备、属性等列表依赖productId，没选择产品时，禁用相关下拉框
-    const [ruletype, setRuletype] = useState("0"); //比较方式，组合条件才有的字段，"and" / "or", 非组合条件仅前端用值"0"
+    const [triggerMode, setTriggerMode] = useState(formdata.triggerMode); //记录触发方式
+    const [productId, setProductId] = useState(formdata.productId); //记录productId，因为 设备、属性等列表依赖productId，没选择产品时，禁用相关下拉框
+    const [ruletype, setRuletype] = useState(formdata.connType||"0"); //比较方式，组合条件才有的字段，"and" / "or", 非组合条件仅前端用值"0"
+
+    //ant4 select list数据加载前赋值无效
+    const [initialForm,setInitialForm] = useState(false);//标记表单是否被初始化过，是则各个select异步加载后不需要再赋值
     
-    useEffect( () => {
-        // console.log("---form1--",formdata)
-        if(formdata.productId){
-            setToFormData()
-        }else{
-            // form.resetFields()
-        }
-    },[formdata])
+    // useEffect( () => {
+    //     if(formdata.productId){
+    //         setToFormData()
+    //     }else{
+    //         form.resetFields()
+    //     }
+    // },[formdata.productId])
 
 
     useEffect( () => {
         if(productList.length==0){
             getDownProduct()
         }
+    },[])
+    useEffect( () => {
+        if(productId){
+            getDownDevice(productId)
+        }
+    },[productId])
+
+    useEffect( () => {
+        console.log(111)
+        if(!initialForm){
+            console.log(222)
+            if(formdata.productId){
+                // setToFormData()
+                console.log("333-11")
+                if(productList.length>0&&deviceList>0){
+                    console.log("333-11-aa")
+                    const { productId,deviceIds,triggerMode,props} = formdata;
+                    let values = { productId, deviceIds, triggerMode };
+                    if(triggerMode>1){
+                        form.setFieldsValue({...values});
+                    }else{
+                        values.ruletype = ruletype;
+                        for ( let i=0;i < props.length; i++){
+                            let {propName,propIdentifier,propFieldType, judge,propVal} = props[i];
+                            let str = i>0&&"_add"||"";
+                            values[`propName${str}`] = `${propIdentifier},${propFieldType},${propName}`;
+                            values[`judge${str}`]=judge;
+                            values[`propVal${str}`]=propVal;
+                        }
+
+                        if(triggerMode==1){//事件
+                            getEventList(productId);
+                            let {eventName,eventIdentifier} = formdata;
+                            let eventval = eventIdentifier+","+eventName;
+                            values.identifier = eventval;
+                            getProp(eventval);
+
+                            if(eventList.length>0&&propList.length>0){
+                                form.setFieldsValue({...values});
+                            }
+                        }else if(triggerMode==0){//属性
+                            getProp();
+                            if(propList.length>0){
+                                form.setFieldsValue({...values});
+                            }
+                        }
+                    }
+                }
+            }else{
+                console.log("333-22")
+                form.resetFields()
+            }
+        }
+    },[formdata.productId,productList,deviceList,propList,eventList,initialForm])
+
+    useImperativeHandle(_ref, () => {
         
-    },[productList])
+        return {
+          
+            formDataToData: formDataToState(),
+           
+        }
+    }, [formDataToState]);
+
+    //表单数据转换为接口所需数据
+    const formDataToState = ()=>{
+        const values = form.getFieldsValue();
+        let { triggerName,productId,deviceIds,triggerMode} = values;
+        let resdata ={triggerName,productId,deviceIds,triggerMode}; 
+        if(triggerMode<2){//如果是属性或者事件
+            let {identifier,ruletype,propName,judge,propVal } = values;
+            if(identifier){
+                let _event = identifier.split(",");
+                resdata.eventName = _event[1];
+                resdata.eventIdentifier = _event[0];
+            }
+            let proparr = propName.split(",");
+            let props = [
+                { propName:proparr[2], propIdentifier:proparr[0], propFieldType:proparr[1], judge, propVal }
+            ];
+            if(ruletype !== "0"){//如果是组合条件
+                resdata.connType = ruletype;
+                let { propName_add, judge_add, propVal_add } = values;
+                let proparr_add = propName_add.split(",");
+                props.push({ 
+                    propName:proparr_add[2], 
+                    propIdentifier:proparr_add[0], 
+                    propFieldType:proparr_add[1], 
+                    judge:judge_add, 
+                    propVal:propVal_add
+                })
+
+            }
+            resdata.props = props;
+        }
+        return resdata;
+
+    } 
+
 
     //获取产品列表
     const getDownProduct=()=>{
-        get(Paths.getProductType).then(({data}) => {
+        get(Paths.getProductType,{},{ loading:true }).then(({data}) => {
             const li = Object.keys(data).map(id=>{
                 return {id,name:data[id]}
             })
@@ -74,11 +173,12 @@ function ruleForm({
     //产品改变
     const productChanged = productId=>{
         setProductId(productId);
-        getDownDevice(productId);
+        // getDownDevice(productId);
+        setInitialForm(true)
        
 
     }
-    //获取设备列表 by productId
+    //获取设备列表 by productId  1755 /// 11759
     const getDownDevice= productId=>{
         post(Paths.getDeviceListByProId, { productId,pageIndex:1,pageRows:9999}, { loading:true }).then((res) => {
             setDeviceList(res.data.list)
@@ -90,26 +190,31 @@ function ruleForm({
         if(triggerMode===1){
             getEventList();
             setPropList([]);
+            setInitialForm(true)
         }
         if(triggerMode===0){
             getProp();
+            setInitialForm(true)
         }
         setTriggerMode(triggerMode);
     }
 
     //获取事件列表  by productId
     const getEventList=(id=productId)=>{
-        get(Paths.getDownEventList,{productId:id},{loading:true}).then((res) => {
+        post(Paths.getWarnEventLi,{productId:id},{loading:true}).then((res) => {
             let eventList = res && res.data || [];
             setEventList(eventList)
         });
     }
     //获取属性列表  by productId、triggerMod（0|1）、eventIdentifier（事件标识）
     const getProp=(eventIdentifier)=>{// eventIdentifier 传值则为事件否则为属性
-        eventIdentifier = eventIdentifier&&eventIdentifier.split(",")[0] || undefined;
-        let property = eventIdentifier&&1||0;
-        let params = {productId,property,eventIdentifier};
-        get(Paths.getDownPropEvent,params).then((res) => {
+        let params = {productId} , _path = Paths.getWarnProperty;
+        if(eventIdentifier){
+            _path = Paths.getWarnEventProperty;
+            params.eventIdentifier = eventIdentifier.split(",")[0];
+        }
+
+        post(_path,params,{ loading:true }).then((res) => {
             let propList = res && res.data || [];
             setPropList(propList);
         });
@@ -119,47 +224,10 @@ function ruleForm({
     //选择事件框值改变
     const eventChanged = (eventIdentifier)=>{
         getProp(eventIdentifier);
+        setInitialForm(true)
     }
-
-    //用接口数据初始化表单并初始化请求下拉列表
-    const setToFormData = ()=>{
-        
-        console.log('--ruleformdata--',formdata);
-        let { productId,deviceIds,triggerMode,connType} = formdata;
-        let values = { productId, deviceIds, triggerMode };
-
-        setProductId(productId);
-        setTriggerMode(triggerMode);
-        setRuletype(connType||"0");
-
-        getDownDevice(productId);
-
-        if(triggerMode<2){
-            if(triggerMode==1){//事件
-                getEventList(productId);
-                let {eventName,eventIdentifier} = formdata;
-                let eventval = eventIdentifier+","+eventName;
-                values.identifier = eventval;
-                getProp(eventval);
-            }else if(triggerMode==0){//属性
-                getProp();
-            }
-            values.ruletype = connType || "0";
-            for ( let i=0;i < formdata.props.length; i++){
-                let {propName,propIdentifier,propFieldType, judge,propVal} = formdata.props[i];
-                let str = i>0&&"_add"||"";
-                values[`propName${str}`] = `${propIdentifier},${propFieldType},${propName}`;
-                values[`judge${str}`]=judge;
-                values[`propVal${str}`]=propVal;
-            }
-            console.log(888,values);
-        }
-        form.setFieldsValue({...values});
-    }
-
 
     const onFinish=(values)=>{
-        // console.log("---finish1---",form.getFieldsValue())
         setStepCur(2)
     }
 
@@ -195,8 +263,8 @@ function ruleForm({
                         </Item>
                     </Col>
                     <Col span={7}  >
-                        <Item name='productId' rules={[{ required: true, message: '请选择产品' }]}>
-                            <Select showSearch optionFilterProp="children" onChange={productChanged} placeholder='请选择产品'>
+                        <Item name='productId' rules={[{ required: true, message: '请选择产品' }]} >
+                            <Select showSearch optionFilterProp="children" onChange={productChanged} placeholder='请选择产品' >
                                 {
                                     productList.map(item => {
                                         const {id,name} = item;
