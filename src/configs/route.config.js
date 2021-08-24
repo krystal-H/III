@@ -172,12 +172,7 @@ export const userNavRoutes = [
                 menuname:'用户角色',
                 path: '/userCenter/role',
                 menuid:'用户角色',
-            },
-            {
-                menuname:'操作日志',
-                path: '/userCenter/log',
-                menuid:'操作日志',
-            },
+            }
         ]
     }
 ]

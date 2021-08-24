@@ -6,7 +6,6 @@ import {isEmpty} from 'lodash';
 import UserInfo from './user-info/UserInfo';
 import RoleManagement from './roleManagement/index';
 import UserVisit from './user-visit/index';
-import OperateLog from './operate-log/OperateLog';
 import SecuritySetting from './security-setting';
 
 import OutsideWrapper from '../../components/outside-wrapper/OutsideWrapper';
@@ -24,7 +23,6 @@ const RouteComponentLi ={
     '安全设置':SecuritySetting,
     '访问用户':UserVisit,
     '用户角色':RoleManagement,
-    '操作日志':OperateLog,
 }
 const mapStateToProps = state => {
     return {
