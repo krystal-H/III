@@ -157,7 +157,7 @@ export default function DeviceRegist() {
                     </Select>
                 </div>
             </PageTitle>
-            <div className='comm-shadowbox setp-ttip'>
+            <div className='comm-shadowbox comm-setp-ttip'>
                 <div className='step-title'>
                     <img src={stepImg} alt='' />
                     <span>注册设备步骤</span>

@@ -527,7 +527,55 @@
     display: none;
 }
 
-// .ant-table-tbody tr td,.ant-table-thead tr th{
-//     border-bottom: 1px solid #E9E9E9;
+.comm-setp-ttip {
+    height: 184px;
+    background: #F4FBFF;
+    padding: 22px;
+
+    .step-title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+
+      span {
+        font-size: 14px;
+        font-weight: 600;
+        color: #323232;
+        line-height: 20px;
+        margin-left: 3px;
+      }
+
+    }
+    .ant-steps-item .ant-steps-item-container{
+        .ant-steps-item-description {
+            max-width: 262px;
+            font-size: 12px;
+            font-weight: 400;
+            color: #666666 !important;
+            line-height: 20px;
+          }
+      
+          .ant-steps-item-title {
+            font-size: 16px;
+            font-weight: 400;
+            color: #323232 !important;
+            margin-bottom: 12px;
+          }
+      
+          .ant-steps-item-title::after {
+            background-color: #C4CEE0;
+          }
+      
+          .ant-steps-icon {
+            font-weight: 400;
+            color: #323232 !important;
+          }
+          .ant-steps-item-icon{
+            background-color: #F4FBFF;
+      
+          }
+
+    }
+
     
-// }
+  }
