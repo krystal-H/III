@@ -449,7 +449,7 @@ function EventTemp({ currentTab, sentReq }, ref) {
 
             {
                 newParamsList.map((item, key) => {
-                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true} index={'params' + key} data={item} />
+                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true} key={'params' + key} data={item} />
                 })
             }
         </>
@@ -780,7 +780,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                                         <Form.Item
                                             name={['specs', 'min']}
                                             noStyle
-                                            rules={[{ required: true }]}
+                                            rules={[{ required: true ,message:'请输入最小值'}]}
                                         >
                                             <Input style={{ width: '40%' }} />
                                         </Form.Item>
@@ -788,7 +788,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                                         <Form.Item
                                             name={['specs', 'max']}
                                             noStyle
-                                            rules={[{ required: true }]}
+                                            rules={[{ required: true,message:'请输入最大值' }]}
                                         >
                                             <Input style={{ width: '40%' }} />
                                         </Form.Item>

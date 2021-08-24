@@ -1,7 +1,7 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef, useContext } from 'react'
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
 import moment from 'moment';
-import { Table, Button, Drawer, Space } from 'antd';
+import { Table, Button, Space } from 'antd';
 import './index.scss';
 import EditcusFn from './editcusFn'
 import Addfunction from './addModal'
@@ -11,6 +11,9 @@ import downpng from './../../../../../assets/images/product/download.png';
 import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
 import { MyContext } from '../context'
+import { getRowSpanCount } from './tableCombine'
+import TableCom from './TableCom';
+
 //处理数据
 function delaData(data) {
     let newData = []
@@ -21,82 +24,22 @@ function delaData(data) {
             newData.push({ ...newItem, ...item2 })
         })
     })
+    newData.map((item, index) => {
+        item.key = index
+    })
     return newData
 }
+
 function ProtocolFn({ nextStep, productId }, ref) {
-    // const { productIdInRoutePath } = useContext(MyContext)
-    // alert(productIdInRoutePath)
-    //删除弹窗
-    const [isDelVisible, setIsDelVisible] = useState(false)
-    const [delData, setDelData] = useState({})
-    //编辑右边抽屉
-    const openEditCus = (data) => {
-        setDestoryDom(true)
-        setTimeout(() => {
-            setRightEditVisible(true)
-        }, 0)
-    };
-    //打开删除弹窗
-    const openDel = (data) => {
-        setDelData(data)
-        setIsDelVisible(true)
-    }
     //展示
-    const filterFn = (data) => {
-        let result = null
-        let type = data.dataTypeEN
-        switch (type) {
-            case 'double':
-                result = `数值范围：${data.propertyMap.min}-${data.propertyMap.max},间距：${data.propertyMap.interval},倍数：${data.propertyMap.multiple},单位：${data.propertyMap.unit}`
-                break;
-            case 'bool':
-
-                result = `0：${data.propertyMap[0]},1：${data.propertyMap[1]}`
-                break;
-            case 'enum':
-                let value = ''
-                for (let key in data.propertyMap) {
-                    value += data.propertyMap[key] + '，'
-                }
-                result = `枚举值：${value}`
-                break;
-            default:
-                return ''
-        }
-
-        return result
-    }
-    const columns = [
-        { title: 'DP ID', dataIndex: 'key' },
-        { title: '功能类型', dataIndex: 'funcType' },
-        { title: '功能点名称', dataIndex: 'funcName' },
-        { title: '标识符', dataIndex: 'funcIdentifier' },
-        { title: '参数名称', dataIndex: 'name' },
-        { title: '参数标识', dataIndex: 'identifier' },
-        {
-            title: '数据传输类型', dataIndex: 'dataTransferType',
-        },
-        {
-            title: '数据类型', dataIndex: 'dataType', render: (text, record) => (
-                <span>{record.dataTypCN}</span>
-            )
-        },
-        { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record)}</span> },
-        {
-            title: '操作', render: (text, record) => (
-                <Space size="middle"><Button type="link" onClick={() => { openEditCus(record) }}>编辑</Button>
-                    <Button type="link" onClick={() => { openDel(record) }}>删除</Button></Space>
-            ),
-        },
-    ];
     const [cusData, setCusData] = useState([]);
     const [standardData, setStandardData] = useState([]);
-    const [selectId, setSelectId] = useState(0);
     //获取列表
     const getList = (loading = true) => {
         post(Paths.standardFnList, { productId: '11759' }, { loading }).then((res) => {
             setStandardData(delaData(res.data.standard))
-            setCusData(delaData(res.data.custom))
+            let data2 = delaData(res.data.custom)
+            setCusData(data2)
         });
     }
     useEffect(() => {
@@ -159,15 +102,6 @@ function ProtocolFn({ nextStep, productId }, ref) {
         onFinish: subNextConFirm
     }));
 
-    //确定删除数据
-    const updateOkHandle = () => {
-
-        setIsDelVisible(false)
-    }
-    //取消删除数据
-    const updateCancelHandle = () => {
-        setIsDelVisible(false)
-    }
     const ref11 = useRef()
     return <div className='Protocol-wrap' ref={ref11}>
         <div className='Protocol-label'>
@@ -183,11 +117,7 @@ function ProtocolFn({ nextStep, productId }, ref) {
             <Button type="primary" onClick={openAdd}>新建标准功能</Button >
         </div>
         <div className='Protocol-table'>
-            <Table
-                rowKey="id"
-                columns={columns}
-                dataSource={standardData}
-            />
+            <TableCom dataSource={standardData} reFreshData={getList} type={'1'} />
         </div>
         <div className='Protocol-download'>
             <div>自定义功能</div>
@@ -199,31 +129,13 @@ function ProtocolFn({ nextStep, productId }, ref) {
 
         </div>
         <div >
-            <Table
-                rowKey="id"
-                columns={columns}
-                dataSource={cusData}
-            />
+            <TableCom dataSource={cusData} reFreshData={getList} type={'2'} />
         </div>
         {/* 新增自定义 */}
         {1 && <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
-        {/* 编辑操作 */}
-        {destoryDom && <EditcusFn rightVisible={rightEditVisible} onCloseRight={onCloseEditRight} destData={onDestData}></EditcusFn>}
         {/* 新增标准 */}
         {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>}
-        {/* 删除操作 */}
-        {
-            isDelVisible && <ActionConfirmModal
-                visible={isDelVisible}
-                modalOKHandle={updateOkHandle}
-                modalCancelHandle={updateCancelHandle}
-                targetName={delData.funcName}
-                title='删除'
-                descGray={true}
-                needWarnIcon={true}
-                descText='确定删除此功能'
-            ></ActionConfirmModal>
-        }
+        
 
     </div>
 }
