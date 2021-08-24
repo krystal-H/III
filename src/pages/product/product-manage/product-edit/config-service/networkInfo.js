@@ -54,7 +54,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
     values.guidePage = values.guidePage || '' // 引导图
     values.bindFailPage = values.bindFailPage || '' // 失败图
     console.log('提交的数据****', values)
-    post(Paths.saveNetworkConfig, { ...values }, {loading: true}).then(res => {
+    post(Paths.saveNetworkConfig, { ...values }, { loading: true }).then(res => {
       Notification({ description: '操作成功！', type: 'success' })
       cancelHandle()
     })
@@ -172,76 +172,82 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
               <Input style={{ width: 380 }} />
             </Form.Item>
           }
-          <div className="network-info-modal-title">配网图片引导<span className="tip">（需产品支持WiFi或蓝牙配置能力）</span></div>
-          <div className="flex">
-            <Form.Item
-              label="默认联网指引"
-              name="guidePage"
-              labelCol={{ span: 10 }}
-              wrapperCol={{ span: 10 }}
-              className="upload-img">
-              {
-                <div className="native-upload">
-                  <div className="img-wrap">
-                    <img src={guidePage || guidePic} alt="" />
-                  </div>
-                  <label htmlFor="upLoadImg">
-                    <Button type="primary" className="upload-btn">
-                      上传图片
-                      <input type="file" accept="image/*"
-                        id="upLoadImg"
-                        name="guideImg"
-                        className="hidden"
-                        onInput={(e) => loadImg('guidePage', e)}
-                      />
-                    </Button>
-                  </label>
-                  <div className="tip-text">支持gif、jpeg、jpg、png格式，大小不超过500k，推荐尺寸110*154px，150*267px</div>
-                </div>
-              }
-            </Form.Item>
-            <Form.Item
-              label="默认联网失败提示"
-              name="bindFailPage"
-              labelCol={{ span: 10 }}
-              wrapperCol={{ span: 10 }}
-              className="upload-img">
-              {
-                <div className="native-upload">
-                  <div className="img-wrap">
-                    <img src={bindFailPage || errorPic} alt="" />
-                  </div>
-                  <label htmlFor="upLoadImg">
-                    <Button type="primary" className="upload-btn">
-                      上传图片
-                      <input type="file" accept="image/*"
-                        id="upLoadImg"
-                        name="guideImg"
-                        className="hidden"
-                        onInput={(e) => loadImg('bindFailPage', e)}
-                      />
-                    </Button>
-                  </label>
-                  <div className="tip-text">支持gif、jpeg、jpg、png格式，大小不超过500k，推荐尺寸110*154px，150*267px</div>
-                </div>
-              }
-            </Form.Item>
-          </div>
-          <Form.Item
-            label="图片轮播帮助信息"
-            name="imageUrlList"
-            className="upload-img"
-            labelCol={{ span: 5 }}
-            wrapperCol={{ span: 20 }}>
-            {
-              <UploadFileHooks
-                ref={imgRef}
-                maxCount={5}
-                preferSize={'150*267'}
-                format='.gif,.jpeg,.jpg,.png'
-                maxSize={0.5} />
-            }
-          </Form.Item>
+          {/* WIFI或蓝牙 才需配置图片 */}
+          {
+            (netData.bindTypeId === 1 || netData.bindTypeId === 2) &&
+            <>
+              <div className="network-info-modal-title">配网图片引导<span className="tip">（需产品支持WiFi或蓝牙配置能力）</span></div>
+              <div className="flex">
+                <Form.Item
+                  label="默认联网指引"
+                  name="guidePage"
+                  labelCol={{ span: 10 }}
+                  wrapperCol={{ span: 10 }}
+                  className="upload-img">
+                  {
+                    <div className="native-upload">
+                      <div className="img-wrap">
+                        <img src={guidePage || guidePic} alt="" />
+                      </div>
+                      <label htmlFor="upLoadImg">
+                        <Button type="primary" className="upload-btn">
+                          上传图片
+                          <input type="file" accept="image/*"
+                            id="upLoadImg"
+                            name="guideImg"
+                            className="hidden"
+                            onInput={(e) => loadImg('guidePage', e)}
+                          />
+                        </Button>
+                      </label>
+                      <div className="tip-text">支持gif、jpeg、jpg、png格式，大小不超过500k，推荐尺寸110*154px，150*267px</div>
+                    </div>
+                  }
+                </Form.Item>
+                <Form.Item
+                  label="默认联网失败提示"
+                  name="bindFailPage"
+                  labelCol={{ span: 10 }}
+                  wrapperCol={{ span: 10 }}
+                  className="upload-img">
+                  {
+                    <div className="native-upload">
+                      <div className="img-wrap">
+                        <img src={bindFailPage || errorPic} alt="" />
+                      </div>
+                      <label htmlFor="upLoadImg">
+                        <Button type="primary" className="upload-btn">
+                          上传图片
+                          <input type="file" accept="image/*"
+                            id="upLoadImg"
+                            name="guideImg"
+                            className="hidden"
+                            onInput={(e) => loadImg('bindFailPage', e)}
+                          />
+                        </Button>
+                      </label>
+                      <div className="tip-text">支持gif、jpeg、jpg、png格式，大小不超过500k，推荐尺寸110*154px，150*267px</div>
+                    </div>
+                  }
+                </Form.Item>
+              </div>
+              <Form.Item
+                label="图片轮播帮助信息"
+                name="imageUrlList"
+                className="upload-img"
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 20 }}>
+                {
+                  <UploadFileHooks
+                    ref={imgRef}
+                    maxCount={5}
+                    preferSize={'150*267'}
+                    format='.gif,.jpeg,.jpg,.png'
+                    maxSize={0.5} />
+                }
+              </Form.Item>
+            </>
+          }
         </Form>
       </div>
     </Modal>

@@ -1,16 +1,18 @@
 import React, { useState, useRef } from 'react'
 import { Modal, Input, Form } from 'antd';
-import { UploadFileHooks } from '../../../../../components/upload-file';
+import { UploadFileHooks } from '../../../../../components/upload-file'
 import { Paths, post } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
+import {useHistory} from 'react-router-dom'
 
 import './releaseProduct.scss'
 
 const { TextArea } = Input
 
-export default function ReleaseProduct({ releaseVisible, cancelHandle, productId }) {
+function ReleaseProduct({ releaseVisible, cancelHandle, productId }) {
   const [form] = Form.useForm()
   const $imgel1 = useRef()
+  const history = useHistory()
 
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
@@ -22,7 +24,7 @@ export default function ReleaseProduct({ releaseVisible, cancelHandle, productId
       }
     })
     // 产品说明文件
-    values.instruction = insList
+    values.instruction = JSON.stringify(insList)
     // 成品图片
     values.productPic = values.productPic && values.productPic[0].url
     // 产品图标
@@ -30,7 +32,8 @@ export default function ReleaseProduct({ releaseVisible, cancelHandle, productId
     values.productId = productId
     console.log('请求接口的参数')
     post(Paths.publishProduct, {...values}).then(res => {
-      Notification({ description: '发布成功成功！', type: 'success' })
+      Notification({ description: '发布成功！', type: 'success' })
+      history.push('/open/product/proManage/list')
     })
   }
 
@@ -179,3 +182,5 @@ export default function ReleaseProduct({ releaseVisible, cancelHandle, productId
     </Modal>
   )
 }
+
+export default ReleaseProduct

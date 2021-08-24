@@ -1,11 +1,12 @@
-import React, { useState, useRef } from 'react';
-import { Modal, Input, Form, Select, Row, Col } from 'antd';
-import { UploadFileHooks } from '../../../../../components/upload-file';
-import './networkInfo.scss';
+import React, { useState, useEffect, useRef } from 'react'
+import { Modal, Input, Form, Select, Row, Col } from 'antd'
+import { Paths, post } from '../../../../../api'
+import './networkInfo.scss'
+
 
 const { Option } = Select;
 
-export default function NetworkInfo({ networkModalVisible, cancelHandle }) {
+export default function NetworkInfo({ productId, networkModalVisible, cancelHandle }) {
   const [form] = Form.useForm()
   const $imgel1 = useRef() // {current:''}
   const $imgel2 = useRef() // {current:''}
@@ -17,6 +18,31 @@ export default function NetworkInfo({ networkModalVisible, cancelHandle }) {
   const onOk = () => {
     form.submit()
   }
+
+  // 获取配网方式
+  const getNetDataByProductId = () => {
+    post(Paths.getNetDataByProductId, { productId })
+      .then(res => {
+        // setNetData(res.data)
+        // // form.resetFields()
+        // // formRef.current.setFieldsValue(res.data)
+        // formRef.current.setFieldsValue({
+        //   baseTypeId: res.data.baseTypeId,
+        //   guidePage: res.data.guidePage.guidePage,
+        //   bindFailPage: res.data.guidePage.bindFailPage,
+        //   imageUrlList: res.data.helpPage.imageUrls
+        // })
+        // setGuidePage(res.data.guidePage.guidePage)
+        // setBindFailPage(res.data.guidePage.bindFailPage)
+        // imgRef.current.setFileList(res.data.helpPage.imageUrls.filter(item => item).map(item => {
+        //   return { url: item, status: 'done' }
+        // }))
+      })
+  }
+
+  useEffect(() => {
+    getNetDataByProductId()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Modal
@@ -36,23 +62,22 @@ export default function NetworkInfo({ networkModalVisible, cancelHandle }) {
           <div className="network-detail-modal-title">配网方式</div>
           <Form.Item
             label="已选通信协议"
-            name="username"
-            rules={[{ required: true, message: 'Please input your username!' }]}>
+            name="username">
             <span>WiFi</span>
           </Form.Item>
           <Form.Item
             label="配网方式"
-            name="username"
-            rules={[{ required: true, message: 'Please input your username!' }]}>
+            name="username">
             <span>WiFi</span>
           </Form.Item>
           <Form.Item
             label="输入AP-SSID"
-            name="AP-SSID"
-            rules={[{ required: true, message: 'Please input your username!' }]}>
+            name="AP-SSID">
             <span>WiFi</span>
           </Form.Item>
-          <div className="network-detail-modal-title">配网图片引导<span className="tip">（需产品支持WiFi或蓝牙配置能力）</span></div>
+          <div className="network-detail-modal-title">配网图片引导
+            <span className="tip">（需产品支持WiFi或蓝牙配置能力）</span>
+          </div>
           <Row>
             <Col span={12}>
               <Form.Item

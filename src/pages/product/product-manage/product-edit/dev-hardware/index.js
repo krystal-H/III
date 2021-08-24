@@ -126,15 +126,19 @@ class Hardware extends Component {
 
     // 获取方案类型展示
     getSchemeType = () => {
-        switch (productItemData.schemeType) {
-            case 1:
-                return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。'
-            case 2:
-                return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。'
-            case 3:
-                return 'SoC方案，不提供通用固件程序，需自行开发模组固件。'
-            default:
-                break;
+        if (productItemData && productItemData.schemeType) {
+            switch (productItemData.schemeType) {
+                case 1:
+                    return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。'
+                case 2:
+                    return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。'
+                case 3:
+                    return 'SoC方案，不提供通用固件程序，需自行开发模组固件。'
+                default:
+                    break;
+            }
+        } else {
+            return ''
         }
     }
 

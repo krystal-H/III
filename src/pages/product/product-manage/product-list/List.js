@@ -91,18 +91,19 @@ class List extends PureComponent {
 
   // 获取产品列表
   getProductListNew = () => {
-    post(Paths.getProductListNew, { ...this.state.listParams }).then(res => {
-      const pager = {
-        current: res.data.current,
-        size: res.data.size,
-        pages: res.data.pages,
-        total: res.data.total
-      }
-      this.setState({
-        dataSource: res.data.records,
-        pager
+    post(Paths.getProductListNew, { ...this.state.listParams }, { loading: true })
+      .then(res => {
+        const pager = {
+          current: res.data.current,
+          size: res.data.size,
+          pages: res.data.pages,
+          total: res.data.total
+        }
+        this.setState({
+          dataSource: res.data.records,
+          pager
+        })
       })
-    })
   }
 
   // 搜索

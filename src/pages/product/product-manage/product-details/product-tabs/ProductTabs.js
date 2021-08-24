@@ -77,7 +77,7 @@ export default class ProductTabs  extends Component {
                         <HardwareDep productId={productId}/>
                     </TabPane>
                     <TabPane key={'5'} tab={'服务配置'}>
-                        <ServiceConfig />
+                        <ServiceConfig productId={productId}/>
                     </TabPane>
                     <TabPane key={'7'} tab={'设备注册'}>
                         <RegiserProduct />
