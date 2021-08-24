@@ -3,25 +3,17 @@ import { connect } from 'react-redux';
 import { Link} from 'react-router-dom';
 import { Input, Button, Table, Tag, Card, Divider, Popconfirm } from 'antd';
 import {get, Paths} from '../../../api';
-import './roleManagement.scss';
 import { deleteRole } from '../store/ActionCreator';
 import { DateTool } from '../../../util/util';
 import { Notification } from './../../../components/Notification';
 import PageTitle from '../../../components/page-title/PageTitle';
 
-const mapStateToProps = state => {
-    return {
-        // optionsList: state.getIn(['product','optionsList']).toJS(),
-    }
-}
 const mapDispatchToProps = dispatch => {
     return {
-        // getCatalogList: () => dispatch(getCatalogListAction()),
         deleteRole: (roleId) => dispatch(deleteRole(roleId))
     }
 }
-@connect(mapStateToProps, mapDispatchToProps)
-// class addProduct extends Component{
+@connect(null, mapDispatchToProps)
 export default class RoleManagementList extends Component {
     constructor(props){
         super(props);
@@ -73,7 +65,8 @@ export default class RoleManagementList extends Component {
             this.setState({
                 roleList:res.data.list,
                 pager:res.data.pager,
-                loading:false,
+            }).finally(()=>{
+                this.setState({loading:false})
             });
         });
     }
@@ -88,8 +81,7 @@ export default class RoleManagementList extends Component {
         this.props.deleteRole(roleId).then((res) => {
             if(res){
 				Notification({type:'success',description:'删除用户角色成功！'});
-                this.setState({loading: true});
-                this.getList({pageIndex,pageRows:10});
+                this.pagerIndex(pageIndex)
             }
         })
     }
@@ -122,7 +114,7 @@ export default class RoleManagementList extends Component {
                         </div>
                     </div>
                 </PageTitle>
-                <Card>
+                <div className="comm-shadowbox">
                     <Table 
                         rowKey='roleId'
                         columns={this.columns} 
@@ -136,7 +128,7 @@ export default class RoleManagementList extends Component {
                         }}
                         loading={loading}
                     />
-                </Card>
+                </div>
             </div>
         );
     }
