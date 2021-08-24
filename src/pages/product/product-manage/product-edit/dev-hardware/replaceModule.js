@@ -1,50 +1,65 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { Modal, Input, Table } from 'antd';
+import React, { useState, useEffect } from 'react'
+import { Modal, Input, Table } from 'antd'
+import { Paths, post } from '../../../../../api'
+
 import './replaceModule.scss'
 const { Search } = Input;
 
-export default function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, handleCancel, selectedId }) {
-  const [selectionType] = useState('radio');
+function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, handleCancel, schemeId, moduleId }) {
+  const [selectionType] = useState('radio')
   const columns = [
-    { title: '模组', dataIndex: 'name' },
-    { title: '芯片', dataIndex: 'id' },
-    { title: '尺寸', dataIndex: '' },
-    { title: '适用说明', dataIndex: '' },
-    { title: '调试价格', dataIndex: '' },
+    { title: '模组', dataIndex: 'moduleName' },
+    { title: '芯片', dataIndex: 'hetModuleTypeName' },
+    {
+      title: '尺寸', key: '',
+      render: (text, record, index) => (
+        <div>
+          <span>{record.sizeWidth}x{record.sizeHeight}x{record.sizeThickness}</span>
+        </div>
+      )
+    },
+    { title: '适用说明', dataIndex: 'applyScope' },
+    { title: '调试价格', dataIndex: 'price' },
     {
       title: '操作', dataIndex: '',
-      render: (text, record, index) => <a>详情</a>
+      render: (text, record, index) => <a>说明书</a>
     }
-  ];
+  ]
   const columns2 = [
     { title: '方案', dataIndex: 'name' },
     { title: '版本', dataIndex: 'id' },
     { title: '适用说明', dataIndex: '' }
   ]
-  const [dataSource, setdataSource] = useState([
-    {
-      name: 'a',
-      id: '1'
-    },
-    {
-      name: '22',
-      id: '2'
-    },
-    {
-      name: 'aaaa',
-      id: '3'
-    }
-  ]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([selectedId])
+  const [dataSource, setdataSource] = useState([])
+  const [selectedRowKeys, setSelectedRowKeys] = useState([moduleId])
+
+  // 搜索模组
   const onSearch = value => {
-    console.log(value)
+    if (value && !!value.trim()) {
+      getReplaceModuleList(value.trim())
+    } else {
+      getReplaceModuleList('')
+    }
   }
+
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setSelectedRowKeys(selectedRowKeys)
     }
-  };
-  useEffect(() => { })
+  }
+
+  // 获取模组列表
+  const getReplaceModuleList = (moduleName) => {
+    post(Paths.replaceModuleList, { schemeId, moduleName }, { loading: true })
+      .then(res => {
+        console.log(res)
+        setdataSource(res.data)
+      })
+  }
+
+  useEffect(() => {
+    getReplaceModuleList('')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Modal
@@ -55,10 +70,8 @@ export default function ReplaceModule({ title, desc = "", type, replaceModalVisi
       maskClosable={false}
       width={857}
       wrapClassName="replace-module-modal">
-      {
-        desc && <div className="replace-firmware-desc">{desc}</div>
-      }
-      
+      {desc && <div className="replace-firmware-desc">{desc}</div>}
+
       {/* 搜索 */}
       <Search
         className="search-input"
@@ -74,10 +87,12 @@ export default function ReplaceModule({ title, desc = "", type, replaceModalVisi
           selectedRowKeys,
           ...rowSelection,
         }}
-        rowKey="id"
+        rowKey="moduleId"
         columns={type === 'module' ? columns : columns2}
         dataSource={dataSource}
         pagination={false} />
     </Modal>
   )
 }
+
+export default ReplaceModule

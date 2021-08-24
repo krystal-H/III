@@ -1,16 +1,67 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, Input, Form, Row, Col, Select } from 'antd';
 import './modifyFirmware.scss'
+import { Paths, post } from '../../../../../api'
+import { Notification } from '../../../../../components/Notification'
+
 const { Option } = Select;
 
-export default function ModifyFirmwareModal({ modifyFirmwareVisible,handleCancelFirmware }) {
+export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCancelFirmware, firmwareId, productId }) {
   const [form] = Form.useForm()
+
+  const [firmwareData, setFirmwareData] = useState({})
+  const [selectVal, setSelectVal] = useState('')
+
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-  };
+    // console.log('接受的数据：', values)
+    const keyArr = Object.keys(values)
+    const valArr = Object.values(values)
+    const firmwareConfigReqList = keyArr.map((item, index) => ({
+      funcModule: item.split('#')[0],
+      identifier: item.split('#')[1],
+      value: valArr[index]
+    }))
+    const params = { productId, id: firmwareId, firmwareConfigReqList }
+    console.log('提交的数据', params)
+    post(Paths.saveFirmwareSetting, { ...params })
+      .then(res => {
+        Notification({ description: '操作成功！', type: 'success' })
+        handleCancelFirmware()
+      })
+  }
+
   const onOk = () => {
     form.submit()
   }
+
+  // 获取信息
+  const modifyFirmware = () => {
+    post(Paths.modifyFirmware, { id: firmwareId })
+      .then(res => {
+        res.data.firmwareModuleList.forEach(ele => {
+          ele.firmwareFuncList.forEach(item => {
+            // 输入框
+            item.dataType.type === 'int' && 
+            form.setFieldsValue({
+              [`${item.funcName}#${item.identifier}`]: item.dataType.specs.defaultValue
+            })
+            // 下拉框
+            if (item.dataType.type === 'enum') {
+              form.setFieldsValue({
+                [`${item.funcName}#${item.identifier}`]: item.dataType.specs.defaultValue[0].k
+              })
+              setSelectVal(item.dataType.specs.defaultValue[0].k)
+            }
+          })
+        })
+        setFirmwareData(res.data)
+      })
+  }
+
+  useEffect(() => {
+    modifyFirmware()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <Modal
       title="修改固件"
@@ -22,97 +73,64 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible,handleCancel
       width={857}
       okText="重新生成固件"
       wrapClassName="replace-module-modal"
-      >
+    >
       <div className="modify-firmware-modal">
         <div className="modify-firmware-modal-left">
           <Form
             form={form}
             onFinish={onFinish}
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 15 }}
             name="modify-firmware-form"
-            initialValues={{ portNum1: 'Option1-1', portNum2: 'Option2-2', "Option1-1": "Option1-1", "Option2-2": "Option2-2" }}>
-            <div className="modify-firmware-title">配网相关</div>
-            <Form.Item
-              label="通断电复位次数"
-              name="username"
-              style={{width: 410}}
-              rules={[{ required: true, message: 'Please input your username!' }]}>
-              <Input />
-            </Form.Item>
-
-            <div className="modify-firmware-title">IO引脚配置</div>
-            <Form.Item
-              label="白光输出引脚-C/Bright"
-              name="username"
-              rules={[{ required: true, message: 'Please input your username!' }]}>
-              <Input.Group compact>
-                <Form.Item
-                  name="portNum1"
-                  noStyle
-                  rules={[{ required: true, message: 'Province is required' }]}>
-                  <Select  style={{width: 190}}>
-                    <Option value="Option1-1">Option1-1</Option>
-                    <Option value="Option1-2">Option1-2</Option>
-                  </Select>
-                </Form.Item>
-                &nbsp;&nbsp;
-                <Form.Item
-                  name="portNum2"
-                  noStyle
-                  rules={[{ required: true, message: 'Province is required' }]}>
-                  <Select  style={{width: 190}}>
-                    <Option value="Option2-1">Option2-1</Option>
-                    <Option value="Option2-2">Option2-2</Option>
-                  </Select>
-                </Form.Item>
-              </Input.Group>
-            </Form.Item>
-
-            <Form.Item
-              label="暖光输出引脚 - W/CCT"
-              name="username"
-              rules={[{ required: true, message: 'Please input your username!' }]}>
-              <Input.Group compact>
-                <Form.Item
-                  name="Option1-1"
-                  noStyle
-                  rules={[{ required: true, message: 'Province is required' }]}>
-                  <Select style={{width: 190}}>
-                    <Option value="Option1-1">Option1-1</Option>
-                    <Option value="Option1-2">Option1-2</Option>
-                  </Select>
-                </Form.Item>
-                &nbsp;&nbsp;
-                <Form.Item
-                  name="Option2-2"
-                  noStyle
-                  rules={[{ required: true, message: 'Province is required' }]}>
-                  <Select style={{width: 190}}>
-                    <Option value="Option2-1">Option2-1</Option>
-                    <Option value="Option2-2">Option2-2</Option>
-                  </Select>
-                </Form.Item>
-              </Input.Group>
-            </Form.Item>
-
-            <div className="modify-firmware-title">产品功能相关</div>
-            <Form.Item
-              label="白光亮度最大值"
-              name="username"
-              style={{width: 410}}
-              rules={[{ required: true, message: 'Please input your username!' }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="白光亮度最小值"
-              name="username"
-              style={{width: 410}}
-              rules={[{ required: true, message: 'Please input your username!' }]}>
-              <Input />
-            </Form.Item>
+            initialValues={{}}>
+            {
+              firmwareData.firmwareModuleList &&
+              firmwareData.firmwareModuleList.map(item => (
+                <React.Fragment key={item.funcModule}>
+                  <div className="modify-firmware-title">{item.funcModule}</div>
+                  {
+                    item.firmwareFuncList && item.firmwareFuncList.map(item2 => (
+                      <React.Fragment key={item2.identifier}>
+                        {
+                          item2.dataType.type === 'int' &&
+                          <Form.Item
+                            label={item2.funcName}
+                            name={`${item2.funcName}#${item2.identifier}`}
+                            key={item2.identifier}
+                            rules={[{ required: true, message: `请输入${item2.funcName}` }]}>
+                            <Input />
+                          </Form.Item>
+                        }
+                        {
+                          item2.dataType.type === 'enum' &&
+                          <div className="parent-item">
+                            <Form.Item
+                              label={item2.funcName}
+                              name={`${item2.funcName}#${item2.identifier}`}
+                              key={item2.identifier}
+                              wrapperCol={{ span: 10 }}
+                              rules={[{ required: true, message: `选择${item2.funcName}` }]}>
+                              <Select onChange={(val) => setSelectVal(val)} allowClear>
+                                {
+                                  item2.dataType.specs.def && item2.dataType.specs.def.map(optionItem => (
+                                    <Option key={optionItem.k} value={optionItem.k}>{optionItem.v}</Option>
+                                  ))
+                                }
+                              </Select>
+                            </Form.Item>
+                            <Input className="son-item" value={selectVal} disabled style={{ width: 100 }} />
+                          </div>
+                        }
+                      </React.Fragment>
+                    ))
+                  }
+                </React.Fragment>
+              ))
+            }
           </Form>
         </div>
         <div className="modify-firmware-modal-right">
-          <img />
+          <img src={firmwareData.pinDiagram} alt="" />
         </div>
       </div>
     </Modal>
