@@ -9,7 +9,6 @@
  */
 
 export const getRowSpanCount = (datasource, key, index, value, firstKey) => {
-    console.log('触发了',datasource, key, index, value, firstKey)
   if (!Array.isArray(datasource)) return 1;
   let datas = datasource.map((_) => _[firstKey]); //第一字段数组集合
   let arrKey = datasource.map((_) => _[key]); //需要排序字段的数组集合

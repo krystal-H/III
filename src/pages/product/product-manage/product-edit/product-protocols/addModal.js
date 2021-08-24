@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select } from 'antd';
 import { post, Paths, get } from '../../../../../api';
 import './addModal.scss';
+import TableShow from './tableSelect'
 const filterFn = (data) => {
   let result = null
   let type = data.dataTypeEN
@@ -36,9 +37,13 @@ function delaData(data) {
       newData.push({ ...newItem, ...item2 })
     })
   })
+  newData.forEach((item, index) => {
+    item.key = index
+  })
   return newData
 }
 const columns = [
+  { title: '功能类型', dataIndex: 'funcType6', type: 'checkbox', },
   { title: '功能类型', dataIndex: 'funcType' },
   { title: '功能点名称', dataIndex: 'funcName' },
   { title: '标识符', dataIndex: 'funcIdentifier' },
@@ -48,7 +53,7 @@ const columns = [
     title: '数据传输类型', dataIndex: 'dataTransferType',
   },
   { title: '数据类型', dataIndex: 'dataTypCN' },
-  { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn( record)}</span> }
+  { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record)}</span> }
 ];
 export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
 
@@ -70,15 +75,30 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
   const [otherData, setOtherData] = useState([])
 
   const getOneList = () => {
-    post(Paths.PhysicalModelList, { deviceTypeId: 2 }).then((res) => {
+    let params = {
+      deviceTypeId: 2,
+      eq: true,
+    }
+    post(Paths.PhysicalModelList, params).then((res) => {
       setTableData(delaData(res.data))
+    });
+  }
+  const getTwoList = () => {
+    let params = {
+      deviceTypeId: 2,
+      eq: false,
+    }
+    post(Paths.PhysicalModelList, params).then((res) => {
+      setOtherData(delaData(res.data))
     });
   }
 
   useEffect(() => {
     getOneList()
+    getTwoList()
   }, [])
   const onSearch = (value) => {
+    console.log(value)
   }
 
   return (
@@ -90,39 +110,21 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
             <div className='add-protocols-count'>
               {`已选择${selectedRowKeys.length}项`}
             </div>
-            <Table
-              rowSelection={{
-                type: 'checkbox',
-                ...rowSelection,
-              }}
-              columns={columns}
-              dataSource={tableData}
-              rowKey='funcIdentifier'
-              scroll={{ y: 300 }}
-            />
+            <TableShow dataSource={tableData} />
           </TabPane>
           <TabPane tab="其他品类" key="2">
             <div className='other-product-top'>
               <Search placeholder="搜索功能点名称" allowClear onSearch={onSearch} style={{ width: 465 }} />
               <Select
                 labelInValue
-                style={{ width: 122 }}
+                style={{ width: 142 }}
               >
                 <Option value="jack">Jack (100)</Option>
                 <Option value="lucy">Lucy (101)</Option>
-              </Select>,
+              </Select>
             </div>
             <div>
-              <Table
-                rowSelection={{
-                  type: 'checkbox',
-                  ...rowSelection,
-                }}
-                scroll={{ y: 240 }}
-                columns={columns}
-                dataSource={otherData}
-                pagination={false}
-              />
+              <TableShow dataSource={otherData} />
             </div>
           </TabPane>
         </Tabs>
