@@ -360,6 +360,8 @@ let Paths = {
     getWarningInfo: '/device/warning/info/get',
     dealWithWarning: '/device/warning/info/update',
     reflushWarningDeviceIds: '/warning/info/flush',
+    getDeviceListByProId: '/remoteConfig/deviceInfo/getList',
+    
 
     
 
@@ -536,6 +538,8 @@ let Paths = {
 
     //公共接口
     getProductType:'/productManage/getSelectList',//产品下拉列表
+    
+
     // 产品发布后-设备注册
     proReledRegist:'/deviceRegister/deviceList',//设备注册列表
     proReledCount:'/deviceRegister/statistics',//设备注册统计

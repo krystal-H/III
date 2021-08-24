@@ -1,68 +1,51 @@
-import React, { Component } from 'react';
-import { Form ,Input} from 'antd';
-import TextAreaCounter from '../../../../../components/textAreaCounter/TextAreaCounter';
+import React, {  memo, forwardRef,useEffect } from 'react';
+import { Input,Form} from 'antd';
+import DoubleBtns from '../../../../../components/double-btns/DoubleBtns';
+const { TextArea } = Input;
+const { Item } = Form;
+const formlayout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 12 },
+};
 
-class BaseInfo extends Component {
-
-    componentDidMount() {
-        this.props.onRef(this);
-        let { baseFormData, form } = this.props;
-        if(baseFormData.name){
-            let { setFieldsValue } = form;
-            setFieldsValue({...baseFormData}); 
-        } 
-
-    }
-    componentWillReceiveProps(newprops){
-        let {baseFormData} = newprops;
-        if(!this.props.baseFormData.name && !!baseFormData.name){
-            console.log(11111,baseFormData);
-            this.props.form.setFieldsValue({...baseFormData});
-
+function baseForm({
+    setStepCur,
+    formdata
+},_ref){
+    const [form] = Form.useForm();
+    useEffect( () => {
+        // console.log("---form1--",formdata)
+        if(formdata.name){
+            form.setFieldsValue({...formdata})
+        }else{
+            form.resetFields()
         }
+    },[formdata])
 
+    const onFinish=(values)=>{
+        // console.log("---finish1---",form.getFieldsValue())
+        setStepCur(1)
     }
 
-    handleSubmit = e => {
-        const { validateFieldsAndScroll } = this.props.form;
-        const { saveBaseInfo} = this.props;
-        validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                let baseFormData = {...values};
-                saveBaseInfo({baseFormData,current:1});
-            }
-        });
-    };
+    
 
-    render() {
-        let formlayout = {
-            labelCol: { span: 4 },
-            wrapperCol: { span: 15 },
-        };
-        let { getFieldDecorator,getFieldValue } = this.props.form;
-        return ( 
-            <Form  {...formlayout} >
-                <Form.Item label="告警规则名称">
-                    {getFieldDecorator('name', {
-                        rules: [{ required: true, message: '请输入告警规则名称'},
-                                { max: 50, message: '最大输入长度为50' }],
-                    })(<Input placeholder="请输入告警规则名称" />)
-                    }
-                </Form.Item>
-                <TextAreaCounter
-                    label="描述"
-                    formId='remark'
-                    astrictNub='100'
-                    rows='3'
-                    placeholder='告警规则描述' 
-                    getFieldDecorator={getFieldDecorator}
-                    getFieldValue={getFieldValue}
-                />
+    return <div>
+            <Form ref={_ref} form={form} {...formlayout} onFinish={onFinish}>
+                <Item label="告警规则名称" name='name' rules={[
+                    { required: true, message: '请输入告警规则名称' },{ max: 30, message: '最大输入长度为30字符' },
+                ]}>
+                    <Input placeholder="告警规则名称" />
+                </Item>
+
+                <Item label="描述" name='remark' rules={[
+                    { max: 100, message: '最大输入长度为100字符' },
+                ]}>
+                    <TextArea placeholder="告警规则描述" showCount maxLength={100} rows={4} />
+                </Item>
             </Form>
-        )
-    }
+            <DoubleBtns preBtn={false} nextHandle={form.submit} />
+        </div>
+
 }
 
-export const BaseInfoForm = Form.create({
-    name: 'baseInfoForm',
-})(BaseInfo);
+export default memo(forwardRef(baseForm));

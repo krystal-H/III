@@ -1,27 +1,54 @@
-import React, { useState  } from 'react';
-import { Modal } from "antd";
-// import { BaseInfoForm } from './configform/baseinfo';
-// import { RuleForm } from './configform/rule';
-// import { PublictypeForm } from './configform/publictype';
+import React, { useState,useEffect,useRef  } from 'react';
+import { Modal, Steps,Tabs  } from "antd";
+import BaseInfoForm from './configform/baseinfo';
+import RuleForm from './configform/rule';
+import PublictypeForm from './configform/publictype';
 import {Paths, post } from '../../../../api';
 import DoubleBtns from '../../../../components/double-btns/DoubleBtns';
-
-const initialData = {
-    id: undefined,
-    status:undefined,
-    name:"",
-    remark:"",
-    content:"",
-}
-
+const {Step} = Steps;
+const {TabPane} = Tabs;
 export default ({
     visible,
     closeEditMod,
     editData
 })=>{
-    const [dataobj, setDataobj] = useState(editData&&{...editData}||{...initialData});
+    const { id,name,status } = editData;
 
-    const { id,name,remark,status,content } = dataobj
+    const [baseFormData, setBaseFormData] = useState({});
+    const [ruleFormData, setRuleFormData] = useState({});
+    const [pubFormData, setPubFormData] = useState({});
+
+    const [stepcurrent, setStepcurrent] = useState(2);
+
+    useEffect( () => {
+        console.log(777,editData)
+        const { remark,content } = editData;
+        if(id!==undefined){
+            const contobj = JSON.parse(content);
+            const {warningWay,warningTitle,warningDetails,waringFreq,emailAddress,...others} = contobj;
+            setBaseFormData({name,remark});
+            setRuleFormData(others);
+            setPubFormData({warningWay,warningTitle,warningDetails,waringFreq,emailAddress});
+        }
+    },[editData])
+
+    const setStepCur = (num=0)=>{
+        setStepcurrent(num)
+    }
+    const ref0 = useRef();
+    const ref1 = useRef();
+    const ref2= useRef();
+    const afterCloseHandle = ()=>{
+        setStepcurrent(0);
+        setBaseFormData({});
+        setRuleFormData({});
+        setPubFormData({});
+        
+        console.log("---ref---",ref0.current.getFieldsValue())
+
+
+    }
+    
 
     return <Modal
                 title={id!==undefined?"编辑规则":"新增规则"}
@@ -30,9 +57,30 @@ export default ({
                 footer={null}
                 maskClosable={false}
                 onCancel={closeEditMod}
-                wrapClassName="page-devwarn-config-modal"
+                className="page-devwarn-config-modal"
+                afterClose={afterCloseHandle}
             >
-                123
+                <Steps current={stepcurrent} >
+                    <Step title='告警信息' /><Step title='规则配置' /><Step title='通知方式' />
+                </Steps>
+
+                <div className='formbox'>
+                    <Tabs activeKey={stepcurrent+""}>
+                        <TabPane tab="告警信息" key={'0'}>
+                            <BaseInfoForm ref={ref0} setStepCur={setStepCur} formdata={baseFormData}/>
+                        </TabPane>
+                        <TabPane tab="规则配置"  key={'1'}>
+                            <RuleForm ref={ref1} setStepCur={setStepCur} formdata={ruleFormData}/>
+                        </TabPane>
+                        <TabPane tab="通知方式"  key={'2'}>
+                            <PublictypeForm ref={ref2} setStepCur={setStepCur} formdata={pubFormData}/>
+                        </TabPane>
+                    </Tabs> 
+
+
+                </div>
+
+
             </Modal>
 }
 

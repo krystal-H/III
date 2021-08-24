@@ -3,7 +3,7 @@ import { Table, Input, InputNumber, Popconfirm, Form, Typography, Button, Space 
 import { post, Paths, get } from '../../../../api';
 import DelModal from './actionOp'
 import './index.scss'
-
+import { Notification } from '../../../../components/Notification'
 const EditableCell = ({
     editing,
     dataIndex,
@@ -62,6 +62,10 @@ export default function EditableTable({ devceId }) {
     const updateOkHandle = () => {
         post(Paths.deleteDeviceLabel, { labelId: delLabelId }).then((res) => {
             setCloudUpdateVisible(false)
+            Notification({
+                type: 'success',
+                description: '删除成功！'
+            })
             getDetail()
         });
 
@@ -84,6 +88,10 @@ export default function EditableTable({ devceId }) {
         row.deviceId = devceId
         post(Paths.addDeviceLabel, row, { loading }).then((res) => {
             setEditingKey('');
+            Notification({
+                type: 'success',
+                description: '新增成功！'
+            })
             getDetail()
         }).catch(err => {
             setEditingKey('');
@@ -95,6 +103,10 @@ export default function EditableTable({ devceId }) {
         row.deviceId = devceId
         post(Paths.updateDeviceLabel, row, { loading }).then((res) => {
             setEditingKey('');
+            Notification({
+                type: 'success',
+                description: '编辑成功！'
+            })
             getDetail()
         }).catch(err => {
             setEditingKey('');

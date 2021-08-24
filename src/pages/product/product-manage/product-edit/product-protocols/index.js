@@ -9,6 +9,7 @@ import NewCusmFn from './addcusFn'
 // import TitleEdit from './titleEdit'
 import downpng from './../../../../../assets/images/product/download.png';
 import { post, Paths, get } from '../../../../../api';
+import { Notification } from '../../../../../components/Notification';
 import { MyContext } from '../context'
 //处理数据
 function delaData(data) {
@@ -40,25 +41,29 @@ function ProtocolFn({ nextStep, productId }, ref) {
         setDelData(data)
         setIsDelVisible(true)
     }
-    const filterFn = (type, data) => {
+    //展示
+    const filterFn = (data) => {
         let result = null
+        let type = data.dataTypeEN
         switch (type) {
             case 'double':
-                result = `数值范围：${data.min}-${data.max},间距：${data.type},倍数：${data.type},单位：${data.type}`
+                result = `数值范围：${data.propertyMap.min}-${data.propertyMap.max},间距：${data.propertyMap.interval},倍数：${data.propertyMap.multiple},单位：${data.propertyMap.unit}`
                 break;
-            case '布尔':
-                result = `0：${data.type},1：${data.type}`
+            case 'bool':
+
+                result = `0：${data.propertyMap[0]},1：${data.propertyMap[1]}`
                 break;
-            case '枚举':
+            case 'enum':
                 let value = ''
                 for (let key in data.propertyMap) {
-                    value += data.propertyMap[key] + ','
+                    value += data.propertyMap[key] + '，'
                 }
                 result = `枚举值：${value}`
                 break;
             default:
                 return ''
         }
+
         return result
     }
     const columns = [
@@ -69,11 +74,14 @@ function ProtocolFn({ nextStep, productId }, ref) {
         { title: '参数名称', dataIndex: 'name' },
         { title: '参数标识', dataIndex: 'identifier' },
         {
-            title: '数据传输类型', dataIndex: 'createTime',
-            render: text => <span>1</span>
+            title: '数据传输类型', dataIndex: 'dataTransferType',
         },
-        { title: '数据类型', dataIndex: 'dataType' },
-        { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record.dataTypeEN, record)}</span> },
+        {
+            title: '数据类型', dataIndex: 'dataType', render: (text, record) => (
+                <span>{record.dataTypCN}</span>
+            )
+        },
+        { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record)}</span> },
         {
             title: '操作', render: (text, record) => (
                 <Space size="middle"><Button type="link" onClick={() => { openEditCus(record) }}>编辑</Button>
@@ -96,7 +104,7 @@ function ProtocolFn({ nextStep, productId }, ref) {
     }, [])
     //编辑标准功能/新增自定义功能=======
     // const [isStarDia, setIsStarDia] = useState(true); //
-    const [rightVisible, setRightVisible] = useState(true); //新增自定义功能
+    const [rightVisible, setRightVisible] = useState(false); //新增自定义功能
     const [rightEditVisible, setRightEditVisible] = useState(false);
     const [destoryDom, setDestoryDom] = useState(true);
 
@@ -113,14 +121,19 @@ function ProtocolFn({ nextStep, productId }, ref) {
         setRightVisible(true);
     };
     //关闭抽屉
-    const onCloseRight = (isRefresh) => {
-        // alert(isRefresh)
-        console.log(isRefresh,999)
-        if (isRefresh) {
-            getList()
-        }
+    const onCloseRight = () => {
         setRightVisible(false);
     };
+    //关闭自定义且更新
+    const onRefreshList = () => {
+        setRightVisible(false);
+        Notification({
+            type: 'success',
+            description: '新增成功！',
+        });
+
+        getList()
+    }
     //新增标准功能====
     const [isModalVisible, setIsModalVisible] = useState(false);
     const closeAdd = () => {
@@ -148,6 +161,7 @@ function ProtocolFn({ nextStep, productId }, ref) {
 
     //确定删除数据
     const updateOkHandle = () => {
+
         setIsDelVisible(false)
     }
     //取消删除数据
@@ -179,7 +193,7 @@ function ProtocolFn({ nextStep, productId }, ref) {
             <div>自定义功能</div>
             <div>
                 <a >导出协议</a>
-                <img src={downpng} style={{ marginRight: '15px' }} />
+                <img src={downpng} style={{ marginRight: '15px' }} alt='' />
                 <Button type="primary" onClick={openCusmon}>新建自定义功能</Button >
             </div>
 
@@ -192,7 +206,7 @@ function ProtocolFn({ nextStep, productId }, ref) {
             />
         </div>
         {/* 新增自定义 */}
-        <NewCusmFn rightVisible={rightVisible} onCloseRight={ onCloseRight}></NewCusmFn>
+        {1 && <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
         {/* 编辑操作 */}
         {destoryDom && <EditcusFn rightVisible={rightEditVisible} onCloseRight={onCloseEditRight} destData={onDestData}></EditcusFn>}
         {/* 新增标准 */}

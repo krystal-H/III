@@ -4,6 +4,7 @@ import PageTitle from '../../../components/page-title/PageTitle';
 import stepImg from '../../../assets/images/product-regist.png';
 import AddSubScribe from './addModal'
 import { post, Paths, get } from '../../../api';
+import { Notification } from '../../../components/Notification'
 import ActionModal from './actionOp'
 import SubInfo from './detail'
 import './index.scss'
@@ -36,12 +37,20 @@ export default function DeviceRegist() {
             let url = Paths.subscribeStart + '?urlConfId=' + selectRow.urlConfId
             post(url, {}, { loading }).then((res) => {
                 setTableAcVisible(false)
+                Notification({
+                    type:'success',
+                    description:'操作成功！'
+                })
                 getList()
             });
         } else {
             let url = Paths.subscribeClose + '?urlConfId=' + selectRow.urlConfId
             post(url, {}, { loading }).then((res) => {
                 setTableAcVisible(false)
+                Notification({
+                    type:'success',
+                    description:'操作成功！'
+                })
                 getList()
             });
         }
