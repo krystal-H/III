@@ -20,7 +20,7 @@ function baseForm({
         }else{
             form.resetFields()
         }
-    },[formdata])
+    },[formdata.name])
 
     const onFinish=(values)=>{
         // console.log("---finish1---",form.getFieldsValue())

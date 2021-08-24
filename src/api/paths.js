@@ -346,7 +346,7 @@ let Paths = {
     //设备告警
     getDeviceWarningTotal: '/device/warning/info/summary',
     getWarningList: '/device/warning/info/list',
-    saveWarningConfig: '/warning/rule/add',
+    saveWarningConfig: '/device/warning/rule/save',
     getWarningConfigLi: '/device/warning/rule/list',
     delWarningConfig: '/device/warning/rule/delete',
     startWarningConfigLi: '/device/warning/rule/start',
@@ -354,8 +354,13 @@ let Paths = {
     getWarningConfigDetail: '/device/warning/rule/get',
     getWarningInfo: '/device/warning/info/get',
     dealWithWarning: '/device/warning/info/update',
-    reflushWarningDeviceIds: '/warning/info/flush',
+    
     getDeviceListByProId: '/remoteConfig/deviceInfo/getList',
+    getWarnProperty:'/device/warning/property/get',
+    getWarnEventProperty:'/device/warning/event/get',
+    getWarnEventLi:'/device/warning/event/list',
+
+    
     
 
     
