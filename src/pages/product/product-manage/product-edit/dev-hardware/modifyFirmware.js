@@ -38,6 +38,7 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
   const modifyFirmware = () => {
     post(Paths.modifyFirmware, { id: firmwareId })
       .then(res => {
+        // 动态设置默认值
         res.data.firmwareModuleList.forEach(ele => {
           ele.firmwareFuncList.forEach(item => {
             // 输入框

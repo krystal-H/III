@@ -54,6 +54,7 @@ const optionalList = [
     url: require('../../../../../assets/images/commonDefault/service-device.png')
   }
 ]
+const productItemData = JSON.parse(sessionStorage.getItem('productItem'))
 
 function ServiceSelect({ productId, nextStep }, ref) {
   const [requiredList, setRequiredList] = useState([
@@ -93,7 +94,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
   // 是否配置过  配网信息、通信安全机制
   const isConfigedFunc = () => {
     setSecurityVisible(false)
-    post(Paths.getSecurityConfigStatus, { productId }, {loading: true}).then(res => {
+    post(Paths.getSecurityConfigStatus, { productId }, { loading: true }).then(res => {
       const list = cloneDeep(requiredList)
       if (res.data.gatewayConfigflag) { // 配网信息配置过
         list[0].isConfiged = true
@@ -110,7 +111,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
 
   // 判断是否为网关设备
   const judgeIsGateWay = () => {
-    post(Paths.getProductExtendInfo, { productId }, {loading: true})
+    post(Paths.getProductExtendInfo, { productId }, { loading: true })
       .then(res => {
         setIsGateWayDevice(res.data.productClassId)
       })
@@ -144,15 +145,33 @@ function ServiceSelect({ productId, nextStep }, ref) {
         break;
     }
   }
-  
+
   // 固件模块详情列表
   const showFirmwareDetail = () => {
     setFirmwareDetailVisible(true)
   }
 
+  // 获取方案类型展示
+  const getSchemeType = () => {
+    if (productItemData && productItemData.schemeType) {
+      switch (productItemData.schemeType) {
+        case 1:
+          return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。'
+        case 2:
+          return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。'
+        case 3:
+          return 'SoC方案，不提供通用固件程序，需自行开发模组固件。'
+        default:
+          break;
+      }
+    } else {
+      return ''
+    }
+  }
+
   return (
     <div className="service-config-page">
-      <div className="desc">免开发方案，只需选择推荐模组、以及配置固件信息，快速实现硬件智能化。</div>
+      <div className="desc">{getSchemeType()}</div>
       {/* 必选配置 */}
       <div className="service-config-title">必选配置</div>
       <div className="service-config-cont">
@@ -198,7 +217,11 @@ function ServiceSelect({ productId, nextStep }, ref) {
                           <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
                             <Link to="/open/product/cloudTimer" target="_blank">配置</Link>
                           </div> :
-                          <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
+                          item.type === 'deviceWarning' ?
+                            <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
+                              <Link to="/open/device/devMsg" target="_blank">配置</Link>
+                            </div> :
+                            <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
                       : ''
                   }
                   {/* 配置的判断 */}
@@ -276,7 +299,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
           gatewayVisible={gatewayVisible}
           cancelHandle={() => { setGatewayVisible(false) }} />
       } */}
-    </div>
+    </div >
   )
 }
 
