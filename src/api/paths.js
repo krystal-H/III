@@ -43,7 +43,7 @@ let Paths = {
     deleteProductNew: '/product/delete', // 删除产品
     copyProductNew: '/product/copy', // 复制产品
 
-    // 新建产品品类信息
+    // 5.x新建产品品类信息
     getThirdCategory: '/deviceCategory/deviceType/all', // 获取所有的三级品类
     getSecondCategory: '/deviceCategory/subCategory/all', // 二级品类
     getSecondById: '/deviceCategory/subCategory/deviceTypeId', // 根据三级品类id查二级
@@ -52,28 +52,35 @@ let Paths = {
     getCommunicationProtocol: '/module/type/all', // 通信协议
     createProduct: '/product/create', // 创建产品
 
-    // 确定方案
+    // 5.x确定方案
     getScheme: '/scheme/list/deviceType', // 获取方案数据
     getPhysicalModelId: '/physicalModel/func', // 获取功能点
     confirmScheme: 'product/create/confirm/scheme', // 创建方案下一步
 
-    // 继续开发-发布产品
+    // 5.x继续开发-发布产品
     publishProduct: '/product/publish', // 继续开发-发布产品
 
-    // 继续开发-服务配置
+    // 5.x继续开发-服务配置
     getSecurityConfigStatus: '/productManage/getConfigBaseInfoByProductId', // 服务配置-获取标志
     saveProductSecurityConfig: '/productManage/saveProductSecurityConfig', // 服务配置-通信安全机制
     getProductExtendInfo: '/productManage/getProductExtendInfo', // 服务配置-配网信息  是否为网关设备
     saveNetworkConfig: '/productManage/saveProductConfig', // 服务配置-保存配网信息
     getNetDataByProductId: '/productManage/getNetDataByProductId', // 服务配置-获取配网方式
 
-    // 继续开发-开发硬件
+    // 5.x继续开发-开发硬件
     getMoudleInfo: '/product/dev/show/module',
     replaceModuleList: '/module/list/scheme', // 更换模组列表
     modifyFirmware: '/firmware/show/config', // 修改固件配置项
     saveFirmwareSetting: '/firmware/config/setting', // 保存固件信息
     freeApplyModule: '/module/apply/create', // 免费申请模组
     showFirmware: '/product/dev/show/firmware/config', // 免费申请固件信息
+
+    // 5.xAPP-应用管理
+    getAppInfoList: '/appInfoManage/getAppInfoList', // app应用列表
+    deleteApp: '', // app应用删除
+    // 获取app应用详情
+
+
     
 
     /* 协议 */
