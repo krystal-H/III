@@ -73,6 +73,7 @@ let Paths = {
     modifyFirmware: '/firmware/show/config', // 修改固件配置项
     saveFirmwareSetting: '/firmware/config/setting', // 保存固件信息
     freeApplyModule: '/module/apply/create', // 免费申请模组
+    showFirmware: '/product/dev/show/firmware/config', // 免费申请固件信息
     
 
     /* 协议 */

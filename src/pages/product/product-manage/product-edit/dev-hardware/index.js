@@ -1,17 +1,17 @@
 import React, { Component } from 'react'
-import { Button, Tabs, Table, Tooltip } from 'antd'
+import { Table, Tooltip } from 'antd'
 import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons'
-import ReplaceModule from './replaceModule'
-import ModuleDetail from './moduleDetail'
-import FreeApplyModal from './freeApply'
-import ModifyFirmwareModal from './modifyFirmware'
 import { Paths, post, get } from '../../../../../api'
 import { cloneDeep } from 'lodash'
-import "./index.scss"
 import { connect } from 'react-redux'
+import ReplaceModule from './replaceModule'
+// import ModuleDetail from './moduleDetail'
+import FreeApplyModal from './freeApply'
+import ModifyFirmwareModal from './modifyFirmware'
+
+import "./index.scss"
 
 const productItemData = JSON.parse(sessionStorage.getItem('productItem'))
-console.log(productItemData, 'productItemDataproductItemData')
 class Hardware extends Component {
     constructor(props) {
         super(props)
@@ -49,7 +49,7 @@ class Hardware extends Component {
             }
         ]
         this.state = {
-            replaceModalVisible: false,
+            replaceModalVisible: false,  // 更换模组
             freeApplyVisible: false, // 免费申请
             modifyFirmwareVisible: false, // 修改固件
             // replaceFirmwareVisible: false, // 更换固件
@@ -90,15 +90,11 @@ class Hardware extends Component {
     // 修改固件
     modifyFirmware = (id, e) => {
         console.log(id, '-----')
-        this.setState({
-            firmwareId: id
-        }, () => {
+        this.setState({ firmwareId: id }, () => {
             this.setState({ modifyFirmwareVisible: true })
         })
     }
-    // handleCancelFirmware = () => {
-    //     this.setState({ modifyFirmwareVisible: false })
-    // }
+
     // 更换固件
     // goReplaceFirmware = () => {
     //     this.setState({ replaceFirmwareVisible: true })
@@ -123,10 +119,6 @@ class Hardware extends Component {
         }
     }
 
-    // 更换模组
-    replaceModule = () => {
-        this.setState({ replaceModalVisible: true })
-    }
     // 下载说明书
     downInstructions = () => {
         alert('暂无！')
@@ -146,14 +138,6 @@ class Hardware extends Component {
         }
     }
 
-    // 免费申请
-    // onFreeApply = () => {
-    //     this.setState({ freeApplyVisible: true })
-    // }
-    // 关闭免费申请
-    // handleFreeApply = () => {
-    //     this.setState({ freeApplyVisible: false })
-    // }
     render() {
         const { replaceModalVisible, freeApplyVisible, modifyFirmwareVisible, replaceFirmwareVisible, dataSource, allInfo, currentModuleId, firmwareId } = this.state
         return (
@@ -202,15 +186,18 @@ class Hardware extends Component {
                         <div className="module-tip mar-t-b">已生成固件</div>
                         {
                             allInfo.firmwareDefList &&
-                            <Table rowKey="burnFileVersion" columns={this.columns} dataSource={dataSource} pagination={false} size="small" />
+                            <Table rowKey="burnFileVersion"
+                                columns={this.columns}
+                                dataSource={dataSource}
+                                pagination={false}
+                                size="small" />
                         }
-
                         {/* 无固件信息 */}
                         {
                             !allInfo.firmwareDefList === 0 &&
                             <div className="no-match-firmware">
                                 <div className="no-match-firmware-img">
-                                    <img src={require('../../../../../assets/images/product/firmware-icon.png')} alt="" />
+                                    <img src={require('../../../../../assets/images/no-source-tip.png')} alt="" />
                                 </div>
                                 <div className="no-match-firmware-tip">您选择的模组暂无通用固件程序，请自行开发模组固件。</div>
                             </div>
