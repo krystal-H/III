@@ -58,7 +58,7 @@
                             }
                             &-title:hover {
                                 cursor: pointer;
-                                color: #2F78FF;
+                                color: #2f78ff;
                             }
                             &-bar {
                                 margin-bottom: 10px;
@@ -72,14 +72,15 @@
                             }
                         }
                         .del-app {
-                            @include text(14px, #F42C2C);
+                            @include flex(center);
+                            @include text(14px, #f42c2c);
                             display: none;
                             position: absolute;
                             bottom: 0;
                             left: 0;
                             width: 100%;
-                            height: 25px;
-                            line-height: 23px;
+                            height: 30px;
+                            line-height: 30px;
                             text-align: center;
                             cursor: pointer;
                             background-color: $sectionBgColor;
@@ -110,7 +111,9 @@
             .application-content {
                 .lists-wrapper {
                     .list-item {
-                        &:nth-last-child(1),  &:nth-last-child(2), &:nth-last-child(3){
+                        &:nth-last-child(1),
+                        &:nth-last-child(2),
+                        &:nth-last-child(3) {
                             margin-bottom: 0;
                         }
                     }

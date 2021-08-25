@@ -9,24 +9,6 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
 
   //提交数据
   const subData = () => {
-    const fileList = $el.current.getFileListUrl()
-    if (fileList.length) {
-      form.validateFields(['upload']).then(value => {
-        // 验证通过后进入
-        console.log(value, '==========aaaaaaaaa1');
-      }).catch(err => {
-        // 验证不通过时进入
-      });
-    } else {
-      form.validateFields().then(value => {
-        // 验证通过后进入
-        console.log(value, '==========aaaaaaaaa1');
-      }).catch(err => {
-        // 验证不通过时进入
-      });
-    }
-    return
-    colseMoadl()
   }
   const [selectPro, setSelectPro] = useState('')
   const $dom = useMemo(() => {
@@ -42,6 +24,9 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
   }, [selectPro])
   const selectHandle = (value) => {
     setSelectPro(value)
+  }
+  const downfile = () => {
+    window.open('http://skintest.hetyj.com/31438/6b0b20891e06ac31d0eed37a5083cca9.xlsx')
   }
   return (
     <Modal title="注册设备" visible={isModalVisible} onOk={subData} onCancel={cancelModel} width='555px' wrapClassName='add-protocols-wrap'>
@@ -79,7 +64,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
                 isNotImg={true}
                 maxSize={10} />
             </Form.Item>
-            <a className='down-model'>下载模板</a>
+            <a className='down-model' onClick={downfile}>下载模板</a>
           </Form.Item>
         </Form>
       </div>

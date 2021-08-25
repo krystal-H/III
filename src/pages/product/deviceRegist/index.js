@@ -54,6 +54,9 @@ export default function DeviceRegist() {
         if (selectType) {
             params.productId = selectType
         }
+        if (!params.id || !params.id.trim()) {
+            delete params.id
+        }
         post(Paths.proReledRegist, params, { loading }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {

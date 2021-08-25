@@ -571,7 +571,7 @@ function ServeTemp({ sentReq }, ref) {
             </Form>
             {
                 inputList.map((item, key) => {
-                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true} index={'input' + key} data={item} />
+                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true} key={'input' + key} data={item} />
                 })
             }
             <Form
@@ -597,7 +597,7 @@ function ServeTemp({ sentReq }, ref) {
             </Form>
             {
                 outputList.map((item, key) => {
-                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={false} index={'outputt' + key} data={item} />
+                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={false} key={'outputt' + key}  data={item} />
                 })
             }
         </>
@@ -650,7 +650,6 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
     return (
         <div className='add-tempele-wrap add-params-wrap'>
             <Form form={form}
-                initialValues={data}
                 labelCol={{
                     span: 8,
                 }}
@@ -780,7 +779,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                                         <Form.Item
                                             name={['specs', 'min']}
                                             noStyle
-                                            rules={[{ required: true ,message:'请输入最小值'}]}
+                                            rules={[{ required: true, message: '请输入最小值' }]}
                                         >
                                             <Input style={{ width: '40%' }} />
                                         </Form.Item>
@@ -788,7 +787,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                                         <Form.Item
                                             name={['specs', 'max']}
                                             noStyle
-                                            rules={[{ required: true,message:'请输入最大值' }]}
+                                            rules={[{ required: true, message: '请输入最大值' }]}
                                         >
                                             <Input style={{ width: '40%' }} />
                                         </Form.Item>

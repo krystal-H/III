@@ -11,7 +11,7 @@ import ModifyFirmwareModal from './modifyFirmware'
 
 import "./index.scss"
 
-const productItemData = JSON.parse(sessionStorage.getItem('productItem'))
+const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
 class Hardware extends Component {
     constructor(props) {
         super(props)
@@ -66,7 +66,7 @@ class Hardware extends Component {
     }
 
     // 获取展示模组及固件信息
-    getMoudleInfo = (moduleId) => {
+    getMoudleInfo = (moduleId = '') => {
         post(Paths.getMoudleInfo, {
             productId: this.props.productId,
             moduleId
@@ -126,7 +126,7 @@ class Hardware extends Component {
 
     // 获取方案类型展示
     getSchemeType = () => {
-        if (productItemData && productItemData.schemeType) {
+        if (productItemData.schemeType) {
             switch (productItemData.schemeType) {
                 case 1:
                     return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。'
@@ -213,16 +213,41 @@ class Hardware extends Component {
                         <div className="debug">
                             <div className="flex-c">
                                 <img className="debug-icon" src={require('../../../../../assets/images/product/pcb.png')} alt="" />
-                                <div>设计PCB</div>
-                                {/* <div className="blue">参考电路原理图</div> */}
-                                <div className="blue">
-                                    下载MCU开发资料包
-                                    <Tooltip
-                                        title={'MCU' ? '包含MCU SDK、串口协议、模组调试助手等' : '包含模组 SDK、Bin文件等'}
-                                        placement="top">
-                                        <QuestionCircleOutlined className="tooltip-icon" />
-                                    </Tooltip>
-                                </div>
+                                {
+                                    productItemData.schemeType === 1 &&
+                                    <>
+                                        <div>设计PCB</div>
+                                        <div className="blue" onClick={() => alert('暂无电路原理图！')}>参考电路原理图</div>
+                                    </>
+                                }
+                                {
+                                    productItemData.schemeType === 2 &&
+                                    <>
+                                        <div>MCU模组 SDK开发</div>
+                                        <div className="blue">
+                                            <span onClick={() => alert('暂无MCU开发资料包！')}>下载MCU开发资料包</span>
+                                            <Tooltip
+                                                title={'包含MCU SDK、串口协议、模组调试助手等。SDK根据您产品的基本信息和功能定义生成对应的模组代码。若您的产品信息和功能定义发生变化，请重新生成。重新生成。'}
+                                                placement="top">
+                                                <QuestionCircleOutlined className="tooltip-icon" />
+                                            </Tooltip>
+                                        </div>
+                                    </>
+                                }
+                                {
+                                    productItemData.schemeType === 3 &&
+                                    <>
+                                        <div>模组SDK开发</div>
+                                        <div className="blue">
+                                            <span onClick={() => alert('暂无模组SDK开发资料包！')}>下载模组SDK开发资料包</span>
+                                            <Tooltip
+                                                title={'包含模组 SDK、Bin文件等'}
+                                                placement="top">
+                                                <QuestionCircleOutlined className="tooltip-icon" />
+                                            </Tooltip>
+                                        </div>
+                                    </>
+                                }
                             </div>
                             <div className="line">
                                 <img src={require('../../../../../assets/images/product/arrowLine.png')} alt="" />

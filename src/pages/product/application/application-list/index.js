@@ -15,7 +15,7 @@ import './style.scss';
 
 const { Search } = Input;
 const initPager = {
-    pageRows: 4,
+    pageRows: 9,
     pageIndex: 1,
 };
 
@@ -24,66 +24,17 @@ export default class Application extends PureComponent {
         super(props);
         this.state = {
             application: {
-                appMaxNum: 100,
-                currentNum: 25,
-                list: [
-                    {
-                        androidDownUrl: null,
-                        apkResult: 1,
-                        appCopyright: null,
-                        appDesc: "健康人居事业部试衣镜项目健康人居事业部试衣镜项目健康人居事业部试衣镜项目",
-                        appEngDesc: null,
-                        appEngName: null,
-                        appFaq: null,
-                        appIconHigh: null,
-                        appIconLow: "",
-                        appId: 31689,
-                        appMode: 1,
-                        appName: "试衣镜",
-                        appPrivacy: null,
-                        appSecret: "7e3cee171b304b25817cbcd5cd2c75be",
-                        appType: 0,
-                        appVersionType: 0,
-                        appleId: null,
-                        createTime: "2021-08-04 08:58:42",
-                        ct: 1628038722000,
-                        developerId: 1,
-                        developerName: "深圳和而泰智能控制股份有限公司",
-                        iosDownUrl: null,
-                        ipWhitelist: null,
-                        isEnable: 1,
-                        isValid: null,
-                        productId: null,
-                        qrcode: "http://fileserver1.clife.net/group1/M01/F8/A0/CvtlhmEKVsKAMBZ8AAAJDPRFiQw893.png",
-                        secret: null,
-                        softIntroduce: null,
-                        statu: 1,
-                        updateTime: 1628038722000,
-                        weChatAppId: null,
-                    },
-                ],
-                pager: {
-                    currPageRows: 4,
-                    defaultPageRows: 20,
-                    hasNextPage: true,
-                    hasPrevPage: false,
-                    pageEndRow: 3,
-                    pageIndex: 1,
-                    pageRows: 4,
-                    pageStartRow: 0,
-                    paged: false,
-                    totalPages: 32,
-                    totalRows: 125,
-                },
+                list: [],
+                pager: {},
             },
             searchValue: '',
-            createAppJurisdiction: '创建应用', // CheckPermissions('创建应用'),
+            createAppJurisdiction: '创建应用',
         }
     }
 
     componentDidMount = () => {
-        this._getApplicationList(initPager);
-    };
+        this._getApplicationList(initPager)
+    }
 
     // 翻页
     onChange = pageNumber => {
@@ -91,7 +42,7 @@ export default class Application extends PureComponent {
             ...initPager,
             pageIndex: pageNumber,
             appName: this.state.searchValue,
-        });
+        })
     };
 
     // 搜索应用
@@ -105,36 +56,32 @@ export default class Application extends PureComponent {
 
     // 获取应用列表
     _getApplicationList = (params) => {
-        get(Paths.getApplicationList, {
+        post(Paths.getAppInfoList, {
             ...params
         }, { loading: true }).then((res) => {
-            const code = res.code;
-            const data = res.data;
+            const code = res.code
+            const data = res.data
             if (code === REQUEST_SUCCESS) {
                 this.setState(() => {
-                    return { application: data };
-                });
+                    return { application: data }
+                })
             }
-        });
-    };
+        })
+    }
 
     // 删除应用
     deleteApp = (appId) => {
-        post(Paths.deleteApp, {
+        post(Paths.deleteApp5x, {
             appId: Number(appId),
+            developerId: '1'
         }, { loading: true }).then((res) => {
-            const code = res.code;
+            const code = res.code
             if (code === REQUEST_SUCCESS) {
-                Notification({
-                    message: '删除成功',
-                    description: '应用删除成功',
-                    type: 'success'
-                });
-
-                this._getApplicationList(initPager);
+                Notification({ description: '应用删除成功！', type: 'success' })
+                this._getApplicationList(initPager)
             }
-        });
-    };
+        })
+    }
 
     _getApplicationListHTML = () => {
         let { application } = this.state;
@@ -147,18 +94,14 @@ export default class Application extends PureComponent {
         }) : <NoSourceWarn style={{ margin: 'auto' }} />;
     };
 
+    // 创建应用
     addNewApplication = () => {
         let { application = {} } = this.state,
-            { appMaxNum = 0, currentNum = 0 } = application;
-
+            { appMaxNum = 0, currentNum = 0 } = application
         if (currentNum >= appMaxNum) {
-            Notification({
-                description: `最多只能创建${appMaxNum}个应用！`
-            })
-            return
+            return Notification({ description: `最多只能创建${appMaxNum}个应用！` })
         }
-
-        window.location.hash = '/open/app/add';
+        window.location.hash = '/open/app/add'
     }
 
     render() {
@@ -180,6 +123,7 @@ export default class Application extends PureComponent {
                         <div className="application-header-input-wrapper comm-searchBox">
                             <Search placeholder="请输入应用名称查找"
                                 enterButton
+                                allowClear
                                 maxLength={100}
                                 onSearch={value => this.searchApplication(value)}
                             />

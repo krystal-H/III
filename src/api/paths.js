@@ -77,8 +77,10 @@ let Paths = {
 
     // 5.xAPP-应用管理
     getAppInfoList: '/appInfoManage/getAppInfoList', // app应用列表
-    deleteApp: '', // app应用删除
-    // 获取app应用详情
+    deleteApp5x: '/appInfoManage/delete', // app应用删除
+    saveAppInfo5x: '/appInfoManage/saveAppBaseInfo', // 保存应用信息
+    getAppDetail5x: '/appInfoManage/getAppInfo', // 获取app应用详情
+    getRelateProduct5x: '/appInfoManage/getRelaProducts', // 获取关联产品
 
 
     
@@ -532,6 +534,7 @@ let Paths = {
     exportPhysicalModel:'/physicalModel/export/product',//产品-定义功能-导出物模型
     PhysicalModelAction:'/physicalModel/func/product/action',//产品-功能定义-物模型-功能-增
     searchModelList:'/physicalModel/func/search',//产品-功能定义-创建物模型-查询模型列表
+    addPhticalStard:'/physicalModel/func/product/add',//产品-功能定义-物模型-新增标准模型
 
     // //设备-设备管理
     // getDeviceList
@@ -552,7 +555,7 @@ let Paths = {
     // 产品发布后-设备注册
     proReledRegist:'/deviceRegister/deviceList',//设备注册列表
     proReledCount:'/deviceRegister/statistics',//设备注册统计
-    proReledExport:'/open/deviceRegister/importAddr',//设备注册导出
+    proReledExport:'/deviceRegister/importAddr',//设备注册导出
 };
 
 // 拼接 urlPrefix

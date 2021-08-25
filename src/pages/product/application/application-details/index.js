@@ -151,13 +151,13 @@ class ApplicationDetail extends PureComponent {
     saveAppInfo = (params) => {
         let { appId, appInfo } = this.state;
         let appType = appInfo.appType.value;
-        params = { ...params, appMode: 1, appId };
-        let url = appType === 0 ? 'saveAppBaseInfo' : 'saveMiniProgramsInfo';
+        params = { ...params, appMode: 1, appId, developerId: '1' };
+        // let url = appType === 0 ? 'saveAppBaseInfo' : 'saveMiniProgramsInfo';
         let app = appType === 0 ? '移动应用编辑成功' : '小程序应用编辑成功';
         if (appType === 2) {
             params = { ...params, weChatAppId: appInfo.weChatAppId.value, secret: appInfo.secret.value }
         }
-        post(Paths[url], {
+        post(Paths.saveAppInfo5x, {
             ...params
         }, { loading: true }).then((res) => {
             const code = res.code;
@@ -177,11 +177,12 @@ class ApplicationDetail extends PureComponent {
         });
     };
 
+    // 获取关联产品信息
     _getRelaProducts = (appId) => {
-        get(Paths.getRelaProducts, {
+        post(Paths.getRelateProduct5x, {
             appId,
-            version: '1.1',
             paged: false,
+            developerId: '1'
         }, { loading: true }).then((res) => {
             const code = res.code;
             const data = res.data;
@@ -215,10 +216,11 @@ class ApplicationDetail extends PureComponent {
         });
     };
 
+    // 获取详情接口
     _getAppInfo = (appId) => {
-        get(Paths.getAppInfo, {
+        post(Paths.getAppDetail5x, {
             appId,
-            version: '1.1',
+            developerId: '1'
         }, { loading: true }).then((res) => {
             const code = res.code;
             const data = res.data;

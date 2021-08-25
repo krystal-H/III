@@ -13,8 +13,6 @@ import { MyContext } from '../context'
 import { getRowSpanCount } from './tableCombine'
 
 
-
-
 export default function TableCom({ dataSource, reFreshData, type }) {
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     //页码改变
@@ -34,17 +32,20 @@ export default function TableCom({ dataSource, reFreshData, type }) {
     }
     //删除弹窗
     const [isDelVisible, setIsDelVisible] = useState(false)
-    const [delData, setDelData] = useState({})
+    const [actionData, setActionData] = useState({})
     //编辑右边抽屉
+    const [rightEditVisible, setRightEditVisible] = useState(false);
     const openEditCus = (data) => {
-        setDestoryDom(true)
-        setTimeout(() => {
-            setRightEditVisible(true)
-        }, 0)
+        setActionData(data)
+        setRightEditVisible(true)
+        // setDestoryDom(true)
+        // setTimeout(() => {
+        //     setRightEditVisible(true)
+        // }, 0)
     };
     //打开删除弹窗
     const openDel = (data) => {
-        setDelData(data)
+        setActionData(data)
         setIsDelVisible(true)
     }
     //展示
@@ -91,14 +92,14 @@ export default function TableCom({ dataSource, reFreshData, type }) {
             },
         },
         {
-            title: '功能类型', dataIndex: 'funcType',
+            title: '功能类型', dataIndex: 'funcTypeCN',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     getComData(),
                     "funcIdentifier",
                     index,
                     value,
-                    "funcType"
+                    "funcTypeCN"
                 );
             },
         },
@@ -125,7 +126,6 @@ export default function TableCom({ dataSource, reFreshData, type }) {
                     "funcIdentifier"
                 );
             },
-
         },
         { title: '参数名称', dataIndex: 'name' },
         { title: '参数标识', dataIndex: 'identifier' },
@@ -150,7 +150,6 @@ export default function TableCom({ dataSource, reFreshData, type }) {
                 );
                 obj.children = <Space size="middle"><Button type="link" onClick={() => { openEditCus(row) }}>编辑</Button>
                     <Button type="link" onClick={() => { openDel(row) }}>删除</Button></Space>
-                console.log('哈哈哈', obj)
                 return obj
             },
         },
@@ -159,7 +158,7 @@ export default function TableCom({ dataSource, reFreshData, type }) {
     //编辑标准功能/新增自定义功能=======
     // const [isStarDia, setIsStarDia] = useState(true); //
     const [rightVisible, setRightVisible] = useState(false); //新增自定义功能
-    const [rightEditVisible, setRightEditVisible] = useState(false);
+
     const [destoryDom, setDestoryDom] = useState(true);
 
     //编辑抽屉关闭回调
@@ -172,14 +171,14 @@ export default function TableCom({ dataSource, reFreshData, type }) {
     };
     //关闭抽屉
     const onCloseRight = () => {
-        setRightVisible(false);
+        setRightEditVisible(false)
     };
     //关闭自定义且更新
     const onRefreshList = () => {
-        setRightVisible(false);
+        setRightEditVisible(false)
         Notification({
             type: 'success',
-            description: '新增成功！',
+            description: '编辑成功！',
         });
         reFreshData()
     }
@@ -194,14 +193,24 @@ export default function TableCom({ dataSource, reFreshData, type }) {
 
     //确定删除数据
     const updateOkHandle = () => {
-        post(Paths.standardFnList, { productId: '11759' }).then((res) => {
+        let content = JSON.stringify({
+            identifier: actionData.funcIdentifier
+        })
+        let params = {
+            productId: 11759,
+            type: 'delete',
+            content,
+            funcType: actionData.funcType
+        }
+        post(Paths.PhysicalModelAction, params).then((res) => {
             Notification({
                 type: 'success',
                 description: '删除成功！',
             });
             setIsDelVisible(false)
+            reFreshData()
         });
-        
+
     }
     //取消删除数据
     const updateCancelHandle = () => {
@@ -224,18 +233,23 @@ export default function TableCom({ dataSource, reFreshData, type }) {
             }}
         />
         {/* 新增自定义 */}
-        {1 && <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
+        {/* {1 && <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>} */}
         {/* 编辑操作 */}
-        {destoryDom && <EditcusFn rightVisible={rightEditVisible} onCloseRight={onCloseEditRight} destData={onDestData}></EditcusFn>}
+        {rightEditVisible && <EditcusFn
+            rightVisible={rightEditVisible}
+            onCloseRight={onCloseRight}
+            onRefreshList={onRefreshList}
+            actionData={actionData}
+            modelType={type}></EditcusFn>}
         {/* 新增标准 */}
-        {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>}
+        {/* {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>} */}
         {/* 删除操作 */}
         {
             isDelVisible && <ActionConfirmModal
                 visible={isDelVisible}
                 modalOKHandle={updateOkHandle}
                 modalCancelHandle={updateCancelHandle}
-                targetName={delData.funcName}
+                targetName={actionData.funcName}
                 title='删除'
                 descGray={true}
                 needWarnIcon={true}

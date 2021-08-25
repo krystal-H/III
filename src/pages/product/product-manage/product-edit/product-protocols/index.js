@@ -10,8 +10,6 @@ import NewCusmFn from './addcusFn'
 import downpng from './../../../../../assets/images/product/download.png';
 import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
-import { MyContext } from '../context'
-import { getRowSpanCount } from './tableCombine'
 import TableCom from './TableCom';
 
 //处理数据
@@ -24,7 +22,7 @@ function delaData(data) {
             newData.push({ ...newItem, ...item2 })
         })
     })
-    newData.map((item, index) => {
+    newData.forEach((item, index) => {
         item.key = index
     })
     return newData
@@ -36,7 +34,7 @@ function ProtocolFn({ nextStep, productId }, ref) {
     const [standardData, setStandardData] = useState([]);
     //获取列表
     const getList = (loading = true) => {
-        post(Paths.standardFnList, { productId: '11759' }, { loading }).then((res) => {
+        post(Paths.standardFnList, { productId}, { loading }).then((res) => {
             setStandardData(delaData(res.data.standard))
             let data2 = delaData(res.data.custom)
             setCusData(data2)
@@ -48,17 +46,8 @@ function ProtocolFn({ nextStep, productId }, ref) {
     //编辑标准功能/新增自定义功能=======
     // const [isStarDia, setIsStarDia] = useState(true); //
     const [rightVisible, setRightVisible] = useState(false); //新增自定义功能
-    const [rightEditVisible, setRightEditVisible] = useState(false);
-    const [destoryDom, setDestoryDom] = useState(true);
 
-    //编辑抽屉关闭回调
-    const onDestData = () => {
-        setDestoryDom(false)
-    }
-    //关闭编辑右边抽屉
-    const onCloseEditRight = () => {
-        setRightEditVisible(false)
-    };
+
     //新增自定义功能抽屉
     const openCusmon = () => {
         setRightVisible(true);
@@ -81,6 +70,11 @@ function ProtocolFn({ nextStep, productId }, ref) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const closeAdd = () => {
         setIsModalVisible(false)
+        Notification({
+            type: 'success',
+            description: '新增成功！',
+        });
+        getList()
     }
     const CancelAdd = () => {
         setIsModalVisible(false)
@@ -132,10 +126,10 @@ function ProtocolFn({ nextStep, productId }, ref) {
             <TableCom dataSource={cusData} reFreshData={getList} type={'2'} />
         </div>
         {/* 新增自定义 */}
-        {1 && <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
+        {rightVisible && <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
         {/* 新增标准 */}
         {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>}
-        
+
 
     </div>
 }
