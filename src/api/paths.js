@@ -77,8 +77,10 @@ let Paths = {
 
     // 5.xAPP-应用管理
     getAppInfoList: '/appInfoManage/getAppInfoList', // app应用列表
-    deleteApp: '', // app应用删除
-    // 获取app应用详情
+    deleteApp5x: '/appInfoManage/delete', // app应用删除
+    saveAppInfo5x: '/appInfoManage/saveAppBaseInfo', // 保存应用信息
+    getAppDetail5x: '/appInfoManage/getAppInfo', // 获取app应用详情
+    getRelateProduct5x: '/appInfoManage/getRelaProducts', // 获取关联产品
 
 
     
