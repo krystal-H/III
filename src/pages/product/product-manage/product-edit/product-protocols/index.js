@@ -48,17 +48,8 @@ function ProtocolFn({ nextStep, productId }, ref) {
     //编辑标准功能/新增自定义功能=======
     // const [isStarDia, setIsStarDia] = useState(true); //
     const [rightVisible, setRightVisible] = useState(false); //新增自定义功能
-    const [rightEditVisible, setRightEditVisible] = useState(false);
-    const [destoryDom, setDestoryDom] = useState(true);
 
-    //编辑抽屉关闭回调
-    const onDestData = () => {
-        setDestoryDom(false)
-    }
-    //关闭编辑右边抽屉
-    const onCloseEditRight = () => {
-        setRightEditVisible(false)
-    };
+
     //新增自定义功能抽屉
     const openCusmon = () => {
         setRightVisible(true);
@@ -80,7 +71,14 @@ function ProtocolFn({ nextStep, productId }, ref) {
     //新增标准功能====
     const [isModalVisible, setIsModalVisible] = useState(false);
     const closeAdd = () => {
+
         setIsModalVisible(false)
+        Notification({
+            type: 'success',
+            description: '新增成功！',
+        });
+
+        getList()
     }
     const CancelAdd = () => {
         setIsModalVisible(false)
@@ -132,10 +130,10 @@ function ProtocolFn({ nextStep, productId }, ref) {
             <TableCom dataSource={cusData} reFreshData={getList} type={'2'} />
         </div>
         {/* 新增自定义 */}
-        {1 && <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
+        {rightVisible && <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
         {/* 新增标准 */}
         {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>}
-        
+
 
     </div>
 }
