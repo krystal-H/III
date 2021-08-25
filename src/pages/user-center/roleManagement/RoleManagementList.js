@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link} from 'react-router-dom';
-import { Input, Button, Table, Tag, Card, Divider, Popconfirm } from 'antd';
-import {get, Paths} from '../../../api';
+import { Input, Button, Table, Tag, Divider, Popconfirm } from 'antd';
+import {get,post, Paths} from '../../../api';
 import { deleteRole } from '../store/ActionCreator';
 import { DateTool } from '../../../util/util';
 import { Notification } from './../../../components/Notification';
@@ -38,7 +38,7 @@ export default class RoleManagementList extends Component {
              render:(text, {roleId,roleName,remark,userCategory}) => (
                     <span>
                         <Link to={{
-                                    pathname:`/userCenter/role/add`,
+                                    pathname:`/userCenter/role/edit`,
                                     search:`?roleId=${roleId}&roleName=${encodeURI(roleName)}&remark=${encodeURI(remark)}&userCategory=${userCategory}`
                                 }}
                         >编辑
@@ -46,7 +46,7 @@ export default class RoleManagementList extends Component {
                         <Divider type="vertical" />
                         <Popconfirm 
                             title="你确定要删除该角色吗？"
-                            onConfirm={this.deleteRole.bind(this,record.roleId)}
+                            onConfirm={this.deleteRole.bind(this,roleId)}
                             okText="是"
                             cancelText="否"
                             placement="topRight"
@@ -61,7 +61,7 @@ export default class RoleManagementList extends Component {
     }
     //获取角色列表
     getList = (data={}) => {
-        get(Paths.getRolePage,data).then((res) => {
+        post(Paths.getRolePage,data).then((res) => {
             this.setState({
                 roleList:res.data.list,
                 pager:res.data.pager,
@@ -107,10 +107,7 @@ export default class RoleManagementList extends Component {
                             <Input.Search placeholder="请输入用户角色名查找" maxLength={20} onSearch={value => this.searchProduct(value)} enterButton />
                         </div>
                         <div className='butFloatRight'>
-                            <Link to={{
-                                    pathname:`/userCenter/role/add`
-                                }}><Button type="primary">创建用户角色</Button>
-                            </Link>  
+                            <Link to="/userCenter/role/edit"><Button type="primary">创建用户角色</Button></Link>  
                         </div>
                     </div>
                 </PageTitle>

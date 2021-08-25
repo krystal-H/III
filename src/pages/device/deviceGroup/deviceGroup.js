@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import {get, Paths} from '../../../api';
+import {get,post, Paths} from '../../../api';
 import { Input, Button, Table, Divider } from 'antd';
 import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
 import ModeAddForm from './addForm';
 import PageTitle from '../../../components/page-title/PageTitle';
+import { DateTool } from '../../../util/util';
 import './deviceGroup.scss'
-import moment from 'moment';
 
 export default class DeviceGroup extends Component {
     
@@ -16,18 +16,18 @@ export default class DeviceGroup extends Component {
             loading:true,// 列表加载
             caseList:[],
             pager:{},
-            searchName:'',//搜索框
+            searchName:undefined,//搜索框
             name:'',// 当前操作的分组名称
             id:'',//当前操作的分组id
             addVisible:false,//新增分组弹窗
-            pageIndex:'1',
+            pageIndex: 1,
         };
         this.columns = [
             { title: '分组名称', dataIndex: 'name', key: 'name'},
             { title: '分组ID', dataIndex: 'id',  key: 'id'},
             { title: '描述', dataIndex: 'remark',  key: 'remark'},
             { title: '添加时间', dataIndex: 'createTime', key: 'createTime', 
-                render: text => <span>{text && moment(text).add(8,'h').format('YYYY-MM-DD HH:mm:ss') || '--'}</span>
+                render: text => <span>{text && DateTool.utcToDev(text) || '--'}</span>
             },
             
             { title: '操作', key: 'action', width:'140px',
@@ -43,7 +43,10 @@ export default class DeviceGroup extends Component {
     }
     //获取分组列表
     getList = (data={}) => {
-        get(Paths.getGroupList,data).then((res) => {
+        const {pageIndex, searchName} =this.state;
+        post(Paths.getGroupList,
+            { pageIndex,pageRows:10,name:searchName, ...data}
+        ).then((res) => {
             this.setState({
                 caseList:res.data.list,
                 pager:res.data.pager,
@@ -55,7 +58,7 @@ export default class DeviceGroup extends Component {
         });
     }
     componentDidMount() {
-        this.getList({pageIndex:1,pageRows:10});
+        this.getList();
     }
     //打开、关闭新增弹窗
     switchOpen = (open=true) => {
@@ -68,11 +71,10 @@ export default class DeviceGroup extends Component {
     //删除确认框的确认和取消
     delOkCancel = (type)=>{
         if(type=='ok'){// 点击确认
-            let {id,pageIndex} = this.state;
-            pageIndex=pageIndex?pageIndex:1;
+            let {id} = this.state;
             get(Paths.deleteGroup,{id}).then((res) => {
                 this.setState({loading:true,id:''},()=>{
-                    this.getList({pageIndex,pageRows:10});
+                    this.getList();
                 });
             });
         }else{
@@ -89,7 +91,7 @@ export default class DeviceGroup extends Component {
     }
     pagerIndex = (pageIndex) => {
         this.setState({pageIndex,loading:true},()=>{
-            this.getList({pageIndex,pageRows:10,name: this.state.searchName || undefined});
+            this.getList();
         });
     }
     render() {
