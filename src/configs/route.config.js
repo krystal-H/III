@@ -5,7 +5,9 @@ import loadable from '@loadable/component';
 import { find,remove } from "lodash";
 /*Open是业务入口页面*/
 import Open from '../pages/open/Open';
-import LogicDevelop from "../pages/logicDevelop";
+
+// import LogicDevelop from "../pages/logicDevelop";
+
 /*账号管理页面 */
 const Account = loadable(() => import('../pages/user-center/Account'))
 /*消息中心页面 */
@@ -13,7 +15,7 @@ const MessageCenter = loadable(() => import('../pages/message-center/MessageCent
 /*用户中心页面 */
 const UserCenter = loadable(() => import('../pages/user-center/UserCenter'))
 /*数据服务-数据分析页面 */
-const DataAnalysis = loadable(() => import('../pages/data-analysis/DataAnalysisi'))
+// const DataAnalysis = loadable(() => import('../pages/data-analysis/DataAnalysisi'))
 
 /* 左侧菜单、用户中心 导航全权限路由
     * menuid 仅用于前端遍历key  和 判断选中的高亮菜单匹配地址栏的路由
@@ -100,7 +102,8 @@ export const navRoutes = [
         path: '/open/app',
         menuicon: 'app',
         menuid:'3',
-    }, {
+    },
+    {
         menuname: '数据服务',
         path: '/open/serve',
         menuicon: 'shujufw',
@@ -124,25 +127,26 @@ export const navRoutes = [
 
             }
         ]
-    }, {
-        menuname: '开发Studio',
-        path: '/open/studio',
-        menuicon: 'studio',
-        menuid:'5',
-        childmenus: [
-            {
-                menuname: '项目管理',
-                path: '/open/studio/project',
-                menuid:'5-0',
+    }, 
+    // {
+    //     menuname: '开发Studio',
+    //     path: '/open/studio',
+    //     menuicon: 'studio',
+    //     menuid:'5',
+    //     childmenus: [
+    //         {
+    //             menuname: '项目管理',
+    //             path: '/open/studio/project',
+    //             menuid:'5-0',
 
-            },
-            {
-                menuname: '服务开发',
-                path: '/open/studio/serve',
-                menuid:'5-1',
-            }
-        ]
-    }
+    //         },
+    //         {
+    //             menuname: '服务开发',
+    //             path: '/open/studio/serve',
+    //             menuid:'5-1',
+    //         }
+    //     ]
+    // }
 ]
 
 export const userNavRoutes = [
@@ -187,10 +191,10 @@ export const mainRoutes = [
         path: '/account',
         component: Account
     },
-    {
-        path: '/logicDevelop/:projectId/:serviceId',
-        component: LogicDevelop
-    },
+    // {
+    //     path: '/logicDevelop/:projectId/:serviceId',
+    //     component: LogicDevelop
+    // },
     {
         path: '/userCenter',
         component: UserCenter
@@ -199,10 +203,10 @@ export const mainRoutes = [
         path: '/messageCenter',
         component: MessageCenter
     },
-    {
-        path: '/dataAnalysis/:projectId/:serviceId',
-        component: DataAnalysis
-    },
+    // {
+    //     path: '/dataAnalysis/:projectId/:serviceId',
+    //     component: DataAnalysis
+    // },
     {
         redirect: '/account'
     }

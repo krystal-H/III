@@ -5,16 +5,24 @@ import CountNum from '../../../../../components/CountNum/index';
 import { netStatus } from '../../../../../configs/text-map';
 import { post, Paths, get } from '../../../../../api';
 import { DateTool } from '../../../../../util/util';
+import { Notification } from '../../../../../components/Notification';
 import './index.scss'
 import RegistModel from './modelFn'
 const { Option } = Select;
 const { Step } = Steps;
 export default function DeviceRegist() {
     const [form] = Form.useForm();
-    const [deviceNameS, setDeviceNameS] = useState([])
-    const [productCount, SetproductCount] = useState({})
     const [dataSource, setDataSource] = useState([])
     const [countData, setCountData] = useState([{ label: '设备总数量', count: 0 }, { label: '已入网设备', count: 0 }, { label: '未入网设备', count: 0 }])
+    const filter = (data) => {
+        if (data == 0) {
+            return '一型一密'
+        } else if (data == 1) {
+            return '一型一密plus'
+        } else if (data == 2) {
+            return '一机一密'
+        }
+    }
     const columns = [
         {
             title: '设备ID',
@@ -30,6 +38,9 @@ export default function DeviceRegist() {
             title: '通信验证方式',
             dataIndex: 'authorityType',
             key: 'authorityType',
+            render: (text) => (
+                <span >{filter(text)}</span>
+            )
         }, {
             title: '设备秘钥',
             dataIndex: 'deviceSecret',
@@ -73,6 +84,10 @@ export default function DeviceRegist() {
         setModelVis(false)
     }
     const colseMoadl = () => {
+        Notification({
+            type: 'success',
+            description: '注册成功！',
+        });
         setModelVis(false)
     }
     //搜索
@@ -82,8 +97,13 @@ export default function DeviceRegist() {
     }, [pager.pageIndex, pager.pageRows])
     //获取列表
     const getList = (loading = true) => {
-        let params = { ...form.getFieldsValue(), ...pager, productId: 11549 }
-        post(Paths.proReledRegist, params, { load }).then((res) => {
+        let productId=JSON.parse(sessionStorage.getItem('productItem')).productId
+        let params = { ...form.getFieldsValue(), ...pager, productId }
+        if (!params.id || !params.id.trim()) {
+            delete params.id
+        }
+        // let params = { ...form.getFieldsValue(), ...pager, productId: 11549 }
+        post(Paths.proReledRegist, params, { loading }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))
@@ -116,6 +136,7 @@ export default function DeviceRegist() {
             })
         }
     };
+
     return (
         <div id='product-device-regist'>
             <div className='comm-shadowbox setp-ttip'>

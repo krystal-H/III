@@ -30,7 +30,7 @@ export default props => {
                 <div className="item">最近告警时间<br/><span className="num time">{leastWaringDate&&DateTool.utcToDev(leastWaringDate) || "--"}</span></div>
             </div>
             <div className='comm-shadowbox common-tab'>
-                <Tabs defaultActiveKey={"2"}>
+                <Tabs defaultActiveKey={"1"}>
                     <TabPane tab="消息列表" key="1">
                         <WarningList />
                     </TabPane>

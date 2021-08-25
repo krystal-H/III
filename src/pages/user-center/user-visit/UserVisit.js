@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link} from 'react-router-dom';
-import {get, Paths} from '../../../api';
+import {get, post,Paths} from '../../../api';
 import { Input, Button, Table, Divider, Modal, Tooltip, Tag } from 'antd';
 import ActionConfirmModal from './../../../components/action-confirm-modal/ActionConfirmModal';
 import {AddUserInfo} from './AddUserInfo';
@@ -73,7 +73,7 @@ export default class UserVisit extends Component {
     }
     //获取账号列表
     getList = (data={}) => {
-        get(Paths.getChildlist,data).then((res) => {
+        post(Paths.getChildlist,data).then((res) => {
             this.setState({
                 userList:res.data.list,
                 pager:res.data.pager,
@@ -95,7 +95,6 @@ export default class UserVisit extends Component {
         this.setState({loading:true,
             userName
        },()=>{
-            // this.getList({pageIndex,pageRows:10,userName});
             this.pagerIndex(1);
         });
     }

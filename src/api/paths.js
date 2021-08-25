@@ -264,7 +264,7 @@ let Paths = {
      * 账户-访问用户 start
      * aize-2019-10-30
      */
-    getChildlist: '/public/account/getChildlist',//获得子账户分页列表
+    getChildlist: '/common/getSubUserList',//获得子账户分页列表
     freezeChild: '/public/account/freezeChild',//停用子账户
     unfreezeChild: '/public/account/unfreezeChild',//启动子账户
     deleteChild: '/public/account/deleteChild',//删除子账户
@@ -279,15 +279,11 @@ let Paths = {
      * 账户-用户角色 start
      * aize-2019-11-06
      */
-    getRolePage: '/role/getRolePage',//获取角色分页列表
-    deleteRole: '/role/deleteRole',//获取角色分页列表
+    getRolePage: '/roleresource/getRolePage',
+    deleteRole: '/roleresource/deleteRole',
     
-    saveRole: '/rolePlus/saveRole',//获取账号权限列表
+    saveRole: '/rolePlus/saveRole',
 
-
-    /* 省市联动数据 */
-    getProvince: '/stats/analysis/getProvince',
-    getCityByProvinceId: '/stats/analysis/getCityByProvinceId',
     /**
      * 数据订阅 start
      * xiao-2019-10-16
@@ -426,7 +422,7 @@ let Paths = {
     testDataAssets:'/data/assets/test',
 
     //设备分组
-    getGroupList:'/group/getList',
+    getGroupList:'/deviceGroup/getDeviceGroupList',
     getGroupListAuth:'/group/getGroupList',
     updateGroup:'/deviceGroup/addOrUpdate',
     deleteGroup:'/group/delete',
@@ -560,7 +556,7 @@ let Paths = {
     // 产品发布后-设备注册
     proReledRegist:'/deviceRegister/deviceList',//设备注册列表
     proReledCount:'/deviceRegister/statistics',//设备注册统计
-    proReledExport:'/open/deviceRegister/importAddr',//设备注册导出
+    proReledExport:'/deviceRegister/importAddr',//设备注册导出
 };
 
 // 拼接 urlPrefix
