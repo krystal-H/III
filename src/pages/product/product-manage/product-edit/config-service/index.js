@@ -54,7 +54,7 @@ const optionalList = [
     url: require('../../../../../assets/images/commonDefault/service-device.png')
   }
 ]
-const productItemData = JSON.parse(sessionStorage.getItem('productItem'))
+const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
 
 function ServiceSelect({ productId, nextStep }, ref) {
   const [requiredList, setRequiredList] = useState([
@@ -153,7 +153,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
 
   // 获取方案类型展示
   const getSchemeType = () => {
-    if (productItemData && productItemData.schemeType) {
+    if (productItemData.schemeType) {
       switch (productItemData.schemeType) {
         case 1:
           return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。'
