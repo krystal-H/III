@@ -1,10 +1,15 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef, useContext } from 'react'
+import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef, useContext,useMemo } from 'react'
+import { useHistory } from "react-router-dom"
 import { Table, Button, Space, Checkbox } from 'antd';
 import { getRowSpanCount } from './tableCombine'
 
 
-export default function TableCom({ dataSource }) {
+export default function TableCom({ dataSource,refreshCount }) {
+    const history = useHistory();
     const [selectData, setSelectData] = useState([])
+    const productId=useMemo(()=>{
+        return history.location.pathname.split('/').slice(-2,-1)[0]
+    },[])
     //展示
     const filterFn = (data) => {
         let result = null
@@ -44,19 +49,21 @@ export default function TableCom({ dataSource }) {
                 arr.push(obj)
             } else {
                 arr = arr.filter(item => {
-                    if (item.id !== data.id) {
+                    if (item.identifier !== data.funcIdentifier) {
                         return item
                     }
                 })
             }
-
             return arr
         })
-        console.log(data, e)
     }
+    useEffect(()=>{
+        refreshCount(selectData)
+    },[selectData.length])
     const columns = [
         {
             title: '勾选',
+            width:'50px',
             render: (value, row, index) => {
                 let obj = getRowSpanCount(
                     dataSource,
