@@ -81,8 +81,9 @@ let Paths = {
     saveAppInfo5x: '/appInfoManage/saveAppBaseInfo', // 保存应用信息
     getAppDetail5x: '/appInfoManage/getAppInfo', // 获取app应用详情
     getRelateProduct5x: '/appInfoManage/getRelaProducts', // 获取关联产品
-
-
+    getAppVersionList5x: '/appInfoManage/getAppVersionList', // 获取版本列表记录
+    addAppVersionInfo5x: '/appInfoManage/version/add', // 添加版本信息
+    deleteAppVersion5x: '/appInfoManage/version/delete', // 删除版本信息
     
 
     /* 协议 */

@@ -41,7 +41,7 @@ const texts = [{
     desc: '删除后用户将无法再获取到该版本升级，已升级用户不受影响。即将删除应用版本',
     tip: '是否确认删除?',
     targetName: 'V1.1.3',
-}];
+}]
 
 class ApplicationDetail extends PureComponent {
     constructor(props) {
@@ -93,19 +93,19 @@ class ApplicationDetail extends PureComponent {
         });
     };
 
+    // 翻页
     onChange = pageNumber => {
         this._getVersionList({
             pageIndex: pageNumber,
             pageRows: 5,
-        });
-    };
+        })
+    }
 
+    // 获取版本列表记录
     _getVersionList = (param) => {
-        let { appId } = this.state;
-        get(Paths.getVersionList, {
-            appId,
-            ...param,
-            version: '1.1',
+        let { appId } = this.state
+        post(Paths.getAppVersionList5x, {
+            appId, ...param, developerId: '1'
         }, { loading: true }).then((res) => {
             const code = res.code;
             const data = res.data;
@@ -119,22 +119,20 @@ class ApplicationDetail extends PureComponent {
         });
     };
 
+    // 创建应用版本
     createAppVersion = (params) => {
         let { appId } = this.state;
-        post(Paths.createAppVersion, {
+        post(Paths.addAppVersionInfo5x, {
             ...params,
             appType: Number(params.appType),
             status: Number(params.status),
             appId: Number(appId),
             mainVersion: Number(params.mainVersion),
+            developerId: '1'
         }, { loading: true }).then((res) => {
             const code = res.code;
             if (code === REQUEST_SUCCESS) {
-                Notification({
-                    message: '创建成功',
-                    description: '创建应用版本成功',
-                    type: 'success'
-                });
+                Notification({ description: '创建应用版本成功', type: 'success' })
                 this.setState((preState) => {
                     let { showAppVersionDialog } = preState;
                     return { showAppVersionDialog: !showAppVersionDialog };
@@ -219,8 +217,7 @@ class ApplicationDetail extends PureComponent {
     // 获取详情接口
     _getAppInfo = (appId) => {
         post(Paths.getAppDetail5x, {
-            appId,
-            developerId: '1'
+            appId, developerId: '1'
         }, { loading: true }).then((res) => {
             const code = res.code;
             const data = res.data;
@@ -304,12 +301,15 @@ class ApplicationDetail extends PureComponent {
         });
     };
 
+    // 删除版本信息
     deleteAppVersion = (appVersionId) => {
-        post(Paths.deleteAppVersion, {
+        post(Paths.deleteAppVersion5x, {
             appVersionId,
+            developerId: '1'
         }, { loading: true }).then((res) => {
             const code = res.code;
             if (code === REQUEST_SUCCESS) {
+                Notification({ description: '删除成功！', type: 'success' })
                 this.setState((preState) => {
                     return { showDeleteDialog: !preState.showDeleteDialog };
                 }, () => {
@@ -355,6 +355,7 @@ class ApplicationDetail extends PureComponent {
         });
     };
 
+    // 编辑版本信息-获取详情
     getAppVersionDetail = (curAppVersionId) => {
         get(Paths.getAppVersionDetail, {
             id: curAppVersionId,
@@ -468,12 +469,9 @@ class ApplicationDetail extends PureComponent {
             render: (text, record) => {
                 return (
                     <div>
-                        <a href="#"
-                            onClick={() => this.getAppVersionDetail(record.appVersionId)}
-                        >编辑</a>
+                        <a onClick={() => this.getAppVersionDetail(record.appVersionId)}>编辑</a>
                         <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                        <a href="#"
-                            onClick={() => this.showDialog('showDeleteDialog', 'curAppVersionId', record.appVersionId, 'versionTargetName', record.appName)}
+                        <a onClick={() => this.showDialog('showDeleteDialog', 'curAppVersionId', record.appVersionId, 'versionTargetName', record.appName)}
                         >删除</a>
                     </div>
                 )
@@ -657,7 +655,7 @@ class ApplicationDetail extends PureComponent {
                                                         <div className="product-id flex-row flex1">
                                                             {productId}
                                                         </div>
-                                                        <a href="javascript:"
+                                                        <a
                                                             onClick={() => this.showDialog('showDeleteDialog', 'curProductID', productId, 'targetName', productName)}
                                                             className="delete-product-relation">
                                                             <MyIcon style={{ fontSize: 20 }} type="icon-shanchu" />
@@ -703,26 +701,33 @@ class ApplicationDetail extends PureComponent {
                             : null}
                     </Tabs>
                 </div>
-                {showDeleteDialog && <ActionConfirmModal
-                    visible={showDeleteDialog}
-                    modalOKHandle={() => this.updateOkHandle(deleteType)}
-                    modalCancelHandle={() => this.updateCancelHandle('showDeleteDialog')}
-                    targetName={texts[currentTab].targetName}
-                    title={texts[currentTab].title}
-                    descText={texts[currentTab].desc}
-                    needWarnIcon={true}
-                    tipText={texts[currentTab].tip}
-                />}
-                {showAddProductRelationDialog && <AddProductRelationModal
-                    {...this.state}
-                    showDialog={this.showDialog}
-                    updateRelaProduct={this.updateRelaProduct}
-                />}
-                {showAppVersionDialog && <AddAppVersionForm
-                    {...this.state}
-                    showDialog={this.showDialog}
-                    createAppVersion={this.createAppVersion}
-                />}
+                {showDeleteDialog &&
+                    <ActionConfirmModal
+                        visible={showDeleteDialog}
+                        modalOKHandle={() => this.updateOkHandle(deleteType)}
+                        modalCancelHandle={() => this.updateCancelHandle('showDeleteDialog')}
+                        targetName={texts[currentTab].targetName}
+                        title={texts[currentTab].title}
+                        descText={texts[currentTab].desc}
+                        needWarnIcon={true}
+                        tipText={texts[currentTab].tip}
+                    />
+                }
+                {showAddProductRelationDialog &&
+                    <AddProductRelationModal
+                        {...this.state}
+                        showDialog={this.showDialog}
+                        updateRelaProduct={this.updateRelaProduct}
+                    />
+                }
+                {/* 创建应用版本 */}
+                {showAppVersionDialog &&
+                    <AddAppVersionForm
+                        {...this.state}
+                        showDialog={this.showDialog}
+                        createAppVersion={this.createAppVersion}
+                    />
+                }
             </section>
         );
     }
