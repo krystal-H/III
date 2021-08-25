@@ -58,37 +58,24 @@ export default class AddProductRelationModal extends Component {
     };
 
     handleSubmit = e => {
-        e.preventDefault();
-        let checkedValues = [...this.state.checkedValues];
-        let { relationProductList, currentAppType } = this.props;
-        let list = currentAppType === 1 ? relationProductList.listAndroid : relationProductList.listIos;
-        let relationProductIds = list && list.map((item) => {
-            return item.productId;
-        });
+        e.preventDefault()
+        let checkedValues = [...this.state.checkedValues]
         if (checkedValues.length === 0) {
-            // if (relationProductIds.length !== 0) {
-            //     checkedValues = relationProductIds;
-            // } else {
-            Notification({
-                description: '请选择需要关联的产品',
-                type: 'warn'
-            });
-            return;
-            // }
+            return Notification({ description: '请选择需要关联的产品', type: 'warn' })
         }
-        this.props.updateRelaProduct(checkedValues);
-    };
+        this.props.updateRelaProduct(checkedValues)
+    }
 
     handleCancel = (type) => {
-        const { showDialog } = this.props;
-        showDialog(type);
-    };
+        const { showDialog } = this.props
+        showDialog(type)
+    }
 
     onChange = (checkedValues) => {
         this.setState(() => {
-            return { checkedValues: checkedValues };
-        });
-    };
+            return { checkedValues: checkedValues }
+        })
+    }
 
     handleSearch = (value) => {
         this.setState(() => {
@@ -97,12 +84,11 @@ export default class AddProductRelationModal extends Component {
             this.getListAllProductAndAccreditInfo({
                 productName: value,
             })
-        });
-    };
+        })
+    }
 
     clickIconHandle = (e, productId) => {
         e.stopPropagation()
-
         let { checkedValues } = this.state,
             temp = cloneDeep(checkedValues),
             _index = temp.indexOf(productId);
@@ -112,34 +98,25 @@ export default class AddProductRelationModal extends Component {
             temp.splice(_index, 1)
         }
 
-        this.setState({
-            checkedValues: temp
-        })
+        this.setState({ checkedValues: temp })
     }
 
     render() {
-        let { showAddProductRelationDialog } = this.props;
-        let { listAllProductAndAccreditInfo, checkedValues } = this.state;
-
+        const { showAddProductRelationDialog } = this.props;
+        const { listAllProductAndAccreditInfo, checkedValues } = this.state;
         return (
             <Modal
                 width="63%"
                 visible={showAddProductRelationDialog}
-                // height="82%"
                 title="添加产品关联"
                 className="add-product-relation-modal"
                 onCancel={() => this.handleCancel('showAddProductRelationDialog')}
                 maskClosable={false}
                 style={{ minWidth: 900 }}
                 footer={[
-                    <Button key="submit" type="primary" onClick={this.handleSubmit}>
-                        确认
-                    </Button>,
-                    <Button key="cancel" onClick={() => this.handleCancel('showAddProductRelationDialog')}>
-                        取消
-                    </Button>
-                ]}
-            >
+                    <Button key="submit" type="primary" onClick={this.handleSubmit}>确认</Button>,
+                    <Button key="cancel" onClick={() => this.handleCancel('showAddProductRelationDialog')}>取消</Button>
+                ]}>
                 <div className="product-relation flex-column">
                     <div className="desc">您可以添加由您创建和给予授权的硬件产品</div>
                     <div className="search-wrapper">
@@ -155,39 +132,36 @@ export default class AddProductRelationModal extends Component {
                         <Checkbox.Group style={{ width: '100%' }}
                             // defaultValue={checkedProductIds}
                             value={checkedValues}
-                            onChange={this.onChange}
-                        >
+                            onChange={this.onChange}>
                             <div id="mescroll" className="mescroll">
                                 <div id="dataList" className="data-list flex-row">
-                                    {listAllProductAndAccreditInfo.list.length > 0 && listAllProductAndAccreditInfo.list.map((item, index) => {
-                                        let { productId, productIcon, productName } = item;
-                                        return (
-                                            <div key={productId} className="list-item flex-column">
-                                                <i className="product-pic">
-                                                    <div style={{ cursor: 'pointer' }}
-                                                        onClick={(e) => this.clickIconHandle(e, productId)}>
-                                                        <ProductIcon icon={productIcon} />
+                                    {
+                                        listAllProductAndAccreditInfo.list.length > 0 && listAllProductAndAccreditInfo.list.map((item, index) => {
+                                            let { productId, productIcon, productName } = item;
+                                            return (
+                                                <div key={productId} className="list-item flex-column">
+                                                    <i className="product-pic">
+                                                        <div style={{ cursor: 'pointer' }}
+                                                            onClick={(e) => this.clickIconHandle(e, productId)}>
+                                                            <ProductIcon icon={productIcon} />
+                                                        </div>
+                                                        <div className="check-box">
+                                                            <Checkbox value={productId} />
+                                                        </div>
+                                                    </i>
+                                                    <p className="product-name flex1 flex-row">
+                                                        {productName}
+                                                    </p>
+                                                    <div className="product-id flex-row flex1">
+                                                        {productId}
                                                     </div>
-                                                    <div className="check-box">
-                                                        <Checkbox
-                                                            value={productId}
-                                                        />
-                                                    </div>
-                                                </i>
-                                                <p className="product-name flex1 flex-row">
-                                                    {productName}
-                                                </p>
-                                                <div className="product-id flex-row flex1">
-                                                    {productId}
                                                 </div>
-                                            </div>
-                                        )
-                                    })}
+                                            )
+                                        })
+                                    }
                                     {
                                         listAllProductAndAccreditInfo.list.length === 0 &&
-                                        <div className="no-data-box">
-                                            <Empty />
-                                        </div>
+                                        <div className="no-data-box"><Empty /></div>
                                     }
                                 </div>
                             </div>
@@ -195,6 +169,6 @@ export default class AddProductRelationModal extends Component {
                     </div>
                 </div>
             </Modal>
-        );
+        )
     }
 }

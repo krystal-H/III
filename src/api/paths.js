@@ -84,6 +84,7 @@ let Paths = {
     getAppVersionList5x: '/appInfoManage/getAppVersionList', // 获取版本列表记录
     addAppVersionInfo5x: '/appInfoManage/version/add', // 添加版本信息
     deleteAppVersion5x: '/appInfoManage/version/delete', // 删除版本信息
+    getAppVersionDetail5x: '/appInfoManage/version/get', // 获取版本信息详情
     
 
     /* 协议 */

@@ -73,9 +73,11 @@ class AddAppVersion extends Component {
                 status: 'done',
                 url: curAppVersionDetail.url,
             },];
-            setTimeout(() => {
-                this.versionApk.setState({ fileList });
-            })
+            if (curAppVersionDetail.appType === 1) {
+                setTimeout(() => {
+                    this.versionApk.setState({ fileList });
+                })
+            }
         }
     };
 
@@ -98,11 +100,10 @@ class AddAppVersion extends Component {
         const formItemLayout = {
             labelCol: { span: 5 },
             wrapperCol: { span: 19 }
-        };
-        let title = curAppVersionId ? '编辑应用版本' : '创建应用版本';
-        let { androidPkg, iosBundleId } = appInfo;
-        const appType = getFieldValue('appType');
-        const status = getFieldValue('status') || 1;
+        }
+        let title = curAppVersionId ? '编辑应用版本' : '创建应用版本'
+        const appType = getFieldValue('appType')
+        const status = getFieldValue('status') || 1
         return (
             <Modal
                 width="50%"
@@ -216,11 +217,11 @@ export const AddAppVersionForm = Form.create({
         let { appVersionType } = appInfo;
         let correctMap = null;
         // 版本的ios和android反了
-        if (appVersionType.value === 1) {
-            correctMap = 2;
-        } else {
-            correctMap = 1;
-        }
+        // if (appVersionType.value === 1) {
+        //     correctMap = 2;
+        // } else {
+        //     correctMap = 1;
+        // }
         let curAppVersionDetailMap = {};
         if (curAppVersionDetail) {
             for (let key of Object.keys(curAppVersionDetail)) {
@@ -229,10 +230,10 @@ export const AddAppVersionForm = Form.create({
                 })
             }
         }
-        curAppVersionDetailMap.appType = Form.createFormField({
-            // android and ios
-            value: appVersionType.value === 3 ? 1 : correctMap,
-        })
+        // curAppVersionDetailMap.appType = Form.createFormField({
+        //     // android and ios
+        //     value: appVersionType.value === 3 ? 1 : correctMap,
+        // })
         return curAppVersionDetailMap;
     }
 })(AddAppVersion);
