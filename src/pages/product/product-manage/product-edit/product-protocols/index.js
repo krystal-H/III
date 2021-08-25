@@ -10,8 +10,6 @@ import NewCusmFn from './addcusFn'
 import downpng from './../../../../../assets/images/product/download.png';
 import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
-import { MyContext } from '../context'
-import { getRowSpanCount } from './tableCombine'
 import TableCom from './TableCom';
 
 //处理数据
@@ -24,7 +22,7 @@ function delaData(data) {
             newData.push({ ...newItem, ...item2 })
         })
     })
-    newData.map((item, index) => {
+    newData.forEach((item, index) => {
         item.key = index
     })
     return newData
@@ -36,7 +34,7 @@ function ProtocolFn({ nextStep, productId }, ref) {
     const [standardData, setStandardData] = useState([]);
     //获取列表
     const getList = (loading = true) => {
-        post(Paths.standardFnList, { productId: '11759' }, { loading }).then((res) => {
+        post(Paths.standardFnList, { productId}, { loading }).then((res) => {
             setStandardData(delaData(res.data.standard))
             let data2 = delaData(res.data.custom)
             setCusData(data2)
@@ -71,13 +69,11 @@ function ProtocolFn({ nextStep, productId }, ref) {
     //新增标准功能====
     const [isModalVisible, setIsModalVisible] = useState(false);
     const closeAdd = () => {
-
         setIsModalVisible(false)
         Notification({
             type: 'success',
             description: '新增成功！',
         });
-
         getList()
     }
     const CancelAdd = () => {

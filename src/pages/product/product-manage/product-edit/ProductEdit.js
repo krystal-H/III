@@ -41,6 +41,13 @@ const getProductIdFromPath = (match) => +match.params.id;
 
 
 function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, history }) {
+    let productItem = {}
+
+    if (sessionStorage.getItem('productItem')) {
+
+        productItem = JSON.parse(sessionStorage.getItem('productItem'))
+        console.log(productItem, '=============')
+    }
     let { path } = match,
         { pathname = '' } = location,
         // showTitle = !NOT_SHOW.test(pathname),
@@ -110,7 +117,6 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
         if (location.pathname.split('/')[6] != stepList[current].content) {
             history.push(match.url + '/' + stepList[current].content);
         }
-
     }, [current])
     if (!productIdInRoutePath) {
 
@@ -127,29 +133,29 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
     const titleCom = (<div className='product_title_baseinfo_list'>
         <div>
             <div>品类：</div>
-            <div>睡眠监测</div>
+            <div>{productItem.deviceType}</div>
         </div>
         <div>
             <div>产品ID：</div>
-            <div>睡眠监测</div>
+            <div>{productItem.productId}</div>
         </div>
         <div>
             <div>通讯协议：</div>
-            <div>睡眠监测</div>
+            <div>{productItem.bindTypeStr}</div>
         </div>
         <div>
             <div>产品编码：</div>
-            <div>睡眠监测</div>
+            <div>{productItem.productCode}</div>
         </div>
         <div>
             <div>产品密钥：</div>
-            <div>睡眠监测</div>
+            <div>{productItem.deviceKey}</div>
         </div>
     </div>)
     return (
         <React.Fragment>
             <div className="eidt-wrapper">
-                <PageTitle title='开发流程' titleTag='免开发方案' btnTxt='编辑' backTitle='开发流程' btnClickHandle={openTitle} >
+                <PageTitle title={productItem.productName} titleTag={productItem.schemeName} btnTxt='编辑' backTitle='开发流程' btnClickHandle={openTitle} >
 
                     {titleCom}
 
