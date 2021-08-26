@@ -9,7 +9,6 @@ import TextAreaCounter from '../../../../components/textAreaCounter/TextAreaCoun
 
 import './addAppVersion.scss'
 
-const { TextArea } = Input;
 const { Option } = Select;
 
 class AddAppVersion extends Component {
@@ -42,10 +41,7 @@ class AddAppVersion extends Component {
                     // 创建
                     if (!appVersionId) {
                         if (!url && JSON.stringify(curAppVersionDetail) === '{}') {
-                            Notification({
-                                description:'请先上传文件，自动生成升级链接！',
-                                type:'warn'
-                            });
+                            Notification({ description: '请先上传文件，自动生成升级链接！', type: 'warn' });
                             return false;
                         }
                     } else {
@@ -77,12 +73,15 @@ class AddAppVersion extends Component {
                 status: 'done',
                 url: curAppVersionDetail.url,
             },];
-            setTimeout(() => {
-                this.versionApk.setState({ fileList });
-            })
+            if (curAppVersionDetail.appType === 1) {
+                setTimeout(() => {
+                    this.versionApk.setState({ fileList });
+                })
+            }
         }
     };
 
+    // 验证方法
     validateMainVersion = (rule, value, callback) => {
         const reg = /^[0-9]*$/;
         if (!value) {
@@ -93,7 +92,7 @@ class AddAppVersion extends Component {
             callback('最多可以输入100个数值型数据');
         }
         callback();
-    };
+    }
 
     render() {
         const { getFieldDecorator, getFieldValue } = this.props.form;
@@ -101,11 +100,10 @@ class AddAppVersion extends Component {
         const formItemLayout = {
             labelCol: { span: 5 },
             wrapperCol: { span: 19 }
-        };
-        let title = curAppVersionId ? '编辑应用版本' : '创建应用版本';
-        let { androidPkg, iosBundleId } = appInfo;
-        const appType = getFieldValue('appType');
-        const status = getFieldValue('status') || 1;
+        }
+        let title = curAppVersionId ? '编辑应用版本' : '创建应用版本'
+        const appType = getFieldValue('appType')
+        const status = getFieldValue('status') || 1
         return (
             <Modal
                 width="50%"
@@ -122,115 +120,66 @@ class AddAppVersion extends Component {
                     <Button key="cancel" onClick={() => this.handleCancel('showAppVersionDialog')}>
                         取消
                     </Button>
-                ]}
-            >
+                ]}>
                 <div className="add-version-from-wrapper">
                     <Form {...formItemLayout} className="add-version-from">
-                        <Form.Item
-                            label="版本序列标识"
-                            wrapperCol={ { span: 10 }}
-                        >
+                        <Form.Item label="版本序列标识" wrapperCol={{ span: 10 }} >
                             {getFieldDecorator('mainVersion', {
-                                rules: [
-                                    {
-                                        validator: this.validateMainVersion,
-                                    }
-                                ],
-                            })
-                            (<Input placeholder="请输入版本序列标识" style={{ width: 'calc(100% )' }} />)}
+                                rules: [{ required: true, validator: this.validateMainVersion, }],
+                            })(<Input placeholder="请输入版本序列标识" style={{ width: 'calc(100% )' }} />)}
                         </Form.Item>
-                        <Form.Item
-                            label="版本号"
-                            wrapperCol={ { span: 10 }}
-                        >
+
+                        <Form.Item label="版本号" wrapperCol={{ span: 10 }}>
                             {getFieldDecorator('externalVersion', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '请输入版本号',
-                                    },
-                                    {
-                                        max: 100,
-                                        message: '最多可以输入100个字符',
-                                    },
-                                ],
-                            })
-                            (<Input
-                                placeholder='推荐使用XYZ的格式，如：V1.1.0'
-                            />)}
+                                rules: [{ required: true, message: '请输入版本号', },
+                                { max: 100, message: '最多可以输入100个字符', }],
+                            })(<Input placeholder='推荐使用XYZ的格式，如：V1.1.0' />)}
                         </Form.Item>
-                        <Form.Item
-                            label="版本类型"
-                            wrapperCol={ { span: 10 }}
-                        >
+
+                        <Form.Item label="版本类型" wrapperCol={{ span: 10 }}>
                             {getFieldDecorator('appType', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '请选择版本类型',
-                                    },
-                                ],
-                            })
-                            (<Select
+                                rules: [{ required: true, message: '请选择版本类型' }],
+                            })(<Select
                                 showSearch
                                 placeholder="请选择版本类型"
-                                optionFilterProp="children"
-                            >
+                                optionFilterProp="children">
                                 {<Option value={1}>Android版</Option>}
-                                {<Option value={2}>iOS版</Option> }
+                                {<Option value={2}>iOS版</Option>}
                             </Select>)}
                         </Form.Item>
-                        {(appType === 1 || appType === undefined) && <Form.Item
-                            label="版本附件"
-                        >
-                            <UploadFileClass
-                                onRef={ref => this.versionApk = ref}
-                                format='.apk'
-                                maxSize={200}
-                                isNotImg={true}
-                                cb={this.getUrl}
-                            />
-                        </Form.Item>}
-                        {(appType === 1 || appType === undefined) && <Form.Item
-                            label="升级链接"
-                        >
-                            <a href="javascript:">{this.state.url || curAppVersionDetail.url}</a>
-                            <div className="url-desc">上传附件链接后自动生成升级链接</div>
-                        </Form.Item>}
-                        {appType === 2 && <Form.Item
-                            label="升级链接"
-                        >
-                            {getFieldDecorator('url', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '请输入链接',
-                                    },
-                                ],
-                            })
-                            (<Input
-                                placeholder='请确保链接填写完全正确'
-                                style={{ width: 'calc(53% )' }}
-                            />)}
-                            <div className="url-desc">请先将应用包上传到iOS应用市场，然后将获取的链接复制到这里</div>
-                        </Form.Item>}
-                        <Form.Item
-                            label="升级方式"
-                        >
+
+                        {(appType === 1 || appType === undefined) &&
+                            <Form.Item label="版本附件">
+                                <UploadFileClass
+                                    onRef={ref => this.versionApk = ref}
+                                    format='.apk'
+                                    maxSize={200}
+                                    isNotImg={true}
+                                    cb={this.getUrl} />
+                            </Form.Item>}
+                        {(appType === 1 || appType === undefined) &&
+                            <Form.Item
+                                label="升级链接">
+                                <a>{this.state.url || curAppVersionDetail.url}</a>
+                                <div className="url-desc">上传附件链接后自动生成升级链接</div>
+                            </Form.Item>}
+                        {appType === 2 &&
+                            <Form.Item label="升级链接">
+                                {getFieldDecorator('url', {
+                                    rules: [{ required: true, message: '请输入链接' }],
+                                })(<Input placeholder='请确保链接填写完全正确' style={{ width: 'calc(53% )' }} />)}
+                                <div className="url-desc">请先将应用包上传到iOS应用市场，然后将获取的链接复制到这里</div>
+                            </Form.Item>}
+
+                        <Form.Item label="升级方式" >
                             {getFieldDecorator('status', {
                                 initialValue: 1,
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '请选择升级方式',
-                                    },
-                                ],
-                            })
-                            (<Select
+                                rules: [{ required: true, message: '请选择升级方式' }]
+                            })(<Select
                                 showSearch
                                 placeholder="请选择升级方式"
                                 optionFilterProp="children"
-                                style={{ width: 'calc(53% )', marginRight: '6px' } }>
+                                style={{ width: 'calc(53% )', marginRight: '6px' }}>
                                 <Option value={1}>普通升级</Option>
                                 <Option value={2}>强制升级</Option>
                             </Select>)}
@@ -268,11 +217,11 @@ export const AddAppVersionForm = Form.create({
         let { appVersionType } = appInfo;
         let correctMap = null;
         // 版本的ios和android反了
-        if (appVersionType.value === 1) {
-            correctMap = 2;
-        } else {
-            correctMap = 1;
-        }
+        // if (appVersionType.value === 1) {
+        //     correctMap = 2;
+        // } else {
+        //     correctMap = 1;
+        // }
         let curAppVersionDetailMap = {};
         if (curAppVersionDetail) {
             for (let key of Object.keys(curAppVersionDetail)) {
@@ -281,10 +230,10 @@ export const AddAppVersionForm = Form.create({
                 })
             }
         }
-        curAppVersionDetailMap.appType = Form.createFormField({
-            // android and ios
-            value: appVersionType.value === 3 ? 1 : correctMap,
-        })
+        // curAppVersionDetailMap.appType = Form.createFormField({
+        //     // android and ios
+        //     value: appVersionType.value === 3 ? 1 : correctMap,
+        // })
         return curAppVersionDetailMap;
     }
 })(AddAppVersion);

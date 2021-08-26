@@ -81,8 +81,10 @@ let Paths = {
     saveAppInfo5x: '/appInfoManage/saveAppBaseInfo', // 保存应用信息
     getAppDetail5x: '/appInfoManage/getAppInfo', // 获取app应用详情
     getRelateProduct5x: '/appInfoManage/getRelaProducts', // 获取关联产品
-
-
+    getAppVersionList5x: '/appInfoManage/getAppVersionList', // 获取版本列表记录
+    addAppVersionInfo5x: '/appInfoManage/version/add', // 添加版本信息
+    deleteAppVersion5x: '/appInfoManage/version/delete', // 删除版本信息
+    getAppVersionDetail5x: '/appInfoManage/version/get', // 获取版本信息详情
     
 
     /* 协议 */
@@ -132,12 +134,13 @@ let Paths = {
     getLinkHelpImg: '/product/help/get',
     saveLinkHelpImg: '/product/help/save',
 
-    /* 云端定时功能 */
+    /* 云端定时功能5x */
     cloudGetProductList: '/productManage/getProductList', // 产品列表
     getTimeServiceList: '/timeServer/getList', // 获取列表
     updateTimeService: '/timerService/update',
-    saveTimeService: '/timerService/save',
     updateTimeServiceStatus: 'timerService/updateStatus', // 修改云端定时状态
+    getPhysicalModel: '/productManage/physicalModel/get', // 获取物模型  关联协议
+    saveTimeService: '/timeServer/save', // 保存定时信息
 
     /* 场景配置服务 */
     getSceneFunctionList: '/scene/getSceneFunctionList',

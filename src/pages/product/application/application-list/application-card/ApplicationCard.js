@@ -32,7 +32,7 @@ function ApplicationCard(props) {
                 <div className="application-info-bar">
                     <span className="title">应用类型：</span>{Number(appType) === 0 ? '移动应用' : '小程序'}
                 </div>
-                <div className="application-info-bar application-desc">
+                <div className="application-info-bar application-desc" title={appDesc}>
                     <span className="title">应用简介：</span>{appDesc}
                 </div>
             </div>
@@ -46,7 +46,7 @@ function ApplicationCard(props) {
                 modalCancelHandle={() => updateCancelHandle()}
                 targetName={appName}
                 title={'删除应用'}
-                descText={'应用删除后将无法继续APPID。即将删除应用'}
+                descText={'应用删除后将无法继续使用APPID。即将删除应用'}
                 needWarnIcon={true}
                 tipText={'应用删除操作不可恢复。是否确认删除?'}
             />}
