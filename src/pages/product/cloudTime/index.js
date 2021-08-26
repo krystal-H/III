@@ -3,7 +3,6 @@ import { Select, Steps, Button, Input, Table, Divider } from 'antd'
 import PageTitle from '../../../components/page-title/PageTitle'
 import stepImg from '../../../assets/images/product-regist.png'
 import { cloudStatus } from '../../../configs/text-map'
-import { setFuncDataType } from '../../../util/util'
 import { Paths, post, get } from '../../../api'
 import { CloudAddForm } from './cloud-manage-modals'
 import CloudUpdate from './cloud-update'
@@ -23,8 +22,9 @@ export default function CloudTime() {
     const [currentProductId, setCurrentProductId] = useState('')
     const [currentServiceName, setcurrentServiceName] = useState('')
 
-    const [cloudEditVisible, setCloudEditVisible] = useState(false)
-    const [usedPropertys, setUsedPropertys] = useState([])
+    const [cloudEditVisible, setCloudEditVisible] = useState(false) // 编辑
+    const [editData, setEditData] = useState([]) // 编辑数据
+    const [changeStatus, setChangeStatus] = useState([]) // 操作数据状态
 
     const columns = [
         {
@@ -67,13 +67,12 @@ export default function CloudTime() {
             title: '协议数据类型',
             dataIndex: 'functionDataType',
             key: 'functionDataType',
-            // width: 160,
             render: (text, record) => (
                 <div>
                     {
-                        record.timeServerDetails && record.timeServerDetails.map((item, index) => {
-                            return <div key={index}>{setFuncDataType(item)}</div>
-                        })
+                        record.timeServerDetails && record.timeServerDetails.map((item, index) => (
+                            <div key={index}>{item.functionDataType}</div>
+                        ))
                     }
                 </div>
             )
@@ -96,14 +95,14 @@ export default function CloudTime() {
                     {
                         record.status !== 1 ?
                             <React.Fragment>
-                                <a onClick={() => { setCloudEditVisible(true) }}>编辑</a>
+                                <a onClick={() => { editCloudTime(record) }}>编辑</a>
                                 <Divider type="vertical" />
-                                <a onClick={() => { operateHandle(1) }}>发布</a>
+                                <a onClick={() => { operateHandle(record, 1) }}>发布</a>
                                 <Divider type="vertical" />
-                                <a onClick={() => { operateHandle(2) }}>删除</a>
+                                <a onClick={() => { operateHandle(record, 2) }}>删除</a>
                             </React.Fragment>
                             :
-                            <a onClick={() => { operateHandle(3) }}>下线</a>
+                            <a onClick={() => { operateHandle(record, 0) }}>下线</a>
                     }
                 </span>
             ),
@@ -120,6 +119,12 @@ export default function CloudTime() {
         getTimeList()
     }, [pager.pageIndex, pager.pageRows, currentServiceName, currentProductId]) // eslint-disable-line react-hooks/exhaustive-deps
 
+    // 编辑
+    const editCloudTime = (record) => {
+        setEditData(record)
+        setCloudEditVisible(true)
+    }
+
     // 获取产品列表
     const getCloudGetProductList = () => {
         get(Paths.cloudGetProductList).then(res => {
@@ -127,13 +132,13 @@ export default function CloudTime() {
         }, () => setAllProductList([]))
     }
 
-    //  获取云端定时列表
+    // 获取云端定时列表
     const getTimeList = () => {
         post(Paths.getTimeServiceList, {
             serviceName: currentServiceName || '',
             productId: currentProductId || '',
             ...pager
-        }, {loading: true}).then((res) => {
+        }, { loading: true }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {
                 return Object.assign(cloneDeep(pre), { totalRows: res.data.pager.totalRows })
@@ -141,40 +146,29 @@ export default function CloudTime() {
         })
     }
 
-    //页码改变
+    // 翻页
     const pagerChange = (pageIndex, pageRows) => {
-        if (pageRows === pager.pageRows) {
-            setPager(pre => {
-                return Object.assign(cloneDeep(pre), { pageIndex, pageRows })
-            })
-        } else {
-            setPager(pre => {
-                return Object.assign(cloneDeep(pre), { pageIndex: 1, pageRows })
-            })
-        }
+        setPager(pre => {
+            return Object.assign(cloneDeep(pre), { pageIndex: pageRows === pager.pageRows ? pageIndex : 1, pageRows })
+        })
     }
 
-    //搜索
-    const onSearch = value => {
-        setcurrentServiceName(value)
-    }
-
-    // table操作-发布、删除、下线
-    const operateHandle = (type) => {
+    // 操作-发布、删除、下线
+    const operateHandle = (record, type) => {
+        setChangeStatus(record)
         setCloudUpdateVisible(true)
         setOperate(type)
     }
 
     // 发布、删除、下线  弹框确定
-    const updateOkHandle = () => {
-        console.log('确定-调接口')
-        alert('确定-调接口')
+    const updateOkHandle = (type) => {
+        post(Paths.updateTimeServiceStatus, {
+            serviceId: changeStatus.serviceId,
+            productId: changeStatus.productId,
+            status: type
+        }, { loading: true }).then(res => { })
         setCloudUpdateVisible(false)
-    }
-
-    // 发布、删除、下线  弹框取消
-    const close = () => {
-        setCloudUpdateVisible(false)
+        getTimeList()
     }
 
     return (
@@ -206,11 +200,17 @@ export default function CloudTime() {
             <div className='comm-shadowbox device-content'>
                 <div className='content-top'>
                     <div className='content-top-left'>
-                        <Search placeholder="请输入功能名称" onSearch={onSearch} allowClear enterButton style={{ width: 465 }} />
+                        <Search placeholder="请输入功能名称"
+                            allowClear
+                            enterButton
+                            style={{ width: 465 }}
+                            onSearch={(value) => setcurrentServiceName(value)} />
                     </div>
                     <Button type="primary" onClick={() => setCloudAddVisible(true)}>创 建</Button>
                 </div>
-                <Table rowKey="serviceId" dataSource={dataSource} columns={columns}
+                <Table rowKey="serviceId"
+                    dataSource={dataSource}
+                    columns={columns}
                     pagination={{
                         defaultCurrent: 1,
                         current: pager.pageIndex,
@@ -218,7 +218,6 @@ export default function CloudTime() {
                         pageSize: pager.pageRows,
                         total: pager.totalRows,
                         showQuickJumper: true,
-                        
                     }} />
             </div>
             {/* 创建 */}
@@ -228,26 +227,33 @@ export default function CloudTime() {
                     visible={cloudAddVisible}
                     type="add"
                     allProductList={allProductList}
-                    onCancel={() => setCloudAddVisible(false)}></CloudAddForm>
+                    onCancel={() => {
+                        setCloudAddVisible(false)
+                        getTimeList()
+                    }}></CloudAddForm>
             }
-
             {/* 编辑 */}
             {
                 cloudEditVisible &&
                 <CloudAddForm
                     visible={cloudEditVisible}
                     type="edit"
-                    onCancel={() => setCloudEditVisible(false)} />
+                    allProductList={allProductList}
+                    editData={editData}
+                    onCancel={() => {
+                        setCloudEditVisible(false)
+                        getTimeList()
+                    }} />
             }
-
             {/* 发布、删除、下线 */}
             {
                 cloudUpdateVisible &&
                 <CloudUpdate
                     visible={cloudUpdateVisible}
                     operate={operate}
-                    updateOkHandle={() => updateOkHandle()}
-                    updateCancelHandle={() => close()} />
+                    changeStatus={changeStatus}
+                    updateOkHandle={() => updateOkHandle(operate)}
+                    updateCancelHandle={() => setCloudUpdateVisible(false)} />
             }
         </div>
     )

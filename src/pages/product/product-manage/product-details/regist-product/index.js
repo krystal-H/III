@@ -97,12 +97,12 @@ export default function DeviceRegist() {
     }, [pager.pageIndex, pager.pageRows])
     //获取列表
     const getList = (loading = true) => {
-        let productId=JSON.parse(sessionStorage.getItem('productItem')).productId
-        let params = { ...form.getFieldsValue(), ...pager, productId }
-        if (!params.id || !params.id.trim()) {
-            delete params.id
-        }
-        // let params = { ...form.getFieldsValue(), ...pager, productId: 11549 }
+        // let productId=JSON.parse(sessionStorage.getItem('productItem')).productId
+        // let params = { ...form.getFieldsValue(), ...pager, productId }
+        // if (!params.id || !params.id.trim()) {
+        //     delete params.id
+        // }
+        let params = { ...form.getFieldsValue(), ...pager, productId: 11549 }
         post(Paths.proReledRegist, params, { loading }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {

@@ -7,7 +7,6 @@ import { post, Paths, get } from '../../../api';
 import downpng from '../../../assets/images/product/download.png';
 import './index.scss'
 // import GroupDetailt from '../../product/device/device-group/groupDeviceList';
-const { Search } = Input;
 const { Option } = Select;
 const originCount = [{ label: '当前异常数', count: 0 }, { label: '累积设备总数', count: 0 }, { label: '累积入网总数', count: 0 }, { label: '今日入网总数', count: 0 }]
 export default function DeviceList() {
@@ -23,7 +22,7 @@ export default function DeviceList() {
     }, [])
     useEffect(() => {
         getList()
-    }, [selectType,pager.pageRows, pager.pageIndex])
+    }, [selectType, pager.pageRows, pager.pageIndex])
     //产品改变
     const selectChange = (value) => {
         setPager(pre => {
@@ -38,8 +37,8 @@ export default function DeviceList() {
             ...form.getFieldsValue(),
             ...pager,
         }
-        if(selectType){
-            params.productId=selectType
+        if (selectType) {
+            params.productId = selectType
         }
         post(Paths.getDeviceList, params, { loading }).then((res) => {
             setDataSource(res.data.list)
@@ -69,8 +68,9 @@ export default function DeviceList() {
         form.resetFields();
     }
     //去详情
-    const GroupDetailt = (id) => {
-        history.push(`/open/device/devManage/detail/${id}?step=1`);
+    const GroupDetailt = (data) => {
+        window.sessionStorage.setItem('DEVICE_DETAIL_BASE', JSON.stringify(data))
+        history.push(`/open/device/devManage/detail/${data.deviceId}?step=1`);
     }
     //过滤函数
     const fliterFn = (type, value) => {
@@ -168,7 +168,7 @@ export default function DeviceList() {
             title: '操作',
             render: (text, record) => (
                 <Space size="middle">
-                    <a onClick={() => { GroupDetailt(record.deviceId) }}>查看</a>
+                    <a onClick={() => { GroupDetailt(record) }}>查看</a>
                 </Space>
             )
         },
@@ -176,7 +176,7 @@ export default function DeviceList() {
     //导出
     const exportFile = () => {
         // window.open (Paths.exportDeviceList) ;
-        // return
+    
         post(Paths.exportDeviceList, {}).then((res) => {
 
         });

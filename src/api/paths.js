@@ -136,10 +136,9 @@ let Paths = {
     /* 云端定时功能5x */
     cloudGetProductList: '/productManage/getProductList', // 产品列表
     getTimeServiceList: '/timeServer/getList', // 获取列表
-    updateTimeService: '/timerService/update',
-    updateTimeServiceStatus: 'timerService/updateStatus', // 修改云端定时状态
     getPhysicalModel: '/productManage/physicalModel/get', // 获取物模型  关联协议
     saveTimeService: '/timeServer/save', // 保存定时信息
+    updateTimeServiceStatus: '/timeServer/updateStatus', // 修改云端定时状态
 
     /* 场景配置服务 */
     getSceneFunctionList: '/scene/getSceneFunctionList',
@@ -540,6 +539,7 @@ let Paths = {
     PhysicalModelAction:'/physicalModel/func/product/action',//产品-功能定义-物模型-功能-增
     searchModelList:'/physicalModel/func/search',//产品-功能定义-创建物模型-查询模型列表
     addPhticalStard:'/physicalModel/func/product/add',//产品-功能定义-物模型-新增标准模型
+    downPhysicalModel:'/physicalModel/download/product',//产品-功能定义-下载物模型
 
     // //设备-设备管理
     // getDeviceList
@@ -561,6 +561,13 @@ let Paths = {
     proReledRegist:'/deviceRegister/deviceList',//设备注册列表
     proReledCount:'/deviceRegister/statistics',//设备注册统计
     proReledExport:'/deviceRegister/importAddr',//设备注册导出
+    proReledInfo:'/product/detail',//设备基本详情
+    getProductPlus:'/productManage/getProductExtendList',//产品下拉带验证方式
+
+    //确定面板接口
+    cusSavePanel:'/panelManage/saveProject',//自定义-保存/更新面板
+    delPanel:'/panelManage/delProject',//删除项目面板
+
 };
 
 // 拼接 urlPrefix
