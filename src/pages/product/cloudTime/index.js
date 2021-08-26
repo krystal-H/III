@@ -133,7 +133,7 @@ export default function CloudTime() {
             serviceName: currentServiceName || '',
             productId: currentProductId || '',
             ...pager
-        }).then((res) => {
+        }, {loading: true}).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {
                 return Object.assign(cloneDeep(pre), { totalRows: res.data.pager.totalRows })
@@ -227,7 +227,7 @@ export default function CloudTime() {
                 <CloudAddForm
                     visible={cloudAddVisible}
                     type="add"
-                    usedPropertys={usedPropertys}
+                    allProductList={allProductList}
                     onCancel={() => setCloudAddVisible(false)}></CloudAddForm>
             }
 
