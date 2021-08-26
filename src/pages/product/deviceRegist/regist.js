@@ -3,17 +3,36 @@ import { Modal, Button, Input, Select, Tooltip, Form } from 'antd';
 import { UploadFileHooks } from '../../../components/upload-file';
 import LabelTip from '../../../components/form-com/LabelTip';
 import './index.scss'
+import { post, Paths, get } from '../../../api';
 export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, optionArr }) {
   const [form] = Form.useForm();
   const $el = useRef(null)
-
   //提交数据
   const subData = () => {
+    form.validateFields().then(value => {
+      // 验证通过后进入
+
+      let params = {
+        productId: value.productId,
+        data: value.upload[0].url
+      }
+      post(Paths.proReledExport, params).then((res) => {
+        colseMoadl()
+      });
+    }).catch(err => {
+      // 验证不通过时进入
+    });
   }
   const [selectPro, setSelectPro] = useState('')
   const $dom = useMemo(() => {
+
     if (!selectPro) return
     let count = 0
+    optionArr.forEach(item => {
+      if (item.productId === selectPro) {
+        count = item.authorityType
+      }
+    })
     if (count === 0) {
       return (<span>一型一密<LabelTip tip="设备通信时，仅校验烧录的产品密钥，设备安全性较低。"></LabelTip></span>)
     } else if (count === 1) {
@@ -33,14 +52,14 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
       <div className='device-regist'>
         <Form form={form} labelAlign='right'>
           <Form.Item
-            name="select"
+            name="productId"
             label="产品名称"
             rules={[{ required: true }]}
           >
             <Select onChange={selectHandle}>
               {
                 optionArr.map(item => {
-                  return (<Select.Option value={item.key} key={item.key}>{item.value}</Select.Option>)
+                  return (<Select.Option value={item.productId} key={item.productId}>{item.productName}</Select.Option>)
                 })
               }
             </Select>
@@ -50,12 +69,12 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
           </Form.Item>
           <Form.Item
             label="导入设备物理地址"
-            
+
           >
             <Form.Item
               name="upload"
               noStyle
-              rules={[{ required: true ,message: '请上传文件' }]}
+              rules={[{ required: true, message: '请上传文件' }]}
             >
               <UploadFileHooks
                 ref={$el}

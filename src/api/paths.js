@@ -559,6 +559,8 @@ let Paths = {
     proReledRegist:'/deviceRegister/deviceList',//设备注册列表
     proReledCount:'/deviceRegister/statistics',//设备注册统计
     proReledExport:'/deviceRegister/importAddr',//设备注册导出
+    proReledInfo:'/product/detail',//设备基本详情
+    getProductPlus:'/productManage/getProductExtendList',//产品下拉带验证方式
 };
 
 // 拼接 urlPrefix
