@@ -176,7 +176,7 @@ export default function DeviceList() {
     //导出
     const exportFile = () => {
         // window.open (Paths.exportDeviceList) ;
-        // return
+    
         post(Paths.exportDeviceList, {}).then((res) => {
 
         });

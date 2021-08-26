@@ -3,73 +3,85 @@ import { Input, Button, Select, Table } from 'antd';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import './index.scss'
 import EditableTable from './editTable';
-import { post, Paths, get } from '../../../../../api';
+import { post, Paths } from '../../../../../api';
 export default function productInfo() {
     useEffect(() => {
         getBusinessInfo()
     }, [])
-    let productBaseInfo={}
+    let productBaseInfo = {}
     if (sessionStorage.getItem('productItem')) {
         productBaseInfo = JSON.parse(sessionStorage.getItem('productItem'))
     }
     const [businessInfo, setBusinessInfo] = useState({})
-    const [imageInfo,setImageInfo]= useState({})
+    const [imageInfo, setImageInfo] = useState({})
     const getBusinessInfo = () => {
-        let productId=productBaseInfo.productId
+        let productId = productBaseInfo.productId
         post(Paths.getPublishProductBusinessInfo, { productId: 1 }).then((res) => {
             setBusinessInfo(res.data)
         });
-        post(Paths.proReledInfo, { productId: 11760 }).then((res) => {
-
+        post(Paths.proReledInfo, { productId }).then((res) => {
+            setImageInfo(res.data)
         });
     }
-    const downFile=(url)=>{
+    const downFile = (url) => {
         window.open(url)
+    }
+    const getMcuCodeCheck = (count) => {
+        if (count === 0) {
+            return '一型一密'
+        } else if (count === 1) {
+            return '一型一密plus'
+        } else if (count === 2) {
+            return '一机一密'
+        } else {
+            return ''
+        }
     }
     return (<div id='product-info'>
         <div className='product-info-item'>
             <h3 className='product-info-title'>产品信息</h3>
             <div className='product-info-content'>
                 <div className='product-info-conten-wrap'>
-                    <img className='product-top-left-img' alt=''/>
+                    <img className='product-top-left-img' alt='' />
                     <div className='product-info-content-text'>
                         <div>
+                            <span>产品品牌：</span>
+                            <span>{imageInfo.brandName}</span>
+                        </div>
+                        <div>
                             <span>产品型号：</span>
-                            <span>HTSL-BB100]</span>
+                            <span>{imageInfo.productCode}</span>
                         </div>
                         <div>
                             <span>网关子设备：</span>
-                            <span>HTSL-BB100]</span>
+                            <span>{imageInfo.productClassId}</span>
                         </div>
                         <div>
                             <span>通信安全验证：</span>
-                            <span>HTSL-BB100]</span>
+                            <span>{getMcuCodeCheck(imageInfo.authorityType)}</span>
                         </div>
-                        <div>
-                            <span>配网方式：</span>
-                            <span>HTSL-BB100]</span>
-                        </div>
+
                     </div>
                 </div>
                 <div className='product-info-conten-wrap'>
                     <div className='product-info-content-text'>
                         <div>
                             <span>配网方式：</span>
-                            <span>HTSL-BB100]</span>
+                            <span>{imageInfo.bindTypeStr}</span>
                         </div>
                         <div>
                             <span>AP-SSID：</span>
-                            <span>HTSL-BB100]</span>
+                            <span>{imageInfo.ssid}</span>
                         </div>
                         <div>
                             <span>AP-密码：</span>
-                            <span>HTSL-BB100]</span>
+                            <span>{imageInfo.ssidPassword}</span>
                         </div>
                     </div>
                 </div>
                 <div className='product-info-conten-wrap' style={{ paddingTop: '12px' }}>
                     <div className='product-top-right-text'>配网方式：</div>
-                    <img className='product-top-right-img' alt=''/>
+                    <img className='product-top-right-img' alt='' />
                 </div>
             </div>
         </div>
@@ -78,11 +90,11 @@ export default function productInfo() {
             <div className='product-info-content'>
                 <div className='product-info-conten-wrap'>
                     <span className='middle-text'>配网引导图：</span>
-                    <img className='middle-img' alt=''/>
+                    <img className='middle-img' alt='' src={imageInfo.guidePage}/>
                 </div>
                 <div className='product-info-conten-wrap'>
                     <span className='middle-text'>失败引导图：</span>
-                    <img className='middle-img' alt=''/>
+                    <img className='middle-img' alt='' src={imageInfo.bindFailPage}/>
                 </div>
                 <div className='product-info-conten-wrap'>
                     <span className='middle-text'>帮助轮播图：</span>
@@ -133,9 +145,9 @@ export default function productInfo() {
                     <div className='business-left-item'>
                         <div className='item-label'>产品说明书：</div>
                         {
-                           businessInfo.instruction ?  JSON.parse(businessInfo.instruction).map((item,index)=>{
-                            return (<a key={index} onClick={()=>{downFile(item.filesrc)}}>{item.filename}</a>)
-                           }) : null
+                            businessInfo.instruction ? JSON.parse(businessInfo.instruction).map((item, index) => {
+                                return (<a key={index} onClick={() => { downFile(item.filesrc) }}>{item.filename}</a>)
+                            }) : null
                         }
                     </div>
                 </div>

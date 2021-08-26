@@ -37,39 +37,44 @@ function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtoco
     //         getProtocolLists(productIdInRoutePath)
     //     }
     // }, [getProductBaseInfo, getProtocolLists, productIdInRoutePath])
-    useEffect(() => {
-        getDetail()
-    }, [])
-    const [data, setData] = useState({})
-    const getDetail = () => {
-        post(Paths.getPublishProductInfo, { productId: 1 }).then((res) => {
-            setData(res.data)
-        });
+    // useEffect(() => {
+    //     getDetail()
+    // }, [])
+    // const [data, setData] = useState({})
+    // const getDetail = () => {
+    //     post(Paths.getPublishProductInfo, { productId: 1 }).then((res) => {
+    //         setData(res.data)
+    //     });
+    // }
+    let productItem = {}
+    if (sessionStorage.getItem('productItem')) {
+        productItem = JSON.parse(sessionStorage.getItem('productItem'))
+    } else {
+        return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
-
     if (!productIdInRoutePath) {
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
     const titleCom = (<div className='product_title_baseinfo_list'>
         <div>
             <div>品类：</div>
-            <div>睡眠监测</div>
+            <div>{productItem.deviceType}</div>
         </div>
         <div>
             <div>产品ID：</div>
-            <div>{data.productId}</div>
+            <div>{productItem.productId}</div>
         </div>
         <div>
             <div>通讯协议：</div>
-            <div>{}</div>
+            <div>{productItem.bindTypeStr}</div>
         </div>
         <div>
             <div>产品编码：</div>
-            <div>睡眠监测</div>
+            <div>{productItem.productCode}</div>
         </div>
         <div>
             <div>产品密钥：</div>
-            <div>睡眠监测</div>
+            <div>{productItem.deviceKey}</div>
         </div>
     </div>)
     return (
