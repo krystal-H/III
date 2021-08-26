@@ -176,7 +176,7 @@ export default class H5Manage extends Component {
         this.setState({
             deleteLoading:true
         },() => {
-            post(Paths.delProject,{
+            post(Paths.delApph5Project,{
                 projectId
             }).then(res => {
                 this.setState({
@@ -382,6 +382,7 @@ export default class H5Manage extends Component {
                 </section>
 
                 <ProductHelpConfig productId={productId}></ProductHelpConfig>
+
                 {/* 页面发布弹框 */}
                 {
                     h5PublishVisible &&

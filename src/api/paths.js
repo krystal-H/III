@@ -111,20 +111,19 @@ let Paths = {
     /* v5.x之前的旧产品详情页面 */
     getH5Pages: '/projectManage/getProjectList',
     getAppsByProductId: '/projectManage/getAppsByProductId',
-
-
-    getTemplateMarket: '/h5/template/getTemplateMarket',
-    getTemplateBaseInfo: '/h5/template/getTemplateBaseInfo',
-    getTemplateAnalysis: '/h5/template/getAnalysis',
-    useAppPanelTemplate: '/projectManage/useAppPanelTemplate',
-    saveProject: '/projectManage/saveProject',
-    delProject: '/projectManage/delProject',
-    copyProject: '/projectManage/copyProject',
-    
-    getFormalPubHistory: '/projectManage/getFormalPubHistory',
+    delApph5Project: '/projectManage/delProject',
     getGreyPubHistory:'/projectManage/getGreyPubHistory',
+    getFormalPubHistory: '/projectManage/getFormalPubHistory',
     garyUpdate: '/projectManage/garyUpdate',
     formalUpdate: '/projectManage/formalUpdate',
+
+
+    saveProject: '/projectManage/saveProject',
+    
+    
+    
+    
+    
     offlineUiDesign: '/projectManage/offlineUiDesign',
     cancelGrayUpdate: '/projectManage/cancelGrayUpdate',
 
