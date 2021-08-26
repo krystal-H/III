@@ -10,7 +10,6 @@ const defaultState = fromJS({
     },
     productBaseInfo:{},
     productProtocolLists:[],
-    productConfigSteps:[],
     productH5Pages:{},
     appsByProductId:[],
     timeServiceList:[],
@@ -41,8 +40,6 @@ export default (state = defaultState, action) => {
       return state.set('jsContent', action.jsContent);
     case ActionTypes.UPDATE_APPS_BY_PRODUCTID:
       return state.set('appsByProductId',action.list)
-    case ActionTypes.UPDATE_CONFIG_STEPS:
-      return state.set('productConfigSteps',action.list)
     case ActionTypes.UPDATE_H5MANAGE_PAGES:
       return state.set('productH5Pages',action.data)
 

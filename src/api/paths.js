@@ -108,8 +108,11 @@ let Paths = {
     getConfigSteps: '/product/getConfigSteps',
     saveConfigSteps: '/product/saveConfigSteps',
 
-    /* App服务控制 */
-    getH5Pages: '/projectManage/getProjectPage',
+    /* v5.x之前的旧产品详情页面 */
+    getH5Pages: '/projectManage/getProjectList',
+    getAppsByProductId: '/projectManage/getAppsByProductId',
+
+
     getTemplateMarket: '/h5/template/getTemplateMarket',
     getTemplateBaseInfo: '/h5/template/getTemplateBaseInfo',
     getTemplateAnalysis: '/h5/template/getAnalysis',
@@ -117,7 +120,7 @@ let Paths = {
     saveProject: '/projectManage/saveProject',
     delProject: '/projectManage/delProject',
     copyProject: '/projectManage/copyProject',
-    getAppsByProductId: '/projectManage/getAppsByProductId',
+    
     getFormalPubHistory: '/projectManage/getFormalPubHistory',
     getGreyPubHistory:'/projectManage/getGreyPubHistory',
     garyUpdate: '/projectManage/garyUpdate',

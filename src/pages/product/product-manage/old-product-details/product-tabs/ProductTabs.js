@@ -1,4 +1,5 @@
-import React,{Component} from 'react'
+import React,{Component} from 'react';
+import { connect } from 'react-redux';
 import { post,Paths } from '../../../../../api';
 import ProduceInfo from '../product-info/ProductInfo';
 import ProductProtocols from '../product-protocols/ProductProtocols';
@@ -13,7 +14,7 @@ import {getUrlParam} from '../../../../../util/util';
 //     updateDeviceDebugAccountListAction,//更新账号列表
 //     updateDeviceDebugMacListAction,//更新mac列表
 // } from '../../store/ActionCreator_debug.js';
-import { connect } from 'react-redux';
+
 
 
 import { Tabs } from 'antd';
