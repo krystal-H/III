@@ -6,6 +6,7 @@ import CountNum from '../../../components/CountNum/index';
 import { post, Paths, get } from '../../../api';
 import { netStatus } from '../../../configs/text-map'
 import { DateTool } from '../../../util/util';
+import { Notification } from '../../../components/Notification';
 import './index.scss'
 import RegistModel from './regist'
 const { Option } = Select;
@@ -21,18 +22,27 @@ export default function DeviceRegist() {
 
     useEffect(() => {
         getProductType()
+        getCount()
     }, [])
     const downFile = () => {
         alert(10)
     }
+    //统计
+    const getCount = (productId) => {
+        let params = {}
+        if (productId) {
+            params.productId = productId
+        }
+        post(Paths.proReledCount, params).then((res) => {
+            setCountData([{ label: '设备总数量', count: res.data.total },
+            { label: '已入网设备', count: res.data.activate },
+            { label: '未入网设备', count: res.data.unactivate }])
+        });
+    }
     //产品种类列表
     const getProductType = () => {
-        get(Paths.getProductType).then((res) => {
-            let arr = []
-            for (let key in res.data) {
-                arr.push({ key, value: res.data[key] })
-            }
-            setOptionArr(arr)
+        post(Paths.getProductPlus, {}).then((res) => {
+            setOptionArr(res.data)
         });
     }
     //产品改变
@@ -41,6 +51,7 @@ export default function DeviceRegist() {
             let obj = JSON.parse(JSON.stringify(pre))
             return Object.assign(obj, { pageIndex: 1 })
         })
+        getCount(value)
         setSelectType(value)
     }
     //搜索
@@ -99,6 +110,10 @@ export default function DeviceRegist() {
         setModelVis(false)
     }
     const colseMoadl = () => {
+        Notification({
+            type: 'success',
+            description: '注册成功！',
+        });
         setModelVis(false)
     }
     const tableFilterFn = (count) => {
@@ -154,7 +169,7 @@ export default function DeviceRegist() {
                     <Select style={{ width: 200 }} allowClear onChange={selectChange}>
                         {
                             optionArr.map(item => {
-                                return (<Option value={item.key} key={item.key}>{item.value}</Option>)
+                                return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
                             })
                         }
                     </Select>

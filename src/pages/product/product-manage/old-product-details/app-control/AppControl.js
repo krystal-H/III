@@ -1,43 +1,49 @@
-import React , {useEffect} from 'react';
-import { connect} from 'react-redux';
-import {getH5Manages,getAppsByProductId,getConfigSteps} from '../store/ActionCreator';
+import React , {useEffect ,useState} from 'react';
+import {post, Paths} from '../../../../../api';
 import H5Manage from './H5Manage/H5Manage';
 
-const mapStateToProps = state => {    
-    return {
-        productH5Pages: state.getIn(['oldProduct','productH5Pages']).toJS(),
-        appsByProductId: state.getIn(['oldProduct','appsByProductId']).toJS(),
-        productConfigSteps: state.getIn(['oldProduct','productConfigSteps']).toJS()
-    }
-}
 
-const mapDispatchToProps = dispatch => {
-    return {
-        getH5Manages: params => dispatch(getH5Manages(params)), // 更新当前操作的产品ID
-        getAppsByProductId: productId => dispatch(getAppsByProductId(productId)), // 更新当前操作的产品ID
-        getConfigSteps: id => dispatch(getConfigSteps(id)) // 获取产品页面步骤配置
-    }
-}
-
-function AppControl ({
+export default function AppControl ({
     productId,
-    getH5Manages,
-    productH5Pages,
-    getAppsByProductId,
-    appsByProductId,
-    getConfigSteps,
     productBaseInfo,
     }) {
+        const [pagelist, setPagelist] = useState({
+            pager: {},
+            list: []
+        });
+        const [applist, setApplist] = useState([]);
         
         let {productName,deviceTypeId,deviceSubtypeId,allCategoryName} = productBaseInfo,
             deviceTypeName = allCategoryName || '';
 
         useEffect(() => {
             if (productId) {
-                getH5Manages({productId})
+                // getH5Manages(productId)
                 getAppsByProductId(productId)
             }
-        },[productId,getH5Manages,getAppsByProductId,getConfigSteps])
+        },[productId])
+
+        const getH5Manages = params=>{
+            post(Paths.getH5Pages,{...params},{
+                needVersion: '1.1'
+              }).then(({data={}}) => {
+                setPagelist({
+                    pager: data.pager,
+                    list: data.list
+                })
+            })
+        }
+        const getAppsByProductId = productId=>{
+            post(Paths.getAppsByProductId,{
+                productId
+              },{
+                needVersion: '1.1'
+              }).then(data => {
+                setApplist(data.data || []);
+            })
+        }
+
+        
 
 
         return (
@@ -46,13 +52,11 @@ function AppControl ({
                             productName={productName}
                             deviceTypeId={deviceTypeId}
                             deviceSubtypeId={deviceSubtypeId}
-                            productH5Pages={productH5Pages} 
-                            appsByProductId={appsByProductId}
+                            productH5Pages={pagelist} 
+                            appsByProductId={applist}
                             deviceTypeName={deviceTypeName}
                             getH5Manages={getH5Manages}></H5Manage>
                 
             </div>
         )
 }
-
-export default connect(mapStateToProps,mapDispatchToProps)(AppControl)

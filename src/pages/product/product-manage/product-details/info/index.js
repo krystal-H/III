@@ -8,10 +8,19 @@ export default function productInfo() {
     useEffect(() => {
         getBusinessInfo()
     }, [])
+    let productBaseInfo={}
+    if (sessionStorage.getItem('productItem')) {
+        productBaseInfo = JSON.parse(sessionStorage.getItem('productItem'))
+    }
     const [businessInfo, setBusinessInfo] = useState({})
+    const [imageInfo,setImageInfo]= useState({})
     const getBusinessInfo = () => {
+        let productId=productBaseInfo.productId
         post(Paths.getPublishProductBusinessInfo, { productId: 1 }).then((res) => {
             setBusinessInfo(res.data)
+        });
+        post(Paths.proReledInfo, { productId: 11760 }).then((res) => {
+
         });
     }
     const downFile=(url)=>{

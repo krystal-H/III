@@ -108,8 +108,11 @@ let Paths = {
     getConfigSteps: '/product/getConfigSteps',
     saveConfigSteps: '/product/saveConfigSteps',
 
-    /* App服务控制 */
-    getH5Pages: '/projectManage/getProjectPage',
+    /* v5.x之前的旧产品详情页面 */
+    getH5Pages: '/projectManage/getProjectList',
+    getAppsByProductId: '/projectManage/getAppsByProductId',
+
+
     getTemplateMarket: '/h5/template/getTemplateMarket',
     getTemplateBaseInfo: '/h5/template/getTemplateBaseInfo',
     getTemplateAnalysis: '/h5/template/getAnalysis',
@@ -117,7 +120,7 @@ let Paths = {
     saveProject: '/projectManage/saveProject',
     delProject: '/projectManage/delProject',
     copyProject: '/projectManage/copyProject',
-    getAppsByProductId: '/projectManage/getAppsByProductId',
+    
     getFormalPubHistory: '/projectManage/getFormalPubHistory',
     getGreyPubHistory:'/projectManage/getGreyPubHistory',
     garyUpdate: '/projectManage/garyUpdate',
@@ -558,6 +561,8 @@ let Paths = {
     proReledRegist:'/deviceRegister/deviceList',//设备注册列表
     proReledCount:'/deviceRegister/statistics',//设备注册统计
     proReledExport:'/deviceRegister/importAddr',//设备注册导出
+    proReledInfo:'/product/detail',//设备基本详情
+    getProductPlus:'/productManage/getProductExtendList',//产品下拉带验证方式
 };
 
 // 拼接 urlPrefix

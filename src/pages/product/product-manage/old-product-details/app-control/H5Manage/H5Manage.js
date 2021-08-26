@@ -3,7 +3,7 @@ import { Input, Divider,Table } from 'antd'
 import { Notification} from '../../../../../../components/Notification'
 import {cloneDeep} from 'lodash'
 import { addKeyToTableData} from '../../../../../../util/util';
-import {Paths,post,axios} from '../../../../../../api';
+import {Paths,post} from '../../../../../../api';
 import ActionConfirmModal from '../../../../../../components/action-confirm-modal/ActionConfirmModal';
 import AloneSection from '../../../../../../components/alone-section/AloneSection';
 import FlowChart from '../../../../../../components/flow-chart/FlowChart';
@@ -33,8 +33,6 @@ const flowLists = [
 export default class H5Manage extends Component {
     state = {
         
-        h5CopyVisible:false, // 页面复制框状态
-        copyLoading:false, // 复制按钮loading状态
         h5DeleteVisible:false, // 页面删除框状态
         deleteLoading:false, // 页面删除按钮loading状态
         h5PublishVisible:false, // 发布框状态
@@ -113,14 +111,7 @@ export default class H5Manage extends Component {
                                 <Divider type="vertical" />
                             </React.Fragment>
                         }
-                        {
-                            // SDK模式不能复制
-                            (projectType == '2') && 
-                            <React.Fragment>
-                                <a onClick={ e => this.openModal('h5CopyVisible',record)}>复制</a>
-                                <Divider type="vertical" />
-                            </React.Fragment>
-                        }
+                       
                         {
                             // 草稿状态才可以删除
                             [1].includes(judgeStatu) && 
@@ -142,8 +133,8 @@ export default class H5Manage extends Component {
         ]
     }
     componentDidMount(){
-        // 此处是为了页面从H5编辑器返回时，能及时更新数据
         this.getPages()
+        
     }
     openModal = (type,record,isGrayUpdate) => {
         let _state = {
@@ -199,29 +190,7 @@ export default class H5Manage extends Component {
             })
         })
     }
-    copyOKHandle = () => {
-        let {currentOperateItem} = this.state,
-            {productId} = this.props,
-            {projectId} = currentOperateItem;
-        
-        this.setState({
-            copyLoading:true
-        })
-
-        post(Paths.copyProject,{
-            projectId,
-            productId
-        }).then( res => {
-            this.getPages()
-            this.setState({
-                h5CopyVisible:false
-            })
-        }).finally( () => {
-            this.setState({
-                copyLoading:false
-            })
-        })
-    }
+    
     offLineOkHandle = () => {
         let {currentOperateItem} = this.state,
             {productId} = this.props,
@@ -345,9 +314,8 @@ export default class H5Manage extends Component {
         return _list;
     }
     render() {
-        let {h5DeleteVisible,h5CopyVisible,
-            h5PublishVisible,h5OffLineVisible,listPager,projectName,
-            currentOperateItem,deleteLoading,copyLoading,offLineLoading,publishType,publishLoading} = this.state,
+        let {h5DeleteVisible,h5PublishVisible,h5OffLineVisible,listPager,projectName,
+            currentOperateItem,deleteLoading,offLineLoading,publishType,publishLoading} = this.state,
             {productH5Pages,appsByProductId,productId} = this.props,
             {pageIndex,pageRows} = listPager,
             {list,pager} = productH5Pages,        
@@ -397,9 +365,7 @@ export default class H5Manage extends Component {
                         <div className="h5-manage-tab">
                             <Table columns={_columns} 
                                    dataSource={_list}
-                                   pagination = {
-                                    pager ? 
-                                    {
+                                   pagination = {{
                                         total:pager.totalRows,
                                         current:pageIndex,
                                         defaultCurrent:1,
@@ -409,9 +375,7 @@ export default class H5Manage extends Component {
                                         showTotal: total => <span>共 <a>{total}</a> 条</span>,
                                         showQuickJumper:true,
                                         hideOnSinglePage:true,
-                                    }:
-                                    false
-                                   }
+                                    }}
                                    />
                         </div>
                     </div>
@@ -445,21 +409,6 @@ export default class H5Manage extends Component {
                         descText={'即将删除的页面'}
                         needWarnIcon={true}
                         tipText={'页面删除后将无法找回，是否确认删除？'}
-                    ></ActionConfirmModal>
-                }
-                {/* 页面复制弹框 */}
-                {
-                    h5CopyVisible && 
-                    <ActionConfirmModal
-                        visible={h5CopyVisible}
-                        modalOKHandle={this.copyOKHandle}
-                        modalCancelHandle={this.close.bind(this,'h5CopyVisible')}
-                        targetName={currentOperateItem.projectNameVersion}
-                        confirmLoading={copyLoading}
-                        title={'复制页面'}
-                        descGray={true}
-                        descText={'即将复制的页面'}
-                        tipText={'将创建与原页面功能一样的新页面，是否确认创建？'}
                     ></ActionConfirmModal>
                 }
                 {/* 页面下线弹框 */}
