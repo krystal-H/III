@@ -134,10 +134,9 @@ let Paths = {
     /* 云端定时功能5x */
     cloudGetProductList: '/productManage/getProductList', // 产品列表
     getTimeServiceList: '/timeServer/getList', // 获取列表
-    updateTimeService: '/timerService/update',
-    updateTimeServiceStatus: 'timerService/updateStatus', // 修改云端定时状态
     getPhysicalModel: '/productManage/physicalModel/get', // 获取物模型  关联协议
     saveTimeService: '/timeServer/save', // 保存定时信息
+    updateTimeServiceStatus: '/timeServer/updateStatus', // 修改云端定时状态
 
     /* 场景配置服务 */
     getSceneFunctionList: '/scene/getSceneFunctionList',

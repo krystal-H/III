@@ -24,8 +24,8 @@ export default function NetworkInfo({ productId, networkModalVisible, cancelHand
     post(Paths.getNetDataByProductId, { productId })
       .then(res => {
         // setNetData(res.data)
-        // // form.resetFields()
-        // // formRef.current.setFieldsValue(res.data)
+        // form.resetFields()
+        // formRef.current.setFieldsValue(res.data)
         // formRef.current.setFieldsValue({
         //   baseTypeId: res.data.baseTypeId,
         //   guidePage: res.data.guidePage.guidePage,

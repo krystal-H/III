@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
+import React from 'react'
+import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal'
 
-export default function CloudUpdate({ operate, visible, updateOkHandle, updateCancelHandle }) {
+export default function CloudUpdate({ operate, visible, updateOkHandle, updateCancelHandle, changeStatus }) {
   let texts = null;
     switch (operate) {
         case 1:
@@ -20,7 +20,7 @@ export default function CloudUpdate({ operate, visible, updateOkHandle, updateCa
                 needWarnIcon:true
             }
             break;
-        case 3:
+        case 0:
             texts = {
                 title:'下线云端定时功能',
                 desc:'即将下线的功能',
@@ -42,7 +42,6 @@ export default function CloudUpdate({ operate, visible, updateOkHandle, updateCa
       needWarnIcon={texts.needWarnIcon}
       descText={texts.desc}
       tipText={texts.tip}
-      // confirmLoading={updateLoading}
     ></ActionConfirmModal>
   )
 }

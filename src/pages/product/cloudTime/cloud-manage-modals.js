@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Modal, Input, Form, Select, Tooltip, Button } from 'antd';
-import { DeleteOutlined, QuestionCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
-import { Notification } from '../../../components/Notification';
-import { cloneDeep, uniq, difference } from 'lodash'
-
+import React, { useState, useEffect } from 'react'
+import { Modal, Input, Form, Select, Tooltip, Button } from 'antd'
+import { DeleteOutlined, QuestionCircleOutlined, CheckCircleOutlined } from '@ant-design/icons'
+import { Notification } from '../../../components/Notification'
+import { cloneDeep, difference } from 'lodash'
+import { Paths, post } from '../../../api'
 import './cloud-manage-modals.scss'
 
-const { Option } = Select;
+const { Option } = Select
 
-export function CloudAddForm({ visible, onCancel, type }) {
+export function CloudAddForm({ visible, onCancel, type, allProductList, editData }) {
     const [form] = Form.useForm()
 
     const [isShowAddItem, setIsShowAddItem] = useState(false)
@@ -16,35 +16,48 @@ export function CloudAddForm({ visible, onCancel, type }) {
     const [selectedProtocolList, setSelectedProtocolList] = useState([]) // 弹框中所有被选中的协议
 
     const onFinish = (values) => {
-        console.log('Received values of form: ', values);
-        console.log(selectedProtocolList, '******')
-    };
+        let timeServerDetails = []
+        if (type === 'add') {
+            timeServerDetails = selectedProtocolList.map(item => {
+                return {
+                    property: item.identifier,
+                    propertyName: item.name,
+                    functionDataType: item.dataType.type
+                }
+            })
+        } else {
+            timeServerDetails= selectedProtocolList.map(item => {
+                return {
+                    property: item.property || item.identifier,
+                    propertyName: item.propertyName || item.name,
+                    functionDataType: item.functionDataType || item.dataType.type
+                }
+            })
+            values.serviceId = editData.serviceId
+        }
+        values.timeServerDetails = timeServerDetails
+        console.log('提交的参数', { ...values})
+        post(Paths.saveTimeService, { ...values}, {loading:true}).then(res => {
+            Notification({ description: '操作成功！', type: 'success' })
+            onCancel()
+        })
+    }
+
     const onOk = () => {
         form.submit()
     }
-    const initialList = [
-        {
-            key: 1,
-            value: 'aaa'
-        },
-        {
-            key: 2,
-            value: 'bbb'
-        },
-        {
-            key: 3,
-            value: 'ccc'
-        },
-        {
-            key: 4,
-            value: 'ddd'
-        },
 
-    ]
+    const [initialList, setInitialList] = useState([])
+
+    const showDetail = () => {
+        getRelationProtocol(editData.productId)
+        form.setFieldsValue(editData)
+        setSelectedProtocolList(editData.timeServerDetails)
+    }
 
     useEffect(() => {
-        type === 'edit' && setSelectedProtocolList(initialList)
-    }, [])
+        type === 'edit' && showDetail()
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         console.log(selectedProtocolList)
@@ -53,6 +66,14 @@ export function CloudAddForm({ visible, onCancel, type }) {
     useEffect(() => {
         console.log(protocolItemIndex, 'protocolItemIndex--------')
     }, [protocolItemIndex])
+
+    // 获取关联协议
+    const getRelationProtocol = (productId) => {
+        post(Paths.getPhysicalModel, { productId }).then(res => {
+            console.log(res)
+            setInitialList(res.data.properties)
+        })
+    }
 
     // 展示新增功能点
     const showAddItem = () => {
@@ -72,8 +93,8 @@ export function CloudAddForm({ visible, onCancel, type }) {
         setSelectedProtocolList((prev) => {
             const preArr = cloneDeep(prev)
             // 选出原始list下已经被选的，加入被选list,为了展示
-            const newAdd = initialList.filter(item => item.value === protocolItemIndex)
-            console.log([...preArr, ...newAdd], '*************')
+            const newAdd = initialList.filter(item => item.identifier === protocolItemIndex)
+            // console.log([...preArr, ...newAdd], '*************')
             return [...preArr, ...newAdd]
         })
         setIsShowAddItem(false)
@@ -96,17 +117,29 @@ export function CloudAddForm({ visible, onCancel, type }) {
     // 协议下拉-选项   过滤掉选择过的协议
     const getOptions = () => {
         const protocolNames = dealProtocols() // 剩余未选择的list返回
-        console.log(protocolNames, 'protocolNames')
         return protocolNames.map((item, index) => {
-            return <Option key={index} value={item}>{item}</Option>
+            return <Option key={item.identifier} value={item.identifier}>{item.name}</Option>
         })
     }
 
     // 处理协议差集数据
     const dealProtocols = () => {// 原始的  差集   已选中的  return  剩余的
-        const _init = cloneDeep(initialList).map(item => item.value)
-        const _select = cloneDeep(selectedProtocolList).map(item => item.value)
-        return difference(_init, _select)
+        const _initId = cloneDeep(initialList).map(item => item.identifier)
+        let _selectId = []
+        if (type === 'add') {
+            _selectId = cloneDeep(selectedProtocolList).map(item => item.identifier)  
+        } 
+        if (type === 'edit') {
+            _selectId = cloneDeep(selectedProtocolList).map(item => item.property)
+        }
+        const renainListId = difference(_initId, _selectId)
+        let newTempArr = []
+        cloneDeep(initialList).forEach(ele => {
+            renainListId.forEach(item => {
+                ele.identifier == item && newTempArr.push(ele)
+            })
+        })
+        return newTempArr
     }
 
     return (
@@ -135,33 +168,32 @@ export function CloudAddForm({ visible, onCancel, type }) {
                     </Form.Item>
                     <Form.Item
                         label="归属产品"
-                        name="username"
+                        name="productId"
                         rules={[{ required: true, message: '请选择归属产品' }]}>
-                        <Select >
-                            <Option value="Option1-1">Option1-1</Option>
-                            <Option value="Option1-2">Option1-2</Option>
+                        <Select
+                            onChange={val => getRelationProtocol(val)}>
+                            {
+                                allProductList && allProductList.map(item => (
+                                    <Option key={item.productId} value={item.productId}>{item.productName}</Option>
+                                ))
+                            }
                         </Select>
                     </Form.Item>
                     <Form.Item
                         label={<>
                             关联协议
-                            <Tooltip title={'仅支持可下发类型数据'} placement="top"> <QuestionCircleOutlined /> </Tooltip>
+                            <Tooltip title={'仅支持可下发类型数据'} placement="top"><QuestionCircleOutlined /></Tooltip>
                         </>}>
 
                         {/* 展示选择的协议 */}
-                        {
-                            selectedProtocolList.length > 0 &&
+                        {selectedProtocolList.length > 0 &&
                             <div className="show-protocol-box">
                                 {
                                     selectedProtocolList.map((item, index) => {
                                         return (
                                             <div className="protocol-bar" key={index}>
-                                                <p className="protocol-bar-title">选择的选项-----{item.value}</p>
-                                                <div>
-                                                    <span>CO_Null_Reset_asdfasdfdsafasdfklas</span>
-                                                    <span>布尔型</span>
-                                                    <span>0-1|1-2</span>
-                                                </div>
+                                                <p className="protocol-bar-title">{item.name || item.propertyName}</p>
+                                                <div><span>{item.identifier || item.property}</span></div>
                                                 <span
                                                     className="protocol-bar-del"
                                                     onClick={() => deleteProtocol(index)}>
@@ -173,7 +205,6 @@ export function CloudAddForm({ visible, onCancel, type }) {
                                 }
                             </div>
                         }
-
                         {/* 添加功能点固定 */}
                         {
                             isShowAddItem &&
@@ -184,9 +215,7 @@ export function CloudAddForm({ visible, onCancel, type }) {
                                         onChange={value => changeProtocolItem(value)}
                                         style={{ width: 365 }}>
                                         <Option key="" value="">请选择需要相关的协议</Option>
-                                        {
-                                            getOptions()
-                                        }
+                                        {getOptions()}
                                     </Select>
                                 </div>
                                 <div className="control-btns">
@@ -199,7 +228,6 @@ export function CloudAddForm({ visible, onCancel, type }) {
                                 </div>
                             </div>
                         }
-
                         <Button className="add-btn" onClick={() => showAddItem()}>添加功能点</Button>
                     </Form.Item>
                 </Form>
