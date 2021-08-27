@@ -28,22 +28,23 @@ export default class AddProductRelationModal extends Component {
     }
 
     componentDidMount() {
-        this.getListAllProductAndAccreditInfo()
+        this.getListAllProductAndAccreditInfo({productName: ''})
     }
 
+    // 获取可关联的产品
     getListAllProductAndAccreditInfo = (params) => {
         let { appId, relationedProductIds, currentAppType } = this.props,
             _relationedProductIds = (relationedProductIds && relationedProductIds[currentAppType === 1 ? 'android' : 'ios']) || [];
 
-        get(Paths.getDevProductList, {
+        post(Paths.getAppDevProductList5x, {
             // pageIndex: 1,
             // pageRows: 10000, // 写一个极大值，不分页
-            version: '1.1',
-            appId,
+            developerId: 1,
+            appId: Number(appId),
             ...params,
         }, { loading: true }).then((res) => {
             const code = res.code;
-            const data = res.data || [];
+            const data = res.data.list || [];
             // 后台改了接口返回格式，兼容一下
             let listAllProductAndAccreditInfo = {
                 list: data.filter(item => !_relationedProductIds.includes(item.productId)),
@@ -126,6 +127,7 @@ export default class AddProductRelationModal extends Component {
                             onSearch={value => this.handleSearch(value)}
                             style={{ width: '50%' }}
                             enterButton
+                            allowClear
                         />
                     </div>
                     <div className="mescroll-refresh flex1" style={{ height: 'max-content' }}>

@@ -51,6 +51,7 @@ let Paths = {
     getProductBrand: '/productBrand/all', // 产品品牌
     getCommunicationProtocol: '/module/type/all', // 通信协议
     createProduct: '/product/create', // 创建产品
+    downloadData: '/product/dev/module/data/url', // 下载资料路径
 
     // 5.x确定方案
     getScheme: '/scheme/list/deviceType', // 获取方案数据
@@ -78,14 +79,16 @@ let Paths = {
     // 5.xAPP-应用管理
     getAppInfoList: '/appInfoManage/getAppInfoList', // app应用列表
     deleteApp5x: '/appInfoManage/delete', // app应用删除
-    saveAppInfo5x: '/appInfoManage/saveAppBaseInfo', // 保存应用信息
+    saveAppInfo5x: '/appInfoManage/saveAppBaseInfo', // 保存app应用信息
     getAppDetail5x: '/appInfoManage/getAppInfo', // 获取app应用详情
-    getRelateProduct5x: '/appInfoManage/getRelaProducts', // 获取关联产品
-    getAppVersionList5x: '/appInfoManage/getAppVersionList', // 获取版本列表记录
+    getRelateProduct5x: '/appInfoManage/getRelaProducts', // 获取关联产品数据-tab
+    getAppVersionList5x: '/appInfoManage/getAppVersionList', // 获取版本列表记录-tab
     addAppVersionInfo5x: '/appInfoManage/version/add', // 添加版本信息
     deleteAppVersion5x: '/appInfoManage/version/delete', // 删除版本信息
     getAppVersionDetail5x: '/appInfoManage/version/get', // 获取版本信息详情
-    
+    getAppDevProductList5x: '/appInfoManage/getDevProductList', // 获取可关联的产品列表
+    updateRelaProduct5x: '/appInfoManage/updateRelaProduct', // 保存可关联的产品
+    deleteAppRelaProducts5x: '/appInfoManage/deleteRelaProducts', // 删除关联的产品
 
     /* 协议 */
     getProtocolTemplates: '/protoManage/getProtocolTemplatesByProductId',
