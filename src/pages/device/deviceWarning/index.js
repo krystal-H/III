@@ -23,7 +23,7 @@ export default props => {
     return (
         <section className="page-devwarnlist">
             <PageTitle title="设备消息" />
-            <div className="comm-shadowbox countbox">
+            <div className="comm-shadowbox comm-countbox">
                 <div className="item">待处理告警<br/><span className="num">{pendingCount}</span></div>
                 <div className="item">已处理告警<br/><span className="num">{processedCount}</span></div>
                 <div className="item">已发送告警<br/><span className="num">{sentCount}</span></div>

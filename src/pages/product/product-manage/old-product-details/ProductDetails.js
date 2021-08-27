@@ -23,7 +23,7 @@ export default function ProductDetail ({match}) {
     },[getBaseInfo, getProtocolLi,productIdInRoutePath])
 
     const getBaseInfo = productId=>{
-        post(Paths.getProductBaseInfo,{productId},{
+        post(Paths.getOldProductBaseInfo,{productId},{
             needVersion:1.1,
             loading:true
           }).then(data => {

@@ -35,7 +35,7 @@ let Paths = {
     getProductList: '/product/listAllProductAndAccreditInfo',
     copyProduct: '/product/copy',
     delectProduct: '/product/deleteProduct',
-    getProductBaseInfo: '/product/getProduct',
+    getProductBaseInfo: '/product/detail/old',
     updateProductBaseInfo: '/product/update',
 
     // 5.x产品列表功能
@@ -112,6 +112,7 @@ let Paths = {
     saveConfigSteps: '/product/saveConfigSteps',
 
     /* v5.x之前的旧产品详情页面 */
+    getOldProductBaseInfo: '/product/detail/old',
     getH5Pages: '/projectManage/getProjectList',
     getAppsByProductId: '/projectManage/getAppsByProductId',
     delApph5Project: '/projectManage/delProject',
@@ -431,8 +432,8 @@ let Paths = {
     getGroupList:'/deviceGroup/getDeviceGroupList',
     getGroupListAuth:'/group/getGroupList',
     updateGroup:'/deviceGroup/addOrUpdate',
-    deleteGroup:'/group/delete',
-    getGroupDetail:'/group/get',
+    deleteGroup:'/deviceGroup/deleteGroup',
+    getGroupDetail:'/deviceGroup/getDeviceGroupInfo',
     getGroupDeviceList:'/group/getDeviceList',
     addGroupDevice:'/group/relaDevice',
     getGroupSlctDev:'/group/getRelaList',
