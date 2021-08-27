@@ -142,6 +142,16 @@ class Hardware extends Component {
         }
     }
 
+    // 获取下载资料
+    downloadData = () => {
+        post(Paths.downloadData, {
+            productId: this.props.productId,
+            moduleId: this.state.currentModuleId
+        }).then(res => {
+            res.data ? window.location = res.data : alert('暂无数据！')
+        })
+    }
+
     render() {
         const { replaceModalVisible, freeApplyVisible, modifyFirmwareVisible, replaceFirmwareVisible, dataSource, allInfo, currentModuleId, firmwareId } = this.state
         return (
@@ -217,7 +227,7 @@ class Hardware extends Component {
                                     productItemData.schemeType === 1 &&
                                     <>
                                         <div>设计PCB</div>
-                                        <div className="blue" onClick={() => alert('暂无电路原理图！')}>参考电路原理图</div>
+                                        <div className="blue" onClick={() => this.downloadData()}>参考电路原理图</div>
                                     </>
                                 }
                                 {
@@ -225,7 +235,7 @@ class Hardware extends Component {
                                     <>
                                         <div>MCU模组 SDK开发</div>
                                         <div className="blue">
-                                            <span onClick={() => alert('暂无MCU开发资料包！')}>下载MCU开发资料包</span>
+                                            <span onClick={() => this.downloadData()}>下载MCU开发资料包</span>
                                             <Tooltip
                                                 title={'包含MCU SDK、串口协议、模组调试助手等。SDK根据您产品的基本信息和功能定义生成对应的模组代码。若您的产品信息和功能定义发生变化，请重新生成。重新生成。'}
                                                 placement="top">
@@ -239,7 +249,7 @@ class Hardware extends Component {
                                     <>
                                         <div>模组SDK开发</div>
                                         <div className="blue">
-                                            <span onClick={() => alert('暂无模组SDK开发资料包！')}>下载模组SDK开发资料包</span>
+                                            <span onClick={() => this.downloadData()}>下载模组SDK开发资料包</span>
                                             <Tooltip
                                                 title={'包含模组 SDK、Bin文件等'}
                                                 placement="top">

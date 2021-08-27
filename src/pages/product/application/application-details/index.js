@@ -282,8 +282,9 @@ class ApplicationDetail extends PureComponent {
 
     // 删除关联信息
     deleteRelationProduct = (productId) => {
-        post(Paths.deleteRelationProduct, {
+        post(Paths.deleteAppRelaProducts5x, {
             productId,
+            developerId: 1,
             appId: Number(this.state.appId),
             appType: Number(this.state.currentAppType),
         }, { loading: true }).then((res) => {
@@ -319,14 +320,16 @@ class ApplicationDetail extends PureComponent {
         });
     };
 
+    // 保存关联的产品
     updateRelaProduct = (productIds) => {
         let { appId, currentAppType, relationProductList } = this.state;
         let relationProductListType = currentAppType === 1 ? relationProductList.listAndroid : relationProductList.listIos;
         // let list = relationProductListType.map(item => item.productId);
-        post(Paths.updateRelaProduct, {
-            productIds: [...productIds].join(','),
+        post(Paths.updateRelaProduct5x, {
+            developerId: 1,
+            productIds: [...productIds],
             appId: Number(appId),
-            appVersionType: Number(currentAppType),
+            appType: Number(currentAppType),
         }, { loading: true, needJson: true, noInstance: true }).then((res) => {
             const code = res.code;
             if (code === REQUEST_SUCCESS) {
