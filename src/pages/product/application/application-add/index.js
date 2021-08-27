@@ -19,8 +19,10 @@ export default memo(function ApplicationAdd(props) {
 
     const saveAppBaseInfo = (params) => {
         let appType = params.appType;
-        delete params.appType;
-        params = { ...params, appMode: 1, developerId: '1' };
+        // delete params.appType;
+        params = { ...params, appMode: 1, developerId: 1 };
+        params.appType = Number(params.appType)
+        console.log(params, '--------')
         // let url = Number(appType) === 0 ? 'saveAppBaseInfo' : 'saveMiniProgramsInfo';
         let app = Number(appType) === 0 ? '应用移动创建成功' : '小程序应用创建成功';
         post(Paths.saveAppInfo5x, {
