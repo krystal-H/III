@@ -7,20 +7,14 @@ class CommercailInfo extends Component {
     constructor(props){
         super(props);
         this.state = {
-            publishProductInfo:{
-                commerceInfo:{},
-                moduleInfo:{},
-                productBaseInfo:{},
-            },
+            publishProductInfo:{},
         }
         this.clickFile = this.clickFile.bind(this);
         this.getPublishProductInfoFun = this.getPublishProductInfoFun.bind(this);
     }
     getPublishProductInfoFun(){
-        post(Paths.getPublishProductInfo,{productId:this.props.productId},{loading:true}).then((model) => {
-            if(model.code==0){
-                this.setState({publishProductInfo:model.data});
-            }
+        post(Paths.getPublishProductBusinessInfo,{productId:this.props.productId},{loading:true}).then((model) => {
+           this.setState({publishProductInfo:model.data || {}});
         });
     }
     componentDidMount() {
@@ -32,9 +26,6 @@ class CommercailInfo extends Component {
         if(this.props.productId&&(prevProps.productId!= this.props.productId)){
             this.getPublishProductInfoFun();
         }
-    }
-    clickFile(url){
-        window.open(url);
     }
 
     clickFile(url){
@@ -50,11 +41,11 @@ class CommercailInfo extends Component {
 
 
     render() {
-        let {publishProductInfo:{commerceInfo}} = this.state;
+        let {publishProductInfo} = this.state;
         let html = null;
-        let mode = commerceInfo?commerceInfo.mode:null;
+        let mode = publishProductInfo.mode;
 
-        if(commerceInfo){//commerceInfo对象，会返回为null的情况，
+        if(publishProductInfo){
             let {
                 supplier,
                 contact,
@@ -65,7 +56,7 @@ class CommercailInfo extends Component {
                 productParam,
                 instruction,
                 productPic,
-            } = commerceInfo;
+            } = publishProductInfo;
             html = (
                 <div>
                     <div className='commonContentBox'>
@@ -159,7 +150,7 @@ class CommercailInfo extends Component {
         return (
         <div className="product_info">
         {
-                commerceInfo?
+                publishProductInfo?
                 html:<div>
                         <div className='commonContentBox'>
                             <div className='title'>商业化信息</div>

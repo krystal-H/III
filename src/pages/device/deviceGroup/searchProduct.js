@@ -1,7 +1,7 @@
 import React,{useState} from "react";
 import { Input, Select } from "antd";
 
-export default ({productList,changedfunc,searchedFunc})=> {
+export default ({productList,changedfunc,searchedFunc,children})=> {
 
 
     const [selectedList,setSelectedList] = useState([-1])
@@ -44,7 +44,7 @@ export default ({productList,changedfunc,searchedFunc})=> {
 
     return (
         <div className='search-box'>
-            <Input.Group compact >
+            <Input.Group compact style={{"display":"inline-block"}} >
                 <Select 
                     showSearch 
                     optionFilterProp="children" 
@@ -65,9 +65,10 @@ export default ({productList,changedfunc,searchedFunc})=> {
                     enterButton maxLength={30} 
                     placeholder="请输入设备ID查询" 
                     onSearch={searchedFunc} 
-                    style={{width: 300}}
+                    style={{width: 250}}
                 />
             </Input.Group>
+            {children}
         </div>
     )
     

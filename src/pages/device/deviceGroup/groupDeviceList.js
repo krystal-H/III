@@ -1,6 +1,6 @@
 import React, { PureComponent,useEffect } from 'react';
 import {Modal, Table,Radio,Form,Select,Upload,Button } from 'antd';
-import moment from 'moment';
+import { DateTool } from '../../../util/util';
 import {get,post, Paths} from '../../../api';
 import SearchProduct from './searchProduct';
 import './deviceGroup.scss';
@@ -30,22 +30,22 @@ export default class GroupDetailt extends PureComponent {
             { title: '状态', dataIndex: 'status',  key: 'status',
                 render: txt => <span>{ {'0':'有效','1':'未激活','2':'在线','3':'离线','4':'禁用'}[txt] }</span>},
             { title: '最后上线时间', dataIndex: 'lastOnlineTime', key: 'lastOnlineTime', 
-                render: text => <span>{text && moment(text).add(8,'h').format('YYYY-MM-DD HH:mm:ss') || '--'}</span>
+                render: text => <span>{text && DateTool.utcToDev(text) || '--'}</span>
             }
         ];
     }
     componentDidMount() {
-        this.props.onRef(this);
+        // this.props.onRef(this);
         this.getCreateProduct();
     }
     //获取产品下拉列表
     getCreateProduct = ()=>{
-        get(Paths.getCreateProduct,{pageRows:999}).then((res) => {
-            let addProductList = res.data.list;
-            if(addProductList&&addProductList.length&&addProductList.length>0){
-                this.setState({addProductList});
+        get(Paths.getProductType).then((res) => {
+            let addProductList = []
+            for (let key in res.data) {
+                addProductList.push({ key, value: res.data[key] })
             }
-           
+            this.setState({addProductList});
         });
     }
     //获取列表

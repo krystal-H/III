@@ -47,64 +47,16 @@
     }
 }
 
-.groupdetailpage{
-    .descriptions{
-        width: 700px;
-        .ant-descriptions-item-label{
-            font-weight: bold;
-        }
-
-    }
-    
-    .page-content-header{
-        position: relative;
-        padding-right: 300px;
-
-        .device-inine-data{
-            position: absolute;
-            padding: 0;
-            margin: 0;
-            right: 0;
-            top: 10px;
-            li{
-                display: inline-block;
-                padding: 0 30px;
-                font-size: 14px;
-                color: #8f8f8f;
-                text-align: center;
-        
-                p{
-                    margin-bottom: 5px;
-                }
-                .count{
-                    font-weight: bold;
-                    font-size: 26px;
-                    color: rgba(0, 0, 0, 0.85);
-                }
-            }
-        
-            li+li{
-                border-left: solid 1px #dedede;
-            }
-        
-            .icon-cube{
-                width: 10px;
-                height: 10px;
-                margin-right: 10px;
-                display: inline-block;
-                background-color: #84afff;
-                box-shadow: #84afff 0 0 10px;
-                transition: box-shadow 2s ease-in-out;
-            }
-        }
-
+.page-groupdetail{
+    .comm-countbox{
+        padding-right: 50%;
     }
 
     .search-box{
-        padding: 10px 0 15px;
+        padding-bottom: 15px;
         .but-add{
             float: right;
-            margin-top: -56px;
+            margin-top: -32px;
         }
     }  
 

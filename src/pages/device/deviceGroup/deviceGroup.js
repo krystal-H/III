@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import {get,post, Paths} from '../../../api';
+import { post, Paths} from '../../../api';
 import { Input, Button, Table, Divider } from 'antd';
 import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
 import ModeAddForm from './addForm';
@@ -29,7 +29,6 @@ export default class DeviceGroup extends Component {
             { title: '添加时间', dataIndex: 'createTime', key: 'createTime', 
                 render: text => <span>{text && DateTool.utcToDev(text) || '--'}</span>
             },
-            
             { title: '操作', key: 'action', width:'140px',
                 render: (text, record) => (
                     <span>
@@ -45,11 +44,11 @@ export default class DeviceGroup extends Component {
     getList = (data={}) => {
         const {pageIndex, searchName} =this.state;
         post(Paths.getGroupList,
-            { pageIndex,pageRows:10,name:searchName, ...data}
+            { pageIndex,pageRows:10,name:searchName||undefined, ...data}
         ).then((res) => {
             this.setState({
-                caseList:res.data.list,
-                pager:res.data.pager,
+                caseList:res.data.list || [],
+                pager:res.data.pager || {},
             });
         }).finally( () => {
             this.setState({
@@ -72,7 +71,7 @@ export default class DeviceGroup extends Component {
     delOkCancel = (type)=>{
         if(type=='ok'){// 点击确认
             let {id} = this.state;
-            get(Paths.deleteGroup,{id}).then((res) => {
+            post(Paths.deleteGroup,{id}).then((res) => {
                 this.setState({loading:true,id:''},()=>{
                     this.getList();
                 });
@@ -99,7 +98,7 @@ export default class DeviceGroup extends Component {
         
         return (
            <div className='page-devicegroup'>
-                <PageTitle noback={true} title="设备分组" />
+                <PageTitle title="设备分组" />
 
                 <div className='comm-shadowbox searchbox'>
                     <div className='comm-searchBox'>
