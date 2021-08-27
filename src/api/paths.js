@@ -114,20 +114,19 @@ let Paths = {
     /* v5.x之前的旧产品详情页面 */
     getH5Pages: '/projectManage/getProjectList',
     getAppsByProductId: '/projectManage/getAppsByProductId',
-
-
-    getTemplateMarket: '/h5/template/getTemplateMarket',
-    getTemplateBaseInfo: '/h5/template/getTemplateBaseInfo',
-    getTemplateAnalysis: '/h5/template/getAnalysis',
-    useAppPanelTemplate: '/projectManage/useAppPanelTemplate',
-    saveProject: '/projectManage/saveProject',
-    delProject: '/projectManage/delProject',
-    copyProject: '/projectManage/copyProject',
-    
-    getFormalPubHistory: '/projectManage/getFormalPubHistory',
+    delApph5Project: '/projectManage/delProject',
     getGreyPubHistory:'/projectManage/getGreyPubHistory',
+    getFormalPubHistory: '/projectManage/getFormalPubHistory',
     garyUpdate: '/projectManage/garyUpdate',
     formalUpdate: '/projectManage/formalUpdate',
+
+
+    saveProject: '/projectManage/saveProject',
+    
+    
+    
+    
+    
     offlineUiDesign: '/projectManage/offlineUiDesign',
     cancelGrayUpdate: '/projectManage/cancelGrayUpdate',
 
@@ -543,6 +542,7 @@ let Paths = {
     PhysicalModelAction:'/physicalModel/func/product/action',//产品-功能定义-物模型-功能-增
     searchModelList:'/physicalModel/func/search',//产品-功能定义-创建物模型-查询模型列表
     addPhticalStard:'/physicalModel/func/product/add',//产品-功能定义-物模型-新增标准模型
+    downPhysicalModel:'/physicalModel/download/product',//产品-功能定义-下载物模型
 
     // //设备-设备管理
     // getDeviceList
@@ -566,6 +566,11 @@ let Paths = {
     proReledExport:'/deviceRegister/importAddr',//设备注册导出
     proReledInfo:'/product/detail',//设备基本详情
     getProductPlus:'/productManage/getProductExtendList',//产品下拉带验证方式
+
+    //确定面板接口
+    cusSavePanel:'/panelManage/saveProject',//自定义-保存/更新面板
+    delPanel:'/panelManage/delProject',//删除项目面板
+
 };
 
 // 拼接 urlPrefix

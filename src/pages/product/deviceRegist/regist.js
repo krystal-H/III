@@ -3,7 +3,7 @@ import { Modal, Button, Input, Select, Tooltip, Form } from 'antd';
 import { UploadFileHooks } from '../../../components/upload-file';
 import LabelTip from '../../../components/form-com/LabelTip';
 import './index.scss'
-import { post, Paths, get } from '../../../api';
+import { post, Paths} from '../../../api';
 export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, optionArr }) {
   const [form] = Form.useForm();
   const $el = useRef(null)

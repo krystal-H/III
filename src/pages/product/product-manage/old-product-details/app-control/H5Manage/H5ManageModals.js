@@ -1,7 +1,7 @@
 import React  from 'react';
 import { Modal, Select,Tabs} from 'antd';
 import { Notification} from '../../../../../../components/Notification';
-import {Paths,get} from '../../../../../../api';
+import {Paths,post} from '../../../../../../api';
 import DefaultIconImg from '../../../../../../assets/images/product/app-default-icon.png';
 
 const { Option } = Select;
@@ -18,7 +18,7 @@ export class H5PagePublish extends React.Component {
         let {productId,publishType} = this.props,
             _path = publishType == 3 ? Paths.getGreyPubHistory : Paths.getFormalPubHistory;
 
-        get(_path,{
+        post(_path,{
             appId,
             productId
         }).then(res => {

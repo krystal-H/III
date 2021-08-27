@@ -44,13 +44,11 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
     let productItem = {}
 
     if (sessionStorage.getItem('productItem')) {
-
         productItem = JSON.parse(sessionStorage.getItem('productItem'))
-        console.log(productItem, '=============')
+    } else {
+        return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
     let { path } = match,
-        { pathname = '' } = location,
-        // showTitle = !NOT_SHOW.test(pathname),
         productIdInRoutePath = getProductIdFromPath(match),
         { mode } = productBaseInfo,
         canOperate = (mode === 0);
