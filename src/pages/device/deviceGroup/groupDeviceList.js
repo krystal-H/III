@@ -1,4 +1,4 @@
-import React, { PureComponent,useEffect } from 'react';
+import React, { PureComponent,useEffect,createRef } from 'react';
 import {Modal, Table,Radio,Form,Select,Upload,Button } from 'antd';
 import { DateTool } from '../../../util/util';
 import {get,post, Paths} from '../../../api';
@@ -8,6 +8,7 @@ import './deviceGroup.scss';
 export default class GroupDetailt extends PureComponent {
     constructor(props){
         super(props);
+        this.uploadForm = createRef();
         this.state = {
             addWay:1,
             listLoading:false,
@@ -20,8 +21,7 @@ export default class GroupDetailt extends PureComponent {
                 id:props.id,
                 productId:-1,
                 deviceUniqueId:undefined,
-            },
-            addProductList:[],
+            }
             
         };
         this.columns = [
@@ -36,17 +36,7 @@ export default class GroupDetailt extends PureComponent {
     }
     componentDidMount() {
         // this.props.onRef(this);
-        this.getCreateProduct();
-    }
-    //获取产品下拉列表
-    getCreateProduct = ()=>{
-        get(Paths.getProductType).then((res) => {
-            let addProductList = []
-            for (let key in res.data) {
-                addProductList.push({ key, value: res.data[key] })
-            }
-            this.setState({addProductList});
-        });
+        
     }
     //获取列表
     getGroupAddDevList = ()=>{
@@ -89,29 +79,18 @@ export default class GroupDetailt extends PureComponent {
                 });
             }
         }else if(addWay==2){
-            this.publicTypeForm();
-
-        }
-
-        
+            this.uploadForm.current.submit();
+        } 
     }
-    addUPload=(params)=>{
-        params.groupId = this.props.groupid;
-        params.type = 1;
-        post(Paths.addDevice,params).then((res) => {
-            // this.setState({selectedRowKeys:[]});
-            this.props.openCloseAdd(true); 
-        });
-
-    }
+    
     changeAddWay=(e)=>{
         let addWay = e.target.value;
         this.setState({addWay});
 
     }
     render() {
-        let { addVisiable,openCloseAdd} =this.props;
-        let { selectedRowKeys, list, pager, addWay,listLoading, addProductList } =this.state;
+        let { addVisiable,openCloseAdd,productList,groupid} =this.props;
+        let { selectedRowKeys, list, pager, addWay,listLoading } =this.state;
         const rowSelection ={
             selectedRowKeys,
             onChange: this.onSelectRowKeys,
@@ -137,7 +116,7 @@ export default class GroupDetailt extends PureComponent {
                 addWay==1 ?
                 <div className="">
                     <SearchProduct 
-                        productList={addProductList}
+                        productList={productList}
                         changedfunc={val=>{this.setQuestParams('productId',val,true)}} 
                         searchedFunc={val=>{this.setQuestParams('deviceUniqueId',val)}}
                     />
@@ -157,7 +136,7 @@ export default class GroupDetailt extends PureComponent {
                         />
                     </div>
                 </div> : 
-                <UploadDevice productList={addProductList} onRef={ref => this.publicTypeForm = ref} addUPload={this.addUPload}></UploadDevice>
+                <UploadDevice productList={productList} groupid={groupid} ref={this.uploadForm} openCloseAdd={openCloseAdd}></UploadDevice>
                 }
             </Modal>
 
@@ -167,87 +146,59 @@ export default class GroupDetailt extends PureComponent {
     }
 }
 
+const formItemLayout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 10 }
+};
 
-const UploadDevice =  Form.create({ name:'form-upload-device' })(function ({
-    form,
+const UploadDevice = ({
     productList,
-    onRef,
-    addUPload,
-}) {
-    // const [labelList,setLabelList] = useState([])
-    useEffect(() => {
-        onRef(returnFormData);
-        // console.log(222,returnFormData);
-    }, []);
-    const {getFieldDecorator,validateFields} = form;
-    const returnFormData = ()=>{
-        validateFields((err,values)=>{
-            // console.log(3333,values);
-            if (!err){
-                let {data,productId} = values,
-                _data = '';
+    groupid,
+    openCloseAdd
+},_ref) =>{
+   
 
-                if (data && data.fileList && data.fileList.length) {
-                    let temp = data.fileList[0]
+    const on_Finish = values =>{
+        let {data,productId} = values,
+        _data = '';
 
-                    if (temp && temp.response && temp.response.data) {
-                        _data = temp.response.data.url
-                    }
-                }
-                let params = {
-                    productId,
-                    data:_data
-                }
-                addUPload(params)
+        if (data && data.fileList && data.fileList.length) {
+            let temp = data.fileList[0]
+
+            if (temp && temp.response && temp.response.data) {
+                _data = temp.response.data.url
             }
-        })
-
+        }
+        post(Paths.addDevice,{groupid,type:1,productId,data:_data}).then((res) => {
+            openCloseAdd(true); 
+        });
     }
+    
 
-    const formItemLayout = {
-        labelCol: { span: 6 },
-        wrapperCol: { span: 10 }
-    };
-
-
-    return (
-        <div>
-        <Form {...formItemLayout}>
-            <Form.Item label="产品">
-                {getFieldDecorator('productId', {
-                    rules: [{ required: true, message: '请选择产品！' }],
-                    initialValue:''
-                })(
-                    <Select showSearch optionFilterProp="children" placeholder="请选择产品">
-                        <Select.Option value="" disabled selected>请选择产品</Select.Option>
-                        {
-                            productList.map(item => {
-                                let {productName,productId} = item;
-                                return (<Select.Option key={productId} value={productId}>{productName}</Select.Option>)
-                            })
-                        }
-                    </Select>
-                )}
+    return (<Form ref={_ref} {...formItemLayout} onFinish={on_Finish}>
+            <Form.Item label="产品" name="productId" rules={[{ required: true, message: '请选择产品' }]}>
+                <Select showSearch optionFilterProp="children" placeholder="请选择产品">
+                    <Select.Option value="" disabled selected>请选择产品</Select.Option>
+                    {
+                        productList.map(item => {
+                            let {productName,productId} = item;
+                            return (<Select.Option key={productId} value={productId}>{productName}</Select.Option>)
+                        })
+                    }
+                </Select>
             </Form.Item>
-            <Form.Item label="上传文件">
-                {getFieldDecorator('data', {
-                    rules: [{ required: true, message: '请上传文件！' }],
-                    // initialValue:[],
-                })(
-                    <Upload
-                        accept='.xls,.xlsx' 
-                        action={Paths.upFileUrl}
-                        data={{
-                            appId: 31438,
-                            domainType: 4,
-                        }}>
-                        <Button type="primary" icon="upload">上传文件</Button><span style={{marginLeft:"15px"}}>仅支持.xls,.xlsx格式文件</span>
-                    </Upload>
-                )}
+            <Form.Item label="上传文件" name="data" rules={[{ required: true, message: '请上传文件' }]}>
+                <Upload
+                    accept='.xls,.xlsx' 
+                    action={Paths.upFileUrl}
+                    data={{
+                        appId: 31438,
+                        domainType: 4,
+                    }}>
+                    <Button type="primary" icon="upload">上传文件</Button><span style={{marginLeft:"15px"}}>仅支持.xls,.xlsx格式文件</span>
+                </Upload>
                 <a href="http://skintest.hetyj.com/31438/6b0b20891e06ac31d0eed37a5083cca9.xlsx">下载模板</a>
             </Form.Item>
-        </Form>
-    </div>
-    )
-})
+        </Form>)
+}
 

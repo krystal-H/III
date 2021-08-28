@@ -40,11 +40,8 @@ export default class GroupDetailt extends PureComponent {
 
             groupDevList:[],
             pager:{},
-            productList:[],//下拉产品列表
+            productList:[],//下拉产品列表、添加设备到分组时的产品选择列表 公用同一数据源
             addVisiable:false,
-
-            addProductList:[],//添加设备到分组时的产品选择列表
-
             selectedRowKeys:[],
             delid:'',deldeviceUniqueId:'',
             delVisable:false,
@@ -104,11 +101,12 @@ export default class GroupDetailt extends PureComponent {
     }
     //获取产品下拉列表
     getDownProduct=()=>{
-        get(Paths.getDownProduct,{pageRows:999}).then((res) => {
-            let productList = res.data.list;
-            if(productList&&productList.length&&productList.length>0){
-                this.setState({productList});
+        get(Paths.getProductType).then((res) => {
+            let productList = []
+            for (let key in res.data) {
+                productList.push({ productId:key, productName: res.data[key] })
             }
+            this.setState({productList});
         });
     }
     //获取分组中的设备列表
@@ -165,7 +163,7 @@ export default class GroupDetailt extends PureComponent {
     render() {
         let {name,createTime,remark,deviceCount,activeCount,groupId,productList,
             groupDevList,addVisiable,selectedRowKeys,
-            pager,delVisable,delid,deldeviceUniqueId,addProductList
+            pager,delVisable,delid,deldeviceUniqueId
         } = this.state;
         const rowSelection ={
             selectedRowKeys,
@@ -224,7 +222,7 @@ export default class GroupDetailt extends PureComponent {
                 <DeviceList 
                     addVisiable={addVisiable} 
                     ref={this.addListRefs}
-                    productList={addProductList}
+                    productList={productList}
                     id={this.id}
                     groupid={this.groupidid}
                     openCloseAdd={this.openCloseAdd}

@@ -434,7 +434,7 @@ let Paths = {
     updateGroup:'/deviceGroup/addOrUpdate',
     deleteGroup:'/deviceGroup/deleteGroup',
     getGroupDetail:'/deviceGroup/getDeviceGroupInfo',
-    getGroupDeviceList:'/group/getDeviceList',
+    getGroupDeviceList:'/deviceGroup/getGroupDeviceList',
     addGroupDevice:'/group/relaDevice',
     getGroupSlctDev:'/group/getRelaList',
     delGroupDevice:'/group/deleteRela',
