@@ -77,7 +77,8 @@ class ApplicationDetail extends PureComponent {
             relationProductJurisdiction: '关联产品',
             versionPublishJurisdiction: '发布版本',
             showEditAppForm: true,
-            relationedProductIds: {}
+            relationedProductIds: {},
+            deleteAppVersionItem: {}
         }
     }
 
@@ -104,7 +105,7 @@ class ApplicationDetail extends PureComponent {
     _getVersionList = (param) => {
         let { appId } = this.state
         post(Paths.getAppVersionList5x, {
-            appId, ...param, developerId: '1'
+            appId, ...param, developerId: 1
         }, { loading: true }).then((res) => {
             const code = res.code;
             const data = res.data;
@@ -126,8 +127,8 @@ class ApplicationDetail extends PureComponent {
             appType: Number(params.appType),
             status: Number(params.status),
             appId: Number(appId),
-            mainVersion: Number(params.mainVersion),
-            developerId: '1'
+            // mainVersion: Number(params.mainVersion),
+            developerId: 1
         }, { loading: true }).then((res) => {
             const code = res.code;
             if (code === REQUEST_SUCCESS) {
@@ -149,7 +150,7 @@ class ApplicationDetail extends PureComponent {
     saveAppInfo = (params) => {
         let { appId, appInfo } = this.state;
         let appType = appInfo.appType.value;
-        params = { ...params, appMode: 1, appId, developerId: '1' };
+        params = { ...params, appMode: 1, appId, developerId: 1, appType: Number(appType) };
         let app = appType === 0 ? '移动应用编辑成功' : '小程序应用编辑成功';
         if (appType === 2) {
             params = { ...params, weChatAppId: appInfo.weChatAppId.value, secret: appInfo.secret.value }
@@ -159,7 +160,7 @@ class ApplicationDetail extends PureComponent {
         }, { loading: true }).then((res) => {
             const code = res.code;
             if (code === REQUEST_SUCCESS) {
-                Notification({ description: app, type: 'warn' })
+                Notification({ description: app, type: 'success' })
                 this.setState((preState) => {
                     let { showEditAppForm } = preState;
                     return { showEditAppForm: !showEditAppForm };
@@ -176,7 +177,7 @@ class ApplicationDetail extends PureComponent {
         post(Paths.getRelateProduct5x, {
             appId,
             paged: false,
-            developerId: '1'
+            developerId: 1
         }, { loading: true }).then((res) => {
             const code = res.code;
             const data = res.data;
@@ -213,7 +214,7 @@ class ApplicationDetail extends PureComponent {
     // 获取详情接口
     _getAppInfo = (appId) => {
         post(Paths.getAppDetail5x, {
-            appId, developerId: '1'
+            appId, developerId: 1
         }, { loading: true }).then((res) => {
             const code = res.code;
             const data = res.data;
@@ -262,10 +263,10 @@ class ApplicationDetail extends PureComponent {
 
     showDialog = (dialogType, curIdType, id, targetType, targetTypeValue) => {
         if (targetType === 'targetName') {
-            texts[0].targetName = targetTypeValue;
+            texts[1].targetName = targetTypeValue;
         }
         if (targetType === 'versionTargetName') {
-            texts[1].targetName = targetTypeValue;
+            texts[2].targetName = targetTypeValue;
         }
         this.setState((preState) => {
             if (curIdType || id) {
@@ -303,7 +304,8 @@ class ApplicationDetail extends PureComponent {
     deleteAppVersion = (appVersionId) => {
         post(Paths.deleteAppVersion5x, {
             appVersionId,
-            developerId: '1'
+            developerId: 1,
+            appType: this.state.deleteAppVersionItem.appType
         }, { loading: true }).then((res) => {
             const code = res.code;
             if (code === REQUEST_SUCCESS) {
@@ -359,7 +361,7 @@ class ApplicationDetail extends PureComponent {
     getAppVersionDetail = (curAppVersionId) => {
         post(Paths.getAppVersionDetail5x, {
             appVersionId: curAppVersionId,
-            developerId: '1'
+            developerId: 1
         }, { loading: true }).then((res) => {
             const code = res.code;
             const data = res.data;
@@ -420,11 +422,13 @@ class ApplicationDetail extends PureComponent {
             title: '版本号',
             dataIndex: 'externalVersion',
             key: 'externalVersion',
-        }, {
-            title: '版本序列标志',
-            dataIndex: 'appSign',
-            key: 'appSign',
-        }, {
+        },
+        // {
+        //     title: '版本序列标志',
+        //     dataIndex: 'appSign',
+        //     key: 'appSign',
+        // }, 
+        {
             title: '版本类型',
             dataIndex: 'appType',
             key: 'appType',
@@ -454,7 +458,12 @@ class ApplicationDetail extends PureComponent {
                     <div>
                         <a onClick={() => this.getAppVersionDetail(record.appVersionId)}>编辑</a>
                         <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                        <a onClick={() => this.showDialog('showDeleteDialog', 'curAppVersionId', record.appVersionId, 'versionTargetName', record.appName)}
+                        <a onClick={() => {
+                            this.setState({
+                                deleteAppVersionItem: record
+                            })
+                            this.showDialog('showDeleteDialog', 'curAppVersionId', record.appVersionId, 'versionTargetName', record.externalVersion)
+                        }}
                         >删除</a>
                     </div>
                 )

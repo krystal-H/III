@@ -38,7 +38,7 @@ function RemoteConfig() {
     const [form] = Form.useForm()
     const [formLayout] = useState('inline')
     const [configProtoclList, setConfigProtoclList] = useState([])
-    const [addVisible, setAddVisible] = useState(true)
+    const [addVisible, setAddVisible] = useState(false)
     const [editData, setEditData] = useState(null)
     const [remoteConfigPager, setRemoteConfigPager] = useState({ pageIndex: 1 })
     const [deleteParams, setDeleteParams] = useState({ deletevisible: false, deleteItem: null, deleteLoading: false })
@@ -94,7 +94,7 @@ function RemoteConfig() {
     }
     // 编辑
     const addOrEditRemoteConfig = (record) => {
-        return setAddVisible(!addVisible)
+        return alert('敬请期待！')
         if (record) { // 编辑
             let { taskId } = record
             getDetail(taskId, 1).then(data => {

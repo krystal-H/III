@@ -82,17 +82,17 @@ class AddAppVersion extends Component {
     };
 
     // 验证方法
-    validateMainVersion = (rule, value, callback) => {
-        const reg = /^[0-9]*$/;
-        if (!value) {
-            callback('请输入版本序列标识，仅支持数值型');
-        } else if (!reg.test(value)) {
-            callback('版本序列标识仅支持数值型');
-        } else if (value.length > 100) {
-            callback('最多可以输入100个数值型数据');
-        }
-        callback();
-    }
+    // validateMainVersion = (rule, value, callback) => {
+    //     const reg = /^[0-9]*$/;
+    //     if (!value) {
+    //         callback('请输入版本序列标识，仅支持数值型');
+    //     } else if (!reg.test(value)) {
+    //         callback('版本序列标识仅支持数值型');
+    //     } else if (value.length > 100) {
+    //         callback('最多可以输入100个数值型数据');
+    //     }
+    //     callback();
+    // }
 
     render() {
         const { getFieldDecorator, getFieldValue } = this.props.form;
@@ -123,11 +123,11 @@ class AddAppVersion extends Component {
                 ]}>
                 <div className="add-version-from-wrapper">
                     <Form {...formItemLayout} className="add-version-from">
-                        <Form.Item label="版本序列标识" wrapperCol={{ span: 10 }} >
+                        {/* <Form.Item label="版本序列标识" wrapperCol={{ span: 10 }} >
                             {getFieldDecorator('mainVersion', {
                                 rules: [{ required: true, validator: this.validateMainVersion, }],
                             })(<Input placeholder="请输入版本序列标识" style={{ width: 'calc(100% )' }} />)}
-                        </Form.Item>
+                        </Form.Item> */}
 
                         <Form.Item label="版本号" wrapperCol={{ span: 10 }}>
                             {getFieldDecorator('externalVersion', {
