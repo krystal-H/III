@@ -20,7 +20,7 @@ function confirmModel({ nextStep }, ref) {
         setIsGrayModalVisible(true)
     }
     //更改面板
-    const [isChangeModalVisible, setIsChangeModalVisible] = useState(false);
+    const [isChangeModalVisible, setIsChangeModalVisible] = useState(true);
     const CancelChange = () => {
         setIsChangeModalVisible(false)
     }

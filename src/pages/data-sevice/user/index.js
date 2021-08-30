@@ -12,6 +12,7 @@ const options = [
     { label: '近7天', value: '1' },
     { label: '近30天', value: '2' },
 ];
+const { Option } = Select;
 const { RangePicker } = DatePicker;
 const originCount = [
     { label: '新增用户数', count: 0 },
@@ -86,9 +87,21 @@ export default function Device() {
         setValue(null)
         setCurrentTime(e.target.value)
     };
+    const [optionArr, setOptionArr] = useState([])
+    const [selectType, setSelectType] = useState('') //产品种类
+    //产品种类列表
+    const getProductType = () => {
+        post(Paths.getProductPlus, {}).then((res) => {
+            setOptionArr(res.data)
+        });
+    }
+    //产品改变
+    const selectChange = (value) => {
+        setSelectType(value)
+    }
     useEffect(() => {
         getData()
-    }, [currentTime, value])
+    }, [currentTime, value, selectType])
     useEffect(() => {
         if (tableData.length) {
             initData(tableData)
@@ -107,6 +120,9 @@ export default function Device() {
         if (value && value.length) {
             params.endDate = value[1].format('YYYY-MM-DD')
             params.startDate = value[0].format('YYYY-MM-DD')
+        }
+        if (selectType) {
+            params.productId = selectType
         }
         post(Paths.userDataAn, params, { loading }).then((res) => {
             initData(res.data.summaryList)
@@ -220,8 +236,12 @@ export default function Device() {
         <div id='device-analysis'>
             <PageTitle title='用户分析'>
                 <div className='top-select'>
-                    <Select defaultValue="lucy" style={{ width: 200 }} allowClear>
-                        <Select.Option value="lucy">Lucy</Select.Option>
+                    <Select style={{ width: 200 }} allowClear onChange={selectChange}>
+                        {
+                            optionArr.map(item => {
+                                return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
+                            })
+                        }
                     </Select>
                 </div>
             </PageTitle>

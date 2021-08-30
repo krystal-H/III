@@ -50,7 +50,7 @@ const columns = [
         key: 'totalNum',
     },
 ];
-
+const { Option } = Select;
 export default function Device() {
     //====
     const [dates, setDates] = useState([]);
@@ -64,7 +64,18 @@ export default function Device() {
         const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
         return tooEarly || tooLate;
     };
-
+    const [optionArr, setOptionArr] = useState([])
+    const [selectType, setSelectType] = useState('') //产品种类
+    //产品种类列表
+    const getProductType = () => {
+        post(Paths.getProductPlus, {}).then((res) => {
+            setOptionArr(res.data)
+        });
+    }
+    //产品改变
+    const selectChange = (value) => {
+        setSelectType(value)
+    }
     const onOpenChange = open => {
         if (open) {
             setHackValue([]);
@@ -86,8 +97,11 @@ export default function Device() {
         setCurrentTime(e.target.value)
     };
     useEffect(() => {
+        getProductType()
+    }, [])
+    useEffect(() => {
         getData()
-    }, [currentTime, value])
+    }, [currentTime, value,selectType])
     useEffect(() => {
         if (tableData.length) {
             initData(tableData)
@@ -106,6 +120,9 @@ export default function Device() {
         if (value && value.length) {
             params.endDate = value[1].format('YYYY-MM-DD')
             params.startDate = value[0].format('YYYY-MM-DD')
+        }
+        if(selectType){
+            params.productId=selectType
         }
         post(Paths.deviceDataAn, params, { loading }).then((res) => {
             initData(res.data.summaryList)
@@ -219,8 +236,12 @@ export default function Device() {
         <div id='device-analysis'>
             <PageTitle title='设备分析'>
                 <div className='top-select'>
-                    <Select defaultValue="lucy" style={{ width: 200 }} allowClear>
-                        <Select.Option value="lucy">Lucy</Select.Option>
+                    <Select style={{ width: 200 }} allowClear onChange={selectChange}>
+                        {
+                            optionArr.map(item => {
+                                return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
+                            })
+                        }
                     </Select>
                 </div>
             </PageTitle>

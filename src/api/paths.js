@@ -538,10 +538,10 @@ let Paths = {
 
     // 产品发布前-定义功能
     standardFnList:'/product/dev/show/func', //标准和自定义功能列表
-    PhysicalModelList:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
+    Physpanel:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
     exportPhysicalModel:'/physicalModel/export/product',//产品-定义功能-导出物模型
     PhysicalModelAction:'/physicalModel/func/product/action',//产品-功能定义-物模型-功能-增
-    searchModelList:'/physicalModel/func/search',//产品-功能定义-创建物模型-查询模型列表
+    sepanel:'/physicalModel/func/search',//产品-功能定义-创建物模型-查询模型列表
     addPhticalStard:'/physicalModel/func/product/add',//产品-功能定义-物模型-新增标准模型
     downPhysicalModel:'/physicalModel/download/product',//产品-功能定义-下载物模型
 
@@ -575,8 +575,9 @@ let Paths = {
     greyModel:'/panelManage/garyUpdate',//灰度
     modelRel:'/panelManage/formalUpdate',//发布
     greyHistory:'/panelManage/getGreyPubHistory',//项目灰度历史列表
-    relHistory:'/panelManage/getFormalPubHistory',//项目发布历史列表
-    offLine:'/panelManage/offlineUiDesign',//下线
+    panelRelHistory:'/panelManage/getFormalPubHistory',//项目发布历史列表
+    panelOffLine:'/panelManage/offlineUiDesign',//下线
+    panelList:'/panelManage/getProjectPage',//获取产品下的所有项目
 
 };
 
