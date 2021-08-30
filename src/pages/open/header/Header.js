@@ -32,7 +32,7 @@ export default class Header extends PureComponent  {
                 {
                     !onlyLogo && 
                     <div className='right'>
-                        <Link to="/messageCenter" target="_blank">帮助文档</Link>
+                        <a href="https://dp.clife.net/iotdoc" target="_blank">帮助文档</a>
                         <Link to="/messageCenter" >工单</Link>
                         <Link to="/messageCenter"  target="_blank">
                             <BellOutlined className='bellicon' />

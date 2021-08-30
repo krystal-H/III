@@ -88,7 +88,8 @@ function ProtocolFn({ nextStep, productId }, ref) {
     }
     //导出物模型
     const exportFile = () => {
-        post(Paths.downPhysicalModel, { productId: '11759' }).then((res) => {
+
+        post(Paths.downPhysicalModel, { productId: productId }).then((res) => {
             // delaData(res.data)
         });
     }
