@@ -1,40 +1,59 @@
 @charset 'utf-8';
 
-.network-detail-modal {
+.network-info-modal {
   &-title {
     margin-bottom: 20px;
     font-weight: bold;
-    @include text(14px, $_323Color);
+    @include text(14px, #323232);
     .tip {
-      @include text(12px, $_666Color);
+      @include text(12px, #666666);
       font-weight: normal;
     }
   }
-  // 展示默认图片
-  .show-img-box {
-    .img-box {
-      @include wh(150px, 267px);
-      @include flex(center);
-      border: $_border;
-      img {
-        max-width: 100%;
-        max-height: 100%;
-      }
-    }
+  .flex {
+    @include flex(flex-start, center);
   }
-  // 展示轮播图
-  .show-img-box2 {
-    .img-box {
-      @include flex(flex-start);
-      &-item {
-        margin: 0 8px 8px 0;
-        border: $_border;
+  .upload-img {
+    .ant-upload.ant-upload-select-picture-card,
+    .ant-upload-list-picture-card-container {
+      @include wh(150px, 267px);
+    }
+    // 原生本地上传
+    .native-upload {
+      .img-wrap {
+        border-radius: 4px;
+        border: 1px dashed #d9d9d9;
+        @include wh(150px, 267px);
         @include flex(center);
-        @include wh(104px, 104px);
         img {
           max-width: 100%;
           max-height: 100%;
         }
+      }
+      .tip-text {
+        @include text(12px, #8e8e8e);
+      }
+    }
+  }
+  .guide-page {
+    border: 1px solid;
+  }
+  // 轮播图
+  .carousel-container {
+    .ant-form-item-control-input-content {
+      @include flex(flex-start);
+      flex-wrap: wrap;
+    }
+    .img-box {
+      margin-right: 10px;
+      margin-bottom: 10px;
+      @include wh(150px, 267px);
+      @include flex(center);
+      border-radius: 4px;
+      border: 1px dashed #d9d9d9;
+      img {
+        max-width: 100%;
+        max-height: 100%;
       }
     }
   }

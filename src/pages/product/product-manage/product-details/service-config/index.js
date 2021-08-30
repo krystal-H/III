@@ -6,6 +6,7 @@ import CommunicateSecurity from './communicationSecurity'
 // import JoinGateway from './joinGateway';
 // import ConfigFirmwareDetail from './configFirmwareDetail';
 import { Link } from 'react-router-dom';
+import { Paths, post, get } from '../../../../../api'
 
 import './index.scss';
 
@@ -77,6 +78,9 @@ function ServiceConfig({ productId, nextStep }, ref) {
   const [firmwareVisible, setFirmwareVisible] = useState(false)
   const [gatewayVisible, setGatewayVisible] = useState(false)
   const [firmwareDetailVisible, setFirmwareDetailVisible] = useState(false)
+  // const [productConfig, setProductConfig] = useState('') // 配网信息信息
+  // const [productExtend, setProductExtend] = useState('') // 通信安全
+  const [productExtend, setProductExtend] = useState('') // 通信安全
   //验证函数
   const subNextConFirm = () => {
     nextStep()
@@ -113,6 +117,29 @@ function ServiceConfig({ productId, nextStep }, ref) {
   const showFirmwareDetail = () => {
     setFirmwareDetailVisible(true)
   }
+
+  // 是否配置过  配网信息、通信安全机制
+  const isConfigedFunc = () => {
+    setSecurityVisible(false)
+    post(Paths.getSecurityConfigStatus, { productId }, { loading: true }).then(res => {
+      // const list = cloneDeep(requiredList)
+      // if (res.data.gatewayConfigflag) { // 配网信息配置过
+      //   list[0].isConfiged = true
+      //   setRequiredList(list)
+      //   setProductConfig(res.data.productConfig)
+      // }
+      if (res.data.securityConfigflag) { // 通信安全配置过
+        // list[1].isConfiged = true
+        // setRequiredList(list)
+        setProductExtend(res.data.productExtend.authorityType)
+      }
+    })
+  }
+
+  useEffect(() => {
+    isConfigedFunc()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div className="service-config-page2">
       <div className="desc">免开发方案，只需选择推荐模组、以及配置固件信息，快速实现硬件智能化。</div>
@@ -197,6 +224,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
         securityVisible &&
         <CommunicateSecurity
           securityVisible={securityVisible}
+          productExtend={productExtend}
           cancelHandle={() => { setSecurityVisible(false) }} />
       }
       {/* 配置产品固件模块 */}
