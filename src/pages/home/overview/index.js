@@ -53,14 +53,14 @@ export default function OverviewWrap() {
             setBannerArr(res.data)
         });
     }
-    //消息列表
+    //消息列表 
     const [messageList, setMessageList] = useState([])
     const getMessageList = () => {
         post(Paths.messageList, { developerId: 1 }).then((res) => {
-            if (res.data.length > 3) {
-                setMessageList(res.data.slice(0, 3))
+            if (res.data.list.length > 3) {
+                setMessageList(res.data.list.slice(0, 3))
             } else {
-                setMessageList(res.data)
+                setMessageList(res.data.list)
             }
 
         });
@@ -79,10 +79,10 @@ export default function OverviewWrap() {
     const [appList, setAppList] = useState([])
     const getAppList = () => {
         post(Paths.appList, { developerId: 1 }).then((res) => {
-            if (res.data.length > 3) {
-                setAppList(res.data.slice(0, 3))
+            if (res.data.list.length > 3) {
+                setAppList(res.data.list.slice(0, 3))
             } else {
-                setAppList(res.data)
+                setAppList(res.data.list)
             }
 
         });
@@ -118,10 +118,10 @@ export default function OverviewWrap() {
     const [produList, setProductList] = useState([])
     const getProductList = () => {
         post(Paths.productList, { developerId: 1 }).then((res) => {
-            if (res.data.length > 3) {
-                setProductList(res.data.slice(0, 3))
+            if (res.data.list.length > 3) {
+                setProductList(res.data.list.slice(0, 3))
             } else {
-                setProductList(res.data)
+                setProductList(res.data.list)
             }
         });
     }

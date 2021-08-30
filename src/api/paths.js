@@ -552,6 +552,7 @@ let Paths = {
     subWorkOrder :'/workOrder/createWorkOrder',//新增工单
     WorkOrderList:'/workOrder/getHistoryWorkOrderList',//工单列表
     WorkOrderDetail:'/workOrder/getWorkOrder',//工单详情
+    downDeviceFile:'/deviceExport/exportDeviceList',//下载设备数据
 
     //数据服务
     deviceDataAn:'/summary/device/dashboard',//设备分析
@@ -571,6 +572,11 @@ let Paths = {
     //确定面板接口
     cusSavePanel:'/panelManage/saveProject',//自定义-保存/更新面板
     delPanel:'/panelManage/delProject',//删除项目面板
+    greyModel:'/panelManage/garyUpdate',//灰度
+    modelRel:'/panelManage/formalUpdate',//发布
+    greyHistory:'/panelManage/getGreyPubHistory',//项目灰度历史列表
+    relHistory:'/panelManage/getFormalPubHistory',//项目发布历史列表
+    offLine:'/panelManage/offlineUiDesign',//下线
 
 };
 

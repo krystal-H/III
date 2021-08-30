@@ -4,7 +4,6 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { post, Paths, get } from '../../../../../api';
 
 import './editInfo.scss'
-import { CloseOutlined } from '@ant-design/icons';
 //tab
 const optionsWithDisabled = [
     { label: '属性', value: 'properties' },
@@ -71,7 +70,9 @@ export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList,
     const sentReq = (data) => {
         data.funcType = currentTab
         data.type = 'update'
-        data.productId = 11759
+        let productItem = JSON.parse(sessionStorage.getItem('productItem'))
+        data.productId = productItem.productId
+        // data.productId = 11759
         data.content.standard = modelType == 1 ? true : false
         console.log(data, '要提交的数据')
         data.content = JSON.stringify(data.content)
