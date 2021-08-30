@@ -68,7 +68,8 @@ export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList 
     const sentReq = (data) => {
         data.funcType = currentTab
         data.type = 'add'
-        data.productId = 11759
+        let productItem = JSON.parse(sessionStorage.getItem('productItem'))
+        data.productId = productItem.productId
         data.content.standard = false
         console.log(data, '要提交的数据')
         data.content = JSON.stringify(data.content)
