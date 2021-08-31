@@ -173,7 +173,7 @@ export const updateAppsByProductId= (list) => {
 // 获取产品关联的APP
 export const getAppsByProductId = (productId) => {
   return (dispatch,getState) => {
-    get(Paths.getAppsByProductId,{
+    post(Paths.getAppsByProductId,{
       productId
     },{
       needVersion: '1.1'

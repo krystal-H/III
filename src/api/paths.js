@@ -120,22 +120,14 @@ let Paths = {
     getFormalPubHistory: '/projectManage/getFormalPubHistory',
     garyUpdate: '/projectManage/garyUpdate',
     formalUpdate: '/projectManage/formalUpdate',
-
-
-    saveProject: '/projectManage/saveProject',
-    
-    
-    
-    
-    
     offlineUiDesign: '/projectManage/offlineUiDesign',
     cancelGrayUpdate: '/projectManage/cancelGrayUpdate',
-
-    netWorkDelete: '/device/netWorkLogo/delete',
-    netWorkAddAndUpdate: '/device/netWorkLogo/addAndUpdate',
-    getLinkConfiguration: '/device/netWorkLogo/getDetail',
-    getLinkHelpImg: '/product/help/get',
-    saveLinkHelpImg: '/product/help/save',
+    getLinkConfiguration: '/netWorkLogo/getDetail',
+    getLinkHelpImg: '/productManage/getProductHelp',
+    saveLinkHelpImg: '/productManage/saveProductHelp',
+    netWorkDelete: '/netWorkLogo/delete',
+    netWorkAddAndUpdate: '/netWorkLogo/addAndUpdate',
+    
 
     /* 云端定时功能5x */
     cloudGetProductList: '/productManage/getProductList', // 产品列表
@@ -435,8 +427,8 @@ let Paths = {
     deleteGroup:'/deviceGroup/deleteGroup',
     getGroupDetail:'/deviceGroup/getDeviceGroupInfo',
     getGroupDeviceList:'/deviceGroup/getGroupDeviceList',
-    addGroupDevice:'/group/relaDevice',
-    getGroupSlctDev:'/group/getRelaList',
+    addGroupDevice:'/deviceGroup/getRelaDeviceList',
+    getGroupSlctDev:'/deviceGroup/getRelaDeviceList',
     delGroupDevice:'/group/deleteRela',
     getCreateProduct:'/prod/getCreateProduct',
     

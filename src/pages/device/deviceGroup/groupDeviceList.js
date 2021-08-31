@@ -1,4 +1,4 @@
-import React, { PureComponent,useEffect,createRef } from 'react';
+import React, { PureComponent,createRef } from 'react';
 import {Modal, Table,Radio,Form,Select,Upload,Button } from 'antd';
 import { DateTool } from '../../../util/util';
 import {get,post, Paths} from '../../../api';
@@ -44,11 +44,9 @@ export default class GroupDetailt extends PureComponent {
         let{addListParams}=this.state;
         let params = {...addListParams}
         if(params.productId == -1){delete params.productId}
-        get(Paths.getGroupSlctDev,params).then((res) => {
+        post(Paths.getGroupSlctDev,params).then((res) => {
             let {list,pager} = res.data || {};
-            if(res.code==0){
-                this.setState({list,pager});
-            }
+            this.setState({list,pager});
         }).finally(()=>{
             this.setState({listLoading:false})
         });

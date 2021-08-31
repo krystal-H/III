@@ -69,6 +69,7 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   function (response) {
+    // console.log("---response---",response)
     let { data, status, statusText, config } = response;
 
     closeLoading(config);

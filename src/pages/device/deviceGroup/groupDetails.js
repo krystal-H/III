@@ -103,9 +103,11 @@ export default class GroupDetailt extends PureComponent {
     getDownProduct=()=>{
         get(Paths.getProductType).then((res) => {
             let productList = []
+            console.log(444,typeof res)
             for (let key in res.data) {
                 productList.push({ productId:key, productName: res.data[key] })
             }
+            console.log(777,productList)
             this.setState({productList});
         });
     }
@@ -113,7 +115,7 @@ export default class GroupDetailt extends PureComponent {
     getGroupDevList=()=>{
         let params = cloneDeep(this.state.listParams);
         if(params.productId == -1){delete params.productId}
-        get(Paths.getGroupDeviceList,params).then((res) => {
+        post(Paths.getGroupDeviceList,params).then((res) => {
             let {list,pager} = res.data || {};
             this.setState({groupDevList:list,pager});
         });
@@ -132,9 +134,10 @@ export default class GroupDetailt extends PureComponent {
     openCloseAdd=(getList=false)=>{
         let addVisiable = !this.state.addVisiable;
         this.setState({addVisiable});
+        // console.log(5555,this.addListRefs)
         if(addVisiable){
-            // this.addListRefs.setQuestParams("pageIndex",1);
-            // this.addListRefs.setState({addWay:1});
+            this.addListRefs.current.setQuestParams("pageIndex",1);
+            this.addListRefs.current.setState({addWay:1});
         }else{
             if(getList){ //关闭弹窗时候，getList 为 true 则需要重新请求列表
                 this.getGroupDevList();
@@ -183,7 +186,7 @@ export default class GroupDetailt extends PureComponent {
                         </div>
                         <div>
                             <div>描述：</div>
-                            <div>{remark}</div>
+                            <div>{remark || "无"}</div>
                         </div>
                     </div>
                 </PageTitle>
@@ -220,7 +223,7 @@ export default class GroupDetailt extends PureComponent {
                 </div>
                
                 <DeviceList 
-                    addVisiable={addVisiable} 
+                    addVisiable={addVisiable}
                     ref={this.addListRefs}
                     productList={productList}
                     id={this.id}

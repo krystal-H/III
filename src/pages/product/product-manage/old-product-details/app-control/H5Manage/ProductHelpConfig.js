@@ -39,32 +39,30 @@ export default class ProductHelpConfig  extends Component {
     //更新 联网配置或失败指引type 1 联网配置， 2 失败指引
     getLinkConfiguration(type){
         let productId = this.props.productId;
-        get(Paths.getLinkConfiguration,{productId,helpType:type}).then((model) => {
-            if(model.code==0){
-                let guidePage = model.data&&model.data.guidePage;
-                if(guidePage){
-                    let fileList = [
-                        {
-                            file:null,
-                            filename:guidePage,
-                            filesrc:guidePage
-                        }
-                    ];
-                    if(type==1){
-                        this.setState({configguide:'1',configguidepage:guidePage});
-                        this.addFirmwareInput.setState({fileList});
-                    }else if(type==2){
-                        this.setState({configfail:'1',configfailpage:guidePage});
-                        this.visitConfigFailState.setState({fileList});
+        post(Paths.getLinkConfiguration,{productId,helpType:type}).then((model) => {
+            let guidePage = model.data&&model.data.guidePage;
+            if(guidePage){
+                let fileList = [
+                    {
+                        file:null,
+                        filename:guidePage,
+                        filesrc:guidePage
                     }
-                }else{
-                    if(type==1){
-                        this.setState({configguide:'2',configguidepage:""});
-                    }else if(type==2){
-                        this.setState({configfail:'2',configfailpage:""});
-                    }
-                    
+                ];
+                if(type==1){
+                    this.setState({configguide:'1',configguidepage:guidePage});
+                    this.addFirmwareInput.setState({fileList});
+                }else if(type==2){
+                    this.setState({configfail:'1',configfailpage:guidePage});
+                    this.visitConfigFailState.setState({fileList});
                 }
+            }else{
+                if(type==1){
+                    this.setState({configguide:'2',configguidepage:""});
+                }else if(type==2){
+                    this.setState({configfail:'2',configfailpage:""});
+                }
+                
             }
         });
     }
@@ -135,16 +133,14 @@ export default class ProductHelpConfig  extends Component {
         }
 
         if(configguide == "2"){
-            get(Paths.netWorkDelete,data).then((model) => {
-                if(model.code==0){
-                    Notification({
-                        type:'success',
-                        description:'保存成功',
-                        duration:2
-                        
-                    });
-                    this.getLinkConfiguration(1);
-                }
+            post(Paths.netWorkDelete,data).then((model) => {
+                Notification({
+                    type:'success',
+                    description:'保存成功',
+                    duration:2
+                    
+                });
+                this.getLinkConfiguration(1);
             });
         }else if(configguide == "1"){
             let fileList = this.addFirmwareInput.state.fileList;
@@ -162,20 +158,29 @@ export default class ProductHelpConfig  extends Component {
                         duration:2
                     });
                 }else{
-                    data.guideType = 1;
-                    data.guideFiles = file;
-                    post(Paths.netWorkAddAndUpdate,data,{needFormData:true}).then((model) => {
-                        if(model.code==0){
+                    this.addFirmwareInput.upToTencentCloud((srclist)=>{
+                        // console.log(99999,srclist)
+                        if(srclist.length > 0){
+                            data.guideType = 1;
+                            data.guidePage = srclist[0];
+                            post(Paths.netWorkAddAndUpdate,data).then((model) => {
+                                Notification({
+                                    type:'success',
+                                    description:'保存成功',
+                                    duration:2
+                                });
+                                this.getLinkConfiguration(1);
+                            });
+                        }else{
                             Notification({
-                                type:'success',
-                                description:'保存成功',
+                                description:'请先上传文件',
                                 duration:2
                             });
-                            this.getLinkConfiguration(1);
                         }
                     });
 
                 }
+                
             }
         }
 
@@ -188,7 +193,7 @@ export default class ProductHelpConfig  extends Component {
             helpType:2
         }
         if(configfail == "2"){
-            get(Paths.netWorkDelete,data).then((model) => {
+            post(Paths.netWorkDelete,data).then((model) => {
                 if(model.code==0){
                     Notification({
                         type:'success',
@@ -214,16 +219,25 @@ export default class ProductHelpConfig  extends Component {
                         duration:2
                     });
                 }else{
-                    data.guideType = 1;
-                    data.guideFiles = file;
-                    post(Paths.netWorkAddAndUpdate,data,{needFormData:true}).then((model) => {
-                        if(model.code==0){
+
+                    this.visitConfigFailState.upToTencentCloud((srclist)=>{
+                       
+                        if(srclist.length > 0){
+                            data.guideType = 1;
+                            data.guidePage = srclist[0];
+                            post(Paths.netWorkAddAndUpdate,data).then((model) => {
+                                Notification({
+                                    type:'success',
+                                    description:'保存成功',
+                                    duration:2
+                                });
+                                this.getLinkConfiguration(1);
+                            });
+                        }else{
                             Notification({
-                                type:'success',
-                                description:'保存成功',
+                                description:'请先上传文件',
                                 duration:2
                             });
-                            this.getLinkConfiguration(2);
                         }
                     });
                }
