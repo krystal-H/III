@@ -30,6 +30,7 @@ const optionalList = [
     desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
     isConfiged: false,
     type: 'firmwareUpdate',
+    routePath: '/open/product/otaUpdate',
     url: require('../../../../../assets/images/commonDefault/service-firmwareUpdate.png')
   },
   {
@@ -44,6 +45,7 @@ const optionalList = [
     desc: '云端设定开关时间及周循环，无需硬件嵌入式开发',
     isConfiged: false,
     type: 'cloud',
+    routePath: '/open/product/cloudTimer',
     url: require('../../../../../assets/images/commonDefault/service-cloud.png')
   },
   {
@@ -51,6 +53,7 @@ const optionalList = [
     desc: '可定义配置设备预警消息推送，方便随时随地的设备监控',
     isConfiged: false,
     type: 'deviceWarning',
+    routePath: '/open/device/devMsg',
     url: require('../../../../../assets/images/commonDefault/service-device.png')
   }
 ]
@@ -209,18 +212,10 @@ function ServiceSelect({ productId, nextStep }, ref) {
                   {/* 未配置的判断 */}
                   {
                     !item.isConfiged ?
-                      item.type === 'firmwareUpdate' ?
-                        <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
-                          <Link to="/open/product/otaUpdate" target="_blank">配置</Link>
+                      (item.type === 'firmwareUpdate' || item.type === 'cloud' || item.type === 'deviceWarning') ?
+                        <div className="config-card-right-btn">
+                          <Link to={item.routePath} target="_blank">配置</Link>
                         </div> :
-                        item.type === 'cloud' ?
-                          <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
-                            <Link to="/open/product/cloudTimer" target="_blank">配置</Link>
-                          </div> :
-                          item.type === 'deviceWarning' ?
-                            <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
-                              <Link to="/open/device/devMsg" target="_blank">配置</Link>
-                            </div> :
                             <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
                       : ''
                   }
