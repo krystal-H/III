@@ -36,7 +36,7 @@ export default class Header extends PureComponent  {
                         <Link to="/messageCenter" >工单</Link>
                         <Link to="/messageCenter"  target="_blank">
                             <BellOutlined className='bellicon' />
-                            { "totalUnRead" &&  <span className='msgnum'> {"totalUnRead>99"?99:totalUnRead} </span> || null }
+                            { totalUnRead &&  <span className='msgnum'> {totalUnRead>99?99:totalUnRead} </span> || null }
                         </Link>
                         <div className='user'>
                             <img src={DefaultUserIcon} alt="用户头像" className="usericon"/>
