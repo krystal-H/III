@@ -3,6 +3,7 @@ import { Modal, Button, Tabs, Table, Input, Select, Checkbox, Form, Space } from
 import { useHistory } from 'react-router-dom';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import NewModal from './newModal'
+import EditModal from './editModal'
 import './changeModal.scss'
 import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
@@ -31,9 +32,32 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     const CancelAdd = () => {
         setIsAddModalVisible(false)
     }
-
+    //列表
+    const getList = () => {
+        post(Paths.panelList, { productId: 11791 }).then((res) => {
+            setData(res.data.list)
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { totalRows: res.data.pager.totalRows })
+            })
+        });
+    }
+    //新增
     const openAdd = () => {
         setIsAddModalVisible(true)
+    }
+    //编辑
+    const [iseditModalVisible, setIseditModalVisible] = useState(false)
+    const closeEdit = () => {
+        getList()
+        setIseditModalVisible(false)
+    }
+    const CancelEdit = () => {
+        setIseditModalVisible(false)
+    }
+    const openEdit = (data) => {
+        setActionData(data)
+        setIseditModalVisible(true)
     }
     //发布
     const relData = (data) => {
@@ -44,16 +68,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     const [data, setData] = useState([])
     const [actionVis, setActionVis] = useState(false)
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
-    //
-    const getList = () => {
-        post(Paths.panelList, { productId: 11791 }).then((res) => {
-            setData(res.data.list)
-            setPager(pre => {
-                let obj = JSON.parse(JSON.stringify(pre))
-                return Object.assign(obj, { totalRows: res.data.pager.totalRows })
-            })
-        });
-    }
+    
     //确定删除
     const delOkCancel = () => {
         post(Paths.delPanel, { projectId: actionData.projectId }).then((res) => {
@@ -82,6 +97,21 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             getList()
         });
     }
+    //确定下线
+    const offOkLine = () => {
+        let params = {
+            productId: 11791,
+            projectId: actionData.projectId,
+        }
+        post(Paths.panelOffLine, params).then((res) => {
+            Notification({
+                type: 'success',
+                description: '下线成功！'
+            })
+            setActionVis(false)
+            getList()
+        });
+    }
     //取消
     const closeAction = () => {
         setActionVis(false)
@@ -101,6 +131,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     }
     //更新灰度
     const closeDebugg = () => {
+        getList()
         setIsGrayModalVisible(false)
     }
     //打开灰度
@@ -118,7 +149,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         } else if (actionType === 2) {
             delOkCancel()
         } else if (actionType === 3) {
-
+            offOkLine()
         }
     }
     const columns = [
@@ -149,13 +180,19 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         {
             title: '操作',
             key: 'action',
-            render: (text, record) => (
-                <Space size="middle">
-                    <a onClick={() => { openDel(record, 1) }}>发布</a>
-                    <a onClick={() => { openDebugg(record) }}>灰度调试</a>
-                    <a onClick={() => { openDel(record, 2) }}>删除</a>
-                </Space>
-            ),
+            render: (text, record) => {
+                let { verifyStatus } = record;
+                return (
+                    <Space size="middle">
+
+                        {[3].includes(verifyStatus) && <a onClick={() => { openDel(record, 1) }}>发布</a>}
+                        {[1].includes(verifyStatus) && <a onClick={() => { openDebugg(record) }}>灰度调试</a>}
+                        {[1].includes(verifyStatus) && <a onClick={() => { openDel(record, 2) }}>删除</a>}
+                        {[3, 4].includes(verifyStatus) && <a onClick={() => { openDel(record, 3) }}>下线</a>}
+                        {[1, 3].includes(verifyStatus) && <a onClick={() => { openEdit(record) }}>编辑</a>}
+                    </Space>
+                )
+            },
         },
     ];
     return (
@@ -196,7 +233,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                                         <Button type='primary' onClick={openAdd}>新增</Button>
                                     </div>
                                     <div>
-                                        <Table rowKey='did' dataSource={data} columns={columns} pagination={false} />
+                                        <Table rowKey='projectId' dataSource={data} columns={columns} pagination={false} />
                                     </div>
                                 </div>
 
@@ -206,7 +243,11 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                 </div>
             </Modal>
             {
-                isAddModalVisible && <NewModal isAddModalVisible={isAddModalVisible} closeAdd={closeAdd} CancelAdd={CancelAdd}></NewModal>}
+                isAddModalVisible && <NewModal isAddModalVisible={isAddModalVisible} closeAdd={closeAdd} CancelAdd={CancelAdd}></NewModal>
+            }
+            {
+                iseditModalVisible && <EditModal actionObj={actionData} isAddModalVisible={iseditModalVisible} closeAdd={closeEdit} CancelAdd={CancelEdit} />
+            }
             {
                 isGrayModalVisible && <GrayDebugg actionObj={actionData} isGrayModalVisible={isGrayModalVisible} closeDebugg={closeDebugg} CancelDebugg={CancelDebugg}></GrayDebugg>
             }

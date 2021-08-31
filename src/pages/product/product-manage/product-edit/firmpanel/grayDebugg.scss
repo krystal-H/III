@@ -62,4 +62,152 @@
       width: 50%;
       margin-top: 20px;
   }
+  .app-items-wrapper{
+
+    max-height: 200px;
+    overflow-y: scroll;
+
+    // @include self-scroll-bar;
+
+    
+    .app-item{
+        display: inline-block;
+        margin: $gap / 2;
+        text-align: center;
+
+        .app-icon{
+            display: flex;
+            position: relative;
+            width:61px;
+            height:61px;
+            background:rgba(247,249,250,1);
+            border:$border;
+            border-radius: 50%;
+            margin-bottom: $gap / 2;
+            cursor: pointer;
+
+            img{
+                margin: auto;
+                height: 40px;
+                object-fit: contain;
+                overflow: hidden;
+            }
+
+
+            &::before{
+                content: '';
+                width: 16px;
+                height: 16px;
+                position: absolute;
+                top: 0;
+                right: 0;
+                border:$border;
+                background-color: #fff;
+                border-radius: 50%;
+                z-index: 2;
+            }
+
+            &.active{
+                &::before{
+                    background:rgba(47,120,255,1);
+                }
+
+                &::after{
+                    content: '';
+                    width: 8px;
+                    height: 4px;
+                    position: absolute;
+                    top: 5px;
+                    right: 4px;
+                    border-left: $border;
+                    border-bottom: $border;
+                    transform: rotate(-45deg);
+                    z-index: 3;
+                }
+            }
+        }
+
+        .app-name{
+            display: inline-block;
+            width: 61px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+}
+}
+.app-items-wrapper2{
+
+  max-height: 370px;
+  overflow-y: scroll;
+
+  @include self-scroll-bar;
+
+  
+  .app-item{
+      display: inline-block;
+      margin: $gap / 2;
+      text-align: center;
+
+      .app-icon{
+          display: flex;
+          position: relative;
+          width:61px;
+          height:61px;
+          background:rgba(247,249,250,1);
+          border:$border;
+          border-radius: 50%;
+          margin-bottom: $gap / 2;
+          cursor: pointer;
+
+          img{
+              margin: auto;
+              height: 40px;
+              object-fit: contain;
+              overflow: hidden;
+          }
+
+
+          &::before{
+              content: '';
+              width: 16px;
+              height: 16px;
+              position: absolute;
+              top: 0;
+              right: 0;
+              border:$border;
+              background-color: #fff;
+              border-radius: 50%;
+              z-index: 2;
+          }
+
+          &.active{
+              &::before{
+                  background:rgba(47,120,255,1);
+              }
+
+              &::after{
+                  content: '';
+                  width: 8px;
+                  height: 4px;
+                  position: absolute;
+                  top: 5px;
+                  right: 4px;
+                  border-left: $border;
+                  border-bottom: $border;
+                  transform: rotate(-45deg);
+                  z-index: 3;
+              }
+          }
+      }
+
+      .app-name{
+          display: inline-block;
+          width: 61px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+      }
+  }
 }

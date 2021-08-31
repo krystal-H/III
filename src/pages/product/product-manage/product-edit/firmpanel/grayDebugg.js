@@ -6,6 +6,7 @@ import './grayDebugg.scss';
 const { TabPane } = Tabs;
 export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDebugg, actionObj }) {
     const [form] = Form.useForm();
+    const [form2] = Form.useForm();
     const formItemLayout = {
         labelCol: {
             span: 8,
@@ -19,19 +20,38 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
             span: 16, offset: 8
         },
     };
+    const [applist, setApplist] = useState([])
+    const getAoolist = () => {
+        post(Paths.panelApplicationList, {
+            "productId": 11791
+        }).then((res) => {
+            setApplist(res.data)
+        });
+    }
     useEffect(() => {
+        getAoolist()
     }, [])
+    const [currentTab, setCurrentTab] = useState('1')
     const callback = (key) => {
-        console.log(key);
+        setCurrentTab(key);
     }
     function onChange(e) {
         console.log(`checked = ${e.target.checked}`);
     }
     const closeOk = () => {
-        form.validateFields().then(value => {
-            // 验证通过后进入
+        let currentForm
+        if(currentTab == 1){
+            currentForm=form
+        }else{
+            currentForm=form2
+        }
+        currentForm.validateFields().then(value => {
             let params = {
-
+                productId: 11791,
+                projectId: actionObj.projectId,
+                status: 1,
+                newAppIds: selectAppId,
+                accountList: value.accountList
             }
             post(Paths.cusSavePanel, params).then((res) => {
                 closeDebugg()
@@ -41,10 +61,26 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
         });
     }
     //
+    const [selectAppId, setSelectAppId] = useState('')
+    const selectApp = (type, appId) => {
+        // let {selectedAppId} = this.state,
+        //     {publishType}  = this.props,
+        //     _name = publishType == 3 ? "GrayPubHistory" : "FormalPubHistory",
+        //     _state = {};
+
+        // _state.selectedAppId = selectedAppId === appId ? null : appId;
+
+        // _state[_name] = []
+
+        // if (_state.selectedAppId !== null) {
+        //     this.getPubHistory(appId,_name)
+        // } 
+
+        // this.setState(_state)
+        setSelectAppId(appId)
+    }
     const getAppListDOM = (type) => {
-        let { selectedAppId } = this.state,
-            { appsByProductId } = this.props,
-            _apps = appsByProductId.filter(item => type == '0' ? item.isOfficialApp : !item.isOfficialApp),
+        let _apps = applist.filter(item => type ? item.isOfficialApp : !item.isOfficialApp),
             className = 'app-icon';
         return (
             _apps.length > 0 ?
@@ -53,12 +89,12 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
 
                     className = 'app-icon'; // 重置class的值
 
-                    if (selectedAppId == appId) {
+                    if (selectAppId == appId) {
                         className += ' active';
                     }
 
                     return (
-                        <div className="app-item" key={type + '-' + appId} onClick={() => this.selectApp(type, appId)}>
+                        <div className="app-item" key={type + '-' + appId} onClick={() => selectApp(type, appId)}>
                             <div className={className}>
                                 <img src={appIcon} alt="应用图标" />
                             </div>
@@ -83,36 +119,19 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                         <Tabs defaultActiveKey="1" onChange={callback}>
                             <TabPane tab="C-Life官方应用" key="1">
                                 <div className='GrayModal-img-wrap'>
-                                    <div className='GrayModal-img-wrap-item'>
-                                        <img src='https://oimagec7.ydstatic.com/image?id=-636285311512234656&product=dict-homepage&w=200&h=150&fill=0&cw=200&ch=150&sbc=0&cgra=CENTER&of=jpeg'></img>
-                                        <div className='GrayModal-img-wrap-check'>
-                                            <Checkbox onChange={onChange}></Checkbox>
-                                        </div>
+                                    <div className="app-items-wrapper">
+                                        {
+                                            getAppListDOM(true)
+                                        }
                                     </div>
                                 </div>
                                 <div className='GrayModal-form-wrap'>
                                     <Form
                                         wrapperCol={{ span: 16 }}
+                                        form={form}
                                     >
-                                        {/* <Form.Item
-                                            name="gender"
-                                            label="Gender"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                },
-                                            ]}
-                                        >
-                                            <Select
-                                                allowClear
-                                            >
-                                                <Option value="male">male</Option>
-                                                <Option value="female">female</Option>
-                                                <Option value="other">other</Option>
-                                            </Select>
-                                        </Form.Item> */}
                                         <Form.List
-                                            name="names2"
+                                            name="accountList"
                                         >
                                             {(fields, { add, remove }, { errors }) => (
                                                 <>
@@ -128,7 +147,9 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                                 validateTrigger={['onChange', 'onBlur']}
                                                                 noStyle
                                                             >
-                                                                <Input placeholder="passenger name" style={{ width: '214px', marginRight: '10px' }} />
+                                                                <Input placeholder="请输入手机号码"
+                                                                    rules={[{ pattern: /^(((\d{3,4}-)?\d{7,8})|(1\d{10}))$/, message: '请输入固话号码或者手机号码' }]}
+                                                                    style={{ width: '214px', marginRight: '10px' }} />
                                                             </Form.Item>
                                                             {fields.length ? (
                                                                 <MinusCircleOutlined
@@ -153,8 +174,63 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                 </div>
                             </TabPane>
                             <TabPane tab="独立MCU方案" key="2">
-                                Content of Tab Pane 2
+                                <div className='GrayModal-img-wrap'>
+                                    <div className="app-items-wrapper">
+                                        {
+                                            getAppListDOM(false)
+                                        }
+                                    </div>
+                                </div>
+                                <div className='GrayModal-form-wrap'>
+                                    <Form
+                                        wrapperCol={{ span: 16 }}
+                                        form={form2}
+                                    >
+                                        <Form.List
+                                            name="names"
+                                        >
+                                            {(fields, { add, remove }, { errors }) => (
+                                                <>
+                                                    {fields.map((field, index) => (
+                                                        <Form.Item
+                                                            {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                                                            label={index === 0 ? '指定调试账号：' : ''}
+                                                            required={false}
+                                                            key={field.key}
+                                                        >
+                                                            <Form.Item
+                                                                {...field}
+                                                                validateTrigger={['onChange', 'onBlur']}
+                                                                noStyle
+                                                            >
+                                                                <Input placeholder="请输入手机号码"
+                                                                    rules={[{ pattern: /^(((\d{3,4}-)?\d{7,8})|(1\d{10}))$/, message: '请输入固话号码或者手机号码' }]}
+                                                                    style={{ width: '214px', marginRight: '10px' }} />
+                                                            </Form.Item>
+                                                            {fields.length ? (
+                                                                <MinusCircleOutlined
+                                                                    className="dynamic-delete-button"
+                                                                    onClick={() => remove(field.name)}
+                                                                />
+                                                            ) : null}
+                                                        </Form.Item>
+                                                    ))}
+                                                    <Form.Item {...(fields.length === 0 ? formItemLayout : formItemLayoutWithOutLabel)} label={fields.length === 0 ? '指定调试账号：' : ''}>
+                                                        <a
+                                                            onClick={() => add()}
+                                                        >
+                                                            添加参数
+                                                        </a>
+                                                        <Form.ErrorList errors={errors} />
+                                                    </Form.Item>
+                                                </>
+                                            )}
+                                        </Form.List>
+                                    </Form>
+                                </div>
+
                             </TabPane>
+
                         </Tabs>
                     </div>
                 </div>

@@ -570,6 +570,7 @@ let Paths = {
     panelRelHistory:'/panelManage/getFormalPubHistory',//项目发布历史列表
     panelOffLine:'/panelManage/offlineUiDesign',//下线
     panelList:'/panelManage/getProjectPage',//获取产品下的所有项目
+    panelApplicationList:'/panelManage/getAppsByProductId',//应用列表
 
 };
 
