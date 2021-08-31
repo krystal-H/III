@@ -36,7 +36,7 @@ function CloudUpdate({ operate, visible, updateOkHandle, updateCancelHandle, cha
       visible={visible}
       modalOKHandle={() => updateOkHandle(operate)}
       modalCancelHandle={updateCancelHandle}
-      targetName='test'
+      targetName={changeStatus.serviceName}
       title={texts.title}
       descGray={true}
       needWarnIcon={texts.needWarnIcon}

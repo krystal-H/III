@@ -31,6 +31,48 @@
         color: #ccc;
         border: none;
       }
+      // 本地导入文件
+      .local-import {
+        .file-input-wrapper {
+          position: relative;
+          width: max-content;
+          margin: 70px auto 16px;
+          font-size: 12px;
+          input {
+            width: 194px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            cursor: pointer;
+          }
+          .get-template {
+            margin-left: 12px;
+          }
+        }
+        &-tip {
+          @include text(12px, #8E8E8E);
+        }
+      }
+      // 本地上传结果
+      .result-area {
+        @include text(12px, #323232);
+        .red {
+          color: #F42C2C;
+        }
+        .upload-data {
+          margin: 14px auto;
+        }
+      }
+      .upload-btn {
+        border-radius: 3px;
+        font-size: 12px;
+      }
+      .martop22 {
+        margin-top: 22px;
+      }
     }
     .padtop0 {
       padding-top: 0;

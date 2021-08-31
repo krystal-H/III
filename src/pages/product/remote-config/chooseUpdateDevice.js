@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Select, Tabs, Input, Table } from 'antd'
+import { Select, Tabs, Input, Table, Button } from 'antd'
 import { Paths, post, get } from '../../../api'
-import { uniqueItemInArrayByKey } from '../../../util/util'
-import { MinusCircleOutlined } from '@ant-design/icons'
+import { uniqueItemInArrayByKey, checkFileTypeAndSize } from '../../../util/util'
+import { MinusCircleOutlined, UploadOutlined } from '@ant-design/icons'
 import { cloneDeep } from 'lodash'
 import { Notification } from '../../../components/Notification'
+import DeviceImportErrorLogModal from './errorLogModal'
 
 import './chooseUpdateDevice.scss'
 
 const { Option } = Select
-const { Search } = Input;
+const { Search } = Input
 const { TabPane } = Tabs
 
 
@@ -21,10 +22,15 @@ function ChooseUpdateDevice() {
   const [selectDeviceIndexToAdd, setSelectDeviceIndexToAdd] = useState([])
   const [rightDeviceList, setRightDeviceList] = useState({ rightAllList: [], rightTempList: [] })
   const rightSearchInput = useRef(null)
+  const [importDeviceData, setImportDeviceData] = useState({ allList: [], successList: [], errorList: [], errorVisible: false })
+  const [selectDeviceIndexToDelete, setSelectDeviceIndexToDelete] = useState([])
+  const [excelFileName, setExcelFileName] = useState('')
+  const [isShowImportResult, setIsShowImportResult] = useState(false)
 
 
   const { curDeviceInfoList, allDeviceInfoList, allDeviceInfoPager } = allDeviceInfo
   const { rightAllList, rightTempList } = rightDeviceList
+  const { allList, successList, errorList, errorVisible } = importDeviceData
 
   const deviceColumns = [
     {
@@ -177,6 +183,7 @@ function ChooseUpdateDevice() {
 
   const callback = (key) => {
     console.log(key)
+    setcurrentActiveKey(key)
   }
 
   // 左侧搜索
@@ -230,6 +237,65 @@ function ChooseUpdateDevice() {
     })
   }
 
+  const importRemoteExcel = e => {
+    const input = e.target;
+    if (input.files && input.files.length > 0) {
+      let { isOk, type, size } = checkFileTypeAndSize(input.files, ['xls', 'xlsx'], 10000)
+      if (!isOk) {
+        return Notification({ description: '文件类型或者大小不符合要求' })
+      }
+      let excel = input.files[0];
+      post(Paths.importRemoteDeviceExcel, {
+        uploadExcel: excel,
+        productId: ''
+      }, {
+        needFormData: true,
+        loading: true
+      }).then(data => {
+        if (data.data) {
+          let allList = data.data,
+            successList = [],
+            errorList = [];
+
+          allList.forEach((item, index) => {
+            let { errorType, deviceUniqueId } = item
+            item.key = deviceUniqueId;
+
+            if (errorType) {
+              errorList.push({
+                deviceUniqueId,
+                errorType,
+                key: deviceUniqueId
+              })
+            } else {
+              successList.push({ ...item })
+            }
+          })
+
+          setImportDeviceData({
+            ...importDeviceData,
+            allList,
+            successList,
+            errorList
+          })
+          if (successList.length > 0) {
+            setRightDeviceList({
+              rightAllList: [...successList],
+              rightTempList: [...successList]
+            })
+            setSelectDeviceIndexToDelete([])
+          }
+          setExcelFileName(excel.name)
+          setIsShowImportResult(true)
+        }
+      })
+    }
+  }
+
+  const getRemoteExcelTemplate = () => {
+    window.open(Paths.downloadRemoteDeviceTemplateExcel)
+  }
+
   let leftDeviceDataSource = curDeviceInfoList
 
   return (
@@ -263,7 +329,34 @@ function ChooseUpdateDevice() {
               />
             </TabPane>
             <TabPane tab="本地导入" key="2">
-              Content of Tab Pane 2
+              {
+                !isShowImportResult ?
+                  <div>
+                    <div className="result-area">
+                      <h3>{excelFileName || '--'}</h3>
+                      <div style={{ marginTop: 14 }}>{`共${allList.length}条数据`}</div>
+                      <div className="upload-data">成功：{successList.length}条&nbsp;/&nbsp;
+                        <span className="red">失败：{errorList.length}条，请修改完成后重上传</span>
+                      </div>
+                      <div>
+                        <a onClick={() => setImportDeviceData({ ...importDeviceData, errorVisible: true })}>错误日志</a>
+                      </div>
+                    </div>
+                    <Button type="primary"
+                      className="upload-btn martop22"
+                      onClick={() => setIsShowImportResult(false)}>
+                      <UploadOutlined /> 重新上传</Button>
+                  </div>
+                  :
+                  <div className="local-import">
+                    <div className="file-input-wrapper">
+                      <Button type="primary" className="upload-btn"><UploadOutlined /> 选择本地设备数据文件</Button>
+                      <input type="file" onInput={importRemoteExcel} accept=".xls,.xlsx" />
+                      <a className="get-template" onClick={getRemoteExcelTemplate}>设备数据模板</a>
+                    </div>
+                    <p className="local-import-tip">支持xls、xlsx格式，每次添加最多支持20,000个设备，总体文件大小不超过10MB</p>
+                  </div>
+              }
             </TabPane>
           </Tabs>
         </div>
@@ -297,6 +390,16 @@ function ChooseUpdateDevice() {
           />
         </div>
       </div>
+      
+      {/* 错误日志 */}
+      {
+        errorVisible &&
+        <DeviceImportErrorLogModal
+          visible={errorVisible}
+          errorList={errorList}
+          onCancel={() => setImportDeviceData({ ...importDeviceData, errorVisible: false })}>
+        </DeviceImportErrorLogModal>
+      }
     </div>
   )
 }
