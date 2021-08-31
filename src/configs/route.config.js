@@ -264,11 +264,11 @@ export const menuList = [
                 childmenus: [],
                 items: ['基本信息', '设备影子', '设备标签', '远程配置'],
             },
-            {
-                menuname: '设备秘钥',
-                childmenus: [],
-                items: [],
-            },
+            // {
+            //     menuname: '设备秘钥',
+            //     childmenus: [],
+            //     items: [],
+            // },
             {
                 menuname: '设备分组',
                 childmenus: [],

@@ -103,11 +103,9 @@ export default class GroupDetailt extends PureComponent {
     getDownProduct=()=>{
         get(Paths.getProductType).then((res) => {
             let productList = []
-            console.log(444,typeof res)
             for (let key in res.data) {
                 productList.push({ productId:key, productName: res.data[key] })
             }
-            console.log(777,productList)
             this.setState({productList});
         });
     }

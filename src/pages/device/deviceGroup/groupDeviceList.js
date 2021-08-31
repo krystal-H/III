@@ -1,4 +1,4 @@
-import React, { PureComponent,createRef } from 'react';
+import React, { PureComponent,createRef,forwardRef } from 'react';
 import {Modal, Table,Radio,Form,Select,Upload,Button } from 'antd';
 import { DateTool } from '../../../util/util';
 import {get,post, Paths} from '../../../api';
@@ -146,10 +146,10 @@ export default class GroupDetailt extends PureComponent {
 
 const formItemLayout = {
     labelCol: { span: 6 },
-    wrapperCol: { span: 10 }
+    wrapperCol: { span: 12 }
 };
 
-const UploadDevice = ({
+const UploadDevice = forwardRef(({
     productList,
     groupid,
     openCloseAdd
@@ -193,10 +193,10 @@ const UploadDevice = ({
                         appId: 31438,
                         domainType: 4,
                     }}>
-                    <Button type="primary" icon="upload">上传文件</Button><span style={{marginLeft:"15px"}}>仅支持.xls,.xlsx格式文件</span>
+                    <Button type="primary" >上传文件</Button><span style={{marginLeft:"15px"}}>仅支持.xls,.xlsx格式文件</span>
                 </Upload>
                 <a href="http://skintest.hetyj.com/31438/6b0b20891e06ac31d0eed37a5083cca9.xlsx">下载模板</a>
             </Form.Item>
         </Form>)
-}
+})
 
