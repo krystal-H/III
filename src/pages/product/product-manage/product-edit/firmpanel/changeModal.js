@@ -13,7 +13,7 @@ import ActionModel from './actionModel'
 const { TabPane } = Tabs;
 
 
-export default function ChangeModal({ isChangeModalVisible, closeChange, CancelChange }) {
+export default function ChangeModal({ isChangeModalVisible, closeChange, CancelChange,defaultTab='1' }) {
     const history = useHistory();
     const callback = (key) => {
         console.log(key);
@@ -201,7 +201,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                 wrapClassName='add-protocols-wrap' footer={null}>
                 <div>
                     <div className='GrayModal-tab'>
-                        <Tabs defaultActiveKey="1" onChange={callback}>
+                        <Tabs defaultActiveKey={defaultTab} onChange={callback}>
                             <TabPane tab="标准面板" key="1">
                                 <div className='change-modal-tab1'>
                                     <div className='change-modal-tab3-dec'>

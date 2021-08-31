@@ -103,7 +103,7 @@ function ProtocolFn({ nextStep, productId }, ref) {
             <div>独立MCU方案，需选择下载MCU开发资料包等，进行相应开发</div>
             <div className='Protocol-download' onClick={exportFile}>
                 <a>导出物模型</a>
-                <img src={downpng} />
+                <img src={downpng} alt/>
             </div>
 
         </div>

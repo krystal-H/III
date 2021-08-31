@@ -11,6 +11,10 @@ import RegistModel from './modelFn'
 const { Option } = Select;
 const { Step } = Steps;
 export default function DeviceRegist() {
+    let productItem = {}
+    if (sessionStorage.getItem('productItem')) {
+        productItem = JSON.parse(sessionStorage.getItem('productItem'))
+    } 
     const [form] = Form.useForm();
     const [dataSource, setDataSource] = useState([])
     const [countData, setCountData] = useState([{ label: '设备总数量', count: 0 }, { label: '已入网设备', count: 0 }, { label: '未入网设备', count: 0 }])
@@ -66,7 +70,7 @@ export default function DeviceRegist() {
     }, [])
     //获取统计
     const getStatistical = () => {
-        post(Paths.proReledCount).then((res) => {
+        post(Paths.proReledCount,{productId: productItem.productId }).then((res) => {
             setCountData([{ label: '设备总数量', count: res.data.total },
             { label: '已入网设备', count: res.data.activate },
             { label: '未入网设备', count: res.data.unactivate }])
@@ -102,7 +106,7 @@ export default function DeviceRegist() {
         // if (!params.id || !params.id.trim()) {
         //     delete params.id
         // }
-        let params = { ...form.getFieldsValue(), ...pager, productId: 11549 }
+        let params = { ...form.getFieldsValue(), ...pager, productId: productItem.productId }
         post(Paths.proReledRegist, params, { loading }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {

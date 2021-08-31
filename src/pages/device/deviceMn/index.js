@@ -19,6 +19,7 @@ export default function DeviceList() {
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     useEffect(() => {
         getProductType()
+        getDevOneList()
     }, [])
     useEffect(() => {
         getList()
@@ -50,15 +51,22 @@ export default function DeviceList() {
     }
     //产品种类列表
     const getProductType = () => {
-        get(Paths.getProductType).then(res=> {
-            // console.log(res,666666666,res.data,JSON.parse(res))
-            // alert(1)
-            // let arr = []
-            // for (let key in JSON.parse(res).data) {
-            //     arr.push({ key, value: res.data[key] })
-            // }
-            // console.log(arr,'==========', res,res.data)
-            // setOptionArr(arr)
+        get(Paths.getProductType).then(res => {
+            let arr = []
+            for (let key in JSON.parse(res).data) {
+                arr.push({ key, value: res.data[key] })
+            }
+            setOptionArr(arr)
+        });
+    }
+    //获取统计
+    const getDevOneList = () => {
+        post(Paths.devMnCount, { developerId: 1 }).then((res) => {
+            setCountData([
+                { label: '当前异常数', count: res.data.exception },
+                { label: '累积设备总数', count: res.data.total },
+                { label: '累积入网总数', count: res.data.totalActive },
+                { label: '今日入网总数', count: res.data.todayActive }])
         });
     }
     //搜索
