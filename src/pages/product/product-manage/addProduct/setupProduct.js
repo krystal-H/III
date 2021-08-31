@@ -36,7 +36,6 @@ const mapDispatchToProps = dispatch => {
 class SetupProduct extends Component {
   formRef = React.createRef()
   constructor(props) {
-    // console.log(props, '***********')
     super(props)
     this.state = {
       productBrandList: [], // 产品品牌
@@ -124,9 +123,9 @@ class SetupProduct extends Component {
           name="productName"
           rules={[
             { required: true, message: '请输入产品名称' },
-            { max: 20, message: '最大输入长度为20' },
+            { max: 50, message: '最大输入长度为50' },
           ]}>
-          <Input placeholder="请输入产品名称，不能超过20个字符" />
+          <Input placeholder="请输入产品名称，不能超过50个字符" />
         </Form.Item>
 
         <Form.Item
@@ -148,7 +147,7 @@ class SetupProduct extends Component {
           rules={[
             { pattern: new RegExp(/^[\u4E00-\u9FA5A-Za-z0-9]+$/, "g"), message: '请输入产品型号，支持中英文、数字' }
           ]}>
-          <Input placeholder="请输入产品型号，支持中英文、数字" />
+          <Input maxLength={50} placeholder="请输入产品型号，支持中英文、数字" />
         </Form.Item>
         <Form.Item name="bindType" label="通信协议"
           rules={[{ required: true, message: '请选择通信协议' }]}>
@@ -181,8 +180,9 @@ class SetupProduct extends Component {
         {
           this.props.createProductCategory.controlClass == 1 &&
           <Form.Item name="portNumber" label="控制端口数"
-            rules={[{ required: true, pattern: new RegExp(/^[0-9]+$/, "g"), message: '请输入控制端口数，支持数字' }]}
-          >
+            rules={[
+              { required: true, pattern: new RegExp(/^[0-9]+$/, "g"), message: '请输入控制端口数，支持数字' }
+            ]}>
             <Input placeholder="请输入控制端口数，支持数字" />
           </Form.Item>
         }

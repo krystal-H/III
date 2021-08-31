@@ -159,7 +159,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
               label="AP-SSID"
               name="ssid"
               rules={[{ required: true, message: '请输入AP-SSID！' }]}>
-              <Input style={{ width: 380 }} />
+              <Input maxLength={50} style={{ width: 380 }} />
             </Form.Item>
           }
           {/* 通信是wifi、蓝牙 */}
@@ -169,7 +169,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
               label="广播名"
               name="radiocastName"
               rules={[{ required: true, message: '请输入广播名！' }]}>
-              <Input style={{ width: 380 }} />
+              <Input maxLength={50} style={{ width: 380 }} />
             </Form.Item>
           }
           {/* WIFI或蓝牙 才需配置图片 */}

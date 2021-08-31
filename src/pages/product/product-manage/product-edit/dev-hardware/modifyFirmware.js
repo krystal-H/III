@@ -73,8 +73,7 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
       destroyOnClose={true}
       width={857}
       okText="重新生成固件"
-      wrapClassName="replace-module-modal"
-    >
+      wrapClassName="replace-module-modal">
       <div className="modify-firmware-modal">
         <div className="modify-firmware-modal-left">
           <Form

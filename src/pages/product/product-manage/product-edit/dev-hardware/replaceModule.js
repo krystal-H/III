@@ -3,7 +3,7 @@ import { Modal, Input, Table } from 'antd'
 import { Paths, post } from '../../../../../api'
 
 import './replaceModule.scss'
-const { Search } = Input;
+const { Search } = Input
 
 function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, handleCancel, schemeId, moduleId }) {
   const [selectionType] = useState('radio')
