@@ -78,7 +78,7 @@ export default function OverviewWrap() {
     //app列表
     const [appList, setAppList] = useState([])
     const getAppList = () => {
-        post(Paths.appList, { developerId: 1 }).then((res) => {
+        get(Paths.appList, { developerId: 1 }).then((res) => {
             if (res.data.list.length > 3) {
                 setAppList(res.data.list.slice(0, 3))
             } else {
@@ -460,19 +460,19 @@ export default function OverviewWrap() {
                             <div className='center-layout-wrap'>
                                 <div>
                                     <img src={dataservice1} alt=''/>
-                                    <div>设备分析</div>
+                                    <div onClick={()=>{history.push(`/open/serve/device`)}}>设备分析</div>
                                 </div>
                             </div>
                             <div className='center-layout-wrap'>
                                 <div>
                                     <img src={dataservice2} alt=''/>
-                                    <div>用户分析</div>
+                                    <div onClick={()=>{history.push(`/open/serve/user`)}}>用户分析</div>
                                 </div>
                             </div>
                             <div className='center-layout-wrap'>
                                 <div>
                                     <img src={dataservice3} alt=''/>
-                                    <div>数据订阅</div>
+                                    <div onClick={()=>{history.push(`/open/serve/dataSub`)}}>数据订阅</div>
                                 </div>
                             </div>
                         </div>

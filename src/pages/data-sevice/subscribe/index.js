@@ -38,8 +38,8 @@ export default function DeviceRegist() {
             post(url, {}, { loading }).then((res) => {
                 setTableAcVisible(false)
                 Notification({
-                    type:'success',
-                    description:'操作成功！'
+                    type: 'success',
+                    description: '操作成功！'
                 })
                 getList()
             });
@@ -48,8 +48,8 @@ export default function DeviceRegist() {
             post(url, {}, { loading }).then((res) => {
                 setTableAcVisible(false)
                 Notification({
-                    type:'success',
-                    description:'操作成功！'
+                    type: 'success',
+                    description: '操作成功！'
                 })
                 getList()
             });
@@ -134,9 +134,8 @@ export default function DeviceRegist() {
     //获取列表
     const getList = (loading = true) => {
         let params = {
-            devicePushUrlConf: form.getFieldsValue(),
+            devicePushUrlConf: { ...form.getFieldsValue(), developerId: 1 },
             pager: pager,
-            developerId:1
         }
         // setSearchParams(params.devicePushUrlConf)
         post(Paths.subscribeList, params, { loading }).then((res) => {
@@ -178,7 +177,7 @@ export default function DeviceRegist() {
         <div id='subscribe-data'>
             <PageTitle title='数据订阅'>
                 <div className='top-select'>
-                    <Select defaultValue="lucy" style={{ width: 200 }} allowClear>
+                    <Select style={{ width: 200 }} allowClear>
                         <Option value="0">API数据PUSH形式 </Option>
                         <Option value="1">MQTT主题订阅</Option>
                     </Select>
@@ -186,7 +185,7 @@ export default function DeviceRegist() {
             </PageTitle>
             <div className='comm-shadowbox setp-ttip'>
                 <div className='step-title'>
-                    <img src={stepImg} alt=''/>
+                    <img src={stepImg} alt='' />
                     <span>数据订阅步骤</span>
                 </div>
                 <Steps current={-1} initial={0}>
