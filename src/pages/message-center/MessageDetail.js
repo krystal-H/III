@@ -1,7 +1,7 @@
 import React from 'react'
 import AloneSection from '../../components/alone-section/AloneSection'
 import { DateTool } from '../../util/util';
-import { get, Paths,post } from '../../api';
+import { get, Paths, post } from '../../api';
 
 export default class MessageDetail extends React.PureComponent {
     state = {
@@ -27,8 +27,9 @@ export default class MessageDetail extends React.PureComponent {
             { read } = state;
 
         if (noticeId) {
-            get(Paths.getNoticeDetail, {
-                noticeId
+            post(Paths.getNoticeDetail, {
+                noticeId: noticeId - 0,
+                developerId: 1
             }).then(data => {
 
                 if (read === false) {
@@ -59,7 +60,13 @@ export default class MessageDetail extends React.PureComponent {
                         <h2 className="message-title">{detail.noticeTitle}</h2>
                         <p className="message-tips">
                             <span><b>发布时间：</b>{DateTool.utcToDev(detail.sendTime)}</span>
-                            <span><b>消息类型：</b>{detail.noticeTypeName}</span>
+                            <span><b>消息类型：</b>{(() => {
+                                if (detail.noticeType == 1) return '系统公告'
+                                if (detail.noticeType == 2) return '流程消息'
+                                if (detail.noticeType == 3) return '服务消息'
+                            }
+                            )()
+                            }</span>
                         </p>
                         <div className="message-content" dangerouslySetInnerHTML={{ __html: detail.noticeContent }}>{ }</div>
                         <a className="left-top" onClick={this.goBackList}>返回消息列表</a>

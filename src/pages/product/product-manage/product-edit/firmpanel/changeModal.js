@@ -174,7 +174,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                                     <div className='model-arr-wrap-item'>
                                         <div className='model-arr-wrap-item-title'>
                                             <span className='model-arr-wrap-item-title-name'> 面板1</span>
-                                            <Button type='primary' ghost onClick={() => { relData }}>发布</Button>
+                                            <Button type='primary' ghost onClick={() => { relData() }}>发布</Button>
                                         </div>
                                         <div className='model-arr-wrap-item-content'>
 

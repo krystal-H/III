@@ -44,9 +44,9 @@ const columns = [
 
 export default function MessageList({ messageList = [], selectedRowKeys, noticeType, onSelectChange, newMessageNums, pageIndex, changePage, read }) {
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
-    let btnDisable = (selectedRowKeys.length > 0),
-        { totalUnRead, processUnRead, serviceUnRead, publicUnRead } = newMessageNums,
-        showReadNums = !(read === true);
+    // let btnDisable = (selectedRowKeys.length > 0),
+    //     { totalUnRead, processUnRead, serviceUnRead, publicUnRead } = newMessageNums,
+    //     showReadNums = !(read === true);
 
     messageList = addKeyToTableData(messageList)
     const [selectedKey, setSelectedKey] = useState('')
@@ -131,7 +131,7 @@ export default function MessageList({ messageList = [], selectedRowKeys, noticeT
     }, [pager.pageRows, pager.pageIndex, messageType, read])
     useEffect(() => {
         getCount()
-    }, [read])
+    }, [])
     return (
         <AloneSection>
             <div className="message-wrapper">
@@ -171,7 +171,7 @@ export default function MessageList({ messageList = [], selectedRowKeys, noticeT
                         total: pager.totalRows,
                         showQuickJumper: true,
                         pageSizeOptions: [10],
-                        // showTotal: () => <span>共 <a>{pager.totalRows}</a> 条</span>
+                        showTotal: () => <span>共 <a>{pager.totalRows}</a> 条</span>
                     }} />
             </section>
         </AloneSection>

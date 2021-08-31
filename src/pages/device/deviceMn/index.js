@@ -50,12 +50,15 @@ export default function DeviceList() {
     }
     //产品种类列表
     const getProductType = () => {
-        get(Paths.getProductType).then((res) => {
-            let arr = []
-            for (let key in res.data) {
-                arr.push({ key, value: res.data[key] })
-            }
-            setOptionArr(arr)
+        get(Paths.getProductType).then(res=> {
+            // console.log(res,666666666,res.data,JSON.parse(res))
+            // alert(1)
+            // let arr = []
+            // for (let key in JSON.parse(res).data) {
+            //     arr.push({ key, value: res.data[key] })
+            // }
+            // console.log(arr,'==========', res,res.data)
+            // setOptionArr(arr)
         });
     }
     //搜索
@@ -175,27 +178,8 @@ export default function DeviceList() {
     ];
     //导出
     const exportFile = () => {
-        post(Paths.downDeviceFile, {}, { responseType: 'arraybuffer' }).then((res) => {
-            const data = res.data
-            const url = window.URL.createObjectURL(new Blob([data], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}))
-            const link = document.createElement('a')
-            link.style.display = 'none'
-            link.href = url
-            link.setAttribute('download', 'excel.xlsx')
-            document.body.appendChild(link)
-            link.click()
-            document.body.removeChild(link)
-            return
-            const reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onload = (e) => {
-                const a = document.createElement('a');
-                // 后端设置的文件名称在res.headers的 "content-disposition": "form-data; name=\"attachment\"; filename=\"20181211191944.zip\"",
-                a.href = e.target.result;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            };
+        post(Paths.downDeviceFile).then((res) => {
+            window.open(res.data)
         });
     }
     //页码改变
