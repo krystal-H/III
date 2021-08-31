@@ -1,18 +1,18 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { Modal, Form, Input, Button, Space } from 'antd';
-import { MinusCircleOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { Modal, Form, Input } from 'antd'
+import { DeleteOutlined } from '@ant-design/icons'
 import './configFirmware.scss'
 
 function ConfigFirmware({ firmwareVisible, cancelHandle }) {
   const [form] = Form.useForm()
+
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
-  };
+  }
+
   const onOk = () => {
     form.submit()
   }
-
 
   return (
     <Modal
@@ -37,7 +37,7 @@ function ConfigFirmware({ firmwareVisible, cancelHandle }) {
                 { required: true, message: '请输入英文字符' },
                 { pattern: new RegExp(/^[a-zA-Z]+$/, "g"), message: '请输入英文字符' }
               ]}>
-              <Input placeholder="请输入英文字符" />
+              <Input maxLength={50} placeholder="请输入英文字符" />
             </Form.Item>
             <Form.Item
               label="配置固件模块名称"
@@ -46,7 +46,7 @@ function ConfigFirmware({ firmwareVisible, cancelHandle }) {
                 { required: true, message: '请输入中文名称' },
                 { pattern: new RegExp(/^[\u2E80-\u9FFF]+$/, "g"), message: '请输入中文产品名称' }
               ]}>
-              <Input placeholder="请输入中文名称" />
+              <Input maxLength={50} placeholder="请输入中文名称" />
             </Form.Item>
           </div>
           <Form.List name="list">
@@ -63,7 +63,7 @@ function ConfigFirmware({ firmwareVisible, cancelHandle }) {
                         { required: true, message: '请输入英文字符' },
                         { pattern: new RegExp(/^[a-zA-Z]+$/, "g"), message: '请输入英文字符' }
                       ]}>
-                      <Input placeholder="请输入英文字符" />
+                      <Input maxLength={50} placeholder="请输入英文字符" />
                     </Form.Item>
                     <Form.Item
                       label="配置固件模块名称"
@@ -74,7 +74,7 @@ function ConfigFirmware({ firmwareVisible, cancelHandle }) {
                         { required: true, message: '请输入中文名称' },
                         { pattern: new RegExp(/^[\u2E80-\u9FFF]+$/, "g"), message: '请输入中文产品名称' }
                       ]}>
-                      <Input placeholder="请输入中文名称" />
+                      <Input maxLength={50} placeholder="请输入中文名称" />
                     </Form.Item>
                     <div className="delete-btn" onClick={() => remove(name)}><DeleteOutlined />&nbsp;&nbsp;删除</div>
                   </div>

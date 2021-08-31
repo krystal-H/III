@@ -35,18 +35,12 @@ const optionalList = [
     type: 'addFirmware',
     url: require('../../../../../assets/images/commonDefault/service-hardware.png')
   },
-  // { // 产品说暂时不做
-  //   title: '加入网关',
-  //   desc: '设备申请加入clife网关，应用到更加丰富的行业方案和场景市场。',
-  //   isConfiged: false,
-  //   type: 'gateway',
-  //   url: require('../../../../../assets/images/commonDefault/service-gateway.png')
-  // },
   {
     title: '固件升级',
     desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
     isConfiged: false,
     type: 'firmwareUpdate',
+    routePath: '/open/product/otaUpdate',
     url: require('../../../../../assets/images/commonDefault/service-firmwareUpdate.png')
   },
   {
@@ -61,6 +55,7 @@ const optionalList = [
     desc: '云端设定开关时间及周循环，无需硬件嵌入式开发',
     isConfiged: false,
     type: 'cloud',
+    routePath: '/open/product/cloudTimer',
     url: require('../../../../../assets/images/commonDefault/service-cloud.png')
   },
   {
@@ -68,6 +63,7 @@ const optionalList = [
     desc: '可定义配置设备预警消息推送，方便随时随地的设备监控',
     isConfiged: false,
     type: 'deviceWarning',
+    routePath: '/open/device/devMsg',
     url: require('../../../../../assets/images/commonDefault/service-device.png')
   }
 ]
@@ -78,24 +74,18 @@ function ServiceConfig({ productId, nextStep }, ref) {
   const [firmwareVisible, setFirmwareVisible] = useState(false)
   const [gatewayVisible, setGatewayVisible] = useState(false)
   const [firmwareDetailVisible, setFirmwareDetailVisible] = useState(false)
-  // const [productConfig, setProductConfig] = useState('') // 配网信息信息
-  // const [productExtend, setProductExtend] = useState('') // 通信安全
   const [productExtend, setProductExtend] = useState('') // 通信安全
   //验证函数
   const subNextConFirm = () => {
     nextStep()
   }
+
   useImperativeHandle(ref, () => ({
     onFinish: subNextConFirm
-  }));
+  }))
 
-  // 查看配网信息
-  const checkNetwork = () => {
-    setNetworkVisible(true)
-  }
-
-  const showModal = (type) => {
-    console.log(type)
+  // 查看配网信息、通信安全
+  const checkNetwork = (type) => {
     switch (type) {
       case 'network':
         setNetworkVisible(true)
@@ -103,6 +93,13 @@ function ServiceConfig({ productId, nextStep }, ref) {
       case 'security':
         setSecurityVisible(true)
         break;
+      default:
+        break;
+    }
+  }
+
+  const showModal = (type) => {
+    switch (type) {
       case 'addFirmware':
         setFirmwareVisible(true)
         break;
@@ -113,6 +110,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
         break;
     }
   }
+
   // 固件模块详情列表
   const showFirmwareDetail = () => {
     setFirmwareDetailVisible(true)
@@ -122,15 +120,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
   const isConfigedFunc = () => {
     setSecurityVisible(false)
     post(Paths.getSecurityConfigStatus, { productId }, { loading: true }).then(res => {
-      // const list = cloneDeep(requiredList)
-      // if (res.data.gatewayConfigflag) { // 配网信息配置过
-      //   list[0].isConfiged = true
-      //   setRequiredList(list)
-      //   setProductConfig(res.data.productConfig)
-      // }
       if (res.data.securityConfigflag) { // 通信安全配置过
-        // list[1].isConfiged = true
-        // setRequiredList(list)
         setProductExtend(res.data.productExtend.authorityType)
       }
     })
@@ -180,27 +170,26 @@ function ServiceConfig({ productId, nextStep }, ref) {
                   {/* 未配置的判断 */}
                   {
                     !item.isConfiged ?
-                      item.type === 'firmwareUpdate' ?
-                        <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
-                          <Link to="/open/product/otaUpdate" target="_blank">配置</Link>
+                      (item.type === 'firmwareUpdate' || item.type === 'cloud' || item.type === 'deviceWarning') ?
+                        <div className="config-card-right-btn">
+                          <Link to={item.routePath} target="_blank">配置</Link>
                         </div> :
-                        item.type === 'cloud' ?
-                          <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
-                            <Link to="/open/product/cloudTimer" target="_blank">配置</Link>
-                          </div> :
-                          <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
+                        <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
                       : ''
                   }
-                  {/* 配置的判断 */}
+                  {/* 配置的判断todo----------------------需要增加判断 */}
                   {
-                    item.isConfiged ?
-                      item.type === 'addFirmware' ?
-                        <>
-                          <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
-                          <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
-                        </> :
-                        <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>修改</div>
-                      : ''
+                    item.isConfiged && item.type === 'addFirmware' && '配置过固件模块的展示详情，否则不显示' &&
+                    <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
+                    // 固件升级模块配置——仅支持发布前配置，产品发布后不可配置以及修改。发布前未发布过，直接不显示
+                    // 仅使用MCU方案和SoC方案产品出现此选项
+                    // item.type === 'addFirmware' ?
+                    //   <>
+                    //     <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
+                    //     <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
+                    //   </> :
+                    //   <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>修改</div>
+                    // : ''
                   }
                 </div>
               </div>
@@ -249,15 +238,8 @@ function ServiceConfig({ productId, nextStep }, ref) {
             setFirmwareDetailVisible(false)
           }} />
       } */}
-      {/* 加入网关 - 产品说暂时不做，先隐藏*/}
-      {/* {
-        gatewayVisible &&
-        <JoinGateway
-          gatewayVisible={gatewayVisible}
-          cancelHandle={() => { setGatewayVisible(false) }} />
-      } */}
     </div>
   )
 }
 
-export default ServiceConfig = forwardRef(ServiceConfig)
+export default forwardRef(ServiceConfig)

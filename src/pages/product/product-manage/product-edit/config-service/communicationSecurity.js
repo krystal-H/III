@@ -1,10 +1,9 @@
-import React, { useState, useRef } from 'react';
-import { Modal, Form, Radio, Row, Tooltip } from 'antd';
-import { InfoCircleFilled } from '@ant-design/icons';
-import { Paths, post, get } from '../../../../../api'
-
+import React, { useState } from 'react'
+import { Modal, Form, Radio, Tooltip } from 'antd'
+import { InfoCircleFilled } from '@ant-design/icons'
+import { Paths, post } from '../../../../../api'
+import { Notification } from '../../../../../components/Notification'
 import './communicationSecurity.scss'
-import { Notification } from '../../../../../components/Notification';
 
 function CommunicateSecurity({ securityVisible, productId, cancelHandle, isGateWayDevice, isConfigedFunc, productExtend }) {
   const [form] = Form.useForm()
@@ -20,6 +19,7 @@ function CommunicateSecurity({ securityVisible, productId, cancelHandle, isGateW
       isConfigedFunc()
     })
   }
+
   const onOk = () => {
     form.submit()
   }
@@ -32,6 +32,7 @@ function CommunicateSecurity({ securityVisible, productId, cancelHandle, isGateW
       span: 14,
     },
   }
+
   return (
     <Modal
       title="通信安全机制"
@@ -49,8 +50,7 @@ function CommunicateSecurity({ securityVisible, productId, cancelHandle, isGateW
           form={form}
           {...formItemLayout}
           onFinish={onFinish}
-          initialValues={{ authorityType: productExtend + '' }}
-        >
+          initialValues={{ authorityType: productExtend + '' }}>
           <Form.Item
             name="authorityType"
             label="验证方式"

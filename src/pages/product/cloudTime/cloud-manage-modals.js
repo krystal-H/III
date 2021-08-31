@@ -162,9 +162,9 @@ export function CloudAddForm({ visible, onCancel, type, allProductList, editData
                         label="功能名称"
                         name="serviceName"
                         rules={[
-                            { required: true, message: '请输入功能名称' }, { max: 20, message: '最大输入长度为20' }
+                            { required: true, message: '请输入功能名称' }, { max: 50, message: '最大输入长度为50' }
                         ]}>
-                        <Input placeholder="不超过20个字符" />
+                        <Input placeholder="不超过50个字符" />
                     </Form.Item>
                     <Form.Item
                         label="归属产品"

@@ -125,19 +125,19 @@ function FreeApplyModal({ freeApplyVisible, handleFreeApply, type, moduleName, f
             name="account"
             label="产品联系人"
             rules={[{ required: true, message: '请输入联系人名称', }]}>
-            <Input placeholder="请输入联系人名称" />
+            <Input maxLength={50} placeholder="请输入联系人名称" />
           </Form.Item>
           <Form.Item
             name="tel"
             label="联系方式"
-            rules={[{ required: true, message: '请输入联系方式', }]}>
+            rules={[{ required: true, pattern: /^(((\d{3,4}-)?\d{7,8})|(1\d{10}))$/, message: '请输入联系方式', }]}>
             <Input placeholder="请输入联系方式" />
           </Form.Item>
           <Form.Item
             name="address"
             label="邮寄地址"
             rules={[{ required: true, message: '请输入联系邮寄地址', },]}>
-            <Input placeholder="请输入联系邮寄地址" />
+            <Input maxLength={50} placeholder="请输入联系邮寄地址" />
           </Form.Item>
           <Form.Item
             name="num"
