@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select, Checkbox, Form } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { post, Paths } from '../../../../../api';
 import './grayDebugg.scss';
 const { TabPane } = Tabs;
-export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDebugg }) {
+export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDebugg, actionObj }) {
+    const [form] = Form.useForm();
     const formItemLayout = {
         labelCol: {
             span: 8,
@@ -25,16 +27,56 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
     function onChange(e) {
         console.log(`checked = ${e.target.checked}`);
     }
-    const onFinish = (values) => {
-        console.log('Success:', values);
-    };
+    const closeOk = () => {
+        form.validateFields().then(value => {
+            // 验证通过后进入
+            let params = {
+
+            }
+            post(Paths.cusSavePanel, params).then((res) => {
+                closeDebugg()
+            });
+        }).catch(err => {
+            // 验证不通过时进入
+        });
+    }
+    //
+    const getAppListDOM = (type) => {
+        let { selectedAppId } = this.state,
+            { appsByProductId } = this.props,
+            _apps = appsByProductId.filter(item => type == '0' ? item.isOfficialApp : !item.isOfficialApp),
+            className = 'app-icon';
+        return (
+            _apps.length > 0 ?
+                _apps.map((item) => {
+                    let { appIcon, appName, appId } = item;
+
+                    className = 'app-icon'; // 重置class的值
+
+                    if (selectedAppId == appId) {
+                        className += ' active';
+                    }
+
+                    return (
+                        <div className="app-item" key={type + '-' + appId} onClick={() => this.selectApp(type, appId)}>
+                            <div className={className}>
+                                <img src={appIcon} alt="应用图标" />
+                            </div>
+                            <span className="gray-text app-name">{appName}</span>
+                        </div>
+                    )
+                })
+                :
+                <div style={{ textAlign: 'center' }} className="explain-text">{`该产品暂无${type === '0' ? '官方' : "私有"}应用`}</div>
+        )
+    }
     return (
         <div >
-            <Modal title="灰度调试" visible={isGrayModalVisible} onOk={closeDebugg} onCancel={CancelDebugg} width='764px' wrapClassName='add-protocols-wrap'>
+            <Modal title="灰度调试" visible={isGrayModalVisible} onOk={closeOk} onCancel={CancelDebugg} width='764px' wrapClassName='add-protocols-wrap'>
                 <div>
                     <div className='GrayModal-top'>
                         <div>即将发布的页面：</div>
-                        <div>面板2</div>
+                        <div>{actionObj.projectName}</div>
                     </div>
                     <div className='GrayModal-tip'>发布到应用：</div>
                     <div className='GrayModal-tab'>
@@ -50,13 +92,9 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                 </div>
                                 <div className='GrayModal-form-wrap'>
                                     <Form
-                                        name="basic"
-                                        labelCol={{ span: 8 }}
                                         wrapperCol={{ span: 16 }}
-                                        initialValues={{ remember: true }}
-                                        onFinish={onFinish}
                                     >
-                                        <Form.Item
+                                        {/* <Form.Item
                                             name="gender"
                                             label="Gender"
                                             rules={[
@@ -72,7 +110,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                 <Option value="female">female</Option>
                                                 <Option value="other">other</Option>
                                             </Select>
-                                        </Form.Item>
+                                        </Form.Item> */}
                                         <Form.List
                                             name="names2"
                                         >
