@@ -115,6 +115,7 @@ export default function OverviewWrap() {
             setProductCount(res.data)
         });
     }
+    //产品列表
     const [produList, setProductList] = useState([])
     const getProductList = () => {
         post(Paths.productList, { developerId: 1 }).then((res) => {
@@ -142,6 +143,9 @@ export default function OverviewWrap() {
     }
     const closeNewProduct = () => {
         setNewProductModal(false)
+    }
+    const goApp=()=>{
+        history.push(`/open/app/list`);
     }
     //引导图
     const [currentTip, setCurrentTip] = useState(0)
@@ -355,7 +359,7 @@ export default function OverviewWrap() {
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>APP开发</div>
-                                <a>进入</a>
+                                <a onClick={goApp}>进入</a>
                             </div>
                             <div className='over-view-productmn-content' style={{ height: '80px' }}>
                                 {

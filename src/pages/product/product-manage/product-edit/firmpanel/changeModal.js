@@ -2,59 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select, Checkbox, Form, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import DescWrapper from '../../../../../components/desc-wrapper/DescWrapper';
+import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
 import NewModal from './newModal'
 import './changeModal.scss'
+import { post, Paths, get } from '../../../../../api';
+import { Notification } from '../../../../../components/Notification';
+
 const { TabPane } = Tabs;
-const columns = [
-    {
-        title: 'APP ID',
-        dataIndex: 'name',
-        key: 'name',
-        render: text => <a>{text}</a>,
-    },
-    {
-        title: '产品名称',
-        dataIndex: 'age',
-        key: 'age',
-    },
-    {
-        title: '最新修改时间',
-        dataIndex: 'address',
-        key: 'address',
-    },
-    {
-        title: '状态',
-        key: 'tags',
-        dataIndex: 'tags',
-    },
-    {
-        title: '操作',
-        key: 'action',
-        render: (text, record) => (
-            <Space size="middle">
-                <a>发布</a>
-                <a>灰度调试</a>
-                <a>删除</a>
-            </Space>
-        ),
-    },
-];
+
+
 export default function ChangeModal({ isChangeModalVisible, closeChange, CancelChange }) {
-    const formItemLayout = {
-        labelCol: {
-            span: 8,
-        },
-        wrapperCol: {
-            span: 16,
-        },
-    };
-    const formItemLayoutWithOutLabel = {
-        wrapperCol: {
-            span: 16, offset: 8
-        },
-    };
-    useEffect(() => {
-    }, [])
+
     const callback = (key) => {
         console.log(key);
     }
@@ -64,29 +22,8 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     const onFinish = (values) => {
         console.log('Success:', values);
     };
-    const data = [
-        {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-        },
-        {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-        },
-        {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-        },
-    ];
+    // const data = [];
+
     //新增面板
     const [isAddModalVisible, setIsAddModalVisible] = useState(false)
     const closeAdd = () => {
@@ -95,14 +32,85 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     const CancelAdd = () => {
         setIsAddModalVisible(false)
     }
+
     const openAdd = () => {
         setIsAddModalVisible(true)
     }
+    const relData = (data) => {
+        alert(1)
+    }
     //标准面板选项
-
+    //tab3
+    const [data, setData] = useState([])
+    const [actionVis, setActionVis] = useState(false)
+    const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
+    const [actionData, setActionData] = useState({})
+    //确定删除
+    const delOkCancel = () => {
+        setActionVis(false)
+    }
+    //取消删除
+    const delCancel = () => {
+        setActionVis(false)
+    }
+    //删除
+    const openDel = (data) => {
+        setActionData(data)
+        setActionVis(true)
+    }
+    const getList = () => {
+        post(Paths.panelList, { productId: 11791 }).then((res) => {
+            setData(res.data.list)
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { totalRows: res.data.pager.totalRows })
+            })
+        });
+    }
+    useEffect(() => {
+        getList()
+    }, [pager.pageIndex, pager.pageRows])
+    const columns = [
+        {
+            title: 'APP ID',
+            dataIndex: 'projectId',
+            key: 'projectId',
+        },
+        {
+            title: '产品名称',
+            dataIndex: 'projectName',
+            key: 'projectName',
+        },
+        {
+            title: '最新修改时间',
+            dataIndex: 'modifyTime',
+            key: 'modifyTime',
+        },
+        {
+            title: '状态',
+            key: 'verifyStatus',
+            dataIndex: 'verifyStatus',
+            render: (text, record) => {
+                let arr = ['待审核', '已通过', '不通过', '审核中']
+                return arr[text]
+            }
+        },
+        {
+            title: '操作',
+            key: 'action',
+            render: (text, record) => (
+                <Space size="middle">
+                    <a>发布</a>
+                    <a>灰度调试</a>
+                    <a onClick={() => { openDel(record) }}>删除</a>
+                </Space>
+            ),
+        },
+    ];
     return (
         <div >
-            <Modal title="更换面板" visible={isChangeModalVisible} onOk={closeChange} onCancel={CancelChange} width='952px' wrapClassName='add-protocols-wrap'>
+            <Modal title="更换面板" visible={isChangeModalVisible} onOk={closeChange} onCancel={CancelChange} width='952px' wrapClassName='add-protocols-wrap'
+            footer={''}>
                 <div>
                     <div className='GrayModal-top'>
                         <DescWrapper style={{ marginBottom: 8, width: '100%' }} desc={['请先下线已发布面板，再重新选择面板']}></DescWrapper>
@@ -118,7 +126,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                                     <div className='model-arr-wrap-item'>
                                         <div className='model-arr-wrap-item-title'>
                                             <span className='model-arr-wrap-item-title-name'> 面板1</span>
-                                            <Button type='primary' ghost>发布</Button>
+                                            <Button type='primary' ghost onClick={() => { relData }}>发布</Button>
                                         </div>
                                         <div className='model-arr-wrap-item-content'>
 
@@ -140,7 +148,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                                         <Button type='primary' onClick={openAdd}>新增</Button>
                                     </div>
                                     <div>
-                                        <Table columns={columns} dataSource={data} />
+                                        <Table rowKey='did' dataSource={data} columns={columns} pagination={false} />
                                     </div>
                                 </div>
 
@@ -150,6 +158,13 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                 </div>
             </Modal>
             {isAddModalVisible && <NewModal isAddModalVisible={isAddModalVisible} closeAdd={closeAdd} CancelAdd={CancelAdd}></NewModal>}
+            <ActionConfirmModal
+                visible={actionVis}
+                modalOKHandle={delOkCancel}
+                modalCancelHandle={delCancel}
+                title='删除'
+                descText={`即将${actionData.projectName}`}
+            />
         </div>
     )
 }

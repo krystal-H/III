@@ -135,7 +135,8 @@ export default function DeviceRegist() {
     const getList = (loading = true) => {
         let params = {
             devicePushUrlConf: form.getFieldsValue(),
-            pager: pager
+            pager: pager,
+            developerId:1
         }
         // setSearchParams(params.devicePushUrlConf)
         post(Paths.subscribeList, params, { loading }).then((res) => {

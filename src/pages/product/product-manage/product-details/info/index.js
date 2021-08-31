@@ -102,12 +102,12 @@ export default function productInfo() {
                 </div>
             </div>
         </div>
-        <div className='product-info-item'>
+        {/* <div className='product-info-item'>
             <h3 className='product-info-title'>标签<LabelTip tip="产品标签是您给产品自定义的标识，您可以使用标签功能实现产品的分类统一管理。"></LabelTip></h3>
             <div className='product-info-table'>
                 <EditableTable />
             </div>
-        </div>
+        </div> */}
         <div className='product-info-item'>
             <h3 className='product-info-title'>商业化信息</h3>
             <div className='product-business-wrap'>
