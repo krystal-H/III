@@ -48,86 +48,6 @@ class DebuggerModal extends React.Component{
             dataType: val
         })
     }
-    
-    // 运行
-    handleRun = () => {
-        const {type, dataType} = this.state;
-        const { value } = this.refJs.state;
-        let input = this.refInput.state.value;
-
-        try{
-            // 解析脚本
-            let funObj;
-            try{
-                eval(value + `funObj = {clinkJsToRawData: typeof clinkJsToRawData === "function" ? clinkJsToRawData: undefined,
-                RawDataToclinkJs: typeof RawDataToclinkJs === "function" ? RawDataToclinkJs: undefined}`);
-            }catch(err){
-                throw new Error('脚本错误:\n'+err);
-            }
-            const {clinkJsToRawData, RawDataToclinkJs} = funObj;
-            let fun = type === 2 ? clinkJsToRawData : RawDataToclinkJs;
-            // 解析输入
-            // try{
-            //     if(!/^0x[0-9a-fA-F]{8,}$/.test(input)){
-            //         JSON.parse(input);
-            //     }
-            // }catch(err){
-            //     throw new Error('输入错误:\n'+err);
-            // }
-            // 执行bug
-            let result;
-            try{
-                if(typeof fun !== "function"){
-                    throw new Error(`${type === 2 ? "clinkJsToRawData 函数不存在" : "RawDataToclinkJs 函数不存在"}`);
-                }
-                result = fun(input, dataType);
-                if(typeof result === "object"){
-                    result = JSON.stringify(result, null, 4);
-                }
-            }catch(err){
-                throw new Error('脚本错误:\n'+err);
-            }
-            
-            this.setState({
-                result: result || "undefined"
-            })
-        }catch(err){
-            this.setState({
-                result: err
-            });
-        }
-    }
-
-    // 提交
-    handleSubmit = () => {
-        const {productId} = this.props;
-        const { value } = this.refJs.state;
-        
-        try{
-            let funObj;
-            try{
-                eval(value + `funObj = {clinkJsToRawData: typeof clinkJsToRawData === "function" ? clinkJsToRawData: undefined,
-                RawDataToclinkJs: typeof RawDataToclinkJs === "function" ? RawDataToclinkJs: undefined}`);
-            }catch(err){
-                throw new Error('脚本错误:\n'+err);
-            }
-            const {clinkJsToRawData, RawDataToclinkJs} = funObj;
-            if(clinkJsToRawData && RawDataToclinkJs){
-                // 上传脚本代码
-                this.props.submitJsContent(productId, value);
-            }else{
-                Notification({
-                    type:'error',
-                    duration: 3,
-                    message: "脚本必须包含clinkJsToRawData和RawDataToclinkJs两个函数"
-                })
-            }
-        }catch(err){
-            this.setState({
-                result: err
-            });
-        }
-    }
 
     // 关闭窗口
     handleClose = () => {
@@ -160,7 +80,7 @@ class DebuggerModal extends React.Component{
 
     render(){
         const { type, result, dataType } = this.state;
-        const { visible, canOperate } = this.props;
+        const { visible } = this.props;
 
         return (
             <Modal
@@ -169,12 +89,6 @@ class DebuggerModal extends React.Component{
                 wrapClassName="debugger-modal"
                 centered
                 maskClosable={false}
-                footer={(
-                    <div className="debugger-modal-footer">
-                        <Button onClick={this.handleRun} disabled={!canOperate}>运行</Button>
-                        <Button onClick={this.handleSubmit} disabled={!canOperate}>提交</Button>
-                    </div>
-                )}
                 onCancel={this.handleClose}
             >
                 <div className="debugger-modal-edit">

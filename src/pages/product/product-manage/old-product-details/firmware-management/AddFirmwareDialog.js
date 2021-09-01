@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { Input, Form, Select,Button } from 'antd';
+import { Input, Select,Button } from 'antd';
+import { Form } from '@ant-design/compatible';
 import { get,post,Paths } from '../../../../../api';
 import {Notification} from '../../../../../components/Notification';
 import { UploadFileClass } from '../../../../../components/upload-file';
 import LabelTip from '../../../../../components/form-com/LabelTip';
-import './but.scss';
 
 const { Option } = Select;
 
 export const AddFirmwareDialog = Form.create({
     name: 'addFirmwareDialog'
 })(
-    class extends React.Component{
+    class extends Component{
         constructor(props){
             super(props);
             this.state = {
@@ -27,7 +27,7 @@ export const AddFirmwareDialog = Form.create({
             this.deviceVersionType = this.deviceVersionType.bind(this);
         }
         componentDidMount() {
-            get(Paths.getAllDeviceVersionType,{checkProductId:this.props.productId,bindType:this.props.bindType}).then((model) => {
+            get(Paths.oldGetAllDeviceVersionType,{checkProductId:this.props.productId,bindType:this.props.bindType}).then((model) => {
                 this.setState({deviceVersionTypeList:model.data});
             });
         }
@@ -73,7 +73,7 @@ export const AddFirmwareDialog = Form.create({
                         });
                         return false;
                     }
-                    post(Paths.versionAdd,data,{needFormData:true,needVersion:1.1}).then((model) => {
+                    post(Paths.oldVersionAdd,data,{needFormData:true,needVersion:1.1}).then((model) => {
                         if(model.code==0){
                             //先清空表单数据再关闭弹窗
                             this.props.form.resetFields();
@@ -87,7 +87,7 @@ export const AddFirmwareDialog = Form.create({
         }
         deviceVersionType(id){
             this.props.form.resetFields('firmwareVersionType');
-            get(Paths.getAllFirmwareVersionType,{deviceVersionTypeId:id}).then((model) => {
+            get(Paths.oldGetAllFirmwareVersionType,{deviceVersionTypeId:id}).then((model) => {
                 this.setState({allFirmwareVersionTypeList:model.data});
             });
         }
@@ -110,7 +110,7 @@ export const AddFirmwareDialog = Form.create({
             };
             let { deviceVersionTypeList, allFirmwareVersionTypeList } = this.state;
             return (
-                <div className='add_firmware_dialog'>
+                <div className='oldPro_add_firmware_dialog'>
                      <Form {...formItemLayout} onSubmit={this.handleSubmit} className="">
                         <Form.Item label={<LabelTip label="添加固件" tip="该产品采用的是独立MCU方案，您可以管理PCB和模组的固件程序"/>} hasFeedback>
                             {getFieldDecorator('deviceVersionType', {
@@ -157,7 +157,7 @@ export const AddFirmwareDialog = Form.create({
                                 maxSize={20}
                             />
                         </Form.Item>
-                        <div className='but'>
+                        <div className='oldPro-but'>
                             <Button type="primary" htmlType="submit">
                                 确定
                             </Button>

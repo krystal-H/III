@@ -1,9 +1,17 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Input, Button, Select, Table } from 'antd';
+import { Carousel } from 'antd';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import './index.scss'
 import EditableTable from './editTable';
 import { post, Paths } from '../../../../../api';
+import baseImg from '../../../../../assets/images/commonDefault/prcduct_avtor.png';
+import guideImg from '../../../../../assets/images/commonDefault/bind_net_guide.png';
+import defaultImg from '../../../../../assets/images/commonDefault/bind_net_dafault.png'
+import carouselImg from '../../../../../assets/images/commonDefault/bind_net_Carousel.png'
+const contentStyle = {
+    height: '160px',
+    with: '100px'
+};
 export default function productInfo() {
     useEffect(() => {
         getBusinessInfo()
@@ -42,7 +50,7 @@ export default function productInfo() {
             <h3 className='product-info-title'>产品信息</h3>
             <div className='product-info-content'>
                 <div className='product-info-conten-wrap'>
-                    <img className='product-top-left-img' alt='' />
+                    <img className='product-top-left-img' alt='' src={imageInfo.productIcon || baseImg} />
                     <div className='product-info-content-text'>
                         <div>
                             <span>产品品牌：</span>
@@ -90,15 +98,20 @@ export default function productInfo() {
             <div className='product-info-content'>
                 <div className='product-info-conten-wrap'>
                     <span className='middle-text'>配网引导图：</span>
-                    <img className='middle-img' alt='' src={imageInfo.guidePage}/>
+                    <img className='middle-img' alt='' src={imageInfo.guidePage || guideImg} />
                 </div>
                 <div className='product-info-conten-wrap'>
                     <span className='middle-text'>失败引导图：</span>
-                    <img className='middle-img' alt='' src={imageInfo.bindFailPage}/>
+                    <img className='middle-img' alt='' src={imageInfo.bindFailPage || defaultImg} />
                 </div>
                 <div className='product-info-conten-wrap'>
                     <span className='middle-text'>帮助轮播图：</span>
-                    <img />
+                    <img src={carouselImg} />
+                    {/* {
+                        imageInfo.imageUrlList? (<img src={carouselImg} />) : null
+                    } */}
+
+
                 </div>
             </div>
         </div>

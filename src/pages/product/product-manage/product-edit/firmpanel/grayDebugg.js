@@ -22,8 +22,12 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
     };
     const [applist, setApplist] = useState([])
     const getAoolist = () => {
+        let productId = 0
+        if (sessionStorage.getItem('productItem')) {
+            productId = JSON.parse(sessionStorage.getItem('productItem')).productId
+        }
         post(Paths.panelApplicationList, {
-            "productId": 11791
+            productId
         }).then((res) => {
             setApplist(res.data)
         });
@@ -40,10 +44,10 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
     }
     const closeOk = () => {
         let currentForm
-        if(currentTab == 1){
-            currentForm=form
-        }else{
-            currentForm=form2
+        if (currentTab == 1) {
+            currentForm = form
+        } else {
+            currentForm = form2
         }
         currentForm.validateFields().then(value => {
             let params = {

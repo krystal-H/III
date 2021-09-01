@@ -130,6 +130,18 @@ let Paths = {
     saveLinkHelpImg: '/productManage/saveProductHelp',
     netWorkDelete: '/netWorkLogo/delete',
     netWorkAddAndUpdate: '/netWorkLogo/addAndUpdate',
+    getPublishProductInfo: '/product/getPublishProductInfo',
+    getV4Protocol: '/productManage/getV4ProtocolListByProductId',
+    oldVersionList: '/firmware/old/device/version/list', //固件列表
+    oldGetAllDeviceVersionType: '/firmware/old/device/version/getAllDeviceVersionType',//固件类型
+    oldGetAllFirmwareVersionType: '/firmware/old/device/version/getAllFirmwareVersionType',//固件模块
+    oldVersionAdd: '/firmware/old/device/version/add',//固件添加
+    oldVersionDelete: '/firmware/old/device/version/delete',//固件删除
+    versionCheckMac: '/firmware/device/version/importMac',//批量导入mac
+    versionValidate: '/firmware/device/version/validate',//发起验证
+    versionPublish: '/firmware/device/upgrade/publish',//发布
+
+    
     
 
     /* 云端定时功能5x */
@@ -203,19 +215,6 @@ let Paths = {
     saveModule: '/product/saveModule',//保存产品所选模组信息
     getModuleInfo:'/product/getModuleInfo',
 
-    /**
-     * 固件管理 start
-     * aize-2019-09-12
-     */
-    versionList: '/device/version/list', //固件列表
-    getAllDeviceVersionType: '/device/version/getAllDeviceVersionType',//固件类型
-    getAllFirmwareVersionType: '/device/version/getAllFirmwareVersionType',//固件模块
-    versionAdd: '/device/version/add',//固件添加
-    versionDelete: '/device/version/delete',//固件删除
-    versionCheckMac: '/device/version/checkMac',//批量导入mac
-    versionValidate: '/device/version/validate',//发起验证
-    versionPublish: '/device/version/publish',//发布
-    /* 固件管理 end */
 
     /**
      * 商业发布 start
@@ -534,6 +533,7 @@ let Paths = {
     productList:'/productManage/getProductList' ,//产品列表
 
     // 产品发布前-定义功能
+    editProductInfo:'/product/update',//产品-基本信息-编辑
     standardFnList:'/product/dev/show/func', //标准和自定义功能列表
     Physpanel:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
     exportPhysicalModel:'/physicalModel/export/product',//产品-定义功能-导出物模型
@@ -565,6 +565,7 @@ let Paths = {
     proReledExport:'/deviceRegister/importAddr',//设备注册导出
     proReledInfo:'/product/detail',//设备基本详情
     getProductPlus:'/productManage/getProductExtendList',//产品下拉带验证方式
+    
 
     //确定面板接口
     cusSavePanel:'/panelManage/saveProject',//自定义-保存/更新面板

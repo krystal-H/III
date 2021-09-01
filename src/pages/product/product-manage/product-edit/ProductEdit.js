@@ -43,11 +43,11 @@ const getProductIdFromPath = (match) => +match.params.id;
 function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, history }) {
     let productItem = {}
 
-    // if (sessionStorage.getItem('productItem')) {
-    //     productItem = JSON.parse(sessionStorage.getItem('productItem'))
-    // } else {
-    //     return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
-    // }
+    if (sessionStorage.getItem('productItem')) {
+        productItem = JSON.parse(sessionStorage.getItem('productItem'))
+    } else {
+        return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
+    }
     let { path } = match,
         productIdInRoutePath = getProductIdFromPath(match),
         { mode } = productBaseInfo,
@@ -121,7 +121,7 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
     //标题修改
-    const [titleVisible, setTitleVisible] = useState(false)
+    const [titleVisible, setTitleVisible] = useState(true)
     const openTitle = () => {
         setTitleVisible(true)
     }

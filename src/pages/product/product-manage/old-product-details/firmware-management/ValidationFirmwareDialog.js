@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Button, Upload, Icon } from 'antd';
+import {  Button, Upload, Icon } from 'antd';
+import { Form } from '@ant-design/compatible';
 import { post,Paths } from '../../../../../api';
-import {Notification} from '../../../../../components/Notification'
-import './but.scss';
+import {Notification} from '../../../../../components/Notification';
 
 export const ValidationFirmwareDialog = Form.create({
     name: 'validationFirmwareDialog',
@@ -19,7 +19,7 @@ export const ValidationFirmwareDialog = Form.create({
         };
     },
 })(
-    class extends React.Component{
+    class extends Component{
         constructor(props){
             super(props);
             this.state = {
@@ -169,7 +169,7 @@ export const ValidationFirmwareDialog = Form.create({
             let {macList} = this.state;
             macList = macListValidationRecords ? macList : macList || validationState;
             return (
-                <div className='validation_firmware_dialog'>
+                <div className='oldPro_validation_firmware_dialog'>
                      <Form {...formItemLayout} onSubmit={this.handleSubmit} className="">
                         <div>
                             <span style={{verticalAlign: 'top',marginRight: '10px'}}>MAC地址:</span>
@@ -198,7 +198,7 @@ export const ValidationFirmwareDialog = Form.create({
                                 }
                             </Form.Item>
                         </div>
-                        <div className='but'>
+                        <div className='oldPro-but'>
                             <Button type="primary" htmlType="submit">
                                 确定
                             </Button>

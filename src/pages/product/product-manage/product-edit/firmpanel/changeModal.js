@@ -13,7 +13,8 @@ import ActionModel from './actionModel'
 const { TabPane } = Tabs;
 
 
-export default function ChangeModal({ isChangeModalVisible, closeChange, CancelChange,defaultTab='1' }) {
+export default function ChangeModal({ isChangeModalVisible, closeChange, CancelChange, defaultTab = '1' }) {
+
     const history = useHistory();
     const callback = (key) => {
         console.log(key);
@@ -24,23 +25,29 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     const goOrder = () => {
         history.push('/open/repairOrder');
     }
-    //新增面板
-    const [isAddModalVisible, setIsAddModalVisible] = useState(false)
-    const closeAdd = () => {
-        setIsAddModalVisible(false)
-    }
-    const CancelAdd = () => {
-        setIsAddModalVisible(false)
-    }
+
     //列表
     const getList = () => {
-        post(Paths.panelList, { productId: 11791 }).then((res) => {
+        let productId = 0
+        if (sessionStorage.getItem('productItem')) {
+            productId = JSON.parse(sessionStorage.getItem('productItem')).productId
+        }
+        post(Paths.panelList, { productId }).then((res) => {
             setData(res.data.list)
             setPager(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))
                 return Object.assign(obj, { totalRows: res.data.pager.totalRows })
             })
         });
+    }
+    //新增面板
+    const [isAddModalVisible, setIsAddModalVisible] = useState(false)
+    const closeAdd = () => {
+        getList()
+        setIsAddModalVisible(false)
+    }
+    const CancelAdd = () => {
+        setIsAddModalVisible(false)
     }
     //新增
     const openAdd = () => {
@@ -68,7 +75,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     const [data, setData] = useState([])
     const [actionVis, setActionVis] = useState(false)
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
-    
+
     //确定删除
     const delOkCancel = () => {
         post(Paths.delPanel, { projectId: actionData.projectId }).then((res) => {

@@ -10,7 +10,6 @@ const getProductIdFromPath = (match) => +match.params.id;
 
 export default function ProductDetail ({match}) {
     const [productBaseInfo, setProductBaseInfo] = useState({})
-    const [protocolLists, setProtocolLists] = useState([])
 
     let productIdInRoutePath = getProductIdFromPath(match);
 
@@ -18,9 +17,8 @@ export default function ProductDetail ({match}) {
         // 产品ID更新后，重新获取数据
         if (productIdInRoutePath) {
             getBaseInfo(productIdInRoutePath)
-            getProtocolLi(productIdInRoutePath)
         }
-    },[getBaseInfo, getProtocolLi,productIdInRoutePath])
+    },[getBaseInfo,productIdInRoutePath])
 
     const getBaseInfo = productId=>{
         post(Paths.getOldProductBaseInfo,{productId},{
@@ -30,14 +28,6 @@ export default function ProductDetail ({match}) {
             setProductBaseInfo(data.data)
         })
     }
-    const getProtocolLi = productId=>{
-        post(Paths.getProtocolList,{ productId },{
-            needVersion:1.2,
-            loading:true
-          }).then(data => {
-            setProtocolLists(data.data.list)
-          })
-    }
 
     if (!productIdInRoutePath) {
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
@@ -46,7 +36,7 @@ export default function ProductDetail ({match}) {
         <div className="old-pro-detail">
             <PageTitle title={productBaseInfo.productName}></PageTitle>
             <div className={'content-wrapper'}>
-                <ProductTabs productId={productIdInRoutePath} protocolLists={protocolLists} productBaseInfo={productBaseInfo}
+                <ProductTabs productId={productIdInRoutePath} productBaseInfo={productBaseInfo}
                 ></ProductTabs>
             </div>
         </div>

@@ -5,11 +5,7 @@ import { get,Paths } from '../../../../../api';
 import {AddFirmwareDialog} from './AddFirmwareDialog';
 import {ReleaseFirmware} from './ReleaseFirmware';
 import {ValidationFirmwareDialog} from './ValidationFirmwareDialog';
-import { connect } from 'react-redux';
 import moment from 'moment';
-
-
-import './FirmwareManagement.scss';
 
 const desc = [
     '温馨提示：',
@@ -23,18 +19,6 @@ const desc = [
 const { Search } = Input;
 const { confirm } = Modal;
 
-
-const mapStateToProps = state => {
-    return {
-        productBaseInfo: state.getIn(['product','productBaseInfo']).toJS(),
-    }
-}
-const mapDispatchToProps = dispatch => {
-    return {
-        // getCatalogList: () => dispatch(getCatalogListAction()),
-    }
-}
-@connect(mapStateToProps, mapDispatchToProps)
 export default class FirmwareManagement  extends Component {
     constructor(props){
         super(props);
@@ -159,7 +143,7 @@ export default class FirmwareManagement  extends Component {
     }
     componentDidMount() {
         if(this.props.productId){
-            get(Paths.versionList,{productId:this.props.productId,pageIndex:1,pageRows:10}).then((model) => {
+            get(Paths.oldVersionList,{productId:this.props.productId,pageIndex:1,pageRows:10}).then((model) => {
                 let versionList = this.listData(model.data.list);
                 this.setState({versionList,bindType:this.props.productBaseInfo.bindType,pager:model.data.pager});
             });
@@ -168,7 +152,7 @@ export default class FirmwareManagement  extends Component {
     componentDidUpdate(prevProps){
         if(this.props.productBaseInfo.bindType&&(prevProps.productBaseInfo.productId!=this.props.productId)){
             let pageIndex = this.state.pager.pageIndex?this.state.pager.pageIndex:1
-            get(Paths.versionList,{productId:this.props.productId,pageIndex,pageRows:10}).then((model) => {
+            get(Paths.oldVersionList,{productId:this.props.productId,pageIndex,pageRows:10}).then((model) => {
                 let versionList = this.listData(model.data.list);
                 this.setState({versionList,bindType:this.props.productBaseInfo.bindType,pager:model.data.pager});
             });
@@ -202,7 +186,7 @@ export default class FirmwareManagement  extends Component {
     }
     //搜索
     search(value){
-        get(Paths.versionList,{totalVersion:value,productId:this.props.productId,pageIndex:1,pageRows:10}).then((model) => {
+        get(Paths.oldVersionList,{totalVersion:value,productId:this.props.productId,pageIndex:1,pageRows:10}).then((model) => {
             let versionList = this.listData(model.data.list);
             this.setState({versionList,bindType:this.props.productBaseInfo.bindType,pager:model.data.pager});
         });
@@ -210,7 +194,7 @@ export default class FirmwareManagement  extends Component {
     //添加固件，弹窗控制   str: 是否请求列表
     addFirmware(str){
         if(str){
-            get(Paths.versionList,{productId:this.props.productId,pageIndex:1,pageRows:10}).then((model) => {
+            get(Paths.oldVersionList,{productId:this.props.productId,pageIndex:1,pageRows:10}).then((model) => {
                 let versionList = this.listData(model.data.list);
                 this.setState({versionList,bindType:this.props.productBaseInfo.bindType,pager:model.data.pager});
             });  
@@ -225,7 +209,7 @@ export default class FirmwareManagement  extends Component {
      */
     validationFirmware(str,id,validationState){
         if(str){
-            get(Paths.versionList,{productId:this.props.productId,pageIndex:1,pageRows:10}).then((model) => {
+            get(Paths.oldVersionList,{productId:this.props.productId,pageIndex:1,pageRows:10}).then((model) => {
                 let versionList = this.listData(model.data.list);
                 this.setState({versionList,bindType:this.props.productBaseInfo.bindType,pager:model.data.pager});
             });  
@@ -240,7 +224,7 @@ export default class FirmwareManagement  extends Component {
      */
     releaseFirmware(str,id,releaseState){
         if(str){
-            get(Paths.versionList,{productId:this.props.productId,pageIndex:1,pageRows:10}).then((model) => {
+            get(Paths.oldVersionList,{productId:this.props.productId,pageIndex:1,pageRows:10}).then((model) => {
                 let versionList = this.listData(model.data.list);
                 this.setState({versionList,bindType:this.props.productBaseInfo.bindType,pager:model.data.pager});
             });  
@@ -263,12 +247,12 @@ export default class FirmwareManagement  extends Component {
           okType: 'danger',
           cancelText: '取消',
           onOk() {
-            get(Paths.versionDelete,{deviceVersionId}).then((model) => {
+            get(Paths.oldVersionDelete,{deviceVersionId}).then((model) => {
                 if(model.code==0){
                     let {totalRows,pageIndex} = _this.state.pager;
                     pageIndex = (totalRows % ((pageIndex-1)*10))>1?pageIndex:pageIndex-1;
 
-                    get(Paths.versionList,{productId:_this.props.productId,pageIndex:pageIndex,pageRows:10}).then((model) => {
+                    get(Paths.oldVersionList,{productId:_this.props.productId,pageIndex:pageIndex,pageRows:10}).then((model) => {
                         let versionList = _this.listData(model.data.list);
                         _this.setState({versionList,bindType:_this.props.productBaseInfo.bindType,pager:model.data.pager});
                     });
@@ -279,7 +263,7 @@ export default class FirmwareManagement  extends Component {
         });
     }
     pagerIndex(index){
-        get(Paths.versionList,{productId:this.props.productId,pageIndex:index,pageRows:10}).then((model) => {
+        get(Paths.oldVersionList,{productId:this.props.productId,pageIndex:index,pageRows:10}).then((model) => {
             let versionList = this.listData(model.data.list);
             this.setState({versionList,bindType:this.props.productBaseInfo.bindType,pager:model.data.pager});
         }); 
@@ -287,30 +271,26 @@ export default class FirmwareManagement  extends Component {
     render() {
         let {versionList,pager,macListOperationRecords,addFirmwareDialog,releaseState,bindType,releaseFirmwareDialog,validationFirmwareDialog,validationState,deviceVersionId,macListValidationRecords} = this.state;
         return (
-            <div className="firmware_management">
-                <div className='commonContentBox'>
-                    <div className="centent">
-                        < DescWrapper desc={desc} />
-                    </div>
-                    <div className='fonction_fence'>
-                        <span>固件标识：</span>
+                <div className="firmware_management">
+                    < DescWrapper desc={desc} />
+                    <div style={{"margin":"24px 0 12px"}}>
+                        
                         <div className='comm-searchBox'>
-                            <Search placeholder="请输入固件" onSearch={value => this.search(value)} enterButton />
+                            <Search placeholder="请输入固件标识查询" onSearch={value => this.search(value)} enterButton />
                         </div>
-                        <Button className='button' onClick={this.addFirmware} type="primary">添加固件</Button>
+                        <Button className='butFloatRight' onClick={this.addFirmware.bind(this,"")} type="primary">添加固件</Button>
                     </div>
-                    <div className='listBox'>
-                        <Table 
-                            columns={this.columns} 
-                            dataSource={versionList} 
-                            pagination={{
-                                defaultCurrent:pager.pageIndex, 
-                                total:pager.totalRows, 
-                                hideOnSinglePage:false,
-                                onChange:this.pagerIndex
-                            }} 
-                        />
-                    </div>
+                   
+                    <Table 
+                        columns={this.columns} 
+                        dataSource={versionList} 
+                        pagination={{
+                            defaultCurrent:pager.pageIndex, 
+                            total:pager.totalRows, 
+                            hideOnSinglePage:false,
+                            onChange:this.pagerIndex
+                        }} 
+                    />
                     <Modal
                         title='新建固件' 
                         visible={addFirmwareDialog}
@@ -345,7 +325,6 @@ export default class FirmwareManagement  extends Component {
                         <ValidationFirmwareDialog deviceVersionId={deviceVersionId} validationState={validationState} validationFirmware={this.validationFirmware} macListValidationRecords={macListValidationRecords} macListValidationRecordsFunc={this.macListValidationRecordsFunc} />
                     </Modal>
                 </div>
-            </div>
         )
     }
 }
