@@ -146,7 +146,7 @@ function _axios(configs) {
       method = "get",
       needVersion,
       needFormData,
-      // needJson,
+      needJson,
       loading,
       noNotification,
       url,
@@ -195,7 +195,7 @@ function _axios(configs) {
       },
     });
     delete _configs.needFormData;
-    // delete _configs.needJson;
+    delete _configs.needJson;
   }
 
 

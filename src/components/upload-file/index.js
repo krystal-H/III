@@ -1,7 +1,7 @@
 /**
  * Created by xiao on 2019/12/18.
  */
-import React, { useState, PureComponent, forwardRef, useImperativeHandle, memo } from 'react';
+import React, { useState, PureComponent, forwardRef, useImperativeHandle, memo, useEffect } from 'react';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Upload, Modal, Button } from 'antd';
 import { Notification } from '../../components/Notification';
@@ -27,7 +27,14 @@ function getBase64(file) {
  * preferSize: 推荐尺寸 图片默认192px*192px
  * cb: 文件上传成功后的回调
  */
-function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false, preferSize = '192px*192px', cb ,value, onChange}, uploadRef) {
+function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false, preferSize = '192px*192px', cb, value, onChange }, uploadRef) {
+
+    //回显
+    useEffect(() => {
+        if (value) {
+            setFileList(value)
+        }
+    }, [])
     const [fileList, setFileList] = useState([]);
     const [previewVisible, setPreviewVisible] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
@@ -148,14 +155,14 @@ function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false
         if (!isLt) {
             Notification({
                 description: `文件必须小于 ${maxSize} MB!`,
-                type:'warn'
+                type: 'warn'
             });
             return false;
         }
         if (!isLtMaxCount()) {
             Notification({
                 description: `文件个数必须小于 ${maxCount} 个!`,
-                type:'warn'
+                type: 'warn'
             });
             return false;
         }
@@ -244,7 +251,7 @@ export class UploadFileClass extends PureComponent {
     };
 
     //验证文件格式
-    isLtFormat=(file)=>{
+    isLtFormat = (file) => {
         const { format } = this.props;
         let filename = file.name;
         let upformat = filename.substring(filename.lastIndexOf('.')).toLowerCase(),
@@ -276,20 +283,20 @@ export class UploadFileClass extends PureComponent {
      * @param fileList
      */
     handleChange = ({ file, fileList }) => {
-        
-        if(file.name!==""){
+
+        if (file.name !== "") {
             const { format } = this.props;
             const isLtF = this.isLtFormat(file);
-            if(!isLtF){
-            
+            if (!isLtF) {
+
                 Notification({
                     description: `文件格式必须是 ${format}其中之一 `,
-                    type:'warn'
+                    type: 'warn'
                 });
                 return false;
             }
         }
-        
+
         const { maxCount, cb } = this.props;
         fileList = fileList.map(file => {
             if (file.response) {
@@ -368,28 +375,28 @@ export class UploadFileClass extends PureComponent {
     };
 
     beforeUpload = (file) => {
-        const { maxSize, maxCount,format} = this.props;
+        const { maxSize, maxCount, format } = this.props;
         const isLt = this.isLtMaxSize(file);
         const isLtF = this.isLtFormat(file);
 
-        if(!isLtF){
+        if (!isLtF) {
             Notification({
                 description: `文件格式必须是 ${format}其中之一 `,
-                type:'warn'
+                type: 'warn'
             });
             return false;
         }
         if (!isLt) {
             Notification({
                 description: `文件必须小于 ${maxSize} MB!`,
-                type:'warn'
+                type: 'warn'
             });
             return false;
         }
         if (!this.isLtMaxCount()) {
             Notification({
                 description: `文件个数必须小于 ${maxCount} 个!`,
-                type:'warn'
+                type: 'warn'
             });
             return false;
         }
@@ -406,7 +413,7 @@ export class UploadFileClass extends PureComponent {
             </div>
         );
         const uploadButton = (
-            <Button type="primary"  disabled={disabled}>
+            <Button type="primary" disabled={disabled}>
                 <UploadOutlined /> 上传附件
             </Button>
         );
@@ -444,7 +451,7 @@ export class UploadFileClass extends PureComponent {
                     >
                         {(maxCount === fileList.length && !isNotImg) ? null : buttonType}
                     </Upload>
-                    {isNotImg &&maxCount>1&& <span className="file-upload-desc">最多{maxCount}个</span>}
+                    {isNotImg && maxCount > 1 && <span className="file-upload-desc">最多{maxCount}个</span>}
                     {desc}
                     {previewVisible && <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
                         <img alt="example" style={{ width: '100%' }} src={previewImage} />

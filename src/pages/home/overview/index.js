@@ -50,7 +50,7 @@ export default function OverviewWrap() {
     const [bannerArr, setBannerArr] = useState([])
     const getBannerList = () => {
         post(Paths.homeBanner, { developerId: 1 }).then((res) => {
-            setBannerArr(res.data)
+            setBannerArr(res.data.list)
         });
     }
     //消息列表 
@@ -118,7 +118,7 @@ export default function OverviewWrap() {
     //产品列表
     const [produList, setProductList] = useState([])
     const getProductList = () => {
-        post(Paths.productList, { developerId: 1 }).then((res) => {
+        get(Paths.productList, { developerId: 1 }).then((res) => {
             if (res.data.list.length > 3) {
                 setProductList(res.data.list.slice(0, 3))
             } else {

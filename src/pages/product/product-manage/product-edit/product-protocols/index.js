@@ -28,13 +28,13 @@ function delaData(data) {
     return newData
 }
 
-function ProtocolFn({ nextStep, productId }, ref) {
+function ProtocolFn2({ nextStep, productId }, ref) {
     //展示
     const [cusData, setCusData] = useState([]);
     const [standardData, setStandardData] = useState([]);
     //获取列表
     const getList = (loading = true) => {
-        post(Paths.standardFnList, { productId}, { loading }).then((res) => {
+        post(Paths.standardFnList, { productId }, { loading }).then((res) => {
             setStandardData(delaData(res.data.standard))
             let data2 = delaData(res.data.custom)
             setCusData(data2)
@@ -93,17 +93,18 @@ function ProtocolFn({ nextStep, productId }, ref) {
             // delaData(res.data)
         });
     }
+    
+    const ref11 = useRef()
     useImperativeHandle(ref, () => ({
         onFinish: subNextConFirm
     }));
 
-    const ref11 = useRef()
     return <div className='Protocol-wrap' ref={ref11}>
         <div className='Protocol-label'>
             <div>独立MCU方案，需选择下载MCU开发资料包等，进行相应开发</div>
             <div className='Protocol-download' onClick={exportFile}>
                 <a>导出物模型</a>
-                <img src={downpng} />
+                <img src={downpng} alt='' />
             </div>
 
         </div>
@@ -135,4 +136,4 @@ function ProtocolFn({ nextStep, productId }, ref) {
     </div>
 }
 
-export default ProtocolFn = forwardRef(ProtocolFn)
+export default ProtocolFn2 = forwardRef(ProtocolFn2)

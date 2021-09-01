@@ -1,19 +1,30 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef, useRef } from 'react'
 import moment from 'moment';
 import { Form, Input, Button, Space, Select, Radio, Tabs, Drawer } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { UploadFileHooks } from '../../../../components/upload-file';
+import { post, Paths, get } from '../../../../api';
 import './titleSet.scss'
 export default function TitleEdit({ titleVisible, onCloseTitle }) {
-    useEffect(() => {
-    }, [])
+    let productItem = {}
+    if (sessionStorage.getItem('productItem')) {
+        productItem = JSON.parse(sessionStorage.getItem('productItem'))
+    } 
     const [form] = Form.useForm();
     const oneRef = useRef();
     //提交数据
     const subData = () => {
-        const value = form.getFieldsValue(); // {name: 'dee', age: 18}
-        console.log(value,'======')
-        // form.resetFields();
+        form.validateFields().then(val=>{
+            let params={
+                productId:productItem.productId,
+                productName:val.productName,
+                brandId:val.brandId,
+                productIcon:val.productIcon[0].url,
+                productCode:val.productCode
+            }
+            post(Paths.editProductInfo,params).then((res) => {
+                // delaData(res.data)
+            });
+        })
     }
     return (
         <Drawer
@@ -41,7 +52,6 @@ export default function TitleEdit({ titleVisible, onCloseTitle }) {
         >
             <div className='edit-left-protocol-wrap'>
                 <Form
-                    name="basic"
                     labelCol={{
                         span: 8,
                     }}
@@ -49,10 +59,14 @@ export default function TitleEdit({ titleVisible, onCloseTitle }) {
                         span: 16,
                     }}
                     form={form}
+                    initialValues={{
+                        productIcon:[{url:productItem.productIcon}],
+                        productName:productItem.productName
+                    }}
                 >
                     <Form.Item
                         label="产品名称"
-                        name="username"
+                        name="productName"
                         rules={[
                             {
                                 required: true,
@@ -64,15 +78,15 @@ export default function TitleEdit({ titleVisible, onCloseTitle }) {
 
                     <Form.Item
                         label="产品ID"
-                    ><span>switch</span>
+                    ><span>{productItem.productId}</span>
                     </Form.Item>
                     <Form.Item
                         label="品类"
-                    ><span>枚举型</span>
+                    ><span>{productItem.deviceType}</span>
                     </Form.Item>
                     <Form.Item
                         label="品牌"
-                        name="username"
+                        name="brandId"
                         rules={[
                             {
                                 required: true,
@@ -94,23 +108,23 @@ export default function TitleEdit({ titleVisible, onCloseTitle }) {
                     </Form.Item>
                     <Form.Item
                         label="通信协议"
-                    ><span>枚举型</span>
+                    ><span>{productItem.bindTypeStr}</span>
                     </Form.Item>
                     <Form.Item
                         label="智能化方案"
-                    ><span>枚举型</span>
+                    ><span>{productItem.schemeName}</span>
                     </Form.Item>
                     <Form.Item
                         label="产品编码"
-                    ><span>枚举型</span>
+                    ><span>{productItem.productCode}</span>
                     </Form.Item>
                     <Form.Item
                         label="产品密钥"
-                    ><span>枚举型</span>
+                    ><span>{productItem.deviceKey}</span>
                     </Form.Item>
                     <Form.Item
                         label="产品图片"
-                        name='prcImg'
+                        name='productIcon'
                     >
                         <UploadFileHooks
                             ref={oneRef}

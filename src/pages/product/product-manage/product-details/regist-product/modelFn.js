@@ -6,20 +6,21 @@ import LabelTip from '../../../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../../../api';
 import './index.scss'
 export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }) {
-  let productItem = {}
+  // let productItem = {}
 
-  if (sessionStorage.getItem('productItem')) {
+  // if (sessionStorage.getItem('productItem')) {
 
-    productItem = JSON.parse(sessionStorage.getItem('productItem'))
-  }
+  //   productItem = JSON.parse(sessionStorage.getItem('productItem'))
+  // }
   const [form] = Form.useForm();
   const $el = useRef(null)
   //提交数据
   const subData = () => {
+    let productId = JSON.parse(sessionStorage.getItem('productItem')).productId
     form.validateFields().then(value => {
       // 验证通过后进入
       let params = {
-        productId: 11549,
+        productId,
         data: value.upload[0].url
       }
       post(Paths.proReledExport, params).then((res) => {

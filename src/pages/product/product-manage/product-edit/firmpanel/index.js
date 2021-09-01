@@ -5,9 +5,7 @@ import GrayDebugg from './grayDebugg'
 import ChangeModal from './changeModal'
 import './index.scss'
 function confirmModel({ nextStep }, ref) {
-    useEffect(() => {
-    }, [])
-    const { pathname } = useLocation()
+    const [defaultTab, setDefaultTab] = useState('1')
     //灰色测试
     const [isGrayModalVisible, setIsGrayModalVisible] = useState(false);
     const CancelDebugg = () => {
@@ -19,15 +17,23 @@ function confirmModel({ nextStep }, ref) {
     const openDebugg = () => {
         setIsGrayModalVisible(true)
     }
+
     //更改面板
     const [isChangeModalVisible, setIsChangeModalVisible] = useState(true);
     const CancelChange = () => {
+        setDefaultTab('1')
         setIsChangeModalVisible(false)
     }
+    const openChangeTab=(val)=>{
+        setDefaultTab(val)
+        setIsChangeModalVisible(true)
+    }
     const closeChange = () => {
+        setDefaultTab('1')
         setIsChangeModalVisible(false)
     }
     const openChange = () => {
+        setDefaultTab('1')
         setIsChangeModalVisible(true)
     }
     const subNextConFirm = () => {
@@ -45,9 +51,9 @@ function confirmModel({ nextStep }, ref) {
             <div></div>
             <div>
                 <div className='confirm-pannel-content-left'>
-                    {
+                    {/* {
                         pathname.indexOf('edit') > -1 && <Button type="primary" onClick={openDebugg}>灰度调试</Button>
-                    }
+                    } */}
 
                     <Button type="primary" ghost onClick={openChange}>更换面板</Button>
                 </div>
@@ -65,7 +71,7 @@ function confirmModel({ nextStep }, ref) {
                 <div className='confirm-pannel-content-item'>
                     <div>标准面板</div>
                     <div>clife推荐的快速控制面板，既拿既用，一键开发，快速支持硬件的智能化，适用于快速开发方案。</div>
-                    <Button type="primary" ghost>
+                    <Button type="primary" ghost onClick={()=>{openChangeTab('1')}}>
                         进入
                     </Button>
                 </div>
@@ -79,7 +85,7 @@ function confirmModel({ nextStep }, ref) {
                 <div className='confirm-pannel-content-item'>
                     <div>自定义开发上传</div>
                     <div>通过clife提供的一系列开发工具包，便捷的开发调试出最具品牌风格的面板，适用于自定义开发方案。</div>
-                    <Button type="primary" ghost>
+                    <Button type="primary" ghost onClick={()=>{openChangeTab('3')}}>
                         进入
                     </Button>
                 </div>
@@ -90,7 +96,7 @@ function confirmModel({ nextStep }, ref) {
             isGrayModalVisible && <GrayDebugg isGrayModalVisible={isGrayModalVisible} closeDebugg={closeDebugg} CancelDebugg={CancelDebugg}></GrayDebugg>
         }
         {
-            isChangeModalVisible && <ChangeModal isChangeModalVisible={isChangeModalVisible} closeChange={closeChange} CancelChange={CancelChange}></ChangeModal>
+            isChangeModalVisible && <ChangeModal isChangeModalVisible={isChangeModalVisible} defaultTab={defaultTab} closeChange={closeChange} CancelChange={CancelChange}></ChangeModal>
         }
     </div>
 }
