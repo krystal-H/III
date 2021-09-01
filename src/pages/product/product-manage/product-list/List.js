@@ -247,7 +247,10 @@ class List extends PureComponent {
         <PageTitle title="我的智能产品" />
         <div className="page-header comm-shadowbox">
           <div className="page-header-left">
-            <Search placeholder="产品名称/ID/型号" maxLength={20} onSearch={value => this.searchProduct(value)} style={{ width: 465, margin: '0 22px' }} />
+            <Search placeholder="产品名称/ID/型号"
+              allowClear
+              onSearch={value => this.searchProduct(value)}
+              style={{ width: 465, margin: '0 22px' }} />
             <Select allowClear onChange={this.handleChange} placeholder="产品状态" style={{ width: 120 }}>
               {
                 statusList.map((item, index) => (

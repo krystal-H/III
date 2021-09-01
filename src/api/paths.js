@@ -67,6 +67,9 @@ let Paths = {
     getProductExtendInfo: '/productManage/getProductExtendInfo', // 服务配置-配网信息  是否为网关设备
     saveNetworkConfig: '/productManage/saveProductConfig', // 服务配置-保存配网信息
     getNetDataByProductId: '/productManage/getNetDataByProductId', // 服务配置-获取配网方式
+    getFirmwareList: '/firmware/productFirmware/type/get', // 固件模块-获取固件类型-判断是否配置过
+    addFirmwareModule: '/firmware/productFirmware/type/add', // 新增固件模块
+
 
     // 5.x继续开发-开发硬件
     getMoudleInfo: '/product/dev/show/module',
@@ -372,6 +375,8 @@ let Paths = {
     getWarnEventLi:'/device/warning/event/list',
 
     
+    // 5.x远程配置
+    getRomoteConfigListByProduct5x: '/remoteConfig/product/getList', // 列表
     
 
     
