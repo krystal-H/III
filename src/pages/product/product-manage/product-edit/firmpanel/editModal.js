@@ -13,7 +13,7 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd ,actio
     
     // $apkel.current.setFileList=actionObj.filePath
     const closeReqAdd = () => {
-        let productId=11791
+        let productId=0
         if (sessionStorage.getItem('productItem')) {
             productId = JSON.parse(sessionStorage.getItem('productItem')).productId
         }

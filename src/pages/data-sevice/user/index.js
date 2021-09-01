@@ -55,6 +55,9 @@ const columns = [
 
 export default function Device() {
     //====
+    useEffect(() => {
+        getProductType()
+    }, [])
     const [dates, setDates] = useState([]);
     const [hackValue, setHackValue] = useState();
     const [value, setValue] = useState(); //时间值
@@ -95,6 +98,7 @@ export default function Device() {
             setOptionArr(res.data)
         });
     }
+    
     //产品改变
     const selectChange = (value) => {
         setSelectType(value)

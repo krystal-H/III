@@ -529,6 +529,7 @@ let Paths = {
     productList:'/productManage/getProductList' ,//产品列表
 
     // 产品发布前-定义功能
+    editProductInfo:'/product/update',//产品-基本信息-编辑
     standardFnList:'/product/dev/show/func', //标准和自定义功能列表
     Physpanel:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
     exportPhysicalModel:'/physicalModel/export/product',//产品-定义功能-导出物模型
@@ -560,6 +561,7 @@ let Paths = {
     proReledExport:'/deviceRegister/importAddr',//设备注册导出
     proReledInfo:'/product/detail',//设备基本详情
     getProductPlus:'/productManage/getProductExtendList',//产品下拉带验证方式
+    
 
     //确定面板接口
     cusSavePanel:'/panelManage/saveProject',//自定义-保存/更新面板
