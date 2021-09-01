@@ -11,7 +11,7 @@ import {Notification} from '../../../components/Notification';
 import PageTitle from '../../../components/page-title/PageTitle'
 
 import {VERTYPE,STATUSTAG,UPDATESTATUS,PACKAGETYPE} from './store/constData'
-import {getVersionList,getExtVerLi,sendFirmwareDetails} from './store/actionCreators'
+import {getVersionList,getExtVerLi} from './store/actionCreators'
 import upIconImg from '../../../assets/images/upota.png';
 const { Step } = Steps;
 import './FirmwareManagement.scss';
@@ -20,14 +20,14 @@ const { Option } = Select;
 const mapStateToProps = state => {
     const {versionList,extVerisonLi} = state.get('otaUpgrade')
     return {
-        versionList,extVerisonLi
+        versionList,
+        extVerisonLi
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
         getVersionLi: param => dispatch(getVersionList(param)),
         getExtVerLi: param => dispatch(getExtVerLi(param)),
-        sendFirmwareDetails: details => dispatch(sendFirmwareDetails(details)),
         
     }
 }
@@ -138,14 +138,9 @@ export default class FirmwareManagement  extends Component {
     }
     componentDidMount() {
         this.pagerIndex()
-
-        
-
-
     }
     toFirmwareDetails = deviceVersionId=>{
         window.location.hash = `#/open/bigData/OTA/firmwareDetails/${deviceVersionId}`;
-        // this.props.sendFirmwareDetails({...detail})
     }
 
     changeState=(k,v)=>{
@@ -208,8 +203,7 @@ export default class FirmwareManagement  extends Component {
     //获取固件列表
     pagerIndex=(pageIndex=1)=>{
         let {productId,deviceVersionType,deviceVersionName} = this.state
-        let params ={pageIndex}
-        productId!=-1 && (params.productId = productId)
+        let params ={pageIndex,productId}
         deviceVersionType!=-1 && (params.deviceVersionType = deviceVersionType)
         deviceVersionName && (params.deviceVersionName = deviceVersionName)
 

@@ -259,6 +259,7 @@ let Paths = {
     updateDeviceLabel:'/deviceLabel/update',//修改设备标签
     deleteDeviceLabel:'/deviceLabel/delete',//删除设备标签
     exportDeviceList:'/deviceManage/exportDeviceList',//导出数据
+    deviceShadow:'/deviceManage/getProtocolList',//设备影子
     
 
     /**
@@ -273,6 +274,8 @@ let Paths = {
     addMultiChild: '/public/account/addMultiChild',//添加用户
     updateChild: '/public/account/updateChild',//添加用户
     getChildWithSecret: '/public/account/getChildWithSecret',//获得单个子账号+secret数据
+
+    
     getRights: '/rights/getRights',//获得角色/子账户正在使用的角色的权限数据及相关列表
     /* 账户-访问用户 end */
 
@@ -507,7 +510,7 @@ let Paths = {
     getTransfer4Monitor:'/transfer/getTransferList4Monitor',
 
     //OTA升级
-    otaDevVersionList:'/device/version/5/getList',
+    otaDevVersionList:'/firmware/productFirmware/getList',
     otaGetExtVersion:'/device/version/5/getExtVersion',
     otaAddVersion:'/device/version/5/add',
     otaImportMac:'/device/version/5/importMac',

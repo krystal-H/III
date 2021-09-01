@@ -10,7 +10,8 @@ import NewCusmFn from './addcusFn'
 import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
 import { MyContext } from '../context'
-import { getRowSpanCount } from './tableCombine'
+import { getRowSpanCount } from '../../../../../configs/tableCombine'
+// import { getRowSpanCount } from './tableCombine'
 
 
 export default function TableCom({ dataSource, reFreshData, type }) {
