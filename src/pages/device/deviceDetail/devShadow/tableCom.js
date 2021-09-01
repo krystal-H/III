@@ -1,15 +1,30 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef, useContext,useMemo } from 'react'
-import { useHistory } from "react-router-dom"
-import { Table, Button, Space, Checkbox } from 'antd';
-import { getRowSpanCount } from '../../../../../configs/tableCombine'
+import React, { useEffect, useState } from 'react'
+import moment from 'moment';
+import { Table, Button, Space } from 'antd';
+import './index.scss';
+// import TitleEdit from './titleEdit'
+// import { getRowSpanCount } from './tableCombine'
+import { getRowSpanCount } from '../../../../configs/tableCombine'
 
 
-export default function TableCom({ dataSource,refreshCount }) {
-    const history = useHistory();
-    const [selectData, setSelectData] = useState([])
-    const productId=useMemo(()=>{
-        return history.location.pathname.split('/').slice(-2,-1)[0]
-    },[])
+
+export default function TableCom({ dataSource}) {
+    const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
+    //页码改变
+    const pagerChange = (pageIndex, pageRows) => {
+        if (pageRows === pager.pageRows) {
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { pageIndex, pageRows })
+            })
+        } else {
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { pageIndex: 1, pageRows })
+            })
+        }
+
+    }
     //展示
     const filterFn = (data) => {
         let result = null
@@ -35,52 +50,29 @@ export default function TableCom({ dataSource,refreshCount }) {
 
         return result
     }
-    const onChange = (e, data) => {
-        let isTrue = e.target.checked
-        setSelectData(pre => {
-            let obj = {
-                id: data.id,
-                funcType: data.funcType,
-                identifier: data.funcIdentifier,
-                productId: 11759
-            }
-            let arr = JSON.parse(JSON.stringify(pre))
-            if (isTrue) {
-                arr.push(obj)
-            } else {
-                arr = arr.filter(item => {
-                    if (item.identifier !== data.funcIdentifier) {
-                        return item
-                    }
-                })
-            }
-            return arr
-        })
+    //获取数据
+    const getComData = () => {
+        let index = (pager.pageIndex - 1) * pager.pageRows
+        let data = dataSource.slice(index, index + 10)
+        return data
     }
-    useEffect(()=>{
-        refreshCount(selectData)
-    },[selectData.length])
     const columns = [
-        {
-            title: '勾选',
-            width:'50px',
-            render: (value, row, index) => {
-                let obj = getRowSpanCount(
-                    dataSource,
-                    "funcIdentifier",
-                    index,
-                    row.funcIdentifier,
-                    "funcIdentifier"
-                );
-                obj.children = <Checkbox onChange={(e) => { onChange(e, row) }}></Checkbox>
-                return obj
-            },
-        },
+        // {
+        //     title: 'DP ID', dataIndex: 'key', render: (value, row, index) => {
+        //         return getRowSpanCount(
+        //             getComData(),
+        //             "funcType",
+        //             index,
+        //             value,
+        //             "funcIdentifier"
+        //         );
+        //     },
+        // },
         {
             title: '功能类型', dataIndex: 'funcTypeCN',
             render: (value, row, index) => {
                 return getRowSpanCount(
-                    dataSource,
+                    getComData(),
                     "funcIdentifier",
                     index,
                     value,
@@ -92,7 +84,7 @@ export default function TableCom({ dataSource,refreshCount }) {
             title: '功能点名称', dataIndex: 'funcName',
             render: (value, row, index) => {
                 return getRowSpanCount(
-                    dataSource,
+                    getComData(),
                     "funcIdentifier",
                     index,
                     value,
@@ -104,7 +96,7 @@ export default function TableCom({ dataSource,refreshCount }) {
             title: '标识符', dataIndex: 'funcIdentifier',
             render: (value, row, index) => {
                 return getRowSpanCount(
-                    dataSource,
+                    getComData(),
                     "funcIdentifier",
                     index,
                     value,
@@ -123,14 +115,24 @@ export default function TableCom({ dataSource,refreshCount }) {
             )
         },
         { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record)}</span> },
+        { title: '最新数据', dataIndex: 'funcData' },
     ];
+
     return <div>
         <Table
             rowKey="key"
             columns={columns}
             dataSource={dataSource}
-            pagination={false}
-            scroll={{ y: 440 }}
+            pagination={{
+                defaultCurrent: 1,
+                current: pager.pageIndex,
+                onChange: pagerChange,
+                pageSize: pager.pageRows,
+                total: pager.totalRows,
+                showQuickJumper: true,
+                pageSizeOptions: [10],
+                showTotal: () => <span>共 <a>{dataSource.length}</a> 条</span>
+            }}
         />
 
     </div>

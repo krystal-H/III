@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Table, Button, Space } from 'antd';
 import './index.scss';
 // import TitleEdit from './titleEdit'
-import { getRowSpanCount } from './tableCombine'
+import { getRowSpanCount } from '../../../../../configs/tableCombine'
 
 
 export default function TableCom({ dataSource, reFreshData, type }) {

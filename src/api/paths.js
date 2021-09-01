@@ -259,6 +259,7 @@ let Paths = {
     updateDeviceLabel:'/deviceLabel/update',//修改设备标签
     deleteDeviceLabel:'/deviceLabel/delete',//删除设备标签
     exportDeviceList:'/deviceManage/exportDeviceList',//导出数据
+    deviceShadow:'/deviceManage/getProtocolList',//设备影子
     
 
     /**
