@@ -29,7 +29,9 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
           baseTypeId: res.data.baseTypeId,
           guidePage: res.data.guidePage.guidePage,
           bindFailPage: res.data.guidePage.bindFailPage,
-          imageUrlList: res.data.helpPage.imageUrls
+          imageUrlList: res.data.helpPage.imageUrls,
+          radiocastName: res.data.radiocastName || '',
+          ssid: res.data.ssid || ''
         })
         setGuidePage(res.data.guidePage.guidePage)
         setBindFailPage(res.data.guidePage.bindFailPage)

@@ -375,7 +375,8 @@ let Paths = {
 
     
     // 5.x远程配置
-    getRomoteConfigListByProduct5x: '/remoteConfig/product/getList', // 列表
+    getRomoteConfigListByProduct5x: '/remoteConfig/product/getList', // 主页列表
+    getRemoteConfigList5x: '/remoteConfig/product/get', // 添加配置数据-列表
     
 
     

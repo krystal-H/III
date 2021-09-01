@@ -29,7 +29,9 @@ const stepList = [
 function CreateTask({ visible, onCancel }) {
     const refConfig = useRef()
     const [form] = Form.useForm()
-    const [stepcurrent, setStepcurrent] = useState(2)
+    const [stepcurrent, setStepcurrent] = useState(0)
+    const [productId, setProductId] = useState('')
+    const [allProductList, setAllProductList] = useState([]) // 下拉所有产品列表
 
     const onOk = () => {
         form.submit()
@@ -37,6 +39,7 @@ function CreateTask({ visible, onCancel }) {
 
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
+        setProductId(values.productId)
         let index = cloneDeep(stepcurrent)
         setStepcurrent(++index)
     }
@@ -54,7 +57,7 @@ function CreateTask({ visible, onCancel }) {
     const nextStep = () => {
         setStepcurrent(stepcurrent + 1)
     }
-    
+
     // 下一步前验证
     const clickNext = () => {
         if (stepcurrent === 0) { // 填写任务说明
@@ -66,6 +69,15 @@ function CreateTask({ visible, onCancel }) {
 
         }
     }
+
+    // 获取所有产品列表
+    const getCloudGetProductList = () => {
+        get(Paths.cloudGetProductList).then(res => {
+            setAllProductList(res.data)
+        }, () => setAllProductList([]))
+    }
+
+    useEffect(() => { getCloudGetProductList() }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <Modal
@@ -102,21 +114,19 @@ function CreateTask({ visible, onCancel }) {
                         onFinishFailed={onFinishFailed}>
                         <Form.Item
                             label="归属产品"
-                            name="brandId"
+                            name="productId"
                             rules={[{ required: true, message: '请选择归属产品' }]}>
                             <Select style={{ width: '100%' }} placeholder="请选择归属产品">
-                                <Option value="option1">option1</Option>
-                                <Option value="option2">option2</Option>
-                                {/* {
-                                    productBrandList.length > 0 && productBrandList.map(item => (
-                                        <Option value={item.brandId} key={item.brandId}>{item.fullName}</Option>
+                                {
+                                    allProductList && allProductList.map(item => (
+                                        <Option key={item.productId} value={item.productId}>{item.productName}</Option>
                                     ))
-                                } */}
+                                }
                             </Select>
                         </Form.Item>
                         <Form.Item
                             label="任务名称"
-                            name="productName"
+                            name="taskName"
                             rules={[
                                 { required: true, message: '请输入任务名称' },
                                 { max: 20, message: '最大输入长度为20' },
@@ -125,14 +135,13 @@ function CreateTask({ visible, onCancel }) {
                         </Form.Item>
                         <Form.Item
                             label="任务说明"
-                            name="productParam"
+                            name="taskExplain"
                             rules={[
                                 { required: true, message: '请输入任务说明' }
                             ]}>
                             <TextArea showCount maxLength={100}
                                 placeholder="请输入任务说明"
-                                autoSize={{ minRows: 4 }}
-                            />
+                                autoSize={{ minRows: 4 }} />
                         </Form.Item>
                     </Form>
                 }
@@ -142,6 +151,7 @@ function CreateTask({ visible, onCancel }) {
                     stepcurrent === 1 &&
                     <AddConfigData
                         ref={refConfig}
+                        productId={productId}
                         nextStep={nextStep} />
                 }
 
