@@ -1,4 +1,4 @@
-import { get, Paths } from '../../../../api';
+import { get, Paths, post } from '../../../../api';
 import * as actionTypes from './actionTypes';
 
 export const getProductList = param => {
@@ -16,11 +16,11 @@ export const getProductList = param => {
 export const getVersionList = (params={}) => {
     const defaultparams  = {pageIndex:1,pageRows:10}
     return (dispatch) => {
-        get(Paths.otaDevVersionList,{...defaultparams,...params}).then(({data={}}) => {
-            dispatch({
-                type: actionTypes.GETVERLI,
-                versionList:data,
-            });
+        post(Paths.otaDevVersionList,{...defaultparams,...params}).then(({data={}}) => {
+            // dispatch({
+            //     type: actionTypes.GETVERLI,
+            //     versionList:data,
+            // });
         }); 
     }
 }

@@ -26,13 +26,13 @@ export default class RoleManagementList extends Component {
         this.columns = [
             { title: '角色名', dataIndex: 'roleName', key: 'roleName' },
             { title: '备注', dataIndex: 'remark', key: 'remark' },
-            { title: '访问方式',key: 'userCategory',dataIndex: 'userCategory',
-              render: userCategory => (
-                <span>
-                  <Tag color={userCategory ==1 ? 'blue' :'green'} >{userCategory ==1 ? '控制台访问用户' :'接口访问用户'}</Tag>
-                </span>
-              ),
-            },
+            // { title: '访问方式',key: 'userCategory',dataIndex: 'userCategory',
+            //   render: userCategory => (
+            //     <span>
+            //       <Tag color={userCategory ==1 ? 'blue' :'green'} >{userCategory ==1 ? '控制台访问用户' :'接口访问用户'}</Tag>
+            //     </span>
+            //   ),
+            // },
             { title: '最新修改时间', dataIndex: 'modifyTime', key: 'modifyTime', render: text => <span>{DateTool.utcToDev(text)}</span> },
             { title: '操作', key: 'tags', dataIndex: 'tags',
              render:(text, {roleId,roleName,remark,userCategory}) => (
