@@ -7,6 +7,7 @@ import { Paths, post, get } from '../../../api'
 import { CloudAddForm } from './cloud-manage-modals'
 import CloudUpdate from './cloud-update'
 import { cloneDeep } from 'lodash'
+import { Notification } from '../../../components/Notification'
 import './index.scss'
 
 const { Option } = Select;
@@ -18,7 +19,6 @@ export default function CloudTime() {
     const [cloudAddVisible, setCloudAddVisible] = useState(false) // 新建
     const [cloudUpdateVisible, setCloudUpdateVisible] = useState(false) // 删除
 
-    const [allProductList, setAllProductList] = useState([])
     const [currentProductId, setCurrentProductId] = useState('')
     const [currentServiceName, setcurrentServiceName] = useState('')
 
@@ -155,9 +155,11 @@ export default function CloudTime() {
             serviceId: changeStatus.serviceId,
             productId: changeStatus.productId,
             status: type
-        }, { loading: true }).then(res => { })
-        setCloudUpdateVisible(false)
-        getTimeList()
+        }, { loading: true }).then(res => {
+            Notification({ description: '操作成功！', type: 'success' })
+            setCloudUpdateVisible(false)
+            getTimeList()
+        })
     }
 
     return (
@@ -205,7 +207,6 @@ export default function CloudTime() {
                 <CloudAddForm
                     visible={cloudAddVisible}
                     type="add"
-                    allProductList={allProductList}
                     onCancel={() => {
                         setCloudAddVisible(false)
                         getTimeList()
@@ -217,7 +218,6 @@ export default function CloudTime() {
                 <CloudAddForm
                     visible={cloudEditVisible}
                     type="edit"
-                    allProductList={allProductList}
                     editData={editData}
                     onCancel={() => {
                         setCloudEditVisible(false)
