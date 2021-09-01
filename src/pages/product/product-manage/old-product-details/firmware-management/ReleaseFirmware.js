@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Input, Form, Select,Button, Upload, Icon  } from 'antd';
+import { Input, Select,Button, Upload, Icon  } from 'antd';
+import { Form } from '@ant-design/compatible';
 import { get,post,Paths } from '../../../../../api';
 import {Notification} from '../../../../../components/Notification'
-import './but.scss';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -49,7 +49,7 @@ export const ReleaseFirmware = Form.create({
         };
     },
 })(
-    class extends React.Component{
+    class extends Component{
         constructor(props){
             super(props);
             this.state = {
@@ -278,7 +278,7 @@ export const ReleaseFirmware = Form.create({
                             })(<TextArea />)}
                             <p style={{height: '10px',fontSize: '12px'}}>选择普通升级和强制升级时，用户可在app查看到升级提示</p>
                         </Form.Item>
-                        <div className='but'>
+                        <div className='oldPro-but'>
                             <Button type="primary" htmlType="submit">
                                 确定
                             </Button>

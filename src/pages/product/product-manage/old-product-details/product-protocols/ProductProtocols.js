@@ -1,27 +1,23 @@
 import React, { Component } from 'react';
-import { Tabs, Table, Icon } from 'antd';
+import { Tabs, Table, Button } from 'antd';
 import { connect } from 'react-redux';
 import { cloneDeep,isArray } from 'lodash';
-import {
-    triggerDebugger 
-} from '../store/ActionCreator';
-import { Paths } from '../../../../../api';
+import { triggerDebugger } from '../store/ActionCreator';
+import { get, Paths, post } from '../../../../../api';
 import {addKeyToTableData,setFuncDataType} from '../../../../../util/util';
 import NoSourceWarn from '../../../../../components/no-source-warn/NoSourceWarn';
 import DebuggerModal from './DebuggerModal';
 import LabelTip from '@src/components/form-com/LabelTip';
 const { TabPane } = Tabs;
 
-const mapDispatchToProps = dispatch => {
-    return {
-        triggerDebug: (visible, productId) => dispatch(triggerDebugger(visible, productId)),   //  打开关闭协议脚本窗口
-    }
-}
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         triggerDebugger: (visible, productId) => dispatch(triggerDebugger(visible, productId)),   //  打开关闭协议脚本窗口
+//     }
+// }
 
-function concatComplexProtocols(protocolLists) {
-    let li = protocolLists.filter(item => !!item.dataTypeId);
-
-    let _productProtocolLists = cloneDeep(li);
+function concatComplexProtocols(productProtocolLists) {
+    let _productProtocolLists = cloneDeep(productProtocolLists);
 
     return _productProtocolLists.map(item => {
         let {list,structDefVOList,arrayDefVOList} = item,
@@ -43,11 +39,16 @@ function concatComplexProtocols(protocolLists) {
     })
 }
 
-@connect(null, mapDispatchToProps)
+// @connect(null, mapDispatchToProps)
 export default class ProductProtocols extends Component {
-   
+    
     constructor(props) {
         super(props);
+        this.state = {
+            curDataTypeId:undefined, // 当前tab对应的协议类别
+            isChangeDataTypeId:false, // 标记是否切换过协议tab
+            productProtocolLists:[]
+        }
 
         this.recordProtocols = {}
         this.columns = [
@@ -142,15 +143,30 @@ export default class ProductProtocols extends Component {
 
                     return obj;
                 }
-            },
+            }
         ];
     }
     componentDidMount() {
-        
+        this.getProtocols();
     }
     componentDidUpdate() {
-       
+        let { productId } = this.props,
+            {curDataTypeId,productProtocolLists} = this.state;
 
+        if (productId && productId !== this.lastProductId) { // 切换产品
+           
+            this.getProtocols();
+        }
+
+        if (curDataTypeId === undefined && productProtocolLists.length > 0) {
+            curDataTypeId = productProtocolLists[0].dataTypeId;
+            // 此处日志是为了定位一个线上偶现BUG
+            console.log("ProductProtocols -> componentDidUpdate -> curDataTypeId", curDataTypeId)
+            this.lastDataTypeId = curDataTypeId;
+            this.setState({
+                curDataTypeId
+            })
+        }
     }
     dealWhatToShow(record,index,key,isFuncDatatype) {
         let realRecords = [record];
@@ -223,6 +239,23 @@ export default class ProductProtocols extends Component {
 
         return result;
     }
+    // 获取产品协议列表
+    getProtocols() {
+        let { productId } = this.props;
+        if (productId) {
+            this.lastProductId = productId; // 记录当前的产品ID
+            get(Paths.getV4Protocol,{
+                productId
+            },{
+                needVersion:1.2,
+                loading:true
+            }).then(data => {
+                this.setState({
+                    productProtocolLists: concatComplexProtocols(data.data.list.filter(item => !!item.dataTypeId)),
+                })
+            })
+        }
+    }
     // 过滤表格中所需要展示的数据
     // 并且为协议添加 dataTypeIndex recordResult 字段，这两个字段在后续逻辑中很重要，但是在上传协议时，记得一定要删除，否则会报错
     filterProtocol(list,type,dataTypeIndex) {
@@ -235,7 +268,6 @@ export default class ProductProtocols extends Component {
                     return item;
                 });
     }
-    
     /**
      * 返回协议展示的表单
      * @param {Object} protocols 待处理的协议对象 （对应于 控制/运行 层级）
@@ -248,8 +280,8 @@ export default class ProductProtocols extends Component {
         
         let _columns = cloneDeep(this.columns);
 
-        console.log('---bindType----',this.props.bindType)
-        if(this.props.bindType == 8){
+        console.log('---bindType----',this.props.productBaseInfo.bindType)
+        if(this.props.productBaseInfo.bindType == 8){
             _columns[6] = {
                 title: 'zigbeeDescribe',
                 dataIndex: 'command',
@@ -259,7 +291,6 @@ export default class ProductProtocols extends Component {
                 }
             }
         }
-        
 
         return (temp.length > 0) 
         ? <Table
@@ -269,26 +300,26 @@ export default class ProductProtocols extends Component {
             dataSource={temp} />
         : <NoSourceWarn tipText="暂无功能数据"></NoSourceWarn>
     }
-    
-    exportProtocols = () => {
-        let {productId} = this.props,
-        url = Paths.exportProtocol + '?productId=' + productId
-        
-        window.location.href = url;
+    tabChangeHandle(protocols){
+        let {dataTypeId} = protocols;
+        if (this.lastDataTypeId !== undefined && this.lastDataTypeId != dataTypeId){
+            this.lastDataTypeId = dataTypeId;
+            this.setState({
+                isChangeDataTypeId:true
+            })
+        }
+        this.setState({
+            curDataTypeId:dataTypeId
+        })
     }
+
     render() {
-        let { protocolLists,productId,productBaseInfo,triggerDebug} = this.props,
-        { protocolFormat} = productBaseInfo;
-        let productProtocolLists = concatComplexProtocols(protocolLists);
+        let { productId,productBaseInfo} = this.props,
+        { protocolFormat} = productBaseInfo,
+        { productProtocolLists } = this.state;
 
         return (
             <div className="product-protocol-wrapper">
-                {
-                    productProtocolLists.length ?
-                    <div className="export-wrapper" onClick={this.exportProtocols}>
-                        <span><Icon type="export" /> 导出完整协议</span>
-                    </div> : null
-                }
                 <Tabs 
                     onChange={activeKey => {this.tabChangeHandle(productProtocolLists[activeKey])}}
                     defaultActiveKey="0">
@@ -306,7 +337,6 @@ export default class ProductProtocols extends Component {
                                                         <LabelTip tipPlacement="right" tip="该产品使用CLink标准数据格式（十六进制），每类功能协议数据长度必须满足16字节的整数倍，平台将自动填充保留字段以满足长度规范。"/>
                                                     }
                                                 </>
-                                                
                                                 {
                                                     this.getTable(protocols,1,index)
                                                 }
@@ -314,14 +344,14 @@ export default class ProductProtocols extends Component {
                                             <div className="self-protocols">
                                             <div >
                                                 <span className="protocol-name">自定义功能</span>
-                                                    
+                                              
                                                 </div>
                                                 {
                                                     this.getTable(protocols,0,index)
                                                 }
                                             </div>
-                                            {/* 自定义透传才有协议脚本 */}
-                                            {
+                                            {/* 自定义透传才有协议脚本   5.x版本取消旧产品的此功能 */}  
+                                            {/* {   
                                                 protocolFormat == 3 && 
                                                 <div className="protocol-script">
                                                     <span className="protocol-name">数据解析</span>
@@ -329,11 +359,11 @@ export default class ProductProtocols extends Component {
                                                         <div className="protocol-script-title">数据解析脚本</div>
                                                             <div className="protocol-script-example">
                                                                 <span>支持开发者自定义解析脚本，将设备上下行的数据，分别解析成平台定义的标准数据格式。</span>
-                                                                <Button type="primary" className="protocol-script-btn" onClick={triggerDebug.bind(this, true, productId)}>调试上传脚本</Button>
+                                                                <Button type="primary" className="protocol-script-btn" onClick={this.props.triggerDebugger.bind(this, true, productId)}>调试上传脚本</Button>
                                                             </div>
                                                     </div>
                                                 </div>
-                                            }
+                                            } */}
                                         </div>
                                 </TabPane>
                             )

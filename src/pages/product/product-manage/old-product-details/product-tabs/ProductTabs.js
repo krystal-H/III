@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { post,Paths } from '../../../../../api';
 import ProduceInfo from '../product-info/ProductInfo';
 import ProductProtocols from '../product-protocols/ProductProtocols';
-// import FirmwareManagement from '../firmware-management/FirmwareManagement';
+import FirmwareManagement from '../firmware-management/FirmwareManagement';
 // import DebuggingTool from '../../deviceDebugging/deviceDebuggerTest/StartTest';
 import AppControl from '../app-control/AppControl';
 import CommercailInfo from '../basic-information/commercailinfo';
@@ -85,9 +85,9 @@ export default class ProductTabs  extends Component {
                     <TabPane key={'10'} tab={'硬件开发'}>
                         <Firmware productId={productId}/>
                     </TabPane>
-                    {/* <TabPane key={'3'} tab={'固件管理'}>
-                        <FirmwareManagement productId={productId} />
-                    </TabPane> */}
+                    <TabPane key={'3'} tab={'固件管理'}>
+                        <FirmwareManagement productId={productId} productBaseInfo={productBaseInfo}/>
+                    </TabPane>
                     {/*<TabPane key={'4'} tab={'调试工具'}>
                         <div className="gray-bg-padding">
                             <DebuggingTool productId={productId} onRef={ref => this.debugVisible = ref} />

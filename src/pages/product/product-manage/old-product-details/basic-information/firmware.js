@@ -9,10 +9,8 @@ class FirmWare extends Component {
     constructor(props){
         super(props);
         this.state = {
-            publishProductInfo:{
-                moduleInfo:{},
-                productBaseInfo:{},
-            }
+            moduleInfo:{},
+            productBaseInfo:{}
         }
         this.moduleDetails = this.moduleDetails.bind(this);
         this.download = this.download.bind(this);
@@ -20,9 +18,11 @@ class FirmWare extends Component {
     }
     getPublishProductInfoFun(){
         post(Paths.getPublishProductInfo,{productId:this.props.productId},{loading:true}).then((model) => {
-            if(model.code==0){
-                this.setState({publishProductInfo:model.data});
-            }
+
+            this.setState({
+                moduleInfo:model.data && model.data.moduleInfo || {},
+                productBaseInfo:model.data && model.data.productBaseInfo || {}
+            });
         });
     }
     componentDidMount() {
@@ -55,7 +55,7 @@ class FirmWare extends Component {
         window.location = url;
     }
     render() {
-        let {publishProductInfo} = this.state;
+        let {moduleInfo,productBaseInfo} = this.state;
 
         let {
             burnFileName,
@@ -73,9 +73,9 @@ class FirmWare extends Component {
             sourceCodeName,
             sourceCodeVersion,
             sourceCode,sizeHeight,sizeThickness,sizeWidth
-        } = publishProductInfo.moduleInfo;
+        } = moduleInfo;
         let sizes = (sizeHeight||'-'+' * ')+(sizeThickness||'-'+' * ')+(sizeWidth||'-');
-        let {hardwareType,commFreq} = publishProductInfo.productBaseInfo;
+        let {hardwareType,commFreq} = productBaseInfo;
 
         return (
         <div className="product_info">

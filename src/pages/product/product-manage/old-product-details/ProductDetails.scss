@@ -31,7 +31,6 @@
         }
     
         .ant-tabs{
-            padding: $gap;
             .ant-tabs-top-bar{
                 background: #fff;
                 margin: 0;
@@ -329,4 +328,29 @@
             font-size: 14px;
         }
     }
+
+    
 }
+
+.oldPro_add_firmware_dialog{
+    .ant-legacy-form-item{
+        margin-bottom: 24px;
+    }
+    
+}
+.oldPro_validation_firmware_dialog{
+    .filebox{
+        position: relative;
+    }
+    
+}
+
+.oldPro-but{
+    height: 50px;
+    line-height: 50px;
+    text-align: right;
+    .cancel{
+        margin-left: $gap;
+    }
+}
+
