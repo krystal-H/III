@@ -1,7 +1,8 @@
-import React from 'react'
+import React, {useState,useEffect} from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
-import { withRouter} from 'react-router-dom'
+import { Button,Select } from 'antd';
+import { withRouter} from 'react-router-dom';
+import { get,Paths} from '../../api'
 
 import './PageTitle.scss'
 
@@ -17,10 +18,34 @@ function PageTitle({
     btnLoading,
     btnIcon = null,
     children = null,     // 标题下面额外的内容
-    history
+    history,
+    selectOnchange=null,    //公共下拉框的 onChange 方法 , 不传则代表无此下拉框
+    selectData=null, // 自定义 selectOnchange 的下拉框的列表数据，不传则代表是 公共产品下拉数据
 }) {
+    const [dataList, setDataList] = useState([]);//产品列表
+    useEffect( () => {
+        if(selectOnchange){
+            if(!selectData && dataList.length==0){
+                get(Paths.getProductType,{},{ loading:true }).then(({data}) => {
+                    const productList = Object.keys(data).map(id=>{
+                        return {productId:id,productName:data[id]}
+                    });
+                    setDataList(productList)
+                });
+
+            }else{
+                setDataList(selectData || [])
+            }
+
+        }
+    },[])
     const defaultGoback = () => history.goBack()
 
+    const selectChange = selectOnchange && (id=>{
+        if (id == -1) { id = undefined}
+        selectOnchange(id)
+    });
+    
     return (
         <div className={`comm-shadowbox main-page-title${backTitle?' haveback':''}`}>
             {
@@ -49,6 +74,16 @@ function PageTitle({
 
                 }
             </div>
+            {
+                selectOnchange &&
+                <Select className="pagetitle-select" onChange={selectChange} showSearch optionFilterProp="children" defaultValue={-1}>
+                    <Select.Option value={-1}>全部产品</Select.Option>
+                    {
+                        dataList.map(({productId,productName},i)=><Select.Option key={i} value={productId}>{productName}</Select.Option>)
+                    }
+                </Select>
+            }
+
             {
                 children && 
                 <div className='othercontent'>

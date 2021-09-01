@@ -11,21 +11,20 @@ import {Notification} from '../../../components/Notification';
 import PageTitle from '../../../components/page-title/PageTitle'
 
 import {VERTYPE,STATUSTAG,UPDATESTATUS,PACKAGETYPE} from './store/constData'
-import {getProductList,getVersionList,getExtVerLi,sendFirmwareDetails} from './store/actionCreators'
+import {getVersionList,getExtVerLi,sendFirmwareDetails} from './store/actionCreators'
 import upIconImg from '../../../assets/images/upota.png';
 const { Step } = Steps;
 import './FirmwareManagement.scss';
 const { Search,Group } = Input;
 const { Option } = Select;
 const mapStateToProps = state => {
-    const {productList,versionList,extVerisonLi} = state.get('otaUpgrade')
+    const {versionList,extVerisonLi} = state.get('otaUpgrade')
     return {
-        productList,versionList,extVerisonLi
+        versionList,extVerisonLi
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        getProLi: param => dispatch(getProductList(param)),
         getVersionLi: param => dispatch(getVersionList(param)),
         getExtVerLi: param => dispatch(getExtVerLi(param)),
         sendFirmwareDetails: details => dispatch(sendFirmwareDetails(details)),
@@ -138,8 +137,11 @@ export default class FirmwareManagement  extends Component {
         ];
     }
     componentDidMount() {
-        this.props.getProLi({pageRows:999})
         this.pagerIndex()
+
+        
+
+
     }
     toFirmwareDetails = deviceVersionId=>{
         window.location.hash = `#/open/bigData/OTA/firmwareDetails/${deviceVersionId}`;
@@ -230,12 +232,12 @@ export default class FirmwareManagement  extends Component {
             addFirmwareDialog,releaseFirmwareDialog,validationFirmwareDialog,
             deviceVersionId,validationDetail,validateInfo,releasePackageType,validationModTit
         } = this.state;
-        const {productList,versionList:{list,pager}} = this.props
-        const {pageIndex,totalRows} =pager
+        const {versionList:{list,pager}} = this.props;
+        const {pageIndex,totalRows} =pager;
         
         return (
             <div className="ota-firmware-up">
-                <PageTitle title="固件升级" ></PageTitle>
+                <PageTitle title="固件升级" selectOnchange={val=>{this.changeState('productId',val)}} />
                 <div className='comm-shadowbox comm-setp-ttip'>
                     <div className='step-title'>
                         <img src={upIconImg}/>
@@ -248,15 +250,9 @@ export default class FirmwareManagement  extends Component {
                     </Steps>
                 </div>
 
-                <div className='commonContentBox'>
-                    <div className='centent'>
+                <div className='otacontent comm-shadowbox'>
+                    <div className='otasearchbox'>
                         <Group compact className="searchgroupbox">
-                            <Select onChange={val=>{this.changeState('productId',val)}} className='proselect' showSearch optionFilterProp="children" defaultValue={-1}>
-                                <Option value={-1}>全部产品</Option>
-                                {
-                                    productList.map(({productId,productName},i)=><Option key={i} value={productId}>{productName}</Option>)
-                                }
-                            </Select>
                             <Select className='typeselect' defaultValue={-1} onChange={val=>{this.changeState('deviceVersionType',val)}}>
                                 <Option value={-1}>全部类型</Option>
                                 {
@@ -274,19 +270,19 @@ export default class FirmwareManagement  extends Component {
                         <Button className='button' onClick={()=>{this.switchDialog('addFirmwareDialog')}} type="primary">添加固件</Button>
                     </div>
                     
-                    <div className='listBox'>
-                        <Table 
-                            rowKey="deviceVersionId"
-                            columns={this.columns}
-                            dataSource={list}
-                            pagination={{
-                                defaultCurrent:pageIndex, 
-                                total:totalRows, 
-                                hideOnSinglePage:false,
-                                onChange:this.pagerIndex
-                            }} 
-                        />
-                    </div>
+                   
+                    <Table 
+                        rowKey="deviceVersionId"
+                        columns={this.columns}
+                        dataSource={list}
+                        pagination={{
+                            defaultCurrent:pageIndex, 
+                            total:totalRows, 
+                            hideOnSinglePage:false,
+                            onChange:this.pagerIndex
+                        }} 
+                    />
+
                     <Modal
                         title='新增固件' 
                         visible={addFirmwareDialog}

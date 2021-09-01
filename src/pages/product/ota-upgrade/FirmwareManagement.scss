@@ -1,7 +1,16 @@
 
 .ota-firmware-up{
-    // padding: $gap;
-    background: #e9e9e9;
+    .comm-setp-ttip{
+        margin-bottom: 16px;
+
+    }
+    .otacontent{
+        padding: $boxpadd;
+    }
+    .otasearchbox{
+        margin-bottom: 32px;
+        
+    }
     .searchgroupbox{
         .proselect{
             width: 240px;
@@ -18,10 +27,7 @@
         margin-top: -32px;
 
     }
-    .listBox{
-        padding:$gap;
-        padding-top: 0;
-    }
+    
     
     .ant-form-item-children{
         position: initial;

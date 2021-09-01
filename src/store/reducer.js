@@ -8,7 +8,7 @@ import { reducer as messageReducer } from "../pages/message-center/store";
 
 /* add by lcp at 2020-05-20 10:03 */
 // import drawViewReducer from "../pages/logicDevelop/DrawView/store/reducer";
-
+import { reducer as otaUpgradeReducer } from "../pages/product/ota-upgrade/store";
 
 /* 旧产品的详情页面 单独store */
 import oldProDetailReducer from "../pages/product/product-manage/old-product-details/store/reducer";
@@ -20,7 +20,7 @@ const reducer = combineReducers({
   deviceDebug: debugReducer,
   // device: deviceReducer,
   userCenter: userCenterReducer,
-  
+  otaUpgrade:otaUpgradeReducer,
   /**
    * loading是否显示得状态
    */
