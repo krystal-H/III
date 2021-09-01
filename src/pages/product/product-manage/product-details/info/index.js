@@ -104,12 +104,18 @@ export default function productInfo() {
                     <span className='middle-text'>失败引导图：</span>
                     <img className='middle-img' alt='' src={imageInfo.bindFailPage || defaultImg} />
                 </div>
-                <div className='product-info-conten-wrap'>
+                <div className='product-info-conten-wrap '>
                     <span className='middle-text'>帮助轮播图：</span>
-                    <img src={carouselImg} />
-                    {/* {
-                        imageInfo.imageUrlList? (<img src={carouselImg} />) : null
-                    } */}
+                    {/* <img src={carouselImg} /> */}
+                    {
+                        imageInfo.imageUrlList ? (<img src={carouselImg} />) : (<div className='product-info-image-wrap'>
+                            {/* <Carousel autoplay>
+                                <div style={contentStyle}>
+                                    <img src={carouselImg} />
+                                </div>
+                            </Carousel> */}
+                        </div>)
+                    }
 
 
                 </div>

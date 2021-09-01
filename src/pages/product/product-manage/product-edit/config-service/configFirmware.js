@@ -2,21 +2,66 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'rea
 import { Modal, Form, Input } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
 import './configFirmware.scss'
+import { Paths, post } from '../../../../../api'
+import { Notification } from '../../../../../components/Notification'
 
-function ConfigFirmware({ firmwareVisible, cancelHandle }) {
+function ConfigFirmware({ productId, firmwareVisible, cancelHandle, type, editData }) {
   const [form] = Form.useForm()
 
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
+    let arr = [{
+      deviceVersionType: 5,
+      productId,
+      firmwareTypeMark: values.firmwareTypeMark,
+      firmwareTypeName: values.firmwareTypeName
+    }]
+    if (values.list && values.list.length) {
+      values.list.forEach(ele => {
+        arr.push({
+          deviceVersionType: 5,
+          productId,
+          firmwareTypeMark: ele.firmwareTypeMark,
+          firmwareTypeName: ele.firmwareTypeName
+        })
+      })
+    }
+
+    console.log('最终提交的数据', arr)
+    if (type === 'edit') {
+      // post(Paths.addFirmwareModule, {
+      //   productId,
+      //   deviceVersionType: 5,
+      //   firmwareTypeName: values.firmwareTypeName,
+      //   firmwareTypeMark: values.firmwareTypeMark
+      // }).then(res => {
+      //   Notification({ description: '操作成功！', type: 'success' })
+      //   cancelHandle()
+      // })
+    } else {
+      post(Paths.addFirmwareModule, arr).then(res => {
+        Notification({ description: '操作成功！', type: 'success' })
+        cancelHandle()
+      })
+    }
   }
 
   const onOk = () => {
     form.submit()
   }
 
+  useEffect(() => {
+    if (type === 'edit') {
+      form.setFieldsValue({
+        firmwareTypeMark: editData.firmwareTypeMark,
+        firmwareTypeName: editData.firmwareTypeName
+      })
+    }
+  }, [])  // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <Modal
-      title="配置产品固件模块"
+      title={type === 'edit' ? '编辑产品固件模块' : '配置产品固件模块'}
       visible={firmwareVisible}
       width={555}
       onOk={onOk}
@@ -32,7 +77,7 @@ function ConfigFirmware({ firmwareVisible, cancelHandle }) {
           <div className="form-item-block">
             <Form.Item
               label="配置固件模块标识"
-              name='first'
+              name='firmwareTypeMark'
               rules={[
                 { required: true, message: '请输入英文字符' },
                 { pattern: new RegExp(/^[a-zA-Z]+$/, "g"), message: '请输入英文字符' }
@@ -41,7 +86,7 @@ function ConfigFirmware({ firmwareVisible, cancelHandle }) {
             </Form.Item>
             <Form.Item
               label="配置固件模块名称"
-              name='last'
+              name='firmwareTypeName'
               rules={[
                 { required: true, message: '请输入中文名称' },
                 { pattern: new RegExp(/^[\u2E80-\u9FFF]+$/, "g"), message: '请输入中文产品名称' }
@@ -49,40 +94,43 @@ function ConfigFirmware({ firmwareVisible, cancelHandle }) {
               <Input maxLength={50} placeholder="请输入中文名称" />
             </Form.Item>
           </div>
-          <Form.List name="list">
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map(({ key, name, fieldKey, ...restField }) => (
-                  <div className="form-item-block" key={key}>
-                    <Form.Item
-                      label="配置固件模块标识"
-                      {...restField}
-                      name={[name, 'first']}
-                      fieldKey={[fieldKey, 'first']}
-                      rules={[
-                        { required: true, message: '请输入英文字符' },
-                        { pattern: new RegExp(/^[a-zA-Z]+$/, "g"), message: '请输入英文字符' }
-                      ]}>
-                      <Input maxLength={50} placeholder="请输入英文字符" />
-                    </Form.Item>
-                    <Form.Item
-                      label="配置固件模块名称"
-                      {...restField}
-                      name={[name, 'last']}
-                      fieldKey={[fieldKey, 'last']}
-                      rules={[
-                        { required: true, message: '请输入中文名称' },
-                        { pattern: new RegExp(/^[\u2E80-\u9FFF]+$/, "g"), message: '请输入中文产品名称' }
-                      ]}>
-                      <Input maxLength={50} placeholder="请输入中文名称" />
-                    </Form.Item>
-                    <div className="delete-btn" onClick={() => remove(name)}><DeleteOutlined />&nbsp;&nbsp;删除</div>
-                  </div>
-                ))}
-                <div className="add-btn" onClick={() => add()}>新增</div>
-              </>
-            )}
-          </Form.List>
+          {
+            type === 'add' &&
+            <Form.List name="list">
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, fieldKey, ...restField }) => (
+                    <div className="form-item-block" key={key}>
+                      <Form.Item
+                        label="配置固件模块标识"
+                        {...restField}
+                        name={[name, 'firmwareTypeMark']}
+                        fieldKey={[fieldKey, 'firmwareTypeMark']}
+                        rules={[
+                          { required: true, message: '请输入英文字符' },
+                          { pattern: new RegExp(/^[a-zA-Z]+$/, "g"), message: '请输入英文字符' }
+                        ]}>
+                        <Input maxLength={50} placeholder="请输入英文字符" />
+                      </Form.Item>
+                      <Form.Item
+                        label="配置固件模块名称"
+                        {...restField}
+                        name={[name, 'firmwareTypeName']}
+                        fieldKey={[fieldKey, 'firmwareTypeName']}
+                        rules={[
+                          { required: true, message: '请输入中文名称' },
+                          { pattern: new RegExp(/^[\u2E80-\u9FFF]+$/, "g"), message: '请输入中文产品名称' }
+                        ]}>
+                        <Input maxLength={50} placeholder="请输入中文名称" />
+                      </Form.Item>
+                      <div className="delete-btn" onClick={() => remove(name)}><DeleteOutlined />&nbsp;&nbsp;删除</div>
+                    </div>
+                  ))}
+                  <div className="add-btn" onClick={() => add()}>新增</div>
+                </>
+              )}
+            </Form.List>
+          }
         </Form>
       </div>
     </Modal>

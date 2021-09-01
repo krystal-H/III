@@ -19,7 +19,7 @@ import Validation from './validation'
 import ConfigService from './config-service';
 import TitleSet from './titleSet'
 import { MyContext } from './context'
-
+import { Notification } from '../../../../components/Notification';
 
 // 此部分路由不需要展示产品信息
 const NOT_SHOW = /(\/service\/appcontrol|cloudtime|scenelink)|\/applyRelease/;
@@ -40,9 +40,9 @@ const mapDispatchToProps = dispatch => {
 const getProductIdFromPath = (match) => +match.params.id;
 
 
-function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, history }) {
+function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
     let productItem = {}
-
+    let history = useHistory();
     if (sessionStorage.getItem('productItem')) {
         productItem = JSON.parse(sessionStorage.getItem('productItem'))
     } else {
@@ -121,12 +121,20 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
     //标题修改
-    const [titleVisible, setTitleVisible] = useState(true)
+    const [titleVisible, setTitleVisible] = useState(false)
     const openTitle = () => {
         setTitleVisible(true)
     }
     const onCloseTitle = () => {
         setTitleVisible(false)
+    }
+    const onOkClose=()=>{
+        Notification({
+            type: 'success',
+            description: '更新成功！',
+        });
+        setTitleVisible(false)
+        history.push('/open/product/proManage/list');
     }
     const titleCom = (<div className='product_title_baseinfo_list'>
         <div>
@@ -196,7 +204,7 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location, his
                     )}
                 </div>
             </div>
-            <TitleSet titleVisible={titleVisible} onCloseTitle={onCloseTitle}></TitleSet>
+            <TitleSet titleVisible={titleVisible} onCloseTitle={onCloseTitle} onOkClose={onOkClose}></TitleSet>
         </React.Fragment>
     )
 }

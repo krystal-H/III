@@ -10,53 +10,7 @@ import { cloneDeep } from 'lodash'
 
 import './index.scss';
 
-const optionalList = [
-  {
-    title: '配置产品固件模块',
-    desc: '支持配置OTA升级模块，比如区分控制板、驱动板、显示板等不同模块',
-    isConfiged: false,
-    type: 'addFirmware',
-    url: require('../../../../../assets/images/commonDefault/service-hardware.png')
-  },
-  // { // 产品说暂时不做
-  //   title: '加入网关',
-  //   desc: '设备申请加入clife网关，应用到更加丰富的行业方案和场景市场。',
-  //   isConfiged: false,
-  //   type: 'gateway',
-  //   url: require('../../../../../assets/images/commonDefault/service-gateway.png')
-  // },
-  {
-    title: '固件升级',
-    desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
-    isConfiged: false,
-    type: 'firmwareUpdate',
-    routePath: '/open/product/otaUpdate',
-    url: require('../../../../../assets/images/commonDefault/service-firmwareUpdate.png')
-  },
-  {
-    title: '场景联动配置',
-    desc: '配置自动化联动的条件动作，以便加入场景，跟其他设备联动控制。',
-    isConfiged: false,
-    type: 'scene',
-    url: require('../../../../../assets/images/commonDefault/service-scene.png')
-  },
-  {
-    title: '云端定时',
-    desc: '云端设定开关时间及周循环，无需硬件嵌入式开发',
-    isConfiged: false,
-    type: 'cloud',
-    routePath: '/open/product/cloudTimer',
-    url: require('../../../../../assets/images/commonDefault/service-cloud.png')
-  },
-  {
-    title: '设备告警',
-    desc: '可定义配置设备预警消息推送，方便随时随地的设备监控',
-    isConfiged: false,
-    type: 'deviceWarning',
-    routePath: '/open/device/devMsg',
-    url: require('../../../../../assets/images/commonDefault/service-device.png')
-  }
-]
+
 const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
 
 function ServiceSelect({ productId, nextStep }, ref) {
@@ -77,6 +31,53 @@ function ServiceSelect({ productId, nextStep }, ref) {
 
     }
   ])
+  const [optionalList, setOptionalList] = useState([
+    {
+      title: '配置产品固件模块',
+      desc: '支持配置OTA升级模块，比如区分控制板、驱动板、显示板等不同模块',
+      isConfiged: false,
+      type: 'addFirmware',
+      url: require('../../../../../assets/images/commonDefault/service-hardware.png')
+    },
+    // { // 产品说暂时不做
+    //   title: '加入网关',
+    //   desc: '设备申请加入clife网关，应用到更加丰富的行业方案和场景市场。',
+    //   isConfiged: false,
+    //   type: 'gateway',
+    //   url: require('../../../../../assets/images/commonDefault/service-gateway.png')
+    // },
+    {
+      title: '固件升级',
+      desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
+      isConfiged: false,
+      type: 'firmwareUpdate',
+      routePath: '/open/product/otaUpdate',
+      url: require('../../../../../assets/images/commonDefault/service-firmwareUpdate.png')
+    },
+    {
+      title: '场景联动配置',
+      desc: '配置自动化联动的条件动作，以便加入场景，跟其他设备联动控制。',
+      isConfiged: false,
+      type: 'scene',
+      url: require('../../../../../assets/images/commonDefault/service-scene.png')
+    },
+    {
+      title: '云端定时',
+      desc: '云端设定开关时间及周循环，无需硬件嵌入式开发',
+      isConfiged: false,
+      type: 'cloud',
+      routePath: '/open/product/cloudTimer',
+      url: require('../../../../../assets/images/commonDefault/service-cloud.png')
+    },
+    {
+      title: '设备告警',
+      desc: '可定义配置设备预警消息推送，方便随时随地的设备监控',
+      isConfiged: false,
+      type: 'deviceWarning',
+      routePath: '/open/device/devMsg',
+      url: require('../../../../../assets/images/commonDefault/service-device.png')
+    }
+  ])
   const [productConfig, setProductConfig] = useState('') // 配网信息信息
   const [productExtend, setProductExtend] = useState('') // 通信安全
 
@@ -86,6 +87,9 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [gatewayVisible, setGatewayVisible] = useState(false)
   const [firmwareDetailVisible, setFirmwareDetailVisible] = useState(false)
   const [isGateWayDevice, setIsGateWayDevice] = useState('') // （0-普通设备，1-网关设备）
+  const [firmwareDetailData, setFirmwareDetailData] = useState([])
+  const [showType, setShowType] = useState('add')
+  const [editData, setEditData] = useState({})
   //验证函数
   const subNextConFirm = () => {
     nextStep()
@@ -120,14 +124,23 @@ function ServiceSelect({ productId, nextStep }, ref) {
       })
   }
 
+  // 固件模块
+  const getFirmwareList = () => {
+    post(Paths.getFirmwareList, { productId }, {loading: true}).then(res => {
+      if (res.data && res.data.length > 0) {
+        setFirmwareDetailData(res.data)
+        const list = cloneDeep(optionalList)
+        list[0].isConfiged = true
+        setOptionalList(list)
+      }
+    })
+  }
+
   useEffect(() => {
     isConfigedFunc()
     judgeIsGateWay()
+    getFirmwareList()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    console.log(requiredList)
-  }, [requiredList])
 
   const showModal = (type) => {
     console.log(type)
@@ -224,7 +237,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
                     item.isConfiged ?
                       item.type === 'addFirmware' ?
                         <>
-                          <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
+                          <div className="config-card-right-btn" onClick={() => { showModal(item.type); setShowType('add') }}>配置</div>
                           <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
                         </> :
                         <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>修改</div>
@@ -254,6 +267,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
             judgeIsGateWay()
           }} />
       }
+
       {/* 通信安全机制 */}
       {
         securityVisible &&
@@ -265,18 +279,24 @@ function ServiceSelect({ productId, nextStep }, ref) {
           isConfigedFunc={isConfigedFunc}
           cancelHandle={() => { setSecurityVisible(false) }} />
       }
+
       {/* 配置产品固件模块 */}
       {
         firmwareVisible &&
         <ConfigFirmware
+          productId={productId}
+          type={showType}
+          editData={editData}
           firmwareVisible={firmwareVisible}
-          cancelHandle={() => { setFirmwareVisible(false) }} />
+          cancelHandle={() => { setFirmwareVisible(false); getFirmwareList()}} />
       }
+
       {/* 配置产品固件模块详情 */}
       {
         firmwareDetailVisible &&
         <ConfigFirmwareDetail
           firmwareDetailVisible={firmwareDetailVisible}
+          firmwareDetailData={firmwareDetailData}
           cancelHandle={() => { setFirmwareDetailVisible(false) }}
           showAddFirmware={() => {
             setFirmwareVisible(true)
@@ -284,9 +304,12 @@ function ServiceSelect({ productId, nextStep }, ref) {
           }}
           showEditFirmware={(val) => {
             setFirmwareVisible(true)
-            setFirmwareDetailVisible(false)
+            // setFirmwareDetailVisible(false)
+            setShowType('edit')
+            setEditData(val)
           }} />
       }
+
       {/* 加入网关 - 产品说暂时不做，先隐藏*/}
       {/* {
         gatewayVisible &&
@@ -298,4 +321,4 @@ function ServiceSelect({ productId, nextStep }, ref) {
   )
 }
 
-export default ServiceSelect = forwardRef(ServiceSelect)
+export default forwardRef(ServiceSelect)

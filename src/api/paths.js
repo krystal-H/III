@@ -67,6 +67,9 @@ let Paths = {
     getProductExtendInfo: '/productManage/getProductExtendInfo', // 服务配置-配网信息  是否为网关设备
     saveNetworkConfig: '/productManage/saveProductConfig', // 服务配置-保存配网信息
     getNetDataByProductId: '/productManage/getNetDataByProductId', // 服务配置-获取配网方式
+    getFirmwareList: '/firmware/productFirmware/type/get', // 固件模块-获取固件类型-判断是否配置过
+    addFirmwareModule: '/firmware/productFirmware/type/add', // 新增固件模块
+
 
     // 5.x继续开发-开发硬件
     getMoudleInfo: '/product/dev/show/module',
@@ -371,6 +374,8 @@ let Paths = {
     getWarnEventLi:'/device/warning/event/list',
 
     
+    // 5.x远程配置
+    getRomoteConfigListByProduct5x: '/remoteConfig/product/getList', // 列表
     
 
     
@@ -572,6 +577,19 @@ let Paths = {
     panelOffLine:'/panelManage/offlineUiDesign',//下线
     panelList:'/panelManage/getProjectPage',//获取产品下的所有项目
     panelApplicationList:'/panelManage/getAppsByProductId',//应用列表
+
+    //场景服务
+    scenceList:'/deviceProtocol/queryProtocolFromDevice',//获取场景规则列表
+    saveScenceData:'/deviceProtocol/saveProtocolToScene',//保存场景规则数据到规则引擎服务
+    delScenceControl:'/deviceProtocol/deleteControlScene',//删除场景控制规则
+    delScenceRun:'/deviceProtocol/deleteStatusScene',//删除场景运行规则
+
+    //设备远程配置
+    deviceRemoteConfigList:'/remoteConfig/device/getList',//获得设备远程配置分页列表
+    singelDeviceRemoset:'/remoteConfig/device/get',//获得单个设备的远程配置任务
+    delDeviceRemoset:'/remoteConfig/device/delete',//删除单个设备的远程配置任务
+    saveDeviceRemoset:'/remoteConfig/device/save',//保存单个设备的远程配置任务
+    addDeviceRemoset:'/remoteConfig/product/submit',//提交单个产品的远程配置任务
 
 };
 
