@@ -1,0 +1,55 @@
+#device-regist {
+    .main-page-title {
+      display: flex;
+      justify-content: space-between;
+    }
+  
+    .device-content {
+      padding: 22px;
+  
+      .content-top {
+        display: flex;
+        white-space: nowrap;
+        align-items: center;
+        margin-bottom: 23px;
+        justify-content: space-between;
+  
+        .content-top-left {
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+  
+  }
+  
+  .device-regist {
+    padding: 0 20px;
+  
+    .ant-form-item-label {
+      width: 135px;
+    }
+  
+    .upload-wrapper .upload .file-upload-desc {
+      display: none;
+    }
+  
+    .ant-form-item-control-input-content {
+      display: flex;
+  
+      .down-model {
+        position: relative;
+        left: -78px;
+        top: 5px;
+      }
+    }
+  
+    .ant-upload-list-item-name {
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 200px;
+    }
+  }
+  

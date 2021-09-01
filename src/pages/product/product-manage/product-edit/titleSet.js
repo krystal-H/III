@@ -4,7 +4,7 @@ import { Form, Input, Button, Space, Select, Radio, Tabs, Drawer } from 'antd';
 import { UploadFileHooks } from '../../../../components/upload-file';
 import { post, Paths, get } from '../../../../api';
 import './titleSet.scss'
-export default function TitleEdit({ titleVisible, onCloseTitle }) {
+export default function TitleEdit({ titleVisible, onCloseTitle,onOkClose }) {
     let productItem = {}
     if (sessionStorage.getItem('productItem')) {
         productItem = JSON.parse(sessionStorage.getItem('productItem'))

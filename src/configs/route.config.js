@@ -52,7 +52,7 @@ export const navRoutes = [
 
             },
             {
-                menuname: '规则引擎',
+                menuname: '场景服务',
                 path: '/open/product/ruleEngine',
                 menuid:'1-3',
             },
@@ -239,7 +239,7 @@ export const menuList = [
             },
 
             {
-                menuname: '规则引擎',
+                menuname: '场景服务',
                 childmenus: [],
                 items: [],
             },

@@ -1,9 +1,14 @@
-#device-online-set {
-  .device-setp-ttip {
-    height: 220px;
-    background: #F4FBFF;
+@charset 'utf-8';
+
+#remote-config {
+  .main-page-title {
+    @include flex();
+  }
+  .setp-tip {
+    // height: 184px;
+    background: #f4fbff;
     padding: 22px;
-    margin: 0 -22px;
+    margin-bottom: 16px;
 
     .step-title {
       display: flex;
@@ -13,21 +18,9 @@
       span {
         font-size: 14px;
         font-weight: 600;
-        color: #323232;
+        color: $_323Color;
         line-height: 20px;
         margin-left: 3px;
-      }
-
-    }
-
-    .desc-wrapper {
-      align-items: center;
-      display: flex;
-        padding: 0;
-        height: 37px;
-        margin-bottom: 12px;
-      .list_text {
-        padding: 0;
       }
     }
 
@@ -35,28 +28,41 @@
       max-width: 262px;
       font-size: 12px;
       font-weight: 400;
-      color: #666666;
+      color: $_666Color;
       line-height: 20px;
     }
 
     .ant-steps-item-title {
       font-size: 16px;
       font-weight: 400;
-      color: #323232;
+      color: $_323Color;
       margin-bottom: 12px;
     }
 
     .ant-steps-item-title::after {
-      background-color: #C4CEE0;
+      background-color: #c4cee0;
     }
 
     .ant-steps-icon {
       font-weight: 400;
-      color: #323232;
+      color: $_323Color;
     }
   }
-  .device-online-btn{
-      text-align: right;
-      margin: 22px 0 12px 0;
+
+  .device-content {
+    padding: 22px;
+
+    .content-top {
+      display: flex;
+      white-space: nowrap;
+      align-items: center;
+      margin-bottom: 23px;
+      justify-content: space-between;
+
+      .content-top-left {
+        display: flex;
+        align-items: center;
+      }
+    }
   }
 }
