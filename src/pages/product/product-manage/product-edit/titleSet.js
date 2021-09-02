@@ -11,7 +11,13 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
     }
     const [form] = Form.useForm();
     const oneRef = useRef();
-    const [optionArr,setOptionArr]=useState([])
+    const [optionArr, setOptionArr] = useState([])
+    useEffect(() => {
+
+        post(Paths.getProductBrand).then((res) => {
+            setOptionArr(res.data)
+        });
+    },[])
     //提交数据
     const subData = () => {
         form.validateFields().then(val => {
@@ -94,7 +100,14 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                             },
                         ]}
                     >
-                        <Input />
+                        <Select  >
+                            {
+                                optionArr.map(item => {
+                                    return (<Option value={item.brandId} key={item.brandId}>{item.fullName}</Option>)
+                                })
+                            }
+                        </Select>
+
                     </Form.Item>
                     <Form.Item
                         label="产品型号"
@@ -105,13 +118,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                             },
                         ]}
                     >
-                        <Select  >
-                            {
-                                optionArr.map(item => {
-                                    return (<Option value={item.key} key={item.key}>{item.value}</Option>)
-                                })
-                            }
-                        </Select>
+                        <Input />
                     </Form.Item>
                     <Form.Item
                         label="通信协议"

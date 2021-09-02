@@ -73,7 +73,6 @@ export default class Application extends PureComponent {
     deleteApp = (appId) => {
         post(Paths.deleteApp5x, {
             appId: Number(appId),
-            developerId: 1
         }, { loading: true }).then((res) => {
             const code = res.code
             if (code === REQUEST_SUCCESS) {

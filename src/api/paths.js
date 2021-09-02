@@ -69,7 +69,8 @@ let Paths = {
     getNetDataByProductId: '/productManage/getNetDataByProductId', // 服务配置-获取配网方式
     getFirmwareList: '/firmware/productFirmware/type/get', // 固件模块-获取固件类型-判断是否配置过
     addFirmwareModule: '/firmware/productFirmware/type/add', // 新增固件模块
-
+    delFirmwareModule: '/firmware/productFirmware/type/del', // 删除固件类型模块
+    updateFirmwareModule: '/firmware/productFirmware/type/update', // 修改固件类型模块
 
     // 5.x继续开发-开发硬件
     getMoudleInfo: '/product/dev/show/module',
@@ -304,6 +305,7 @@ let Paths = {
     subscribeStart:'/datapush/enabled',//启动数据订阅
     subscribeClose:'/datapush/stop',//停用数据订阅
     subscribeDetail:'/datapush/getByUrlConfId',//订阅详情
+    addsubscribe:'/datapush/create',//新增数据订阅
 
     /**
      * 基础产品--应用 start

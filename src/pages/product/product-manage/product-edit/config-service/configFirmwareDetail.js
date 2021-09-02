@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { Modal, Button, Table, Divider } from 'antd'
+import { Notification } from '../../../../../components/Notification'
+import { Paths, post } from '../../../../../api'
 
 import './configFirmwareDetail.scss'
 
-function ConfigFirmwareDetail({ firmwareDetailData = [], firmwareDetailVisible, cancelHandle, showAddFirmware, showEditFirmware }) {
+function ConfigFirmwareDetail({ productId, firmwareDetailData = [], firmwareDetailVisible, cancelHandle, showAddFirmware, showEditFirmware, getFirmwareList }) {
 
   const columns = [
     {
@@ -35,11 +37,10 @@ function ConfigFirmwareDetail({ firmwareDetailData = [], firmwareDetailVisible, 
 
   // 删除固件
   const deleteFirmwareItem = (record) => {
-
-  }
-
-  const onOk = () => {
-
+    post(Paths.delFirmwareModule, {productId, id: record.id}).then(res => {
+      Notification({ description: '操作成功！', type: 'success' })
+      getFirmwareList()
+    })
   }
 
   return (
@@ -47,12 +48,11 @@ function ConfigFirmwareDetail({ firmwareDetailData = [], firmwareDetailVisible, 
       title="配置产品固件模块"
       visible={firmwareDetailVisible}
       width={857}
-      onOk={onOk}
       onCancel={cancelHandle}
       maskClosable={false}
       wrapClassName="replace-module-modal">
       <div className="configfirmware-detail-modal">
-        <Button type="primary" className="mar22" onClick={showAddFirmware}>新增产品固件模块</Button>
+        <Button type="primary" className="mar22" onClick={() => showAddFirmware('add')}>新增产品固件模块</Button>
         <Table rowKey="firmwareTypeNo" columns={columns} dataSource={firmwareDetailData} pagination={false} size="small" />
       </div>
     </Modal>

@@ -178,10 +178,10 @@ class Hardware extends Component {
                                     </div>
                                     <div className="desc-item">
                                         <span className="desc-item-title">特性：</span>
-                                        1.配网方式:{allInfo.netTypeName || '-'}；
-                                        2.支持协议:{allInfo.bindTypeName || '-'}；
-                                        3.通信通讯速率:{allInfo.communicateSpeed || '-'}bps；
-                                        4.是否支持文件传输:{allInfo.supportFileTransfer === 0 ? '否' : '是'}
+                                        1.配网方式: {allInfo.netTypeName || '-'}；
+                                        2.支持协议: {allInfo.bindTypeName || '-'}；
+                                        3.通信通讯速率: {allInfo.communicateSpeed || '-'}bps；
+                                        4.是否支持文件传输: {allInfo.supportFileTransfer === 0 ? '否' : '是'}
                                     </div>
                                     <div className="more" onClick={this.downInstructions}>说明书<CaretRightOutlined /></div>
                                 </div>

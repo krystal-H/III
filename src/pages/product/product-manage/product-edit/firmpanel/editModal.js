@@ -9,9 +9,6 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd ,actio
     console.log(actionObj)
     const $apkel = useRef(null)
     const $el = useRef(null)
-    
-    
-    // $apkel.current.setFileList=actionObj.filePath
     const closeReqAdd = () => {
         let productId=0
         if (sessionStorage.getItem('productItem')) {
@@ -24,7 +21,8 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd ,actio
                 filePath: value.filePath[0].url,
                 projectType:1,
                 projectName:value.projectName,
-                projectId:actionObj.projectId
+                projectId:actionObj.projectId,
+                page1:value.page1[0].url
             }
             post(Paths.cusSavePanel, params).then((res) => {
                 Notification({
@@ -46,7 +44,8 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd ,actio
                     wrapperCol={{ span: 20 }}
                     initialValues={{
                         projectName:actionObj.projectName,
-                        filePath:[{url:actionObj.filePath,name:actionObj.filePath}]
+                        filePath:[{url:actionObj.filePath,name:actionObj.filePath}],
+                        page1:[{url:actionObj.page1}]
                     }}
                 >
                     <Form.Item
@@ -58,8 +57,9 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd ,actio
                     </Form.Item>
                     <Form.Item
                         label="封面："
-                        name="basic2"
+                        name="page1"
                         className="clearfix"
+                        rules={[{ required: true }]}
                     >
                         {
                             <UploadFileHooks

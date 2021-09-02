@@ -39,7 +39,6 @@ export default class AddProductRelationModal extends Component {
         post(Paths.getAppDevProductList5x, {
             // pageIndex: 1,
             // pageRows: 10000, // 写一个极大值，不分页
-            developerId: 1,
             appId: Number(appId),
             ...params,
         }, { loading: true }).then((res) => {
