@@ -259,6 +259,7 @@ let Paths = {
     updateDeviceLabel:'/deviceLabel/update',//修改设备标签
     deleteDeviceLabel:'/deviceLabel/delete',//删除设备标签
     exportDeviceList:'/deviceManage/exportDeviceList',//导出数据
+    deviceShadow:'/deviceManage/getProtocolList',//设备影子
     
 
     /**
@@ -377,7 +378,8 @@ let Paths = {
 
     
     // 5.x远程配置
-    getRomoteConfigListByProduct5x: '/remoteConfig/product/getList', // 列表
+    getRomoteConfigListByProduct5x: '/remoteConfig/product/getList', // 主页列表
+    getRemoteConfigList5x: '/remoteConfig/product/get', // 添加配置数据-列表
     
 
     

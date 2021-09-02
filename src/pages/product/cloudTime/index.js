@@ -7,6 +7,7 @@ import { Paths, post, get } from '../../../api'
 import { CloudAddForm } from './cloud-manage-modals'
 import CloudUpdate from './cloud-update'
 import { cloneDeep } from 'lodash'
+import { Notification } from '../../../components/Notification'
 import './index.scss'
 
 const { Option } = Select;
@@ -18,7 +19,6 @@ export default function CloudTime() {
     const [cloudAddVisible, setCloudAddVisible] = useState(false) // 新建
     const [cloudUpdateVisible, setCloudUpdateVisible] = useState(false) // 删除
 
-    const [allProductList, setAllProductList] = useState([])
     const [currentProductId, setCurrentProductId] = useState('')
     const [currentServiceName, setcurrentServiceName] = useState('')
 
@@ -112,10 +112,6 @@ export default function CloudTime() {
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 6 })
 
     useEffect(() => {
-        getCloudGetProductList()
-    }, [])
-
-    useEffect(() => {
         getTimeList()
     }, [pager.pageIndex, pager.pageRows, currentServiceName, currentProductId]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -123,13 +119,6 @@ export default function CloudTime() {
     const editCloudTime = (record) => {
         setEditData(record)
         setCloudEditVisible(true)
-    }
-
-    // 获取产品列表
-    const getCloudGetProductList = () => {
-        get(Paths.cloudGetProductList).then(res => {
-            setAllProductList(res.data)
-        }, () => setAllProductList([]))
     }
 
     // 获取云端定时列表
@@ -166,24 +155,16 @@ export default function CloudTime() {
             serviceId: changeStatus.serviceId,
             productId: changeStatus.productId,
             status: type
-        }, { loading: true }).then(res => { })
-        setCloudUpdateVisible(false)
-        getTimeList()
+        }, { loading: true }).then(res => {
+            Notification({ description: '操作成功！', type: 'success' })
+            setCloudUpdateVisible(false)
+            getTimeList()
+        })
     }
 
     return (
         <div id='cloud-time'>
-            <PageTitle title='云端定时'>
-                <div className='top-select'>
-                    <Select style={{ width: 200 }} allowClear
-                        onChange={val => setCurrentProductId(val)}>
-                        {
-                            allProductList && allProductList.map(item => (
-                                <Option key={item.productId} value={item.productId}>{item.productName}</Option>
-                            ))
-                        }
-                    </Select>
-                </div>
+            <PageTitle title='云端定时' selectOnchange={val => setCurrentProductId(val)}>
             </PageTitle>
             <div className='comm-shadowbox setp-tip'>
                 <div className='step-title'>
@@ -226,7 +207,6 @@ export default function CloudTime() {
                 <CloudAddForm
                     visible={cloudAddVisible}
                     type="add"
-                    allProductList={allProductList}
                     onCancel={() => {
                         setCloudAddVisible(false)
                         getTimeList()
@@ -238,7 +218,6 @@ export default function CloudTime() {
                 <CloudAddForm
                     visible={cloudEditVisible}
                     type="edit"
-                    allProductList={allProductList}
                     editData={editData}
                     onCancel={() => {
                         setCloudEditVisible(false)

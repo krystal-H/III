@@ -4,24 +4,25 @@ import { Form, Input, Button, Space, Select, Radio, Tabs, Drawer } from 'antd';
 import { UploadFileHooks } from '../../../../components/upload-file';
 import { post, Paths, get } from '../../../../api';
 import './titleSet.scss'
-export default function TitleEdit({ titleVisible, onCloseTitle,onOkClose }) {
+export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
     let productItem = {}
     if (sessionStorage.getItem('productItem')) {
         productItem = JSON.parse(sessionStorage.getItem('productItem'))
-    } 
+    }
     const [form] = Form.useForm();
     const oneRef = useRef();
+    const [optionArr,setOptionArr]=useState([])
     //提交数据
     const subData = () => {
-        form.validateFields().then(val=>{
-            let params={
-                productId:productItem.productId,
-                productName:val.productName,
-                brandId:val.brandId,
-                productIcon:val.productIcon[0].url,
-                productCode:val.productCode
+        form.validateFields().then(val => {
+            let params = {
+                productId: productItem.productId,
+                productName: val.productName,
+                brandId: val.brandId,
+                productIcon: val.productIcon[0].url,
+                productCode: val.productCode
             }
-            post(Paths.editProductInfo,params).then((res) => {
+            post(Paths.editProductInfo, params).then((res) => {
                 // delaData(res.data)
             });
         })
@@ -60,8 +61,8 @@ export default function TitleEdit({ titleVisible, onCloseTitle,onOkClose }) {
                     }}
                     form={form}
                     initialValues={{
-                        productIcon:[{url:productItem.productIcon}],
-                        productName:productItem.productName
+                        productIcon: [{ url: productItem.productIcon }],
+                        productName: productItem.productName
                     }}
                 >
                     <Form.Item
@@ -104,7 +105,13 @@ export default function TitleEdit({ titleVisible, onCloseTitle,onOkClose }) {
                             },
                         ]}
                     >
-                        <Input />
+                        <Select  >
+                            {
+                                optionArr.map(item => {
+                                    return (<Option value={item.key} key={item.key}>{item.value}</Option>)
+                                })
+                            }
+                        </Select>
                     </Form.Item>
                     <Form.Item
                         label="通信协议"

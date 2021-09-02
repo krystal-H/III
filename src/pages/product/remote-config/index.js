@@ -40,7 +40,7 @@ function RemoteConfig(remoteType = 'product') {
     const [remoteConfigPager, setRemoteConfigPager] = useState({ pageIndex: 1 })
     const [deleteParams, setDeleteParams] = useState({ deletevisible: false, deleteItem: null, deleteLoading: false })
     const [remoteConfigList, setRemoteConfigList] = useState([]) // table-datasorce
-    const [allProductList, setAllProductList] = useState([]) // 下拉所有产品列表
+    
     const [currentProductId, setCurrentProductId] = useState('')  // 下拉选中产品id
     const [status, setStatus] = useState('') // 状态
 
@@ -135,15 +135,6 @@ function RemoteConfig(remoteType = 'product') {
 
     const _text = isDeviceRomote ? statusTextForDevice : statusText
 
-    // 获取所有产品列表
-    const getCloudGetProductList = () => {
-        get(Paths.cloudGetProductList).then(res => {
-            setAllProductList(res.data)
-        }, () => setAllProductList([]))
-    }
-
-    useEffect(() => { getCloudGetProductList() }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
     const getDetail = (taskId, type) => {
         return get(Paths.getRemoteDetail, { taskId, type }, { loading: true })
     }
@@ -152,7 +143,6 @@ function RemoteConfig(remoteType = 'product') {
     const addOrEditRemoteConfig = (record) => {
         return alert('敬请期待！')
         if (record) { // 编辑
-            
             let { taskId } = record
             getDetail(taskId, 1).then(data => {
                 let { taskExplain, taskId, protocolJson, deviceList } = data.data,
@@ -184,7 +174,7 @@ function RemoteConfig(remoteType = 'product') {
             })
         } else {
             // if (configProtoclList.length > 0) {
-                setAddVisible(!addVisible)
+            setAddVisible(!addVisible)
             // }
         }
     }
@@ -194,7 +184,7 @@ function RemoteConfig(remoteType = 'product') {
 
     useEffect(() => {
         getRemoteConfigList()
-    }, [pageIndex, isDeviceRomote])  // eslint-disable-line react-hooks/exhaustive-deps
+    }, [pageIndex, isDeviceRomote, currentProductId])  // eslint-disable-line react-hooks/exhaustive-deps
 
     // 查询列表数据
     const searchListData = (val) => {
@@ -229,7 +219,6 @@ function RemoteConfig(remoteType = 'product') {
             ...deleteParams,
             deleteLoading: true
         })
-        alert('敬请期待！')
         // get(Paths.deleteRomoteConfig, {
         //     taskId
         // }, { loading: true }).then(data => {
@@ -241,20 +230,7 @@ function RemoteConfig(remoteType = 'product') {
 
     return (
         <div id='remote-config'>
-            <PageTitle title='远程配置'>
-                <div className='top-select'>
-                    <Select
-                        style={{ width: 200 }}
-                        allowClear
-                        onChange={val => setCurrentProductId(val)}>
-                        {
-                            allProductList && allProductList.map(item => (
-                                <Option key={item.productId} value={item.productId}>{item.productName}</Option>
-                            ))
-                        }
-                    </Select>
-                </div>
-            </PageTitle>
+            <PageTitle title='远程配置' selectOnchange={val => setCurrentProductId(val)}></PageTitle>
             <div className='comm-shadowbox setp-tip'>
                 <div className='step-title'>
                     <img src={stepImg} alt="" />
@@ -319,7 +295,6 @@ function RemoteConfig(remoteType = 'product') {
                 addVisible &&
                 <CreateTaskModal
                     visible={addVisible}
-                    allProductList={allProductList}
                     onCancel={() => { setAddVisible(false); setEditData(null) }}
                     editData={editData}
                     configProtoclList={configProtoclList}
