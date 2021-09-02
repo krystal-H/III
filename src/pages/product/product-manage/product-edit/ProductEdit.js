@@ -204,7 +204,10 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
                     )}
                 </div>
             </div>
-            <TitleSet titleVisible={titleVisible} onCloseTitle={onCloseTitle} onOkClose={onOkClose}></TitleSet>
+            {
+                titleVisible && <TitleSet titleVisible={titleVisible} onCloseTitle={onCloseTitle} onOkClose={onOkClose}></TitleSet>
+            }
+            
         </React.Fragment>
     )
 }

@@ -21,7 +21,8 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
                 productId,
                 filePath: value.filePath[0].url,
                 projectType:1,
-                projectName:value.projectName
+                projectName:value.projectName,
+                page1:value.page1[0].url
             }
             post(Paths.cusSavePanel, params).then((res) => {
                 Notification({
@@ -51,8 +52,9 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
                     </Form.Item>
                     <Form.Item
                         label="封面："
-                        name="basic2"
+                        name="page1"
                         className="clearfix"
+                        rules={[{ required: true }]}
                     >
                         {
                             <UploadFileHooks

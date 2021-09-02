@@ -5,6 +5,10 @@ import { post, Paths } from '../../../../../api';
 import './grayDebugg.scss';
 const { TabPane } = Tabs;
 export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDebugg, actionObj }) {
+    let productId = 0
+    if (sessionStorage.getItem('productItem')) {
+        productId = JSON.parse(sessionStorage.getItem('productItem')).productId
+    }
     const [form] = Form.useForm();
     const [form2] = Form.useForm();
     const formItemLayout = {
@@ -21,14 +25,8 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
         },
     };
     const [applist, setApplist] = useState([])
-    const getAoolist = () => {
-        let productId = 0
-        if (sessionStorage.getItem('productItem')) {
-            productId = JSON.parse(sessionStorage.getItem('productItem')).productId
-        }
-        post(Paths.panelApplicationList, {
-            productId
-        }).then((res) => {
+    const getAoolist = () => { 
+        post(Paths.panelApplicationList,{productId}).then((res) => {
             setApplist(res.data)
         });
     }
@@ -51,9 +49,8 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
         }
         currentForm.validateFields().then(value => {
             let params = {
-                productId: 11791,
+                productId,
                 projectId: actionObj.projectId,
-                status: 1,
                 newAppIds: selectAppId,
                 accountList: value.accountList
             }
@@ -67,20 +64,6 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
     //
     const [selectAppId, setSelectAppId] = useState('')
     const selectApp = (type, appId) => {
-        // let {selectedAppId} = this.state,
-        //     {publishType}  = this.props,
-        //     _name = publishType == 3 ? "GrayPubHistory" : "FormalPubHistory",
-        //     _state = {};
-
-        // _state.selectedAppId = selectedAppId === appId ? null : appId;
-
-        // _state[_name] = []
-
-        // if (_state.selectedAppId !== null) {
-        //     this.getPubHistory(appId,_name)
-        // } 
-
-        // this.setState(_state)
         setSelectAppId(appId)
     }
     const getAppListDOM = (type) => {

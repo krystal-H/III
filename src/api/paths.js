@@ -304,6 +304,7 @@ let Paths = {
     subscribeStart:'/datapush/enabled',//启动数据订阅
     subscribeClose:'/datapush/stop',//停用数据订阅
     subscribeDetail:'/datapush/getByUrlConfId',//订阅详情
+    addsubscribe:'/datapush/create',//新增数据订阅
 
     /**
      * 基础产品--应用 start
