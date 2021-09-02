@@ -163,7 +163,7 @@ export default function DeviceRegist() {
     }
 
     //新增订阅
-    const [modelVis, setModelVis] = useState(false)
+    const [modelVis, setModelVis] = useState(true)
     const openRegist = () => {
         setModelVis(true)
     }
@@ -171,6 +171,11 @@ export default function DeviceRegist() {
         setModelVis(false)
     }
     const colseMoadl = () => {
+        Notification({
+            type: 'success',
+            description: '新增成功！'
+        })
+        getList()
         setModelVis(false)
     }
     return (

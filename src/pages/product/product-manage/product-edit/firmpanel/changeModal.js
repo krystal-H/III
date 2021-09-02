@@ -139,6 +139,10 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     //更新灰度
     const closeDebugg = () => {
         getList()
+        Notification({
+            type: 'success',
+            description: '灰度调试成功！'
+        })
         setIsGrayModalVisible(false)
     }
     //打开灰度
@@ -191,12 +195,16 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                 let { verifyStatus } = record;
                 return (
                     <Space size="middle">
-
-                        {[3].includes(verifyStatus) && <a onClick={() => { openDel(record, 1) }}>发布</a>}
+                        <a onClick={() => { openDel(record, 1) }}>发布</a>
+                        <a onClick={() => { openDebugg(record) }}>灰度调试</a>
+                        <a onClick={() => { openDel(record, 2) }}>删除</a>
+                        <a onClick={() => { openDel(record, 3) }}>下线</a>
+                        <a onClick={() => { openEdit(record) }}>编辑</a>
+                        {/* {[3].includes(verifyStatus) && <a onClick={() => { openDel(record, 1) }}>发布</a>}
                         {[1].includes(verifyStatus) && <a onClick={() => { openDebugg(record) }}>灰度调试</a>}
                         {[1].includes(verifyStatus) && <a onClick={() => { openDel(record, 2) }}>删除</a>}
                         {[3, 4].includes(verifyStatus) && <a onClick={() => { openDel(record, 3) }}>下线</a>}
-                        {[1, 3].includes(verifyStatus) && <a onClick={() => { openEdit(record) }}>编辑</a>}
+                        {[1, 3].includes(verifyStatus) && <a onClick={() => { openEdit(record) }}>编辑</a>} */}
                     </Space>
                 )
             },

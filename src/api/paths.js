@@ -283,10 +283,10 @@ let Paths = {
      * 账户-用户角色 start
      * aize-2019-11-06
      */
-    getRolePage: '/roleresource/getRolePage',
+    getRolePage: '/rights/getRolePage',
     deleteRole: '/roleresource/deleteRole',
     
-    saveRole: '/rolePlus/saveRole',
+    saveRole: '/rights/createRole',
 
     /**
      * 数据订阅 start
@@ -304,6 +304,7 @@ let Paths = {
     subscribeStart:'/datapush/enabled',//启动数据订阅
     subscribeClose:'/datapush/stop',//停用数据订阅
     subscribeDetail:'/datapush/getByUrlConfId',//订阅详情
+    addsubscribe:'/datapush/create',//新增数据订阅
 
     /**
      * 基础产品--应用 start

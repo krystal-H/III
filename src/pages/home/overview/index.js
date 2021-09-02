@@ -56,7 +56,7 @@ export default function OverviewWrap() {
     //消息列表 
     const [messageList, setMessageList] = useState([])
     const getMessageList = () => {
-        post(Paths.messageList, { developerId: 1 }).then((res) => {
+        post(Paths.getNoticeList, { developerId: 1 }).then((res) => {
             if (res.data.list.length > 3) {
                 setMessageList(res.data.list.slice(0, 3))
             } else {
@@ -78,7 +78,7 @@ export default function OverviewWrap() {
     //app列表
     const [appList, setAppList] = useState([])
     const getAppList = () => {
-        get(Paths.appList, { developerId: 1 }).then((res) => {
+        post(Paths.appList).then((res) => {
             if (res.data.list.length > 3) {
                 setAppList(res.data.list.slice(0, 3))
             } else {
@@ -119,10 +119,10 @@ export default function OverviewWrap() {
     const [produList, setProductList] = useState([])
     const getProductList = () => {
         get(Paths.productList, { developerId: 1 }).then((res) => {
-            if (res.data.list.length > 3) {
-                setProductList(res.data.list.slice(0, 3))
+            if (res.data.length > 3) {
+                setProductList(res.data.slice(0, 3))
             } else {
-                setProductList(res.data.list)
+                setProductList(res.data)
             }
         });
     }
@@ -365,7 +365,7 @@ export default function OverviewWrap() {
                                 {
                                     appList.length ? (appList.map((item, index) => {
                                         return (<div className='over-view-productmn-content-item over-view-productmn-content-two' key={index}>
-                                            <div className='over-view-productmn-content-img center-layout-wrap'><img src={projectmn1} /></div>
+                                            <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.appIconLow} /></div>
                                             <div className='over-view-productmn-content-content'>
                                                 <div>{item.appName}</div>
                                                 <div className='over-view-productmn-content-content-time'>更新时间{moment(item.updateTime).format('YYYY-MM-DD')}</div>
@@ -421,7 +421,7 @@ export default function OverviewWrap() {
                         <div className='over-view-message hover-commons-unite'>
                             {
                                 messageList.length ? (messageList.map((item, index) => {
-                                    return (<div className='over-view-message-item' onClick={() => { goMessageDetail(item.noticeId) }} key={index}>【{item.noticeTitle} 】{item.point}</div>)
+                                    return (<div className='over-view-message-item' onClick={() => { goMessageDetail(item.noticeId) }} key={index}>【{item.noticeTitle} 】{item.noticeContent}</div>)
                                 })) : <div className='over-no-data'><img src={noData} alt=''/> <div>暂无消息</div></div>
 
                             }

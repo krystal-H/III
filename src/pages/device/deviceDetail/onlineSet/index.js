@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
 import { Button, Table, Divider, Tooltip, Select, Steps, Input, Form, Row, Col } from 'antd'
 import { DateTool, setFuncDataType, addKeyToTableData, createArrayByLength } from '../../../../util/util'
-import PageTitle from '../../../../components/page-title/PageTitle'
 import stepImg from '../../../../assets/images/remote-config.png'
 import DescWrapper from '../../../../components/desc-wrapper/DescWrapper'
 import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal'
 import { cloneDeep } from 'lodash'
 import { Paths, post, get } from '../../../../api'
+import { Notification } from '../../../../components/Notification';
+import AddModel from './addModel'
 import './index.scss'
 
 const { Option } = Select
@@ -33,19 +34,13 @@ const statusText = ['草稿', '待执行', '执行中', '已执行']
 const statusTextForDevice = ['', '执行中', '执行成功', '执行失败']
 
 function RemoteConfig({ devceId, remoteType = 'device' }) {
-    const [configProtoclList, setConfigProtoclList] = useState([])
-    const [addVisible, setAddVisible] = useState(false)
+    const [addVisible, setAddVisible] = useState(true)
     const [editData, setEditData] = useState(null)
-    const [remoteConfigPager, setRemoteConfigPager] = useState({ pageIndex: 1 })
     const [deleteParams, setDeleteParams] = useState({ deletevisible: false, deleteItem: null, deleteLoading: false })
     const [remoteConfigList, setRemoteConfigList] = useState([]) // table-datasorce
-    const [allProductList, setAllProductList] = useState([]) // 下拉所有产品列表
-    const [currentProductId, setCurrentProductId] = useState('')  // 下拉选中产品id
     const [status, setStatus] = useState('') // 状态
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
-    const { totalRows, pageIndex, pageRows } = remoteConfigPager
     const { deletevisible, deleteItem, deleteLoading } = deleteParams
-
     const PageColumns = [
         {
             title: '任务ID',
@@ -136,9 +131,6 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
     const retryForDeviceByTaskId = () => { }
     const showErrorLogForDeviceByTaskId = () => { }
 
-    // useEffect(() => {
-    //     getRemoteConfigList()
-    // }, [pageIndex, isDeviceRomote])  // eslint-disable-line react-hooks/exhaustive-deps
     useEffect(() => {
         getRemoteConfigList()
     }, [ pager.pageRows, pager.pageIndex])
@@ -150,14 +142,12 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
             ...pager
         }
         post(Paths.deviceRemoteConfigList, params, { loading: true }).then(data => {
-            const { pager = {}, list = [] } = data.data
+            const {list = [] } = data.data
             setRemoteConfigList(addKeyToTableData(list))
             setPager(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))
                 return Object.assign(obj, { totalRows: data.data.pager.totalRows })
             })
-            // setRemoteConfigList(addKeyToTableData(list))
-            // setRemoteConfigPager(pager)
         })
     }
 
@@ -165,19 +155,13 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
     // 确定删除
     const deletelOKHandle = () => {
         const { taskId } = deleteItem
-        alert(taskId)
-        // setDeleteParams({
-        //     ...deleteParams,
-        //     deleteLoading: true
-        // })
-        // alert('敬请期待！')
-        // get(Paths.deleteRomoteConfig, {
-        //     taskId
-        // }, { loading: true }).then(data => {
-        //     getRemoteConfigList(pageRows > 1 ? pageIndex : ((pageIndex - 1 > 0) ? pageIndex - 1 : 1))
-        // }).finally(() => {
-        //     setDeleteParams({ deletevisible: false, deleteItem: null, deleteLoading: false })
-        // })
+        post(Paths.delDeviceRemoset,{taskId}).then(data => {
+            Notification({
+                type: 'success',
+                description: '删除成功！',
+            });
+            getRemoteConfigList()
+        })
     }
     //页码改变
     const pagerChange = (pageIndex, pageRows) => {
@@ -193,6 +177,13 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
             })
         }
 
+    }
+    //新增
+    const CancelAdd=()=>{
+        setAddVisible(false)
+    }
+    const addOk=()=>{
+        setAddVisible(false)
     }
     return (
         <div id='remote-config'>
@@ -230,16 +221,6 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
                         pageSizeOptions: [10],
                         showTotal: () => <span>共 <a>{pager.totalRows}</a> 条</span>
                     }}
-                // pagination={{
-                //     total: totalRows,
-                //     current: pageIndex,
-                //     defaultCurrent: 1,
-                //     defaultPageSize: PAGE_ROWS,
-                //     onChange: (index) => changePage(index),
-                //     showQuickJumper: true,
-                //     hideOnSinglePage: true,
-                //     showTotal: total => <span>共 <a>{total}</a> 条</span>
-                // }}
                 />
             </div>
             {/* 删除弹窗 */}
@@ -257,6 +238,9 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
                     tipText={'任务的所有信息将完全被删除，无法找回，请谨慎操作'}
                 >
                 </ActionConfirmModal>
+            }
+            {
+              addVisible &&  <AddModel addVisible={addVisible} addOk={addOk} CancelAdd={CancelAdd}/>
             }
         </div>
     )
