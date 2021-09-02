@@ -261,6 +261,8 @@ let Paths = {
     deleteDeviceLabel:'/deviceLabel/delete',//删除设备标签
     exportDeviceList:'/deviceManage/exportDeviceList',//导出数据
     deviceShadow:'/deviceManage/getProtocolList',//设备影子
+    deviceShadowHis:'',//设备影子历史数据
+    exportShadowHis:'/deviceManage/getHistoryProtocolList',//设备影子历史数据
     
 
     /**

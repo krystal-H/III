@@ -5,10 +5,10 @@ import './index.scss';
 // import TitleEdit from './titleEdit'
 // import { getRowSpanCount } from './tableCombine'
 import { getRowSpanCount } from '../../../../configs/tableCombine'
+import DetailModl from './detail'
 
 
-
-export default function TableCom({ dataSource}) {
+export default function TableCom({ dataSource }) {
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     //页码改变
     const pagerChange = (pageIndex, pageRows) => {
@@ -56,18 +56,16 @@ export default function TableCom({ dataSource}) {
         let data = dataSource.slice(index, index + 10)
         return data
     }
+    const [ModalVisible, setModalVisible] = useState(false)
+    const [sentData,setSentData]=useState({})
+    const goTetail = (data) => {
+        setSentData(data)
+        setModalVisible(true)
+    }
+    const closeOk=()=>{
+        setModalVisible(false)
+    }
     const columns = [
-        // {
-        //     title: 'DP ID', dataIndex: 'key', render: (value, row, index) => {
-        //         return getRowSpanCount(
-        //             getComData(),
-        //             "funcType",
-        //             index,
-        //             value,
-        //             "funcIdentifier"
-        //         );
-        //     },
-        // },
         {
             title: '功能类型', dataIndex: 'funcTypeCN',
             render: (value, row, index) => {
@@ -116,6 +114,7 @@ export default function TableCom({ dataSource}) {
         },
         { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record)}</span> },
         { title: '最新数据', dataIndex: 'funcData' },
+        { title: '操作', dataIndex: 'dd', render: (text, record) => <a onClick={() => { goTetail(record) }}>查看</a> },
     ];
 
     return <div>
@@ -134,6 +133,8 @@ export default function TableCom({ dataSource}) {
                 showTotal: () => <span>共 <a>{dataSource.length}</a> 条</span>
             }}
         />
-
+        {
+            ModalVisible && <DetailModl ModalVisible={ModalVisible} closeOk={closeOk} sentData={sentData}/>
+        }
     </div>
 }

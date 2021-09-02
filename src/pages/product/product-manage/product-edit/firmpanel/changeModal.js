@@ -9,6 +9,7 @@ import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
 import GrayDebugg from './grayDebugg'
 import ActionModel from './actionModel'
+import RelPanModel from './relPanel'
 
 const { TabPane } = Tabs;
 
@@ -98,7 +99,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         post(Paths.modelRel, params).then((res) => {
             Notification({
                 type: 'success',
-                description: '发布成功！'
+                description: '提交发布成功！'
             })
             setActionVis(false)
             getList()
@@ -150,7 +151,25 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         setActionData(data)
         setIsGrayModalVisible(true)
     }
-
+    //发布
+    const [relPanVis, setRelPanVis] = useState(false)
+    //打开发布==============
+    const openRel = (data) => {
+        setActionData(data)
+        setRelPanVis(true)
+    }
+    const CancelRel = () => {
+        setRelPanVis(false)
+    }
+    const closeOkRel = () => {
+        Notification({
+            type: 'success',
+            description: '发布成功！'
+        })
+        setRelPanVis(false)
+    }
+    //发布结束
+    //==============
     useEffect(() => {
         getList()
     }, [pager.pageIndex, pager.pageRows])
@@ -161,6 +180,29 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             delOkCancel()
         } else if (actionType === 3) {
             offOkLine()
+        }
+    }
+    const getBtn = (record, verifyStatus, isGray) => {
+        if (!isGray) {
+            return (<Space size="middle">
+                <a onClick={() => { openDebugg(record) }}>灰度调试</a>
+                <a onClick={() => { openDel(record, 2) }}>删除</a>
+                <a onClick={() => { openEdit(record) }}>编辑</a>
+            </Space>)
+        }
+        if (verifyStatus == 0 || verifyStatus == 2) {
+            return (<Space size="middle">
+                <a onClick={() => { openDebugg(record) }}>灰度调试</a>
+                <a onClick={() => { openDel(record, 2) }}>删除</a>
+                <a onClick={() => { openEdit(record) }}>编辑</a>
+                <a onClick={() => { openRel(record) }}>发布</a>
+            </Space>)
+        }
+        if (verifyStatus == 1) {
+            return <a onClick={() => { openDel(record, 3) }}>下线</a>
+        }
+        if (verifyStatus == 3) {
+            return <a onClick={() => { openRel(record) }}>发布</a>
         }
     }
     const columns = [
@@ -184,6 +226,10 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             key: 'verifyStatus',
             dataIndex: 'verifyStatus',
             render: (text, record) => {
+                if (!record.isGray) {
+                    return '草稿'
+                }
+                // if(record.isF)
                 let arr = ['待审核', '已通过', '不通过', '审核中']
                 return arr[text]
             }
@@ -192,21 +238,9 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             title: '操作',
             key: 'action',
             render: (text, record) => {
-                let { verifyStatus } = record;
-                return (
-                    <Space size="middle">
-                        <a onClick={() => { openDel(record, 1) }}>发布</a>
-                        <a onClick={() => { openDebugg(record) }}>灰度调试</a>
-                        <a onClick={() => { openDel(record, 2) }}>删除</a>
-                        <a onClick={() => { openDel(record, 3) }}>下线</a>
-                        <a onClick={() => { openEdit(record) }}>编辑</a>
-                        {/* {[3].includes(verifyStatus) && <a onClick={() => { openDel(record, 1) }}>发布</a>}
-                        {[1].includes(verifyStatus) && <a onClick={() => { openDebugg(record) }}>灰度调试</a>}
-                        {[1].includes(verifyStatus) && <a onClick={() => { openDel(record, 2) }}>删除</a>}
-                        {[3, 4].includes(verifyStatus) && <a onClick={() => { openDel(record, 3) }}>下线</a>}
-                        {[1, 3].includes(verifyStatus) && <a onClick={() => { openEdit(record) }}>编辑</a>} */}
-                    </Space>
-                )
+                let { verifyStatus, isGray } = record;
+                // `verify_status` int(10) unsigned NOT NULL DEFAULT '1' COMMENT '审核状态：0 -待审核 1- 已通过 2-不通过 3-审核中',
+                return getBtn(record, verifyStatus, isGray)
             },
         },
     ];
@@ -273,6 +307,9 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                     actionObj={actionData}
                     updateOkHandle={() => updateOkHandle()}
                     updateCancelHandle={() => closeAction()} />
+            }
+            {
+                relPanVis && <RelPanModel actionObj={actionData} relPanVis={relPanVis} CancelRel={CancelRel} closeOkRel={closeOkRel} />
             }
         </div>
     )

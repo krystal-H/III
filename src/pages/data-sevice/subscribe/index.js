@@ -87,8 +87,8 @@ export default function DeviceRegist() {
             )
         }, {
             title: '归属产品名称',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'productName',
+            key: 'productName',
         }, {
             title: '订阅更新时间',
             dataIndex: 'updateTime',
@@ -163,7 +163,7 @@ export default function DeviceRegist() {
     }
 
     //新增订阅
-    const [modelVis, setModelVis] = useState(true)
+    const [modelVis, setModelVis] = useState(false)
     const openRegist = () => {
         setModelVis(true)
     }
