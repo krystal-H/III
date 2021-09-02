@@ -2,14 +2,14 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'rea
 import { Image } from 'antd';
 import NetworkInfo from './networkInfo';
 import CommunicateSecurity from './communicationSecurity'
-// import ConfigFirmware from './configFirmware';
-// import JoinGateway from './joinGateway';
-// import ConfigFirmwareDetail from './configFirmwareDetail';
 import { Link } from 'react-router-dom';
 import { Paths, post, get } from '../../../../../api'
+import { cloneDeep } from 'lodash'
+import ConfigFirmwareDetail from './configFirmwareDetail.js'
 
 import './index.scss';
 
+const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
 const requiredList = [
   {
     title: '配网信息',
@@ -27,54 +27,56 @@ const requiredList = [
   }
 ]
 
-const optionalList = [
-  {
-    title: '配置产品固件模块',
-    desc: '支持配置OTA升级模块，比如区分控制板、驱动板、显示板等不同模块',
-    isConfiged: true,
-    type: 'addFirmware',
-    url: require('../../../../../assets/images/commonDefault/service-hardware.png')
-  },
-  {
-    title: '固件升级',
-    desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
-    isConfiged: false,
-    type: 'firmwareUpdate',
-    routePath: '/open/product/otaUpdate',
-    url: require('../../../../../assets/images/commonDefault/service-firmwareUpdate.png')
-  },
-  {
-    title: '场景联动配置',
-    desc: '配置自动化联动的条件动作，以便加入场景，跟其他设备联动控制。',
-    isConfiged: false,
-    type: 'scene',
-    url: require('../../../../../assets/images/commonDefault/service-scene.png')
-  },
-  {
-    title: '云端定时',
-    desc: '云端设定开关时间及周循环，无需硬件嵌入式开发',
-    isConfiged: false,
-    type: 'cloud',
-    routePath: '/open/product/cloudTimer',
-    url: require('../../../../../assets/images/commonDefault/service-cloud.png')
-  },
-  {
-    title: '设备告警',
-    desc: '可定义配置设备预警消息推送，方便随时随地的设备监控',
-    isConfiged: false,
-    type: 'deviceWarning',
-    routePath: '/open/device/devMsg',
-    url: require('../../../../../assets/images/commonDefault/service-device.png')
-  }
-]
-
 function ServiceConfig({ productId, nextStep }, ref) {
+  const [optionalList, setOptionalList] = useState([
+    {
+      title: '配置产品固件模块',
+      desc: '支持配置OTA升级模块，比如区分控制板、驱动板、显示板等不同模块',
+      isConfiged: false,
+      type: 'addFirmware',
+      url: require('../../../../../assets/images/commonDefault/service-hardware.png')
+    },
+    {
+      title: '固件升级',
+      desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
+      isConfiged: false,
+      type: 'firmwareUpdate',
+      routePath: '/open/product/otaUpdate',
+      url: require('../../../../../assets/images/commonDefault/service-firmwareUpdate.png')
+    },
+    {
+      title: '场景联动配置',
+      desc: '配置自动化联动的条件动作，以便加入场景，跟其他设备联动控制。',
+      isConfiged: false,
+      type: 'scene',
+      routePath: '/open/product/ruleEngine',
+      url: require('../../../../../assets/images/commonDefault/service-scene.png')
+    },
+    {
+      title: '云端定时',
+      desc: '云端设定开关时间及周循环，无需硬件嵌入式开发',
+      isConfiged: false,
+      type: 'cloud',
+      routePath: '/open/product/cloudTimer',
+      url: require('../../../../../assets/images/commonDefault/service-cloud.png')
+    },
+    {
+      title: '设备告警',
+      desc: '可定义配置设备预警消息推送，方便随时随地的设备监控',
+      isConfiged: false,
+      type: 'deviceWarning',
+      routePath: '/open/device/devMsg',
+      url: require('../../../../../assets/images/commonDefault/service-device.png')
+    }
+  ])
+
   const [networkVisible, setNetworkVisible] = useState(false)
   const [securityVisible, setSecurityVisible] = useState(false)
   const [firmwareVisible, setFirmwareVisible] = useState(false)
   const [gatewayVisible, setGatewayVisible] = useState(false)
   const [firmwareDetailVisible, setFirmwareDetailVisible] = useState(false)
   const [productExtend, setProductExtend] = useState('') // 通信安全
+  const [firmwareDetailData, setFirmwareDetailData] = useState([])
   //验证函数
   const subNextConFirm = () => {
     nextStep()
@@ -98,19 +100,6 @@ function ServiceConfig({ productId, nextStep }, ref) {
     }
   }
 
-  const showModal = (type) => {
-    switch (type) {
-      case 'addFirmware':
-        setFirmwareVisible(true)
-        break;
-      case 'gateway':
-        setGatewayVisible(true)
-        break
-      default:
-        break;
-    }
-  }
-
   // 固件模块详情列表
   const showFirmwareDetail = () => {
     setFirmwareDetailVisible(true)
@@ -126,13 +115,61 @@ function ServiceConfig({ productId, nextStep }, ref) {
     })
   }
 
+  // 固件模块
+  const getFirmwareList = () => {
+    post(Paths.getFirmwareList, { productId }, { loading: true }).then(res => {
+      if (res.data && res.data.length > 0) {
+        setFirmwareDetailData(res.data)
+        const list = cloneDeep(optionalList)
+        list[0].isConfiged = true
+        setOptionalList(list)
+      } else {
+        const tempList = cloneDeep(optionalList)
+        tempList.splice(0, 1)
+        setOptionalList(tempList)
+      }
+    })
+  }
+
+  // 免开发方案不显示 配置产品固件模块
+  const noFreeScheme = () => {
+    if (productItemData.schemeType) {
+      if (productItemData.schemeType == 1) {
+        const tempList = cloneDeep(optionalList)
+        tempList.splice(0, 1)
+        setOptionalList(tempList)
+      } else {
+        getFirmwareList()
+      }
+    }
+  }
+
   useEffect(() => {
     isConfigedFunc()
+    noFreeScheme()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 获取方案类型展示
+  const getSchemeType = () => {
+    if (productItemData.schemeType) {
+      switch (productItemData.schemeType) {
+        case 1:
+          return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。'
+        case 2:
+          return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。'
+        case 3:
+          return 'SoC方案，不提供通用固件程序，需自行开发模组固件。'
+        default:
+          break;
+      }
+    } else {
+      return ''
+    }
+  }
 
   return (
     <div className="service-config-page2">
-      <div className="desc">免开发方案，只需选择推荐模组、以及配置固件信息，快速实现硬件智能化。</div>
+      <div className="desc">{getSchemeType()}</div>
       {/* 必选配置 */}
       <div className="service-config-title">必选配置</div>
       <div className="service-config-cont">
@@ -167,29 +204,15 @@ function ServiceConfig({ productId, nextStep }, ref) {
                 <div className="config-card-right-title">{item.title}</div>
                 <div className="config-card-right-desc">{item.desc}</div>
                 <div className="flex-start">
-                  {/* 未配置的判断 */}
                   {
-                    !item.isConfiged ?
-                      (item.type === 'firmwareUpdate' || item.type === 'cloud' || item.type === 'deviceWarning') ?
-                        <div className="config-card-right-btn">
-                          <Link to={item.routePath} target="_blank">配置</Link>
-                        </div> :
-                        <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
-                      : ''
-                  }
-                  {/* 配置的判断todo----------------------需要增加判断 */}
-                  {
-                    item.isConfiged && item.type === 'addFirmware' && '配置过固件模块的展示详情，否则不显示' &&
-                    <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
-                    // 固件升级模块配置——仅支持发布前配置，产品发布后不可配置以及修改。发布前未发布过，直接不显示
-                    // 仅使用MCU方案和SoC方案产品出现此选项
-                    // item.type === 'addFirmware' ?
-                    //   <>
-                    //     <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
-                    //     <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
-                    //   </> :
-                    //   <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>修改</div>
-                    // : ''
+                    ['firmwareUpdate', 'cloud', 'deviceWarning', 'scene'].includes(item.type) ?
+                      <div className="config-card-right-btn">
+                        <Link to={item.routePath} target="_blank">配置</Link>
+                      </div> :
+                      item.isConfiged ?
+                        <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
+                        :
+                        ''
                   }
                 </div>
               </div>
@@ -209,35 +232,21 @@ function ServiceConfig({ productId, nextStep }, ref) {
           cancelHandle={() => { setNetworkVisible(false) }} />
       }
       {/* 通信安全机制 */}
-      {
-        securityVisible &&
+      {securityVisible &&
         <CommunicateSecurity
           securityVisible={securityVisible}
           productExtend={productExtend}
           cancelHandle={() => { setSecurityVisible(false) }} />
       }
-      {/* 配置产品固件模块 */}
-      {/* {
-        firmwareVisible &&
-        <ConfigFirmware
-          firmwareVisible={firmwareVisible}
-          cancelHandle={() => { setFirmwareVisible(false) }} />
-      } */}
+
       {/* 配置产品固件模块详情 */}
-      {/* {
-        firmwareDetailVisible &&
+      {firmwareDetailVisible &&
         <ConfigFirmwareDetail
           firmwareDetailVisible={firmwareDetailVisible}
+          firmwareDetailData={firmwareDetailData}
           cancelHandle={() => { setFirmwareDetailVisible(false) }}
-          showAddFirmware={() => {
-            setFirmwareVisible(true)
-            setFirmwareDetailVisible(false)
-          }}
-          showEditFirmware={(val) => {
-            setFirmwareVisible(true)
-            setFirmwareDetailVisible(false)
-          }} />
-      } */}
+        />
+      }
     </div>
   )
 }

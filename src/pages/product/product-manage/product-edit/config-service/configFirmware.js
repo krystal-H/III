@@ -5,43 +5,40 @@ import './configFirmware.scss'
 import { Paths, post } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
 
-function ConfigFirmware({ productId, firmwareVisible, cancelHandle, type, editData }) {
+function ConfigFirmware({ productId, firmwareVisible, cancelHandle, type, editData, confirmHandle }) {
   const [form] = Form.useForm()
-
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-    let arr = [{
-      deviceVersionType: 5,
-      productId,
-      firmwareTypeMark: values.firmwareTypeMark,
-      firmwareTypeName: values.firmwareTypeName
-    }]
-    if (values.list && values.list.length) {
-      values.list.forEach(ele => {
-        arr.push({
-          deviceVersionType: 5,
-          productId,
-          firmwareTypeMark: ele.firmwareTypeMark,
-          firmwareTypeName: ele.firmwareTypeName
-        })
-      })
-    }
-
-    console.log('最终提交的数据', arr)
+    console.log('Received values of form: ', values, type, 'type');
     if (type === 'edit') {
-      // post(Paths.addFirmwareModule, {
-      //   productId,
-      //   deviceVersionType: 5,
-      //   firmwareTypeName: values.firmwareTypeName,
-      //   firmwareTypeMark: values.firmwareTypeMark
-      // }).then(res => {
-      //   Notification({ description: '操作成功！', type: 'success' })
-      //   cancelHandle()
-      // })
+      post(Paths.updateFirmwareModule, {
+        id: editData.id,
+        firmwareTypeName: values.firmwareTypeName,
+        firmwareTypeMark: values.firmwareTypeMark
+      }).then(res => {
+        Notification({ description: '操作成功！', type: 'success' })
+        confirmHandle()
+      })
     } else {
+      let arr = [{
+        deviceVersionType: 5,
+        productId,
+        firmwareTypeMark: values.firmwareTypeMark,
+        firmwareTypeName: values.firmwareTypeName
+      }]
+      if (values.list && values.list.length) {
+        values.list.forEach(ele => {
+          arr.push({
+            deviceVersionType: 5,
+            productId,
+            firmwareTypeMark: ele.firmwareTypeMark,
+            firmwareTypeName: ele.firmwareTypeName
+          })
+        })
+      }
+  
       post(Paths.addFirmwareModule, arr).then(res => {
         Notification({ description: '操作成功！', type: 'success' })
-        cancelHandle()
+        confirmHandle()
       })
     }
   }

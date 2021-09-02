@@ -39,13 +39,6 @@ function ServiceSelect({ productId, nextStep }, ref) {
       type: 'addFirmware',
       url: require('../../../../../assets/images/commonDefault/service-hardware.png')
     },
-    // { // 产品说暂时不做
-    //   title: '加入网关',
-    //   desc: '设备申请加入clife网关，应用到更加丰富的行业方案和场景市场。',
-    //   isConfiged: false,
-    //   type: 'gateway',
-    //   url: require('../../../../../assets/images/commonDefault/service-gateway.png')
-    // },
     {
       title: '固件升级',
       desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
@@ -59,6 +52,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
       desc: '配置自动化联动的条件动作，以便加入场景，跟其他设备联动控制。',
       isConfiged: false,
       type: 'scene',
+      routePath: '/open/product/ruleEngine',
       url: require('../../../../../assets/images/commonDefault/service-scene.png')
     },
     {
@@ -76,7 +70,14 @@ function ServiceSelect({ productId, nextStep }, ref) {
       type: 'deviceWarning',
       routePath: '/open/device/devMsg',
       url: require('../../../../../assets/images/commonDefault/service-device.png')
-    }
+    },
+    // { // 产品说暂时不做
+    //   title: '加入网关',
+    //   desc: '设备申请加入clife网关，应用到更加丰富的行业方案和场景市场。',
+    //   isConfiged: false,
+    //   type: 'gateway',
+    //   url: require('../../../../../assets/images/commonDefault/service-gateway.png')
+    // },
   ])
   const [productConfig, setProductConfig] = useState('') // 配网信息信息
   const [productExtend, setProductExtend] = useState('') // 通信安全
@@ -126,7 +127,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
 
   // 固件模块
   const getFirmwareList = () => {
-    post(Paths.getFirmwareList, { productId }, {loading: true}).then(res => {
+    post(Paths.getFirmwareList, { productId }, { loading: true }).then(res => {
       if (res.data && res.data.length > 0) {
         setFirmwareDetailData(res.data)
         const list = cloneDeep(optionalList)
@@ -136,14 +137,26 @@ function ServiceSelect({ productId, nextStep }, ref) {
     })
   }
 
+  // 免开发方案不显示 配置产品固件模块
+  const noFreeScheme = () => {
+    if (productItemData.schemeType) {
+      if (productItemData.schemeType == 1) {
+        const tempList = cloneDeep(optionalList)
+        tempList.splice(0, 1)
+        setOptionalList(tempList)
+      } else {
+        getFirmwareList()
+      }
+    }
+  }
+
   useEffect(() => {
     isConfigedFunc()
     judgeIsGateWay()
-    getFirmwareList()
+    noFreeScheme()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const showModal = (type) => {
-    console.log(type)
     switch (type) {
       case 'network':
         setNetworkVisible(true)
@@ -200,7 +213,9 @@ function ServiceSelect({ productId, nextStep }, ref) {
               <div className="config-card-right">
                 <div className="config-card-right-title">{item.title}</div>
                 <div className="config-card-right-desc">{item.desc}</div>
-                <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>{!item.isConfiged ? '配置' : '修改'}</div>
+                <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
+                  {!item.isConfiged ? '配置' : '修改'}
+                </div>
               </div>
               {
                 item.isConfiged && <div className="configured-logo">已配置</div>
@@ -225,11 +240,11 @@ function ServiceSelect({ productId, nextStep }, ref) {
                   {/* 未配置的判断 */}
                   {
                     !item.isConfiged ?
-                      (item.type === 'firmwareUpdate' || item.type === 'cloud' || item.type === 'deviceWarning') ?
+                      ['firmwareUpdate', 'cloud', 'deviceWarning', 'scene'].includes(item.type) ?
                         <div className="config-card-right-btn">
                           <Link to={item.routePath} target="_blank">配置</Link>
                         </div> :
-                            <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
+                        <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
                       : ''
                   }
                   {/* 配置的判断 */}
@@ -259,7 +274,6 @@ function ServiceSelect({ productId, nextStep }, ref) {
           networkModalVisible={networkVisible}
           productId={productId}
           isGateWayDevice={isGateWayDevice}
-          // productConfig={productConfig}
           isedited={requiredList[0].isConfiged}
           cancelHandle={() => {
             setNetworkVisible(false)
@@ -288,23 +302,25 @@ function ServiceSelect({ productId, nextStep }, ref) {
           type={showType}
           editData={editData}
           firmwareVisible={firmwareVisible}
-          cancelHandle={() => { setFirmwareVisible(false); getFirmwareList()}} />
+          confirmHandle={() => { setFirmwareVisible(false); getFirmwareList() }}
+          cancelHandle={() => { setFirmwareVisible(false) }} />
       }
 
       {/* 配置产品固件模块详情 */}
       {
         firmwareDetailVisible &&
         <ConfigFirmwareDetail
+          productId={productId}
           firmwareDetailVisible={firmwareDetailVisible}
           firmwareDetailData={firmwareDetailData}
+          getFirmwareList={getFirmwareList}
           cancelHandle={() => { setFirmwareDetailVisible(false) }}
-          showAddFirmware={() => {
+          showAddFirmware={(type) => {
             setFirmwareVisible(true)
-            setFirmwareDetailVisible(false)
+            setShowType(type)
           }}
           showEditFirmware={(val) => {
             setFirmwareVisible(true)
-            // setFirmwareDetailVisible(false)
             setShowType('edit')
             setEditData(val)
           }} />

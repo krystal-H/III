@@ -1,0 +1,11 @@
+@charset 'utf-8';
+
+.configfirmware-detail-modal {
+  .mar22 {
+    margin-bottom: 22px;
+  }
+  .edit-ope {
+    cursor: pointer;
+    @include text(12px, $themeColor);
+  }
+}
