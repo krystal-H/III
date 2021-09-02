@@ -284,7 +284,7 @@ let Paths = {
      * aize-2019-11-06
      */
     getRolePage: '/rights/getRolePage',
-    deleteRole: '/roleresource/deleteRole',
+    deleteRole: '/rights/deleteRole',
     
     saveRole: '/rights/createRole',
 
@@ -435,7 +435,7 @@ let Paths = {
     deleteGroup:'/deviceGroup/deleteGroup',
     getGroupDetail:'/deviceGroup/getDeviceGroupInfo',
     getGroupDeviceList:'/deviceGroup/getGroupDeviceList',
-    addGroupDevice:'/deviceGroup/getRelaDeviceList',
+    addGroupDevice:'/deviceGroup/groupRelaDevice',
     getGroupSlctDev:'/deviceGroup/getRelaDeviceList',
     delGroupDevice:'/group/deleteRela',
     getCreateProduct:'/prod/getCreateProduct',
