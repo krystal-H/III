@@ -105,7 +105,7 @@ class ApplicationDetail extends PureComponent {
     _getVersionList = (param) => {
         let { appId } = this.state
         post(Paths.getAppVersionList5x, {
-            appId, ...param, developerId: 1
+            appId, ...param,
         }, { loading: true }).then((res) => {
             const code = res.code;
             const data = res.data;
@@ -128,7 +128,6 @@ class ApplicationDetail extends PureComponent {
             status: Number(params.status),
             appId: Number(appId),
             // mainVersion: Number(params.mainVersion),
-            developerId: 1
         }, { loading: true }).then((res) => {
             const code = res.code;
             if (code === REQUEST_SUCCESS) {
@@ -150,7 +149,7 @@ class ApplicationDetail extends PureComponent {
     saveAppInfo = (params) => {
         let { appId, appInfo } = this.state;
         let appType = appInfo.appType.value;
-        params = { ...params, appMode: 1, appId, developerId: 1, appType: Number(appType) };
+        params = { ...params, appMode: 1, appId, appType: Number(appType) };
         let app = appType === 0 ? '移动应用编辑成功' : '小程序应用编辑成功';
         if (appType === 2) {
             params = { ...params, weChatAppId: appInfo.weChatAppId.value, secret: appInfo.secret.value }
@@ -177,7 +176,6 @@ class ApplicationDetail extends PureComponent {
         post(Paths.getRelateProduct5x, {
             appId,
             paged: false,
-            developerId: 1
         }, { loading: true }).then((res) => {
             const code = res.code;
             const data = res.data;
@@ -214,7 +212,7 @@ class ApplicationDetail extends PureComponent {
     // 获取详情接口
     _getAppInfo = (appId) => {
         post(Paths.getAppDetail5x, {
-            appId, developerId: 1
+            appId,
         }, { loading: true }).then((res) => {
             const code = res.code;
             const data = res.data;
@@ -285,7 +283,6 @@ class ApplicationDetail extends PureComponent {
     deleteRelationProduct = (productId) => {
         post(Paths.deleteAppRelaProducts5x, {
             productId,
-            developerId: 1,
             appId: Number(this.state.appId),
             appType: Number(this.state.currentAppType),
         }, { loading: true }).then((res) => {
@@ -304,7 +301,6 @@ class ApplicationDetail extends PureComponent {
     deleteAppVersion = (appVersionId) => {
         post(Paths.deleteAppVersion5x, {
             appVersionId,
-            developerId: 1,
             appType: this.state.deleteAppVersionItem.appType
         }, { loading: true }).then((res) => {
             const code = res.code;
@@ -328,7 +324,6 @@ class ApplicationDetail extends PureComponent {
         let relationProductListType = currentAppType === 1 ? relationProductList.listAndroid : relationProductList.listIos;
         // let list = relationProductListType.map(item => item.productId);
         post(Paths.updateRelaProduct5x, {
-            developerId: 1,
             productIds: [...productIds],
             appId: Number(appId),
             appType: Number(currentAppType),
@@ -361,7 +356,6 @@ class ApplicationDetail extends PureComponent {
     getAppVersionDetail = (curAppVersionId) => {
         post(Paths.getAppVersionDetail5x, {
             appVersionId: curAppVersionId,
-            developerId: 1
         }, { loading: true }).then((res) => {
             const code = res.code;
             const data = res.data;
