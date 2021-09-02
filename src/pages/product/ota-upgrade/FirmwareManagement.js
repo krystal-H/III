@@ -78,12 +78,12 @@ export default class FirmwareManagement  extends Component {
             },
             { title: '内部版本号', dataIndex: 'mainVersion', },
             { title: '外部版本号', dataIndex: 'extVersion', },
-            { title: '运行状态',  dataIndex: 'updateStatus',
-              render: u => {
-                  const {nam,color} = STATUSTAG[u]
-                  return <Tag color={color} >{nam}</Tag>
-              }
-            },
+            // { title: '运行状态',  dataIndex: 'updateStatus',
+            //   render: u => {
+            //       const {nam,color} = STATUSTAG[u]
+            //       return <Tag color={color} >{nam}</Tag>
+            //   }
+            // },
             { title: '操作',dataIndex: 'action',
                 render:(a,recard) => {//runStatus 0：待验证 1：验证中 2：已发布,3 验证完成,4
                     const {

@@ -3,7 +3,7 @@ import React from 'react'
 import {Switch,Redirect,Route} from 'react-router-dom'
 
 import List from './RoleManagementList'
-import Edit from './AddRole'
+import Edit from './Detail'
 
 export default ({match}) => {
     const {path} = match;

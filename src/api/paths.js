@@ -282,10 +282,10 @@ let Paths = {
      * 账户-用户角色 start
      * aize-2019-11-06
      */
-    getRolePage: '/roleresource/getRolePage',
+    getRolePage: '/rights/getRolePage',
     deleteRole: '/roleresource/deleteRole',
     
-    saveRole: '/rolePlus/saveRole',
+    saveRole: '/rights/createRole',
 
     /**
      * 数据订阅 start
