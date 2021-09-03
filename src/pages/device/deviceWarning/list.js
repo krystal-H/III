@@ -110,7 +110,7 @@ const WarningConfigList = props=>{
     const [editData, setEditData] = useState(initialData);// 当前要编辑的规则数据对象,initialData代表 新增
 
     useEffect(() => {
-        console.log('getlist')
+        // console.log('getlist')
         getWarningList(initPager);
     }, []);
     

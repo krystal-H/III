@@ -20,7 +20,7 @@ export default ({
     const [stepcurrent, setStepcurrent] = useState(0);
 
     useEffect( () => {
-        console.log(777,editData)
+        // console.log(777,editData)
         const { remark,content } = editData;
         if(id!==undefined){
             const contobj = JSON.parse(content);

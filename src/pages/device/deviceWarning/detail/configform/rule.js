@@ -69,14 +69,14 @@ function ruleForm({
     },[productId])
 
     useEffect( () => {
-        console.log(111)
+        // console.log(111)
         if(!initialForm){
-            console.log(222)
+            // console.log(222)
             if(formdata.productId){
                 // setToFormData()
-                console.log("333-11")
+                // console.log("333-11")
                 if(productList.length>0&&deviceList>0){
-                    console.log("333-11-aa")
+                    // console.log("333-11-aa")
                     const { productId,deviceIds,triggerMode,props} = formdata;
                     let values = { productId, deviceIds, triggerMode };
                     if(triggerMode>1){
@@ -110,7 +110,7 @@ function ruleForm({
                     }
                 }
             }else{
-                console.log("333-22")
+                // console.log("333-22")
                 form.resetFields()
             }
         }

@@ -9,6 +9,7 @@ import './PageTitle.scss'
 
 function PageTitle({
     backTitle,          //返回按钮文本，例：'开发流程'，不传则代表无返回
+    titleBack = false,
     backHandle,         //返回操作 ，默认 defaultGoback
     title,              //页面标题，一般是产品名、设备名 等
     titleTag,           //标题后缀的标签，例：'免开发方案',不传则代表无标签
@@ -56,6 +57,13 @@ function PageTitle({
                 </span>
             }
             <div className='title'>
+                {
+                    titleBack &&
+                    <span className="back-titleBack" onClick={backHandle || defaultGoback}>
+                        <ArrowLeftOutlined />
+                        <span className='backtit'>{backTitle}</span>
+                    </span>
+                }
                 {title}
                 {
                     titleTag && 

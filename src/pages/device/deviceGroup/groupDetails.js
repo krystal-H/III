@@ -75,7 +75,7 @@ export default class GroupDetailt extends PureComponent {
     openDel = (delid,deldeviceUniqueId)=>{
         this.setState({delVisable:true});
         if(delid){
-            console.log(delid);
+            // console.log(delid);
             this.setState({delid,deldeviceUniqueId});
         }
 

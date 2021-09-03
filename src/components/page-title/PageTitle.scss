@@ -55,4 +55,12 @@
     .othercontent{
         font-size: $explainFontSize;
     }
+
+    .back-titleBack{
+        // position: absolute;
+        padding-right: 12px;
+        font-size: 16px;
+        font-weight: normal;
+        cursor: pointer;
+    }
 }

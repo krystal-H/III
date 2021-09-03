@@ -69,7 +69,7 @@ export default ({
     const onSearch = () => {
         setSeachLoading(true);
         searchedData(getdata()).finally( (rrr) => {
-            console.log("---rrr--",rrr);
+            // console.log("---rrr--",rrr);
             setSeachLoading(false)
         })
     }
