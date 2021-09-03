@@ -108,6 +108,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
 function StepContentOne({ continueStep }, ref) {
     const [form] = Form.useForm();
     const [option, setOption] = useState([])
+    const [laberArr, setLaberArr] = useState([])//标签
     useEffect(() => {
         getList()
     }, [])
@@ -118,12 +119,24 @@ function StepContentOne({ continueStep }, ref) {
     }
     const onFinish = () => {
         form.validateFields().then(res => {
+            res=JSON.parse(JSON.stringify(res))
             let name = ''
             option.forEach(item => {
                 if (item.productId == res.productId) {
                     name = item.productName
                 }
             })
+            console.log(res.labelVoList,'=======')
+            if(res.labelVoList && res.labelVoList.length){
+                let laberA=[]
+                laberArr.forEach(item=>{
+                    console.log(item.value,res.labelVoList)
+                    if(res.labelVoList.indexOf(item.value)>-1){
+                        laberA.push(item)
+                    }
+                })
+                res.labelVoList=laberA
+            }
             res.productName = name
             localStorage.SELECT_SUBSCRI_NAME = name
             continueStep('1', res)
@@ -135,18 +148,15 @@ function StepContentOne({ continueStep }, ref) {
         setShowLabel(e.target.value);
     }
     //获取标签
-    const [laberArr, setLaberArr] = useState([])
+    
     const getLabel = (val) => {
         post(Paths.getLabelByAddress, { productId: val, developerId: 1 }).then((res) => {
             let arr = []
             res.data.forEach(item => {
-                arr.push({ label: item.labelKey + '-' + item.labelValue, value: item.id })
+                arr.push({ ...item,label: item.labelKey + '-' + item.labelValue, value: item.id })
             })
             setLaberArr(arr)
         });
-    }
-    const onSelectChange = (checkedValues) => {
-
     }
     const productIdChange = val => {
         getLabel(val)
@@ -177,20 +187,24 @@ function StepContentOne({ continueStep }, ref) {
 
                 </Select>
             </Form.Item>
-            <Form.Item name="radio-group" label="选择设备">
+            <Form.Item name="radiogroup" label="选择设备">
                 <Radio.Group onChange={radioChange}>
                     <Radio value="a">全部设备</Radio>
                     <Radio value="b">根据标签筛选设备</Radio>
                 </Radio.Group>
             </Form.Item>
-            {/* <div>
-                <Checkbox.Group options={laberArr} onChange={onSelectChange} />
-            </div> */}
-            {
-                 (<Form.Item name="address" label="选择标签">
-                    <Checkbox.Group options={laberArr} onChange={onSelectChange} />
-                </Form.Item>)
-            }
+            <Form.Item
+                noStyle
+                shouldUpdate={(prevValues, currentValues) => prevValues.radiogroup !== currentValues.radiogroup}
+            >
+                {({ getFieldValue }) =>
+                    getFieldValue('radiogroup') === 'b' ? (
+                        <Form.Item name="labelVoList" label="选择标签">
+                            <Checkbox.Group options={laberArr}  />
+                        </Form.Item>
+                    ) : null
+                }
+            </Form.Item>
 
         </Form>
     </div>)

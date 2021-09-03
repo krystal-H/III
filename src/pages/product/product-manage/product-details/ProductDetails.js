@@ -79,7 +79,7 @@ function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtoco
     </div>)
     return (
         <div className="eidt-wrapper">
-            <PageTitle title='开发流程' titleTag='免开发方案'  backTitle='开发流程' children={titleCom} />
+            <PageTitle title={productItem.productName} titleTag={productItem.statusStr}  backTitle='开发流程' children={titleCom} />
             <div className='comm-shadowbox product-detail-wrap'>
                 <ProductTabs productId={productIdInRoutePath} protocolLists={protocolLists} productBaseInfo={productBaseInfo}
                 ></ProductTabs>

@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Button } from 'antd';
+import { Button,Modal } from 'antd';
 import GrayDebugg from './grayDebugg'
 import ChangeModal from './changeModal'
 import { post, Paths, get } from '../../../../../api';
+import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.png';
 import './index.scss'
 function confirmModel({ nextStep }, ref) {
     useEffect(() => {
@@ -21,7 +22,6 @@ function confirmModel({ nextStep }, ref) {
     const openDebugg = () => {
         setIsGrayModalVisible(true)
     }
-    const [modelRelHis, setModelRelHis] = useState([])
     //获取最近发布的数据
     const [shoaLast, setShoaLast] = useState({})
     const getHistory = () => {
@@ -31,9 +31,18 @@ function confirmModel({ nextStep }, ref) {
         }
         post(Paths.panelList, { productId }).then((res) => {
             let lastEst = {}
+            if (!res.data.list.length) return;
+            lastEst = res.data.list[0]
+            res.data.list.forEach(item => {
+                if (item.verifyStatus == 1) {
+                    lastEst = item
+                    return
+                }
+            })
             res.data.list.forEach(item => {
                 if (item.isLatest == 1) {
                     lastEst = item
+                    return
                 }
             })
             setShoaLast(lastEst)
@@ -60,6 +69,13 @@ function confirmModel({ nextStep }, ref) {
     const subNextConFirm = () => {
         nextStep()
     }
+    const [showOffice, setShowOffice] = useState(false)
+    const openOffice=()=>{
+        setShowOffice(true)
+    }
+    const handleCancel=()=>{
+        setShowOffice(false)
+    }
     useImperativeHandle(ref, () => ({
         onFinish: subNextConFirm
     }));
@@ -69,7 +85,9 @@ function confirmModel({ nextStep }, ref) {
             <div>标准面板</div>
         </div>
         <div className='confirm-pannel-content'>
-            <div></div>
+            <div className='pannel-cover-image'>
+                <img src={shoaLast.page1} alt='' />
+            </div>
             <div>
                 <div className='confirm-pannel-content-left'>
                     {/* {
@@ -80,10 +98,12 @@ function confirmModel({ nextStep }, ref) {
                 </div>
                 <div className='confirm-pannel-content-right'>
                     <div>请使用“数联智能”App，扫描以下二维码，体验此面板。</div>
-                    <div></div>
+                    <div className='model-panal-code'>
+                        <img src={shoaLast.qrcode} alt='' />
+                    </div>
                     <div>
                         还没安装App？
-                        <a>下载"数联智能"App</a>
+                        <a onClick={openOffice}>下载"数联智能"App</a>
                     </div>
                 </div>
             </div>
@@ -118,6 +138,14 @@ function confirmModel({ nextStep }, ref) {
         }
         {
             isChangeModalVisible && <ChangeModal isChangeModalVisible={isChangeModalVisible} defaultTab={defaultTab} closeChange={closeChange} CancelChange={CancelChange}></ChangeModal>
+        }
+        {
+            showOffice && <Modal title="安装“数联智能”App"  width='370px' visible={showOffice} footer={null} onCancel={handleCancel}>
+                <div className='down-office-modal'>
+                    <img src={demoAppOfficial}/>
+                    <div>手机扫描二维码下载</div>
+                </div>
+            </Modal>
         }
     </div>
 }

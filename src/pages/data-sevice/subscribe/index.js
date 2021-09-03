@@ -105,6 +105,9 @@ export default function DeviceRegist() {
             devicePushUrlConf: { ...form.getFieldsValue()},
             pager: pager,
         }
+        if(productCount){
+            params.productId=productCount
+        }
         // setSearchParams(params.devicePushUrlConf)
         post(Paths.subscribeList, params, { loading }).then((res) => {
             setDataSource(res.data.list)
@@ -253,8 +256,8 @@ export default function DeviceRegist() {
                                     allowClear
                                     style={{ width: '200px' }}
                                 >
-                                    <Option value='1'>API数据PUSH形式</Option>
-                                    <Option value='0'>MQTT主题订阅</Option>
+                                    <Option value='0'>API数据PUSH形式</Option>
+                                    <Option value='1'>MQTT主题订阅</Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item
