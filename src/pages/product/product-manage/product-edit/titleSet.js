@@ -29,6 +29,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                 productCode: val.productCode
             }
             post(Paths.editProductInfo, params).then((res) => {
+                onOkClose()
                 // delaData(res.data)
             });
         })
@@ -103,7 +104,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                         <Select  >
                             {
                                 optionArr.map(item => {
-                                    return (<Option value={item.brandId} key={item.brandId}>{item.fullName}</Option>)
+                                    return (<Select.Option value={item.brandId} key={item.brandId}>{item.fullName}</Select.Option>)
                                 })
                             }
                         </Select>

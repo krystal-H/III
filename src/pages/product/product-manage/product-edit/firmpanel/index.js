@@ -3,8 +3,12 @@ import { useLocation } from 'react-router-dom'
 import { Button } from 'antd';
 import GrayDebugg from './grayDebugg'
 import ChangeModal from './changeModal'
+import { post, Paths, get } from '../../../../../api';
 import './index.scss'
 function confirmModel({ nextStep }, ref) {
+    useEffect(()=>{
+        getHistory()
+    },[])
     const [defaultTab, setDefaultTab] = useState('1')
     //灰色测试
     const [isGrayModalVisible, setIsGrayModalVisible] = useState(false);
@@ -17,7 +21,13 @@ function confirmModel({ nextStep }, ref) {
     const openDebugg = () => {
         setIsGrayModalVisible(true)
     }
+     const [modelRelHis,setModelRelHis]=useState([])
+     //获取历史发布列表
+     const getHistory=()=>{
+        post(Paths.panelRelHistory, { projectId: 11982 }).then((res) => {
 
+        });
+     }
     //更改面板
     const [isChangeModalVisible, setIsChangeModalVisible] = useState(true);
     const CancelChange = () => {

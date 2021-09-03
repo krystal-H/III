@@ -25,8 +25,8 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
         },
     };
     const [applist, setApplist] = useState([])
-    const getAoolist = () => { 
-        post(Paths.panelApplicationList,{productId}).then((res) => {
+    const getAoolist = () => {
+        post(Paths.panelApplicationList, { productId }).then((res) => {
             setApplist(res.data)
         });
     }
@@ -47,19 +47,45 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
         } else {
             currentForm = form2
         }
-        currentForm.validateFields().then(value => {
-            let params = {
-                productId,
-                projectId: actionObj.projectId,
-                newAppIds: selectAppId,
-                accountList: value.accountList
-            }
-            post(Paths.cusSavePanel, params).then((res) => {
-                closeDebugg()
-            });
-        }).catch(err => {
-            // 验证不通过时进入
+        let value = currentForm.getFieldsValue()
+        let accountList = []
+        if(value.accountList){
+            value.accountList.forEach(item => {
+                accountList.push(Number(item))
+            })
+        }
+        
+        let params = {
+            productId,
+            projectId: actionObj.projectId,
+            newAppIds: selectAppId,
+            accountList
+        }
+        if(!selectAppId){
+            return
+        }
+        // console.log(params,'=============')
+        // return
+        post(Paths.greyModel, params).then((res) => {
+            closeDebugg()
         });
+        // currentForm.validateFields().then(value => {
+        //     let accountList=[]
+        //     value.accountList.forEach(item=>{
+        //         accountList.push(Number(item))
+        //     })
+        //     let params = {
+        //         productId,
+        //         projectId: actionObj.projectId,
+        //         newAppIds: selectAppId,
+        //         accountList
+        //     }
+        //     post(Paths.greyModel, params).then((res) => {
+        //         closeDebugg()
+        //     });
+        // }).catch(err => {
+        //     // 验证不通过时进入
+        // });
     }
     //
     const [selectAppId, setSelectAppId] = useState('')
@@ -174,7 +200,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                         form={form2}
                                     >
                                         <Form.List
-                                            name="names"
+                                            name="accountList"
                                         >
                                             {(fields, { add, remove }, { errors }) => (
                                                 <>
