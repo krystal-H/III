@@ -61,7 +61,7 @@ export default class RoleManagementList extends Component {
             })
         }).finally(()=>{
             this.setState({loading:false})
-        });;
+        });
     }
     componentDidMount() {
         this.getList({pageIndex:1,pageRows:10});

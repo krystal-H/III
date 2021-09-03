@@ -1,5 +1,5 @@
 import React, { PureComponent,createRef,forwardRef } from 'react';
-import {Modal, Table,Radio,Form,Select,Upload,Button } from 'antd';
+import {Modal, Table,Radio,Form,Select,Upload,Button, Input } from 'antd';
 import { DateTool } from '../../../util/util';
 import { post, Paths} from '../../../api';
 import SearchProduct from './searchProduct';
@@ -77,6 +77,9 @@ export default class GroupDetailt extends PureComponent {
                 });
             }
         }else if(addWay==2){
+
+            console.log(11, this.uploadForm.current );
+            console.log(22, this.uploadForm.current.getFieldsValue() )
             this.uploadForm.current.submit();
         } 
     }
@@ -167,7 +170,7 @@ const UploadDevice = forwardRef(({
                 _data = temp.response.data.url
             }
         }
-        post(Paths.groupUpDevice,{groupid,type:1,productId,data:_data}).then((res) => {
+        post(Paths.groupUpDevice,{groupid,productId,data:_data}).then((res) => {
             openCloseAdd(true); 
         });
     }
@@ -185,18 +188,22 @@ const UploadDevice = forwardRef(({
                     }
                 </Select>
             </Form.Item>
-            <Form.Item label="上传文件" name="data" rules={[{ required: true, message: '请上传文件' }]}>
+            <Form.Item label="上传文件" name="data" 
+                rules={[{ required: true, message: '请上传文件' }]}
+            >
                 <Upload
-                    accept='.xls,.xlsx' 
+                    accept='.xls,.xlsx'
+                    maxCount={1}
                     action={Paths.upFileUrl}
                     data={{
                         appId: 31438,
                         domainType: 4,
                     }}>
                     <Button type="primary" >上传文件</Button><span style={{marginLeft:"15px"}}>仅支持.xls,.xlsx格式文件</span>
-                </Upload>
-                <a href="http://skintest.hetyj.com/31438/6b0b20891e06ac31d0eed37a5083cca9.xlsx">下载模板</a>
+                </Upload> 
             </Form.Item>
+               <a style={{ "display":"inline-block", "margin":"0 0 10px 172px"}} href="http://skintest.hetyj.com/31438/6b0b20891e06ac31d0eed37a5083cca9.xlsx">下载模板</a> 
+
         </Form>)
 })
 

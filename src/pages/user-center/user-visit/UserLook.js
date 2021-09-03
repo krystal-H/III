@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {get, Paths} from '../../../api';
+import {get, Paths,post} from '../../../api';
 import { getUrlParam } from '../../../util/util';
 import BasicInformation from './BasicInformation';
 import {EditBasicInformation} from './EditBasicInformation';
@@ -55,17 +55,9 @@ export default class UserLook extends Component {
     }
     // 获取用户详情
     getChildWithSecret = () => {
-        let userId = getUrlParam('userId'),
-        userCategory = getUrlParam('userCategory');
-        get(Paths.getChildWithSecret,{userId,userCategory},{loading:true}).then((res) => {
-            // let dataTable = [
-            //     {
-            //         key: '1',
-            //         secret: res.data.secretKey,
-            //         time: res.data.regTime,
-            //         secretId: res.data.secretId,
-            //     },
-            // ];
+        let userId = getUrlParam('userId');
+        post(Paths.getChildWithSecret,{userId},{loading:true}).then((res) => {
+            
             this.setState({userInfo:res.data,loading:false,secretKey:res.data.secretKey,secretId:res.data.secretId});
         });
     }
@@ -76,9 +68,8 @@ export default class UserLook extends Component {
          * 【数据对象】dataObject
          * 【数据维度权限】dataDimension
          */ 
-        let userId = getUrlParam('userId'),
-        userCategory = getUrlParam('userCategory');
-        get(Paths.getRights,{userId,userCategory},{needVersion:1.2,loading:true}).then((model) => {
+        let userId = getUrlParam('userId');
+        post(Paths.getRights,{userId},{loading:true}).then((model) => {
             let productResource = [],
                 dataObjRightsList = [],
                 dataDimensionRightsList = [],
@@ -166,8 +157,10 @@ export default class UserLook extends Component {
         return (
             <div className='user-info-box'>
                 <PageTitle backHandle={() => this.props.history.goBack()} title="用户详情" />
+
+                <div className="comm-shadowbox">
                 <BasicInformation editUserInfo={this.editUserInfo} userInfo={userInfo} secretKey={secretKey} secretId={secretId}/>
-                <TreeStructureDisplay defaultExpandAll={true} userCategory={userInfo.userCategory} productResource={productResource} dataObjRightsList={dataObjRightsList} dataDimensionRightsList={dataDimensionRightsList} apiInvokList={apiInvokList} projectAuthList={projectAuthList} />
+                {/* <TreeStructureDisplay defaultExpandAll={true} userCategory={userInfo.userCategory} productResource={productResource} dataObjRightsList={dataObjRightsList} dataDimensionRightsList={dataDimensionRightsList} apiInvokList={apiInvokList} projectAuthList={projectAuthList} /> */}
                 <Modal
                     title="编辑用户信息"
                     visible={userEditVisible}
@@ -179,6 +172,7 @@ export default class UserLook extends Component {
                 >
                     <EditBasicInformation userData={userInfo} onCancel={this.handleCancel} onRef={ref => this.editAffirm  = ref} handleClose={this.handleOkCancel}/>
                 </Modal>
+                </div>
             </div>
         );
     }

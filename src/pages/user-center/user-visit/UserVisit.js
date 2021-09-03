@@ -33,13 +33,6 @@ export default class UserVisit extends Component {
             { title: '用户角色', dataIndex: 'roleName',  key: 'roleName',
                 render:text=> <Tooltip placement="topLeft" title={text}> <span>{text}</span> </Tooltip>
             },
-            { title: '账户类型', dataIndex: 'userCategory', key: 'userCategory', width:'170px',
-                render: text => (
-                    <span>
-                      <Tag color={text ==1 ? 'blue' :'green'} >{text ==1 ? '控制台访问用户' :'接口访问用户'}</Tag>
-                    </span>
-                  )
-            },
             { title: '备注', dataIndex: 'remark', key: 'remark',
                 render:text=> <Tooltip placement="topLeft" title={text}> <span>{text}</span> </Tooltip>
             },
@@ -50,11 +43,11 @@ export default class UserVisit extends Component {
             },
             { title: '创建时间', dataIndex: 'regTime', key: 'regTime', width:'160px', render: text => <span>{moment(text).add(8,'h').format('YYYY-MM-DD HH:mm:ss')}</span>},
             { title: '操作', key: 'action', width:'140px',
-                render: (text, {userId,userCategory,status,userName}) => (
+                render: (text, {userId,status,userName}) => (
                     <span>
                         <Link to={{
                                 pathname:`/userCenter/visitUser/detail`,
-                                search:`?userId=${userId}&userCategory=${userCategory}`
+                                search:`?userId=${userId}`
                             }}>查看
                         </Link>
                         <Divider type="vertical" />
@@ -239,7 +232,7 @@ export default class UserVisit extends Component {
                     className="self-modal"
                     footer={null}
                 >
-                    <AddUserInfo onAddClose={this.closeAdd} onCancel={this.addUserModal.bind(this,2)} pagerIndex={this.pagerIndex} onRef={ref => this.addUserRefs = ref} />
+                    <AddUserInfo developerInfo={this.props.developerInfo} onAddClose={this.closeAdd} onCancel={this.addUserModal.bind(this,2)} pagerIndex={this.pagerIndex} onRef={ref => this.addUserRefs = ref} />
                 </Modal>
                 <ActionConfirmModal
                     visible={startModalVisible}

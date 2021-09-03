@@ -22,7 +22,8 @@ export const getDeveloperInfo= () => {
     post(Paths.getDeveloperInfo,{},{
       loading: true
     }).then((res) => {
-      let info = res.userId?res:res.data,
+      console.log(22,res)
+      let info = res,
           action = updateDeveloperInfo(info);
       dispatch(action);
     });

@@ -22,6 +22,16 @@ const passwordList = [
         text:'手动设置登录密码',
     }
 ];
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 5 },
+        sm: { span: 5 },
+    },
+    wrapperCol: {
+        xs: { span: 19 },
+        sm: { span: 19 },
+    },
+};
 const mapStateToProps = state => {
     return {
         developerInfo: state.getIn(['userCenter', 'developerInfo']).toJS()
@@ -38,38 +48,17 @@ class EditBasicInformationForm extends Component {
             userName:this.props.userData.userName||null,//用户名称
             remark:this.props.userData.remark||'',//备注
             roleId:this.props.userData.roleId||null,//角色ID
-            roleList_1:[],//角色列表
-            roleList_2:[],//角色列表
+            roleList:[],
             ipWhiteSelect:this.props.userData.ipWhiteList?true:false,//是否提白名单
             ipWhiteList:this.props.userData.ipWhiteList
         };
     }
     componentDidMount() {
         this.props.onRef(this);
-        get(Paths.getRoleList).then((res) => {
-            if(res.code==0){
-                let roleList_1 = [],
-                    roleList_2 = [];
-                for(let a=0; a<res.data.length; a++){
-                    let item = res.data[a];
-                    if(item.userCategory==1){
-                        roleList_1.push(item);
-                    }else{
-                        roleList_2.push(item);
-                    }
-                }
-                this.setState({roleList_1,roleList_2});
-            }
-        });
-    }
-    backfill = (userInfo) => {
-        this.setState({
-            userName:userInfo.userName||null,//用户名称
-            remark:userInfo.remark||'',//备注
-            roleId:userInfo.roleId||null,//角色ID
-            ipWhiteSelect:userInfo.ipWhiteList?true:false,//是否提白名单
-            ipWhiteList:userInfo.ipWhiteList,
-            resetChecked:false,
+        post(Paths.getRolePage,{pageIndex:1,pageRows:9999}).then((res) => {
+            this.setState({
+                roleList:res.data.list,
+            })
         });
     }
     //角色选择
@@ -94,14 +83,6 @@ class EditBasicInformationForm extends Component {
     passwordInput = (val) => {
         this.setState({password:val.target.value});
     }
-    //是否选中白名单
-    ipWhiteSelectFunc = (ipWhiteSelect) => {
-        this.setState({ipWhiteSelect});
-    }
-    //白名单
-    ipWhiteListFunc = (val) => {
-        this.setState({ipWhiteList:val.target.value});
-    }
     userName = (e) => {
         this.setState({userName:e.target.value});
     }
@@ -114,30 +95,16 @@ class EditBasicInformationForm extends Component {
         const { validateFieldsAndScroll } = this.props.form;
         validateFieldsAndScroll((err, values) => {
             if (!err) {
-                let {resetChecked,ipWhiteSelect} = this.state,
-                    {userId,userCategory} = this.props.userData,
-                    {roleId,userName,password,ipWhiteList,remark} = values;
+                let {resetChecked} = this.state,
+                    {userId} = this.props.userData,
+                    {roleId,userName,password,remark} = values;
                     let data = {
                     userId,
                     roleIds:roleId
                     // userName:userName+'@'+this.props.developerInfo.id,
                 };
-                 if(userCategory==1&&resetChecked){
+                if(resetChecked){
                     data.password = encryption(password);//密码 加密
-                }
-                if(userCategory==2&&ipWhiteSelect){
-                    if(ipWhiteList){
-                        let ipList = ipWhiteList.split(',');//英文 , 分隔符
-                        if(ipList.length>10){
-                            Notification({
-                                description:'IP白名单最多添加10条！',
-                            });
-                            return false;
-                        }
-                        data.ipWhiteList = ipWhiteList
-                    }
-                }else if(userCategory==2&&!ipWhiteSelect){
-                    data.ipWhiteList = '';
                 }
                 if(remark){
                     data.remark = remark;
@@ -158,48 +125,17 @@ class EditBasicInformationForm extends Component {
         }
     }
     render() {
-        let { resetChecked, remark, userName, roleId, roleList_1, roleList_2, ipWhiteSelect, ipWhiteList } = this.state;
-        // userName = userName.split('@')[0];
+        let { resetChecked, remark, userName, roleId,roleList} = this.state;
         const { getFieldDecorator,getFieldValue } = this.props.form;
         const resetSelectId = resetChecked ? getFieldValue('resetSelectId') : null;
-        let parentAccountId = this.props.developerInfo.id;
-        let roleList = [];
-        let { userCategory } = this.props.userData;
-        if(userCategory==1){
-            roleList = roleList_1;
-        }else{
-            roleList = roleList_2;
-        }
-        const formItemLayout = {
-            labelCol: {
-                xs: { span: 5 },
-                sm: { span: 5 },
-            },
-            wrapperCol: {
-                xs: { span: 19 },
-                sm: { span: 19 },
-            },
-        };
+       
+        
         return (
             <Form {...formItemLayout} onSubmit={this.affirm} className='edit-basic-information'>
-                {/* <div className='common_title_input'>
-                    <Form.Item label='账户类型' hasFeedback >
-                        {getFieldDecorator('userName',{
-                            rules: [{ required: true, min: 6, max: 14, message: '请输入6~14位大小写字母＋数字' }],
-                            initialValue:userName,
-                            disabled:true
-                        })(
-                            <Input disabled style={{width:'240px'}} onChange={this.userName}  suffix={'@'+parentAccountId}/>
-                        )}
-                    </Form.Item>
-                </div> */}
+               
                 <div className='common_title_input'>
                     <span className='common_title'>用户名:</span>
                     <div className='common_content'>{userName}</div>
-                </div>
-                <div className='common_title_input'>
-                    <span className='common_title'>账户类型:</span>
-                    <div className='common_content'>{userCategory==1?'控制台访问用户':userCategory==2?'接口访问用户':'--'}</div>
                 </div>
                 <div className='common_title_input'>
                     <Form.Item label='用户角色' hasFeedback >
@@ -217,8 +153,6 @@ class EditBasicInformationForm extends Component {
                         )}
                     </Form.Item>
                 </div>
-                {
-                    userCategory==1?
                     <div className='common_title_input'>
                         <Form.Item label='重置密码：' >
                             {getFieldDecorator('resetChecked')(
@@ -254,38 +188,6 @@ class EditBasicInformationForm extends Component {
                                 :null
                         }
                     </div>
-                    :null
-                }
-                {
-                    userCategory==2?
-                        // <div className='common_title_input'>
-                        //     <Form.Item label='IP白名单' >
-                        //         {getFieldDecorator('ipWhiteSelect')(
-                        //             <Switch size="small" checked={ipWhiteSelect} onClick={this.ipWhiteSelectFunc} />
-                        //         )}
-                        //     </Form.Item>
-                        //     {
-                        //         ipWhiteSelect?
-                        //         <TextAreaCounter
-                        //             label=" "
-                        //             colon={false} 
-                        //             formId='ipWhiteList'
-                        //             astrictNub='159'
-                        //             rows='3' 
-                        //             placeholder='请输入IP地址，多个IP地址以",(英文)"分割,最多10个IP' 
-                        //             getFieldDecorator={getFieldDecorator}
-                        //             initialVal={ipWhiteList}
-                        //             getFieldValue={getFieldValue}
-                        //             width='300px'
-                        //             isRequired={true}
-                        //             message='IP白名单'
-                        //         />
-                        //         :null
-                        //     }
-                        // </div>
-                        null
-                        :null
-                }
                 <div className='common_title_input'>
                     <TextAreaCounter
                         label="备注"
