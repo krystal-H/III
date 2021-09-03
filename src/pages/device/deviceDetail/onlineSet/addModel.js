@@ -61,7 +61,7 @@ export default function AddModel({ addVisible, addOk, CancelAdd }) {
   ]
   return (
     <div >
-      <Modal title="远程配置任务" visible={addVisible} onOk={addOk} onCancel={CancelAdd} width='900px' wrapClassName='add-protocols-wrap'>
+      <Modal title="远程配置任务" visible={addVisible} onOk={addOk} onCancel={CancelAdd} width='725px' wrapClassName='add-protocols-wrap'>
         <div>
 
           <Form

@@ -88,12 +88,13 @@ function ProtocolFn2({ nextStep, productId }, ref) {
     }
     //导出物模型
     const exportFile = () => {
-
-        get(Paths.downPhysicalModel, { productId: productId }).then((res) => {
-            // delaData(res.data)
-        });
+        let url = Paths.downPhysicalModel + '?productId=' + productId
+        window.open(url)
+        // get(Paths.downPhysicalModel, { productId: productId }).then((res) => {
+        //     // delaData(res.data)
+        // });
     }
-    
+
     const ref11 = useRef()
     useImperativeHandle(ref, () => ({
         onFinish: subNextConFirm
@@ -106,7 +107,6 @@ function ProtocolFn2({ nextStep, productId }, ref) {
                 <a>导出物模型</a>
                 <img src={downpng} alt='' />
             </div>
-
         </div>
         <div className='Protocol-download'>
             <div>标准功能</div>

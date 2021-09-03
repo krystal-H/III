@@ -49,14 +49,14 @@ export default function OverviewWrap() {
     //轮播图
     const [bannerArr, setBannerArr] = useState([])
     const getBannerList = () => {
-        post(Paths.homeBanner, { developerId: 1 }).then((res) => {
+        post(Paths.homeBanner).then((res) => {
             setBannerArr(res.data.list)
         });
     }
     //消息列表 
     const [messageList, setMessageList] = useState([])
     const getMessageList = () => {
-        post(Paths.getNoticeList, { developerId: 1 }).then((res) => {
+        post(Paths.getNoticeList).then((res) => {
             if (res.data.list.length > 3) {
                 setMessageList(res.data.list.slice(0, 3))
             } else {
@@ -92,33 +92,33 @@ export default function OverviewWrap() {
         exception: 0, total: 0, totalActive: 0, todayActive: 0
     })
     const getDevOneList = () => {
-        post(Paths.devMnCount, { developerId: 1 }).then((res) => {
+        post(Paths.devMnCount ).then((res) => {
             setDevOneList(res.data)
         });
     }
     const [devTwoList, setDevTwoList] = useState({ burn: 0, total: 0, active: 0, unactive: 0 })
     const getDevTwoList = () => {
-        post(Paths.devSecreCount, { developerId: 1 }).then((res) => {
+        post(Paths.devSecreCount).then((res) => {
             setDevTwoList(res.data)
         });
     }
     const [devThreeList, setDevThreeList] = useState({ processed: 0, lastWarnTime: "-", pending: 0, send: 0 })
     const getDevThreeList = () => {
-        post(Paths.devWarnCount, { developerId: 1 }).then((res) => {
+        post(Paths.devWarnCount).then((res) => {
             setDevThreeList(res.data)
         });
     }
     //产品统计
     const [productCount, setProductCount] = useState({ online: 0, fault: 0, total: 0, devTotal: 0 })
     const getProductCount = () => {
-        post(Paths.productCount, { developerId: 1 }).then((res) => {
+        post(Paths.productCount).then((res) => {
             setProductCount(res.data)
         });
     }
     //产品列表
     const [produList, setProductList] = useState([])
     const getProductList = () => {
-        get(Paths.productList, { developerId: 1 }).then((res) => {
+        get(Paths.productList).then((res) => {
             if (res.data.length > 3) {
                 setProductList(res.data.slice(0, 3))
             } else {
@@ -144,45 +144,51 @@ export default function OverviewWrap() {
     const closeNewProduct = () => {
         setNewProductModal(false)
     }
-    const goApp=()=>{
+    const goApp = () => {
         history.push(`/open/app/list`);
+    }
+    const goPage=(url)=>{
+        history.push(url);
     }
     //引导图
     const [currentTip, setCurrentTip] = useState(0)
-    const [showDialog,setShowDialog]=useState(false)
+    const [showDialog, setShowDialog] = useState(false)
     const changeTip = () => {
         let anchorElement = document.getElementById('show-shadow');
         if (anchorElement) {
             anchorElement.scrollIntoView({ behavior: 'smooth' });
         }
         setCurrentTip(currentTip + 1)
-        if(currentTip >= 5){
+        if (currentTip >= 5) {
             setShowDialog(false)
-            
+
         }
     }
-    useEffect(()=>{
-        if(!localStorage.getItem('IS_SECOND_USER')){
-            localStorage.setItem('IS_SECOND_USER',1)
+    useEffect(() => {
+        if (!localStorage.getItem('IS_SECOND_USER')) {
+            localStorage.setItem('IS_SECOND_USER', 1)
             setCurrentTip(1)
             setShowDialog(true)
         }
-    },[])
+    }, [])
+    const getProductListNew=()=>{
+        history.push(`/open/product/proManage/list`);
+    }
     return (
         <div className='over-view'>
             {
-               showDialog &&  <div className='Guide-the-figure-dia'></div>
+                showDialog && <div className='Guide-the-figure-dia'></div>
             }
-            
+
             <div className='comm-shadowbox over-view-banner'>
                 <Carousel autoplay>
                     {
                         bannerArr.length ? (bannerArr.map((item, index) => {
                             return <div className='imgdiv' key={index}>
-                                <img src={item.imageUrl} alt=''/>
+                                <img src={item.imageUrl} alt='' />
                             </div>
                         })) : (<div className='imgdiv' >
-                            <img src={banner} alt=''/>
+                            <img src={banner} alt='' />
                         </div>)
                     }
                 </Carousel>
@@ -211,7 +217,7 @@ export default function OverviewWrap() {
                                 <span>总览数据</span>
                                 <div>快速查看创建的产品及设备，点击数字查看相关信息</div>
                             </div>
-                            <Button onClick={ changeTip}>下一步</Button>
+                            <Button onClick={changeTip}>下一步</Button>
                         </div>
                     </div>
 
@@ -219,7 +225,7 @@ export default function OverviewWrap() {
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>产品管理</div>
-                                <a>进入</a>
+                                <a onClick={()=>{goPage('/open/product/proManage/list')}}>进入</a>
                             </div>
                             <div className='over-view-productmn-content'>
                                 {
@@ -241,23 +247,23 @@ export default function OverviewWrap() {
                         <div className='over-view-productmn-footer hover-commons-unite'>
                             <div>
                                 <img src={projectmn1} />
-                                <div>设备注册</div>
+                                <div onClick={()=>{goPage('/open/product/devRegist')}}>设备注册</div>
                             </div>
                             <div>
                                 <img src={projectmn2} />
-                                <div>固件升级</div>
+                                <div onClick={()=>{goPage('/open/product/otaUpdate/list')}}>固件升级</div>
                             </div>
                             <div>
                                 <img src={projectmn3} />
-                                <div>场景服务</div>
+                                <div onClick={()=>{goPage('/open/product/ruleEngine')}}>场景服务</div>
                             </div>
                             <div>
                                 <img src={projectmn4} />
-                                <div>云端定时</div>
+                                <div onClick={()=>{goPage('/open/product/cloudTimer')}}>云端定时</div>
                             </div>
                             <div>
                                 <img src={projectmn5} />
-                                <div>远程配置</div>
+                                <div onClick={()=>{goPage('/open/product/remoteCofig')}}>远程配置</div>
                             </div>
                         </div>
                         <div className='Guide-the-figure-content'>
@@ -422,7 +428,7 @@ export default function OverviewWrap() {
                             {
                                 messageList.length ? (messageList.map((item, index) => {
                                     return (<div className='over-view-message-item' onClick={() => { goMessageDetail(item.noticeId) }} key={index}>【{item.noticeTitle} 】{item.noticeContent}</div>)
-                                })) : <div className='over-no-data'><img src={noData} alt=''/> <div>暂无消息</div></div>
+                                })) : <div className='over-no-data'><img src={noData} alt='' /> <div>暂无消息</div></div>
 
                             }
                         </div>
@@ -433,15 +439,15 @@ export default function OverviewWrap() {
                         </div>
                         <div className='over-view-new-product'>
                             <div className='over-view-new-product-img'>
-                                <img src={newproduct1} alt=''/>
-                                <img src={processimg} alt=''/>
-                                <img src={newproduct2} alt=''/>
-                                <img src={processimg} alt=''/>
-                                <img src={newproduct3} alt=''/>
-                                <img src={processimg} alt=''/>
-                                <img src={newproduct4} alt=''/>
-                                <img src={processimg} alt=''/>
-                                <img src={newproduct5} alt=''/>
+                                <img src={newproduct1} alt='' />
+                                <img src={processimg} alt='' />
+                                <img src={newproduct2} alt='' />
+                                <img src={processimg} alt='' />
+                                <img src={newproduct3} alt='' />
+                                <img src={processimg} alt='' />
+                                <img src={newproduct4} alt='' />
+                                <img src={processimg} alt='' />
+                                <img src={newproduct5} alt='' />
                             </div>
                             <div className='over-view-new-product-text'>
                                 <div>1.定义功能</div>
@@ -459,20 +465,20 @@ export default function OverviewWrap() {
                         <div className='over-view-data-service'>
                             <div className='center-layout-wrap'>
                                 <div>
-                                    <img src={dataservice1} alt=''/>
-                                    <div onClick={()=>{history.push(`/open/serve/device`)}}>设备分析</div>
+                                    <img src={dataservice1} alt='' />
+                                    <div onClick={() => { history.push(`/open/serve/device`) }}>设备分析</div>
                                 </div>
                             </div>
                             <div className='center-layout-wrap'>
                                 <div>
-                                    <img src={dataservice2} alt=''/>
-                                    <div onClick={()=>{history.push(`/open/serve/user`)}}>用户分析</div>
+                                    <img src={dataservice2} alt='' />
+                                    <div onClick={() => { history.push(`/open/serve/user`) }}>用户分析</div>
                                 </div>
                             </div>
                             <div className='center-layout-wrap'>
                                 <div>
-                                    <img src={dataservice3} alt=''/>
-                                    <div onClick={()=>{history.push(`/open/serve/dataSub`)}}>数据订阅</div>
+                                    <img src={dataservice3} alt='' />
+                                    <div onClick={() => { history.push(`/open/serve/dataSub`) }}>数据订阅</div>
                                 </div>
                             </div>
                         </div>
@@ -483,15 +489,15 @@ export default function OverviewWrap() {
                         </div>
                         <div className='over-view-help hover-commons-unite'>
                             <div>
-                                <img src={help1} alt=''/>
+                                <img src={help1} alt='' />
                                 <div>客服</div>
                             </div>
                             <div onClick={goOrder}>
-                                <img src={help2} alt=''/>
+                                <img src={help2} alt='' />
                                 <div>工单</div>
                             </div>
                             <div>
-                                <img src={help3} alt=''/>
+                                <img src={help3} alt='' />
                                 <div>帮助文档</div>
                             </div>
                         </div>
@@ -503,6 +509,7 @@ export default function OverviewWrap() {
                 <AddProductModal
                     visible={newProductModal}
                     cancelHandle={closeNewProduct}>
+                    getProductListNew={getProductListNew}
                 </AddProductModal>
             }
         </div>

@@ -72,7 +72,6 @@ export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList,
         data.type = 'update'
         let productItem = JSON.parse(sessionStorage.getItem('productItem'))
         data.productId = productItem.productId
-        // data.productId = 11759
         data.content.standard = modelType == 1 ? true : false
         console.log(data, '要提交的数据')
         data.content = JSON.stringify(data.content)

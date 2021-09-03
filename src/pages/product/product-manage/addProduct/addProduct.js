@@ -6,7 +6,13 @@ import { Paths, post, get } from '../../../../api'
 import { cloneDeep } from 'lodash'
 import { Notification } from '../../../../components/Notification';
 import { connect } from 'react-redux';
-import { createProductCategoryAction } from "../store/ActionCreator";
+import {
+  createProductCategoryAction,
+  createProductFormAction,
+  createProductSchemeAction,
+  createProductSchemekeyAction,
+  createProductSchemeBtnKeyAction
+} from "../store/ActionCreator";
 import { withRouter } from 'react-router-dom';
 import "./addProduct.scss";
 
@@ -40,7 +46,15 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    changeBtnIndex: params => dispatch(createProductSchemeBtnKeyAction(params)),
+    changeKey: params => dispatch(createProductSchemekeyAction(params)),
     createCategory: param => dispatch(createProductCategoryAction(param)),
+
+    createProductForm: params => dispatch(createProductFormAction(params)),
+    createProduct_Category: params => dispatch(createProductCategoryAction(params)),
+    createProductScheme: params => dispatch(createProductSchemeAction(params)),
+    createProductSchemekey: params => dispatch(createProductSchemekeyAction(params)),
+    createProductSchemeBtnKey: params => dispatch(createProductSchemeBtnKeyAction(params)),
   }
 }
 
@@ -63,15 +77,26 @@ class MakeProductModal extends Component {
   }
 
   componentDidMount() {
+    this.resetData()
     this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
 
     this.getThirdCategory()
     this.getSecondCategory()
   }
 
+
+  // 创建-初始化数据
+  resetData = () => {
+    this.props.createProductForm({})
+    this.props.createProduct_Category({})
+    this.props.createProductScheme({})
+    this.props.createProductSchemekey('1')
+    this.props.createProductSchemeBtnKey(0)
+  }
+
   // 获取所有的三级品类
   getThirdCategory = () => {
-    get(Paths.getThirdCategory, {}).then(res => {
+    get(Paths.getThirdCategory, {}, { loading: true }).then(res => {
       if (res.code === 0) {
         this.setState({
           thirdCategoryList: res.data
@@ -82,7 +107,7 @@ class MakeProductModal extends Component {
 
   // 获取所有的二级品类
   getSecondCategory = () => {
-    get(Paths.getSecondCategory, {}).then(res => {
+    get(Paths.getSecondCategory, {}, { loading: true }).then(res => {
       if (res.code === 0) {
         this.setState({
           secondCategoryList: res.data
@@ -94,7 +119,7 @@ class MakeProductModal extends Component {
 
   // 根据三级id查二级品类
   getSecondById = (id) => {
-    post(Paths.getSecondById, { deviceTypeId: id }).then(res => {
+    post(Paths.getSecondById, { deviceTypeId: id }, { loading: true }).then(res => {
       if (res.code === 0) {
         const secondList = cloneDeep(this.state.secondCategoryList)
         const _index = secondList.findIndex(item => item.subCategoryId === res.data.subCategoryId)

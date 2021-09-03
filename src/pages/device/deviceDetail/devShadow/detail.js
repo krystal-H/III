@@ -3,7 +3,9 @@ import { Modal, Button, Tabs, Table, Input, Select, Checkbox, Form } from 'antd'
 import { post, Paths } from '../../../../api';
 import './detail.scss';
 import * as echarts from 'echarts';
-export default function AddFuncModal({ ModalVisible, closeOk,sentData }) {
+const { Option } = Select;
+const optionArr = [{ key: 1, value: '最近1小时' }, { key: 2, value: '最近6小时' }, { key: 3, value: '最近24小时' }, { key: 4, value: '最近7天' }]
+export default function AddFuncModal({ ModalVisible, closeOk, sentData }) {
     const initData = () => {
         var chartDom = document.getElementById('echart-show');
         var myChart = echarts.init(chartDom);
@@ -63,16 +65,36 @@ export default function AddFuncModal({ ModalVisible, closeOk,sentData }) {
     }
     useEffect(() => {
         initData()
+        getData()
     }, [])
     const getData = () => {
-        post(Paths.deviceShadowHis, {}).then((res) => {
+        let params = {
+            column: sentData.funcIdentifier,
+            productId: 11529,
+            tslType: sentData.funcType
+        }
+        params={"column":"base_null_status_null","productId":"11529","tslType":"properties"}
+        post(Paths.deviceShadowHis, params).then((res) => {
 
         });
+    }
+    function handleChange(value) {
+        console.log(`selected ${value}`);
     }
     return (
         <div >
             <Modal title="查看" visible={ModalVisible} onOk={closeOk} onCancel={closeOk} width='764px' wrapClassName='add-protocols-wrap'>
-                <div>
+                <div className='device-shadow-modal'>
+                    <div className='device-shadow-modal-header'> 
+                        <Select defaultValue="lucy" style={{ width: 120 }} onChange={handleChange}>
+                            {
+                                optionArr.map(item => {
+                                    return <Option value={item.key} key={item.key}>{item.value}</Option>
+                                })
+                            }
+                        </Select>
+                        <a>导出数据</a>
+                    </div>
                     <div style={{ height: '303px' }} id='echart-show'></div>
                 </div>
 
