@@ -5,13 +5,14 @@ import LabelTip from '../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../api';
 const { Step } = Steps;
 const { TabPane } = Tabs;
-export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }) {
+export default function AddFuncModal({ editModelVis, colseMoadl, cancelModel, id, editData }) {
     const [currentTab, setCurrentTab] = useState('0')
     const [subObj, setSubObj] = useState({
         one: {},
         two: {},
         three: {}
     })
+
     const refOne = useRef(null), refTwo = useRef(null), refThree = useRef(null)
     const next = () => {
         if (currentTab == 0) {
@@ -21,9 +22,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
         }
 
     };
-
     const prev = () => {
-
         setCurrentTab((currentTab - 0 - 1).toString());
     };
     //提交数据
@@ -77,27 +76,28 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
         let params = {
             ...subObj.one,
             devicePushDataConfList: subObj.two,
-            ...val
+            ...val,
+            urlConfId: id
         }
         post(Paths.addsubscribe, params).then((res) => {
             colseMoadl()
         });
     }
     return (
-        <Modal title="新增订阅" visible={isModalVisible} onCancel={cancelModel}
+        <Modal title="编辑订阅" visible={editModelVis} onCancel={cancelModel}
             width='900px' wrapClassName='add-subscribe-modal'
             footer={footer}>
             <div className='add-subscribe'>
                 <div className='add-subscribe-main'>
                     <div className='edit-left-protocol-wrap'> <Tabs activeKey={currentTab} renderTabBar={renderTabBar}>
                         <TabPane tab="Tab 1" key="0">
-                            <StepContentOne ref={refOne} continueStep={continueStep} />
+                            <StepContentOne ref={refOne} continueStep={continueStep} editData={editData} />
                         </TabPane>
                         <TabPane tab="Tab 2" key="1">
-                            <StepContentTwo ref={refTwo} continueStep={continueStep} oneData={subObj.one}/>
+                            <StepContentTwo ref={refTwo} continueStep={continueStep} oneData={subObj.one} editData={editData} />
                         </TabPane>
                         <TabPane tab="Tab 3" key="2" >
-                            <StepContentThree ref={refThree} finishSub={finishSub} />
+                            <StepContentThree ref={refThree} finishSub={finishSub} editData={editData} />
                         </TabPane>
                     </Tabs>
                     </div>
@@ -106,14 +106,20 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
         </Modal>
     )
 }
-function StepContentOne({ continueStep }, ref) {
+function StepContentOne({ continueStep, editData }, ref) {
     const [form] = Form.useForm();
     const [option, setOption] = useState([])
     useEffect(() => {
         getList()
+        form.setFieldsValue(
+            {
+                subscription: editData.subscription,
+                productId: editData.productId,
+            }
+        )
     }, [])
     const getList = () => {
-        get(Paths.productList).then((res) => {
+        get(Paths.productList, { developerId: 1 }).then((res) => {
             setOption(res.data)
         });
     }
@@ -125,7 +131,7 @@ function StepContentOne({ continueStep }, ref) {
                     name = item.productName
                 }
             })
-            res.productName=name
+            res.productName = name
             localStorage.SELECT_SUBSCRI_NAME = name
             continueStep('1', res)
         })
@@ -134,11 +140,12 @@ function StepContentOne({ continueStep }, ref) {
         onFinish: onFinish
     }));
     return (<div className='step-one'>
-        <Form form={form} labelAlign='right'>
+        <Form form={form} labelAlign='right' >
             <Form.Item
                 name="subscription"
                 label="订阅名称"
                 rules={[{ required: true }]}
+
             >
                 <Input />
             </Form.Item>
@@ -174,7 +181,7 @@ function StepContentOne({ continueStep }, ref) {
     </div>)
 }
 StepContentOne = forwardRef(StepContentOne)
-function StepContentTwo({ continueStep,oneData }, ref) {
+function StepContentTwo({ continueStep, oneData }, ref) {
     const columns = [
         {
             title: '数据名称',
@@ -317,18 +324,40 @@ function StepContentTwo({ continueStep,oneData }, ref) {
     </div>)
 }
 StepContentTwo = forwardRef(StepContentTwo)
-function StepContentThree({ finishSub }, ref) {
+function StepContentThree({ finishSub, editData }, ref) {
+    console.log(editData, 'liek')
+    const [showWay, setShowWay] = useState('0')
     const [form] = Form.useForm();
     const onFinish = () => {
         form.validateFields().then(val => {
             finishSub(val)
         })
     }
+    useEffect(() => {
+        setShowWay(editData.pushWay.toString())
+        if (editData.pushWay == 0) {
+            form.setFieldsValue(
+                {
+                    pushWay: editData.pushWay.toString(),
+                    url: editData.url,
+                    pushToken: editData.pushToken,
+
+                }
+            )
+        } else {
+            form.setFieldsValue(
+                {
+                    pushWay: editData.pushWay.toString(),
+                }
+            )
+        }
+
+    }, [])
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
     }));
-    const [showWay,setShowWay]=useState('0')
-    const radioChange=(e)=>{
+
+    const radioChange = (e) => {
         setShowWay(e.target.value);
     }
     return (<div className='step-one'>
@@ -357,20 +386,6 @@ function StepContentThree({ finishSub }, ref) {
                     <Input />
                 </Form.Item>
             }
-            {/* <Form.Item
-                name="url"
-                label={<LabelTip label="数据订阅URL" tip="第三方云服务接口的唯一标识，供C-life云推送服务给第三方云推送数据使用，现仅支持http方式" />}
-                rules={[{ required: true, message: '请输入' }]}
-            >
-                <Input />
-            </Form.Item>
-            <Form.Item
-                name="pushToken"
-                label={<LabelTip label="Token" tip="第三方云服务接口对接C-life云推送服务的凭证，用来验证厂商服务接口的合法性" />}
-                rules={[{ required: true, message: '请输入' }]}
-            >
-                <Input />
-            </Form.Item> */}
             <Form.Item label=" " colon={false}>
                 <a>订阅帮助文档</a>
             </Form.Item>

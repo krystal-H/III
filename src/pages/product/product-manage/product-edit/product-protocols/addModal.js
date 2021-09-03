@@ -21,10 +21,8 @@ function delaData(data) {
   return newData
 }
 export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
-  const history = useHistory();
-  const productId = useMemo(() => {
-    return history.location.pathname.split('/').slice(-2, -1)[0]
-  }, [])
+  const productItem = JSON.parse(sessionStorage.getItem('productItem'))
+  console.log(productItem)
   const { TabPane } = Tabs, { Search } = Input, { Option } = Select;
   const [currentTab, setCurrentTab] = useState('1')
   const callback = (key) => {
@@ -35,8 +33,8 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
 
   const getOneList = () => {
     let params = {
-      deviceTypeId: 2,
-      productId,
+      deviceTypeId: productItem.deviceTypeId,
+      productId: productItem.productId,
       eq: true,
     }
     post(Paths.PhysicalModelList, params).then((res) => {
@@ -45,8 +43,8 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
   }
   const getTwoList = () => {
     let params = {
-      deviceTypeId: 2,
-      productId,
+      deviceTypeId: productItem.deviceTypeId,
+      productId: productItem.productId,
       eq: false,
     }
     post(Paths.PhysicalModelList, params).then((res) => {
@@ -72,8 +70,8 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
     let params = {
       deviceTypeId: productType,
       eq: false,
-      productId,
-      funcName:value
+      productId: productItem.productId,
+      funcName: value
     }
     post(Paths.PhysicalModelList, params).then((res) => {
       setOtherData(delaData(res.data))

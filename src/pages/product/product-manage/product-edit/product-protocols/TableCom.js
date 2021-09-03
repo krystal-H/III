@@ -39,10 +39,6 @@ export default function TableCom({ dataSource, reFreshData, type }) {
     const openEditCus = (data) => {
         setActionData(data)
         setRightEditVisible(true)
-        // setDestoryDom(true)
-        // setTimeout(() => {
-        //     setRightEditVisible(true)
-        // }, 0)
     };
     //打开删除弹窗
     const openDel = (data) => {
@@ -197,8 +193,9 @@ export default function TableCom({ dataSource, reFreshData, type }) {
         let content = JSON.stringify({
             identifier: actionData.funcIdentifier
         })
+        let productId = JSON.parse(sessionStorage.getItem('productItem')).productId
         let params = {
-            productId: 11759,
+            productId,
             type: 'delete',
             content,
             funcType: actionData.funcType

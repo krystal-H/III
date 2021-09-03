@@ -84,6 +84,7 @@ export default function Device() {
             setHackValue(undefined);
         }
     };
+    
     const timeCall = (value) => {
         setValue(value)
     }
@@ -161,6 +162,9 @@ export default function Device() {
             xTime,
             xData
         }
+    }
+    const downFile=()=>{
+        
     }
     const initData = (origin) => {
         let displayData = dealData(origin)

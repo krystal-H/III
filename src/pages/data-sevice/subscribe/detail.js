@@ -2,23 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Modal, Table } from 'antd';
 import { post, Paths, get } from '../../../api';
 import './detail.scss'
-// const columns = [
-//     {
-//         title: '数据名称',
-//         dataIndex: 'funcName',
-//         key: 'funcName',
-//     },
-//     {
-//         title: '数据标识',
-//         dataIndex: 'funcIdentifier',
-//         key: 'funcIdentifier',
-//     },
-//     {
-//         title: '数据属性',
-//         dataIndex: 'funcType',
-//         key: 'funcType',
-//     },
-// ];
 const columns = [
     {
         title: '数据名称',
