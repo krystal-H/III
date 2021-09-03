@@ -62,28 +62,24 @@ export default class FirmwareManagement  extends Component {
         }
         
         this.columns = [
+            { title: '产品名称', dataIndex: 'productName'},
+
             { title: '固件ID', dataIndex: 'deviceVersionId'},
             { title: '固件包名称', dataIndex: 'deviceVersionName'},
             { title: '固件类型', dataIndex: 'deviceVersionType', 
             render:(t=1)=> VERTYPE.find(({id})=> id==t).nam
-        },
-            { title: '包类型', dataIndex: 'packageType', 
-            render:(t=0)=> {
-                t = t||0
-                return PACKAGETYPE[t]
-            }
         },
             { title: '固件包上传创建时间',dataIndex: 'uploadTime',
                 render: t => <span>{DateTool.utcToDev(t)}</span>
             },
             { title: '内部版本号', dataIndex: 'mainVersion', },
             { title: '外部版本号', dataIndex: 'extVersion', },
-            // { title: '运行状态',  dataIndex: 'updateStatus',
-            //   render: u => {
-            //       const {nam,color} = STATUSTAG[u]
-            //       return <Tag color={color} >{nam}</Tag>
-            //   }
-            // },
+            { title: '运行状态',  dataIndex: 'updateStatus',
+              render: u => {
+                  const {nam,color} = STATUSTAG[u]
+                  return <Tag color={color} >{nam}</Tag>
+              }
+            },
             { title: '操作',dataIndex: 'action',
                 render:(a,recard) => {//runStatus 0：待验证 1：验证中 2：已发布,3 验证完成,4
                     const {
@@ -261,7 +257,7 @@ export default class FirmwareManagement  extends Component {
                                 onSearch={()=>{this.pagerIndex(1)}} 
                             />
                         </Group>
-                        <Button className='button' onClick={()=>{this.switchDialog('addFirmwareDialog')}} type="primary">添加固件</Button>
+                        {/* <Button className='button' onClick={()=>{this.switchDialog('addFirmwareDialog')}} type="primary">添加固件</Button> */}
                     </div>
                     
                    

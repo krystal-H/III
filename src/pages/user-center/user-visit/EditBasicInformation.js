@@ -109,7 +109,7 @@ class EditBasicInformationForm extends Component {
                 if(remark){
                     data.remark = remark;
                 }
-                post(Paths.updateChild,data,{needFormData:true,loading:true}).then((res) => {
+                post(Paths.updateChild,data,{loading:true}).then((res) => {
                     if(res.code==0){
                         this.props.handleClose();
                     }
