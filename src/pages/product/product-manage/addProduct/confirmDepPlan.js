@@ -25,7 +25,7 @@ class SwitchFreeDep extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentActiveKey: props.activeKey,
+      // currentActiveKey: props.activeKey,
       btnList1: [], // 免开发
       btnList2: [], // MCU
       btnList3: [], // Soc
@@ -62,7 +62,7 @@ class SwitchFreeDep extends Component {
   render() {
     const { currentActiveKey, btnList1, btnList2, btnList3 } = this.state
     return (
-      <Tabs activeKey={currentActiveKey} defaultActiveKey="1" onChange={(activeKey) => this.handleChange(activeKey)}>
+      <Tabs onChange={(activeKey) => this.handleChange(activeKey)} destroyInactiveTabPane>
         {/* 免开发方案 */}
         {
           btnList1.length > 0 &&

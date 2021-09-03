@@ -64,7 +64,7 @@ class SetupProduct extends Component {
 
   // 获取通信协议
   getCommunicationProtocol = () => {
-    post(Paths.getCommunicationProtocol, {}).then(res => {
+    post(Paths.getCommunicationProtocol, {}, { loading: true }).then(res => {
       this.setState({
         protocolList: res.data
       })
@@ -81,7 +81,6 @@ class SetupProduct extends Component {
   }
 
   onFinish = (values) => {
-    console.log('Success:', values);
     this.props.createProductForm(values)
     const params = {
       ...this.props.createProductCategory,
@@ -89,7 +88,7 @@ class SetupProduct extends Component {
       ...values
     }
     console.log('调用提交的接口', params)
-    post(Paths.createProduct, { ...params }).then(res => {
+    post(Paths.createProduct, { ...params }, { loading: true }).then(res => {
       Notification({ description: '创建成功！', type: 'success' })
       this.props.handleCancel()
       this.resetData()

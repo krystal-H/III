@@ -9,7 +9,6 @@ const { TabPane } = Tabs
 
 const mapStateToProps = state => {
   // console.log(state.getIn(['product', 'createProductScheme']), '步骤二222222页面取得值')
-  // console.log('页面的btnindex', state.getIn(['product', 'createProductSchemeBtnKey']))
   return {
     schememData: state.getIn(['product', 'createProductScheme']),
     btnkey: state.getIn(['product', 'createProductSchemeBtnKey'])
@@ -28,7 +27,8 @@ class SwitchTab extends Component {
     super(props)
     this.state = {
       planActiveKey: '0',
-      btnIndex: props.btnkey,
+      btnIndex: 0,
+      // props.btnkey,
       summaryText: '', // 概述
       propertyText: '', // 特点
       suitableText: '', // 适合
@@ -48,9 +48,12 @@ class SwitchTab extends Component {
       },
       {
         title: '数据类型',
-        dataIndex: 'address',
+        dataIndex: 'type',
+        render: (text, record) => {
+          return <span>{record.dataType.type}</span>
+        }
       }
-    ];
+    ]
   }
 
   componentDidMount() {
@@ -111,7 +114,8 @@ class SwitchTab extends Component {
   saveSchemeData() {
     const currentList = cloneDeep(this.state.currentSchemList)
     const need = currentList[this.state.btnIndex]
-    console.log(need, 'select scheme')
+    console.log(need, 'select scheme-----------')
+    if (!need) return Notification({ description: '请选择对应方案！', type: 'warn' })
     const params = {
       schemeId: need.schemeId, // 方案id
       schemeTypeId: need.schemeTypeId, // 方案类型id
@@ -124,6 +128,7 @@ class SwitchTab extends Component {
 
   // 重置tab选中项，父组件调用
   resetIndex() {
+    // console.log('调用重置btn方法了')
     // btnIndex: 0, planActiveKey: '0' // 为了保存操作数据暂时不重置  btnIndex
     this.setState({ planActiveKey: '0' })
   }
