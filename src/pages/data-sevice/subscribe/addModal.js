@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, forwardRef, useImperativeHandle } from 'react';
-import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, Table } from 'antd';
+import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, Table, Checkbox } from 'antd';
 import './addModal.scss'
 import LabelTip from '../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../api';
@@ -94,7 +94,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
                             <StepContentOne ref={refOne} continueStep={continueStep} />
                         </TabPane>
                         <TabPane tab="Tab 2" key="1">
-                            <StepContentTwo ref={refTwo} continueStep={continueStep} oneData={subObj.one}/>
+                            <StepContentTwo ref={refTwo} continueStep={continueStep} oneData={subObj.one} />
                         </TabPane>
                         <TabPane tab="Tab 3" key="2" >
                             <StepContentThree ref={refThree} finishSub={finishSub} />
@@ -125,10 +125,29 @@ function StepContentOne({ continueStep }, ref) {
                     name = item.productName
                 }
             })
-            res.productName=name
+            res.productName = name
             localStorage.SELECT_SUBSCRI_NAME = name
             continueStep('1', res)
         })
+    }
+    const [showLabel, setShowLabel] = useState('0')
+    const radioChange = (e) => {
+        setShowLabel(e.target.value);
+    }
+    const [laberArr, setLaberArr] = useState([])
+    const getLabel = (val) => {
+        post(Paths.getLabelByAddress, { productId: val, developerId: 1 }).then((res) => {
+            let arr = []
+            res.data.forEach(item => {
+                arr.push({ label: 'Apple', value: 'Apple' })
+            })
+        });
+    }
+    const onSelectChange = (checkedValues) => {
+
+    }
+    const productIdChange = val => {
+        getLabel(val)
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
@@ -147,7 +166,7 @@ function StepContentOne({ continueStep }, ref) {
                 label="归属产品"
                 rules={[{ required: true }]}
             >
-                <Select >
+                <Select onChange={productIdChange}>
                     {
                         option.map(item => {
                             return <Select.Option value={item.productId} key={item.productId}>{item.productName}</Select.Option>
@@ -157,24 +176,27 @@ function StepContentOne({ continueStep }, ref) {
                 </Select>
             </Form.Item>
             <Form.Item name="radio-group" label="选择设备">
-                <Radio.Group>
+                <Radio.Group onChange={radioChange}>
                     <Radio value="a">全部设备</Radio>
                     <Radio value="b">根据标签筛选设备</Radio>
                 </Radio.Group>
             </Form.Item>
-            {
+            {/* <div>
+                <Checkbox.Group options={laberArr} onChange={onSelectChange} />
+            </div> */}
+            {/* {
                 form.getFieldValue('radio-group') === 'a' && (<Form.Item name="address" label="">
                     <div>
                         <div>标签</div>
                     </div>
                 </Form.Item>)
-            }
+            } */}
 
         </Form>
     </div>)
 }
 StepContentOne = forwardRef(StepContentOne)
-function StepContentTwo({ continueStep,oneData }, ref) {
+function StepContentTwo({ continueStep, oneData }, ref) {
     const columns = [
         {
             title: '数据名称',
@@ -327,8 +349,8 @@ function StepContentThree({ finishSub }, ref) {
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
     }));
-    const [showWay,setShowWay]=useState('0')
-    const radioChange=(e)=>{
+    const [showWay, setShowWay] = useState('0')
+    const radioChange = (e) => {
         setShowWay(e.target.value);
     }
     return (<div className='step-one'>

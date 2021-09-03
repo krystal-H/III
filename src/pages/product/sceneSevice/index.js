@@ -4,12 +4,17 @@ import PageTitle from '../../../components/page-title/PageTitle';
 import stepImg from '../../../assets/images/product-regist.png';
 import CountNum from '../../../components/CountNum/index';
 import { post, Paths, get } from '../../../api';
-import { netStatus } from '../../../configs/text-map'
+// import { netStatus } from '../../../configs/text-map'
 import { DateTool } from '../../../util/util';
 import { Notification } from '../../../components/Notification';
 import './index.scss'
 const { Option } = Select;
 const { Step } = Steps;
+const netStatus = [{
+    value: '条件', key: 1
+}, {
+    value: '任务', key: 2
+}]
 export default function DeviceRegist() {
     const [form] = Form.useForm();
     const [deviceNameS, setDeviceNameS] = useState([])
@@ -133,7 +138,7 @@ export default function DeviceRegist() {
             dataIndex: 'status',
             key: 'status',
             render: (text) => (
-                <span >{text ? '已入网' : '未入网'}</span>
+                <span >{text ? '条件' : '任务'}</span>
             )
         }, {
             title: '操作',
@@ -161,7 +166,7 @@ export default function DeviceRegist() {
             <div className='comm-shadowbox comm-setp-ttip'>
                 <div className='step-title'>
                     <img src={stepImg} alt='' />
-                    <span>注册设备步骤</span>
+                    <span>配置场景步骤</span>
                 </div>
                 <Steps current={-1} initial={0}>
                     <Step title="配置自动化" description="进入产品设备联动服务，配置自动化条件和动作" />

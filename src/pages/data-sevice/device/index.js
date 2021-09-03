@@ -84,7 +84,7 @@ export default function Device() {
             setHackValue(undefined);
         }
     };
-    
+
     const timeCall = (value) => {
         setValue(value)
     }
@@ -102,7 +102,7 @@ export default function Device() {
     }, [])
     useEffect(() => {
         getData()
-    }, [currentTime, value,selectType])
+    }, [currentTime, value, selectType])
     useEffect(() => {
         if (tableData.length) {
             initData(tableData)
@@ -122,8 +122,8 @@ export default function Device() {
             params.endDate = value[1].format('YYYY-MM-DD')
             params.startDate = value[0].format('YYYY-MM-DD')
         }
-        if(selectType){
-            params.productId=selectType
+        if (selectType) {
+            params.productId = selectType
         }
         post(Paths.deviceDataAn, params, { loading }).then((res) => {
             initData(res.data.summaryList)
@@ -163,8 +163,26 @@ export default function Device() {
             xData
         }
     }
-    const downFile=()=>{
-        
+    const downFile = () => {
+        let params = {}
+        if (currentTime === '1') {
+            params.endDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
+            params.startDate = dayjs().subtract(8, 'day').format('YYYY-MM-DD')
+
+        } else if (currentTime === '2') {
+            params.endDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
+            params.startDate = dayjs().subtract(31, 'day').format('YYYY-MM-DD')
+        }
+        if (value && value.length) {
+            params.endDate = value[1].format('YYYY-MM-DD')
+            params.startDate = value[0].format('YYYY-MM-DD')
+        }
+        if (selectType) {
+            params.productId = selectType
+        }
+        post(Paths.deviceDataDown, params).then((res) => {
+            window.open(res.data.path)
+        });
     }
     const initData = (origin) => {
         let displayData = dealData(origin)
@@ -286,7 +304,7 @@ export default function Device() {
             <div className='comm-shadowbox main-echart'>
                 <h3>统计数据</h3>
                 <div className='echart-download'>
-                    <a>下载数据</a>
+                    <a onClick={downFile}>下载数据</a>
                 </div>
                 <Table dataSource={tableData} columns={columns} pagination={false} rowKey='summaryDate' />
             </div>
