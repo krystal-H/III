@@ -1,14 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import { Table, Button, Space } from 'antd';
+import { post, Paths } from '../../../../api';
 import './index.scss';
 // import TitleEdit from './titleEdit'
 // import { getRowSpanCount } from './tableCombine'
 import { getRowSpanCount } from '../../../../configs/tableCombine'
+
 import DetailModl from './detail'
 
 
 export default function TableCom({ dataSource }) {
+    let baseInfo = {}
+    if (sessionStorage.DEVICE_DETAIL_BASE) {
+        baseInfo = JSON.parse(sessionStorage.DEVICE_DETAIL_BASE)
+    }
+    useEffect(() => {
+        getProductDetail()
+    }, [])
+    const [productId,setProductId]=useState('')
+    const getProductDetail = (loading = true) => {
+        post(Paths.getDeviceInfo, { 'deviceId': baseInfo.deviceId }, { loading }).then((res) => {
+            setProductId(res.data.productId)
+        });
+    }
+    
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     //页码改变
     const pagerChange = (pageIndex, pageRows) => {
@@ -134,7 +150,7 @@ export default function TableCom({ dataSource }) {
             }}
         />
         {
-            ModalVisible && <DetailModl ModalVisible={ModalVisible} closeOk={closeOk} sentData={sentData}/>
+            ModalVisible && <DetailModl ModalVisible={ModalVisible} closeOk={closeOk} sentData={sentData} productId={productId}/>
         }
     </div>
 }

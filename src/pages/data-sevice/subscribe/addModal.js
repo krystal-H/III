@@ -73,7 +73,6 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
         setCurrentTab(val);
     }
     const finishSub = (val) => {
-        console.log(subObj, val, '=========')
         let params = {
             ...subObj.one,
             devicePushDataConfList: subObj.two,
@@ -130,17 +129,20 @@ function StepContentOne({ continueStep }, ref) {
             continueStep('1', res)
         })
     }
+    //是否展示标签
     const [showLabel, setShowLabel] = useState('0')
     const radioChange = (e) => {
         setShowLabel(e.target.value);
     }
+    //获取标签
     const [laberArr, setLaberArr] = useState([])
     const getLabel = (val) => {
         post(Paths.getLabelByAddress, { productId: val, developerId: 1 }).then((res) => {
             let arr = []
             res.data.forEach(item => {
-                arr.push({ label: 'Apple', value: 'Apple' })
+                arr.push({ label: item.labelKey + '-' + item.labelValue, value: item.id })
             })
+            setLaberArr(arr)
         });
     }
     const onSelectChange = (checkedValues) => {
@@ -184,13 +186,11 @@ function StepContentOne({ continueStep }, ref) {
             {/* <div>
                 <Checkbox.Group options={laberArr} onChange={onSelectChange} />
             </div> */}
-            {/* {
-                form.getFieldValue('radio-group') === 'a' && (<Form.Item name="address" label="">
-                    <div>
-                        <div>标签</div>
-                    </div>
+            {
+                 (<Form.Item name="address" label="选择标签">
+                    <Checkbox.Group options={laberArr} onChange={onSelectChange} />
                 </Form.Item>)
-            } */}
+            }
 
         </Form>
     </div>)

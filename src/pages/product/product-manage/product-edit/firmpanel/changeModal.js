@@ -166,6 +166,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             type: 'success',
             description: '发布成功！'
         })
+        getList()
         setRelPanVis(false)
     }
     //发布结束
@@ -183,7 +184,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         }
     }
     const getBtn = (record, verifyStatus, isGray) => {
-        if (!isGray) {
+        if (!isGray && verifyStatus != 1) {
             return (<Space size="middle">
                 <a onClick={() => { openDebugg(record) }}>灰度调试</a>
                 <a onClick={() => { openDel(record, 2) }}>删除</a>
@@ -226,7 +227,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             key: 'verifyStatus',
             dataIndex: 'verifyStatus',
             render: (text, record) => {
-                if (!record.isGray) {
+                if (!record.isGray && text!=1) {
                     return '草稿'
                 }
                 // if(record.isF)

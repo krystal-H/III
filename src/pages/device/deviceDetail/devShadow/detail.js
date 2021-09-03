@@ -5,21 +5,30 @@ import './detail.scss';
 import * as echarts from 'echarts';
 const { Option } = Select;
 const optionArr = [{ key: 1, value: '最近1小时' }, { key: 2, value: '最近6小时' }, { key: 3, value: '最近24小时' }, { key: 4, value: '最近7天' }]
-export default function AddFuncModal({ ModalVisible, closeOk, sentData }) {
-    const initData = () => {
+export default function AddFuncModal({ ModalVisible, closeOk, sentData ,productId}) {
+    const initData = (origin) => {
+        let xData=[]
+        let yData=[]
+        origin.forEach(item=>{
+            xData.push(item.datatimestamp)
+            yData.push(item.data)
+        })
         var chartDom = document.getElementById('echart-show');
         var myChart = echarts.init(chartDom);
         var option;
-
+ 
         option = {
             title: {
-                text: 'Step Line'
             },
             tooltip: {
                 trigger: 'axis'
             },
             legend: {
-                data: ['Step Start', 'Step Middle', 'Step End']
+                label:{
+                    narmal:{
+                        show:false
+                    }
+                }
             },
             grid: {
                 left: '3%',
@@ -34,7 +43,7 @@ export default function AddFuncModal({ ModalVisible, closeOk, sentData }) {
             },
             xAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                data: xData,
             },
             yAxis: {
                 type: 'value'
@@ -44,19 +53,7 @@ export default function AddFuncModal({ ModalVisible, closeOk, sentData }) {
                     name: 'Step Start',
                     type: 'line',
                     step: 'start',
-                    data: [120, 132, 101, 134, 90, 230, 210]
-                },
-                {
-                    name: 'Step Middle',
-                    type: 'line',
-                    step: 'middle',
-                    data: [220, 282, 201, 234, 290, 430, 410]
-                },
-                {
-                    name: 'Step End',
-                    type: 'line',
-                    step: 'end',
-                    data: [450, 432, 401, 454, 590, 530, 510]
+                    data: yData
                 }
             ]
         };
@@ -64,29 +61,32 @@ export default function AddFuncModal({ ModalVisible, closeOk, sentData }) {
         option && myChart.setOption(option);
     }
     useEffect(() => {
-        initData()
+        
         getData()
     }, [])
-    const getData = () => {
+    const getData = (val) => {
         let params = {
             column: sentData.funcIdentifier,
-            productId: 11529,
+            productId: productId,
             tslType: sentData.funcType
         }
-        params={"column":"base_null_status_null","productId":"11529","tslType":"properties"}
+        if(val){
+            params.selectType=val
+        }
+        // params={"column":"base_null_status_null","productId":"11529","tslType":"properties"}
         post(Paths.deviceShadowHis, params).then((res) => {
-
+            initData(res.data)
         });
     }
     function handleChange(value) {
-        console.log(`selected ${value}`);
+        getData(value)
     }
     return (
         <div >
             <Modal title="查看" visible={ModalVisible} onOk={closeOk} onCancel={closeOk} width='764px' wrapClassName='add-protocols-wrap'>
                 <div className='device-shadow-modal'>
                     <div className='device-shadow-modal-header'> 
-                        <Select defaultValue="lucy" style={{ width: 120 }} onChange={handleChange}>
+                        <Select  style={{ width: 200 }} onChange={handleChange}>
                             {
                                 optionArr.map(item => {
                                     return <Option value={item.key} key={item.key}>{item.value}</Option>

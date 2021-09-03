@@ -15,11 +15,22 @@ const { Step } = Steps;
 const { Search } = Input;
 export default function DeviceRegist() {
     const [form] = Form.useForm();
-    const [deviceNameS, setDeviceNameS] = useState([])
+    const [optionArr, setOptionArr] = useState([]) //产品列表
     const [productCount, SetproductCount] = useState({})
     const [dataSource, setDataSource] = useState([])
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
     // const [searchParams,setSearchParams]=useState({})
+    //产品种类列表
+    const getProductType = () => {
+        get(Paths.getProductType).then(res => {
+            let arr = []
+            for (let key in res.data) {
+                arr.push({ key, value: res.data[key] })
+            }
+            // console
+            setOptionArr(arr)
+        });
+    }
     // table操作-发布、删除、下线
     const [tableAcVisible, setTableAcVisible] = useState(false)
     const [operate, setOperate] = useState(null)
@@ -68,11 +79,15 @@ export default function DeviceRegist() {
         setRightVisible(false)
     }
     //===============
-
+    useEffect(()=>{
+        getProductType()
+    },[])
     useEffect(() => {
         getList()
-    }, [pager.pageRows, pager.pageIndex])
-
+    }, [pager.pageRows, pager.pageIndex,productCount])
+    const productChange=(val)=>{
+        SetproductCount(val)
+    }
     //搜索
     const onSearch = () => {
         if (pager.pageIndex == 1) {
@@ -87,7 +102,7 @@ export default function DeviceRegist() {
     //获取列表
     const getList = (loading = true) => {
         let params = {
-            devicePushUrlConf: { ...form.getFieldsValue(), developerId: 1 },
+            devicePushUrlConf: { ...form.getFieldsValue()},
             pager: pager,
         }
         // setSearchParams(params.devicePushUrlConf)
@@ -204,13 +219,17 @@ export default function DeviceRegist() {
             )
         },
     ];
+    
     return (
         <div id='subscribe-data'>
             <PageTitle title='数据订阅'>
                 <div className='top-select'>
-                    <Select style={{ width: 200 }} allowClear>
-                        <Option value="0">API数据PUSH形式 </Option>
-                        <Option value="1">MQTT主题订阅</Option>
+                    <Select style={{ width: 200 }} allowClear onChange={productChange}>
+                    {
+                        optionArr.map(item => {
+                            return (<Option value={item.key} key={item.key}>{item.value}</Option>)
+                        })
+                    }
                     </Select>
                 </div>
             </PageTitle>
