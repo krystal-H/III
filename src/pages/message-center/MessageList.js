@@ -70,7 +70,6 @@ export default function MessageList({ messageList = [], selectedRowKeys, noticeT
         console.log(selectedKey)
         let params = {
             noticeIds: selectedKey.join(','),
-            "developerId": 1
         }
         post(Paths.setRead, params).then((res) => {
             Notification({
@@ -83,7 +82,6 @@ export default function MessageList({ messageList = [], selectedRowKeys, noticeT
     //获取列表
     const getList = (loading = true) => {
         let params = {
-            "developerId": 1,
             pager: pager,
         }
         if (typeof read == 'boolean') {

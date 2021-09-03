@@ -14,7 +14,6 @@ export default class MessageDetail extends React.PureComponent {
     setReaded = (noticeId) => {
         let params = {
             noticeIds: noticeId,
-            "developerId": 1
         }
         post(Paths.setRead, params).then((res) => {
         });
@@ -29,7 +28,6 @@ export default class MessageDetail extends React.PureComponent {
         if (noticeId) {
             post(Paths.getNoticeDetail, {
                 noticeId: noticeId - 0,
-                developerId: 1
             }).then(data => {
 
                 if (read === false) {

@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Button } from 'antd';
+import { Button,Modal } from 'antd';
 import GrayDebugg from './grayDebugg'
 import ChangeModal from './changeModal'
 import { post, Paths, get } from '../../../../../api';
+import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.png';
 import './index.scss'
 function confirmModel({ nextStep }, ref) {
-    useEffect(()=>{
+    useEffect(() => {
         getHistory()
-    },[])
+    }, [])
     const [defaultTab, setDefaultTab] = useState('1')
     //灰色测试
     const [isGrayModalVisible, setIsGrayModalVisible] = useState(false);
@@ -21,20 +22,39 @@ function confirmModel({ nextStep }, ref) {
     const openDebugg = () => {
         setIsGrayModalVisible(true)
     }
-     const [modelRelHis,setModelRelHis]=useState([])
-     //获取历史发布列表
-     const getHistory=()=>{
-        post(Paths.panelRelHistory, { projectId: 11982 }).then((res) => {
-
+    //获取最近发布的数据
+    const [shoaLast, setShoaLast] = useState({})
+    const getHistory = () => {
+        let productId = 0
+        if (sessionStorage.getItem('productItem')) {
+            productId = JSON.parse(sessionStorage.getItem('productItem')).productId
+        }
+        post(Paths.panelList, { productId }).then((res) => {
+            let lastEst = {}
+            if (!res.data.list.length) return;
+            lastEst = res.data.list[0]
+            res.data.list.forEach(item => {
+                if (item.verifyStatus == 1) {
+                    lastEst = item
+                    return
+                }
+            })
+            res.data.list.forEach(item => {
+                if (item.isLatest == 1) {
+                    lastEst = item
+                    return
+                }
+            })
+            setShoaLast(lastEst)
         });
-     }
+    }
     //更改面板
-    const [isChangeModalVisible, setIsChangeModalVisible] = useState(true);
+    const [isChangeModalVisible, setIsChangeModalVisible] = useState(false);
     const CancelChange = () => {
         setDefaultTab('1')
         setIsChangeModalVisible(false)
     }
-    const openChangeTab=(val)=>{
+    const openChangeTab = (val) => {
         setDefaultTab(val)
         setIsChangeModalVisible(true)
     }
@@ -49,6 +69,13 @@ function confirmModel({ nextStep }, ref) {
     const subNextConFirm = () => {
         nextStep()
     }
+    const [showOffice, setShowOffice] = useState(false)
+    const openOffice=()=>{
+        setShowOffice(true)
+    }
+    const handleCancel=()=>{
+        setShowOffice(false)
+    }
     useImperativeHandle(ref, () => ({
         onFinish: subNextConFirm
     }));
@@ -58,7 +85,9 @@ function confirmModel({ nextStep }, ref) {
             <div>标准面板</div>
         </div>
         <div className='confirm-pannel-content'>
-            <div></div>
+            <div className='pannel-cover-image'>
+                <img src={shoaLast.page1} alt='' />
+            </div>
             <div>
                 <div className='confirm-pannel-content-left'>
                     {/* {
@@ -69,10 +98,12 @@ function confirmModel({ nextStep }, ref) {
                 </div>
                 <div className='confirm-pannel-content-right'>
                     <div>请使用“数联智能”App，扫描以下二维码，体验此面板。</div>
-                    <div></div>
+                    <div className='model-panal-code'>
+                        <img src={shoaLast.qrcode} alt='' />
+                    </div>
                     <div>
                         还没安装App？
-                        <a>下载"数联智能"App</a>
+                        <a onClick={openOffice}>下载"数联智能"App</a>
                     </div>
                 </div>
             </div>
@@ -81,7 +112,7 @@ function confirmModel({ nextStep }, ref) {
                 <div className='confirm-pannel-content-item'>
                     <div>标准面板</div>
                     <div>clife推荐的快速控制面板，既拿既用，一键开发，快速支持硬件的智能化，适用于快速开发方案。</div>
-                    <Button type="primary" ghost onClick={()=>{openChangeTab('1')}}>
+                    <Button type="primary" ghost onClick={() => { openChangeTab('1') }}>
                         进入
                     </Button>
                 </div>
@@ -95,7 +126,7 @@ function confirmModel({ nextStep }, ref) {
                 <div className='confirm-pannel-content-item'>
                     <div>自定义开发上传</div>
                     <div>通过clife提供的一系列开发工具包，便捷的开发调试出最具品牌风格的面板，适用于自定义开发方案。</div>
-                    <Button type="primary" ghost onClick={()=>{openChangeTab('3')}}>
+                    <Button type="primary" ghost onClick={() => { openChangeTab('3') }}>
                         进入
                     </Button>
                 </div>
@@ -107,6 +138,14 @@ function confirmModel({ nextStep }, ref) {
         }
         {
             isChangeModalVisible && <ChangeModal isChangeModalVisible={isChangeModalVisible} defaultTab={defaultTab} closeChange={closeChange} CancelChange={CancelChange}></ChangeModal>
+        }
+        {
+            showOffice && <Modal title="安装“数联智能”App"  width='370px' visible={showOffice} footer={null} onCancel={handleCancel}>
+                <div className='down-office-modal'>
+                    <img src={demoAppOfficial}/>
+                    <div>手机扫描二维码下载</div>
+                </div>
+            </Modal>
         }
     </div>
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import './index.scss'
 import DescWrapper from '../../../../components/desc-wrapper/DescWrapper';
 import { post, Paths } from '../../../../api';
-import { Tabs, Radio, Table } from 'antd';
+import { Tabs, Radio } from 'antd';
 
 import TableCom from './tableCom'
 import CodeMirrorView from "../../../../components/CodeMirrorView";
@@ -23,6 +23,10 @@ function delaData(data) {
     return newData
 }
 export default function DeviceShadow() {
+    let baseInfo = {}
+    if (sessionStorage.DEVICE_DETAIL_BASE) {
+        baseInfo = JSON.parse(sessionStorage.DEVICE_DETAIL_BASE)
+    }
     //下载
     const downFile = () => {
 
@@ -39,7 +43,7 @@ export default function DeviceShadow() {
     }, [])
     const getDetail = (loading = true) => {
         // Paths.getDeviceInfo
-        post(Paths.deviceShadow, { 'deviceUniqueId': 'F0000002082E' }, { loading }).then((res) => {
+        post(Paths.deviceShadow, { 'deviceUniqueId': baseInfo.deviceId }, { loading }).then((res) => {
             setDataSource(delaData(res.data.list))
             setJsonData( JSON.stringify(res.data.jsonString) )
         });

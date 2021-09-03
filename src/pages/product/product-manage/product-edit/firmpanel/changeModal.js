@@ -15,7 +15,10 @@ const { TabPane } = Tabs;
 
 
 export default function ChangeModal({ isChangeModalVisible, closeChange, CancelChange, defaultTab = '1' }) {
-
+    let productId = 0
+    if (sessionStorage.getItem('productItem')) {
+        productId = JSON.parse(sessionStorage.getItem('productItem')).productId
+    }
     const history = useHistory();
     const callback = (key) => {
         console.log(key);
@@ -29,10 +32,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
 
     //列表
     const getList = () => {
-        let productId = 0
-        if (sessionStorage.getItem('productItem')) {
-            productId = JSON.parse(sessionStorage.getItem('productItem')).productId
-        }
+        
         post(Paths.panelList, { productId }).then((res) => {
             setData(res.data.list)
             setPager(pre => {
@@ -91,7 +91,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     //确定发布
     const relOkAc = () => {
         let params = {
-            productId: 11791,
+            productId,
             projectId: actionData.projectId,
             status: 1,
             appId: 1
@@ -108,7 +108,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     //确定下线
     const offOkLine = () => {
         let params = {
-            productId: 11791,
+            productId,
             projectId: actionData.projectId,
         }
         post(Paths.panelOffLine, params).then((res) => {
@@ -166,6 +166,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             type: 'success',
             description: '发布成功！'
         })
+        getList()
         setRelPanVis(false)
     }
     //发布结束
@@ -183,7 +184,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         }
     }
     const getBtn = (record, verifyStatus, isGray) => {
-        if (!isGray) {
+        if (!isGray && verifyStatus != 1) {
             return (<Space size="middle">
                 <a onClick={() => { openDebugg(record) }}>灰度调试</a>
                 <a onClick={() => { openDel(record, 2) }}>删除</a>
@@ -226,7 +227,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             key: 'verifyStatus',
             dataIndex: 'verifyStatus',
             render: (text, record) => {
-                if (!record.isGray) {
+                if (!record.isGray && text!=1) {
                     return '草稿'
                 }
                 // if(record.isF)

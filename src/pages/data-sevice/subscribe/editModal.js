@@ -119,7 +119,7 @@ function StepContentOne({ continueStep, editData }, ref) {
         )
     }, [])
     const getList = () => {
-        get(Paths.productList, { developerId: 1 }).then((res) => {
+        get(Paths.productList).then((res) => {
             setOption(res.data)
         });
     }

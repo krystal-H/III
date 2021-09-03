@@ -53,7 +53,7 @@ export default function DeviceList() {
     const getProductType = () => {
         get(Paths.getProductType).then(res => {
             let arr = []
-            for (let key in JSON.parse(res).data) {
+            for (let key in res.data) {
                 arr.push({ key, value: res.data[key] })
             }
             setOptionArr(arr)
@@ -61,7 +61,7 @@ export default function DeviceList() {
     }
     //获取统计
     const getDevOneList = () => {
-        post(Paths.devMnCount, { developerId: 1 }).then((res) => {
+        post(Paths.devMnCount).then((res) => {
             setCountData([
                 { label: '当前异常数', count: res.data.exception },
                 { label: '累积设备总数', count: res.data.total },
