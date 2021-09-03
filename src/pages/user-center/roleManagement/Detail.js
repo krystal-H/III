@@ -9,7 +9,7 @@ import { Notification } from './../../../components/Notification';
 import PageTitle from '../../../components/page-title/PageTitle';
 
 import './addRole.scss';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+
 export default class AddRole extends Component{
     constructor(props){
         super(props);
@@ -35,8 +35,6 @@ export default class AddRole extends Component{
     }
     componentDidMount() {
         this.getRights();
-        
-        
     }
 
     //获取权限数据
@@ -175,26 +173,30 @@ export default class AddRole extends Component{
     }
 
     saveOkHandle = ()=>{
+        this.formRef.current.submit()
+    }
+    onFinish = (baseinfo)=>{
+
+
         let comitDataObject = this.getOneComitData("dataObject"),
             comitDataDimension = this.getOneComitData("dataDimension");
         let menustr = JSON.stringify(this.state.menu),
             dataArr = [...comitDataObject,...comitDataDimension];
 
-
-
         let data = {
-            remark:"测试创建角色",
-            roleName:"角色名2222",
+            ...baseinfo,
             res:[{resource:menustr,type:'menu'}],
-            dataJson:JSON.stringify(dataArr)
+            dataJson:JSON.stringify(dataArr),
+            roleId:this.roleId
         }
         post(Paths.saveRole,data,{loading:true}).then((res) => {
-            
             Notification({type:'success',description:'用户角色保存成功！'});
             this.props.history.push({
                 pathname: '/userCenter/role/list'
             });
         });
+        
+        
 
     }
 
@@ -231,7 +233,7 @@ export default class AddRole extends Component{
                         <div className="borderbox">
 
 
-                        <Tabs >
+                        <Tabs>
                             {/* <Tabs.TabPane tab="功能菜单" key={'0'}>
                                 <Tree
                                     checkable
@@ -273,8 +275,7 @@ export default class AddRole extends Component{
                             <Tree
                                 checkable
                                 autoExpandParent={true}
-                                // onCheck={onCheck}
-                                // checkedKeys={checkedKeys}
+                               
                                 treeData={treeDataObject}
                             />
 
