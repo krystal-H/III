@@ -270,13 +270,13 @@ let Paths = {
      * aize-2019-10-30
      */
     getChildlist: '/common/getSubUserList',//获得子账户分页列表
-    freezeChild: '/public/account/freezeChild',//停用子账户
-    unfreezeChild: '/public/account/unfreezeChild',//启动子账户
-    deleteChild: '/public/account/deleteChild',//删除子账户
-    getRoleList: '/role/getRoleList',//角色下拉框
-    addMultiChild: '/public/account/addMultiChild',//添加用户
-    updateChild: '/public/account/updateChild',//添加用户
-    getChildWithSecret: '/public/account/getChildWithSecret',//获得单个子账号+secret数据
+    freezeChild: '/common/freezeSubUser',//停用子账户
+    unfreezeChild: '/common/activeSubUser',//启动子账户
+    deleteChild: '/common/deleteSubUser',//删除子账户
+    // getRoleList: '/role/getRoleList',//角色下拉框
+    // addMultiChild: '/public/account/addMultiChild',//添加用户
+    // updateChild: '/public/account/updateChild',//添加用户
+    // getChildWithSecret: '/public/account/getChildWithSecret',//获得单个子账号+secret数据
 
     
     getRights: '/rights/getRights',//获得角色/子账户正在使用的角色的权限数据及相关列表
@@ -442,8 +442,10 @@ let Paths = {
     getGroupDeviceList:'/deviceGroup/getGroupDeviceList',
     addGroupDevice:'/deviceGroup/groupRelaDevice',
     getGroupSlctDev:'/deviceGroup/getRelaDeviceList',
-    delGroupDevice:'/group/deleteRela',
+    delGroupDevice:'/deviceGroup/groupDeleteRelaDevice',
     getCreateProduct:'/prod/getCreateProduct',
+
+    groupUpDevice:'/project/device/addDevice',  
     
     // 项目管理
     getProjectList:'/project/getList',    

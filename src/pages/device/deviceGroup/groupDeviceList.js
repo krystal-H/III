@@ -167,7 +167,7 @@ const UploadDevice = forwardRef(({
                 _data = temp.response.data.url
             }
         }
-        post(Paths.addDevice,{groupid,type:1,productId,data:_data}).then((res) => {
+        post(Paths.groupUpDevice,{groupid,type:1,productId,data:_data}).then((res) => {
             openCloseAdd(true); 
         });
     }

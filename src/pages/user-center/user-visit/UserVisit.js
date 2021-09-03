@@ -111,7 +111,7 @@ export default class UserVisit extends Component {
         if(type==1){//1:确认 2：取消
             let {userId,pageIndex} = this.state;
             pageIndex=pageIndex?pageIndex:1;
-            get(Paths.unfreezeChild,{userId}).then((res) => {
+            post(Paths.unfreezeChild,{userId}).then((res) => {
                 if(res.code==0){
                     this.setState({loading:true},()=>{
                         this.getList({pageIndex,pageRows:10});
@@ -126,7 +126,7 @@ export default class UserVisit extends Component {
         if(type==1){//1:确认 2：取消
             let {userId,pageIndex} = this.state;
             pageIndex=pageIndex?pageIndex:1;
-            get(Paths.freezeChild,{userId}).then((res) => {
+            post(Paths.freezeChild,{userId}).then((res) => {
                 if(res.code==0){
                     this.setState({loading:true},()=>{
                         this.getList({pageIndex:pageIndex,pageRows:10});
@@ -157,7 +157,7 @@ export default class UserVisit extends Component {
             }
             let {userId,pageIndex,pager} = this.state;
                 pageIndex=pageIndex?pageIndex:1;
-            get(Paths.deleteChild,{userId}).then((res) => {
+            post(Paths.deleteChild,{userId}).then((res) => {
                 if(res.code==0){
                     this.setState({loading:true,deleteInputValue:''},()=>{
                         pageIndex = (pager.totalRows % ((pageIndex-1)*10))>1?pageIndex:pageIndex-1;
