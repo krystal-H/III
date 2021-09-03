@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {cloneDeep,compact,indexOf} from 'lodash';
+import {cloneDeep,compact} from 'lodash';
 import {get, post, Paths} from '../../../api';
 import DoubleBtns from './../../../components/double-btns/DoubleBtns';
 import NoSourceWarn from './../../../components/no-source-warn/NoSourceWarn';

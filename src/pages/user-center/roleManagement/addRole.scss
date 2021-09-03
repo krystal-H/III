@@ -1,7 +1,5 @@
-@import '../../../assets/css/variables.scss';
-@import '../../../assets/css/tools.scss';
 
-.role-add{
+.page-role-edit{
     .commonContentBox{
         .input{
             width:300px;
@@ -98,6 +96,50 @@
         content: "*";
         color: red;
         margin-right: 5px;
+    }
+
+    .pagebody{
+        padding: $boxpadd;
+        .mod{
+            margin-bottom: 40px;
+            padding-left: 24px;
+            .tit{
+                // font-size: 16px;
+                margin-bottom: 24px;
+                font-weight: 600;
+                margin-left: -24px;
+
+            }
+            .ant-form-item-label{
+                width: 80px;
+            }
+            .ant-form-item-control input{
+                width: 500px;
+            }
+        }
+
+        .treemod{
+            .borderbox{
+                position: relative;
+                display: inline-block;
+                box-sizing: border-box;
+                margin-right: 8%;
+                padding: 12px;
+                width: 40%;
+                height: 500px;
+                max-width: 630px;
+                border: 1px solid #d9d9d9;
+                border-radius: 4px;
+                overflow: auto;
+                @include self-scroll-bar;
+                .checkeddesc{
+                    position: absolute;
+                    top: -60px;
+
+                }
+            }
+        }
+
     }
         
 }

@@ -57,7 +57,7 @@ export const updateMuenList= (data) => {
 // 删除用户角色
 export const deleteRole = (roleId) => {
   return (dispatch) => {
-    return get(Paths.deleteRole,{roleId}, {loading: true}).then((res) => {
+    return post(Paths.deleteRole,{roleId}, {loading: true}).then((res) => {
         if(res.code === 0){
             return Promise.resolve(1);   
         }

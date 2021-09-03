@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Modal, Table } from 'antd';
 import { post, Paths, get } from '../../../api';
 import './detail.scss'
-const dataSource = []
 const columns = [
     {
         title: '数据名称',
@@ -21,12 +20,12 @@ const columns = [
     },
 ];
 export default function ProtocolDelete({ rightVisible, onCloseRight,id }) {
-    const [data,setData]=useState({subscriptDataList:[]})
+    const [data,setData]=useState({devicePushDataConfList:[]})
     useEffect(() => {
         getDetail()
     }, [])
     const getDetail=()=>{
-        let url = Paths.subscribeDetail + '?urlConfId=' + 238
+        let url = Paths.subscribeDetail + '?urlConfId=' + id
         post(url).then((res) => {
             setData(res.data)
         });
@@ -49,7 +48,7 @@ export default function ProtocolDelete({ rightVisible, onCloseRight,id }) {
                         <div className='item-value'>{data.subscription}</div>
                     </div>
                     <div className='subscrbe-t'>配置数据</div>
-                    <Table dataSource={data.subscriptDataList} columns={columns} />
+                    <Table dataSource={data.devicePushDataConfList} columns={columns} />
                     <div className='subscrbe-t' style={{marginTop:'22px'}}>订阅方式</div>
                     <div className='subscrbe-item'>
                         <div className='item-label'>订阅方式：</div>

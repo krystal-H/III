@@ -9,6 +9,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
     if (sessionStorage.getItem('productItem')) {
         productItem = JSON.parse(sessionStorage.getItem('productItem'))
     }
+    console.info(productItem,999999)
     const [form] = Form.useForm();
     const oneRef = useRef();
     const [optionArr, setOptionArr] = useState([])
@@ -29,6 +30,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                 productCode: val.productCode
             }
             post(Paths.editProductInfo, params).then((res) => {
+                onOkClose()
                 // delaData(res.data)
             });
         })
@@ -68,7 +70,9 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     form={form}
                     initialValues={{
                         productIcon: [{ url: productItem.productIcon }],
-                        productName: productItem.productName
+                        productName: productItem.productName,
+                        brandId:productItem.brandId,
+                        productCode:productItem.productCode,
                     }}
                 >
                     <Form.Item
@@ -103,7 +107,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                         <Select  >
                             {
                                 optionArr.map(item => {
-                                    return (<Option value={item.brandId} key={item.brandId}>{item.fullName}</Option>)
+                                    return (<Select.Option value={item.brandId} key={item.brandId}>{item.fullName}</Select.Option>)
                                 })
                             }
                         </Select>
@@ -111,7 +115,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     </Form.Item>
                     <Form.Item
                         label="产品型号"
-                        name="username"
+                        name="productCode"
                         rules={[
                             {
                                 required: true,
@@ -148,7 +152,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     </Form.Item>
                     <Form.Item
                         label="创建时间"
-                    ><span>枚举型</span>
+                    ><span>{productItem.createTime}</span>
                     </Form.Item>
                     <Form.Item
                         label="更新时间"

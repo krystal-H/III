@@ -261,6 +261,8 @@ let Paths = {
     deleteDeviceLabel:'/deviceLabel/delete',//删除设备标签
     exportDeviceList:'/deviceManage/exportDeviceList',//导出数据
     deviceShadow:'/deviceManage/getProtocolList',//设备影子
+    deviceShadowHis:'/deviceManage/getHistoryProtocolList',//设备影子历史数据
+    exportShadowHis:'/deviceManage/exportHistoryProtocolList',//设备影子历史数据
     
 
     /**
@@ -285,7 +287,7 @@ let Paths = {
      * aize-2019-11-06
      */
     getRolePage: '/rights/getRolePage',
-    deleteRole: '/roleresource/deleteRole',
+    deleteRole: '/rights/deleteRole',
     
     saveRole: '/rights/createRole',
 
@@ -306,6 +308,7 @@ let Paths = {
     subscribeClose:'/datapush/stop',//停用数据订阅
     subscribeDetail:'/datapush/getByUrlConfId',//订阅详情
     addsubscribe:'/datapush/create',//新增数据订阅
+    getLabelByAddress:'/deviceLabel/getDeviceLabelByProductId',//通过地区获取label
 
     /**
      * 基础产品--应用 start
@@ -437,7 +440,7 @@ let Paths = {
     deleteGroup:'/deviceGroup/deleteGroup',
     getGroupDetail:'/deviceGroup/getDeviceGroupInfo',
     getGroupDeviceList:'/deviceGroup/getGroupDeviceList',
-    addGroupDevice:'/deviceGroup/getRelaDeviceList',
+    addGroupDevice:'/deviceGroup/groupRelaDevice',
     getGroupSlctDev:'/deviceGroup/getRelaDeviceList',
     delGroupDevice:'/group/deleteRela',
     getCreateProduct:'/prod/getCreateProduct',
@@ -547,6 +550,7 @@ let Paths = {
     sepanel:'/physicalModel/func/search',//产品-功能定义-创建物模型-查询模型列表
     addPhticalStard:'/physicalModel/func/product/add',//产品-功能定义-物模型-新增标准模型
     downPhysicalModel:'/physicalModel/download/product',//产品-功能定义-下载物模型
+    PhysicalModelList:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
 
     // //设备-设备管理
     // getDeviceList
@@ -560,7 +564,8 @@ let Paths = {
     //数据服务
     deviceDataAn:'/summary/device/dashboard',//设备分析
     userDataAn:'/summary/account/dashboard',//用户分析
-
+    deviceDataDown:'/summary/device/download',//设备分析下载
+    userDataDown:'/summary/account/download',//用户分析下载
     //公共接口
     getProductType:'/productManage/getSelectList',//产品下拉列表
     

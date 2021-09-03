@@ -3,6 +3,7 @@ import { Select, Steps, Button, Input, Space, Table, Form } from 'antd';
 import PageTitle from '../../../components/page-title/PageTitle';
 import stepImg from '../../../assets/images/product-regist.png';
 import AddSubScribe from './addModal'
+import EditSubScribe from './editModal'
 import { post, Paths, get } from '../../../api';
 import { Notification } from '../../../components/Notification'
 import ActionModal from './actionOp'
@@ -67,55 +68,7 @@ export default function DeviceRegist() {
         setRightVisible(false)
     }
     //===============
-    const columns = [
-        {
-            title: '订阅ID',
-            dataIndex: 'urlConfId',
-            key: 'urlConfId',
-        },
-        {
-            title: '订阅名称',
-            dataIndex: 'subscription',
-            key: 'subscription',
-        },
-        {
-            title: '订阅方式',
-            dataIndex: 'pushWay',
-            key: 'pushWay',
-            render: (text) => (
-                <span>{text ? 'MQTT主题订阅' : 'API数据PUSH形'}</span>
-            )
-        }, {
-            title: '归属产品名称',
-            dataIndex: 'address',
-            key: 'address',
-        }, {
-            title: '订阅更新时间',
-            dataIndex: 'updateTime',
-            key: 'updateTime',
-            render: text => <span>{text && moment(text).add(8, 'h').format('YYYY-MM-DD HH:mm:ss') || '--'}</span>
-        }, {
-            title: '状态',
-            dataIndex: 'pushState',
-            key: 'pushState',
-            render: (text) => (
-                <span>{text ? '正常' : '停用'}</span>
-            )
-        },
-        {
-            title: '操作',
-            render: (text, record) => (
-                <Space size="middle">
-                    <a onClick={() => { openInfo(record) }}>查看</a>
-                    <a onClick={() => { openInfo(record) }}>编辑</a>
-                    {
-                        record.pushState ? (<a onClick={() => { operateHandle(2, record) }}>停用</a>) :
-                            (<a onClick={() => { operateHandle(1, record) }}>启动</a>)
-                    }
-                </Space>
-            )
-        },
-    ];
+
     useEffect(() => {
         getList()
     }, [pager.pageRows, pager.pageIndex])
@@ -163,7 +116,7 @@ export default function DeviceRegist() {
     }
 
     //新增订阅
-    const [modelVis, setModelVis] = useState(true)
+    const [modelVis, setModelVis] = useState(false)
     const openRegist = () => {
         setModelVis(true)
     }
@@ -178,6 +131,79 @@ export default function DeviceRegist() {
         getList()
         setModelVis(false)
     }
+    //编辑订阅
+    const [editModelVis, setEditModelVis] = useState(false)
+    const [editData, setEditData] = useState({ devicePushDataConfList: [] })
+    const openEdit = (data, loading = true) => {
+        let url = Paths.subscribeDetail + '?urlConfId=' + data.urlConfId
+        post(url, { }, { loading }).then((res) => {
+            setEditData(res.data)
+            setSelectRow(data)
+            setEditModelVis(true)
+        });
+
+    }
+    const cancelEditModel = () => {
+        setEditModelVis(false)
+    }
+    const colseEditMoadl = () => {
+        Notification({
+            type: 'success',
+            description: '编辑成功！'
+        })
+        getList()
+        setEditModelVis(false)
+    }
+
+    const columns = [
+        {
+            title: '订阅ID',
+            dataIndex: 'urlConfId',
+            key: 'urlConfId',
+        },
+        {
+            title: '订阅名称',
+            dataIndex: 'subscription',
+            key: 'subscription',
+        },
+        {
+            title: '订阅方式',
+            dataIndex: 'pushWay',
+            key: 'pushWay',
+            render: (text) => (
+                <span>{text ? 'MQTT主题订阅' : 'API数据PUSH形'}</span>
+            )
+        }, {
+            title: '归属产品名称',
+            dataIndex: 'productName',
+            key: 'productName',
+        }, {
+            title: '订阅更新时间',
+            dataIndex: 'updateTime',
+            key: 'updateTime',
+            render: text => <span>{text && moment(text).add(8, 'h').format('YYYY-MM-DD HH:mm:ss') || '--'}</span>
+        }, {
+            title: '状态',
+            dataIndex: 'pushState',
+            key: 'pushState',
+            render: (text) => (
+                <span>{text ? '正常' : '停用'}</span>
+            )
+        },
+        {
+            title: '操作',
+            render: (text, record) => (
+                <Space size="middle">
+                    <a onClick={() => { openInfo(record) }}>查看</a>
+                    <a onClick={() => { openEdit(record) }}>编辑</a>
+                    {
+                        record.pushState ? (<a onClick={() => { operateHandle(2, record) }}>停用</a>) :
+                            (<a onClick={() => { operateHandle(1, record) }}>启动</a>)
+                    }
+                </Space>
+            )
+        },
+    ];
     return (
         <div id='subscribe-data'>
             <PageTitle title='数据订阅'>
@@ -225,11 +251,6 @@ export default function DeviceRegist() {
                                     查询
                                 </Button>
                             </Form.Item>
-                            {/* <Form.Item label=" " colon={false} style={{ marginRight: '2px' }}>
-                                <Button type="primary" onClick={onSearch}>
-                                    查询
-                                </Button>
-                            </Form.Item> */}
                         </Form>
 
                     </div>
@@ -261,7 +282,10 @@ export default function DeviceRegist() {
             {
                 rightVisible && <SubInfo rightVisible={rightVisible} onCloseRight={onCloseRight} id={selectRow.urlConfId} />
             }
-
+            {
+                editModelVis && <EditSubScribe editModelVis={editModelVis} colseMoadl={colseEditMoadl} editData={editData}
+                    cancelModel={cancelEditModel} id={selectRow.urlConfId} />
+            }
         </div>
     )
 }

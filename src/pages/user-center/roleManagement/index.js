@@ -1,9 +1,9 @@
 
 import React from 'react'
-import {Switch,Redirect,Route} from 'react-router-dom'
-
-import List from './RoleManagementList'
-import Edit from './Detail'
+import {Switch,Redirect,Route} from 'react-router-dom';
+import List from './RoleManagementList';
+import Edit from './Detail';
+// import Edit from './AddRole';
 
 export default ({match}) => {
     const {path} = match;
