@@ -130,7 +130,7 @@ export default class AddRole extends Component{
                 return {
                     title,
                     key:frontId,
-                    children:this.getOneTreeData(subBoxs)
+                    children:this.getOneTreeData(subBoxs,type)
                 }
             }
             return {
