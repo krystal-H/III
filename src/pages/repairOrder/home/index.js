@@ -16,9 +16,9 @@ export default function DeviceShadow() {
     }
     return (<div id='order-home'>
         <div className='common-tab comm-shadowbox'>
-            <Tabs defaultActiveKey='1' className='shadow-tab' onChange={tabHandle}>
+            <Tabs activeKey={currentTab} className='shadow-tab' onChange={tabHandle}>
                 <TabPane key={'1'} tab={'提交工单'}>
-                    <SubOrder  ref={refObj}/>
+                    <SubOrder  ref={refObj} onSuccess={tabHandle}/>
                 </TabPane>
                 <TabPane key={'2'} tab={'我的工单'}>
                     <MyOrder />

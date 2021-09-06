@@ -119,23 +119,23 @@ function StepContentOne({ continueStep }, ref) {
     }
     const onFinish = () => {
         form.validateFields().then(res => {
-            res=JSON.parse(JSON.stringify(res))
+            res = JSON.parse(JSON.stringify(res))
             let name = ''
             option.forEach(item => {
                 if (item.productId == res.productId) {
                     name = item.productName
                 }
             })
-            console.log(res.labelVoList,'=======')
-            if(res.labelVoList && res.labelVoList.length){
-                let laberA=[]
-                laberArr.forEach(item=>{
-                    console.log(item.value,res.labelVoList)
-                    if(res.labelVoList.indexOf(item.value)>-1){
+            console.log(res.labelVoList, '=======')
+            if (res.labelVoList && res.labelVoList.length) {
+                let laberA = []
+                laberArr.forEach(item => {
+                    console.log(item.value, res.labelVoList)
+                    if (res.labelVoList.indexOf(item.value) > -1) {
                         laberA.push(item)
                     }
                 })
-                res.labelVoList=laberA
+                res.labelVoList = laberA
             }
             res.productName = name
             localStorage.SELECT_SUBSCRI_NAME = name
@@ -148,12 +148,12 @@ function StepContentOne({ continueStep }, ref) {
         setShowLabel(e.target.value);
     }
     //获取标签
-    
+
     const getLabel = (val) => {
         post(Paths.getLabelByAddress, { productId: val, developerId: 1 }).then((res) => {
             let arr = []
             res.data.forEach(item => {
-                arr.push({ ...item,label: item.labelKey + '-' + item.labelValue, value: item.id })
+                arr.push({ ...item, label: item.labelKey + '-' + item.labelValue, value: item.id })
             })
             setLaberArr(arr)
         });
@@ -169,7 +169,7 @@ function StepContentOne({ continueStep }, ref) {
             <Form.Item
                 name="subscription"
                 label="订阅名称"
-                rules={[{ required: true }]}
+                rules={[{ required: true, whitespace: true }]}
             >
                 <Input />
             </Form.Item>
@@ -200,7 +200,7 @@ function StepContentOne({ continueStep }, ref) {
                 {({ getFieldValue }) =>
                     getFieldValue('radiogroup') === 'b' ? (
                         <Form.Item name="labelVoList" label="选择标签">
-                            <Checkbox.Group options={laberArr}  />
+                            <Checkbox.Group options={laberArr} />
                         </Form.Item>
                     ) : null
                 }
@@ -379,7 +379,7 @@ function StepContentThree({ finishSub }, ref) {
                 showWay === '0' && <Form.Item
                     name="url"
                     label={<LabelTip label="数据订阅URL" tip="第三方云服务接口的唯一标识，供C-life云推送服务给第三方云推送数据使用，现仅支持http方式" />}
-                    rules={[{ required: true, message: '请输入' }]}
+                    rules={[{ required: true, whitespace: true, message: '请输入' }]}
                 >
                     <Input />
                 </Form.Item>
@@ -388,7 +388,7 @@ function StepContentThree({ finishSub }, ref) {
                 showWay === '0' && <Form.Item
                     name="pushToken"
                     label={<LabelTip label="Token" tip="第三方云服务接口对接C-life云推送服务的凭证，用来验证厂商服务接口的合法性" />}
-                    rules={[{ required: true, message: '请输入' }]}
+                    rules={[{ required: true, whitespace: true, message: '请输入' }]}
                 >
                     <Input />
                 </Form.Item>
