@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux';
-
+import {
+    EyeInvisibleTwoTone,
+    EyeTwoTone,
+} from '@ant-design/icons';
 import { getProductBaseInfo, getProtocolLists } from '../store/ActionCreator';
 import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
 import PageTitle from '../../../../components/page-title/PageTitle';
 import ProductTabs from './product-tabs/ProductTabs';
-
+import { strToAsterisk, DateTool } from './../../../../util/util';
 import './ProductDetails.scss'
 import '../product-edit/ProductEdit.scss'
 import { post, Paths, get } from './../../../../api';
@@ -29,23 +32,6 @@ const getProductIdFromPath = (match) => +match.params.id;
 function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtocolLists, protocolLists }) {
 
     let productIdInRoutePath = getProductIdFromPath(match);
-
-    // useEffect(() => {
-    //     // 产品ID更新后，重新获取数据
-    //     if (productIdInRoutePath) {
-    //         getProductBaseInfo(productIdInRoutePath)
-    //         getProtocolLists(productIdInRoutePath)
-    //     }
-    // }, [getProductBaseInfo, getProtocolLists, productIdInRoutePath])
-    // useEffect(() => {
-    //     getDetail()
-    // }, [])
-    // const [data, setData] = useState({})
-    // const getDetail = () => {
-    //     post(Paths.getPublishProductInfo, { productId: 1 }).then((res) => {
-    //         setData(res.data)
-    //     });
-    // }
     let productItem = {}
     if (sessionStorage.getItem('productItem')) {
         productItem = JSON.parse(sessionStorage.getItem('productItem'))
@@ -54,6 +40,14 @@ function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtoco
     }
     if (!productIdInRoutePath) {
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
+    }
+    const [showSecret, setShowSecret] = useState(false)
+    const changeState = () => {
+        setShowSecret(!showSecret)
+    }
+    const showText = (value) => {
+        value = showSecret ? value : strToAsterisk(value, 10)
+        return value
     }
     const titleCom = (<div className='product_title_baseinfo_list'>
         <div>
@@ -74,12 +68,19 @@ function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtoco
         </div>
         <div>
             <div>产品密钥：</div>
-            <div>{productItem.deviceKey}</div>
+            <div>
+                {showText(productItem.deviceKey)}
+                <span onClick={changeState}>
+                    {
+                        showSecret ? <EyeInvisibleTwoTone /> : <EyeTwoTone />
+                    }
+                </span>
+            </div>
         </div>
     </div>)
     return (
         <div className="eidt-wrapper">
-            <PageTitle title={productItem.productName} titleTag={productItem.statusStr}  backTitle='开发流程' children={titleCom} />
+            <PageTitle title={productItem.productName} titleTag={productItem.statusStr} backTitle='开发流程' children={titleCom} />
             <div className='comm-shadowbox product-detail-wrap'>
                 <ProductTabs productId={productIdInRoutePath} protocolLists={protocolLists} productBaseInfo={productBaseInfo}
                 ></ProductTabs>
