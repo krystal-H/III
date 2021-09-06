@@ -156,7 +156,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     </Form.Item>
                     <Form.Item
                         label="更新时间"
-                    ><span>枚举型</span>
+                    ><span></span>
                     </Form.Item>
                 </Form>
             </div>

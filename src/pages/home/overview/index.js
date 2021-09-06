@@ -496,7 +496,7 @@ export default function OverviewWrap() {
                                 <img src={help2} alt='' />
                                 <div>工单</div>
                             </div>
-                            <div>
+                            <div onClick={()=>{window.open('https://dp.clife.net/iotdoc/')}}>
                                 <img src={help3} alt='' />
                                 <div>帮助文档</div>
                             </div>
@@ -508,8 +508,8 @@ export default function OverviewWrap() {
                 newProductModal &&
                 <AddProductModal
                     visible={newProductModal}
-                    cancelHandle={closeNewProduct}>
                     getProductListNew={getProductListNew}
+                    cancelHandle={closeNewProduct}>
                 </AddProductModal>
             }
         </div>

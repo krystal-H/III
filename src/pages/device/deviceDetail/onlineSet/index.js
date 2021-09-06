@@ -9,6 +9,7 @@ import { cloneDeep } from 'lodash'
 import { Paths, post, get } from '../../../../api'
 import { Notification } from '../../../../components/Notification';
 import AddModel from './addModel'
+import DetailModel from './detail'
 import './index.scss'
 
 const { Option } = Select
@@ -34,8 +35,8 @@ const statusText = ['草稿', '待执行', '执行中', '已执行']
 const statusTextForDevice = ['', '执行中', '执行成功', '执行失败']
 
 function RemoteConfig({ devceId, remoteType = 'device' }) {
-    const [addVisible, setAddVisible] = useState(true)
-    const [editData, setEditData] = useState(null)
+    const [addVisible, setAddVisible] = useState(false)
+    const [actionData, setActionData] = useState({})
     const [deleteParams, setDeleteParams] = useState({ deletevisible: false, deleteItem: null, deleteLoading: false })
     const [remoteConfigList, setRemoteConfigList] = useState([]) // table-datasorce
     const [status, setStatus] = useState('') // 状态
@@ -81,7 +82,7 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
             key: 'action',
             render: (text, record) => {
                 const { status, taskId } = record
-                return !isDeviceRomote ? (
+                return isDeviceRomote ? (
                     <span>
                         {
                             ('' + status) === '1' ?
@@ -120,20 +121,26 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
     const _text = isDeviceRomote ? statusTextForDevice : statusText
 
 
-    const getDetail = (taskId, type) => {
-        return get(Paths.getRemoteDetail, { taskId, type }, { loading: true })
+    // 新增
+    const addOrEditRemoteConfig = () => {
+        setAddVisible(true)
     }
-
-    // 编辑
-    const addOrEditRemoteConfig = (record) => {
+    //详情
+    const [detailVis, setDetailVis] = useState(false)
+    const showRomoteConfigDetail = (data) => {
+        setActionData(data)
+        setDetailVis(true)
     }
-    const showRomoteConfigDetail = () => { }
+    const detailCancel = () => {
+        setDetailVis(false)
+    }
+    //=======================================
     const retryForDeviceByTaskId = () => { }
     const showErrorLogForDeviceByTaskId = () => { }
 
     useEffect(() => {
         getRemoteConfigList()
-    }, [ pager.pageRows, pager.pageIndex])
+    }, [pager.pageRows, pager.pageIndex])
 
     // 获取远程配置列表
     const getRemoteConfigList = (_pageIndex, status = '', taskName = '') => {
@@ -142,7 +149,7 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
             ...pager
         }
         post(Paths.deviceRemoteConfigList, params, { loading: true }).then(data => {
-            const {list = [] } = data.data
+            const { list = [] } = data.data
             setRemoteConfigList(addKeyToTableData(list))
             setPager(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))
@@ -155,7 +162,7 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
     // 确定删除
     const deletelOKHandle = () => {
         const { taskId } = deleteItem
-        post(Paths.delDeviceRemoset,{taskId}).then(data => {
+        post(Paths.delDeviceRemoset, { taskId }).then(data => {
             Notification({
                 type: 'success',
                 description: '删除成功！',
@@ -179,10 +186,10 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
 
     }
     //新增
-    const CancelAdd=()=>{
+    const CancelAdd = () => {
         setAddVisible(false)
     }
-    const addOk=()=>{
+    const addOk = () => {
         setAddVisible(false)
     }
     return (
@@ -240,7 +247,10 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
                 </ActionConfirmModal>
             }
             {
-              addVisible &&  <AddModel addVisible={addVisible} addOk={addOk} CancelAdd={CancelAdd}/>
+                addVisible && <AddModel addVisible={addVisible} addOk={addOk} CancelAdd={CancelAdd} />
+            }
+            {
+                detailVis && <DetailModel detailVis={detailVis} onCancel={detailCancel} actionData={actionData}/>
             }
         </div>
     )

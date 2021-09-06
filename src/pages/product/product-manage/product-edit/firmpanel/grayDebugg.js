@@ -158,10 +158,10 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                             <Form.Item
                                                                 {...field}
                                                                 validateTrigger={['onChange', 'onBlur']}
+                                                                rules={[{ pattern: /^(((\d{3,4}-)?\d{7,8})|(1\d{10}))$/, whitespace: true, message: '请输入正确的手机号码' }]}
                                                                 noStyle
                                                             >
                                                                 <Input placeholder="请输入手机号码"
-                                                                    rules={[{ pattern: /^(((\d{3,4}-)?\d{7,8})|(1\d{10}))$/, message: '请输入固话号码或者手机号码' }]}
                                                                     style={{ width: '214px', marginRight: '10px' }} />
                                                             </Form.Item>
                                                             {fields.length ? (
@@ -214,10 +214,10 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                             <Form.Item
                                                                 {...field}
                                                                 validateTrigger={['onChange', 'onBlur']}
+                                                                rules={[{ pattern: /^(((\d{3,4}-)?\d{7,8})|(1\d{10}))$/, whitespace: true, message: '请输入正确的手机号码' }]}
                                                                 noStyle
                                                             >
                                                                 <Input placeholder="请输入手机号码"
-                                                                    rules={[{ pattern: /^(((\d{3,4}-)?\d{7,8})|(1\d{10}))$/, message: '请输入固话号码或者手机号码' }]}
                                                                     style={{ width: '214px', marginRight: '10px' }} />
                                                             </Form.Item>
                                                             {fields.length ? (

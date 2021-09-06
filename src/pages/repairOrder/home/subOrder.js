@@ -4,7 +4,7 @@ import { UploadFileHooks } from '../../../components/upload-file';
 import { post, Paths, get } from '../../../api';
 import { Notification } from '../../../components/Notification'
 const { TextArea } = Input;
-export default function DeviceShadow(props, ref) {
+export default function DeviceShadow({ onSuccess }, ref) {
     const [form] = Form.useForm();
     useEffect(() => {
         getType()
@@ -70,6 +70,7 @@ export default function DeviceShadow(props, ref) {
                     description: '提交成功！'
                 })
                 form.resetFields();
+                onSuccess('2')
                 // setOptions(res.data)
             });
         }).catch(err => {
@@ -89,14 +90,14 @@ export default function DeviceShadow(props, ref) {
             <Form.Item
                 label="选择内容分类"
                 name="problemType"
-                rules={[{ required: true }]}
+                rules={[{ required: true, whitespace: false }]}
             >
                 <Cascader options={options} onChange={onChange} style={{ width: '612px' }} popupClassName='order-Cascader' />
             </Form.Item>
             <Form.Item
                 label="问题描述"
                 name="problemDesc"
-                rules={[{ required: true }]}
+                rules={[{ required: true, whitespace: true }]}
             >
                 <TextArea rows={4} style={{ width: '612px' }} />
             </Form.Item>
@@ -115,6 +116,7 @@ export default function DeviceShadow(props, ref) {
             <Form.Item
                 label="联系方式"
                 name="phone"
+                rules={[{ pattern: /^(((\d{3,4}-)?\d{7,8})|(1\d{10}))$/, whitespace: true, message: '请输入正确的手机号码' }]}
             >
                 <Input style={{ width: '612px' }} />
             </Form.Item>

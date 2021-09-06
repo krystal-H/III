@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Carousel } from 'antd';
+import { Carousel, Image } from 'antd';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import './index.scss'
 import EditableTable from './editTable';
@@ -106,15 +106,17 @@ export default function productInfo() {
                 </div>
                 <div className='product-info-conten-wrap '>
                     <span className='middle-text'>帮助轮播图：</span>
-                    {/* <img src={carouselImg} /> */}
                     {
-                        imageInfo.imageUrlList ? (<img src={carouselImg} />) : (<div className='product-info-image-wrap'>
-                            {/* <Carousel autoplay>
-                                <div style={contentStyle}>
-                                    <img src={carouselImg} />
-                                </div>
-                            </Carousel> */}
-                        </div>)
+                        !imageInfo.imageUrlList ? (<img src={carouselImg} />) :
+                            (<div className='product-info-image-wrap'>
+                                <Carousel autoplay>
+                                    {
+                                        imageInfo.imageUrlList.map((item, index) => {
+                                            return <img src={carouselImg} key={index} alt='' />
+                                        })
+                                    }
+                                </Carousel>
+                            </div>)
                     }
 
 

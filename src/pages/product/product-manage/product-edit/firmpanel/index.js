@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react'
-import { useLocation } from 'react-router-dom'
 import { Button,Modal } from 'antd';
 import GrayDebugg from './grayDebugg'
 import ChangeModal from './changeModal'
 import { post, Paths, get } from '../../../../../api';
 import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.png';
+import { useHistory } from 'react-router-dom';
 import './index.scss'
 function confirmModel({ nextStep }, ref) {
+    let history = useHistory();
     useEffect(() => {
         getHistory()
     }, [])
@@ -82,7 +83,7 @@ function confirmModel({ nextStep }, ref) {
     return <div className='confirm-pannel'>
         <div className='confirm-pannel-title'>
             <div>已选面板：</div>
-            <div>标准面板</div>
+            <div>{shoaLast.projectName}</div>
         </div>
         <div className='confirm-pannel-content'>
             <div className='pannel-cover-image'>
@@ -130,7 +131,7 @@ function confirmModel({ nextStep }, ref) {
                         进入
                     </Button>
                 </div>
-                <div className='confirm-pannel-content-other'>均不满足，需要委托定制？直接联系Clife。<a>提交工单</a></div>
+                <div className='confirm-pannel-content-other'>均不满足，需要委托定制？直接联系Clife。<a onClick={()=>{history.push(`/open/repairOrder`)}}>提交工单</a></div>
             </div>
         </div>
         {
