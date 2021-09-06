@@ -51,6 +51,8 @@ export default class AddRole extends Component{
             let dataMenu = this.addFrontIdMenu(JSON.parse(menu)),
                 dataObject = this.addFrontId(checkBoxGroupMenuList[0].checkBoxGroupList),
                 dataDimension = this.addFrontId(checkBoxGroupMenuList[1].checkBoxGroupList);
+
+
             let treeDataMenu = this.getMenuTreeData(dataMenu),
                 treeDataObject = this.getOneTreeData(dataObject,"treeDataObjectCheckeys"),
                 treeDataDimension = this.getOneTreeData(dataDimension,"treeDataDimensionCheckeys");
@@ -80,17 +82,24 @@ export default class AddRole extends Component{
         for(let i=0;i<wW.length;i++){
             let one = wW[i];
             wW[i].frontId = i+"";
-            if(one.subBoxs.length>0){
+            if(one.subBoxs && one.subBoxs.length>0){
                 for(let j=0;j<one.subBoxs.length;j++){
                     let two = one.subBoxs[j];
                     wW[i].subBoxs[j].frontId = i+"_"+j;
-                    if(two.subBoxs.length>0){
+                    if(two.subBoxs && two.subBoxs.length>0){
                         for(let k=0;k<two.subBoxs.length;k++){
                             let three = two.subBoxs[k];
                             wW[i].subBoxs[j].subBoxs[k].frontId = i+"_"+j+"_"+k;
-                            if(three.subBoxs.length>0){
+                            if(three.subBoxs && three.subBoxs.length>0){
                                 for(let l=0;l<three.subBoxs.length;l++){
+                                    let four = three.subBoxs[l];
                                     wW[i].subBoxs[j].subBoxs[k].subBoxs[l].frontId = i+"_"+j+"_"+k+"_"+l;
+                                    if(four.subBoxs && four.subBoxs.length>0){
+                                        for(let m=0;m<four.subBoxs.length;m++){
+                                            let five = four.subBoxs[m];
+                                            wW[i].subBoxs[j].subBoxs[k].subBoxs[l].subBoxs[m].frontId = i+"_"+j+"_"+k+"_"+l+"_"+m;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -104,6 +113,8 @@ export default class AddRole extends Component{
     //菜单权限  frontId
     addFrontIdMenu = menu=>{
         // let wW = cloneDeep(menuList);
+
+        console.log(777,menu)
         let wW = cloneDeep(menu);
         
         for(let i=0;i<wW.length;i++){
@@ -116,6 +127,8 @@ export default class AddRole extends Component{
                 }
             }
         }
+
+        console.log(888,wW)
         return wW;
     }
 
@@ -273,6 +286,8 @@ export default class AddRole extends Component{
             treeDataDimension,treeMenuCheckeys,treeDataObjectCheckeys, 
             treeDataDimensionCheckeys
         } = this.state;
+
+        console.log(99,treeDataMenu)
         const treeDataTabPane = [
             {
                 name:"功能菜单",
