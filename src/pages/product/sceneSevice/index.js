@@ -8,6 +8,7 @@ import { post, Paths, get } from '../../../api';
 import { DateTool } from '../../../util/util';
 import { Notification } from '../../../components/Notification';
 import './index.scss'
+import AddModal from './cusmoFn';
 const { Option } = Select;
 const { Step } = Steps;
 const netStatus = [{
@@ -22,6 +23,7 @@ export default function DeviceRegist() {
     const [dataSource, setDataSource] = useState([])
     const [optionArr, setOptionArr] = useState([]) //产品列表
     const [selectType, setSelectType] = useState('') //产品种类
+    const [addVisible, setAddVisible] = useState(false)
     useEffect(() => {
         getProductType()
     }, [])
@@ -128,7 +130,6 @@ export default function DeviceRegist() {
             title: '归属产品名称',
             dataIndex: 'authorityType',
             key: 'authorityType',
-            render: text => tableFilterFn(text)
         }, {
             title: '状态',
             dataIndex: 'deviceSecret',
@@ -219,7 +220,9 @@ export default function DeviceRegist() {
                     showTotal: () => <span>共 <a>{pager.totalRows}</a> 条</span>
                 }} />
             </div>
-
+            {
+                modelVis && <AddModal addVisible={modelVis} addOk={colseMoadl} CancelAdd={cancelModel} />
+            }
         </div>
     )
 }

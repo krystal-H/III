@@ -1,15 +1,13 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef, useContext,useMemo } from 'react'
+import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef, useContext, useMemo } from 'react'
 import { useHistory } from "react-router-dom"
 import { Table, Button, Space, Checkbox } from 'antd';
 import { getRowSpanCount } from '../../../../../configs/tableCombine'
 
 
-export default function TableCom({ dataSource,refreshCount }) {
+export default function TableCom({ dataSource, refreshCount }) {
     const history = useHistory();
     const [selectData, setSelectData] = useState([])
-    const productId=useMemo(()=>{
-        return history.location.pathname.split('/').slice(-2,-1)[0]
-    },[])
+
     //展示
     const filterFn = (data) => {
         let result = null
@@ -37,12 +35,13 @@ export default function TableCom({ dataSource,refreshCount }) {
     }
     const onChange = (e, data) => {
         let isTrue = e.target.checked
+        const productId = JSON.parse(sessionStorage.getItem('productItem')).productId
         setSelectData(pre => {
             let obj = {
                 id: data.id,
                 funcType: data.funcType,
                 identifier: data.funcIdentifier,
-                productId: 11759
+                productId
             }
             let arr = JSON.parse(JSON.stringify(pre))
             if (isTrue) {
@@ -57,13 +56,13 @@ export default function TableCom({ dataSource,refreshCount }) {
             return arr
         })
     }
-    useEffect(()=>{
+    useEffect(() => {
         refreshCount(selectData)
-    },[selectData.length])
+    }, [selectData.length])
     const columns = [
         {
             title: '勾选',
-            width:'50px',
+            width: '50px',
             render: (value, row, index) => {
                 let obj = getRowSpanCount(
                     dataSource,

@@ -117,7 +117,7 @@ export default function Device() {
             params.endDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
             params.startDate = dayjs().subtract(8, 'day').format('YYYY-MM-DD')
 
-        } else if (currentTime === 2) {
+        } else if (currentTime == 2) {
             params.endDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
             params.startDate = dayjs().subtract(31, 'day').format('YYYY-MM-DD')
         }

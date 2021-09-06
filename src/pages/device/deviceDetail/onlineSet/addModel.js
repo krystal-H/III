@@ -1,15 +1,60 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { Form, Input, Table, Modal } from 'antd'
+import { Paths, post, get } from '../../../../api'
+const EditableContext = React.createContext(null);
 const { TextArea } = Input;
-export default function AddModel({ addVisible, addOk, CancelAdd }) {
+
+const EditableRow = ({ index, ...props }) => {
   const [form] = Form.useForm();
+  return (
+    <Form form={form} component={false}>
+      <EditableContext.Provider value={form}>
+        <tr {...props} />
+      </EditableContext.Provider>
+    </Form>
+  );
+};
+export default function AddModel({ addVisible, addOk, CancelAdd }) {
+  let baseInfo = {}
+  if (sessionStorage.DEVICE_DETAIL_BASE) {
+    baseInfo = JSON.parse(sessionStorage.DEVICE_DETAIL_BASE)
+  }
   const [tableData, setTableData] = useState([])
+  const [form] = Form.useForm();
+  //获取产品id
+  useEffect(() => {
+    getProductDetail()
+  }, [])
+  const [productId, setProductId] = useState('')
+  const onChange=(e,index)=>{
+    setTableData(pre=>{
+      let data=JSON.parse(JSON.stringify(tableData)) 
+      data[index].name=e.target.value
+      return data
+    })
+    console.log(e,index,'====')
+  }
+  const getProductDetail = (loading = true) => {
+    post(Paths.getDeviceInfo, { 'deviceId': baseInfo.deviceId }).then((res) => {
+      if(res.data.productId){
+        getTableData(res.data.productId)
+        setProductId(res.data.productId)
+      }
+      
+    });
+  }
+  const getTableData=(id)=>{
+    post(Paths.getPhysicalModel, { productId: id }).then((res) => {
+      setTableData(res.data.properties)
+    });
+  }
   const columns = [
     {
       title: '数据名称',
       dataIndex: 'name',
       key: 'name',
       width: 160,
+      editable:true,
     },
     {
       title: '数据标识',
@@ -57,11 +102,18 @@ export default function AddModel({ addVisible, addOk, CancelAdd }) {
       dataIndex: 'execTime',
       key: 'execTime',
       width: 180,
+      render: (text, record,index) => {
+        return ( <Input  value={record.name} onChange={(e)=>onChange(e,index)}/>)
+      }
     }
   ]
+  //提交
+  const subData=()=>{
+
+  }
   return (
     <div >
-      <Modal title="远程配置任务" visible={addVisible} onOk={addOk} onCancel={CancelAdd} width='725px' wrapClassName='add-protocols-wrap'>
+      <Modal title="远程配置任务" visible={addVisible} onOk={subData} onCancel={CancelAdd} width='825px' wrapClassName='add-protocols-wrap'>
         <div>
 
           <Form
@@ -72,7 +124,7 @@ export default function AddModel({ addVisible, addOk, CancelAdd }) {
               name="problemType"
               rules={[{ required: true }]}
             >
-              <Input  />
+              <Input />
             </Form.Item>
             <Form.Item
               label="任务说明"
@@ -82,8 +134,9 @@ export default function AddModel({ addVisible, addOk, CancelAdd }) {
               <TextArea rows={4} />
             </Form.Item>
           </Form>
-          <div>请添加配置信息</div>
-          <Table dataSource={tableData} columns={columns} rowKey='workOrderId' />
+          <div style={{ marginBottom: '10px' }}>请添加配置信息</div>
+          <Table dataSource={tableData} columns={columns} rowKey='identifier' />
+          {/* <TableCom/> */}
         </div>
       </Modal>
     </div>
