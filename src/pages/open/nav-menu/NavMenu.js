@@ -9,7 +9,7 @@ const { SubMenu } = Menu;
 class NavMenu extends PureComponent {
     state = {
         openKeys:[],
-        selectedKeys:[],
+        selectedKeys:["0"],
     }
     componentDidMount(){
         this.props.history.listen( ({pathname})=>{
@@ -24,7 +24,7 @@ class NavMenu extends PureComponent {
                 return <SubMenu key={menuid||menuname} 
                                 icon={<span className={`selficon ${menuicon}`}></span>} 
                                 title={menuname}
-                                onTitleClick={({key})=>{this.titleClick(key)}}
+                                // onTitleClick={({key})=>{this.titleClick(key)}}
                         >
                             {this.getNavList(childmenus)}
                         </SubMenu>
@@ -51,41 +51,51 @@ class NavMenu extends PureComponent {
                     if(pathurl.indexOf(path)>-1){
                         this.setState({
                             selectedKeys:[menuid||menuname],
-                            openKeys:Array.from(new Set([...openKeys,keyid]))
+                            // openKeys:Array.from(new Set([...openKeys,keyid]))
+                            openKeys:[keyid]
+
+                            
                         })
                         return
                     }
                 }
             }else{
                 if(pathurl.indexOf(path)>-1){
-                    this.setState({selectedKeys:[keyid],});
-                    if(openKeys.length==0){
-                        for(let i=0;i<menulist.length;i++){
-                            let { childmenus=[],menuid,menuname } = menulist[i];
-                            if(childmenus.length>0){ //将第一个有子菜单的父菜单展开
-                                this.setState({openKeys:[menuid || menuname]});
-                                return;
-                            }
-                        }
-                    }
+                    this.setState({selectedKeys:[keyid]});
+                    // if(openKeys.length==0){
+                    //     for(let i=0;i<menulist.length;i++){
+                    //         let { childmenus=[],menuid,menuname } = menulist[i];
+                    //         if(childmenus.length>0){ //将第一个有子菜单的父菜单展开
+                    //             this.setState({openKeys:[menuid || menuname]});
+                    //             return;
+                    //         }
+                    //     }
+                    // }
                     return
                 }
             }
         }
     }
-    titleClick= key =>{
+    onOpenChange= keys =>{
         const {openKeys} = this.state;
-        let newopenkey = [...openKeys];
-        const kindex = openKeys.indexOf(key);
-        if(kindex>-1){
-            newopenkey.splice(kindex,1)
-        }else{
-            newopenkey.push(key)
-        }
+        const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
+        console.log(11111,latestOpenKey)
+        const newkeys = latestOpenKey && [latestOpenKey] || []
         this.setState({
-            openKeys:newopenkey
+            openKeys:newkeys
         })
         
+        // let newopenkey = [...openKeys];
+        // const kindex = openKeys.indexOf(key);
+        // if(kindex>-1){
+        //     newopenkey.splice(kindex,1)
+        // }else{
+        //     // newopenkey.push(key)
+        //     newopenkey=[key]
+        // }
+        // this.setState({
+        //     openKeys:newopenkey
+        // })
     }
     componentDidUpdate(oldprops){  
         const {menulist} = this.props;
@@ -104,8 +114,9 @@ class NavMenu extends PureComponent {
                     inlineCollapsed={collapsed}
                     inlineIndent={22}
                     forceSubMenuRender={true}
-                    // openKeys={openKeys}
+                    openKeys={openKeys}
                     selectedKeys={selectedKeys}
+                    onOpenChange={this.onOpenChange}
                 >
                     {this.getNavList(menulist)}
                 </Menu>

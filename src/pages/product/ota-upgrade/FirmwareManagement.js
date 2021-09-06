@@ -62,6 +62,23 @@ export default class FirmwareManagement  extends Component {
         }
         
         this.columns = [
+
+
+            // { title: '开发方案', dataIndex: 'productName'},
+            // { title: '产品版本号', dataIndex: 'productFirmwareVersion'},
+            // { title: '模组固件名称', dataIndex: 'productFirmwareVersion'},
+            // { title: '固件包名称', dataIndex: 'productFirmwareVersion'},
+            // { title: '运行状态',  dataIndex: 'updateStatus',
+            //   render: u => {
+            //       const {nam,color} = STATUSTAG[u]
+            //       return <Tag color={color} >{nam}</Tag>
+            //   }
+            // },
+            // { title: '创建时间',dataIndex: 'uploadTime',
+            //     render: t => <span>{DateTool.utcToDev(t)}</span>
+            // },
+
+
             { title: '产品名称', dataIndex: 'productName'},
 
             { title: '固件ID', dataIndex: 'deviceVersionId'},

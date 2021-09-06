@@ -73,14 +73,12 @@ export const AddFirmwareDialog = Form.create({
                         });
                         return false;
                     }
-                    post(Paths.oldVersionAdd,data,{needFormData:true,needVersion:1.1}).then((model) => {
-                        if(model.code==0){
-                            //先清空表单数据再关闭弹窗
-                            this.props.form.resetFields();
-                            _this.addFirmwareInput.setState({fileList:[]},()=>{
-                                this.props.addFirmware('添加固件成，请求列表');
-                            });
-                        }
+                    post(Paths.oldVersionAdd,data,{needVersion:1.1}).then((model) => {
+                        //先清空表单数据再关闭弹窗
+                        this.props.form.resetFields();
+                        _this.addFirmwareInput.setState({fileList:[]},()=>{
+                            this.props.addFirmware('添加固件成，请求列表');
+                        });
                     });
                 }
             });
