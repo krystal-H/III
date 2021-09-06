@@ -1,4 +1,14 @@
 #device-detail {
+  .device-top-name {
+    width: 100px;
+    height: 28px;
+    font-size: 20px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.85);
+    line-height: 28px;
+  }
+
   .device-top {
     display: flex;
     margin-top: 20px;
@@ -36,6 +46,7 @@
   }
 
   .device-content {
+
     // .ant-tabs-nav-wrap {
     //   padding: 0 22px;
     //   height: 60px;
@@ -54,9 +65,9 @@
     //       margin-left: 52px;
     //   }
     // }
-    .ant-tabs-content{
-        // padding: 6px 22px;
-        min-height: calc(100vh - 300px);
+    .ant-tabs-content {
+      // padding: 6px 22px;
+      min-height: calc(100vh - 300px);
     }
   }
 }
