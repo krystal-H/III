@@ -60,16 +60,16 @@ export default class GroupDetailt extends PureComponent {
             },
             
             { title: '操作', key: 'action', width:'200px',
-                render: (text, record) => (
+                render: (text, {deviceId,deviceUniqueId}) => (
                     <span>
-                        <Link key="detail" to={'/open/base/device/onlineDevice/details/' + record.deviceId}>查看</Link>
+                        <Link key="detail" to={`/open/device/devManage/detail/${deviceId}?step=1`}>查看</Link>
                         <Divider type="vertical" />
-                        <a onClick={this.openDel.bind(this,record.deviceId,record.deviceUniqueId)} >从分组中删除</a>
+                        <a onClick={this.openDel.bind(this,deviceId,deviceUniqueId)} >从分组中删除</a>
                     </span>
                 ),
             },
         ];
-       
+        
 
     }
     openDel = (delid,deldeviceUniqueId)=>{
