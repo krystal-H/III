@@ -25,10 +25,22 @@ const columns = [
         dataIndex: 'noticeType',
         width: '300px',
         render: (text, record) => {
-            let arr = ['系统公告', '流程消息', '服务消息']
-            if (text) {
-                return arr[text - 1]
+            if (text == 1) {
+                return '系统公告'
             }
+            if (text == 2) {
+                return '流程消息'
+            }
+            if (text == 31) {
+                return 'APP控制服务'
+            }
+            if (text == 32) {
+                return '云端定时服务'
+            }
+            if (text == 33) {
+                return '场景联动服务'
+            }
+            return ''
         }
     },
     {

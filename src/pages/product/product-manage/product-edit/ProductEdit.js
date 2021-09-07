@@ -151,7 +151,7 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
         </div>
         <div>
             <div>产品编码：</div>
-            <div>{productItem.productCode}</div>
+            <div>{productItem.code}</div>
         </div>
         <div>
             <div>产品密钥：</div>
