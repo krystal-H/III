@@ -349,6 +349,10 @@ export function getNavRoutes(menu) {
             childmenus = [],
             items = [],
         }) => {
+            
+            if(menuname=="规则引擎"){
+                menuname="场景服务"
+            }
             let _nav = find(_navRoutes,(o)=>o.menuname === menuname);
         
             if (childmenus.length > 0) {

@@ -73,7 +73,6 @@ export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList,
         let productItem = JSON.parse(sessionStorage.getItem('productItem'))
         data.productId = productItem.productId
         data.content.standard = modelType == 1 ? true : false
-        console.log(data, '要提交的数据')
         data.content = JSON.stringify(data.content)
 
         post(Paths.PhysicalModelAction, data).then((res) => {

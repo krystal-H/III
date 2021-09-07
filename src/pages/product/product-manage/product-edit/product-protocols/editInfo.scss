@@ -64,18 +64,18 @@
     background-color: #F8F9FB;
     padding: 15px 15px 15px 0;
     margin-bottom: 20px;
-    // position: relative;
+    position: relative;
 
     // &:hover .del-icon-params {
     //   display: block;
     // }
 
-    .del-icon-params {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      display: none;
-    }
+    // .del-icon-params {
+    //   position: absolute;
+    //   top: 0;
+    //   right: 0;
+    //   display: none;
+    // }
 
     .item-wrap {
       display: flex;

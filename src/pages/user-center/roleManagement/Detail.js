@@ -28,14 +28,20 @@ export default class AddRole extends Component{
             treeDataObject:[],
             treeDataDimension:[],
 
+            /*  用于权限操作区的UI变化 （不包括选中的 fatherid ）*/
             treeMenuCheckeys:[],
             treeDataObjectCheckeys:[],
             treeDataDimensionCheckeys:[],
 
-            showCheckedTree:[],
+            /*  用于选中操作改变UI后，导致的“已选权限”展示区的UI变化  和  最终提交的数据所需要的id，（包括选中的 fatherid ）*/
+            menuCheckedIds:[],
+            dataObjectCheckedIds:[],
+            dataDimensionCheckedIds:[],
             
         };
         this.formRef = createRef();
+
+        /* 用于拿到数据 遍历的时候  一次性同时记录初始选中的id ，再更新到操作区的UI 的 state*/
         this.treeMenuCheckeys=[];
         this.treeDataObjectCheckeys=[];
         this.treeDataDimensionCheckeys=[];
@@ -51,6 +57,8 @@ export default class AddRole extends Component{
             let dataMenu = this.addFrontIdMenu(JSON.parse(menu)),
                 dataObject = this.addFrontId(checkBoxGroupMenuList[0].checkBoxGroupList),
                 dataDimension = this.addFrontId(checkBoxGroupMenuList[1].checkBoxGroupList);
+
+
             let treeDataMenu = this.getMenuTreeData(dataMenu),
                 treeDataObject = this.getOneTreeData(dataObject,"treeDataObjectCheckeys"),
                 treeDataDimension = this.getOneTreeData(dataDimension,"treeDataDimensionCheckeys");
@@ -80,17 +88,24 @@ export default class AddRole extends Component{
         for(let i=0;i<wW.length;i++){
             let one = wW[i];
             wW[i].frontId = i+"";
-            if(one.subBoxs.length>0){
+            if(one.subBoxs && one.subBoxs.length>0){
                 for(let j=0;j<one.subBoxs.length;j++){
                     let two = one.subBoxs[j];
                     wW[i].subBoxs[j].frontId = i+"_"+j;
-                    if(two.subBoxs.length>0){
+                    if(two.subBoxs && two.subBoxs.length>0){
                         for(let k=0;k<two.subBoxs.length;k++){
                             let three = two.subBoxs[k];
                             wW[i].subBoxs[j].subBoxs[k].frontId = i+"_"+j+"_"+k;
-                            if(three.subBoxs.length>0){
+                            if(three.subBoxs && three.subBoxs.length>0){
                                 for(let l=0;l<three.subBoxs.length;l++){
+                                    let four = three.subBoxs[l];
                                     wW[i].subBoxs[j].subBoxs[k].subBoxs[l].frontId = i+"_"+j+"_"+k+"_"+l;
+                                    if(four.subBoxs && four.subBoxs.length>0){
+                                        for(let m=0;m<four.subBoxs.length;m++){
+                                            let five = four.subBoxs[m];
+                                            wW[i].subBoxs[j].subBoxs[k].subBoxs[l].subBoxs[m].frontId = i+"_"+j+"_"+k+"_"+l+"_"+m;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -122,29 +137,29 @@ export default class AddRole extends Component{
     //获取数据对象、设备标签权限的展示用树结构数据
     getOneTreeData = (data=[],type)=>{
         return data.map(({checked,groupName="",boxName="",subBoxs=[],frontId},index)=>{
-            if(checked){
-                this[type].push(frontId);
-            }
             let title = groupName || boxName;
-            if(subBoxs.length>0){
+            if(subBoxs.length>0){//有子级的时候，checked true状态的还要子级全部选中才会选中，子级全部选中的话ant自动选中父级
                 return {
                     title,
                     key:frontId,
                     children:this.getOneTreeData(subBoxs,type)
                 }
+            }else{ 
+                if(checked){//无子级的时候，checked状态的才显示选中
+                    this[type].push(frontId);
+                }
+                return {
+                    title,
+                    key:frontId
+                }
             }
-            return {
-                title,
-                key:frontId
-            }
+            
         })
     }
     //获取菜单权限的展示用树结构数据
     getMenuTreeData = (menu=[])=>{
         return menu.map(({checked,childmenus=[],menuname="",item=[],frontId})=>{
-            if(checked){
-                this.treeMenuCheckeys.push(frontId);
-            }
+            
             let title = menuname;
             if(childmenus.length>0){
                 return {
@@ -152,13 +167,21 @@ export default class AddRole extends Component{
                     key:frontId,
                     children:this.getMenuTreeData(childmenus)
                 }
+            }else{
+                if(checked){
+                    this.treeMenuCheckeys.push(frontId);
+                }
+                return {
+                    title,
+                    key:frontId
+                }
+
             }
-            return {
-                title,
-                key:frontId
-            }
+            
         })
     }
+
+
     //根据 Checkeys 里选中的id， 补充父节点id, ant 的 tree 选中的id不会包括非全选的父节点的id，但是后台需要
     addCheckedFatherId = (idlist)=>{
         let fatherIds = [];
@@ -174,19 +197,13 @@ export default class AddRole extends Component{
 
     //获取权限树的提交接口所需的格式数据
     getOneComitData = (type)=>{
-        const { 
-            dataMenu, dataObject, dataDimension, 
-            treeMenuCheckeys,treeDataObjectCheckeys, treeDataDimensionCheckeys
-        } = this.state;
+        const { dataMenu, dataObject, dataDimension } = this.state;
+        const { menuCheckedIds, dataObjectCheckedIds, dataDimensionCheckedIds } = this.getAllCheckedIds();
+        
+        let comitDataMenu = this.changChecked(dataMenu,menuCheckedIds),
+            comitDataObject = this.changChecked(dataObject,dataObjectCheckedIds),
+            comitDataDimension = this.changChecked(dataDimension,dataDimensionCheckedIds);
 
-        let checksMenu = this.addCheckedFatherId(treeMenuCheckeys);
-        let checksDataObj = this.addCheckedFatherId(treeDataObjectCheckeys);
-        let checksDataDimens = this.addCheckedFatherId(treeDataDimensionCheckeys);
-        let comitDataMenu = this.changChecked(dataMenu,checksMenu),
-            comitDataObject = this.changChecked(dataObject,checksDataObj),
-            comitDataDimension = this.changChecked(dataDimension,checksDataDimens);
-
-        // console.log(5555,comitDataMenu)
         return { comitDataMenu, comitDataObject, comitDataDimension }
     }
     //根据UI上的选中的id（frontId）， 设置 checked字段值，设置完成后删除 frontId 属性，
@@ -230,42 +247,83 @@ export default class AddRole extends Component{
         });
     }
 
+    //复选框勾选操作
     onCheckNode = (checkedKeysValue,type) => {
+        // let checkednam = {
+        //     "treeMenuCheckeys":"menuCheckedIds",
+        //     "treeDataObjectCheckeys":"dataObjectCheckedIds",
+        //     "treeDataDimensionCheckeys":"dataDimensionCheckedIds",
+        // }[type]
         this.setState({
-            [type]:checkedKeysValue
+            [type]:checkedKeysValue,
+            // [checkednam]:this.addCheckedFatherId(checkedKeysValue)
         },()=>{
-            // this.getCheckedTreeData()
+            this.getCheckedTree(type)
         })
     };
 
-    //展示已选中的菜单树
-    getCheckedTreeData = ()=>{
-        // let { 
-        //     treeDataMenu, treeDataObject, treeDataDimension, 
-        //     treeMenuCheckeys, treeDataObjectCheckeys, treeDataDimensionCheckeys
-        // } = this.state;
-        // let showCheckedTree = [];
-        // let checkedMenu =  treeMenuCheckeys.length>0 && this.fitherChecked(treeDataMenu,treeMenuCheckeys)
-
-        // console.log("--checkedMenu--",checkedMenu)
+    // ant选中的id 增加 有子节点选中的父节点的id
+    getAllCheckedIds = ()=>{
+        const { treeMenuCheckeys,treeDataObjectCheckeys, treeDataDimensionCheckeys } = this.state;
+        const menuCheckedIds = this.addCheckedFatherId(treeMenuCheckeys),
+            dataObjectCheckedIds = this.addCheckedFatherId(treeDataObjectCheckeys),
+            dataDimensionCheckedIds = this.addCheckedFatherId(treeDataDimensionCheckeys);
+        return {
+            menuCheckedIds, dataObjectCheckedIds, dataDimensionCheckedIds
+        }
 
     }
+   
 
-    // fitherChecked = (tree,checks)=>{
-    //     return tree.map(({title,key,children})=>{
-    //         if(checks.includes(key)){
-    //             let res = {
-    //                 title,
-    //                 key
-    //             }
-    //             if(children&&children.length>0){
-    //                 res.children = this.fitherChecked(children,checks)
-    //             }
-    //             return res
-    //         }
-    //         return null
-    //     })
-    // }
+    //生成展示已选中的菜单树
+    getCheckedTree = ()=>{
+        const { treeDataMenu, treeDataObject, treeDataDimension } = this.state;
+        const { menuCheckedIds, dataObjectCheckedIds, dataDimensionCheckedIds } = this.getAllCheckedIds();
+
+        let _tree = [];
+
+        if(menuCheckedIds.length>0){
+            _tree.push({
+                title:"功能菜单",
+                key:"menu",
+                children:this.fitherChecked(treeDataMenu,menuCheckedIds)
+            })
+        }
+        
+        if(dataObjectCheckedIds.length>0){
+            _tree.push({
+                title:"数据对象",
+                key:"objec",
+                children:this.fitherChecked(treeDataObject,dataObjectCheckedIds)
+            })
+        }
+        if(dataDimensionCheckedIds.length>0){
+            _tree.push({
+                title:"设备标签",
+                key:"dimension",
+                children:this.fitherChecked(treeDataDimension,dataDimensionCheckedIds)
+            })
+        }
+        return _tree;
+        
+    }
+    //已选中的展示区过滤掉 未选种的数据
+    fitherChecked = (tree,checks)=>{
+        // console.log(666,tree,checks)
+        let _arr = [];
+        for(let i = 0; i<tree.length; i++){
+            let { title, key, children=[] } = tree[i];
+            if(checks.includes(key)){
+                _arr.push({
+                    title,
+                    key:key+"_new"+title+"_"+i,// 此处为了解决数据合并后 key（"1_2_3_4"）会重复的问题
+                    children:this.fitherChecked(children,checks)
+                })
+            }
+        }
+        // console.log(777777,_arr)
+        return _arr
+    }
 
     render(){
         const { 
@@ -273,6 +331,8 @@ export default class AddRole extends Component{
             treeDataDimension,treeMenuCheckeys,treeDataObjectCheckeys, 
             treeDataDimensionCheckeys
         } = this.state;
+        const checkedTreeData = this.getCheckedTree();
+
         const treeDataTabPane = [
             {
                 name:"功能菜单",
@@ -326,17 +386,17 @@ export default class AddRole extends Component{
                                 })}
                             </Tabs>
                         </div>
-                        {/* <div className="borderbox">
-                           
-
-                        </div> */}
+                        <div className="borderbox">
+                            { checkedTreeData.length > 0 &&<Tree
+                                    showLine={true}
+                                    // autoExpandParent={true}
+                                    treeData={checkedTreeData}
+                                    defaultExpandAll={true}
+                                /> || <NoSourceWarn />
+                            }
+                        </div>
                     </div>
-
-                    
                 </div>
-
-
-
                 
                 <DoubleBtns
                     preBtn={false}

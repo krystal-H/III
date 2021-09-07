@@ -15,6 +15,7 @@ export default function TableCom({ dataSource }) {
     if (sessionStorage.DEVICE_DETAIL_BASE) {
         baseInfo = JSON.parse(sessionStorage.DEVICE_DETAIL_BASE)
     }
+    //获取产品id
     useEffect(() => {
         getProductDetail()
     }, [])
