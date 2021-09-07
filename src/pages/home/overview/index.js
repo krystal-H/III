@@ -424,8 +424,8 @@ export default function OverviewWrap() {
                             <div>快捷入口</div>
                         </div>
                         <div className='over-view-quick-entry'>
-                            <div className='center-layout-wrap'>
-                                <div onClick={openNewProduct}>
+                            <div className='center-layout-wrap' onClick={openNewProduct}>
+                                <div >
                                     <img src={quick1} />
                                     <div>创建产品</div>
                                 </div>
