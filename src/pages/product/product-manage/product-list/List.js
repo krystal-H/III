@@ -75,8 +75,11 @@ class List extends PureComponent {
             {
               record.status !== 2 &&
               <>
-                <span className="copy mar25" onClick={this.operateProduct.bind(this, record, 'copyModalVisible')}>复制</span>
-                <span className="delete" onClick={this.operateProduct.bind(this, record, 'deleteVisible')}>删除</span>
+                {
+                  record.isOldProduct === 0 &&
+                  <span className="copy mar25" onClick={this.operateProduct.bind(this, record, 'copyModalVisible')}>复制</span>
+                }
+                <span className="delete mar25" onClick={this.operateProduct.bind(this, record, 'deleteVisible')}>删除</span>
               </>
             }
           </div>
