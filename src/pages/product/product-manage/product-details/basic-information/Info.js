@@ -29,7 +29,7 @@ class Info extends Component {
         this.getPublishProductInfoFun = this.getPublishProductInfoFun.bind(this);
     }
     getPublishProductInfoFun(){
-        post(Paths.getPublishProductInfo,{productId:this.props.productId},{loading:true}).then((model) => {
+        post(Paths.getPublishProductInfo,{productId:this.props.productId},{ needFormData:true, loading:true}).then((model) => {
             if(model.code==0){
                 this.setState({publishProductInfo:model.data});
             }

@@ -131,7 +131,7 @@ let Paths = {
     saveLinkHelpImg: '/productManage/saveProductHelp',
     netWorkDelete: '/netWorkLogo/delete',
     netWorkAddAndUpdate: '/netWorkLogo/addAndUpdate',
-    getPublishProductInfo: '/product/getPublishProductInfo',
+    getPublishProductInfo: '/productManage/getV4PublishProductInfo',
     getV4Protocol: '/productManage/getV4ProtocolListByProductId',
     oldVersionList: '/firmware/old/device/version/list', //固件列表
     oldGetAllDeviceVersionType: '/firmware/old/device/version/getAllDeviceVersionType',//固件类型
@@ -275,7 +275,7 @@ let Paths = {
     deleteChild: '/common/deleteSubUser',//删除子账户
     getRoleList: '/role/getRoleList',//角色下拉框
     addMultiChild: '/common/createSubUser',//添加用户
-    updateChild: '/common/updateUserInfo',
+    updateChild: '/common/updateSubUser',
     getChildWithSecret: '/common/getSubUserInfo',//获得单个子账号+secret数据
 
     

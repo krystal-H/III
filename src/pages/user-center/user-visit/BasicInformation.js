@@ -35,19 +35,9 @@ export default class BasicInformation extends Component {
                     <div className="device-info">
                         <ListItem title="用户名" label={userInfo.userName||'--'}/>
                         <ListItem title="用户ID" label={userInfo.userId||'--'} />
-                        <ListItem title="账户类型" label={userInfo.userCategory==1?'控制台访问用户':userInfo.userCategory==2?'接口访问用户':'--'}/>
-                        <ListItem title="用户角色" label={userInfo.roleName||'--'}/>
-                        {   //控制台访问用户不用显示secretKey
-                        userInfo.userCategory==2&&<ListItem title="用户secretId" label={secretId} type="visible"/>
-                        }
-
-                        {   //控制台访问用户不用显示secretKey
-                        userInfo.userCategory==2&&<ListItem title="用户SecretKey" label={secretKey} type="visible"/>
-                        }
-
+                        <ListItem title="用户角色" label={userInfo.userRole||'--'}/>
                         <ListItem title="创建时间" label={ DateTool.utcToDev(userInfo.regTime) }/>
                         <ListItem title="最新修改时间" label={DateTool.utcToDev(userInfo.modifyTime) }/>
-                        {/* <ListItem title="备注" label={userInfo.remark||'--'} /> */}
                     </div>
                     <p className="userlook-mark"><span>备注：</span>{userInfo.remark}</p>
                 </AloneSection>
