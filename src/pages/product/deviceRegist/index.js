@@ -25,7 +25,7 @@ export default function DeviceRegist() {
         getCount()
     }, [])
     const downFile = () => {
-        alert(10)
+        // alert(10)
     }
     //统计
     const getCount = (productId) => {

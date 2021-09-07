@@ -14,9 +14,8 @@ export default function CloudUpdate({ operate, visible, updateOkHandle, updateCa
             break;
         case 2:
             texts = {
-                title:'删除云端定时功能',
-                desc:'即将删除的功能',
-                tip:'功能删除后将无法找回，是否确认删除？',
+                title:'删除标签',
+                tip:'标签删除后将无法找回，是否确认删除？',
                 needWarnIcon:true
             }
             break;
