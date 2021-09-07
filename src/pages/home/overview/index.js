@@ -78,21 +78,20 @@ export default function OverviewWrap() {
     //app列表
     const [appList, setAppList] = useState([])
     const getAppList = () => {
-        post(Paths.appList).then((res) => {
+        post(Paths.getAppInfoList, {}, { loading: true }).then((res) => {
             if (res.data.list.length > 3) {
                 setAppList(res.data.list.slice(0, 3))
             } else {
                 setAppList(res.data.list)
             }
-
-        });
+        })
     }
     //设备列表
     const [devOneList, setDevOneList] = useState({
         exception: 0, total: 0, totalActive: 0, todayActive: 0
     })
     const getDevOneList = () => {
-        post(Paths.devMnCount ).then((res) => {
+        post(Paths.devMnCount).then((res) => {
             setDevOneList(res.data)
         });
     }
@@ -118,13 +117,20 @@ export default function OverviewWrap() {
     //产品列表
     const [produList, setProductList] = useState([])
     const getProductList = () => {
-        get(Paths.productList).then((res) => {
-            if (res.data.length > 3) {
-                setProductList(res.data.slice(0, 3))
+        post(Paths.getProductListNew, { "current": 1, "size": 6 }).then(res => {
+            if (res.data.records.length > 3) {
+                setProductList(res.data.records.slice(0, 3))
             } else {
-                setProductList(res.data)
+                setProductList(res.data.records)
             }
-        });
+        })
+        // get(Paths.productList).then((res) => {
+        //     if (res.data.length > 3) {
+        //         setProductList(res.data.slice(0, 3))
+        //     } else {
+        //         setProductList(res.data)
+        //     }
+        // });
     }
     const productStatuFilter = (value) => {
         // (0开发模式 ,1生产模式，2-审核中)
@@ -147,7 +153,7 @@ export default function OverviewWrap() {
     const goApp = () => {
         history.push(`/open/app/list`);
     }
-    const goPage=(url)=>{
+    const goPage = (url) => {
         history.push(url);
     }
     //引导图
@@ -171,8 +177,18 @@ export default function OverviewWrap() {
             setShowDialog(true)
         }
     }, [])
-    const getProductListNew=()=>{
-        history.push(`/open/product/proManage/list`);
+    const getProductListNew = () => {
+        history.push(`/open/product/proManage/list`)
+    }
+    //产品详情
+    const goProductDetail = (item) => {
+        // 保存当前产品，为后边继续开发取数据使用
+        sessionStorage.setItem('productItem', JSON.stringify(item))
+        history.push(`/open/product/proManage/edit/${item.productId}/protocols`);
+    }
+    //app详情
+    const goAppDetail=item=>{
+        history.push(`/open/app/details/${item.appId}`)
     }
     return (
         <div className='over-view'>
@@ -225,13 +241,13 @@ export default function OverviewWrap() {
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>产品管理</div>
-                                <a onClick={()=>{goPage('/open/product/proManage/list')}}>进入</a>
+                                <a onClick={() => { goPage('/open/product/proManage/list') }}>进入</a>
                             </div>
                             <div className='over-view-productmn-content'>
                                 {
                                     produList.length ? (produList.map((item, index) => {
-                                        return (<div className='over-view-productmn-content-item' key={index}>
-                                            <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.productIcon} /></div>
+                                        return (<div className='over-view-productmn-content-item' key={index} onClick={() => { goProductDetail(item) }}>
+                                            <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.productIcon} alt=''/></div>
                                             <div className='over-view-productmn-content-content'>
                                                 <div>{item.productName}</div>
                                                 <div>{productStatuFilter(item.mode)}</div>
@@ -247,23 +263,23 @@ export default function OverviewWrap() {
                         <div className='over-view-productmn-footer hover-commons-unite'>
                             <div>
                                 <img src={projectmn1} />
-                                <div onClick={()=>{goPage('/open/product/devRegist')}}>设备注册</div>
+                                <div onClick={() => { goPage('/open/product/devRegist') }}>设备注册</div>
                             </div>
                             <div>
                                 <img src={projectmn2} />
-                                <div onClick={()=>{goPage('/open/product/otaUpdate/list')}}>固件升级</div>
+                                <div onClick={() => { goPage('/open/product/otaUpdate/list') }}>固件升级</div>
                             </div>
                             <div>
                                 <img src={projectmn3} />
-                                <div onClick={()=>{goPage('/open/product/ruleEngine')}}>场景服务</div>
+                                <div onClick={() => { goPage('/open/product/ruleEngine') }}>场景服务</div>
                             </div>
                             <div>
                                 <img src={projectmn4} />
-                                <div onClick={()=>{goPage('/open/product/cloudTimer')}}>云端定时</div>
+                                <div onClick={() => { goPage('/open/product/cloudTimer') }}>云端定时</div>
                             </div>
                             <div>
                                 <img src={projectmn5} />
-                                <div onClick={()=>{goPage('/open/product/remoteCofig')}}>远程配置</div>
+                                <div onClick={() => { goPage('/open/product/remoteCofig') }}>远程配置</div>
                             </div>
                         </div>
                         <div className='Guide-the-figure-content'>
@@ -370,7 +386,8 @@ export default function OverviewWrap() {
                             <div className='over-view-productmn-content' style={{ height: '80px' }}>
                                 {
                                     appList.length ? (appList.map((item, index) => {
-                                        return (<div className='over-view-productmn-content-item over-view-productmn-content-two' key={index}>
+                                        return (<div className='over-view-productmn-content-item over-view-productmn-content-two' 
+                                        key={index} onClick={()=>{goAppDetail(item)}}>
                                             <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.appIconLow} /></div>
                                             <div className='over-view-productmn-content-content'>
                                                 <div>{item.appName}</div>
@@ -464,21 +481,21 @@ export default function OverviewWrap() {
                         </div>
                         <div className='over-view-data-service'>
                             <div className='center-layout-wrap'>
-                                <div>
+                                <div onClick={() => { history.push(`/open/serve/device`) }}>
                                     <img src={dataservice1} alt='' />
-                                    <div onClick={() => { history.push(`/open/serve/device`) }}>设备分析</div>
+                                    <div >设备分析</div>
                                 </div>
                             </div>
                             <div className='center-layout-wrap'>
-                                <div>
+                                <div onClick={() => { history.push(`/open/serve/user`) }}>
                                     <img src={dataservice2} alt='' />
-                                    <div onClick={() => { history.push(`/open/serve/user`) }}>用户分析</div>
+                                    <div >用户分析</div>
                                 </div>
                             </div>
                             <div className='center-layout-wrap'>
-                                <div>
+                                <div onClick={() => { history.push(`/open/serve/dataSub`) }}>
                                     <img src={dataservice3} alt='' />
-                                    <div onClick={() => { history.push(`/open/serve/dataSub`) }}>数据订阅</div>
+                                    <div>数据订阅</div>
                                 </div>
                             </div>
                         </div>
@@ -496,7 +513,7 @@ export default function OverviewWrap() {
                                 <img src={help2} alt='' />
                                 <div>工单</div>
                             </div>
-                            <div onClick={()=>{window.open('https://dp.clife.net/iotdoc/')}}>
+                            <div onClick={() => { window.open('https://dp.clife.net/iotdoc/') }}>
                                 <img src={help3} alt='' />
                                 <div>帮助文档</div>
                             </div>

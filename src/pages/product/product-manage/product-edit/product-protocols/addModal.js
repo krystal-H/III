@@ -120,6 +120,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
               <Select
                 style={{ width: 142 }}
                 onChange={onselectChange}
+                defaultValue='11797'
               >
                 {
                   typelist.map(item => {
