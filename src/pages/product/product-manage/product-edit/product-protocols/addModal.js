@@ -43,9 +43,9 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
   }
   const getTwoList = () => {
     let params = {
-      deviceTypeId: productItem.deviceTypeId,
       productId: productItem.productId,
-      eq: false,
+      eq: true,
+      deviceTypeId:14
     }
     post(Paths.PhysicalModelList, params).then((res) => {
       setOtherData(delaData(res.data))
@@ -69,7 +69,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
   const onSearch = (value) => {
     let params = {
       deviceTypeId: productType,
-      eq: false,
+      eq: true,
       productId: productItem.productId,
       funcName: value
     }
@@ -120,6 +120,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
               <Select
                 style={{ width: 142 }}
                 onChange={onselectChange}
+                defaultValue={14}
               >
                 {
                   typelist.map(item => {

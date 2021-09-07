@@ -12,6 +12,7 @@ class NavMenu extends PureComponent {
         selectedKeys:["0"],
     }
     componentDidMount(){
+        this.setCurMenu();
         this.props.history.listen( ({pathname})=>{
             this.setCurMenu(pathname)
         } )
@@ -48,6 +49,7 @@ class NavMenu extends PureComponent {
             if(childmenus.length>0){
                 for(let j=0;j<childmenus.length;j++){
                     let {path,menuid,menuname } = childmenus[j];
+                    console.log(pathurl,path)
                     if(pathurl.indexOf(path)>-1){
                         this.setState({
                             selectedKeys:[menuid||menuname],
@@ -97,7 +99,7 @@ class NavMenu extends PureComponent {
         //     openKeys:newopenkey
         // })
     }
-    componentDidUpdate(oldprops){  
+    componentDidUpdate(oldprops){ 
         const {menulist} = this.props;
         if(oldprops.menulist.length==0 && menulist.length>0){//第一次接收到 menulist 时
             this.setCurMenu();

@@ -8,7 +8,7 @@ import PageTitle from '../../../components/page-title/PageTitle';
 import AloneSection from '../../../components/alone-section/AloneSection';
 import ContactInformation from './ContactInformation';
 
-import TreeStructureDisplay from '../../../components/tree-structure-display/TreeStructureDisplay'
+// import TreeStructureDisplay from '../../../components/tree-structure-display/TreeStructureDisplay'
 
 import './UserInfo.scss'
 import { DateTool } from '../../../util/util'
@@ -104,7 +104,7 @@ export default class BaseInfo extends Component {
                                 </div>
                             </div>
                         </AloneSection>
-                        <TreeStructureDisplay userCategory='1' productResource={productResource} dataObjRightsList={dataObjRightsList} dataDimensionRightsList={dataDimensionRightsList} />
+                        {/* <TreeStructureDisplay userCategory='1' productResource={productResource} dataObjRightsList={dataObjRightsList} dataDimensionRightsList={dataDimensionRightsList} /> */}
                     </div>
                     // 主账号页面
                     :<div>

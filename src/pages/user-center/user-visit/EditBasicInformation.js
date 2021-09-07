@@ -86,6 +86,16 @@ class EditBasicInformationForm extends Component {
     userName = (e) => {
         this.setState({userName:e.target.value});
     }
+    backfill = (userInfo) => {
+        this.setState({
+            userName:userInfo.userName||null,//用户名称
+            remark:userInfo.remark||'',//备注
+            roleId:userInfo.roleId||null,//角色ID
+            ipWhiteSelect:userInfo.ipWhiteList?true:false,//是否提白名单
+            ipWhiteList:userInfo.ipWhiteList,
+            resetChecked:false,
+        });
+    }
     remark = (e) => {
         this.setState({remark:e.target.value});
     }
@@ -98,9 +108,9 @@ class EditBasicInformationForm extends Component {
                 let {resetChecked} = this.state,
                     {userId} = this.props.userData,
                     {roleId,userName,password,remark} = values;
-                    let data = {
+                let data = {
                     userId,
-                    roleIds:roleId
+                    roleId,
                     // userName:userName+'@'+this.props.developerInfo.id,
                 };
                 if(resetChecked){
@@ -110,9 +120,9 @@ class EditBasicInformationForm extends Component {
                     data.remark = remark;
                 }
                 post(Paths.updateChild,data,{loading:true}).then((res) => {
-                    if(res.code==0){
-                        this.props.handleClose();
-                    }
+                   
+                    this.props.handleClose();
+                    
                 });
             }
         });

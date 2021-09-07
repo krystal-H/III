@@ -73,7 +73,6 @@ export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList,
         let productItem = JSON.parse(sessionStorage.getItem('productItem'))
         data.productId = productItem.productId
         data.content.standard = modelType == 1 ? true : false
-        console.log(data, '要提交的数据')
         data.content = JSON.stringify(data.content)
 
         post(Paths.PhysicalModelAction, data).then((res) => {
@@ -166,7 +165,7 @@ function NumberTemp({ currentTab, sentReq,actionData }, ref) {
         obj.type=actionData.dataTypeEN
         
         actionData.funcParamList.forEach(item => {
-            obj.dataTransferType=item.dataTransferType
+            obj.accessMode=item.accessMode
             if (item.dataTypeEN === "enum") {
                 let emusList = []
                 for (let key in item.propertyMap) {
@@ -373,12 +372,12 @@ function NumberTemp({ currentTab, sentReq,actionData }, ref) {
 
             <Form.Item
                 label="数据传输类型："
-                name="dataTransferType"
+                name="accessMode"
             >
                 <Radio.Group >
-                    <Radio value="可下发可上报">可下发可上报</Radio>
-                    <Radio value="可下发">可下发</Radio>
-                    <Radio value="可上报">可上报</Radio>
+                    <Radio value="rw">可下发可上报</Radio>
+                    <Radio value="w">可下发</Radio>
+                    <Radio value="r">可上报</Radio>
                 </Radio.Group>
             </Form.Item>
         </Form>

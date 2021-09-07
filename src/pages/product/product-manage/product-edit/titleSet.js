@@ -134,7 +134,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     </Form.Item>
                     <Form.Item
                         label="产品编码"
-                    ><span>{productItem.productCode}</span>
+                    ><span>{productItem.code}</span>
                     </Form.Item>
                     <Form.Item
                         label="产品密钥"

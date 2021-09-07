@@ -34,7 +34,7 @@ export default function ProductDetail ({match}) {
     }
     return (
         <div className="old-pro-detail">
-            <PageTitle title={productBaseInfo.productName}></PageTitle>
+            <PageTitle title={productBaseInfo.productName} titleBack={true}></PageTitle>
             <div className={'content-wrapper'}>
                 <ProductTabs productId={productIdInRoutePath} productBaseInfo={productBaseInfo}
                 ></ProductTabs>

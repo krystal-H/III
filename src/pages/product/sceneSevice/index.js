@@ -33,25 +33,26 @@ export default function DeviceRegist() {
     //产品种类列表
     const getProductType = () => {
         post(Paths.getProductPlus, {}).then((res) => {
-            setOptionArr(res.data)
+            if (res.data.length) {
+                setSelectType(res.data[0].productId)
+                setOptionArr(res.data)
+            }
         });
     }
     //产品改变
     const selectChange = (value) => {
-        setPager(pre => {
-            let obj = JSON.parse(JSON.stringify(pre))
-            return Object.assign(obj, { pageIndex: 1 })
-        })
         setSelectType(value)
     }
     //搜索
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
     useEffect(() => {
-        getList()
-    }, [pager.pageIndex, pager.pageRows, selectType])
+        if (selectType) {
+            getList()
+        }
+    }, [selectType])
     //获取列表
     const getList = (loading = true) => {
-        let params = { ...form.getFieldsValue(), ...pager }
+        let params = { ...form.getFieldsValue() }
         if (selectType) {
             params.productId = selectType
         }
@@ -59,11 +60,11 @@ export default function DeviceRegist() {
             delete params.id
         }
         post(Paths.scenceList, params, { loading }).then((res) => {
-            setDataSource(res.data.list)
-            setPager(pre => {
-                let obj = JSON.parse(JSON.stringify(pre))
-                return Object.assign(obj, { totalRows: res.data.pager.totalRows })
-            })
+            setDataSource(res.data)
+            // setPager(pre => {
+            //     let obj = JSON.parse(JSON.stringify(pre))
+            //     return Object.assign(obj, { totalRows: res.data.pager.totalRows })
+            // })
         });
     }
     //页码改变
@@ -94,6 +95,7 @@ export default function DeviceRegist() {
     //注册
     const [modelVis, setModelVis] = useState(false)
     const openRegist = () => {
+        return
         setModelVis(true)
     }
     const cancelModel = () => {
@@ -150,12 +152,11 @@ export default function DeviceRegist() {
             }
         }
     ];
-
     return (
-        <div id='device-regist'>
+        <div id='device-regist2'>
             <PageTitle title='场景服务'>
                 <div className='top-select'>
-                    <Select style={{ width: 200 }} allowClear onChange={selectChange}>
+                    <Select style={{ width: 200 }} value={selectType} onChange={selectChange}>
                         {
                             optionArr.map(item => {
                                 return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
