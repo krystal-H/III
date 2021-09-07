@@ -376,8 +376,8 @@ function NumberTemp({ currentTab, sentReq,actionData }, ref) {
             >
                 <Radio.Group >
                     <Radio value="rw">可下发可上报</Radio>
-                    <Radio value="r">可下发</Radio>
-                    <Radio value="w">可上报</Radio>
+                    <Radio value="w">可下发</Radio>
+                    <Radio value="r">可上报</Radio>
                 </Radio.Group>
             </Form.Item>
         </Form>
