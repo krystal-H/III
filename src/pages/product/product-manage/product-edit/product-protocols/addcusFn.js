@@ -336,12 +336,12 @@ function NumberTemp({ currentTab, sentReq }, ref) {
 
             <Form.Item
                 label="数据传输类型："
-                name="dataTransferType"
+                name="accessMode"
             >
                 <Radio.Group >
-                    <Radio value="可下发可上报">可下发可上报</Radio>
-                    <Radio value="可下发">可下发</Radio>
-                    <Radio value="可上报">可上报</Radio>
+                    <Radio value="rw">可下发可上报</Radio>
+                    <Radio value="r">可下发</Radio>
+                    <Radio value="w">可上报</Radio>
                 </Radio.Group>
             </Form.Item>
         </Form>

@@ -19,13 +19,13 @@ export default function TableCom({ dataSource }) {
     useEffect(() => {
         getProductDetail()
     }, [])
-    const [productId,setProductId]=useState('')
+    const [productId, setProductId] = useState('')
     const getProductDetail = (loading = true) => {
         post(Paths.getDeviceInfo, { 'deviceId': baseInfo.deviceId }, { loading }).then((res) => {
             setProductId(res.data.productId)
         });
     }
-    
+
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     //页码改变
     const pagerChange = (pageIndex, pageRows) => {
@@ -74,12 +74,12 @@ export default function TableCom({ dataSource }) {
         return data
     }
     const [ModalVisible, setModalVisible] = useState(false)
-    const [sentData,setSentData]=useState({})
+    const [sentData, setSentData] = useState({})
     const goTetail = (data) => {
         setSentData(data)
         setModalVisible(true)
     }
-    const closeOk=()=>{
+    const closeOk = () => {
         setModalVisible(false)
     }
     const columns = [
@@ -122,7 +122,19 @@ export default function TableCom({ dataSource }) {
         { title: '参数名称', dataIndex: 'name' },
         { title: '参数标识', dataIndex: 'identifier' },
         {
-            title: '数据传输类型', dataIndex: 'dataTransferType',
+            title: '数据传输类型', dataIndex: 'accessMode',
+            render: (text, record) => {
+                if (text == 'rw') {
+                    return '可下发可上报'
+                }
+                if (text == 'r') {
+                    return '可下发'
+                }
+                if (text == 'w') {
+                    return '可上报'
+                }
+                return ''
+            }
         },
         {
             title: '数据类型', dataIndex: 'dataType', render: (text, record) => (
@@ -151,7 +163,7 @@ export default function TableCom({ dataSource }) {
             }}
         />
         {
-            ModalVisible && <DetailModl ModalVisible={ModalVisible} closeOk={closeOk} sentData={sentData} productId={productId}/>
+            ModalVisible && <DetailModl ModalVisible={ModalVisible} closeOk={closeOk} sentData={sentData} productId={productId} />
         }
     </div>
 }

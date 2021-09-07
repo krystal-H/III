@@ -114,7 +114,19 @@ export default function TableCom({ dataSource, refreshCount }) {
         { title: '参数名称', dataIndex: 'name' },
         { title: '参数标识', dataIndex: 'identifier' },
         {
-            title: '数据传输类型', dataIndex: 'dataTransferType',
+            title: '数据传输类型', dataIndex: 'accessMode',
+            render: (text, record) => {
+                if (text == 'rw') {
+                    return '可下发可上报'
+                }
+                if (text == 'r') {
+                    return '可下发'
+                }
+                if (text == 'w') {
+                    return '可上报'
+                }
+                return ''
+            }
         },
         {
             title: '数据类型', dataIndex: 'dataType', render: (text, record) => (
