@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Tabs, Radio, Table, Drawer, Image, Divider } from 'antd';
-const { TabPane } = Tabs;
+import { Table, Drawer, Image, Divider } from 'antd';
 import { post, Paths, get } from '../../../api';
 import { DateTool } from '../../../util/util';
 export default function DeviceShadow() {

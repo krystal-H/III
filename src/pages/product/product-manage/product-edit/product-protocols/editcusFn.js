@@ -119,7 +119,7 @@ export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList,
 }
 
 //属性组件
-function NumberTemp({ currentTab, sentReq,actionData }, ref) {
+function NumberTemp({ currentTab, sentReq, actionData }, ref) {
     const [form] = Form.useForm();
     const onFinish = async () => {
         try {
@@ -160,12 +160,12 @@ function NumberTemp({ currentTab, sentReq,actionData }, ref) {
     }
     const originOutput = useMemo(() => {
         let obj = {}
-        obj.name=actionData.funcName
-        obj.identifier=actionData.funcIdentifier
-        obj.type=actionData.dataTypeEN
-        
+        obj.name = actionData.funcName
+        obj.identifier = actionData.funcIdentifier
+        obj.type = actionData.dataTypeEN
+
         actionData.funcParamList.forEach(item => {
-            obj.accessMode=item.accessMode
+            obj.accessMode = item.accessMode
             if (item.dataTypeEN === "enum") {
                 let emusList = []
                 for (let key in item.propertyMap) {
@@ -182,15 +182,15 @@ function NumberTemp({ currentTab, sentReq,actionData }, ref) {
                     specs[key] = item.propertyMap[key]
                 })
                 obj.specs = specs
-            }else if (item.dataTypeEN === "bool") {
+            } else if (item.dataTypeEN === "bool") {
                 let specs = {
-                    '1':item.propertyMap['1'],
-                    '0':item.propertyMap['0']
+                    '1': item.propertyMap['1'],
+                    '0': item.propertyMap['0']
                 }
                 obj.specs = specs
             }
         })
-        console.log(obj,999)
+        console.log(obj, 999)
         return obj
     }, [])
     //数据类型改变
@@ -219,7 +219,7 @@ function NumberTemp({ currentTab, sentReq,actionData }, ref) {
                         required: true,
                     },
                 ]}
-                
+
             >
                 <Input />
             </Form.Item>
@@ -232,7 +232,7 @@ function NumberTemp({ currentTab, sentReq,actionData }, ref) {
                         required: true,
                     },
                 ]}
-            ><Input readOnly/>
+            ><Input readOnly />
             </Form.Item>
             <Form.Item
                 label="数据类型："
@@ -440,10 +440,10 @@ function EventTemp({ actionData, sentReq }, ref) {
                     specs[key] = item.propertyMap[key]
                 })
                 newItem.specs = specs
-            }else if (item.dataTypeEN === "bool") {
+            } else if (item.dataTypeEN === "bool") {
                 let specs = {
-                    '1':item.propertyMap['1'],
-                    '0':item.propertyMap['0']
+                    '1': item.propertyMap['1'],
+                    '0': item.propertyMap['0']
                 }
                 newItem.specs = specs
             }
@@ -460,7 +460,7 @@ function EventTemp({ actionData, sentReq }, ref) {
             return obj
         })
     }
-    
+
     //触发验证及提交
     const onFinish = async () => {
         paramsWrap = []
@@ -480,7 +480,7 @@ function EventTemp({ actionData, sentReq }, ref) {
                     span: 16,
                 }}
                 form={form}
-                initialValues={{ name: actionData.funcName, identifier: actionData.funcIdentifier,type:actionData.eventType }}
+                initialValues={{ name: actionData.funcName, identifier: actionData.funcIdentifier, type: actionData.eventType }}
             >
                 <Form.Item
                     label="功能点名称："
@@ -566,10 +566,10 @@ function ServeTemp({ sentReq, actionData }, ref) {
                     specs[key] = item.propertyMap[key]
                 })
                 newItem.specs = specs
-            }else if (item.dataTypeEN === "bool") {
+            } else if (item.dataTypeEN === "bool") {
                 let specs = {
-                    '1':item.propertyMap['1'],
-                    '0':item.propertyMap['0']
+                    '1': item.propertyMap['1'],
+                    '0': item.propertyMap['0']
                 }
                 newItem.specs = specs
             }
@@ -928,9 +928,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                                 </Form.Item>
                                 <Form.Item name={['specs', 'unit']} label="单位" >
                                     <Select allowClear >
-                                        <Select.Option value="male">male</Select.Option>
-                                        <Select.Option value="female">female</Select.Option>
-                                        <Select.Option value="other">other</Select.Option>
+                                        <Select.Option value="cal">卡路里</Select.Option>
                                     </Select>
                                 </Form.Item>
                             </>)
