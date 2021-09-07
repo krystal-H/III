@@ -37,7 +37,13 @@ export default class AddRole extends Component{
             menuCheckedIds:[],
             dataObjectCheckedIds:[],
             dataDimensionCheckedIds:[],
-            
+
+            expandedKeys: [],
+            searchValue: '',
+            autoExpandParent: true,
+
+            curTab:0
+                    
         };
         this.formRef = createRef();
 
@@ -45,6 +51,9 @@ export default class AddRole extends Component{
         this.treeMenuCheckeys=[];
         this.treeDataObjectCheckeys=[];
         this.treeDataDimensionCheckeys=[];
+
+
+        this.keylist=[[],[],[]];
     }
     componentDidMount() {
         this.getRights();
@@ -54,14 +63,20 @@ export default class AddRole extends Component{
     getRights = ()=>{
         post(Paths.getRights,{roleId:this.roleId},{loading:true}).then(res => {
             let { checkBoxGroupMenuList=[], menu="[]" } = res.data;
+
             let dataMenu = this.addFrontIdMenu(JSON.parse(menu)),
                 dataObject = this.addFrontId(checkBoxGroupMenuList[0].checkBoxGroupList),
                 dataDimension = this.addFrontId(checkBoxGroupMenuList[1].checkBoxGroupList);
 
-
             let treeDataMenu = this.getMenuTreeData(dataMenu),
                 treeDataObject = this.getOneTreeData(dataObject,"treeDataObjectCheckeys"),
                 treeDataDimension = this.getOneTreeData(dataDimension,"treeDataDimensionCheckeys");
+
+            /* 把tree数据 解析成只有一层级的 同级的{title,key},便于做搜索操作（onSearch）时过滤数据 */
+            // this.generateList(treeDataMenu,0);
+            // this.generateList(treeDataObject,1);
+            // this.generateList(treeDataDimension,2);
+
             this.setState({
                 dataMenu,
                 dataObject,
@@ -249,16 +264,10 @@ export default class AddRole extends Component{
 
     //复选框勾选操作
     onCheckNode = (checkedKeysValue,type) => {
-        // let checkednam = {
-        //     "treeMenuCheckeys":"menuCheckedIds",
-        //     "treeDataObjectCheckeys":"dataObjectCheckedIds",
-        //     "treeDataDimensionCheckeys":"dataDimensionCheckedIds",
-        // }[type]
         this.setState({
             [type]:checkedKeysValue,
-            // [checkednam]:this.addCheckedFatherId(checkedKeysValue)
         },()=>{
-            this.getCheckedTree(type)
+            // this.getCheckedTree(type)
         })
     };
 
@@ -316,7 +325,7 @@ export default class AddRole extends Component{
             if(checks.includes(key)){
                 _arr.push({
                     title,
-                    key:key+"_new"+title+"_"+i,// 此处为了解决数据合并后 key（"1_2_3_4"）会重复的问题
+                    key:key+"_new"+title+"_"+i,// 此处为了解决数据合并后 key（格式如"1_2_3"）会重复的问题
                     children:this.fitherChecked(children,checks)
                 })
             }
@@ -325,11 +334,49 @@ export default class AddRole extends Component{
         return _arr
     }
 
+    onExpand = expandedKeys => {
+        this.setState({
+          expandedKeys,
+          autoExpandParent: false,
+        });
+    };
+    /* 把tree数据 解析成只有一层级的 同级的{title,key},便于做搜索操作（onSearch）时过滤数据 */
+    generateList = (data,cur) => {
+        for (let i = 0; i < data.length; i++) {
+            const node = data[i];
+            const { key } = node;
+            this.keylist[cur].push({ key, title: key });
+            if (node.children) {
+                generateList(node.children,cur);
+            }
+        }
+    };
+
+    onSearch = e => {
+        const { value } = e.target;
+        const expandedKeys = this.keylist[curTab].map(item => {
+            if (item.title.indexOf(value) > -1) {
+                let parentId = item.key.substring(0,item.key.lastIndexOf("_"))
+                return parentId; 
+            }
+            return null;
+        }).filter((item, i, self) => item && self.indexOf(item) === i);
+        this.setState({
+          expandedKeys,
+          searchValue: value,
+          autoExpandParent: true,
+        });
+    };
+    changeTab = curTab=>{
+        this.setState({ curTab })
+    }
+
     render(){
         const { 
             roleName, remark, treeDataMenu,treeDataObject,
             treeDataDimension,treeMenuCheckeys,treeDataObjectCheckeys, 
-            treeDataDimensionCheckeys
+            treeDataDimensionCheckeys,
+            searchValue, expandedKeys, autoExpandParent
         } = this.state;
         const checkedTreeData = this.getCheckedTree();
 
@@ -353,6 +400,32 @@ export default class AddRole extends Component{
                 type:"treeDataDimensionCheckeys",
             }
         ]
+
+
+        // const loop = data => data.map(item => {
+        //     const index = item.title.indexOf(searchValue);
+        //     const beforeStr = item.title.substr(0, index);
+        //     const afterStr = item.title.substr(index + searchValue.length);
+        //     const title =
+        //     index > -1 ? (
+        //         <span>
+        //         {beforeStr}
+        //         <span className="site-tree-search-value">{searchValue}</span>
+        //         {afterStr}
+        //         </span>
+        //     ) : (
+        //         <span>{item.title}</span>
+        //     );
+        //     if (item.children) {
+        //         return { title, key: item.key, children: loop(item.children) };
+        //     }
+        //     return {
+        //         title,
+        //         key: item.key,
+        //     };
+        // });
+
+
         return <div className='page-role-edit'>
             <PageTitle title={this.roleId&&"编辑角色"||"创建角色"} titleBack={true}   />
             <div className="pagebody comm-shadowbox">
@@ -372,24 +445,32 @@ export default class AddRole extends Component{
                     <div className='tit'>权限配置</div>
                     <div className="treemod">
                         <div className="borderbox">
-                            <Tabs>
+                            {/* <Input.Search placeholder="查找" onChange={this.onSearch} /> */}
+                            <Tabs onChange={this.changeTab}>
                                 {treeDataTabPane.map(({name,treeDataNam,checkKeysNam,type},index)=>{
-                                        return <Tabs.TabPane tab={name} key={index+""}>
-                                                { treeDataNam.length > 0 &&<Tree
-                                                    checkable
-                                                    autoExpandParent={true}
-                                                    onCheck={(val)=>{this.onCheckNode(val,type)}}
-                                                    checkedKeys={checkKeysNam}
-                                                    treeData={treeDataNam}
-                                                /> || <NoSourceWarn />}
-                                                </Tabs.TabPane>
+                                    return <Tabs.TabPane tab={name} key={index}>
+                                            { treeDataNam.length > 0 &&<Tree
+                                                checkable
+                                                onCheck={(val)=>{this.onCheckNode(val,type)}}
+                                                checkedKeys={checkKeysNam}
+
+                                                autoExpandParent={true}
+                                                treeData={treeDataNam}
+
+                                                // onExpand={this.onExpand}
+                                                // expandedKeys={expandedKeys}
+                                                // autoExpandParent={autoExpandParent}
+                                                // treeData={loop(treeDataNam)}
+                                            /> 
+                                            || <NoSourceWarn />}
+                                        </Tabs.TabPane>
                                 })}
                             </Tabs>
                         </div>
                         <div className="borderbox">
                             { checkedTreeData.length > 0 &&<Tree
                                     showLine={true}
-                                    // autoExpandParent={true}
+                                    autoExpandParent={true}
                                     treeData={checkedTreeData}
                                     defaultExpandAll={true}
                                 /> || <NoSourceWarn />

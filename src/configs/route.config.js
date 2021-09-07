@@ -80,11 +80,11 @@ export const navRoutes = [
                 menuid:'2-0',
 
             },
-            {
-                menuname: '设备秘钥',
-                path: '/open/device/devSecret',
-                menuid:'2-1',
-            },
+            // {
+            //     menuname: '设备秘钥',
+            //     path: '/open/device/devSecret',
+            //     menuid:'2-1',
+            // },
             {
                 menuname: '设备分组',
                 path: '/open/device/devGroup',
@@ -353,7 +353,11 @@ export function getNavRoutes(menu) {
             if(menuname=="规则引擎"){
                 menuname="场景服务"
             }
-            let _nav = find(_navRoutes,(o)=>o.menuname === menuname);
+            let _nav = find(_navRoutes,(o)=>o.menuname === menuname) || {
+                menuname: menuname + "（暂不支持）",
+                path: '/open/home',
+                menuid:menuname,
+            };
         
             if (childmenus.length > 0) {
                 _navRoutes = _nav.childmenus;
