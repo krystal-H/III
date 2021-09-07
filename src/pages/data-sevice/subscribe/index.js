@@ -16,7 +16,7 @@ const { Search } = Input;
 export default function DeviceRegist() {
     const [form] = Form.useForm();
     const [optionArr, setOptionArr] = useState([]) //产品列表
-    const [productCount, SetproductCount] = useState({})
+    const [productCount, SetproductCount] = useState('')
     const [dataSource, setDataSource] = useState([])
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
     // const [searchParams,setSearchParams]=useState({})

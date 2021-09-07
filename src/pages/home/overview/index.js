@@ -247,7 +247,7 @@ export default function OverviewWrap() {
                                 {
                                     produList.length ? (produList.map((item, index) => {
                                         return (<div className='over-view-productmn-content-item' key={index} onClick={() => { goProductDetail(item) }}>
-                                            <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.productIcon} /></div>
+                                            <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.productIcon} alt=''/></div>
                                             <div className='over-view-productmn-content-content'>
                                                 <div>{item.productName}</div>
                                                 <div>{productStatuFilter(item.mode)}</div>

@@ -94,6 +94,7 @@ export default function DeviceRegist() {
     //注册
     const [modelVis, setModelVis] = useState(false)
     const openRegist = () => {
+        return
         setModelVis(true)
     }
     const cancelModel = () => {
@@ -152,7 +153,7 @@ export default function DeviceRegist() {
     ];
 
     return (
-        <div id='device-regist'>
+        <div id='device-regist2'>
             <PageTitle title='场景服务'>
                 <div className='top-select'>
                     <Select style={{ width: 200 }} allowClear onChange={selectChange}>
