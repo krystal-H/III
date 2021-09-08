@@ -31,7 +31,7 @@
 
       div {
         font-size: 16px;
-        font-weight: 500;
+        font-weight: 600;
         color: #323232;
         line-height: 22px;
       }
@@ -151,7 +151,7 @@
 
             div {
               font-size: 16px;
-              font-weight: 500;
+              font-weight: 600;
               color: #323232;
               line-height: 22px;
             }
@@ -164,7 +164,7 @@
             // overflow: hidden;
 
             .over-view-productmn-content-item {
-              width: 232px;
+              width: 230px;
               height: 96px;
               background: #F8F9FB;
               border-radius: 4px;
@@ -280,7 +280,7 @@
         .over-view-device-title {
           height: 22px;
           font-size: 16px;
-          font-weight: 500;
+          font-weight: 600;
           color: #323232;
           line-height: 22px;
           margin-bottom: 16px;
@@ -299,7 +299,6 @@
             }
 
             >div {
-              // width: 138px;
               flex: 1;
               height: 56px;
               font-size: 12px;
@@ -316,7 +315,7 @@
                 &:last-child {
                   height: 32px;
                   font-size: 14px;
-                  font-weight: 400;
+                  font-weight: 600;
                   color: #212121;
                   line-height: 32px;
                 }
@@ -552,7 +551,7 @@
   position: relative;
   z-index: 9999;
   border-radius: 10px;
-  pointer-events: none;
+  // pointer-events: none;
 
   .Guide-the-figure-content {
     display: block;

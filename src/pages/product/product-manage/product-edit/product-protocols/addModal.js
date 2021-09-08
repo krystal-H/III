@@ -45,7 +45,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
     let params = {
       productId: productItem.productId,
       eq: true,
-      deviceTypeId:14
+      deviceTypeId: 14
     }
     post(Paths.PhysicalModelList, params).then((res) => {
       setOtherData(delaData(res.data))
@@ -64,7 +64,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
     getTwoList()
     getTypeList()
   }, [])
-  const [productType, setProductType] = useState('')
+  const [productType, setProductType] = useState(14)
   //搜索
   const onSearch = (value) => {
     let params = {
@@ -80,6 +80,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
 
   const onselectChange = (value) => {
     setProductType(value)
+    // onSearch('')
   }
   const [selectedMy, setSelectedMy] = useState([])
   const [selectedOther, setSelectedOther] = useState([])
@@ -91,7 +92,10 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
   }
   //提交
   const sentData = () => {
+    if (!selectedMy.length && !selectedOther.length) {
 
+      return
+    }
     if (currentTab === '1') {
       post(Paths.addPhticalStard, selectedMy).then((res) => {
         closeAdd()
@@ -120,7 +124,6 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
               <Select
                 style={{ width: 142 }}
                 onChange={onselectChange}
-                defaultValue={14}
               >
                 {
                   typelist.map(item => {
