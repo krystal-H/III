@@ -1,141 +1,82 @@
 import React, { Component } from 'react';
 import { Tabs, Tree } from 'antd';
-import NoSourceWarn from './../../components/no-source-warn/NoSourceWarn';
+import NoSourceWarn from '../no-source-warn/NoSourceWarn';
 import './TreeStructureDisplay.scss';
-
 const {TabPane} = Tabs;
-const {TreeNode} = Tree;
 
-export default class TreeStructureDisplay extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            permissionsTabsKey:'1',//tabs 切换key
-        };
-    }
-    callback = (permissionsTabsKey)=>{
-        this.setState({permissionsTabsKey});
-    }
-    //树DOM处理
-    renderTreeNodes = data =>
-        data.map(item => {
-            let title = item.checked?<span className='treeTextColor'>{item.title}</span>:<span>{item.title}</span>
-        if (item.children) {
-            return (
-            <TreeNode title={title} key={item.key} dataRef={item}>
-                {this.renderTreeNodes(item.children)}
-            </TreeNode>
-            );
-        }else{
-            item.title=title;
-            /**
-             * 需要将item里面的title赋值为上面定义的title。不然当没有children的时候，子元素就不显示搜索状态了
-             * 或者将下面得return 写成这样 return <Tree.TreeNode key={item.key} {...item} title={title} />;
-             */ 
+
+const fitherChecked = (tree)=>{
+    let _arr = [];
+    for(let i = 0; i<tree.length; i++){
+        let {
+                checked,
+                groupName="", boxName="", subBoxs=[], boxId="",
+                childmenus=[], menuname=""
+            } = tree[i];
+
+        if(checked){
+            let title = menuname || groupName || boxName;
+            let key = boxId + "_" + title + "_" + i;
+            let childs = menuname && childmenus || subBoxs;
+            _arr.push({
+                title,
+                key,
+                children:fitherChecked(childs)
+            })
         }
-        return <TreeNode key={item.key} {...item} />;
-    });
-    //树数据处理
-    rightsList = (arr,key) => {
-        let keyDisposes = null;
-        return arr.map((item,index) => {
-            if(key){
-                keyDisposes = key+'-'+index;
-            }else{
-                keyDisposes = '0-'+index
-            }
-            let title = item.boxName||item.groupName;
-            if(title&&title.indexOf('#')!=-1){
-                title = title.split('#');
-                title = title[0];
-            }
-            item.title = title;
-            item.key = keyDisposes;
-            if (item.subBoxs) {
-                item.children = this.rightsList(item.subBoxs,item.key);
-                delete item.subBoxs;
-            }
-            return item;
-        });
     }
+    return _arr
+}
+
+
+export default ({
+    treeData={}
+}) => {
+
+    const { checkBoxGroupMenuList=[], menu="[]" } = treeData
     
-    
-    render() {
-        let { permissionsTabsKey } = this.state;
-        let {productResource,dataObjRightsList = [],dataDimensionRightsList = [],apiInvokList = [],userCategory,projectAuthList=[]} = this.props;
-        productResource = this.rightsList(productResource);
-        dataObjRightsList = this.rightsList(dataObjRightsList);
-        dataDimensionRightsList = this.rightsList(dataDimensionRightsList);
-        apiInvokList = this.rightsList(apiInvokList);
-        projectAuthList= this.rightsList(projectAuthList);
-        return (<div className='treeStructureDisplay commonContentBox'>
-                    <div className='title'>权限信息</div>
-                    <p className='annotation'>*注：蓝色为已配置的权限。</p>
-                    <div className='centent'>
-                        {
-                            userCategory==1?<Tabs defaultActiveKey={permissionsTabsKey} onChange={this.callback}>
-                                <TabPane tab="产品服务权限" key="1">
-                                    {/* 就是下面这个三目运算符，为什么写一行就会报错？？？ 我裂开了... */}
-                                    { productResource.length>0?
-                                        <Tree showLine defaultExpandAll={true} >
-                                            {this.renderTreeNodes(productResource)}
-                                        </Tree>
-                                        :<NoSourceWarn /> }
-                                </TabPane>
-                                <TabPane tab="数据对象权限" key="2">
-                                    { dataObjRightsList.length>0?
-                                        <Tree showLine defaultExpandAll={true} >
-                                            {this.renderTreeNodes(dataObjRightsList)}
-                                        </Tree>
-                                        :<NoSourceWarn /> }
-                                </TabPane>
-                                <TabPane tab="数据维度权限" key="3">
-                                    { dataDimensionRightsList.length>0?
-                                        <Tree showLine defaultExpandAll={true} >
-                                            {this.renderTreeNodes(dataDimensionRightsList)}
-                                        </Tree>
-                                        :<NoSourceWarn /> }
-                                </TabPane>
-                                <TabPane tab="项目权限" key="4">
-                                    { projectAuthList.length>0?
-                                        <Tree showLine defaultExpandAll={true} >
-                                            {this.renderTreeNodes(projectAuthList)}
-                                        </Tree>
-                                        :<NoSourceWarn /> }
-                                </TabPane>
+    const   dataMenu = JSON.parse(menu) || [],
+            dataObject = checkBoxGroupMenuList[0]&&checkBoxGroupMenuList[0].checkBoxGroupList || [],
+            dataDimension = checkBoxGroupMenuList[1]&&checkBoxGroupMenuList[1].checkBoxGroupList || [];
+    const treeMenu = fitherChecked(dataMenu);
+    const treeObj = fitherChecked(dataObject);
+    const treeDimen = fitherChecked(dataDimension);
 
-                                
+    // console.log(5555,treeObj,treeDimen)
 
 
-                            </Tabs>
-                            :
-                            <Tabs defaultActiveKey={permissionsTabsKey} onChange={this.callback}>
-                                <TabPane tab="数据对象权限" key="1">
-                                    { dataObjRightsList.length>0?
-                                        <Tree showLine defaultExpandAll={true} >
-                                            {this.renderTreeNodes(dataObjRightsList)}
-                                        </Tree>
-                                        :<NoSourceWarn /> }
-                                </TabPane>
-                                <TabPane tab="数据维度权限" key="2">
-                                    { dataDimensionRightsList.length>0?
-                                        <Tree showLine defaultExpandAll={true} >
-                                            {this.renderTreeNodes(dataDimensionRightsList)}
-                                        </Tree>
-                                        :<NoSourceWarn /> }
-                                </TabPane>
-                                <TabPane tab="API调用权限" key="3">
-                                    { apiInvokList.length>0?
-                                        <Tree showLine defaultExpandAll={true} >
-                                            {this.renderTreeNodes(apiInvokList)}
-                                        </Tree>
-                                        :<NoSourceWarn /> }
-                                </TabPane>
-                            </Tabs>
-                        }
-                        
-                    </div>
-                </div>
-        )
-    }
+    const treeDataTabPane = [
+        {
+            name:"功能菜单",
+            data:treeMenu,
+        },
+        {
+            name:"数据对象",
+            data:treeObj,
+        },
+        {
+            name:"设备标签",
+            data:treeDimen,
+        }
+    ]
+
+    return <div className="power-tree-box">
+        <Tabs defaultActiveKey="0">
+            {
+                treeDataTabPane.map(({name,data},index)=>{
+                return <TabPane tab={name} key={index+""}>
+                        { data.length > 0 && <Tree
+                            showLine={true}
+                            autoExpandParent={true}
+                            treeData={data}
+                            defaultExpandAll={true}
+
+                        /> 
+                        || <NoSourceWarn />}
+                    </TabPane>
+                })
+            }
+            
+        </Tabs>
+    </div>
 }

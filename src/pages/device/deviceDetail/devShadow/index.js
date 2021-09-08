@@ -27,8 +27,9 @@ export default function DeviceShadow() {
     if (sessionStorage.DEVICE_DETAIL_BASE) {
         baseInfo = JSON.parse(sessionStorage.DEVICE_DETAIL_BASE)
     }
-    //下载
+    //帮助文档
     const downFile = () => {
+        window.open('https://dp.clife.net/iotdoc/')
 
     }
     // const getJsonView = () => {
@@ -45,7 +46,8 @@ export default function DeviceShadow() {
         // Paths.getDeviceInfo
         post(Paths.deviceShadow, { 'deviceUniqueId': baseInfo.deviceId }, { loading }).then((res) => {
             setDataSource(delaData(res.data.list))
-            setJsonData( JSON.stringify(res.data.jsonString) )
+            let jsonData=res.data.jsonString || {}
+            setJsonData( JSON.stringify(jsonData) )
         });
     }
     //筛选

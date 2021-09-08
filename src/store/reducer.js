@@ -1,7 +1,5 @@
 import { combineReducers } from "redux-immutable";
 import { reducer as productReducer } from "../pages/product/product-manage/store";
-import { reducer_debug as debugReducer } from "../pages/product/product-manage/store";
-// import { reducer as deviceReducer } from "../pages/product/device/online-device/store";
 import { reducer as userCenterReducer } from "../pages/user-center/store";
 import { reducer as loadingShow } from "../components/loading/store";
 import { reducer as messageReducer } from "../pages/message-center/store";
@@ -17,8 +15,6 @@ import oldProDetailReducer from "../pages/product/product-manage/old-product-det
 const reducer = combineReducers({
   oldProduct:oldProDetailReducer,
   product: productReducer,
-  deviceDebug: debugReducer,
-  // device: deviceReducer,
   userCenter: userCenterReducer,
   otaUpgrade:otaUpgradeReducer,
   /**

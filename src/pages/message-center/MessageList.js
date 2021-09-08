@@ -70,7 +70,8 @@ export default function MessageList({ messageList = [], selectedRowKeys, noticeT
         getCheckboxProps: record => ({
             disabled: record.isRead,
             name: record.noticeTitle
-        })
+        }),
+        selectedRowKeys:selectedKey
     };
     const [dataSource, setDataSource] = useState([])
     const [messageType, setMessageType] = useState('')
@@ -106,6 +107,7 @@ export default function MessageList({ messageList = [], selectedRowKeys, noticeT
         post(Paths.getNoticeList, params, { loading }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {
+                setSelectedKey('')
                 let obj = JSON.parse(JSON.stringify(pre))
                 return Object.assign(obj, { totalRows: res.data.pager.totalRows })
             })

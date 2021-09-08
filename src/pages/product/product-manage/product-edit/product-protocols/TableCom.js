@@ -132,10 +132,10 @@ export default function TableCom({ dataSource, reFreshData, type }) {
                 if (text == 'rw') {
                     return '可下发可上报'
                 }
-                if (text == 'r') {
+                if (text == 'w') {
                     return '可下发'
                 }
-                if (text == 'w') {
+                if (text == 'r') {
                     return '可上报'
                 }
                 return ''
@@ -164,20 +164,8 @@ export default function TableCom({ dataSource, reFreshData, type }) {
         },
     ];
 
-    //编辑标准功能/新增自定义功能=======
+    //编辑标准功能
     // const [isStarDia, setIsStarDia] = useState(true); //
-    const [rightVisible, setRightVisible] = useState(false); //新增自定义功能
-
-    const [destoryDom, setDestoryDom] = useState(true);
-
-    //编辑抽屉关闭回调
-    const onDestData = () => {
-        setDestoryDom(false)
-    }
-    //关闭编辑右边抽屉
-    const onCloseEditRight = () => {
-        setRightEditVisible(false)
-    };
     //关闭抽屉
     const onCloseRight = () => {
         setRightEditVisible(false)
@@ -190,14 +178,6 @@ export default function TableCom({ dataSource, reFreshData, type }) {
             description: '编辑成功！',
         });
         reFreshData()
-    }
-    //新增标准功能====
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const closeAdd = () => {
-        setIsModalVisible(false)
-    }
-    const CancelAdd = () => {
-        setIsModalVisible(false)
     }
 
     //确定删除数据

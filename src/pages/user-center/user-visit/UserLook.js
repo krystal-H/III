@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import {get, Paths,post} from '../../../api';
+import {  Paths,post} from '../../../api';
 import { getUrlParam } from '../../../util/util';
 import BasicInformation from './BasicInformation';
 import {EditBasicInformation} from './EditBasicInformation';
 import TreeStructureDisplay from '../../../components/tree-structure-display/TreeStructureDisplay';
 import {strToAsterisk} from '../../../util/util';
 import PageTitle from '../../../components/page-title/PageTitle';
+import AloneSection from '../../../components/alone-section/AloneSection';
 
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 
@@ -26,12 +27,9 @@ export default class UserLook extends Component {
             secretKey:'',
             secretId:'',
 
-            productResource:[],//产品服务权限数据
-            dataObjRightsList:[],//数据对象权限
-            dataDimensionRightsList:[],//数据维度权限
-            apiInvokList:[],//api权限数据
-            projectAuthList:[],//项目权限
             eye:true,
+
+            treeData:{},
         };
         this.columns = [
             {
@@ -51,7 +49,6 @@ export default class UserLook extends Component {
                 key: 'time',
             }
         ];
-        // this.editUserInfo = this.editUserInfo.bind(this);
     }
     // 获取用户详情
     getChildWithSecret = () => {
@@ -63,38 +60,9 @@ export default class UserLook extends Component {
     }
     // 获取权限列表
     getRights(){
-        /**
-         * 【产品服务】productService
-         * 【数据对象】dataObject
-         * 【数据维度权限】dataDimension
-         */ 
         let userId = getUrlParam('userId');
         post(Paths.getRights,{userId},{loading:true}).then((model) => {
-            let productResource = [],
-                dataObjRightsList = [],
-                dataDimensionRightsList = [],
-                apiInvokList = [],
-                projectAuthList=[];
-            let arr = model.data;
-            for (let a = 0; a < arr.length; a++) {
-                let item = arr[a];
-                if(item.menuCode=='productService'){
-                    productResource = item.checkBoxGroupList
-                }
-                if(item.menuCode=='dataObject'){
-                    dataObjRightsList = item.checkBoxGroupList
-                }
-                if(item.menuCode=='dataDimension'){
-                    dataDimensionRightsList = item.checkBoxGroupList
-                }
-                if(item.menuCode=='apiInvok'){
-                    apiInvokList = item.checkBoxGroupList;
-                }
-                if(item.menuCode=='projectAuth'){
-                    projectAuthList = item.checkBoxGroupList;
-                }
-            }
-            this.setState({productResource,dataObjRightsList,dataDimensionRightsList,apiInvokList,projectAuthList});
+            this.setState({ treeData:model.data || {} }); 
         });
     }
     componentDidMount() {
@@ -132,7 +100,7 @@ export default class UserLook extends Component {
             ipWhiteList:'',//白名单
         },()=>{
             this.getChildWithSecret();
-            this.getRights();
+            // this.getRights();
         })
         this.setState({userEditVisible:false});
         console.log('---close');
@@ -153,26 +121,27 @@ export default class UserLook extends Component {
         this.setState({userEditVisible:true});
     }
     render() {
-        let { userInfo, secretKey, secretId, userEditVisible, productResource,dataObjRightsList,dataDimensionRightsList,apiInvokList,projectAuthList} = this.state;
+        let { userInfo, secretKey, secretId, userEditVisible, treeData} = this.state;
         return (
             <div className='user-info-box'>
-                <PageTitle backHandle={() => this.props.history.goBack()} title="用户详情" />
-
-                <div className="comm-shadowbox">
+            <PageTitle title="用户详情" titleBack={true}/>
                 <BasicInformation editUserInfo={this.editUserInfo} userInfo={userInfo} secretKey={secretKey} secretId={secretId}/>
-                {/* <TreeStructureDisplay defaultExpandAll={true} userCategory={userInfo.userCategory} productResource={productResource} dataObjRightsList={dataObjRightsList} dataDimensionRightsList={dataDimensionRightsList} apiInvokList={apiInvokList} projectAuthList={projectAuthList} /> */}
-                <Modal
-                    title="编辑用户信息"
-                    visible={userEditVisible}
-                    onOk={this.handleOk}
-                    onCancel={this.handleCancel}
-                    maskClosable={false}
-                    className="self-modal"
-                    footer={null}
-                >
-                    <EditBasicInformation userData={userInfo} onCancel={this.handleCancel} onRef={ref => this.editAffirm  = ref} handleClose={this.handleOkCancel}/>
-                </Modal>
-                </div>
+                
+                <AloneSection title="权限信息" className='comm-shadowbox'>
+                    <TreeStructureDisplay treeData={treeData}/>
+                </AloneSection>
+
+            <Modal
+                title="编辑用户信息"
+                visible={userEditVisible}
+                onOk={this.handleOk}
+                onCancel={this.handleCancel}
+                maskClosable={false}
+                className="self-modal"
+                footer={null}
+            >
+                <EditBasicInformation userData={userInfo} onCancel={this.handleCancel} onRef={ref => this.editAffirm  = ref} handleClose={this.handleOkCancel}/>
+            </Modal>
             </div>
         );
     }

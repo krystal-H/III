@@ -119,10 +119,10 @@ export default function TableCom({ dataSource, refreshCount }) {
                 if (text == 'rw') {
                     return '可下发可上报'
                 }
-                if (text == 'r') {
+                if (text == 'w') {
                     return '可下发'
                 }
-                if (text == 'w') {
+                if (text == 'r') {
                     return '可上报'
                 }
                 return ''

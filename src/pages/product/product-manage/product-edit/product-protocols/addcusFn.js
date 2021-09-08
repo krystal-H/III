@@ -340,8 +340,8 @@ function NumberTemp({ currentTab, sentReq }, ref) {
             >
                 <Radio.Group >
                     <Radio value="rw">可下发可上报</Radio>
-                    <Radio value="r">可下发</Radio>
-                    <Radio value="w">可上报</Radio>
+                    <Radio value="w">可下发</Radio>
+                    <Radio value="r">可上报</Radio>
                 </Radio.Group>
             </Form.Item>
         </Form>
@@ -598,7 +598,7 @@ function ServeTemp({ sentReq }, ref) {
             </Form>
             {
                 outputList.map((item, key) => {
-                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={false} key={'outputt' + key}  data={item} />
+                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={false} key={'outputt' + key} data={item} />
                 })
             }
         </>
@@ -808,9 +808,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                                 </Form.Item>
                                 <Form.Item name={['specs', 'unit']} label="单位" >
                                     <Select allowClear >
-                                        <Select.Option value="male">male</Select.Option>
-                                        <Select.Option value="female">female</Select.Option>
-                                        <Select.Option value="other">other</Select.Option>
+                                        <Select.Option value="cal">卡路里</Select.Option>
                                     </Select>
                                 </Form.Item>
                             </>)

@@ -181,13 +181,22 @@ export default function OverviewWrap() {
         history.push(`/open/product/proManage/list`)
     }
     //产品详情
-    const goProductDetail = (item) => {
+    const goProductDetail = (record) => {
+        let pathroute = 'details';
+        if (record.status !== 1) {
+            pathroute = 'edit';
+        } else if (record.isOldProduct) {
+            pathroute = 'detail';
+        }
         // 保存当前产品，为后边继续开发取数据使用
-        sessionStorage.setItem('productItem', JSON.stringify(item))
-        history.push(`/open/product/proManage/edit/${item.productId}/protocols`);
+        sessionStorage.setItem('productItem', JSON.stringify(record))
+        history.push(`/open/product/proManage/${pathroute}/${record.productId}`);
+        // 保存当前产品，为后边继续开发取数据使用
+        // sessionStorage.setItem('productItem', JSON.stringify(item))
+        // history.push(`/open/product/proManage/edit/${item.productId}/protocols`);
     }
     //app详情
-    const goAppDetail=item=>{
+    const goAppDetail = item => {
         history.push(`/open/app/details/${item.appId}`)
     }
     return (
@@ -247,7 +256,7 @@ export default function OverviewWrap() {
                                 {
                                     produList.length ? (produList.map((item, index) => {
                                         return (<div className='over-view-productmn-content-item' key={index} onClick={() => { goProductDetail(item) }}>
-                                            <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.productIcon} alt=''/></div>
+                                            <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.productIcon} alt='' /></div>
                                             <div className='over-view-productmn-content-content'>
                                                 <div>{item.productName}</div>
                                                 <div>{productStatuFilter(item.mode)}</div>
@@ -372,7 +381,7 @@ export default function OverviewWrap() {
                         <div className='Guide-the-figure-content-top'>
                             <div className='tip' >
                                 <span>设备管理</span>
-                                <div>预览设备全部数据，点击设备管理、设备密钥、设备告警</div>
+                                <div>预览设备全部数据，点击设备管理、设备密钥、设备告警,可快速查看设备信息</div>
                             </div>
                             <Button onClick={changeTip}>下一步</Button>
                         </div>
@@ -386,8 +395,8 @@ export default function OverviewWrap() {
                             <div className='over-view-productmn-content' style={{ height: '80px' }}>
                                 {
                                     appList.length ? (appList.map((item, index) => {
-                                        return (<div className='over-view-productmn-content-item over-view-productmn-content-two' 
-                                        key={index} onClick={()=>{goAppDetail(item)}}>
+                                        return (<div className='over-view-productmn-content-item over-view-productmn-content-two'
+                                            key={index} onClick={() => { goAppDetail(item) }}>
                                             <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.appIconLow} /></div>
                                             <div className='over-view-productmn-content-content'>
                                                 <div>{item.appName}</div>
@@ -415,13 +424,13 @@ export default function OverviewWrap() {
                             <div>快捷入口</div>
                         </div>
                         <div className='over-view-quick-entry'>
-                            <div className='center-layout-wrap'>
-                                <div onClick={openNewProduct}>
+                            <div className='center-layout-wrap' onClick={openNewProduct}>
+                                <div >
                                     <img src={quick1} />
                                     <div>创建产品</div>
                                 </div>
                             </div>
-                            <div className='center-layout-wrap'>
+                            <div className='center-layout-wrap' onClick={()=>{goPage('/open/product/proManage/list')}}>
                                 <div>
                                     <img src={quick2} />
                                     <div>控制台</div>
@@ -439,7 +448,7 @@ export default function OverviewWrap() {
                     <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >
                         <div>
                             <div>消息中心</div>
-                            <a onClick={goMoreMessAge}>更多</a>
+                            <a onClick={()=>{goPage('/messageCenter/list')}}>更多</a>
                         </div>
                         <div className='over-view-message hover-commons-unite'>
                             {
