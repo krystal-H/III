@@ -13,7 +13,7 @@ import {
     getDeviceDebugMacList,
     updateDeviceDebugAccountListAction,
     getDeviceDebugAccountListAction
-} from '../../store/ActionCreator_debug.js';
+} from '../../store/ActionCreator';
 
 import { Modal, Input, Divider } from 'antd';
 

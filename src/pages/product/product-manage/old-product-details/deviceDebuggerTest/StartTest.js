@@ -13,11 +13,13 @@ import {Notification} from '../../../../../components/Notification';
 
 import { 
         getDeviceAndWsAction, 
-        getWebsocketMessageAction,
+        getWebsocketMessageAction, 
         getTokenAction, 
         resetDataAction, 
         getDataTypeListAction, 
         getPropertyConfigAction,
+        getDeviceDebugAccountListAction,//调试账号列表,
+        getDeviceDebugMacList,
         get_SelectedData1_Action,
         get_SelectedData2_Action,
         get_clearException1_Action,
@@ -26,7 +28,7 @@ import {
         get_clearDevData2_Action,
         updateDeviceDebugAccountListAction,//更新账号列表
         updateDeviceDebugMacListAction,//更新mac列表
-} from '../../store/ActionCreator_debug';
+    } from '../../store/ActionCreator';
 
 import './devTest.scss';
 
@@ -225,16 +227,15 @@ class FilterPanel extends React.Component{
  */
 class CommonPanel extends React.Component{
     componentWillReceiveProps (newProps) {
-        // this.setState({...newProps._state});
+        this.setState({...newProps._state});
     }
     render () {
-        const {className,title,children} = this.props;
         return (
-            <div className={'dev-test-common-panel ' + (className ||'')} >
+            <div className={'dev-test-common-panel ' + (this.props.className ? this.props.className : '')} >
                 <div className="common-panel-title">
-                    <p>{title}</p>
+                    <p>{this.props.title}</p>
                 </div>
-                <div className="common-panel-content">{children}</div>
+                <div className="common-panel-content">{this.props.children}</div>
             </div>
         );
     }
@@ -464,6 +465,7 @@ class DataDebuggingPage extends React.Component{
         this.selectedTableRow = this.selectedTableRow.bind(this);
     }
     componentWillReceiveProps (newProps) {
+        // console.log('--newProps._state-selectedData1---',newProps._state.selectedData1);
         this.setState({...newProps._state});
     }
     tableFilter (data) {
@@ -497,7 +499,17 @@ class DataDebuggingPage extends React.Component{
         this.state.get_SelectedData1(data);
     }
     changeParseData(key, value) {
-        this.state.selectedData1.parseData[key] = value;
+
+        // console.log('--changeval--selectedData1--',key,value)
+        let selectedData1 = cloneDeep(this.state.selectedData1);
+        selectedData1.parseData[key] = value
+
+        this.state.get_SelectedData1(selectedData1);
+
+        // this.setState({selectedData1},()=>{
+        //     console.log('--changeval--selectedData1--',key,value,this.state.selectedData1.parseData)
+        // })
+        // this.state.selectedData1.parseData[key] = value;
     }
     analysisData () {
 
@@ -609,19 +621,27 @@ class DataDebuggingPage extends React.Component{
         }
     }
     commitData () {
-        const {selectedData1} = this.state
-        if (!selectedData1) return;
-        const {packetStart,deviceType,deviceSubType,dataVersion,command,macAddress,parseData} = selectedData1
-        const sendObj = {packetStart,deviceType,deviceSubType,dataVersion,command,macAddress,parseData};
+        console.log('-commitData-parseData--',this.state.selectedData1.parseData)
+
+        if (!this.state.selectedData1) return;
+        const {packetStart,deviceType,deviceSubType,dataVersion,command,macAddress,parseData} = this.state.selectedData1
+        let sendObj = {
+            packetStart,
+            deviceType,
+            deviceSubType,
+            dataVersion,
+            command,
+            macAddress,
+            parseData,
+        };
         ws.send(JSON.stringify(sendObj));
     }
     clearErrorMsg = ()=> {
         this.state.get_clearException1();
     }
     getExceptionDom () {
-        const debuggerException = this.state.websocketMessage.deviceDebuggerException;
-        if(debuggerException){
-            let arrException = debuggerException.split('\r\n');
+        if(this.state.websocketMessage.deviceDebuggerException){
+            let arrException = this.state.websocketMessage.deviceDebuggerException.split('\r\n');
             let dom = arrException.map((v, i) => {
                 return <p key={'ExceptionDom'+i}>{v}</p>;
             });
@@ -630,39 +650,42 @@ class DataDebuggingPage extends React.Component{
     }
     changeFilter (isFilter, filterObj) {
         // actions.DeviceDebugger.updateFilter({"isFilter":isFilter,"filterObj":filterObj});
-        this.setState({ isFilter,filterObj});
+        this.setState({ isFilter: isFilter, filterObj: filterObj });
     }
     render () {
-        const {dataTypeList,websocketMessage,selectedData1} = this.state;
         return (
             <div>
-                <FilterPanel _state={this.state} dataTypeList={dataTypeList} activeKey="1" onChange={this.changeFilter} openDialog={this.props.openDialog}/>
+                <FilterPanel _state={this.state} dataTypeList={this.state.dataTypeList} activeKey="1" onChange={this.changeFilter} openDialog={this.props.openDialog}/>
                 <div className="dev-test-tab-content data-debug-page">
                     <div className="dev-test-data-wrap">
                         <div className="left-wrap">
                             <CommonPanel title='报文列表' className="add_data_table_scroll">
                                 <DataTable
                                     thead={['处理时间','MAC地址','命令字','包标识','数据类型','报文长度','数据长度',]}
-                                    rows={websocketMessage.devData}
+                                    rows={this.state.websocketMessage.devData}
                                     rowKey={['time','macAddress','command','packetSequence','dataTypeString','packetLengthString','dataLengthString',]}
                                     rowsWidth={['', '125px']}
                                     generateRule="json"
                                     minRowCount={15}
-                                    maxRow={601}
+                                    maxRow={1001}
                                     tableClass="fixed-head"
                                     filter={this.tableFilter}
                                     selectedRow={this.selectedTableRow}
-                                    selectedRowId={selectedData1?selectedData1.id: null}
+                                    selectedRowId={
+                                        this.state.selectedData1
+                                            ? this.state.selectedData1.id
+                                            : null
+                                    }
                                 />
                             </CommonPanel>
                             <CommonPanel title='原始报文数据'>
                                 <div className="data-area">
                                     <div className="data-input">
-                                        <p>{(selectedData1.packet ?selectedData1.packet : '').replace(/(.{2})/g, '$1 ')}</p>
+                                        <p>{(this.state.selectedData1.packet ? this.state.selectedData1.packet : '').replace(/(.{2})/g, '$1 ')}</p>
                                     </div>
                                     <div className="data-opera">
                                         <div className="inner">
-                                            <input type="button"  value='复制' onClick={copyText.bind(this, selectedData1 ? selectedData1.packet : '')}/>
+                                            <input type="button"  value='复制' onClick={copyText.bind(this, this.state.selectedData1 ? this.state.selectedData1.packet : '')}/>
                                         </div>
                                     </div>
                                 </div>
@@ -671,12 +694,12 @@ class DataDebuggingPage extends React.Component{
                                 <div className="data-area">
                                     <div className="data-input">
                                         <p>
-                                            {(selectedData1.data ? selectedData1.data : '' ).replace(/(.{2})/g, '$1 ')}
+                                            {(this.state.selectedData1.data ? this.state.selectedData1.data : '' ).replace(/(.{2})/g, '$1 ')}
                                         </p>
                                     </div>
                                     <div className="data-opera">
                                         <div className="inner">
-                                            <input type="button" value='复制' onClick={copyText.bind(this,selectedData1 ? selectedData1.data : '')}/>
+                                            <input type="button" value='复制' onClick={copyText.bind(this, this.state.selectedData1 ? this.state.selectedData1.data : '')}/>
                                         </div>
                                     </div>
                                 </div>
@@ -688,7 +711,7 @@ class DataDebuggingPage extends React.Component{
                                     </div>
                                     <div className="data-opera">
                                         <div className="inner">
-                                            <input type="button" value='复制' onClick={copyText.bind(this, websocketMessage.deviceDebuggerException)}/>
+                                            <input type="button" value='复制' onClick={copyText.bind(this, this.state.websocketMessage.deviceDebuggerException)}/>
                                             <p>
                                                 <input type="button" value='删除' onClick={this.clearErrorMsg} />
                                             </p>
@@ -699,29 +722,29 @@ class DataDebuggingPage extends React.Component{
                         </div>
                         <div className="right-wrap">
                             <CommonPanel title='报文解析列表'>
-                                {selectedData1 &&
-                                    selectedData1.dataFormat == 1 &&
-                                    selectedData1.parseData != undefined ? (
+                                {this.state.selectedData1 &&
+                                    this.state.selectedData1.dataFormat == 1 &&
+                                    this.state.selectedData1.parseData != undefined ? (
                                         <div className="json-format-panel">
-                                            {selectedData1 &&
-                                                selectedData1.editJson ? (
+                                            {this.state.selectedData1 &&
+                                                this.state.selectedData1.editJson ? (
                                                     <div className="editJsonPanel">
                                                         <textarea
                                                             defaultValue={
-                                                                selectedData1 &&
-                                                                    selectedData1.parseData
+                                                                this.state.selectedData1 &&
+                                                                    this.state.selectedData1.parseData
                                                                     ? JSON.stringify(
-                                                                        selectedData1
+                                                                        this.state.selectedData1
                                                                             .parseData,
                                                                     )
-                                                                    : selectedData1.parseData +
+                                                                    : this.state.selectedData1.parseData +
                                                                     ''
                                                             }
                                                             ref="editJsonTextArea"
                                                         />
                                                     </div>
                                                 ) : (
-                                                    <JsonFormatCompentent json={selectedData1.parseData} jsonCode={selectedData1.id} />
+                                                    <JsonFormatCompentent json={this.state.selectedData1.parseData} jsonCode={this.state.selectedData1.id} />
                                                 )}
                                         </div>
                                     ) : 
@@ -732,14 +755,14 @@ class DataDebuggingPage extends React.Component{
                                     <p>
                                         <input
                                             type="button"
-                                            value={selectedData1 && selectedData1.editJson ? '保存编辑数据' : '编辑JSON数据'}
-                                            style={{ display: selectedData1 && selectedData1.dataFormat == 1 && (selectedData1.command == '0103' || selectedData1.command == '0104' || selectedData1.command == '0007') ? 'inline-block' : 'none'}}
+                                            value={this.state.selectedData1 && this.state.selectedData1.editJson ? '保存编辑数据' : '编辑JSON数据'}
+                                            style={{ display: this.state.selectedData1 && this.state.selectedData1.dataFormat == 1 && (this.state.selectedData1.command == '0103' || this.state.selectedData1.command == '0104' || this.state.selectedData1.command == '0007') ? 'inline-block' : 'none'}}
                                             onClick={this.editJsonData}
                                         />
                                         <input
                                             type="button"
                                             value='下发控制命令'
-                                            style={{display: selectedData1 && (selectedData1.command == '0104' || selectedData1.command == '0007') ? 'inline-block' : 'none',}}
+                                            style={{display: this.state.selectedData1 && (this.state.selectedData1.command == '0104' || this.state.selectedData1.command == '0007') ? 'inline-block' : 'none',}}
                                             onClick={this.commitData}
                                         />
                                     </p>
@@ -836,6 +859,24 @@ class EquipmentUpgradePage extends React.Component{
                 this.setState({firmwareModules:data.data});
             }
         });
+        // let typeSrc = type == 1 ? 'Wi-Fi' : 'PCB';
+        // let upgradeData = {},
+        //     data = {},
+        //     upgradeDialogTip = {
+        //         tipconts: typeSrc + '升级',
+        //         warn: '确定要升级设备'+ this.selectedDevice.mac +'的'+ typeSrc +'固件？'
+        //     };
+        // if (type == '1' && this.selectedDevice.packetStart == 'F2') {
+        //     data = { mac: this.selectedDevice.mac, moduleType: type, command: '8030' };
+        // } else if (type == '1' && this.selectedDevice.packetStart == '5A') {
+        //     data = { mac: this.selectedDevice.mac, moduleType: type, command: '0130' };
+        // } else if (type == '2' && this.selectedDevice.packetStart == 'F2') {
+        //     data = { mac: this.selectedDevice.mac, moduleType: type, command: '8020' };
+        // } else if (type == '2' && this.selectedDevice.packetStart == '5A') {
+        //     data = { mac: this.selectedDevice.mac, moduleType: type, command: '0120' };
+        // }
+        // upgradeData.actionType = 'upgrade';
+        // upgradeData.data = data;
         this.setState({
             upgradeDialogClosable: true,
             tipconts,
@@ -926,7 +967,7 @@ class EquipmentUpgradePage extends React.Component{
                                         rowsWidth={['', '125px']}
                                         generateRule="json"
                                         minRowCount={15}
-                                        maxRow={601}
+                                        maxRow={1001}
                                         tableClass="fixed-head"
                                         filter={this.tableFilter}
                                         selectedRow={this.selectedTableRow}
@@ -1544,15 +1585,14 @@ let wsTimer; //websocket心跳连接定时器，页面销毁时，需要同时�
 
 const mapStateToProps = state => {
     return {
-        deviceAndWs: state.getIn(['deviceDebug','deviceAndWs']).toJS(),
-        websocketMessage: state.getIn(['deviceDebug','websocketMessage']).toJS(),
-        dataTypeList: state.getIn(['deviceDebug','dataTypeList']).toJS(),
-        propertyConfig: state.getIn(['deviceDebug','propertyConfig']).toJS(),
-        deviceDebugAccountList: state.getIn(['deviceDebug','deviceDebugAccountList']).toJS(),
-        deviceDebugMacList: state.getIn(['deviceDebug','deviceDebugMacList']).toJS(), 
-        selectedData1: state.getIn(['deviceDebug','selectedData1']).toJS(),
-        selectedData2: state.getIn(['deviceDebug','selectedData2']).toJS(),
-        productBaseInfo: state.getIn(['product','productBaseInfo']).toJS(),
+        deviceAndWs: state.getIn(['oldProduct','deviceAndWs']).toJS(),
+        websocketMessage: state.getIn(['oldProduct','websocketMessage']).toJS(),
+        dataTypeList: state.getIn(['oldProduct','dataTypeList']).toJS(),
+        propertyConfig: state.getIn(['oldProduct','propertyConfig']).toJS(),
+        deviceDebugAccountList: state.getIn(['oldProduct','deviceDebugAccountList']).toJS(),
+        deviceDebugMacList: state.getIn(['oldProduct','deviceDebugMacList']).toJS(), 
+        selectedData1: state.getIn(['oldProduct','selectedData1']).toJS(),
+        selectedData2: state.getIn(['oldProduct','selectedData2']).toJS(),
 
     }
 }
@@ -1564,6 +1604,8 @@ const mapDispatchToProps = dispatch => {
         resetData: () => dispatch(resetDataAction()),
         getDataTypeList: (id) => dispatch(getDataTypeListAction(id)),
         getPropertyConfig: (id) => dispatch(getPropertyConfigAction(id)),
+        getDeviceDebugAccountList: (id) => dispatch(getDeviceDebugAccountListAction(id)),
+        getDeviceDebugMacList: (id) => dispatch(getDeviceDebugMacList(id)),
         get_SelectedData1: (data) => dispatch(get_SelectedData1_Action(data)),
         get_SelectedData2: (data) => dispatch(get_SelectedData2_Action(data)),
         get_clearException1: ()=>dispatch(get_clearException1_Action()),//删除异常
@@ -1581,7 +1623,7 @@ export default class StartTest  extends Component{
     constructor(props){
         super(props);
         this.state = {
-            visibleTestInfo: false,//调式账号弹窗 ***
+            visible: false,//调式账号弹窗 ***
             visibleExportData:false,//导出数据弹窗
             isReceive: true,//是否接受消息
             macList: [],
@@ -1604,21 +1646,27 @@ export default class StartTest  extends Component{
         this.changeReceiveState = this.changeReceiveState.bind(this);
         this.selectCommand = this.selectCommand.bind(this);
         this.openDialog = this.openDialog.bind(this);
+        this.visible = this.visible.bind(this);
+        this.debugVisible = this.debugVisible.bind(this);
     }
     componentDidMount() {
         if(this.props.onRef){
             this.props.onRef(this)
         }
+
         /**
          * 先加载配置账号及配置设备信息
          */
-        const pid = getUrlParam('productId')||this.props.productId;
+        // this.props.getDeviceDebugAccountList(pid);//获取调试账号
+        // this.props.getDeviceDebugMacList(pid);//获取调试MAC
+        let pid = getUrlParam('productId')||this.props.productId;
         let accountList = [],
             macList = [];
         post(Paths.deviceDebugAccountGetList,{productId:pid},{loading:true}).then((model) => {
             if(model.code==0){
                 accountList = model.data || [];
                 this.props.updateDeviceDebugAccountList(model);
+                // post(Paths.deviceDebugMacGetList,{productId:pid}).then((res) => {
                 post(Paths.debugSecretList,{productId:pid},{loading:true}).then((res) => {
                     if(res.code==0){
                         macList = res.data || [];
@@ -1628,96 +1676,92 @@ export default class StartTest  extends Component{
                             this.props.updateDevice(pid);//
                             this.props.getDataTypeList(pid);//获取数据类型 // actions.DeviceDebugger.getDataTypeList({ productId: pid });
                             this.props.getPropertyConfig(pid);// actions.DeviceDebugger.getPropertyConfig({ productId: pid });
-                           
+                            // setTimeout ((()=>{
+                            //     this.setState({visible:false})
+                            // }),5000);//延迟五秒关闭弹窗
                         }
 
                         if(!macList.length) {
-                            this.setVisibleTestInfo()
+                            this.visible()
                         }
                     }
                 });
             }
         });
+        // this.props.updateDevice(pid);//
+        // this.props.getDataTypeList(pid);//获取数据类型 // actions.DeviceDebugger.getDataTypeList({ productId: pid });
+        // this.props.getPropertyConfig(pid);// actions.DeviceDebugger.getPropertyConfig({ productId: pid });
+        // this._mount = true;
     }
     componentWillUpdate (nextProps, nextState) {
-        const nextip = nextProps.deviceAndWs.wsUrl.data.ip;
-        const ip = this.props.deviceAndWs.wsUrl.data.ip;
-        // console.log('---nextip-ip=ws---',nextip,ip,ws)
-        if (nextip && nextip !== ip) {
-            if (!WebSocket || ws) return;
-            ws = new WebSocket(wsProtocol + '//' + nextip);
-            this.bindEvent();
-        }
-        const nextstoken = nextState.token, token = this.state.token;
-        // console.log('--nextstoken-stoken',nextstoken,token)
-        //如果token发生改变就当做 需要重连了
-        if (ws == null && nextstoken && nextstoken !== token) {
-            ws = new WebSocket(wsProtocol + '//' + nextProps.queryServerConfig.ip);
-            this.bindEvent();
-        }
-    }
-    bindEvent = ()=> {
-        //连接成功
-        ws.onopen =  ()=> {
-            this.webSocketStatu = 1;
-            clearInterval(wsTimer);
-            wsTimer = setInterval(function () {
-                ws.send('33');
-            }, 5000);
-            let product = this.props.deviceAndWs.productInfo.data;
-            let productMsg =
-                '[' +
-                this.props.deviceAndWs.token.data +
-                '|' +
-                product.customerCode +
-                '|' +
-                product.deviceTypeId +
-                '#' +
-                product.deviceSubTypeId +
-                '#' +
-                product.productVersion +
-                ']';
-            // let productMsg = "[144514545|1|11#3#1]";//测试数据
-            ws.send(productMsg);
-        };
-        //接收到消息
-        ws.onmessage = (data) =>{
-            if (this.state.isReceive) {
-                this.props.getwebsocketMessage(JSON.parse(data.data));
+            if (nextProps.deviceAndWs.wsUrl.data.ip && nextProps.deviceAndWs.wsUrl.data.ip !== this.props.deviceAndWs.wsUrl.data.ip) {
+                if (!WebSocket || ws) return;
+                ws = new WebSocket(wsProtocol + '//' + nextProps.deviceAndWs.wsUrl.data.ip);
+                bindEvent.call(this);
             }
-        };
-        //检测到断开连接
-        ws.onclose =(e)=> {
-            this.webSocketStatu = 0;
-            clearInterval(wsTimer);
-            if (this._mount && e.code == '1006') {
-                //如果异常断开，会尝试重连
-                setTimeout(
-                    function () {
-                        // actions.DeviceDebugger.getToken();---重新获取token
-                        this.props.getToken();
-                    }.bind(this),
-                    5000,
-                );
+            //如果token发生改变就当做 需要重连了
+            if (ws == null && nextState.token && nextState.token !== this.state.token) {
+                ws = new WebSocket(wsProtocol + '//' + nextProps.queryServerConfig.ip);
+                bindEvent.call(this);
             }
-            ws = null;
-        };
+        function bindEvent() {
+            //连接成功
+            ws.onopen = function () {
+                this.webSocketStatu = 1;
+                clearInterval(wsTimer);
+                wsTimer = setInterval(function () {
+                    ws.send('');
+                }, 5000);
+                let product = this.props.deviceAndWs.productInfo.data;
+                let productMsg =
+                    '[' +
+                    this.props.deviceAndWs.token.data +
+                    '|' +
+                    product.customerCode +
+                    '|' +
+                    product.deviceTypeId +
+                    '#' +
+                    product.deviceSubTypeId +
+                    '#' +
+                    product.productVersion +
+                    ']';
+                // let productMsg = "[144514545|1|11#3#1]";//测试数据
+                ws.send(productMsg);
+            }.bind(this);
+            //接收到消息
+            ws.onmessage = function (data) {
+                if (this.state.isReceive) {
+                    this.props.getwebsocketMessage(JSON.parse(data.data));
+                }
+            }.bind(this);
+            //检测到断开连接
+            ws.onclose = function (e) {
+                this.webSocketStatu = 0;
+                clearInterval(wsTimer);
+                if (this._mount && e.code == '1006') {
+                    //如果异常断开，会尝试重连
+                    setTimeout(
+                        function () {
+                            // actions.DeviceDebugger.getToken();---重新获取token
+                            this.props.getToken();
+                        }.bind(this),
+                        5000,
+                    );
+                }
+                ws = null;
+            }.bind(this);
+        }
     }
     //退出后销毁websocket连接和心跳定时器，重置数据
     componentWillUnmount () {
-        this.goout()
-    }
-    //切换tab到其他页面，样式上隐藏模块但并没有卸载
-    goout = ()=>{
-        console.log('---销毁---')
         this.props.resetData();//初始化数据 actions.DeviceDebugger.resetData();
         ws && ws.close();
         clearInterval(wsTimer);
         ws = null;
         this._mount = false;
     }
-    setVisibleTestInfo =()=>{
-        this.setState({visibleTestInfo:!this.state.visibleTestInfo});
+    visible(){
+        this.setState({visible:!this.state.visible});
     }
     //Tab切换
     onSelectTab (key) {
@@ -1740,7 +1784,6 @@ export default class StartTest  extends Component{
      * @param param  下发命令的参数
      */
     onSendCommand (param) {
-        // console.log(1111,param);
         let sendObj = {
             command: param.command,
             macAddress: param.mac,
@@ -1768,7 +1811,6 @@ export default class StartTest  extends Component{
             }
         }
         sendObj.parseData = parseData;
-        // console.log(2222,sendObj);
 
         if(!ws) {
             Notification({
@@ -1799,22 +1841,22 @@ export default class StartTest  extends Component{
         :this.setState({command:{active: !this.state.command.active}});
     }
     //产品详情，调试工具，当mac跟账号列表都为空的时候，需要展示弹窗
-    debugVisible =()=>{
-        this.setState({visibleTestInfo:true});
+    debugVisible(){
+        this.setState({visible:true});
     }
     changeFormData  = (changedFields)=> {
         this.setState({...changedFields});
     }
     render () {
-        const {visibleTestInfo,visibleExportData,activeKey,selectedMac,date,firmwareVersionType,mainVersion,totalVersion,isReceive} = this.state;
-        const { deviceDebugAccountList, deviceDebugMacList, productBaseInfo,productId } = this.props;
-        let pid = getUrlParam('productId')|| productId;
-        let hardwareType = getUrlParam('hardwareType')||productBaseInfo.hardwareType;
+        let {visible,visibleExportData,activeKey,selectedMac,date,firmwareVersionType,mainVersion,totalVersion} = this.state;
+        let { deviceDebugAccountList, deviceDebugMacList, productBaseInfo } = this.props;
+        let pid = getUrlParam('productId')||this.props.productId;
+        let hardwareType = getUrlParam('hardwareType')||this.props.productBaseInfo.hardwareType;
         return (
             <div className='devDebuggingBox commonContentBox'>
                 <div className="title">
                     <div className='titleName'>在线设备调试工具</div>
-                    <div className='titleOperation' onClick={this.setVisibleTestInfo}>
+                    <div className='titleOperation' onClick={this.visible}>
                         <img src={debuggingImg} />
                         <span>配置调试信息</span>
                     </div>
@@ -1829,20 +1871,20 @@ export default class StartTest  extends Component{
                             <div className={this.webSocketStatu==1?'linkState':'linkState linkError'}>{this.webSocketStatu==1?'链接成功':'链接失败'}</div>
                             <div className="dev-test-header-right">
                                 <DevTestBtnReceive
-                                    className={activeKey == 1 ? 'line' : ''}
-                                    value={isReceive}
+                                    className={this.state.activeKey == 1 ? 'line' : ''}
+                                    value={this.state.isReceive}
                                     onChange={this.changeReceiveState}
                                 />
                                 <DevTestCommand
                                     onSelect={this.selectCommand}
-                                    activeKey={activeKey}
+                                    activeKey={this.state.activeKey}
                                 />
                             </div>
                         </DevTestHeader>
-                        <div style={{ display: activeKey == 1 ? 'block' : 'none' }}>
+                        <div style={{ display: this.state.activeKey == 1 ? 'block' : 'none' }}>
                             <DataDebuggingPage _state={this.props} openDialog={this.handleCancel.bind(this,1)} />
                         </div>
-                        <div style={{ display: activeKey == 2 ? 'block' : 'none' }}>
+                        <div style={{ display: this.state.activeKey == 2 ? 'block' : 'none' }}>
                             <EquipmentUpgradePage 
                                 _state={this.props} 
                                 productBaseInfo={productBaseInfo} 
@@ -1884,7 +1926,7 @@ export default class StartTest  extends Component{
                         </Modal>
                     }
                 </div>
-                    <DebuggingInfoDialog visibleFun={this.setVisibleTestInfo} pid={pid} authorityType={productBaseInfo.authorityType} visible={visibleTestInfo} deviceDebugAccountList={deviceDebugAccountList} deviceDebugMacList={deviceDebugMacList} />
+                    <DebuggingInfoDialog visibleFun={this.visible} pid={pid} authorityType={this.props.productBaseInfo.authorityType} visible={visible} deviceDebugAccountList={deviceDebugAccountList} deviceDebugMacList={deviceDebugMacList} />
             </div>
         );
     }
