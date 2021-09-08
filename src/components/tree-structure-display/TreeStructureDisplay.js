@@ -30,11 +30,9 @@ const fitherChecked = (tree)=>{
 
 
 export default ({
-    treeData={
-    }
+    treeData={}
 }) => {
 
-    console.log(333,treeData)
     const { checkBoxGroupMenuList=[], menu="[]" } = treeData
     
     const   dataMenu = JSON.parse(menu) || [],
@@ -44,9 +42,7 @@ export default ({
     const treeObj = fitherChecked(dataObject);
     const treeDimen = fitherChecked(dataDimension);
 
-
-
-    console.log(5555,treeMenu)
+    // console.log(5555,treeObj,treeDimen)
 
 
     const treeDataTabPane = [
@@ -64,24 +60,23 @@ export default ({
         }
     ]
 
-    return <Tabs >
-        {
-            treeDataTabPane.map(({name,data},index)=>{
+    return <div className="power-tree-box">
+        <Tabs defaultActiveKey="0">
+            {
+                treeDataTabPane.map(({name,data},index)=>{
+                return <TabPane tab={name} key={index+""}>
+                        { data.length > 0 && <Tree
+                            showLine={true}
+                            autoExpandParent={true}
+                            treeData={data}
+                            defaultExpandAll={true}
 
-                <TabPane tab={name} key={index+""}>
-                    { data.length > 0 && <Tree
-                        
-                        
-                        showLine={true}
-                        autoExpandParent={true}
-                        treeData={data}
-                        defaultExpandAll={true}
-
-                    /> 
-                    || <NoSourceWarn />}
-                </TabPane>
-            })
-        }
-        
-    </Tabs>
+                        /> 
+                        || <NoSourceWarn />}
+                    </TabPane>
+                })
+            }
+            
+        </Tabs>
+    </div>
 }

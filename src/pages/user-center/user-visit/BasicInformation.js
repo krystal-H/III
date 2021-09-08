@@ -30,7 +30,7 @@ export default class BasicInformation extends Component {
         return (
             <div className='basic-information-box'>
                 <Button className='but-edit basic-information-edit' type="primary" onClick={this.props.editUserInfo}>编辑</Button>
-                <AloneSection title="基础信息">
+                <AloneSection title="基础信息" className="comm-shadowbox" >
                     
                     <div className="device-info">
                         <ListItem title="用户名" label={userInfo.userName||'--'}/>

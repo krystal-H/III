@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import {get, Paths,post} from '../../../api';
+import {  Paths,post} from '../../../api';
 import { getUrlParam } from '../../../util/util';
 import BasicInformation from './BasicInformation';
 import {EditBasicInformation} from './EditBasicInformation';
 import TreeStructureDisplay from '../../../components/tree-structure-display/TreeStructureDisplay';
 import {strToAsterisk} from '../../../util/util';
 import PageTitle from '../../../components/page-title/PageTitle';
+import AloneSection from '../../../components/alone-section/AloneSection';
 
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 
@@ -61,27 +62,7 @@ export default class UserLook extends Component {
     getRights(){
         let userId = getUrlParam('userId');
         post(Paths.getRights,{userId},{loading:true}).then((model) => {
-            this.setState({ treeData:model.data || {} });
-            
-            // for (let a = 0; a < arr.length; a++) {
-            //     let item = arr[a];
-            //     if(item.menuCode=='productService'){
-            //         productResource = item.checkBoxGroupList
-            //     }
-            //     if(item.menuCode=='dataObject'){
-            //         dataObjRightsList = item.checkBoxGroupList
-            //     }
-            //     if(item.menuCode=='dataDimension'){
-            //         dataDimensionRightsList = item.checkBoxGroupList
-            //     }
-            //     if(item.menuCode=='apiInvok'){
-            //         apiInvokList = item.checkBoxGroupList;
-            //     }
-            //     if(item.menuCode=='projectAuth'){
-            //         projectAuthList = item.checkBoxGroupList;
-            //     }
-            // }
-            
+            this.setState({ treeData:model.data || {} }); 
         });
     }
     componentDidMount() {
@@ -143,23 +124,24 @@ export default class UserLook extends Component {
         let { userInfo, secretKey, secretId, userEditVisible, treeData} = this.state;
         return (
             <div className='user-info-box'>
-                <PageTitle backHandle={() => this.props.history.goBack()} title="用户详情" />
-
-                <div className="comm-shadowbox">
+            <PageTitle title="用户详情" titleBack={true}/>
                 <BasicInformation editUserInfo={this.editUserInfo} userInfo={userInfo} secretKey={secretKey} secretId={secretId}/>
-                {/* <TreeStructureDisplay  treeData={treeData}/> */}
-                <Modal
-                    title="编辑用户信息"
-                    visible={userEditVisible}
-                    onOk={this.handleOk}
-                    onCancel={this.handleCancel}
-                    maskClosable={false}
-                    className="self-modal"
-                    footer={null}
-                >
-                    <EditBasicInformation userData={userInfo} onCancel={this.handleCancel} onRef={ref => this.editAffirm  = ref} handleClose={this.handleOkCancel}/>
-                </Modal>
-                </div>
+                
+                <AloneSection title="权限信息" className='comm-shadowbox'>
+                    <TreeStructureDisplay treeData={treeData}/>
+                </AloneSection>
+
+            <Modal
+                title="编辑用户信息"
+                visible={userEditVisible}
+                onOk={this.handleOk}
+                onCancel={this.handleCancel}
+                maskClosable={false}
+                className="self-modal"
+                footer={null}
+            >
+                <EditBasicInformation userData={userInfo} onCancel={this.handleCancel} onRef={ref => this.editAffirm  = ref} handleClose={this.handleOkCancel}/>
+            </Modal>
             </div>
         );
     }

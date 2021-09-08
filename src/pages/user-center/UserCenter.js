@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import {Switch,Route,Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {isEmpty} from 'lodash';
-
+import {isEmpty,cloneDeep} from 'lodash';
 import UserInfo from './user-info/UserInfo';
 import RoleManagement from './roleManagement/index';
 import UserVisit from './user-visit/index';
@@ -16,7 +15,7 @@ import {getNewMessageNums} from '../message-center/store/ActionCreator';
 import {getDeveloperInfo} from './store/ActionCreator';
 import {userNavRoutes} from '../../configs/route.config';
 import './UserCenter.scss'
-
+let userNavMenu = cloneDeep(userNavRoutes);
 
 const RouteComponentLi ={
     '基本资料':UserInfo,
@@ -53,11 +52,16 @@ export default class UserCenter extends Component {
     }
     render() {
         const {developerInfo,newMessageNums,getDeveloperInfo} = this.props;
+        console.log(1234567,developerInfo)
         const isNotSub = !(developerInfo.isSubUser === 1);//非子账号
-        let childmenus = userNavRoutes[0].childmenus;
+       
         if(!isNotSub){
-            childmenus = childmenus.slice(0,2) // 子账号只有前两项  基本资料  安全设置  两个菜单
+            userNavMenu[0].childmenus.splice(2,2)
+            // childmenus = childmenus.slice(0,2) // 子账号只有前两项  基本资料  安全设置  两个菜单
+            // userNavMenu[0].childmenus = childmenus;
         }
+        let childmenus = userNavMenu[0].childmenus;
+        console.log(777,userNavMenu)
         return (
             <OutsideWrapper>
                 <div className="page-header-wrapper">
@@ -65,7 +69,7 @@ export default class UserCenter extends Component {
                 </div>
                 <div className="page-content-wrapper">
                     <div className={'left-menus'}>
-                        <NavMenu menulist={userNavRoutes} ></NavMenu>
+                        { developerInfo.userName && <NavMenu menulist={userNavMenu} /> }
                     </div>
                     <section className="right-wrapper">
                         <div className="right-wrapper-contentbox">

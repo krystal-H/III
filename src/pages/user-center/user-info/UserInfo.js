@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import { get,Paths } from '../../../api'
+import { post,Paths } from '../../../api'
 import { getDeveloperInfo } from '../store/ActionCreator'
 
 
@@ -8,7 +8,7 @@ import PageTitle from '../../../components/page-title/PageTitle';
 import AloneSection from '../../../components/alone-section/AloneSection';
 import ContactInformation from './ContactInformation';
 
-// import TreeStructureDisplay from '../../../components/tree-structure-display/TreeStructureDisplay'
+import TreeStructureDisplay from '../../../components/tree-structure-display/TreeStructureDisplay'
 
 import './UserInfo.scss'
 import { DateTool } from '../../../util/util'
@@ -31,9 +31,7 @@ export default class BaseInfo extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            productResource:[],
-            dataObjRightsList:[],
-            dataDimensionRightsList:[]
+            treeData:{}
         }
     }
     componentDidMount () {
@@ -46,34 +44,17 @@ export default class BaseInfo extends Component {
         }
     }
     getSubRights = () => {
-        let {developerInfo = {}} = this.props,
-            {isSubUser} = developerInfo;
+        const { isNotSub, developerInfo:{userId} } = this.props;
 
-        if (isSubUser) {
-            get(Paths.getRightsOneself, {}, {loading: true}).then((model) => {
-                let productResource = [];
-                let dataObjRightsList = [];
-                let dataDimensionRightsList = [];
-                let arr = model.data;
-                for (let a = 0; a < arr.length; a++) {
-                    let item = arr[a];
-                    if(item.menuCode=='productService'){
-                        productResource = item.checkBoxGroupList
-                    }
-                    if(item.menuCode=='dataObject'){
-                        dataObjRightsList = item.checkBoxGroupList
-                    }
-                    if(item.menuCode=='dataDimension'){
-                        dataDimensionRightsList = item.checkBoxGroupList
-                    }
-                }
-                this.setState({productResource,dataObjRightsList,dataDimensionRightsList});
+        if (!isNotSub) {
+            post(Paths.getRights,{userId},{loading:true}).then((model) => {
+                this.setState({ treeData:model.data || {} }); 
             });
         }
     }
     render() {
-        const {productResource,dataObjRightsList,dataDimensionRightsList} = this.state,
-            {developerInfo,getDeveloperInfo,isNotSub} = this.props,
+        const {developerInfo,getDeveloperInfo,isNotSub} = this.props,
+            {treeData} = this.state,
             {userId,email,regTime,userRole,parentUserName,userName} = developerInfo;
 
         return <div className='page-userbaseinfo'>
@@ -104,7 +85,9 @@ export default class BaseInfo extends Component {
                                 </div>
                             </div>
                         </AloneSection>
-                        {/* <TreeStructureDisplay userCategory='1' productResource={productResource} dataObjRightsList={dataObjRightsList} dataDimensionRightsList={dataDimensionRightsList} /> */}
+                        <AloneSection title="权限信息" className='comm-shadowbox'>
+                            <TreeStructureDisplay treeData={treeData}/>
+                        </AloneSection> 
                     </div>
                     // 主账号页面
                     :<div>
