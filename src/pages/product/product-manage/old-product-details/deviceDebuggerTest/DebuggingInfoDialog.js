@@ -13,7 +13,7 @@ import {
     getDeviceDebugMacList,
     updateDeviceDebugAccountListAction,
     getDeviceDebugAccountListAction
-} from '../../store/ActionCreator';
+} from '../store/ActionCreator';
 
 import { Modal, Input, Divider } from 'antd';
 
@@ -297,7 +297,7 @@ export default class DebuggingInfoDialog  extends Component {
                     onOk={this.props.visibleFun}
                     onCancel={this.props.visibleFun}
                     width='800px'
-                    className='debuggingInformation self-modal'
+                    className='old-debuggingInformation self-modal'
                     maskClosable={false}
                 >
                     <div className='debuggingInfo_box'>

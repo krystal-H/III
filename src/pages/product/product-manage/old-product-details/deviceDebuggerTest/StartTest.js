@@ -28,7 +28,7 @@ import {
         get_clearDevData2_Action,
         updateDeviceDebugAccountListAction,//更新账号列表
         updateDeviceDebugMacListAction,//更新mac列表
-    } from '../../store/ActionCreator';
+    } from '../store/ActionCreator';
 
 import './devTest.scss';
 
@@ -1663,35 +1663,29 @@ export default class StartTest  extends Component{
         let accountList = [],
             macList = [];
         post(Paths.deviceDebugAccountGetList,{productId:pid},{loading:true}).then((model) => {
-            if(model.code==0){
-                accountList = model.data || [];
-                this.props.updateDeviceDebugAccountList(model);
-                // post(Paths.deviceDebugMacGetList,{productId:pid}).then((res) => {
-                post(Paths.debugSecretList,{productId:pid},{loading:true}).then((res) => {
-                    if(res.code==0){
-                        macList = res.data || [];
-                        this.props.updateDeviceDebugMacList(res);
-                        if(accountList.length>0&&macList.length>0){
-                            this._mount = true;
-                            this.props.updateDevice(pid);//
-                            this.props.getDataTypeList(pid);//获取数据类型 // actions.DeviceDebugger.getDataTypeList({ productId: pid });
-                            this.props.getPropertyConfig(pid);// actions.DeviceDebugger.getPropertyConfig({ productId: pid });
-                            // setTimeout ((()=>{
-                            //     this.setState({visible:false})
-                            // }),5000);//延迟五秒关闭弹窗
-                        }
-
-                        if(!macList.length) {
-                            this.visible()
-                        }
+            accountList = model.data || [];
+            this.props.updateDeviceDebugAccountList(model);
+            // post(Paths.deviceDebugMacGetList,{productId:pid}).then((res) => {
+            post(Paths.debugSecretList,{productId:pid},{loading:true}).then((res) => {
+                if(res.code==0){
+                    macList = res.data || [];
+                    this.props.updateDeviceDebugMacList(res);
+                    if(accountList.length>0&&macList.length>0){
+                        this._mount = true;
+                        this.props.updateDevice(pid);//
+                        this.props.getDataTypeList(pid);//获取数据类型 // actions.DeviceDebugger.getDataTypeList({ productId: pid });
+                        this.props.getPropertyConfig(pid);// actions.DeviceDebugger.getPropertyConfig({ productId: pid });
+                        // setTimeout ((()=>{
+                        //     this.setState({visible:false})
+                        // }),5000);//延迟五秒关闭弹窗
                     }
-                });
-            }
+
+                    if(!macList.length) {
+                        this.visible()
+                    }
+                }
+            });
         });
-        // this.props.updateDevice(pid);//
-        // this.props.getDataTypeList(pid);//获取数据类型 // actions.DeviceDebugger.getDataTypeList({ productId: pid });
-        // this.props.getPropertyConfig(pid);// actions.DeviceDebugger.getPropertyConfig({ productId: pid });
-        // this._mount = true;
     }
     componentWillUpdate (nextProps, nextState) {
             if (nextProps.deviceAndWs.wsUrl.data.ip && nextProps.deviceAndWs.wsUrl.data.ip !== this.props.deviceAndWs.wsUrl.data.ip) {
@@ -1853,7 +1847,7 @@ export default class StartTest  extends Component{
         let pid = getUrlParam('productId')||this.props.productId;
         let hardwareType = getUrlParam('hardwareType')||this.props.productBaseInfo.hardwareType;
         return (
-            <div className='devDebuggingBox commonContentBox'>
+            <div className='devDebuggingBox'>
                 <div className="title">
                     <div className='titleName'>在线设备调试工具</div>
                     <div className='titleOperation' onClick={this.visible}>

@@ -26,7 +26,7 @@ const mapDispatchToProps = dispatch => {
     }
 }
 @connect(mapStateToProps, mapDispatchToProps)
-export default class extends Component{
+export default class AddFirmwareDialog extends Component{
     constructor(props){
         super(props);
         this.state = {
