@@ -38,7 +38,6 @@ export default function DeviceRegist() {
     const [dataSource, setDataSource] = useState([])
     const [optionArr, setOptionArr] = useState([]) //产品列表
     const [selectType, setSelectType] = useState('') //产品种类
-    const [addVisible, setAddVisible] = useState(false)
     const [originData, setOriginData] = useState([])
     useEffect(() => {
         getProductType()
@@ -61,16 +60,11 @@ export default function DeviceRegist() {
             setIsDelVisible(false)
             getList()
         }
-        let url=''
-
-        if(actionData.typeS){
-            url = Paths.delScenceRun+'?statusQueryId='+actionData.funcIdentifier
-            // post(Paths.delScenceRun, { statusQueryId: actionData.funcIdentifier }).then((res) => {
-            //     callBack()
-            // });
-        }else{
-            url = Paths.delScenceControl+'?deviceFunctionId='+actionData.funcIdentifier
-            
+        let url = ''
+        if (actionData.typeS) {
+            url = Paths.delScenceRun + '?statusQueryId=' + actionData.statusQueryId
+        } else {
+            url = Paths.delScenceControl + '?deviceFunctionId=' + actionData.statusQueryId
         }
         post(url).then((res) => {
             callBack()
@@ -98,7 +92,6 @@ export default function DeviceRegist() {
         setSelectType(value)
     }
     //搜索
-    const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
     useEffect(() => {
         if (selectType) {
             getList()
@@ -112,7 +105,7 @@ export default function DeviceRegist() {
     //获取列表
     const getList = (loading = true) => {
         let params = {
-            filter:true
+            filter: true
         }
         // if (selectType) {
         //     params.productId = selectType
@@ -149,7 +142,7 @@ export default function DeviceRegist() {
         setDataSource(arr)
     };
     //自定义
-    const [modelVis, setModelVis] = useState(true)
+    const [modelVis, setModelVis] = useState(false)
     const openRegist = () => {
         setModelVis(true)
     }
@@ -159,7 +152,7 @@ export default function DeviceRegist() {
     const colseMoadl = () => {
         Notification({
             type: 'success',
-            description: '注册成功！',
+            description: '提交成功！',
         });
         setModelVis(false)
     }
@@ -195,7 +188,7 @@ export default function DeviceRegist() {
             title: '操作',
             dataIndex: 'activeTime',
             key: 'activeTime',
-            render(text,row) {
+            render(text, row) {
                 return <a onClick={() => { openDel(row) }}>删除</a>
             }
         }
@@ -250,7 +243,7 @@ export default function DeviceRegist() {
                                 >
                                     <Input style={{ width: '465px' }} placeholder="功能名称" />
                                 </Form.Item>
-                                <Button type="primary" onClick={()=>{onSearch()} }>
+                                <Button type="primary" onClick={() => { onSearch() }}>
                                     查询
                                 </Button>
                             </Form.Item>
