@@ -26,12 +26,13 @@ const stepList = [
     }
 ]
 
-function CreateTask({ visible, onCancel }) {
+function CreateTask({ visible, onCancel, allProductList, editData }) {
     const refConfig = useRef()
+    const refDevice = useRef()
     const [form] = Form.useForm()
     const [stepcurrent, setStepcurrent] = useState(0)
     const [productId, setProductId] = useState('')
-    const [allProductList, setAllProductList] = useState([]) // 下拉所有产品列表
+
 
     const onOk = () => {
         form.submit()
@@ -39,6 +40,7 @@ function CreateTask({ visible, onCancel }) {
 
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
+        sessionStorage.setItem('remoteConfigtaskDesc', JSON.stringify(values))
         setProductId(values.productId)
         let index = cloneDeep(stepcurrent)
         setStepcurrent(++index)
@@ -63,21 +65,13 @@ function CreateTask({ visible, onCancel }) {
         if (stepcurrent === 0) { // 填写任务说明
             onOk()
         } else if (stepcurrent === 1) { // 添加配置数据
-            console.log(refConfig, 'refConfig')
+            console.log(refConfig, '-----------refConfig')
             refConfig.current.onFinish()
         } else if (stepcurrent === 2) { // 选择配置更新的设备
-
+            console.log(refDevice, '-----------refDevice')
+            refDevice.current.onFinish()
         }
     }
-
-    // 获取所有产品列表
-    const getCloudGetProductList = () => {
-        get(Paths.cloudGetProductList).then(res => {
-            setAllProductList(res.data)
-        }, () => setAllProductList([]))
-    }
-
-    useEffect(() => { getCloudGetProductList() }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <Modal
@@ -86,12 +80,12 @@ function CreateTask({ visible, onCancel }) {
             destroyOnClose
             maskClosable={false}
             visible={visible}
-            width={900}
+            width={1100}
             onCancel={onCancel}
             wrapClassName={'remote-config-modal'}
             footer={[
                 stepcurrent !== 0 && <Button key="previous" onClick={() => clickPrevious()}>上一步</Button>,
-                <Button type="primary" key="next" onClick={() => clickNext()}>{stepcurrent === 2 ? '确认创建' : '下一步'}</Button>
+                <Button type="primary" key="next" onClick={() => clickNext()}>{stepcurrent === 2 ? '提交' : '下一步'}</Button>
             ]}>
             <div className="remote-config">
                 <div className="step-box">
@@ -109,9 +103,13 @@ function CreateTask({ visible, onCancel }) {
                         name="filTask"
                         labelCol={{ span: 4 }}
                         wrapperCol={{ span: 18 }}
-                        initialValues={{}}
                         onFinish={onFinish}
-                        onFinishFailed={onFinishFailed}>
+                        onFinishFailed={onFinishFailed}
+                        initialValues={{
+                            productId: editData.productId || '',
+                            taskName: editData.taskName,
+                            taskExplain: editData.taskExplain
+                        }}>
                         <Form.Item
                             label="归属产品"
                             name="productId"
@@ -152,13 +150,18 @@ function CreateTask({ visible, onCancel }) {
                     <AddConfigData
                         ref={refConfig}
                         productId={productId}
+                        editData={editData}
                         nextStep={nextStep} />
                 }
 
                 {/* 选择配置更新的设备 */}
                 {
                     stepcurrent === 2 &&
-                    <ChooseUpdateDevice />
+                    <ChooseUpdateDevice
+                        ref={refDevice}
+                        productId={productId}
+                        editData={editData}
+                        onCancel={onCancel} />
                 }
 
             </div>

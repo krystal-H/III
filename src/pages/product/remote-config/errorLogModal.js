@@ -12,8 +12,8 @@ function DeviceImportErrorLogModal({ visible, errorList, onCancel }) {
     },
     {
       title: '物理地址',
-      dataIndex: '',
-      key: '',
+      dataIndex: 'macAddress',
+      key: 'macAddress',
     },
     {
       title: '错误原因',

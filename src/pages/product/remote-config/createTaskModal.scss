@@ -1,5 +1,4 @@
 @charset 'utf-8';
-
 .remote-config-modal {
   .ant-modal-footer {
     height: 70px;
@@ -26,7 +25,7 @@
   }
 
   // 添加配置数据
-  .config-data-table .ant-table-body{
+  .config-data-table .ant-table-body {
     @include self-scroll-bar();
   }
   .ant-table-tbody > tr > td .ant-input-number,
@@ -38,6 +37,27 @@
   .ant-select,
   .romote-modal .ant-table-thead > tr > th,
   input {
-    width: 130px;
+    width: 182px;
+  }
+
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
+    padding: 4px !important;
+
+    .config-send-data {
+      input,
+      .ant-input-number,
+      .ant-select {
+        // width: 130px;
+      }
+
+      &.warn {
+        .ant-select-selection,
+        .ant-input-number,
+        input {
+          border-color: red;
+        }
+      }
+    }
   }
 }
