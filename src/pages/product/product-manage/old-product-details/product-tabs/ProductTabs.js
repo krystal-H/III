@@ -84,7 +84,7 @@ export default class ProductTabs  extends Component {
                         <FirmwareManagement productId={productId} productBaseInfo={productBaseInfo}/>
                     </TabPane>
                     <TabPane key={'4'} tab={'调试工具'}>
-                        <div className="gray-bg-padding">
+                        <div className="old-device-debug-page">
                             <DebuggingTool productId={productId} productBaseInfo={productBaseInfo} onRef={ref => this.debugVisible = ref} />
                         </div>
                     </TabPane>
