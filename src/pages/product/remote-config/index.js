@@ -292,6 +292,7 @@ function RemoteConfig(remoteType = 'product') {
                     onCancel={() => { setAddVisible(false); setEditData({}) }}
                     editData={editData}
                     configProtoclList={configProtoclList}
+                    getRemoteConfigList={getRemoteConfigList}
                 ></CreateTaskModal>
             }
 
