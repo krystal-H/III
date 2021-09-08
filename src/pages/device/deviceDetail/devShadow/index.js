@@ -46,7 +46,8 @@ export default function DeviceShadow() {
         // Paths.getDeviceInfo
         post(Paths.deviceShadow, { 'deviceUniqueId': baseInfo.deviceId }, { loading }).then((res) => {
             setDataSource(delaData(res.data.list))
-            setJsonData( JSON.stringify(res.data.jsonString) )
+            let jsonData=res.data.jsonString || {}
+            setJsonData( JSON.stringify(jsonData) )
         });
     }
     //筛选

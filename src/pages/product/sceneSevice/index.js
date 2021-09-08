@@ -111,7 +111,9 @@ export default function DeviceRegist() {
     }, [selectType])
     //获取列表
     const getList = (loading = true) => {
-        let params = {}
+        let params = {
+            filter:true
+        }
         // if (selectType) {
         //     params.productId = selectType
         // }
@@ -122,13 +124,14 @@ export default function DeviceRegist() {
         post(Paths.scenceList, params, { loading }).then((res) => {
             let arr1 = delaData(res.data.conditionFunc, true)
             let arr2 = delaData(res.data.controlFunc, false)
-            setDataSource(arr1.concat(arr2))
+            // setDataSource(arr1.concat(arr2))
             setOriginData(arr1.concat(arr2))
+            onSearch(arr1.concat(arr2))
         });
     }
-    const onSearch = () => {
+    const onSearch = (data) => {
         let val = form.getFieldsValue()
-        let arr = cloneDeep(originData)
+        let arr = data ? cloneDeep(data) : cloneDeep(originData)
         if (typeof val.typeS == 'boolean') {
             arr = arr.filter(item => {
                 if (val.typeS == item.typeS) {
@@ -145,10 +148,9 @@ export default function DeviceRegist() {
         }
         setDataSource(arr)
     };
-    //注册
-    const [modelVis, setModelVis] = useState(false)
+    //自定义
+    const [modelVis, setModelVis] = useState(true)
     const openRegist = () => {
-        return
         setModelVis(true)
     }
     const cancelModel = () => {
@@ -248,7 +250,7 @@ export default function DeviceRegist() {
                                 >
                                     <Input style={{ width: '465px' }} placeholder="功能名称" />
                                 </Form.Item>
-                                <Button type="primary" onClick={onSearch}>
+                                <Button type="primary" onClick={()=>{onSearch()} }>
                                     查询
                                 </Button>
                             </Form.Item>
@@ -259,7 +261,7 @@ export default function DeviceRegist() {
                 <Table rowKey='funcIdentifier' dataSource={dataSource} columns={columns} />
             </div>
             {
-                modelVis && <AddModal addVisible={modelVis} addOk={colseMoadl} CancelAdd={cancelModel} />
+                modelVis && <AddModal addVisible={modelVis} addOk={colseMoadl} optionArr={optionArr} CancelAdd={cancelModel} />
             }
             {
                 isDelVisible && <ActionConfirmModal
