@@ -2,6 +2,18 @@
 //设备调试 相关css
 $borderColor: #e8e8e8;
 
+
+.old-device-debug-page{
+
+
+    .linkState{
+        margin: -10px 12px 0;
+        padding: 8px $gap;
+        border: 1px solid #C2E0AD;
+        border-radius: $borderRadius;
+        background-color: #F6FFEC;
+    }
+
 /*右边内容标题*/
 .comm-secondtitle{
 	height: 68px;
@@ -27,8 +39,9 @@ $borderColor: #e8e8e8;
 }
 
 .dev-test-content {
-    border-left: 1px solid #e8e8e8;
-    border-right: 1px solid $borderColor;
+    border: 1px solid #e8e8e8;
+    border-bottom: none;
+    // border-right: 1px solid $borderColor;
 
     input[type='reset'],
     input[type='button'] {
@@ -56,7 +69,7 @@ $borderColor: #e8e8e8;
 }
 .dev-test-header {
     position: relative;
-    background: #f4f5f9;
+    // background: #f4f5f9;
     height: 45px;
     .dev-test-header-right {
         position: absolute;
@@ -68,12 +81,6 @@ $borderColor: #e8e8e8;
         height: 45px;
         line-height: 45px;
         padding: 0 20px;
-    }
-    .linkState{
-        padding: 8px $gap;
-        border: 1px solid #C2E0AD;
-        border-radius: $borderRadius;
-        background-color: #F6FFEC;
     }
     .linkError{
         color: $warnColor;
@@ -165,7 +172,7 @@ $borderColor: #e8e8e8;
     }
 }
 .dev-test-filter-panel {
-    margin-top: 50px;
+    margin-top: 70px;
     padding: 20px;
     overflow: hidden;
     border-bottom: 1px solid $borderColor;
@@ -597,8 +604,215 @@ $borderColor: #e8e8e8;
     }
 }
 
+
+//
+.upgradeDialog{
+    .ant-modal-body{
+        padding:24px;
+    }
+}
+
+//设备调试
+.deviceDebugging{
+    padding: $gap;
+    background-color:#fff;
+    .title{
+        .titleName, .titleOperation{
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .titleName{
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .titleOperation{
+            img{
+                width: 24px;
+                height: 24px;
+                margin: 0 10px 0 30px;
+            }
+            span{
+                vertical-align: middle;
+                color: $themeColor;
+            }
+        }
+    }
+    .content{
+        margin-top: 10px;
+        position: relative;
+        .message, .setUp{
+            display: inline-block;
+            position: absolute;
+        }
+        .message{
+            right: 100px;
+        }
+        .setUp{
+            right: 40px;
+        }
+        .tabs_1, .tabs_2{
+            
+            .drop_down_box{
+                position: relative;
+                padding: $gap 0;
+                .dropDown{
+                    display: inline-block;
+                    margin-right: 30px;
+                    .dropDown_name{
+                        padding-right: 10px;
+                    }
+                }
+            }
+            .resetFilterBox{
+                .reset, .filter, .empty{
+                    display: inline-block;
+                    margin-right: 30px;
+                }
+                .reset, .empty{
+                    padding: 5px 18px;
+                    border:1px solid $borderColor;
+                    border-radius: $borderRadius;
+                    cursor: pointer;
+                }
+                .reset:hover, .empty:hover{
+                    background-color: $borderColor;
+                }
+            }
+            .messageData, .plaintextData, .errorData{
+                height: 249px;
+            }
+            .messageList{
+                height: 352px;
+            }
+            .messageList,.messageData, .plaintextData, .errorData{
+                border-bottom: 1px solid $borderColor;
+                .msgTitle{
+                    position: relative;
+                    padding: 15px;
+                    span{
+                        font-size: $subTitleFontSize;
+                        font-weight: 700;
+                    }
+                    .butCopy, .butDelete{
+                        display: inline-block;
+                        position: absolute;
+                        padding: 5px 12px;
+                        border: 1px solid $borderColor;
+                        border-radius: $borderRadius;
+                    }
+                    .butCopy{
+                        right: 10px;
+                    }
+                    .butDelete{
+                        right: 80px;
+                    }
+                }
+                .msgListBox, .msgParseList{
+                    display: inline-block;
+                    height: 100%;
+                }
+                .msgListBox{
+                    width: 60%;
+                    border-right: 1px solid $borderColor;
+                }
+                .msgParseList{
+                    width: 40%;
+                }
+            }
+        }
+        .tabs_1{
+            .export{
+                position: absolute;
+                right: 0;
+                top: 26px;
+                color: $themeColor;
+                cursor: pointer;
+                img{
+                    height: 16px;
+                    width: 16px;
+                    margin-right: 8px;
+                }
+            }
+            .message_content_box{
+                margin-top: $gap;
+                border: 1px solid $borderColor;
+                border-bottom: none;
+                height: 1100px;
+                background-color: #fff;
+                
+            }
+        }
+        .tabs_2{
+            .message_box{
+                margin-top: $gap;
+                border: 1px solid $borderColor;
+                border-right:none;
+                height: 1100px;
+                background-color: #fff;
+                .productList, .operationBut, .messageList_box{
+                    float: left;
+                    height: 100%;
+                    border-right: 1px solid $borderColor;
+                }
+                .productList{
+                    width: 20%;
+                }
+                .operationBut{
+                    width: 10%;
+                    .operation{
+                        margin: 0 auto;
+                        width: 80%;
+                        padding: 5px 12px;
+                        border: 1px solid $borderColor;
+                        border-radius: $borderRadius;
+                    }
+                }
+                .messageList_box{
+                    position: relative;
+                    width: 70%;
+                    .msgListBox{
+                        width: 100%;
+                        border-right: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.devDebuggingBox{
+    .title{
+        margin-bottom: 12px;
+        .titleName, .titleOperation{
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .titleName{
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .titleOperation{
+            img{
+                width: 20px;
+                height: 20px;
+                margin: 0 5px 0 30px;
+            }
+            span{
+                vertical-align: middle;
+                color: $themeColor;
+                font-size: 14px;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+
+}
+
+
 //弹窗
-.debuggingInformation{
+.old-debuggingInformation{
     .debuggingInfo_box{
         width: 752px;
         .title{
@@ -760,210 +974,5 @@ $borderColor: #e8e8e8;
         table.table tr td:last-child, table.table tr th:last-child{ border-right: 0 }
         table.table tr:last-child td, table.table tr:last-child th{ border-bottom: 0 }
         
-    }
-}
-//
-.upgradeDialog{
-    .ant-modal-body{
-        padding:24px;
-    }
-}
-
-//设备调试
-.deviceDebugging{
-    padding: $gap;
-    background-color:#fff;
-    .title{
-        .titleName, .titleOperation{
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .titleName{
-            font-size: 16px;
-            font-weight: 700;
-        }
-        .titleOperation{
-            img{
-                width: 24px;
-                height: 24px;
-                margin: 0 10px 0 30px;
-            }
-            span{
-                vertical-align: middle;
-                color: $themeColor;
-            }
-        }
-    }
-    .content{
-        margin-top: 10px;
-        position: relative;
-        .message, .setUp{
-            display: inline-block;
-            position: absolute;
-        }
-        .message{
-            right: 100px;
-        }
-        .setUp{
-            right: 40px;
-        }
-        .tabs_1, .tabs_2{
-            .linkState{
-                padding: 8px $gap;
-                border: 1px solid #C2E0AD;
-                border-radius: $borderRadius;
-                background-color: #F6FFEC;
-            }
-            .drop_down_box{
-                position: relative;
-                padding: $gap 0;
-                .dropDown{
-                    display: inline-block;
-                    margin-right: 30px;
-                    .dropDown_name{
-                        padding-right: 10px;
-                    }
-                }
-            }
-            .resetFilterBox{
-                .reset, .filter, .empty{
-                    display: inline-block;
-                    margin-right: 30px;
-                }
-                .reset, .empty{
-                    padding: 5px 18px;
-                    border:1px solid $borderColor;
-                    border-radius: $borderRadius;
-                    cursor: pointer;
-                }
-                .reset:hover, .empty:hover{
-                    background-color: $borderColor;
-                }
-            }
-            .messageData, .plaintextData, .errorData{
-                height: 249px;
-            }
-            .messageList{
-                height: 352px;
-            }
-            .messageList,.messageData, .plaintextData, .errorData{
-                border-bottom: 1px solid $borderColor;
-                .msgTitle{
-                    position: relative;
-                    padding: 15px;
-                    span{
-                        font-size: $subTitleFontSize;
-                        font-weight: 700;
-                    }
-                    .butCopy, .butDelete{
-                        display: inline-block;
-                        position: absolute;
-                        padding: 5px 12px;
-                        border: 1px solid $borderColor;
-                        border-radius: $borderRadius;
-                    }
-                    .butCopy{
-                        right: 10px;
-                    }
-                    .butDelete{
-                        right: 80px;
-                    }
-                }
-                .msgListBox, .msgParseList{
-                    display: inline-block;
-                    height: 100%;
-                }
-                .msgListBox{
-                    width: 60%;
-                    border-right: 1px solid $borderColor;
-                }
-                .msgParseList{
-                    width: 40%;
-                }
-            }
-        }
-        .tabs_1{
-            .export{
-                position: absolute;
-                right: 0;
-                top: 26px;
-                color: $themeColor;
-                cursor: pointer;
-                img{
-                    height: 16px;
-                    width: 16px;
-                    margin-right: 8px;
-                }
-            }
-            .message_content_box{
-                margin-top: $gap;
-                border: 1px solid $borderColor;
-                border-bottom: none;
-                height: 1100px;
-                background-color: #fff;
-                
-            }
-        }
-        .tabs_2{
-            .message_box{
-                margin-top: $gap;
-                border: 1px solid $borderColor;
-                border-right:none;
-                height: 1100px;
-                background-color: #fff;
-                .productList, .operationBut, .messageList_box{
-                    float: left;
-                    height: 100%;
-                    border-right: 1px solid $borderColor;
-                }
-                .productList{
-                    width: 20%;
-                }
-                .operationBut{
-                    width: 10%;
-                    .operation{
-                        margin: 0 auto;
-                        width: 80%;
-                        padding: 5px 12px;
-                        border: 1px solid $borderColor;
-                        border-radius: $borderRadius;
-                    }
-                }
-                .messageList_box{
-                    position: relative;
-                    width: 70%;
-                    .msgListBox{
-                        width: 100%;
-                        border-right: none;
-                    }
-                }
-            }
-        }
-    }
-}
-
-.devDebuggingBox{
-    .title{
-        .titleName, .titleOperation{
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .titleName{
-            font-size: 16px;
-            font-weight: 700;
-        }
-        .titleOperation{
-            img{
-                width: 20px;
-                height: 20px;
-                margin: 0 5px 0 30px;
-            }
-            span{
-                vertical-align: middle;
-                color: $themeColor;
-                font-size: 14px;
-                cursor: pointer;
-            }
-        }
     }
 }

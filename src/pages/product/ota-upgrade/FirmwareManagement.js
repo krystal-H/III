@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Input, Button, Table, Divider, Tag, Modal,Select ,Steps} from 'antd';
 import { get,Paths } from '../../../api';
-import {AddFirmwareDialog} from './AddFirmwareDialog';
+import AddFirmwareDialog from './AddFirmwareDialog';
 import {ReleaseFirmware} from './ReleaseFirmware';
 import {ValidationFirmwareDialog} from './ValidationFirmwareDialog';
 

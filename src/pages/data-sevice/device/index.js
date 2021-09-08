@@ -291,7 +291,8 @@ export default function Device() {
                     {
                         countData.map((item, index) => {
                             return (
-                                <div key={index} className='count-item' onClick={() => { filterData(index) }} className={currentTab === index ? 'current-tab' : ''}>
+                                <div key={index} className='count-item' onClick={() => { filterData(index) }} 
+                                className={[currentTab === index ? 'current-tab' : '', index == 4 ? 'last-wrap' : ''].join(' ')}>
                                     <div className='item-label'>{item.label}</div>
                                     <div className='item-number'>{item.count}</div>
                                 </div>
