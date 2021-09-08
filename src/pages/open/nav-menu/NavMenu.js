@@ -18,10 +18,13 @@ class NavMenu extends PureComponent {
         } )
     }
     getNavList = menus=>{
-        return menus.map(({
-            menuicon,menuname,path,childmenus=[],menuid
-            },index)=>{
+        
+        return menus.map((_item,index)=>{
+            // console.log(333,_item)
+            const { menuicon,menuname,path,childmenus=[],menuid } = _item;
+            // console.log(444,childmenus.length)
             if(childmenus.length>0){
+                // console.log(666,childmenus.length)
                 return <SubMenu key={menuid||menuname} 
                                 icon={<span className={`selficon ${menuicon}`}></span>} 
                                 title={menuname}
@@ -49,7 +52,7 @@ class NavMenu extends PureComponent {
             if(childmenus.length>0){
                 for(let j=0;j<childmenus.length;j++){
                     let {path,menuid,menuname } = childmenus[j];
-                    console.log(pathurl,path)
+                    // console.log(pathurl,path)
                     if(pathurl.indexOf(path)>-1){
                         this.setState({
                             selectedKeys:[menuid||menuname],
@@ -81,7 +84,7 @@ class NavMenu extends PureComponent {
     onOpenChange= keys =>{
         const {openKeys} = this.state;
         const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
-        console.log(11111,latestOpenKey)
+        // console.log(11111,latestOpenKey)
         const newkeys = latestOpenKey && [latestOpenKey] || []
         this.setState({
             openKeys:newkeys
@@ -101,12 +104,14 @@ class NavMenu extends PureComponent {
     }
     componentDidUpdate(oldprops){ 
         const {menulist} = this.props;
+        
         if(oldprops.menulist.length==0 && menulist.length>0){//第一次接收到 menulist 时
             this.setCurMenu();
         }
     }
     render() {
         const {collapsed,menulist} = this.props;
+        // console.log(999,menulist)
         const {openKeys,selectedKeys,} = this.state;
         return (
             <div className="menu-wapper">

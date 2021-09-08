@@ -22,10 +22,13 @@ export default class Header extends PureComponent  {
     }
     render () {
         const {onlyLogo,developerInfo={},newMessageNums={}} = this.props,
-            {email,account}= developerInfo,
-            {childmenus} = userNavRoutes[0],
+            { userName,isSubUser }= developerInfo,
             {totalUnRead} = newMessageNums;
-        
+        let { childmenus } = userNavRoutes[0];
+            
+        if(isSubUser){
+            childmenus = childmenus.slice(0,2) // 子账号只有前两项  基本资料  安全设置  两个菜单
+        }
         return (
             <header className="mainpage-header">
                 <span className="logo">{LOGO_TEXT}</span>
@@ -40,7 +43,7 @@ export default class Header extends PureComponent  {
                         </Link>
                         <div className='user'>
                             <img src={DefaultUserIcon} alt="用户头像" className="usericon"/>
-                            <span className='username'>{email || account || '未知账号'}</span>
+                            <span className='username'>{ userName || '未知账号'}</span>
                             <CaretDownOutlined className='downicon'/>
                             <div className='hoverbox'>
                                 <div className='comm-shadowbox menubox'>
