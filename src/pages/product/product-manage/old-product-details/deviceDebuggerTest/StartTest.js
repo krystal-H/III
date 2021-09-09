@@ -853,37 +853,16 @@ class EquipmentUpgradePage extends React.Component{
             return;//没选择mac得话，点击升级无用。
         } 
         let tipconts = type == 1 ? '模组升级' : 'MCU升级';
-        // this.props.getAllFirmwareVersionTypeAction( type == 1 ? 1 : 2);
-        get(Paths.getAllFirmwareVersionType,{deviceVersionTypeId: type == 1 ? 1 : 2}).then((data) => {
-            if(data.code==0){
-                this.setState({firmwareModules:data.data});
-            }
+        get(Paths.oldGetAllFirmwareVersionType,{deviceVersionTypeId: type == 1 ? 1 : 2}).then((data) => {
+            this.setState({firmwareModules:data.data});
+            
         });
-        // let typeSrc = type == 1 ? 'Wi-Fi' : 'PCB';
-        // let upgradeData = {},
-        //     data = {},
-        //     upgradeDialogTip = {
-        //         tipconts: typeSrc + '升级',
-        //         warn: '确定要升级设备'+ this.selectedDevice.mac +'的'+ typeSrc +'固件？'
-        //     };
-        // if (type == '1' && this.selectedDevice.packetStart == 'F2') {
-        //     data = { mac: this.selectedDevice.mac, moduleType: type, command: '8030' };
-        // } else if (type == '1' && this.selectedDevice.packetStart == '5A') {
-        //     data = { mac: this.selectedDevice.mac, moduleType: type, command: '0130' };
-        // } else if (type == '2' && this.selectedDevice.packetStart == 'F2') {
-        //     data = { mac: this.selectedDevice.mac, moduleType: type, command: '8020' };
-        // } else if (type == '2' && this.selectedDevice.packetStart == '5A') {
-        //     data = { mac: this.selectedDevice.mac, moduleType: type, command: '0120' };
-        // }
-        // upgradeData.actionType = 'upgrade';
-        // upgradeData.data = data;
+        
         this.setState({
             upgradeDialogClosable: true,
             tipconts,
             deviceVersionType:type,
             mac:this.selectedDevice.mac
-            // upgradeDialogTip,
-            // upgradeData,
         });
     }
     handleConfirm = (bool, param) => {
@@ -945,17 +924,13 @@ class EquipmentUpgradePage extends React.Component{
                                             selectedRow={this.selectedDeviceFn}
                                         />
                                     </div>
-                                    {
-                                        this.props.hardwareType==0?
-                                            <div className="device_upgrade_opera">
-                                                <p><input type="button" value='模组升级' onClick={this.upgrade.bind(this, '1')} /></p>
-                                                <p className="line" />
-                                                <p><input type="button" value='MCU升级' onClick={this.upgrade.bind(this, '2')} /></p>
-                                            </div>
-                                            :<div className="device_upgrade_opera">
-                                                <p><input type="button" value='模组升级' onClick={this.upgrade.bind(this, '1')} /></p>
-                                            </div>
-                                    }
+                                    <div className="device_upgrade_opera">
+                                        <p><input type="button" value='模组升级' onClick={this.upgrade.bind(this, '1')} /></p>
+                                        {
+                                            this.props.hardwareType==0 && <p><input type="button" value='MCU升级' onClick={this.upgrade.bind(this, '2')} /></p>
+                                        }
+                                    </div>
+                                    
                                 </CommonPanel>
                             </div>
                             <div className="right-wrap">
