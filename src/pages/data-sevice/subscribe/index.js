@@ -27,7 +27,7 @@ export default function DeviceRegist() {
             for (let key in res.data) {
                 arr.push({ key, value: res.data[key] })
             }
-            // console
+            arr.unshift({ key:0, value: '全部产品' })
             setOptionArr(arr)
         });
     }
@@ -227,7 +227,7 @@ export default function DeviceRegist() {
         <div id='subscribe-data'>
             <PageTitle title='数据订阅'>
                 <div className='top-select'>
-                    <Select style={{ width: 200 }} allowClear onChange={productChange}>
+                    <Select style={{ width: 200 }} allowClear onChange={productChange} defaultValue={0}>
                     {
                         optionArr.map(item => {
                             return (<Option value={item.key} key={item.key}>{item.value}</Option>)

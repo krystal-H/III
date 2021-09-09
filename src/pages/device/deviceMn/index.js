@@ -8,7 +8,11 @@ import downpng from '../../../assets/images/product/download.png';
 import './index.scss'
 // import GroupDetailt from '../../product/device/device-group/groupDeviceList';
 const { Option } = Select;
-const originCount = [{ label: '当前异常数', count: 0 }, { label: '累积设备总数', count: 0 }, { label: '累积入网总数', count: 0 }, { label: '今日入网总数', count: 0 }]
+const originCount = [
+    { label: '当前异常数', count: 0 },
+    { label: '累积设备总数', count: 0 },
+    { label: '累积入网总数', count: 0 },
+    { label: '今日入网总数', count: 0 }]
 export default function DeviceList() {
     const history = useHistory();
     const [countData, setCountData] = useState(originCount) //统计
@@ -34,8 +38,17 @@ export default function DeviceList() {
     }
     //获取列表
     const getList = (loading = true) => {
+        let arr = ['online', 'innet', 'fault']
+        let obj = {}
+        for (let key in form.getFieldsValue()) {
+            if (arr.indexOf(key) > -1 && typeof form.getFieldsValue()[key] == 'string') {
+            } else {
+                obj[key] = form.getFieldsValue()[key]
+            }
+
+        }
         let params = {
-            ...form.getFieldsValue(),
+            ...obj,
             ...pager,
         }
         if (selectType) {
@@ -56,6 +69,7 @@ export default function DeviceList() {
             for (let key in res.data) {
                 arr.push({ key, value: res.data[key] })
             }
+            arr.unshift({ key:0, value: '全部产品' })
             setOptionArr(arr)
         });
     }
@@ -208,7 +222,7 @@ export default function DeviceList() {
     return (<div id='device-manage'>
         <PageTitle title='设备管理'>
             <div className='top-select'>
-                <Select style={{ width: 200 }} allowClear onChange={selectChange}>
+                <Select style={{ width: 200 }}  onChange={selectChange} defaultValue={0}>
                     {
                         optionArr.map(item => {
                             return (<Option value={item.key} key={item.key}>{item.value}</Option>)
@@ -220,7 +234,7 @@ export default function DeviceList() {
         <CountNum data={countData} />
         <div className='comm-shadowbox device-main'>
             <div className='device-filter'>
-                <Form className='device-filter-form' form={form} layout='inline'>
+                <Form className='device-filter-form' form={form} layout='inline' initialValues={{ innet: '1', online: '1', fault: '1' }}>
                     <Form.Item label="设备ID/物理地址">
                         <Input.Group compact>
                             <Form.Item
@@ -256,29 +270,29 @@ export default function DeviceList() {
                     </Form.Item>
                     <Form.Item name="innet" label="入网状态" >
                         <Select
-                            allowClear
                             style={{ width: '102px' }}
                         >
-                            <Option value={true}>是</Option>
-                            <Option value={false}>否</Option>
+                            <Option value={'1'}>全部状态</Option>
+                            <Option value={true}>已入网</Option>
+                            <Option value={false}>未入网</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item name="online" label="在线状态" >
                         <Select
-                            allowClear
                             style={{ width: '102px' }}
                         >
-                            <Option value={true}>是</Option>
-                            <Option value={false}>否</Option>
+                            <Option value={'1'}>全部状态</Option>
+                            <Option value={true}>在线</Option>
+                            <Option value={false}>离线</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item name="fault" label="故障状态" >
                         <Select
-                            allowClear
                             style={{ width: '102px' }}
                         >
-                            <Option value={true}>是</Option>
-                            <Option value={false}>否</Option>
+                            <Option value={'1'}>全部状态</Option>
+                            <Option value={true}>正常运行</Option>
+                            <Option value={false}>今日故障</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item label=" " colon={false} style={{ marginRight: '2px' }}>
