@@ -598,15 +598,16 @@ let Paths = {
 
     //场景服务
     scenceList:'/deviceProtocol/queryProtocolFromDevice',//获取场景规则列表
-    saveScenceData:'/deviceProtocol/saveProtocolToScene',//保存场景规则数据到规则引擎服务
+    // saveScenceData:'/deviceProtocol/saveProtocolToScene',//保存场景规则数据到规则引擎服务
     delScenceControl:'/deviceProtocol/deleteControlScene',//删除场景控制规则
     delScenceRun:'/deviceProtocol/deleteStatusScene',//删除场景运行规则
+    saveScenceData:'/deviceProtocol/save',//新增
 
     //设备远程配置
     deviceRemoteConfigList:'/remoteConfig/device/getList',//获得设备远程配置分页列表
     singelDeviceRemoset:'/remoteConfig/device/get',//获得单个设备的远程配置任务
     delDeviceRemoset:'/remoteConfig/device/delete',//删除单个设备的远程配置任务
-    saveDeviceRemoset:'/deviceProtocol/save',//保存单个设备的远程配置任务
+    saveDeviceRemoset:'/remoteConfig/device/save',//保存单个设备的远程配置任务
     addDeviceRemoset:'/remoteConfig/product/submit',//提交单个产品的远程配置任务
 
 };
