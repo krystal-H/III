@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import { connect } from 'react-redux';
-import { post,Paths } from '../../../../../api';
+import { post,Paths,get } from '../../../../../api';
 import ProduceInfo from '../product-info/ProductInfo';
 import ProductProtocols from '../product-protocols/ProductProtocols';
 import FirmwareManagement from '../firmware-management/FirmwareManagement';

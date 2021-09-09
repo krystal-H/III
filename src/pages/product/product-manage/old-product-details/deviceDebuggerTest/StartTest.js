@@ -1637,11 +1637,11 @@ export default class StartTest  extends Component{
         let pid = getUrlParam('productId')||this.props.productId;
         let accountList = [],
             macList = [];
-        post(Paths.deviceDebugAccountGetList,{productId:pid},{loading:true}).then((model) => {
+        get(Paths.deviceDebugAccountGetList,{productId:pid},{loading:true}).then((model) => {
             accountList = model.data || [];
             this.props.updateDeviceDebugAccountList(model);
             // post(Paths.deviceDebugMacGetList,{productId:pid}).then((res) => {
-            post(Paths.debugSecretList,{productId:pid},{loading:true}).then((res) => {
+            get(Paths.debugSecretList,{productId:pid},{loading:true}).then((res) => {
                 if(res.code==0){
                     macList = res.data || [];
                     this.props.updateDeviceDebugMacList(res);

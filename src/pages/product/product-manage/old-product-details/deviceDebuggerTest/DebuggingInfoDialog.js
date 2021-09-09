@@ -115,12 +115,10 @@ export default class DebuggingInfoDialog  extends Component {
                 physicalAddr:this.state.macStr,
                 productId:+(this.props.pid)//接口参数规定number类型
             };
-            post(Paths.addDebugMac,data,{loading:true}).then((model) => {
-                if(model.code==0){
-                    this.setState({macStr:''},()=>{
-                        this.props.getDeviceDebugMacList(this.props.pid);
-                    });
-                }
+            post(Paths.addDebugMac,data,{loading:true,needFormData:true}).then((model) => {
+                this.setState({macStr:''},()=>{
+                    this.props.getDeviceDebugMacList(this.props.pid);
+                });
             });
         }else{
             Notification({
@@ -169,7 +167,7 @@ export default class DebuggingInfoDialog  extends Component {
     }
     //删除账号 
     deleteAccount(productId,debugAccountId){
-        post(Paths.deviceDebugAccountDelete,{productId,debugAccountId},{needVersion:1.1,loading:true}).then((model) => {
+        post(Paths.deviceDebugAccountDelete,{productId,debugAccountId},{needVersion:1.1,loading:true,needFormData:true}).then((model) => {
             if(model.code==0){
                 this.props.getDeviceDebugAccountList(productId);//获取调试账号
             }
@@ -229,7 +227,7 @@ export default class DebuggingInfoDialog  extends Component {
             return false;
         }
         if(sign){//有改变 请求接口 
-            post(Paths.deviceDebugAccountInsert,data,{needVersion:1.1,loading:true}).then((model) => {
+            post(Paths.deviceDebugAccountInsert,data,{needVersion:1.1,loading:true,needFormData:true}).then((model) => {
                 if(model.code==0){
                     this.props.getDeviceDebugAccountList(productId);//获取调试账号
                 }
@@ -270,7 +268,7 @@ export default class DebuggingInfoDialog  extends Component {
             account:addAccountInput,
             remark:addRemarkInput
         };
-        post(Paths.deviceDebugAccountInsert,data,{needVersion:1.1,loading:true}).then((model) => {
+        post(Paths.deviceDebugAccountInsert,data,{needVersion:1.1,loading:true,needFormData:true}).then((model) => {
             if(model.code==0){
                 this.setState({addAccountInput:''},()=>{
                     this.props.getDeviceDebugAccountList(productId);//获取调试账号
@@ -399,10 +397,7 @@ export default class DebuggingInfoDialog  extends Component {
                                 </tbody>
                             </table>
                         </div>
-                        <div className='accountAdd'>
-                            {/* <MyIcon className='icon' type="icon-jia"></MyIcon> */}
-                            <span onClick={this.addAccountDom}>添加账号</span>
-                        </div>
+                        <div className='accountAdd' onClick={this.addAccountDom}>添加账号</div>
                     </div>
                 </Modal>
             </div>

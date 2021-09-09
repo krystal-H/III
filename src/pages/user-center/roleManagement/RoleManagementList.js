@@ -26,7 +26,7 @@ export default class RoleManagementList extends Component {
         this.columns = [
             { title: '角色名', dataIndex: 'roleName', key: 'roleName' },
             { title: '备注', dataIndex: 'remark', key: 'remark' },
-            { title: '最新修改时间', dataIndex: 'modifyTime', key: 'modifyTime', render: text => <span>{DateTool.utcToDev(text)}</span> },
+            { title: '最新修改时间', dataIndex: 'updateTime', key: 'updateTime', render: t => <span>{t && DateTool.utcToDev(t) || "--"}</span> },
             { title: '操作', key: 'tags', dataIndex: 'tags',
              render:(text, {roleId,roleName,remark}) => (
                     <span>
