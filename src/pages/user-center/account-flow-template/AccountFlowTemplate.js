@@ -342,9 +342,18 @@ class AccountFlowTemplate extends Component {
         })
     }
     render() {
-        let {type,email,countDownNum,isResetEmail,newEmail,isConfirmedForCloseAccount,isReadedCloseAccountDesc,isNeedVerifyType,verifyType} = this.state,
-            {FlowList,cType,title} = this.props,
-            btnDisable = (countDownNum > 0);
+        let {
+            type, email, countDownNum, isResetEmail, newEmail,
+            isConfirmedForCloseAccount, isReadedCloseAccountDesc,
+            isNeedVerifyType, verifyType
+        } = this.state,
+        {
+            FlowList, cType, title
+        } = this.props,
+        
+        btnDisable = (countDownNum > 0);
+
+        console.log(99999,verifyType)
 
         return (
             <FullScreenFlexWrapper needHeader={cType === 1} isInPage={cType !== 1}>

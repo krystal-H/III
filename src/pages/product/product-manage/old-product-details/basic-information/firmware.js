@@ -14,9 +14,8 @@ class FirmWare extends Component {
         }
         this.moduleDetails = this.moduleDetails.bind(this);
         this.download = this.download.bind(this);
-        this.getPublishProductInfoFun = this.getPublishProductInfoFun.bind(this);
     }
-    getPublishProductInfoFun(){
+    getPublishProductInfoFun = ()=>{
         post(Paths.getPublishProductInfo,{productId:this.props.productId},{needFormData:true,loading:true}).then((model) => {
 
             this.setState({
@@ -56,7 +55,6 @@ class FirmWare extends Component {
     }
     render() {
         let {moduleInfo,productBaseInfo} = this.state;
-
         let {
             burnFileName,
             burnFileVersion,

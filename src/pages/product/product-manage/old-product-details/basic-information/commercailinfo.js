@@ -10,21 +10,23 @@ class CommercailInfo extends Component {
             publishProductInfo:{},
         }
         this.clickFile = this.clickFile.bind(this);
-        this.getPublishProductInfoFun = this.getPublishProductInfoFun.bind(this);
     }
-    getPublishProductInfoFun(){
-        post(Paths.getPublishProductBusinessInfo,{productId:this.props.productId},{loading:true}).then((model) => {
+    getBusenessShow = ()=>{
+        console.log(0,Paths.getBusinessInfo)
+        post(Paths.getBusinessInfo,{productId:this.props.productId},{loading:true}).then((model) => {
            this.setState({publishProductInfo:model.data || {}});
         });
     }
     componentDidMount() {
+        
         if(this.props.productId){
-            this.getPublishProductInfoFun();
+            
+            this.getBusenessShow();
         }
     }
     componentDidUpdate(prevProps){
         if(this.props.productId&&(prevProps.productId!= this.props.productId)){
-            this.getPublishProductInfoFun();
+            this.getBusenessShow();
         }
     }
 
