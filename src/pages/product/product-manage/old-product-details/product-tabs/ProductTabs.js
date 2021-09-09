@@ -1,21 +1,20 @@
 import React,{Component} from 'react';
 import { connect } from 'react-redux';
-import { post,Paths } from '../../../../../api';
+import { post,Paths,get } from '../../../../../api';
 import ProduceInfo from '../product-info/ProductInfo';
 import ProductProtocols from '../product-protocols/ProductProtocols';
 import FirmwareManagement from '../firmware-management/FirmwareManagement';
-// import DebuggingTool from '../../deviceDebugging/deviceDebuggerTest/StartTest';
+import DebuggingTool from '../deviceDebuggerTest/StartTest';
 import AppControl from '../app-control/AppControl';
 import CommercailInfo from '../basic-information/commercailinfo';
 import Firmware from '../basic-information/firmware';
 
 import {getUrlParam} from '../../../../../util/util';
-// import {
-//     updateDeviceDebugAccountListAction,//更新账号列表
-//     updateDeviceDebugMacListAction,//更新mac列表
-// } from '../../store/ActionCreator_debug.js';
 
-
+import {
+    updateDeviceDebugAccountListAction,//更新账号列表
+    updateDeviceDebugMacListAction,//更新mac列表
+} from '../store/ActionCreator';
 
 import { Tabs } from 'antd';
 const { TabPane } = Tabs;
@@ -23,14 +22,14 @@ const { TabPane } = Tabs;
 
 const mapStateToProps = state => {
     return {
-        // deviceDebugAccountList: state.getIn(['deviceDebug','deviceDebugAccountList']).toJS(),
-        // deviceDebugMacList: state.getIn(['deviceDebug','deviceDebugMacList']).toJS(),
+        deviceDebugAccountList: state.getIn(['oldProduct','deviceDebugAccountList']).toJS(),
+        deviceDebugMacList: state.getIn(['oldProduct','deviceDebugMacList']).toJS(),
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        // updateDeviceDebugAccountList: (data)=>dispatch(updateDeviceDebugAccountListAction(data)),
-        // updateDeviceDebugMacList: (data)=>dispatch( updateDeviceDebugMacListAction(data))
+        updateDeviceDebugAccountList: (data)=>dispatch(updateDeviceDebugAccountListAction(data)),
+        updateDeviceDebugMacList: (data)=>dispatch( updateDeviceDebugMacListAction(data))
     }
 }
 @connect(mapStateToProps, mapDispatchToProps)
@@ -45,25 +44,21 @@ export default class ProductTabs  extends Component {
         let {productId} = this.props;
         window.location.hash = `#/open/product/proManage/detail/${productId}?step=${steps}`;
         if(steps=='4'){
-            // let accountList = [],
-            // macList = [];
-            // this.setState({steps},()=>{
-            //     post(Paths.deviceDebugAccountGetList,{productId}).then((model) => {
-            //         if(model.code==0){
-            //             accountList = model.data;
-            //             this.props.updateDeviceDebugAccountList(model);
-            //             post(Paths.debugSecretList,{productId}).then((res) => {
-            //                 if(res.code==0){
-            //                     macList = res.data;
-            //                     this.props.updateDeviceDebugMacList(res);
-            //                     if(macList.length<1){
-            //                         this.debugVisible.debugVisible();
-            //                     }
-            //                 }
-            //             });
-            //         }
-            //     });
-            // });
+            let accountList = [],
+            macList = [];
+            this.setState({steps},()=>{
+                post(Paths.deviceDebugAccountGetList,{productId}).then((model) => {
+                    accountList = model.data;
+                    this.props.updateDeviceDebugAccountList(model);
+                    post(Paths.debugSecretList,{productId}).then((res) => {
+                        macList = res.data;
+                        this.props.updateDeviceDebugMacList(res);
+                        if(macList.length<1){
+                            this.debugVisible.debugVisible();
+                        }
+                    });
+                });
+            });
         }else{
             if(this.debugVisible&&this.debugVisible.goout){
                 this.debugVisible.goout()
@@ -88,11 +83,11 @@ export default class ProductTabs  extends Component {
                     <TabPane key={'3'} tab={'固件管理'}>
                         <FirmwareManagement productId={productId} productBaseInfo={productBaseInfo}/>
                     </TabPane>
-                    {/*<TabPane key={'4'} tab={'调试工具'}>
-                        <div className="gray-bg-padding">
-                            <DebuggingTool productId={productId} onRef={ref => this.debugVisible = ref} />
+                    <TabPane key={'4'} tab={'调试工具'}>
+                        <div className="old-device-debug-page">
+                            <DebuggingTool productId={productId} productBaseInfo={productBaseInfo} onRef={ref => this.debugVisible = ref} />
                         </div>
-                    </TabPane>*/}
+                    </TabPane>
                     <TabPane key={'5'} tab={'APP控制'}>
                         <AppControl productId={productId} productBaseInfo={productBaseInfo}/>
                     </TabPane>

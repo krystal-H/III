@@ -23,13 +23,13 @@ export default class DeviceGroup extends Component {
             pageIndex: 1,
         };
         this.columns = [
-            { title: '分组名称', dataIndex: 'name', key: 'name'},
-            { title: '分组ID', dataIndex: 'id',  key: 'id'},
-            { title: '描述', dataIndex: 'remark',  key: 'remark'},
-            { title: '添加时间', dataIndex: 'createTime', key: 'createTime', 
+            { title: '分组名称', dataIndex: 'name',ellipsis:true },
+            { title: '分组ID', dataIndex: 'id', width:'100px',},
+            { title: '描述', dataIndex: 'remark',ellipsis:true},
+            { title: '添加时间', dataIndex: 'createTime', width:'180px',
                 render: text => <span>{text && DateTool.utcToDev(text) || '--'}</span>
             },
-            { title: '操作', key: 'action', width:'140px',
+            { title: '操作', key: 'action', width:'120px',
                 render: (text, record) => (
                     <span>
                         <Link to={`/open/device/devGroup/details/${record.id}/${record.groupId}`}>查看</Link>
@@ -94,7 +94,7 @@ export default class DeviceGroup extends Component {
         });
     }
     render() {
-        let { loading, addVisible,caseList, pager,id,name } = this.state;
+        let { loading, addVisible,caseList, pager:{pageIndex=1,totalRows=0,totalPages=0},id,name } = this.state;
         
         return (
            <div className='page-devicegroup'>
@@ -117,11 +117,12 @@ export default class DeviceGroup extends Component {
                         columns={this.columns} 
                         dataSource={caseList} 
                         pagination={{
-                            defaultCurrent:pager.pageIndex, 
-                            total:pager.totalRows, 
-                            hideOnSinglePage:false,
+                            defaultCurrent:pageIndex, 
+                            total:totalRows, 
                             onChange:this.pagerIndex,
-                            current: pager.pageIndex
+                            current: pageIndex,
+                            showQuickJumper: totalPages > 5,
+                            hideOnSinglePage:true,
                         }} 
                         loading={loading}
                     />

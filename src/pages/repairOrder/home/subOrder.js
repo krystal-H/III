@@ -90,7 +90,7 @@ export default function DeviceShadow({ onSuccess }, ref) {
             <Form.Item
                 label="选择内容分类"
                 name="problemType"
-                rules={[{ required: true, whitespace: false }]}
+                rules={[{ required: true }]}
             >
                 <Cascader options={options} onChange={onChange} style={{ width: '612px' }} popupClassName='order-Cascader' />
             </Form.Item>

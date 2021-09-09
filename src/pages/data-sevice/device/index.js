@@ -69,6 +69,7 @@ export default function Device() {
     //产品种类列表
     const getProductType = () => {
         post(Paths.getProductPlus, {}).then((res) => {
+            res.data.unshift({ productId:0, productName: '全部产品' })
             setOptionArr(res.data)
         });
     }
@@ -258,7 +259,7 @@ export default function Device() {
         <div id='device-analysis'>
             <PageTitle title='设备分析'>
                 <div className='top-select'>
-                    <Select style={{ width: 200 }} allowClear onChange={selectChange}>
+                    <Select style={{ width: 200 }}  onChange={selectChange} defaultValue={0}>
                         {
                             optionArr.map(item => {
                                 return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
@@ -291,7 +292,8 @@ export default function Device() {
                     {
                         countData.map((item, index) => {
                             return (
-                                <div key={index} className='count-item' onClick={() => { filterData(index) }} className={currentTab === index ? 'current-tab' : ''}>
+                                <div key={index} className='count-item' onClick={() => { filterData(index) }} 
+                                className={[currentTab === index ? 'current-tab' : '', index == 4 ? 'last-wrap' : ''].join(' ')}>
                                     <div className='item-label'>{item.label}</div>
                                     <div className='item-number'>{item.count}</div>
                                 </div>

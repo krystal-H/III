@@ -1,209 +1,38 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
-import { Input, Table, Select, InputNumber } from 'antd'
+import { Input, Table, Select, InputNumber, DatePicker } from 'antd'
 import { setFuncDataType } from '../../../util/util'
 import { Notification } from '../../../components/Notification'
 import { cloneDeep } from 'lodash'
 import { Paths, get, post } from '../../../api'
+import moment from 'moment'
 
 const { Option } = Select
 
-// 模拟数据
-let protocolLists = []
-// let protocolLists = [
-//   {
-//     arrayDefVOList: null,
-//     command: null,
-//     content: null,
-//     dataType: 5,
-//     dataTypeId: 5,
-//     dataTypeName: "配置数据",
-//     dataTypeNameEn: "Config Data",
-//     developerId: null,
-//     deviceSubtypeId: null,
-//     deviceTypeId: null,
-//     mode: 0,
-//     moduleType: null,
-//     productId: 139,
-//     productVersion: null,
-//     protocolFormat: 1,
-//     protocolId: 68726,
-//     protocolStatus: 1,
-//     protocolType: 1,
-//     structDefVOList: null,
-//     list: [
-//       {
-//         actionType: null,
-//         bitDefList: null,
-//         commonName: "基础功能_一(序号)_数值配置",
-//         defaultPropertyValue: null,
-//         functionDataType: 2,
-//         gap: 1,
-//         ignore: false,
-//         isSigned: 0,
-//         isTemplateField: 1,
-//         javaType: "LONG",
-//         length: 1,
-//         loop: null,
-//         mulriple: 1,
-//         property: "Base_1_ValueCfg_Null",
-//         propertyFrom: null,
-//         propertyName: "心率",
-//         propertyValueDesc: "0~255",
-//         propertyValueType: "RANGE",
-//         remark: null,
-//         standard: null,
-//         thingLabel: null,
-//         thingLabelId: null,
-//         thingLabelName: null,
-//         unit: null
-//       },
-//       {
-//         actionType: null,
-//         bitDefList: null,
-//         commonName: "基础功能_二(序号)_数值配置",
-//         defaultPropertyValue: null,
-//         functionDataType: 2,
-//         gap: 1,
-//         ignore: false,
-//         isSigned: 0,
-//         isTemplateField: 1,
-//         javaType: "LONG",
-//         length: 1,
-//         loop: null,
-//         mulriple: 1,
-//         property: "Base_2_ValueCfg_Null",
-//         propertyFrom: null,
-//         propertyName: "呼吸率",
-//         propertyValueDesc: "0~255",
-//         propertyValueType: "RANGE",
-//         remark: null,
-//         standard: null,
-//         thingLabel: null,
-//         thingLabelId: null,
-//         thingLabelName: null,
-//         unit: null
-//       },
-//       {
-//         actionType: null,
-//         bitDefList: null,
-//         commonName: "基础功能_数值配置_定时时间",
-//         defaultPropertyValue: null,
-//         functionDataType: 2,
-//         gap: 1,
-//         ignore: false,
-//         isSigned: 0,
-//         isTemplateField: 1,
-//         javaType: "LONG",
-//         length: 1,
-//         loop: null,
-//         mulriple: 1,
-//         property: "Base_Null_ValueCfg_TimingTime",
-//         propertyFrom: null,
-//         propertyName: "上传实时波形",
-//         propertyValueDesc: "0~255",
-//         propertyValueType: "RANGE",
-//         remark: "上传实时波形的剩余持续时间，以10s为单位",
-//         standard: null,
-//         thingLabel: null,
-//         thingLabelId: null,
-//         thingLabelName: null,
-//         unit: null
-//       },
-//       {
-//         actionType: null,
-//         bitDefList: null,
-//         commonName: "基础功能_开关配置",
-//         defaultPropertyValue: null,
-//         functionDataType: 3,
-//         gap: null,
-//         ignore: false,
-//         isSigned: 0,
-//         isTemplateField: 1,
-//         javaType: "LONG",
-//         length: 1,
-//         loop: null,
-//         mulriple: null,
-//         property: "Base_Null_OnOffCfg_Null",
-//         propertyFrom: null,
-//         propertyName: "在离床标志",
-//         propertyValueDesc: "0-离床|1-在床",
-//         propertyValueType: "ENUM",
-//         remark: null,
-//         standard: null,
-//         thingLabel: null,
-//         thingLabelId: null,
-//         thingLabelName: null,
-//         unit: null
-//       },
-//       {
-//         actionType: null,
-//         bitDefList: null,
-//         commonName: "基础功能_字符串配置_处理过的传感器信号",
-//         defaultPropertyValue: null,
-//         functionDataType: 1,
-//         gap: null,
-//         ignore: false,
-//         isSigned: 0,
-//         isTemplateField: 1,
-//         javaType: "STRING",
-//         length: 108,
-//         loop: null,
-//         mulriple: null,
-//         property: "Base_Null_StringCfg_TreatedBeltSignal",
-//         propertyFrom: null,
-//         propertyName: "原始波形",
-//         propertyValueDesc: null,
-//         propertyValueType: null,
-//         remark: null,
-//         standard: null,
-//         thingLabel: null,
-//         thingLabelId: null,
-//         thingLabelName: null,
-//         unit: null
-//       }
-//     ]
-//   }
-// ]
 
-function AddConfigData({ nextStep, productId }, ref) {
-  const [selectedProtocols, setSelectedProtocols] = useState([])
+function AddConfigData({ nextStep, productId, editData }, ref) {
+  const [selectedProtocols, setSelectedProtocols] = useState([]) // rowSelection
   const [sendDataCheck, setSendDataCheck] = useState([])
-  const [configProtoclList, setconfigProtoclList] = useState([])
-  // const [protocolSendData, setProtocolSendData] = useState(configProtoclList.map(item => item.defaultPropertyValue || ''))
+  const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
   const [protocolSendData, setProtocolSendData] = useState([])
-  const [protocolFormat, setProtocolFormat] = useState(0)
 
   // 下一步验证  需要后续修改
   const validData = () => {
-    console.log(nextStep, ref)
-    let temp = []
-    if (protocolFormat !== 1) {
-      if (selectedProtocols.length < 1) {
-        return Notification({ description: '请至少选择一条配置协议' })
-      } else {
-        selectedProtocols.forEach((item) => {
-          if (['', ' ', null, undefined].includes(protocolSendData[item])) {
-            temp.push(item)
-          }
-        })
-      }
+    if (selectedProtocols.length === 0) {
+      return Notification({ description: '请至少选择一条配置协议' })
     } else {
-      protocolSendData.forEach((item, index) => {
-        if (['', ' ', null, undefined].includes(item)) {
-          temp.push(index)
+      for (let index = 0; index < selectedProtocols.length; index++) {
+        const item = selectedProtocols[index]
+        for (let index = 0; index < initialProtoclList.length; index++) {
+          const ele = initialProtoclList[index]
+          if (item === ele.identifier) {
+            if (!ele.sendData) return Notification({ description: '请为配置协议添加参数' })
+          }
         }
-      })
+      }
+      console.log('提交的数据', initialProtoclList.filter(item => item.sendData), '*************')
+      sessionStorage.setItem('addConfigData', JSON.stringify(initialProtoclList.filter(item => item.sendData)))
+      nextStep()
     }
-    if (temp.length > 0) {
-      Notification({
-        description: '请为配置协议添加参数'
-      })
-      setSendDataCheck(temp)
-      return
-    }
-    // 可能要前端保存数据到store，
-    // TODO
-    nextStep()
   }
 
   // 用于定义暴露给父组件的ref方法
@@ -211,67 +40,40 @@ function AddConfigData({ nextStep, productId }, ref) {
     onFinish: validData
   }))
 
-  // 获取关联协议
+  // 获取关联协议列表
   const getRelationProtocol = () => {
-    post(Paths.getPhysicalModel, { productId }).then(res => {
-      console.log(res)
-      // setInitialList(res.data.properties)
-      setconfigProtoclList(res.data.properties)
+    post(Paths.getPhysicalModel, { productId }, { loading: true }).then(res => {
+      res.data.properties && res.data.properties.forEach(item => { item.sendData = '' })
+
+      if (Object.keys(editData).length > 0) {
+        const resList = JSON.parse(editData.remoteProtocol.protocolJson)
+        res.data.properties.forEach(item => {
+          resList.forEach(s => {
+            if (s.identifier === item.identifier) {
+              item.sendData = s.sendData
+            }
+          })
+        })
+      }
+
+      setInitialProtoclList(res.data.properties)
     })
   }
 
   useEffect(() => {
     getRelationProtocol()
-  }, [productId])
-
-  // useEffect(() => {
-  //   let config = protocolLists.filter(item => item.dataType === 5), // 配置协议
-  //     _config = (config[0] && config[0].list) || [],
-  //     _protocolFormat = (config[0] && config[0].protocolFormat) || 0;
-  //   _config = _config.filter(item => item.property !== "Base_Null_Reserved_Null"); // 过滤保留字
-
-  //   _config = _config.map((item, index) => {
-  //     let { propertyValueDesc } = item,
-  //       _params = null;
-  //     if (propertyValueDesc && propertyValueDesc.indexOf('|') > -1) {
-  //       _params = propertyValueDesc.split('|').map(item => {
-  //         let p = item.split('-');
-  //         if (p.length > 1) {
-  //           return {
-  //             name: p[1],
-  //             value: p[0]
-  //           }
-  //         }
-  //         return {}
-  //       })
-  //     }
-  //     if (propertyValueDesc && propertyValueDesc.indexOf('~') > -1) {
-  //       let [min, max] = propertyValueDesc.split('~');
-  //       _params = {
-  //         min: +min,
-  //         max: +max
-  //       }
-  //     }
-  //     return {
-  //       ...item,
-  //       _type: setFuncDataType(item),
-  //       _params,
-  //       _index: index,
-  //       key: index
-  //     }
-  //   })
-  //   setconfigProtoclList(_config)
-  //   setProtocolFormat(_protocolFormat)
-  // }, [])
+  }, [productId])  // eslint-disable-line react-hooks/exhaustive-deps
 
   // 输入参数
-
   const changeSendData = (value, index) => {
-    let temp = [...protocolSendData],
-      _sendDataCheck = sendDataCheck.filter(item => item !== index);
-    temp[index] = value
-    setProtocolSendData(temp)
-    setSendDataCheck(_sendDataCheck)
+    const copyList = cloneDeep(initialProtoclList)
+    copyList[index].sendData = value
+    setInitialProtoclList(copyList)
+  }
+
+  // 日期插件选择
+  const onChangeDate = (date, dateString, index) => {
+    changeSendData(dateString, index)
   }
 
   const protocolSelectChange = selectedRowKeys => {
@@ -288,12 +90,13 @@ function AddConfigData({ nextStep, productId }, ref) {
       title: '数据名称',
       dataIndex: 'name',
       key: 'name',
-      width: 160,
+      width: 190
     },
     {
       title: '数据标识',
       dataIndex: 'identifier',
-      key: 'identifier'
+      key: 'identifier',
+      width: 200
     },
     {
       title: '数据类型',
@@ -314,14 +117,13 @@ function AddConfigData({ nextStep, productId }, ref) {
           case 'float':
             return <span>{record.dataType.specs.min} ~ {record.dataType.specs.max}</span>
           case 'text':
-
-            break;
+            return '-'
           case 'enum':
             return (
               <span>{Object.values(record.dataType.specs).join(' | ')}</span>
             )
           case 'date':
-            break;
+            return '-'
           case 'bool':
             return (
               <span>{Object.values(record.dataType.specs).join(' | ')}</span>
@@ -333,60 +135,72 @@ function AddConfigData({ nextStep, productId }, ref) {
     },
     {
       title: '下发数据',
-      dataIndex: 'execTime',
-      key: 'execTime',
-      width: 180,
-      render: (text, record) => {
-        let { _type, _params, _index, key } = record,
-          _dom = null,
-          disabled = protocolFormat !== 1 ? !selectedProtocols.includes(key) : false;
-
-        switch (_type) {
-          case '数值型':
+      dataIndex: 'sendData',
+      key: 'sendData',
+      render: (text, record, index) => {
+        let { specs, type } = record.dataType,
+          _dom = null
+        switch (type) {
+          case 'int':
+          case 'double':
+          case 'float':
+            _dom = (<InputNumber value={record.sendData}
+              min={specs.min}
+              max={specs.max}
+              onChange={value => changeSendData(value, index)}
+              placeholder="请输入参数"></InputNumber>)
+            break
+          case 'text':
             _dom = (
-              <InputNumber value={protocolSendData[_index]}
-                min={_params.min}
-                max={_params.max}
-                disabled={disabled}
-                onChange={value => changeSendData(value, _index)}
-                placeholder="请输入参数"></InputNumber>
-            )
-            break;
-          case '字符型':
-            _dom = (
-              <Input value={protocolSendData[_index]}
+              <Input value={record.sendData}
                 maxLength={30}
-                disabled={disabled}
-                onChange={e => changeSendData(e.target.value.trim(), _index)}
+                onChange={e => changeSendData(e.target.value.trim(), index)}
                 placeholder="请输入参数"></Input>
             )
-            break;
-          default:
+            break
+          case 'enum':
+          case 'bool':
             _dom = (
-              <Select disabled={disabled}
-                value={protocolSendData[_index] || ""}
-                onChange={value => changeSendData(value, _index)}>
+              <Select
+                value={record.sendData}
+                onChange={value => changeSendData(value, index)}>
                 <Option key={-1} value="">请选择参数</Option>
                 {
-                  _params && _params.map((item, index) => (
-                    <Option key={index + _type} value={item.value}>{item.name}</Option>
+                  Object.values(specs) && Object.values(specs).map((item, index) => (
+                    <Option key={index + item} value={item}>{item}</Option>
                   ))
                 }
               </Select>
             )
+            break
+          case 'date':
+            _dom = (
+              <DatePicker style={{ width: 182 }}
+                defaultValue={moment(record.sendData, "YYYY-MM-DD HH:mm:ss") || ''}
+                onChange={(date, dateString) => {
+                  onChangeDate(date, dateString, index)
+                }}
+                format="YYYY-MM-DD HH:mm:ss"
+                showTime
+                showNow />
+            )
+            break
+          default:
             break;
         }
-        return (<span className={`config-send-data ${sendDataCheck.includes(_index) ? 'warn' : ''}`}>
-          {_dom}
-        </span>)
+        return (
+          <span className={`config-send-data ${sendDataCheck.includes(index) ? 'warn' : ''}`}>
+            {_dom}
+          </span>
+        )
       },
     }
   ]
   return (
     <Table columns={configColumns}
       className="config-data-table"
-      rowSelection={protocolFormat !== 1 ? protocolSelection : null}
-      dataSource={configProtoclList}
+      rowSelection={protocolSelection}
+      dataSource={initialProtoclList}
       rowKey="identifier"
       scroll={{ y: 300 }}
       pagination={false}

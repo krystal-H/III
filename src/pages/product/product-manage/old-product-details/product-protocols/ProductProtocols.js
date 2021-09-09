@@ -1,20 +1,11 @@
 import React, { Component } from 'react';
 import { Tabs, Table, Button } from 'antd';
-import { connect } from 'react-redux';
 import { cloneDeep,isArray } from 'lodash';
-import { triggerDebugger } from '../store/ActionCreator';
 import { get, Paths, post } from '../../../../../api';
 import {addKeyToTableData,setFuncDataType} from '../../../../../util/util';
 import NoSourceWarn from '../../../../../components/no-source-warn/NoSourceWarn';
-import DebuggerModal from './DebuggerModal';
 import LabelTip from '@src/components/form-com/LabelTip';
 const { TabPane } = Tabs;
-
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         triggerDebugger: (visible, productId) => dispatch(triggerDebugger(visible, productId)),   //  打开关闭协议脚本窗口
-//     }
-// }
 
 function concatComplexProtocols(productProtocolLists) {
     let _productProtocolLists = cloneDeep(productProtocolLists);
@@ -39,7 +30,6 @@ function concatComplexProtocols(productProtocolLists) {
     })
 }
 
-// @connect(null, mapDispatchToProps)
 export default class ProductProtocols extends Component {
     
     constructor(props) {
@@ -369,8 +359,6 @@ export default class ProductProtocols extends Component {
                             )
                         }
                 </Tabs>
-                
-                <DebuggerModal productId={productId} canOperate={false}/>
             </div>
         )
     }

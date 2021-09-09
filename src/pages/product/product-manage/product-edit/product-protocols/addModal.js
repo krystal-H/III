@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select } from 'antd';
 import { useHistory } from "react-router-dom"
 import { post, Paths, get } from '../../../../../api';
+import { Notification } from '../../../../../components/Notification';
 import './addModal.scss';
 import TableShow from './tableSelect'
 
@@ -45,7 +46,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
     let params = {
       productId: productItem.productId,
       eq: true,
-      deviceTypeId:14
+      deviceTypeId: 14
     }
     post(Paths.PhysicalModelList, params).then((res) => {
       setOtherData(delaData(res.data))
@@ -64,22 +65,24 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
     getTwoList()
     getTypeList()
   }, [])
-  const [productType, setProductType] = useState('')
+  const [productType, setProductType] = useState(14)
+  const [searchname, setSearchname] = useState('')
   //搜索
-  const onSearch = (value) => {
+  const onSearch = () => {
     let params = {
       deviceTypeId: productType,
       eq: true,
       productId: productItem.productId,
-      funcName: value
+      funcName: searchname
     }
     post(Paths.PhysicalModelList, params).then((res) => {
       setOtherData(delaData(res.data))
     });
   }
-
+  //===切换产品
   const onselectChange = (value) => {
     setProductType(value)
+    onSearch()
   }
   const [selectedMy, setSelectedMy] = useState([])
   const [selectedOther, setSelectedOther] = useState([])
@@ -91,7 +94,13 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
   }
   //提交
   const sentData = () => {
-
+    if (!selectedMy.length && !selectedOther.length) {
+      Notification({
+        description: `至少勾选一条数据`,
+        type: 'warn'
+    });
+      return
+    }
     if (currentTab === '1') {
       post(Paths.addPhticalStard, selectedMy).then((res) => {
         closeAdd()
@@ -116,11 +125,10 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
           </TabPane>
           <TabPane tab="其他品类" key="2">
             <div className='other-product-top'>
-              <Search placeholder="搜索功能点名称" allowClear onSearch={onSearch} style={{ width: 465 }} />
+              <Search placeholder="搜索功能点名称" value={searchname} onChange={(val) => { setSearchname(val.target.value) }} allowClear onSearch={onSearch} style={{ width: 465 }} />
               <Select
                 style={{ width: 142 }}
                 onChange={onselectChange}
-                defaultValue={14}
               >
                 {
                   typelist.map(item => {

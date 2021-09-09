@@ -1,109 +1,75 @@
 import { fromJS } from 'immutable';
 import * as ActionTypes from './ActionTypes';
 
-
-
-const defaultState = fromJS({
-    productList:{
-      list:[],
-      pager:{}
+const devDebugState = fromJS({
+    deviceAndWs:{
+      wsUrl:{
+        data:{}
+      }, 
+      productInfo:{
+        data:{}
+      }, 
+      token:{
+        data:{}
+      }
     },
-    productBaseInfo:{},
-    productProtocolLists:[],
-    productH5Pages:{},
-    appsByProductId:[],
-    timeServiceList:[],
-    optionsList:{},//产品三级类目list
-    productBaseTypeList:{},//获取产品基本数据类型列表 productBaseTypeList
-    visibleDebugger: false, // 是否显示协议脚本窗口
-    jsContent: "",  // 协议脚本内容
-    // 硬件开发
-    tabIndex: 1,   // 当前页面，1： 选择模组类型页面； 2： 模组选择和详情页面
-    moduleList: [],  // 模组列表
-    hardwareType: null, //硬件类型： 0：MCU ; 1: SoC
-    moduleItem: {}, // 选择模组
-    commFreq: 10, // 上报频率
-    mcuCodeCheck:false, // 是否有可导出的mcu sdk
-
-    createProductCategory: {}, // 创建产品-选择品类
-    createProductScheme: {}, // 创建产品-确定方案
-    createProductForm: {}, // 创建产品-建立产品信息
+    websocketMessage:{
+      devData : [], //数据调试原始数据列表
+      devData2 : [], //升级数据原始数据列表
+      deviceDebuggerException : "", //数据调试中的异常信息列表
+      deviceDebuggerException2 : "", //升级数据中的异常信息列表
+      onlineDevice : {}, //在线设备列表
+    },
+    dataTypeList:{
+        data:[]
+    },//数据类型
+    propertyConfig:{},//根据产品ID获取协议信息
+    deviceDebugAccountList:{
+      data:[]
+    },
+    deviceDebugMacList:{
+      data:[]
+    },
+    selectedData1:{},
+    selectedData2:{},
 });
 
-
-export default (state = defaultState, action) => {
+export default (state = devDebugState, action) => {
   switch (action.type) {
-
-     case ActionTypes.TRIGGER_DEBUGGER_MODAL:
-      return state.set('visibleDebugger', action.visible);
-    case ActionTypes.SET_JS_CONTENT:
-      return state.set('jsContent', action.jsContent);
-    case ActionTypes.UPDATE_APPS_BY_PRODUCTID:
-      return state.set('appsByProductId',action.list)
-    case ActionTypes.UPDATE_H5MANAGE_PAGES:
-      return state.set('productH5Pages',action.data)
-
-
-
-      
-
-    case ActionTypes.CREATE_PRODUCT_CATEGORY:
-      return state.set('createProductCategory', action.info)
-    case ActionTypes.CREATE_PRODUCT_SCHEME:
-      return state.set('createProductScheme', action.info)
-    case ActionTypes.CREATE_PRODUCT_FORM:
-      return state.set('createProductForm', action.info)
-
-    case ActionTypes.UPDATE_PRODUCT_LIST:
-      return state.set('productList',action.list)
-    case ActionTypes.UPDATE_PRODUCT_BASE_INFO:
-      return state.set('productBaseInfo',action.info)
-    case ActionTypes.UPDATE_PRODUCT_BASE_INFO_DETAIL:
-      const productBaseInfo = state.getIn(['productBaseInfo']).toJS();
-      return state.merge({
-        'productBaseInfo': {...productBaseInfo, ...action.info}
-      })  
-    case ActionTypes.UPDATE_PRODUCT_PROTOCOL_LISTS:
-      return state.set('productProtocolLists',action.list)
-    
-    
-    
-    case ActionTypes.UPDATE_TIME_SERVICE_LIST:
-      return state.set('timeServiceList',action.data)
-    /**
-     * 新建产品 start
-     * aize-2019-09-10
-     */ 
-    case ActionTypes.GET_CATALOG_LIST://产品三级类目list
-      return state.set('optionsList',action.data)
-    case ActionTypes.PRODUCT_BASE_TYPE_LIST://获取产品基本数据类型列表 productBaseTypeList
-      return state.set('productBaseTypeList',action.data) 
-    
-
-    /**
-     * 硬件开发
-     *  */  
-    case ActionTypes.SWITCH_TAB:
-      return state.set('tabIndex', action.tabIndex);
-    case ActionTypes.SET_MODULE_LIST:
-      return state.set('moduleList', action.list);
-    case ActionTypes.SET_MODULE_ITEM:
-      return state.set('moduleItem', action.moduleItem);
-    case ActionTypes.CHANGE_MODULE:
-      return state.merge({
-        tabIndex: 2,
-        moduleItem: {}
-      })
-    case ActionTypes.MCU_CODE_CHECK:
-      return state.set('mcuCodeCheck',action.bl)
-    case ActionTypes.SET_HARDWARE_TYPE:
-      return state.set('hardwareType', action.hardwareType);
-    case ActionTypes.MODIFY_COM_FREQ:
-      return state.set('commFreq', action.commFreq);
-    case ActionTypes.CHANGE_PRODUCT_INFO:
-      return state.merge({
-        productBaseInfo: {...state.getIn(['productBaseInfo']).toJS(), ...action.params}
-      })
+    case ActionTypes.DEVICE_ADN_WS:
+      return state.set('deviceAndWs',action.data)
+    case ActionTypes.WEBSOCKET_MESSAGE:
+      return state.set('websocketMessage',action.data)
+    case ActionTypes.TOKEN:
+      return state.setIn(['deviceAndWs', 'wsUrl', 'data'],action.data)
+    case ActionTypes.RESET_DATA:
+      return state.set('websocketMessage',action.data)
+    case ActionTypes.DATA_TYPE_LIST:
+      return state.set('dataTypeList',action.data)
+    case ActionTypes.PROPERTY_CONFIG:
+      return state.set('propertyConfig',action.data)
+    case ActionTypes.DEVICE_DEBUG_MAC_LIST://调试MAC列表  
+      return state.set('deviceDebugMacList',action.data||[])
+    case ActionTypes.CHANGE_DEVICE_DEBUG_MAC_DATA://改变调试MAC数据 
+      return state.set('deviceDebugMacList',action.data)
+    case ActionTypes.EDIT_DEVICE_DEBUG_MAC_DATA://保存调试MAC数据 
+      return state.set('deviceDebugMacList',action.data)
+    case ActionTypes.ADD_DEVICE_DEBUG_MAC_LIST://新建调试MAC输入框 
+      return state.set('deviceDebugMacList',action.data)
+    case ActionTypes.DEVICE_DEBUG_ACCOUNT_GRT_LIST://调试账号列表 
+      return state.set('deviceDebugAccountList',action.data)
+    case ActionTypes.SELECTED_DATA_1://调试账号列表 
+      return state.set('selectedData1',action.data||{})
+    case ActionTypes.SELECTED_DATA_2://调试账号列表 
+      return state.set('selectedData2',action.data||{})
+    case ActionTypes.CLEAR_EXCEPTION_1://清空异常数据1
+      return state.setIn(['websocketMessage', 'deviceDebuggerException'],action.data)
+    case ActionTypes.CLEAR_EXCEPTION_2://清空异常数据2
+      return state.setIn(['websocketMessage', 'deviceDebuggerException2'],action.data)
+    case ActionTypes.COLAR_DEV_DATA1://清空报文列表
+      return state.setIn(['websocketMessage', 'devData'],action.data)
+    case ActionTypes.COLAR_DEV_DATA2://清空报文列表
+      return state.setIn(['websocketMessage', 'devData2'],action.data)
     default:
       return state;
   }

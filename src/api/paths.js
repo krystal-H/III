@@ -384,7 +384,11 @@ let Paths = {
     
     // 5.x远程配置
     getRomoteConfigListByProduct5x: '/remoteConfig/product/getList', // 主页列表
-    getRemoteConfigList5x: '/remoteConfig/product/get', // 添加配置数据-列表
+    getRemoteDeviceList5x: '/remoteConfig/deviceInfo/getList', // 获得单个产品下的设备列表
+    importRemoteConfigExcel: '/remoteConfig/deviceInfo/import', // 本地导入设备列表
+    saveRemoteConfig5x: '/remoteConfig/product/save', // 保存单个产品的远程配置任务
+    executeTask5x: '/remoteConfig/product/submit', // 执行远程配置任务
+    getRemoteConfig5x: '/remoteConfig/product/get', // 获得单个产品的远程配置任务
     
 
     
@@ -601,7 +605,7 @@ let Paths = {
     deviceRemoteConfigList:'/remoteConfig/device/getList',//获得设备远程配置分页列表
     singelDeviceRemoset:'/remoteConfig/device/get',//获得单个设备的远程配置任务
     delDeviceRemoset:'/remoteConfig/device/delete',//删除单个设备的远程配置任务
-    saveDeviceRemoset:'/remoteConfig/device/save',//保存单个设备的远程配置任务
+    saveDeviceRemoset:'/deviceProtocol/save',//保存单个设备的远程配置任务
     addDeviceRemoset:'/remoteConfig/product/submit',//提交单个产品的远程配置任务
 
 };

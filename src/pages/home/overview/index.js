@@ -78,7 +78,7 @@ export default function OverviewWrap() {
     //app列表
     const [appList, setAppList] = useState([])
     const getAppList = () => {
-        post(Paths.getAppInfoList, {}, { loading: true }).then((res) => {
+        post(Paths.getAppInfoList, {}).then((res) => {
             if (res.data.list.length > 3) {
                 setAppList(res.data.list.slice(0, 3))
             } else {
@@ -381,7 +381,7 @@ export default function OverviewWrap() {
                         <div className='Guide-the-figure-content-top'>
                             <div className='tip' >
                                 <span>设备管理</span>
-                                <div>预览设备全部数据，点击设备管理、设备密钥、设备告警</div>
+                                <div>预览设备全部数据，点击设备管理、设备密钥、设备告警,可快速查看设备信息</div>
                             </div>
                             <Button onClick={changeTip}>下一步</Button>
                         </div>
@@ -430,7 +430,7 @@ export default function OverviewWrap() {
                                     <div>创建产品</div>
                                 </div>
                             </div>
-                            <div className='center-layout-wrap'>
+                            <div className='center-layout-wrap' onClick={() => { goPage('/open/product/proManage/list') }}>
                                 <div>
                                     <img src={quick2} />
                                     <div>控制台</div>
@@ -448,7 +448,7 @@ export default function OverviewWrap() {
                     <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >
                         <div>
                             <div>消息中心</div>
-                            <a onClick={goMoreMessAge}>更多</a>
+                            <a onClick={() => { goPage('/messageCenter/list') }}>更多</a>
                         </div>
                         <div className='over-view-message hover-commons-unite'>
                             {

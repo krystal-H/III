@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Input, Button, Table, Divider, Tag, Modal,Select ,Steps} from 'antd';
 import { get,Paths } from '../../../api';
-import {AddFirmwareDialog} from './AddFirmwareDialog';
+import AddFirmwareDialog from './AddFirmwareDialog';
 import {ReleaseFirmware} from './ReleaseFirmware';
 import {ValidationFirmwareDialog} from './ValidationFirmwareDialog';
 
@@ -63,39 +63,18 @@ export default class FirmwareManagement  extends Component {
         
         this.columns = [
 
-
-            // { title: '开发方案', dataIndex: 'productName'},
-            // { title: '产品版本号', dataIndex: 'productFirmwareVersion'},
-            // { title: '模组固件名称', dataIndex: 'productFirmwareVersion'},
-            // { title: '固件包名称', dataIndex: 'productFirmwareVersion'},
-            // { title: '运行状态',  dataIndex: 'updateStatus',
-            //   render: u => {
-            //       const {nam,color} = STATUSTAG[u]
-            //       return <Tag color={color} >{nam}</Tag>
-            //   }
-            // },
-            // { title: '创建时间',dataIndex: 'uploadTime',
-            //     render: t => <span>{DateTool.utcToDev(t)}</span>
-            // },
-
-
             { title: '产品名称', dataIndex: 'productName'},
-
-            { title: '固件ID', dataIndex: 'deviceVersionId'},
-            { title: '固件包名称', dataIndex: 'deviceVersionName'},
-            { title: '固件类型', dataIndex: 'deviceVersionType', 
-            render:(t=1)=> VERTYPE.find(({id})=> id==t).nam
-        },
-            { title: '固件包上传创建时间',dataIndex: 'uploadTime',
-                render: t => <span>{DateTool.utcToDev(t)}</span>
-            },
-            { title: '内部版本号', dataIndex: 'mainVersion', },
-            { title: '外部版本号', dataIndex: 'extVersion', },
+            // { title: '开发方案', dataIndex: 'productName'},
+            { title: '产品版本号', dataIndex: 'productFirmwareVersion'},
+            { title: '固件名称', dataIndex: 'firmwareVersionTypeName'},
             { title: '运行状态',  dataIndex: 'updateStatus',
               render: u => {
                   const {nam,color} = STATUSTAG[u]
                   return <Tag color={color} >{nam}</Tag>
               }
+            },
+            { title: '创建时间',dataIndex: 'uploadTime',
+                render: t => <span>{DateTool.utcToDev(t)}</span>
             },
             { title: '操作',dataIndex: 'action',
                 render:(a,recard) => {//runStatus 0：待验证 1：验证中 2：已发布,3 验证完成,4
@@ -279,7 +258,7 @@ export default class FirmwareManagement  extends Component {
                     
                    
                     <Table 
-                        rowKey="deviceVersionId"
+                        rowKey={({deviceVersionId})=>deviceVersionId+"_"}
                         columns={this.columns}
                         dataSource={list}
                         pagination={{
