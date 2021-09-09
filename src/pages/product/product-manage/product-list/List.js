@@ -129,9 +129,11 @@ class List extends PureComponent {
   }
 
   // 翻页
-  changePage = (current) => {
+  changePage = (current, pageSize) => {
+    console.log(current, pageSize, 'hahahahah')
     let newparams = { ...this.state.listParams }
     newparams.current = current
+    // newparams.size = pageSize
     this.setState({
       listParams: newparams
     }, () => { this.getProductListNew() })
@@ -273,24 +275,17 @@ class List extends PureComponent {
               rowKey='productId'
               dataSource={dataSource}
               columns={this.columns}
-              pagination={false}
+              pagination={{
+                defaultCurrent: 1,
+                current: listParams.current,
+                onChange: this.changePage,
+                pageSize: 6,
+                total: pager.total,
+                showSizeChanger: false,
+                showQuickJumper: pager.pages > 5,
+                showTotal: (total) => <span>共 <a>{total}</a> 条</span>
+              }}
             />
-            <footer className="list-pagination">
-              {
-                pager && pager.pages > 0 ?
-                  <Pagination className="self-pa"
-                    total={pager.total}
-                    current={listParams.current}
-                    defaultCurrent={1}
-                    defaultPageSize={listParams.size}
-                    onChange={this.changePage}
-                    showTotal={total => <span>共 <a>{total}</a> 条</span>}
-                    showQuickJumper
-                    hideOnSinglePage
-                  />
-                  : null
-              }
-            </footer>
           </div>
         </div>
         {/* 删除弹框 */}

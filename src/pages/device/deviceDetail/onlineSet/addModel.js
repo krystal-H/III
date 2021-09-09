@@ -1,65 +1,72 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
-import { Form, Input, Table, Modal } from 'antd'
-import { Paths, post, get } from '../../../../api'
-const EditableContext = React.createContext(null);
+import { Form, Input, Table, Modal, Select, InputNumber, DatePicker } from 'antd'
+import { Notification } from '../../../../components/Notification'
+import { cloneDeep } from 'lodash'
+import { Paths, get, post } from '../../../../api'
+import './index.scss'
+import moment from 'moment'
 const { TextArea } = Input;
+const { Option } = Select
 
-const EditableRow = ({ index, ...props }) => {
-  const [form] = Form.useForm();
-  return (
-    <Form form={form} component={false}>
-      <EditableContext.Provider value={form}>
-        <tr {...props} />
-      </EditableContext.Provider>
-    </Form>
-  );
-};
+
 export default function AddModel({ addVisible, addOk, CancelAdd }) {
   let baseInfo = {}
   if (sessionStorage.DEVICE_DETAIL_BASE) {
     baseInfo = JSON.parse(sessionStorage.DEVICE_DETAIL_BASE)
   }
-  const [tableData, setTableData] = useState([])
+  // const [tableData, setTableData] = useState([])
+  const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
+  const [selectedProtocols, setSelectedProtocols] = useState([]) // rowSelection
+  const [sendDataCheck, setSendDataCheck] = useState([])
   const [form] = Form.useForm();
   //获取产品id
   useEffect(() => {
     getProductDetail()
   }, [])
   const [productId, setProductId] = useState('')
-  const onChange=(e,index)=>{
-    setTableData(pre=>{
-      let data=JSON.parse(JSON.stringify(tableData)) 
-      data[index].name=e.target.value
-      return data
-    })
-    console.log(e,index,'====')
-  }
   const getProductDetail = (loading = true) => {
     post(Paths.getDeviceInfo, { 'deviceId': baseInfo.deviceId }).then((res) => {
-      if(res.data.productId){
+      if (res.data.productId) {
         getTableData(res.data.productId)
         setProductId(res.data.productId)
       }
-      
+
     });
   }
-  const getTableData=(id)=>{
+  const getTableData = (id) => {
     post(Paths.getPhysicalModel, { productId: id }).then((res) => {
-      setTableData(res.data.properties)
+      setInitialProtoclList(res.data.properties)
     });
+  }
+  const protocolSelectChange = selectedRowKeys => {
+    setSelectedProtocols(selectedRowKeys)
+  }
+  const protocolSelection = {
+    selectedRowKeys: selectedProtocols,
+    onChange: protocolSelectChange,
+  }
+  // 输入参数
+  const changeSendData = (value, index) => {
+    const copyList = cloneDeep(initialProtoclList)
+    copyList[index].sendData = value
+    setInitialProtoclList(copyList)
+  }
+  // 日期插件选择
+  const onChangeDate = (date, dateString, index) => {
+    changeSendData(dateString, index)
   }
   const columns = [
     {
       title: '数据名称',
       dataIndex: 'name',
       key: 'name',
-      width: 160,
-      editable:true,
+      width: 190
     },
     {
       title: '数据标识',
       dataIndex: 'identifier',
-      key: 'identifier'
+      key: 'identifier',
+      width: 200
     },
     {
       title: '数据类型',
@@ -80,14 +87,13 @@ export default function AddModel({ addVisible, addOk, CancelAdd }) {
           case 'float':
             return <span>{record.dataType.specs.min} ~ {record.dataType.specs.max}</span>
           case 'text':
-
-            break;
+            return '-'
           case 'enum':
             return (
               <span>{Object.values(record.dataType.specs).join(' | ')}</span>
             )
           case 'date':
-            break;
+            return '-'
           case 'bool':
             return (
               <span>{Object.values(record.dataType.specs).join(' | ')}</span>
@@ -99,21 +105,102 @@ export default function AddModel({ addVisible, addOk, CancelAdd }) {
     },
     {
       title: '下发数据',
-      dataIndex: 'execTime',
-      key: 'execTime',
-      width: 180,
-      render: (text, record,index) => {
-        return ( <Input  value={record.name} onChange={(e)=>onChange(e,index)}/>)
-      }
+      dataIndex: 'sendData',
+      key: 'sendData',
+      render: (text, record, index) => {
+        let { specs, type } = record.dataType,
+          _dom = null
+        switch (type) {
+          case 'int':
+          case 'double':
+          case 'float':
+            _dom = (<InputNumber value={record.sendData}
+              min={specs.min}
+              max={specs.max}
+              onChange={value => changeSendData(value, index)}
+              placeholder="请输入参数"></InputNumber>)
+            break
+          case 'text':
+            _dom = (
+              <Input value={record.sendData}
+                maxLength={30}
+                onChange={e => changeSendData(e.target.value.trim(), index)}
+                placeholder="请输入参数"></Input>
+            )
+            break
+          case 'enum':
+          case 'bool':
+            _dom = (
+              <Select
+                value={record.sendData}
+                onChange={value => changeSendData(value, index)}>
+                <Option key={-1} value="">请选择参数</Option>
+                {
+                  Object.values(specs) && Object.values(specs).map((item, index) => (
+                    <Option key={index + item} value={item}>{item}</Option>
+                  ))
+                }
+              </Select>
+            )
+            break
+          case 'date':
+            _dom = (
+              <DatePicker style={{ width: 182 }}
+                defaultValue={moment(record.sendData, "YYYY-MM-DD HH:mm:ss") || ''}
+                onChange={(date, dateString) => {
+                  onChangeDate(date, dateString, index)
+                }}
+                format="YYYY-MM-DD HH:mm:ss"
+                showTime
+                showNow />
+            )
+            break
+          default:
+            break;
+        }
+        return (
+          <span className={`config-send-data ${sendDataCheck.includes(index) ? 'warn' : ''}`}>
+            {_dom}
+          </span>
+        )
+      },
     }
   ]
   //提交
-  const subData=()=>{
-
+  const subData = () => {
+    form.validateFields().then(formvalue => {
+      if (selectedProtocols.length === 0) {
+        return Notification({ description: '请至少选择一条配置协议' })
+      } else {
+        console.log(selectedProtocols, '========')
+        for (let index = 0; index < selectedProtocols.length; index++) {
+          const item = selectedProtocols[index]
+          for (let index = 0; index < initialProtoclList.length; index++) {
+            const ele = initialProtoclList[index]
+            if (item === ele.identifier) {
+              if (!ele.sendData) return Notification({ description: '请为配置协议添加参数' })
+            }
+          }
+        }
+        let params={
+          taskName:formvalue.taskName,
+          deviceId:baseInfo.deviceId,
+          taskExplain:formvalue.taskExplain,
+          protocolJson:JSON.stringify(initialProtoclList.filter(item => item.sendData))
+        }
+        post(Paths.saveDeviceRemoset, params).then((res) => {
+          Notification({type: 'success', description: '添加成功' })
+          addOk()
+        });
+        // console.log('提交的数据', initialProtoclList,initialProtoclList.filter(item => item.sendData), params,'*************')
+        // sessionStorage.setItem('addConfigData', JSON.stringify(initialProtoclList.filter(item => item.sendData)))
+        // nextStep()
+      }
+    })
   }
   return (
     <div >
-      <Modal title="远程配置任务" visible={addVisible} onOk={subData} onCancel={CancelAdd} width='825px' wrapClassName='add-protocols-wrap'>
+      <Modal title="远程配置任务" visible={addVisible} onOk={subData} onCancel={CancelAdd} width='1100px' wrapClassName='device-remote-config-modal'>
         <div>
 
           <Form
@@ -121,22 +208,23 @@ export default function AddModel({ addVisible, addOk, CancelAdd }) {
           >
             <Form.Item
               label="任务名称"
-              name="problemType"
+              name="taskName"
               rules={[{ required: true }]}
+
             >
-              <Input />
+              <Input style={{ width: '300px' }} />
             </Form.Item>
             <Form.Item
               label="任务说明"
-              name="problemDesc"
+              name="taskExplain"
               rules={[{ required: true }]}
             >
               <TextArea rows={4} />
             </Form.Item>
           </Form>
           <div style={{ marginBottom: '10px' }}>请添加配置信息</div>
-          <Table dataSource={tableData} columns={columns} rowKey='identifier' />
-          {/* <TableCom/> */}
+          <Table className="config-data-table" dataSource={initialProtoclList} scroll={{ y: 300 }}
+            columns={columns} rowKey='identifier' rowSelection={protocolSelection} />
         </div>
       </Modal>
     </div>

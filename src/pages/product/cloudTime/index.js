@@ -183,7 +183,6 @@ export default function CloudTime() {
                     <div className='content-top-left'>
                         <Search placeholder="请输入功能名称"
                             allowClear
-                            enterButton
                             style={{ width: 465 }}
                             onSearch={(value) => setcurrentServiceName(value)} />
                     </div>
@@ -198,7 +197,7 @@ export default function CloudTime() {
                         onChange: pagerChange,
                         pageSize: pager.pageRows,
                         total: pager.totalRows,
-                        showQuickJumper: true,
+                        showQuickJumper: pager.totalPages > 5
                     }} />
             </div>
             {/* 创建 */}
