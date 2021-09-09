@@ -42,6 +42,7 @@ export default function DeviceRegist() {
     //产品种类列表
     const getProductType = () => {
         post(Paths.getProductPlus, {}).then((res) => {
+            res.data.unshift({ productId:0, productName: '全部产品' })
             setOptionArr(res.data)
         });
     }
@@ -166,7 +167,7 @@ export default function DeviceRegist() {
         <div id='device-regist'>
             <PageTitle title='设备注册'>
                 <div className='top-select'>
-                    <Select style={{ width: 200 }} allowClear onChange={selectChange}>
+                    <Select style={{ width: 200 }} defaultValue={0} onChange={selectChange}>
                         {
                             optionArr.map(item => {
                                 return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
