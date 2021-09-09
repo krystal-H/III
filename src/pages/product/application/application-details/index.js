@@ -657,7 +657,7 @@ class ApplicationDetail extends PureComponent {
                                             pageSize: pager.pageRows,
                                             total: pager.totalRows,
                                             showSizeChanger: false,
-                                            showQuickJumper: 6 > 5
+                                            showQuickJumper: pager.totalPages > 5
                                         }}
                                     />
                                 </div>
