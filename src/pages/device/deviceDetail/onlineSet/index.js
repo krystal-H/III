@@ -9,6 +9,7 @@ import { cloneDeep } from 'lodash'
 import { Paths, post, get } from '../../../../api'
 import { Notification } from '../../../../components/Notification';
 import AddModel from './addModel'
+import EditModel from './editModel'
 import DetailModel from './detail'
 import './index.scss'
 
@@ -30,12 +31,12 @@ const FLOWLIST = [
         title: '执行任务'
     }
 ]
-const PAGE_ROWS = 10
 const statusText = ['草稿', '待执行', '执行中', '已执行']
-const statusTextForDevice = ['', '执行中', '执行成功', '执行失败']
+const statusTextForDevice = ['草稿', '待执行', '执行成功', '执行失败']
 
 function RemoteConfig({ devceId, remoteType = 'device' }) {
     const [addVisible, setAddVisible] = useState(false)
+    const [editVisible, setEditVisible] = useState(false)
     const [actionData, setActionData] = useState({})
     const [deleteParams, setDeleteParams] = useState({ deletevisible: false, deleteItem: null, deleteLoading: false })
     const [remoteConfigList, setRemoteConfigList] = useState([]) // table-datasorce
@@ -87,12 +88,14 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
                         {
                             ('' + status) === '1' ?
                                 <React.Fragment>
-                                    <a onClick={() => addOrEditRemoteConfig(record)}>编辑</a>
+                                    <a onClick={() => openEdit(record)}>编辑</a>
                                     <Divider type="vertical" />
                                     <a onClick={() => setDeleteParams({ deletevisible: true, deleteItem: record })}>删除</a>
                                 </React.Fragment> :
                                 <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
                         }
+                        <Divider type="vertical" />
+                        <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
                     </span>) :
                     (<span>
                         <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
@@ -145,7 +148,7 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
     // 获取远程配置列表
     const getRemoteConfigList = (_pageIndex, status = '', taskName = '') => {
         const params = {
-            deviceId: 1321312312243,
+            deviceId: devceId,
             ...pager
         }
         post(Paths.deviceRemoteConfigList, params, { loading: true }).then(data => {
@@ -158,7 +161,6 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
         })
     }
 
-
     // 确定删除
     const deletelOKHandle = () => {
         const { taskId } = deleteItem
@@ -167,6 +169,7 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
                 type: 'success',
                 description: '删除成功！',
             });
+            setDeleteParams({ deletevisible: false, deleteItem: null, deleteLoading: false })
             getRemoteConfigList()
         })
     }
@@ -190,7 +193,20 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
         setAddVisible(false)
     }
     const addOk = () => {
+        getRemoteConfigList()
         setAddVisible(false)
+    }
+    //编辑
+    const openEdit = (data) => {
+        setActionData(data)
+        setEditVisible(true)
+    }
+    const CancelEdit = () => {
+        setEditVisible(false)
+    }
+    const EditOk = () => {
+        getRemoteConfigList()
+        setEditVisible(false)
     }
     return (
         <div id='remote-config'>
@@ -237,7 +253,7 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
                     visible={deletevisible}
                     modalOKHandle={deletelOKHandle}
                     modalCancelHandle={() => setDeleteParams({ deletevisible: false, deleteItem: null, deleteLoading: false })}
-                    targetName={deleteItem.taskId}
+                    targetName={deleteItem.taskName}
                     confirmLoading={deleteLoading}
                     title={'删除任务'}
                     needWarnIcon={true}
@@ -250,7 +266,10 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
                 addVisible && <AddModel addVisible={addVisible} addOk={addOk} CancelAdd={CancelAdd} />
             }
             {
-                detailVis && <DetailModel detailVis={detailVis} onCancel={detailCancel} actionData={actionData}/>
+                detailVis && <DetailModel detailVis={detailVis} onCancel={detailCancel} actionData={actionData} />
+            }
+            {
+                editVisible && <EditModel addVisible={editVisible} actionData={actionData} addOk={EditOk} CancelAdd={CancelEdit} />
             }
         </div>
     )
