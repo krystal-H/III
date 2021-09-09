@@ -111,23 +111,18 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
       render: (text, record) => {
         switch (record.dataType.type) {
           case 'int':
-            return <span>{record.dataType.specs.min} ~ {record.dataType.specs.max}</span>
           case 'double':
-            return <span>{record.dataType.specs.min} ~ {record.dataType.specs.max}</span>
           case 'float':
             return <span>{record.dataType.specs.min} ~ {record.dataType.specs.max}</span>
           case 'text':
             return '-'
           case 'enum':
+          case 'bool':
             return (
               <span>{Object.values(record.dataType.specs).join(' | ')}</span>
             )
           case 'date':
             return '-'
-          case 'bool':
-            return (
-              <span>{Object.values(record.dataType.specs).join(' | ')}</span>
-            )
           default:
             break;
         }
@@ -176,7 +171,7 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
           case 'date':
             _dom = (
               <DatePicker style={{ width: 182 }}
-                defaultValue={moment(record.sendData, "YYYY-MM-DD HH:mm:ss") || ''}
+                defaultValue={record.sendData ? moment(record.sendData, "YYYY-MM-DD HH:mm:ss") : ''}
                 onChange={(date, dateString) => {
                   onChangeDate(date, dateString, index)
                 }}

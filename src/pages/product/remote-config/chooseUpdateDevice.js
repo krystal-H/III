@@ -17,16 +17,13 @@ const { TabPane } = Tabs
 function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList }, ref) {
   const [currentActiveKey, setcurrentActiveKey] = useState('1')
   const [searchLoading, setSearchLoading] = useState(false)
-  const [searchedDeviceInfoList, setSearchedDeviceInfoList] = useState([])
   const [allDeviceInfo, setAllDeviceInfo] = useState({ curDeviceInfoList: [], allDeviceInfoList: [], allDeviceInfoPager: { pageIndex: 1, currPageRows: 10 } })
   const [selectDeviceIndexToAdd, setSelectDeviceIndexToAdd] = useState([])
   const [rightDeviceList, setRightDeviceList] = useState({ rightAllList: [], rightTempList: [] })
   const rightSearchInput = useRef(null)
   const [importDeviceData, setImportDeviceData] = useState({ allList: [], successList: [], errorList: [], errorVisible: false })
-  const [selectDeviceIndexToDelete, setSelectDeviceIndexToDelete] = useState([])
   const [excelFileName, setExcelFileName] = useState('')
   const [isShowImportResult, setIsShowImportResult] = useState(false)
-  const [defaultSelectedRowKeys, setDefaultSelectedRowKeys] = useState([])
 
   const { curDeviceInfoList, allDeviceInfoList, allDeviceInfoPager } = allDeviceInfo
   const { rightAllList, rightTempList } = rightDeviceList
@@ -52,18 +49,16 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
       title: '设备ID',
       dataIndex: 'deviceUniqueId',
       key: 'deviceUniqueId',
-      // width: 140,
     },
     {
       title: '物理地址',
       dataIndex: 'macAddress',
-      // width: 140,
       key: 'macAddress'
     },
     {
       title: '操作',
       key: 'action',
-      // width: 200,
+      width: 50,
       render: (text, record) => {
         return <span onClick={() => removeSigle(record)} className="remove-single">移除</span>
       }
@@ -142,9 +137,6 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
   const leftRowSelection = {
     selectedRowKeys: selectDeviceIndexToAdd,
     onChange: leftSelectChange,
-    // getCheckboxProps: record => ({
-    //   defaultChecked: selectDeviceIndexToAdd.includes(`${record.deviceUniqueId}`),
-    // })
   }
 
   // 获取左侧列表
@@ -169,6 +161,8 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
     }).finally(() => {
       setSearchLoading(false)
     })
+
+    setSelectDeviceIndexToAdd(rightTempList.map(item => item.deviceUniqueId))
   }
 
   useEffect(() => {
@@ -285,7 +279,6 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
               rightAllList: [...rightAllList, ...successList],
               rightTempList: [...rightAllList, ...successList]
             })
-            setSelectDeviceIndexToDelete([])
           }
           setExcelFileName(excel.name)
           setIsShowImportResult(true)
@@ -374,6 +367,7 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
         <div className="device-block-item">
           <Search enterButton="查 找"
             ref={rightSearchInput}
+            allowClear
             onSearch={rightDeviceSearch}
             maxLength={50}
             placeholder="请输入设备ID/物理地址查找"></Search>
@@ -381,17 +375,12 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
             <a className={rightTempList.length > 0 ? '' : 'disable'}
               onClick={deleteDeviceFromRightList}><MinusCircleOutlined />&nbsp;一键移除</a>
           </div>
-          <Table columns={deviceRightColumns}
+          <Table
+            className="config-data-table"
+            columns={deviceRightColumns}
             dataSource={rightTempList}
-            pagination={{
-              total: rightTempList.length,
-              defaultCurrent: 1,
-              defaultPageSize: 10,
-              showQuickJumper: false,
-              hideOnSinglePage: true,
-              size: 'small',
-              showTotal: total => <span>共 <a>{total}</a> 条</span>
-            }}
+            pagination={false}
+            scroll={{ y: 344 }}
           />
         </div>
       </div>

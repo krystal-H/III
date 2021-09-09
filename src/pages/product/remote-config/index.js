@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { PlusOutlined } from '@ant-design/icons'
-import { Button, Table, Divider, Tooltip, Select, Steps, Input, Form, Row, Col } from 'antd'
-import { DateTool, setFuncDataType, addKeyToTableData, createArrayByLength } from '../../../util/util'
+import { Button, Table, Divider, Select, Steps, Input, Form } from 'antd'
+import { DateTool, addKeyToTableData } from '../../../util/util'
 import PageTitle from '../../../components/page-title/PageTitle'
 import stepImg from '../../../assets/images/remote-config.png'
 import DescWrapper from '../../../components/desc-wrapper/DescWrapper'
@@ -9,34 +8,25 @@ import ActionConfirmModal from '../../../components/action-confirm-modal/ActionC
 import { cloneDeep } from 'lodash'
 import CreateTaskModal from './createTaskModal'
 import { Paths, post, get } from '../../../api'
+import CheckDetailModal from './checkDetailModal'
+
 import './index.scss'
 
 const { Option } = Select
 const { Step } = Steps
 const { Search } = Input
 const DESC = ['平台支持远程更新设备的配置数据，您可以提交远程配置任务，实时对设备的系统参数等数据进行远程更新，并且获取设备配置的更新状态；详细说明可参考文档']
-const FLOWLIST = [
-    {
-        title: '创建远程配置任务'
-    },
-    {
-        title: '添加配置数据'
-    },
-    {
-        title: '选择设备'
-    },
-    {
-        title: '执行任务'
-    }
-]
+
 const PAGE_ROWS = 10
-const statusText = ['草稿', '待执行', '执行中', '已执行']
+const statusText = ['', '待执行', '执行中', '已执行']
 const statusTextForDevice = ['', '执行中', '执行成功', '执行失败']
 
 function RemoteConfig(remoteType = 'product') {
     const [configProtoclList, setConfigProtoclList] = useState([])
     const [addVisible, setAddVisible] = useState(false)
     const [editData, setEditData] = useState({})
+    const [detailData, setDetailData] = useState({})
+    const [detailVisible, setDetailVisible] = useState(false)
     const [remoteConfigPager, setRemoteConfigPager] = useState({ pageIndex: 1 })
     const [deleteParams, setDeleteParams] = useState({ deletevisible: false, deleteItem: null, deleteLoading: false })
     const [remoteConfigList, setRemoteConfigList] = useState([]) // table-datasorce
@@ -44,6 +34,7 @@ function RemoteConfig(remoteType = 'product') {
     const [currentProductId, setCurrentProductId] = useState('')  // 下拉选中产品id
     const [status, setStatus] = useState('') // 状态
     const [allProductList, setAllProductList] = useState([]) // 下拉所有产品列表
+    const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 6 })
 
     const { totalRows, pageIndex, pageRows } = remoteConfigPager
     const { deletevisible, deleteItem, deleteLoading } = deleteParams
@@ -81,7 +72,7 @@ function RemoteConfig(remoteType = 'product') {
             key: 'status',
             render: (text, record) => {
                 let { status } = record;
-                return <span className={`h5-statu-${status + 1}`}>{_text[status]}</span>
+                return <span className={`h5-statu-${status + 1}`}>{statusText[status]}</span>
             }
         },
         {
@@ -98,7 +89,7 @@ function RemoteConfig(remoteType = 'product') {
             key: 'action',
             render: (text, record) => {
                 const { status, taskId } = record
-                return !isDeviceRomote ? (
+                return (
                     <span>
                         {
                             ('' + status) === '1' ?
@@ -111,40 +102,15 @@ function RemoteConfig(remoteType = 'product') {
                                 </React.Fragment> :
                                 <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
                         }
-                    </span>) :
-                    (<span>
-                        <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
-                        {
-                            ('' + status) === '3' ?
-                                <React.Fragment>
-                                    <Divider type="vertical" />
-                                    <a onClick={() => retryForDeviceByTaskId(taskId)}>重试</a>
-                                    <Divider type="vertical" />
-                                    <a onClick={() => showErrorLogForDeviceByTaskId(record)}>日志</a>
-                                </React.Fragment> : null
-                        }
-                    </span>)
+                    </span>
+                )
             }
         }
     ]
 
-    const isDeviceRomote = remoteType === 'device'
-
-    let _FLOWLIST = cloneDeep(FLOWLIST)
-
-    if (isDeviceRomote) {
-        _FLOWLIST.splice(2, 1)
-    }
-
-    const _text = isDeviceRomote ? statusTextForDevice : statusText
-
-    const getDetail = (taskId, type) => {
-        return get(Paths.getRemoteDetail, { taskId, type }, { loading: true })
-    }
-
     // 编辑
     const addOrEditRemoteConfig = (record) => {
-        return alert('敬请期待！')
+        // return alert('敬请期待！')
         if (record) { // 编辑
             post(Paths.getRemoteConfig5x, { taskId: record.taskId }, { loading: true }).then(res => {
                 setEditData(res.data)
@@ -162,13 +128,34 @@ function RemoteConfig(remoteType = 'product') {
         })
     }
 
-    const showRomoteConfigDetail = () => { }
-    const retryForDeviceByTaskId = () => { }
-    const showErrorLogForDeviceByTaskId = () => { }
+    // 查看详情
+    const showRomoteConfigDetail = (record) => {
+        post(Paths.getRemoteConfig5x, { taskId: record.taskId }, { loading: true }).then(res => {
+            setDetailData(res.data)
+            setDetailVisible(true)
+        })
+    }
+
+    // 获取远程配置列表
+    const getRemoteConfigList = (_pageIndex, status = '', taskName = '') => {
+        const params = {
+            productId: currentProductId,
+            pageRows: PAGE_ROWS,
+            pageIndex: _pageIndex || pageIndex,
+            status,
+            taskName
+        }
+        post(Paths.getRomoteConfigListByProduct5x, params, { loading: true }).then(res => {
+            setRemoteConfigList(addKeyToTableData(res.data.list))
+            setPager(pre => {
+                return Object.assign(cloneDeep(pre), { totalRows: res.data.pager.totalRows })
+            })
+        })
+    }
 
     useEffect(() => {
         getRemoteConfigList()
-    }, [pageIndex, isDeviceRomote, currentProductId])  // eslint-disable-line react-hooks/exhaustive-deps
+    }, [pager.pageIndex, pager.pageRows, status, currentProductId])  // eslint-disable-line react-hooks/exhaustive-deps
 
     // 获取所有产品列表
     const getCloudGetProductList = () => {
@@ -184,41 +171,27 @@ function RemoteConfig(remoteType = 'product') {
         getRemoteConfigList(pageIndex, status, val)
     }
 
-    // 获取远程配置列表
-    const getRemoteConfigList = (_pageIndex, status = '', taskName = '') => {
-        const params = {
-            productId: currentProductId,
-            pageRows: PAGE_ROWS,
-            pageIndex: _pageIndex || pageIndex,
-            status,
-            taskName
-        }
-        post(Paths.getRomoteConfigListByProduct5x, params, { loading: true }).then(data => {
-            const { pager = {}, list = [] } = data.data
-            setRemoteConfigList(addKeyToTableData(list))
-            setRemoteConfigPager(pager)
-        })
-    }
-
     // 翻页
-    const changePage = index => {
-        getRemoteConfigList(index)
+    // pageRows 一页几条数据
+    // totalRows 总行数
+    // pageIndex 第几页
+    const pagerChange = (pageIndex, pageRows) => {
+        setPager(pre => {
+            return Object.assign(cloneDeep(pre), { pageIndex: pageRows === pager.pageRows ? pageIndex : 1, pageRows })
+        })
     }
 
     // 确定删除
     const deletelOKHandle = () => {
         const { taskId } = deleteItem
-        setDeleteParams({
-            ...deleteParams,
-            deleteLoading: true
+        setDeleteParams({ ...deleteParams, deleteLoading: true })
+        post(Paths.deleteRemoteConfig, {
+            taskId
+        }, { loading: true }).then(data => {
+            getRemoteConfigList()
+        }).finally(() => {
+            setDeleteParams({ deletevisible: false, deleteItem: null, deleteLoading: false })
         })
-        // get(Paths.deleteRomoteConfig, {
-        //     taskId
-        // }, { loading: true }).then(data => {
-        //     getRemoteConfigList(pageRows > 1 ? pageIndex : ((pageIndex - 1 > 0) ? pageIndex - 1 : 1))
-        // }).finally(() => {
-        //     setDeleteParams({ deletevisible: false, deleteItem: null, deleteLoading: false })
-        // })
     }
 
     return (
@@ -251,7 +224,7 @@ function RemoteConfig(remoteType = 'product') {
                                     onChange={val => setStatus(val)}
                                     style={{ width: 150, marginRight: 40 }}>
                                     {
-                                        statusText.map((item, index) => (<Option key={item} value={index}>{item}</Option>))
+                                        statusText.filter(item => item).map((item, index) => (<Option key={item} value={index}>{item}</Option>))
                                     }
                                 </Select>
                             </Form.Item>
@@ -272,13 +245,13 @@ function RemoteConfig(remoteType = 'product') {
                     rowKey="taskId"
                     dataSource={remoteConfigList}
                     pagination={{
-                        total: totalRows,
-                        current: pageIndex,
                         defaultCurrent: 1,
-                        defaultPageSize: PAGE_ROWS,
-                        onChange: (index) => changePage(index),
-                        showQuickJumper: true,
-                        hideOnSinglePage: true,
+                        current: pager.pageIndex,
+                        pageSize: pager.pageRows,
+                        total: pager.totalRows,
+                        showSizeChanger: false,
+                        showQuickJumper: pager.totalPages > 5,
+                        onChange: pagerChange,
                         showTotal: total => <span>共 <a>{total}</a> 条</span>
                     }}
                 />
@@ -311,6 +284,18 @@ function RemoteConfig(remoteType = 'product') {
                     tipText={'任务的所有信息将完全被删除，无法找回，请谨慎操作'}
                 >
                 </ActionConfirmModal>
+            }
+
+            {/* 查看详情 */}
+            {
+                detailVisible &&
+                <CheckDetailModal
+                    visible={detailVisible}
+                    detailData={detailData}
+                    allProductList={allProductList}
+                    onCancel={() => setDetailVisible(false)}
+                />
+
             }
         </div>
     )

@@ -389,6 +389,7 @@ let Paths = {
     saveRemoteConfig5x: '/remoteConfig/product/save', // 保存单个产品的远程配置任务
     executeTask5x: '/remoteConfig/product/submit', // 执行远程配置任务
     getRemoteConfig5x: '/remoteConfig/product/get', // 获得单个产品的远程配置任务
+    deleteRemoteConfig: '/remoteConfig/product/delete', // 删除单个产品的配置任务
     
 
     
