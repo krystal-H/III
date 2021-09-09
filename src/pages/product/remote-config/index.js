@@ -144,7 +144,7 @@ function RemoteConfig(remoteType = 'product') {
 
     // 编辑
     const addOrEditRemoteConfig = (record) => {
-        // return alert('敬请期待！')
+        return alert('敬请期待！')
         if (record) { // 编辑
             post(Paths.getRemoteConfig5x, { taskId: record.taskId }, { loading: true }).then(res => {
                 setEditData(res.data)
@@ -292,6 +292,7 @@ function RemoteConfig(remoteType = 'product') {
                     onCancel={() => { setAddVisible(false); setEditData({}) }}
                     editData={editData}
                     configProtoclList={configProtoclList}
+                    getRemoteConfigList={getRemoteConfigList}
                 ></CreateTaskModal>
             }
 

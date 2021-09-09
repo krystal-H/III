@@ -27,7 +27,7 @@ function delaData(data, typeS) {
   return newData
 }
 export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
-  const [selectType, setSelectType] = useState(0) //产品种类
+  const [selectType, setSelectType] = useState(optionArr[0].productId) //产品种类
   const [originData1, setOriginData1] = useState([])
   const [originData2, setOriginData2] = useState([])
   const [selectData, setSelectData] = useState({})
@@ -62,7 +62,7 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
   }
   const getList = (loading = true) => {
     let params = {
-      filter: true
+      filter: false
     }
     params.productId = 11979
     if (!params.id || !params.id.trim()) {
@@ -179,7 +179,9 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
     let obj={}
     obj.productId=selectType
     obj.data=arr.concat(arr2)
-    console.log(obj,'====')
+    post(Paths.saveDeviceRemoset, obj).then((res) => {
+      addOk()
+    });
   }
   return (
     <div >

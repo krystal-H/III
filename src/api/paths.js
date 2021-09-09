@@ -605,7 +605,7 @@ let Paths = {
     deviceRemoteConfigList:'/remoteConfig/device/getList',//获得设备远程配置分页列表
     singelDeviceRemoset:'/remoteConfig/device/get',//获得单个设备的远程配置任务
     delDeviceRemoset:'/remoteConfig/device/delete',//删除单个设备的远程配置任务
-    saveDeviceRemoset:'/remoteConfig/device/save',//保存单个设备的远程配置任务
+    saveDeviceRemoset:'/deviceProtocol/save',//保存单个设备的远程配置任务
     addDeviceRemoset:'/remoteConfig/product/submit',//提交单个产品的远程配置任务
 
 };

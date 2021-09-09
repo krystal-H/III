@@ -98,7 +98,7 @@ export default function Device() {
             setOptionArr(res.data)
         });
     }
-    
+
     //产品改变
     const selectChange = (value) => {
         setSelectType(value)
@@ -134,7 +134,7 @@ export default function Device() {
             setTableData(res.data.summaryList)
         });
     }
-    const fownFile= () => {
+    const fownFile = () => {
         let params = {}
         if (currentTime == 1) {
             params.endDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
@@ -151,7 +151,7 @@ export default function Device() {
         if (selectType) {
             params.productId = selectType
         }
-        post(Paths.userDataDown, params ).then((res) => {
+        post(Paths.userDataDown, params).then((res) => {
             window.open(res.data.path)
         });
     }
@@ -294,7 +294,9 @@ export default function Device() {
                     {
                         countData.map((item, index) => {
                             return (
-                                <div key={index} className='count-item' onClick={() => { filterData(index) }} className={currentTab == index ? 'current-tab' : ''}>
+                                <div key={index} className='count-item' onClick={() => { filterData(index) }}
+                                    className={[currentTab === index ? 'current-tab' : '', index == 4 ? 'last-wrap' : ''].join(' ')}
+                                >
                                     <div className='item-label'>{item.label}</div>
                                     <div className='item-number'>{item.count}</div>
                                 </div>

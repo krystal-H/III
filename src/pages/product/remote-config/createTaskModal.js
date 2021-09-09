@@ -26,7 +26,7 @@ const stepList = [
     }
 ]
 
-function CreateTask({ visible, onCancel, allProductList, editData }) {
+function CreateTask({ visible, onCancel, allProductList, editData, getRemoteConfigList }) {
     const refConfig = useRef()
     const refDevice = useRef()
     const [form] = Form.useForm()
@@ -161,7 +161,8 @@ function CreateTask({ visible, onCancel, allProductList, editData }) {
                         ref={refDevice}
                         productId={productId}
                         editData={editData}
-                        onCancel={onCancel} />
+                        onCancel={onCancel}
+                        getRemoteConfigList={getRemoteConfigList} />
                 }
 
             </div>

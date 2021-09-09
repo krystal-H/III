@@ -54,8 +54,7 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
             }
           })
         })
-        console.log('list=====', res.data.properties)
-      } 
+      }
 
       setInitialProtoclList(res.data.properties)
     })
@@ -70,6 +69,11 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
     const copyList = cloneDeep(initialProtoclList)
     copyList[index].sendData = value
     setInitialProtoclList(copyList)
+  }
+
+  // 日期插件选择
+  const onChangeDate = (date, dateString, index) => {
+    changeSendData(dateString, index)
   }
 
   const protocolSelectChange = selectedRowKeys => {
@@ -172,8 +176,13 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
           case 'date':
             _dom = (
               <DatePicker style={{ width: 182 }}
+                defaultValue={moment(record.sendData, "YYYY-MM-DD HH:mm:ss") || ''}
+                onChange={(date, dateString) => {
+                  onChangeDate(date, dateString, index)
+                }}
                 format="YYYY-MM-DD HH:mm:ss"
-                showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }} />
+                showTime
+                showNow />
             )
             break
           default:
@@ -190,7 +199,6 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
   return (
     <Table columns={configColumns}
       className="config-data-table"
-      // rowSelection={protocolFormat !== 1 ? protocolSelection : null}
       rowSelection={protocolSelection}
       dataSource={initialProtoclList}
       rowKey="identifier"
@@ -201,27 +209,3 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
 }
 
 export default forwardRef(AddConfigData)
-
-// export default connect(mapStateToProps, mapDispatchToProps)(forwardRef(AddConfigData))
-// AddConfigData = connect(mapStateToProps, mapDispatchToProps)(AddConfigData)
-//注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-// export default React.forwardRef( (props,ref) => <AddConfigData  {...props}  refInstance={ref} />);
-
-// AddConfigData = forwardRef(AddConfigData)
-
-// export default connect(
-
-//   mapStateToProps, mapDispatchToProps, null, { forwardRef: true }
-
-//   )(AddConfigData)
-
-// export default connect(mapStateToProps, mapDispatchToProps)(AddConfigData)
-
-// AddConfigData = connect(mapStateToProps, mapDispatchToProps)
-// export default React.forwardRef( (props,ref) => <AddConfigData  {...props}  refInstance={ref} />);
-
-// export default connect(null, dispatch => {
-//   return {
-//     saveconfigData: params => dispatch(addConfigDataAction(params))
-//   }
-// }, null, {forwardRef: true})(AddConfigData)

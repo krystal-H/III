@@ -14,7 +14,7 @@ const { Search } = Input
 const { TabPane } = Tabs
 
 
-function ChooseUpdateDevice({ productId, editData, onCancel }, ref) {
+function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList }, ref) {
   const [currentActiveKey, setcurrentActiveKey] = useState('1')
   const [searchLoading, setSearchLoading] = useState(false)
   const [searchedDeviceInfoList, setSearchedDeviceInfoList] = useState([])
@@ -92,6 +92,7 @@ function ChooseUpdateDevice({ productId, editData, onCancel }, ref) {
       post(Paths.saveRemoteConfig5x, params, { loading: true }).then(res => {
         Notification({ description: '操作成功！', type: 'success' })
         onCancel()
+        getRemoteConfigList()
       })
     }
   }

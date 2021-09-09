@@ -64,6 +64,11 @@
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
+      &:not(.last-wrap){
+        &:hover{
+          background: #F0F1F3 
+        }
+      }
       .item-label {
         height: 22px;
         font-size: 12px;
