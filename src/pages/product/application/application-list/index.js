@@ -156,8 +156,8 @@ export default class Application extends PureComponent {
                                     onChange={(page) => this.onChange(page)}
                                     pageSize={pager.pageRows}
                                     showTotal={total => <span>共 <a>{total}</a> 条</span>}
-                                    showQuickJumper
                                     hideOnSinglePage
+                                    showQuickJumper = {pager.totalPages > 5}
                                 />
                             }
                         </footer>

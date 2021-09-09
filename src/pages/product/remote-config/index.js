@@ -11,6 +11,7 @@ import { Paths, post, get } from '../../../api'
 import CheckDetailModal from './checkDetailModal'
 
 import './index.scss'
+import { Notification } from '../../../components/Notification'
 
 const { Option } = Select
 const { Step } = Steps
@@ -125,6 +126,7 @@ function RemoteConfig(remoteType = 'product') {
     const executeRemoteConfig = (record) => {
         post(Paths.executeTask5x, { taskId: record.taskId }, { loading: true }).then(res => {
             getRemoteConfigList()
+            Notification({ description: '执行成功！', type: 'success' })
         })
     }
 
@@ -231,7 +233,6 @@ function RemoteConfig(remoteType = 'product') {
                             <Form.Item label="任务名称">
                                 <Search placeholder="请输入任务名称"
                                     allowClear
-                                    enterButton
                                     onSearch={searchListData}
                                     style={{ width: 465 }} />
                             </Form.Item>
