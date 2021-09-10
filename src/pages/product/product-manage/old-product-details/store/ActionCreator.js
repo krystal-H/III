@@ -1,4 +1,4 @@
-import {get, Paths} from '../../../../../api';
+import {get, post, Paths} from '../../../../../api';
 import { fromJS } from 'immutable';
 import * as ActionTypes from './ActionTypes';
 import axios from 'axios';
@@ -17,7 +17,15 @@ function getQueryServerConfigAction_1(id) {
   return get(Paths.queryServerConfig,{productId: id})
 }
 function getProductIdentifierAction_1(id) {
-  return get(Paths.productIdentifier,{productId: id});
+  // return get(Paths.productIdentifier,{productId: id});
+  return post(Paths.getPublishProductInfo,{productId:id},{needFormData:true,loading:true})
+  // .then((model) => {
+
+  //     this.setState({
+  //         moduleInfo:model.data && model.data.moduleInfo || {},
+  //         productBaseInfo:model.data && model.data.productBaseInfo || {}
+  //     });
+  //   });
 }
 function getAccessTokenAction_1(){
   return get(Paths.accessToken);
@@ -29,6 +37,7 @@ export const updateDeviceAction = (data) => {
   }
 }
 export const getDeviceAndWsAction = (id) => {
+  alert(456)
   return (dispatch,getState) => {
     axios.all([getQueryServerConfigAction_1(id), getProductIdentifierAction_1(id),getAccessTokenAction_1()])
     .then(axios.spread(function (wsUrl, productInfo, token) {

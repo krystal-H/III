@@ -47,10 +47,10 @@ export default class ProductTabs  extends Component {
             let accountList = [],
             macList = [];
             this.setState({steps},()=>{
-                post(Paths.deviceDebugAccountGetList,{productId}).then((model) => {
+                get(Paths.deviceDebugAccountGetList,{productId}).then((model) => {
                     accountList = model.data;
                     this.props.updateDeviceDebugAccountList(model);
-                    post(Paths.debugSecretList,{productId}).then((res) => {
+                    get(Paths.debugSecretList,{productId}).then((res) => {
                         macList = res.data;
                         this.props.updateDeviceDebugMacList(res);
                         if(macList.length<1){
