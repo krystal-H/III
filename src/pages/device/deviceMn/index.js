@@ -250,7 +250,7 @@ export default function DeviceList() {
                                 name='field'
                                 noStyle
                             >
-                                <Input style={{ width: '228px' }} />
+                                <Input style={{ width: '228px' }} placeholder='请输入设备物理地址或者ID'/>
                             </Form.Item>
                         </Input.Group>
                     </Form.Item>

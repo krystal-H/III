@@ -3,6 +3,7 @@ import { Modal, Button, Tabs, Table, Input, Select, Checkbox, Form, Space } from
 import { useHistory } from 'react-router-dom';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import NewModal from './newModal'
+import TestModal from './test'
 import EditModal from './editModal'
 import './changeModal.scss'
 import { post, Paths, get } from '../../../../../api';
@@ -29,11 +30,16 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     const goOrder = () => {
         history.push('/open/repairOrder');
     }
-
+    //
+    const [standard,setStandard]=useState([])
     //列表
+    const getStandard = () => {
+        post(Paths.panelList, { productId ,panelType:1}).then((res) => {
+            setStandard(res.data.list)
+        });
+    }
     const getList = () => {
-        
-        post(Paths.panelList, { productId }).then((res) => {
+        post(Paths.panelList, { productId ,panelType:3}).then((res) => {
             setData(res.data.list)
             setPager(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))
@@ -174,6 +180,10 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     useEffect(() => {
         getList()
     }, [pager.pageIndex, pager.pageRows])
+    useEffect(()=>{
+        getStandard()
+    },[])
+    //操作判断
     const updateOkHandle = () => {
         if (actionType === 1) {
             relOkAc()
@@ -183,6 +193,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             offOkLine()
         }
     }
+    //回去自定义列表按钮
     const getBtn = (record, verifyStatus, isGray) => {
         if (!isGray && verifyStatus != 1) {
             return (<Space size="middle">
@@ -227,10 +238,9 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             key: 'verifyStatus',
             dataIndex: 'verifyStatus',
             render: (text, record) => {
-                if (!record.isGray && text!=1) {
+                if (!record.isGray && text != 1) {
                     return '草稿'
                 }
-                // if(record.isF)
                 let arr = ['待审核', '已通过', '不通过', '审核中']
                 return arr[text]
             }
@@ -245,6 +255,15 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             },
         },
     ];
+
+    //测试数据
+    const [testVis,setTestVis]=useState(false)
+    const closeTest=()=>{
+        setTestVis(false)
+    }
+    const CancelTest=()=>{
+        setTestVis(false)
+    }
     return (
         <div >
             <Modal title="更换面板" visible={isChangeModalVisible} onOk={closeChange} onCancel={CancelChange} width='952px'
@@ -257,6 +276,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                                     <div className='change-modal-tab3-dec'>
                                         <div>clife推荐的快速控制面板，既拿既用，一键开发，快速支持硬件的识别，适用于快速开发方案。</div>
                                         <div>均不满足，需要委托定制？直接联系Clife。<a onClick={goOrder}>提交工单</a></div>
+                                        <Button type='primary' onClick={()=>{setTestVis(true)}}>新增</Button>
                                     </div>
                                     <div className='model-arr-wrap-item'>
                                         <div className='model-arr-wrap-item-title'>
@@ -311,6 +331,9 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             }
             {
                 relPanVis && <RelPanModel actionObj={actionData} relPanVis={relPanVis} CancelRel={CancelRel} closeOkRel={closeOkRel} />
+            }
+            {
+                testVis && <TestModal isAddModalVisible={testVis} closeAdd={closeTest} CancelAdd={CancelTest} />
             }
         </div>
     )

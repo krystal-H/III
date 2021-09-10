@@ -176,7 +176,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                         <a
                                                             onClick={() => add()}
                                                         >
-                                                            添加参数
+                                                            添加调试账号
                                                         </a>
                                                         <Form.ErrorList errors={errors} />
                                                     </Form.Item>
@@ -232,7 +232,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                         <a
                                                             onClick={() => add()}
                                                         >
-                                                            添加参数
+                                                            添加调试账号
                                                         </a>
                                                         <Form.ErrorList errors={errors} />
                                                     </Form.Item>
