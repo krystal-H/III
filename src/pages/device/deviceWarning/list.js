@@ -124,6 +124,8 @@ const WarningConfigList = props=>{
     const columns = [
         {title: "规则名称",dataIndex: "name",key: "name",ellipsis:true},
         {title: "描述",dataIndex: "remark", key: "remark" ,ellipsis:true},
+        {title: "产品名称",dataIndex: "productName",key: "productName",ellipsis:true},
+        {title: "设备ID",dataIndex: "deviceIds", key: "deviceIds" ,ellipsis:true},
         {title: "运行状态",dataIndex: "status",key: "status", width:"100px",
             render: s => <span>{ {'0':'初始状态','1':'运行中','2':'已停止'}[s] }</span>
         },

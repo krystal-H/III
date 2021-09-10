@@ -49,8 +49,8 @@ function pubForm({
                         <Input placeholder="请输入邮件地址" />
                     </Item>
                 }
-                <Item label="告警内容" name='warningDetails' initialValue="您好，{pruductname}，{time}出现配置规则下的异常，请在站内消息查看详情！">
-                    <TextArea rows='3' disabled={true} />
+                <Item label="告警内容" name='warningDetails' rules={[{ required: true, message: '请输入告警内容'},{ max: 100, message: '最大输入长度为100' }]} >
+                    <TextArea rows='3' maxLength={100} showCount={true} placeholder="请输入告警内容"/>
                 </Item>
                 <Item label="发送频率" name='waringFreq' required initialValue="0">
                     <Radio.Group >
