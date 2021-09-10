@@ -110,7 +110,7 @@ function ReleaseProduct({ releaseVisible, cancelHandle, productId }) {
                 label="产品重量"
                 name="weight"
                 rules={[
-                  { required: true, pattern: new RegExp(/^[0-9]+$/, "g"), message: '请输入产品重量，如2' }
+                  { required: true, pattern: new RegExp(/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/, "g"), message: '请输入产品重量，如2' }
                 ]}>
                 <Input placeholder="请输入产品重量，如2" style={{ width: 366 }} />
               </Form.Item>
