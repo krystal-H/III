@@ -2,23 +2,24 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'rea
 import { Form, Input, Table, Modal } from 'antd'
 import { Paths, post, get } from '../../../../api'
 const { TextArea } = Input;
-export default function AddModel({ detailVis, onCancel,actionData }) {
+export default function AddModel({ detailVis, onCancel, actionData }) {
     const [form] = Form.useForm();
     const [tableData, setTableData] = useState([])
-    useEffect(()=>{
+    useEffect(() => {
         getDetail()
-    },[])
-    const [detailObj,setDetailObj]=useState({})
-    const getDetail=()=>{
+    }, [])
+    const [detailObj, setDetailObj] = useState({})
+    const getDetail = () => {
         const params = {
-            taskId:actionData.taskId
+            taskId: actionData.taskId
         }
         post(Paths.singelDeviceRemoset, params).then(data => {
             setDetailObj(data.data)
-            console.log(JSON.parse(data.data.remoteProtocol.protocolJson),6666)
-            if(data.data.remoteProtocol && data.data.remoteProtocol.protocolJson && JSON.parse(data.data.remoteProtocol.protocolJson).length){
-                // setTableData(JSON.parse(data.data.remoteProtocol.protocolJson))
-            }
+            setTableData(JSON.parse(data.data.remoteProtocol.protocolJson))
+            console.log(JSON.parse(data.data.remoteProtocol.protocolJson), 6666)
+            // if(data.data.remoteProtocol && data.data.remoteProtocol.protocolJson && JSON.parse(data.data.remoteProtocol.protocolJson).length){
+            //     // setTableData(JSON.parse(data.data.remoteProtocol.protocolJson))
+            // }
         })
     }
     const columns = [
@@ -71,14 +72,14 @@ export default function AddModel({ detailVis, onCancel,actionData }) {
         },
         {
             title: '下发数据',
-            dataIndex: 'execTime',
-            key: 'execTime',
-            width: 180,
+            dataIndex: 'sendData',
+            key: 'sendData',
+            width: 180
         }
     ]
     return (
         <div >
-            <Modal title="远程配置任务" visible={detailVis} onOk={onCancel} onCancel={onCancel} width='725px' wrapClassName='add-protocols-wrap'>
+            <Modal title="远程配置任务" visible={detailVis} footer={null} onOk={onCancel} onCancel={onCancel} width='1100px' wrapClassName='add-protocols-wrap'>
                 <div>
 
                     <Form
@@ -97,8 +98,8 @@ export default function AddModel({ detailVis, onCancel,actionData }) {
                             <span>{detailObj.taskExplain}</span>
                         </Form.Item>
                     </Form>
-                    <div style={{marginBottom:'10px'}}>配置数据</div>
-                    <Table dataSource={tableData} columns={columns} />
+                    <div style={{ marginBottom: '10px' }}>配置数据</div>
+                    <Table dataSource={tableData} columns={columns}  rowKey='identifier'/>
                 </div>
             </Modal>
         </div>

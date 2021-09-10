@@ -1,4 +1,4 @@
-import {get, Paths} from '../../../../../api';
+import {get, post, Paths} from '../../../../../api';
 import { fromJS } from 'immutable';
 import * as ActionTypes from './ActionTypes';
 import axios from 'axios';
@@ -17,7 +17,7 @@ function getQueryServerConfigAction_1(id) {
   return get(Paths.queryServerConfig,{productId: id})
 }
 function getProductIdentifierAction_1(id) {
-  return get(Paths.productIdentifier,{productId: id});
+  return post(Paths.getPublishProductInfo,{productId:id},{needFormData:true,loading:true})
 }
 function getAccessTokenAction_1(){
   return get(Paths.accessToken);

@@ -488,63 +488,6 @@ $borderColor: #e8e8e8;
     }
 }
 
-.commandsDebugSytle{
-    .modal-body {
-        position: relative;
-        padding: 15px;
-        .form-group {
-            &:after {
-                content: '';
-                clear: both;
-                display: block;
-            }
-            min-height: 35px;
-            line-height: 35px;
-            margin-bottom: 15px;
-            // text-align: center;
-            label {
-                display: inline-block;
-                vertical-align: middle;
-                text-align: right;
-                width: 120px;
-                text-align: right;
-                font-size: 14px;
-                line-height: 15px;
-            }
-            .form-group-input-out {
-                display: inline-block;
-                vertical-align: middle;
-                width: 240px;
-                margin-top: 4px;
-                margin-left: 15px;
-                input {
-                    font-size: 14px;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    height: 25px;
-                    line-height: 25px;
-                    width: 100%;
-                }
-                textarea {
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    height: 75px;
-                    line-height: 25px;
-                    width: 100%;
-                }
-            }
-        }
-    }
-    .modal-footer {
-        height: 50px;
-        line-height: 50px;
-        text-align: right;
-        .cancel{
-            margin-left: $gap;
-        }
-    }
-}
-
 .exception-text {
     color: red;
 }
@@ -974,5 +917,62 @@ $borderColor: #e8e8e8;
         table.table tr td:last-child, table.table tr th:last-child{ border-right: 0 }
         table.table tr:last-child td, table.table tr:last-child th{ border-bottom: 0 }
         
+    }
+}
+
+.old-commandsDebugSytle{
+    .modal-body {
+        position: relative;
+        padding: 15px;
+        .form-group {
+            &:after {
+                content: '';
+                clear: both;
+                display: block;
+            }
+            min-height: 35px;
+            line-height: 35px;
+            margin-bottom: 15px;
+            // text-align: center;
+            label {
+                display: inline-block;
+                vertical-align: middle;
+                text-align: right;
+                width: 120px;
+                text-align: right;
+                font-size: 14px;
+                line-height: 15px;
+            }
+            .form-group-input-out {
+                display: inline-block;
+                vertical-align: middle;
+                width: 240px;
+                margin-top: 4px;
+                margin-left: 15px;
+                input {
+                    font-size: 14px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    height: 25px;
+                    line-height: 25px;
+                    width: 100%;
+                }
+                textarea {
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    height: 75px;
+                    line-height: 25px;
+                    width: 100%;
+                }
+            }
+        }
+    }
+    .modal-footer {
+        height: 50px;
+        line-height: 50px;
+        text-align: right;
+        .cancel{
+            margin-left: $gap;
+        }
     }
 }

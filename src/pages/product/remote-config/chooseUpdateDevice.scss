@@ -88,4 +88,7 @@
     background: url("../../../assets/images/transfer.png") no-repeat;
     background-size: 100% 100%;
   }
+  .config-data-table .ant-table-body {
+    @include self-scroll-bar();
+  }
 }

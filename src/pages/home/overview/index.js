@@ -134,13 +134,13 @@ export default function OverviewWrap() {
     }
     const productStatuFilter = (value) => {
         // (0开发模式 ,1生产模式，2-审核中)
-        if (value == 1) {
-            return '生产模式'
+        if (value == 0) {
+            return '开发中'
         }
         if (value == 2) {
             return '审核中'
         }
-        return '开发模式'
+        return '已发布'
     }
     //快捷入口
     const [newProductModal, setNewProductModal] = useState(false)
@@ -259,7 +259,7 @@ export default function OverviewWrap() {
                                             <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.productIcon} alt='' /></div>
                                             <div className='over-view-productmn-content-content'>
                                                 <div>{item.productName}</div>
-                                                <div>{productStatuFilter(item.mode)}</div>
+                                                <div>{productStatuFilter(item.status)}</div>
                                                 <div>更新时间{moment(item.modifyTime).format('YYYY-MM-DD')}</div>
                                             </div>
                                         </div>)
@@ -304,7 +304,7 @@ export default function OverviewWrap() {
                         <div className='over-view-device-content'>
                             <div className='over-view-device-content-item'>
                                 <div >
-                                    <div className='over-view-device-content-item-label'>
+                                    <div className='over-view-device-content-item-label' onClick={()=>{ goPage('/open/device/devManage/list') }}>
                                         设备管理
                                         <RightOutlined />
                                     </div>

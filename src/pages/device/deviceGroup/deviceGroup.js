@@ -121,6 +121,7 @@ export default class DeviceGroup extends Component {
                             total:totalRows, 
                             onChange:this.pagerIndex,
                             current: pageIndex,
+                            showSizeChanger:false,
                             showQuickJumper: totalPages > 5,
                             hideOnSinglePage:true,
                         }} 

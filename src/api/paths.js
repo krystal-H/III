@@ -164,7 +164,6 @@ let Paths = {
 
     /**************************/
     queryServerConfig: '/device/debug/queryServerConfig',//设备调试-获取websocket服务器的IP和端口
-    productIdentifier: '/product/getProductIdentifier',//设备调试-根据产品ID获取产品信息
     accessToken: '/device/debug/getAccessToken',//设备调试-获取登录凭证
     dataTypeList: '/device/debug/getDataTypeList', //获取数据类型
     propertyConfig: '/device/debug/getPropertyConfig_v1.1',//根据产品ID获取协议信息
@@ -230,7 +229,7 @@ let Paths = {
      * 产品-基本信息 start
      * aize-2019-09-18
      */
-    getPublishProductBusinessInfo: '/product/commerce/info/show',//产品-基本信息-商业化信息
+    getBusinessInfo: '/product/commerce/info/show',//产品-基本信息-商业化信息
     getPublishProductFn:'',//功能定义
     getPublishProductLabelList:'/label/list',//标签列表
     getPublishProductLabelAdd:'/label/create',//新增标签
@@ -389,6 +388,7 @@ let Paths = {
     saveRemoteConfig5x: '/remoteConfig/product/save', // 保存单个产品的远程配置任务
     executeTask5x: '/remoteConfig/product/submit', // 执行远程配置任务
     getRemoteConfig5x: '/remoteConfig/product/get', // 获得单个产品的远程配置任务
+    deleteRemoteConfig: '/remoteConfig/product/delete', // 删除单个产品的配置任务
     
 
     
@@ -597,15 +597,16 @@ let Paths = {
 
     //场景服务
     scenceList:'/deviceProtocol/queryProtocolFromDevice',//获取场景规则列表
-    saveScenceData:'/deviceProtocol/saveProtocolToScene',//保存场景规则数据到规则引擎服务
+    // saveScenceData:'/deviceProtocol/saveProtocolToScene',//保存场景规则数据到规则引擎服务
     delScenceControl:'/deviceProtocol/deleteControlScene',//删除场景控制规则
     delScenceRun:'/deviceProtocol/deleteStatusScene',//删除场景运行规则
+    saveScenceData:'/deviceProtocol/save',//新增
 
     //设备远程配置
     deviceRemoteConfigList:'/remoteConfig/device/getList',//获得设备远程配置分页列表
     singelDeviceRemoset:'/remoteConfig/device/get',//获得单个设备的远程配置任务
     delDeviceRemoset:'/remoteConfig/device/delete',//删除单个设备的远程配置任务
-    saveDeviceRemoset:'/deviceProtocol/save',//保存单个设备的远程配置任务
+    saveDeviceRemoset:'/remoteConfig/device/save',//保存单个设备的远程配置任务
     addDeviceRemoset:'/remoteConfig/product/submit',//提交单个产品的远程配置任务
 
 };
