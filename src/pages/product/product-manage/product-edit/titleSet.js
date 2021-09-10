@@ -9,7 +9,6 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
     if (sessionStorage.getItem('productItem')) {
         productItem = JSON.parse(sessionStorage.getItem('productItem'))
     }
-    console.info(productItem,999999)
     const [form] = Form.useForm();
     const oneRef = useRef();
     const [optionArr, setOptionArr] = useState([])
@@ -18,7 +17,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
         post(Paths.getProductBrand).then((res) => {
             setOptionArr(res.data)
         });
-    },[])
+    }, [])
     //提交数据
     const subData = () => {
         form.validateFields().then(val => {
@@ -30,7 +29,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                 productCode: val.productCode
             }
             post(Paths.editProductInfo, params).then((res) => {
-                onOkClose()
+                onOkClose(res.data)
                 // delaData(res.data)
             });
         })
@@ -71,8 +70,8 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     initialValues={{
                         productIcon: [{ url: productItem.productIcon }],
                         productName: productItem.productName,
-                        brandId:productItem.brandId,
-                        productCode:productItem.productCode,
+                        brandId: productItem.brandId,
+                        productCode: productItem.productCode,
                     }}
                 >
                     <Form.Item
@@ -156,7 +155,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     </Form.Item>
                     <Form.Item
                         label="更新时间"
-                    ><span></span>
+                    ><span>{productItem.modifyTime}</span>
                     </Form.Item>
                 </Form>
             </div>

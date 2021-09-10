@@ -124,7 +124,12 @@ export default function TableCom({ dataSource, reFreshData, type }) {
                 );
             },
         },
-        { title: '参数名称', dataIndex: 'name' },
+        {
+            title: '参数名称', dataIndex: 'name',
+            render: (text, record) => {
+                return text
+            }
+        },
         { title: '参数标识', dataIndex: 'identifier' },
         {
             title: '数据传输类型', dataIndex: 'accessMode',
@@ -211,6 +216,9 @@ export default function TableCom({ dataSource, reFreshData, type }) {
             rowKey="key"
             columns={columns}
             dataSource={dataSource}
+            locale={{
+                emptyText: type == '1' ? '暂无标准功能' : '暂无自定义功能'
+            }}
             pagination={{
                 defaultCurrent: 1,
                 current: pager.pageIndex,
