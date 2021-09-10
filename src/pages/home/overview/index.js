@@ -304,7 +304,7 @@ export default function OverviewWrap() {
                         <div className='over-view-device-content'>
                             <div className='over-view-device-content-item'>
                                 <div >
-                                    <div className='over-view-device-content-item-label'>
+                                    <div className='over-view-device-content-item-label' onClick={()=>{ goPage('/open/device/devManage/list') }}>
                                         设备管理
                                         <RightOutlined />
                                     </div>

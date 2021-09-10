@@ -20,6 +20,11 @@ import ConfigService from './config-service';
 import TitleSet from './titleSet'
 import { MyContext } from './context'
 import { Notification } from '../../../../components/Notification';
+import { strToAsterisk, DateTool } from '../../../../util/util';
+import {
+    EyeInvisibleTwoTone,
+    EyeTwoTone,
+} from '@ant-design/icons';
 
 // 此部分路由不需要展示产品信息
 const NOT_SHOW = /(\/service\/appcontrol|cloudtime|scenelink)|\/applyRelease/;
@@ -41,13 +46,14 @@ const getProductIdFromPath = (match) => +match.params.id;
 
 
 function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
-    let productItem = {}
+    // let productItem = {}
+    const [productItem,setProductItem]=useState( sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
     let history = useHistory();
-    if (sessionStorage.getItem('productItem')) {
-        productItem = JSON.parse(sessionStorage.getItem('productItem'))
-    } else {
-        return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
-    }
+    // if (sessionStorage.getItem('productItem')) {
+    //     productItem = JSON.parse(sessionStorage.getItem('productItem'))
+    // } else {
+    //     return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
+    // }
     let { path } = match,
         productIdInRoutePath = getProductIdFromPath(match),
         { mode } = productBaseInfo,
@@ -120,6 +126,14 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
 
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
+    const [showSecret, setShowSecret] = useState(false)
+    const changeState = () => {
+        setShowSecret(!showSecret)
+    }
+    const showText = (value) => {
+        value = showSecret ? value : strToAsterisk(value, 10)
+        return value
+    }
     //标题修改
     const [titleVisible, setTitleVisible] = useState(false)
     const openTitle = () => {
@@ -128,13 +142,14 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
     const onCloseTitle = () => {
         setTitleVisible(false)
     }
-    const onOkClose=()=>{
+    const onOkClose=(data)=>{
+        setProductItem(data)
+        sessionStorage.setItem('productItem',JSON.stringify(data))
         Notification({
             type: 'success',
             description: '更新成功！',
         });
         setTitleVisible(false)
-        history.push('/open/product/proManage/list');
     }
     const titleCom = (<div className='product_title_baseinfo_list'>
         <div>
@@ -155,7 +170,13 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
         </div>
         <div>
             <div>产品密钥：</div>
-            <div>{productItem.deviceKey}</div>
+            <div>{showText(productItem.deviceKey)}
+            <span onClick={changeState}>
+                    {
+                        showSecret ? <EyeInvisibleTwoTone /> : <EyeTwoTone />
+                    }
+                </span>
+            </div>
         </div>
     </div>)
     return (
