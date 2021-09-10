@@ -50,7 +50,7 @@ export const UpdataDevice = Form.create({
             }
             componentDidMount() {
                 // this.props.form.resetFields('firmwareVersionType');//清除form列表内容
-                get(Paths.getAllFirmwareVersionType,{deviceVersionTypeId:1}).then((model) => {
+                get(Paths.oldGetAllFirmwareVersionType,{deviceVersionTypeId:1}).then((model) => {
                     this.setState({allFirmwareVersionTypeList:model.data});
                 });
                 
@@ -101,11 +101,11 @@ export const UpdataDevice = Form.create({
                                 return false;
                             }
                             post(Paths.upgradeDebug,data,{needFormData:true}).then((model) => {
-                                if(model.code==0){
-                                    //先清空表单数据再关闭弹窗
-                                    _this.onCancel();
-                                    _this.props.get_clearDevData2();
-                                }
+                                
+                                //先清空表单数据再关闭弹窗
+                                _this.onCancel();
+                                _this.props.get_clearDevData2();
+                                
                             });
                         });
                     }

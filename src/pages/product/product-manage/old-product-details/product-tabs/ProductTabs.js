@@ -43,28 +43,29 @@ export default class ProductTabs  extends Component {
     callback = (steps) => {
         let {productId} = this.props;
         window.location.hash = `#/open/product/proManage/detail/${productId}?step=${steps}`;
-        if(steps=='4'){
-            let accountList = [],
-            macList = [];
-            this.setState({steps},()=>{
-                get(Paths.deviceDebugAccountGetList,{productId}).then((model) => {
-                    accountList = model.data;
-                    this.props.updateDeviceDebugAccountList(model);
-                    get(Paths.debugSecretList,{productId}).then((res) => {
-                        macList = res.data;
-                        this.props.updateDeviceDebugMacList(res);
-                        if(macList.length<1){
-                            this.debugVisible.debugVisible();
-                        }
-                    });
-                });
-            });
-        }else{
-            if(this.debugVisible&&this.debugVisible.goout){
-                this.debugVisible.goout()
-            }
-            this.setState({steps});
-        }
+        this.setState({steps});
+        // if(steps=='4'){
+        //     let accountList = [],
+        //     macList = [];
+        //     this.setState({steps},()=>{
+        //         get(Paths.deviceDebugAccountGetList,{productId}).then((model) => {
+        //             accountList = model.data;
+        //             this.props.updateDeviceDebugAccountList(model);
+        //             get(Paths.debugSecretList,{productId}).then((res) => {
+        //                 macList = res.data;
+        //                 this.props.updateDeviceDebugMacList(res);
+        //                 if(macList.length<1){
+        //                     this.debugVisible.debugVisible();
+        //                 }
+        //             });
+        //         });
+        //     });
+        // }else{
+        //     if(this.debugVisible&&this.debugVisible.goout){
+        //         this.debugVisible.goout()
+        //     }
+        //     this.setState({steps});
+        // }
     }
     render() {
         let {productId,productBaseInfo,protocolLists} = this.props;
@@ -83,11 +84,21 @@ export default class ProductTabs  extends Component {
                     <TabPane key={'3'} tab={'固件管理'}>
                         <FirmwareManagement productId={productId} productBaseInfo={productBaseInfo}/>
                     </TabPane>
-                    <TabPane key={'4'} tab={'调试工具'}>
-                        <div className="old-device-debug-page">
-                            <DebuggingTool productId={productId} productBaseInfo={productBaseInfo} onRef={ref => this.debugVisible = ref} />
-                        </div>
+                    <TabPane key={'4'} tab={'调试工具' + this.state.steps}>
+                    
+                        {
+                                this.state.steps == "4" && 
+                                <div className="old-device-debug-page">
+                                    <DebuggingTool productId={productId} productBaseInfo={productBaseInfo} onRef={ref => this.debugVisible = ref} />
+                                </div>
+                            
+
+
+
+                        }
                     </TabPane>
+
+                    
                     <TabPane key={'5'} tab={'APP控制'}>
                         <AppControl productId={productId} productBaseInfo={productBaseInfo}/>
                     </TabPane>
