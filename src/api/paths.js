@@ -164,7 +164,6 @@ let Paths = {
 
     /**************************/
     queryServerConfig: '/device/debug/queryServerConfig',//设备调试-获取websocket服务器的IP和端口
-    productIdentifier: '/product/getProductIdentifier',//设备调试-根据产品ID获取产品信息
     accessToken: '/device/debug/getAccessToken',//设备调试-获取登录凭证
     dataTypeList: '/device/debug/getDataTypeList', //获取数据类型
     propertyConfig: '/device/debug/getPropertyConfig_v1.1',//根据产品ID获取协议信息

@@ -120,7 +120,7 @@ function ruleForm({
         
         return {
           
-            formDataToData: formDataToState(),
+            formDataToData: formDataToState,
            
         }
     }, [formDataToState]);
@@ -128,6 +128,8 @@ function ruleForm({
     //表单数据转换为接口所需数据
     const formDataToState = ()=>{
         const values = form.getFieldsValue();
+
+        console.log(111,values)
         let { triggerName,productId,deviceIds,triggerMode} = values;
         let resdata ={triggerName,productId,deviceIds,triggerMode}; 
         if(triggerMode<2){//如果是属性或者事件
@@ -279,7 +281,7 @@ function ruleForm({
                             <Select allowClear mode="multiple" placeholder='请选择设备'>
                                 {
                                     deviceList.map(({deviceId,deviceMac}) => {
-                                        return <Option key={deviceId} value={deviceId}>{deviceMac}</Option>
+                                        return <Option key={deviceId} value={deviceId}>{deviceId}</Option>
                                     })
                                 }
                             </Select>

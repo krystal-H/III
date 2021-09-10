@@ -7,7 +7,7 @@ import {ExportStagerDataDialog} from './ExportStagerDataDialog';
 import {UpdataDevice} from './UpdataDevice';
 import debuggingImg from '../../../../../assets/images/debuggingImg.png';
 import {getUrlParam,copyTextToClipBoard} from '../../../../../util/util';
-import { get, post,Paths } from '../../../../../api';
+import { get, Paths } from '../../../../../api';
 import { Tabs, Modal, Button } from 'antd';
 import {Notification} from '../../../../../components/Notification';
 
@@ -1640,7 +1640,6 @@ export default class StartTest  extends Component{
         get(Paths.deviceDebugAccountGetList,{productId:pid},{loading:true}).then((model) => {
             accountList = model.data || [];
             this.props.updateDeviceDebugAccountList(model);
-            // post(Paths.deviceDebugMacGetList,{productId:pid}).then((res) => {
             get(Paths.debugSecretList,{productId:pid},{loading:true}).then((res) => {
                 macList = res.data || [];
                 this.props.updateDeviceDebugMacList(res);
@@ -1864,7 +1863,7 @@ export default class StartTest  extends Component{
                             />
                         </div>
                     </div>
-                    <Modal className='commandsDebugSytle'
+                    <Modal className='old-commandsDebugSytle'
                         title={this.state.command.code+"命令调试"} 
                         visible={this.state.command.active}
                         maskClosable={false} 
