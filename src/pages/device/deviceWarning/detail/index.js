@@ -46,7 +46,7 @@ export default ({
 
     const commitAll=()=>{
         let baseFormData = ref0.current.getFieldsValue(),
-            ruleFormData = ref1.current.formDataToData,
+            ruleFormData = ref1.current.formDataToData(),
             piublicFormData = ref2.current.getFieldsValue();
         let otherobj = {...ruleFormData, ...piublicFormData };
         let content = JSON.stringify(otherobj);

@@ -11,7 +11,7 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
     const $el = useRef(null)
     const $apkel = useRef(null)
     const closeReqAdd = () => {
-        let productId=0
+        let productId = 0
         if (sessionStorage.getItem('productItem')) {
             productId = JSON.parse(sessionStorage.getItem('productItem')).productId
         }
@@ -20,9 +20,9 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
             let params = {
                 productId,
                 filePath: value.filePath[0].url,
-                projectType:1,
-                projectName:value.projectName,
-                page1:value.page1[0].url
+                projectType: 1,
+                projectName: value.projectName,
+                page1: value.page1[0].url
             }
             post(Paths.cusSavePanel, params).then((res) => {
                 Notification({
@@ -51,10 +51,10 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        label="封面："
+                        label="封面"
                         name="page1"
                         className="clearfix"
-                        rules={[{ required: true }]}
+                        rules={[{ required: true, message: '请上传封面' }]}
                     >
                         {
                             <UploadFileHooks
@@ -67,10 +67,10 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
                         }
                     </Form.Item>
                     <Form.Item
-                        label="上传H5包："
+                        label="上传H5包"
                         name="filePath"
                         className="clearfix"
-                        rules={[{ required: true }]}
+                        rules={[{ required: true, message: '请上传H5包' }]}
                     >
                         <UploadFileHooks
                             ref={$apkel}

@@ -5,7 +5,6 @@ import { cloneDeep } from 'lodash'
 import { Paths, get, post } from '../../../../api'
 import './index.scss'
 import moment from 'moment'
-import { data } from '_browserslist@4.16.6@browserslist'
 const { TextArea } = Input;
 const { Option } = Select
 
