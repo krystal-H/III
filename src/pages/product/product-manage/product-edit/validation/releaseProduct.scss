@@ -6,4 +6,12 @@
     font-weight: bold;
     @include text(14px, #323232);
   }
+  .unit-box {
+    position: relative;
+    &-item {
+      position: absolute;
+      right: 145px;
+      top: 0;
+    }
+  }
 }

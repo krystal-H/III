@@ -3,7 +3,7 @@ import { Modal, Input, Form } from 'antd';
 import { UploadFileHooks } from '../../../../../components/upload-file'
 import { Paths, post } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
-import {useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import './releaseProduct.scss'
 
@@ -31,7 +31,7 @@ function ReleaseProduct({ releaseVisible, cancelHandle, productId }) {
     values.productIcon = values.productIcon && values.productIcon[0].url
     values.productId = productId
     console.log('请求接口的参数')
-    post(Paths.publishProduct, {...values}).then(res => {
+    post(Paths.publishProduct, { ...values }).then(res => {
       Notification({ description: '发布成功！', type: 'success' })
       history.push('/open/product/proManage/list')
     })
@@ -40,7 +40,7 @@ function ReleaseProduct({ releaseVisible, cancelHandle, productId }) {
   const onOk = () => {
     form.submit()
   }
-  
+
   const onChange = e => {
     // console.log('Change:', e.target.value)
   }
@@ -94,22 +94,28 @@ function ReleaseProduct({ releaseVisible, cancelHandle, productId }) {
               <Input placeholder="请输入联系人手机号码" />
             </Form.Item>
             <div className="release-item-title">产品信息</div>
-            <Form.Item
-              label="产品尺寸"
-              name="size"
-              rules={[
-                { required: true, message: '请输入产品尺寸，如50*30*30' }
-              ]}>
-              <Input placeholder="请输入产品尺寸，如50*30*30" style={{width: 366}} />&nbsp;&nbsp;mm
-            </Form.Item>
-            <Form.Item
-              label="产品重量"
-              name="weight"
-              rules={[
-                { required: true, message: '请输入产品重量，如2' }
-              ]}>
-              <Input placeholder="请输入产品重量，如2" style={{width: 366}}/>&nbsp;&nbsp;kg
-            </Form.Item>
+            <div className="unit-box">
+              <Form.Item
+                label="产品尺寸"
+                name="size"
+                rules={[
+                  { required: true, message: '请输入产品尺寸，如50*30*30' }
+                ]}>
+                <Input placeholder="请输入产品尺寸，如50*30*30" style={{ width: 366 }} />
+              </Form.Item>
+              <span className="unit-box-item">&nbsp;&nbsp;mm</span>
+            </div>
+            <div className="unit-box">
+              <Form.Item
+                label="产品重量"
+                name="weight"
+                rules={[
+                  { required: true, pattern: new RegExp(/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/, "g"), message: '请输入产品重量，如2' }
+                ]}>
+                <Input placeholder="请输入产品重量，如2" style={{ width: 366 }} />
+              </Form.Item>
+              <span className="unit-box-item">&nbsp;&nbsp;kg</span>
+            </div>
             <Form.Item
               label="产品参数"
               name="productParam"
