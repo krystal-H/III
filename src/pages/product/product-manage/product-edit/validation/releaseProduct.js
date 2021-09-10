@@ -88,7 +88,8 @@ function ReleaseProduct({ releaseVisible, cancelHandle, productId }) {
               label="联系方式"
               name="tel"
               rules={[
-                { required: true, message: '请输入联系人手机号码' }
+                { required: true, message: '请输入联系人手机号码' },
+                { pattern: /^(((\d{3,4}-)?\d{7,8})|(1\d{10}))$/, message: '请输入正确的联系人手机号码', }
               ]}>
               <Input placeholder="请输入联系人手机号码" />
             </Form.Item>
@@ -99,7 +100,7 @@ function ReleaseProduct({ releaseVisible, cancelHandle, productId }) {
               rules={[
                 { required: true, message: '请输入产品尺寸，如50*30*30' }
               ]}>
-              <Input placeholder="请输入产品尺寸，如50*30*30" />
+              <Input placeholder="请输入产品尺寸，如50*30*30" style={{width: 366}} />&nbsp;&nbsp;mm
             </Form.Item>
             <Form.Item
               label="产品重量"
@@ -107,7 +108,7 @@ function ReleaseProduct({ releaseVisible, cancelHandle, productId }) {
               rules={[
                 { required: true, message: '请输入产品重量，如2' }
               ]}>
-              <Input placeholder="请输入产品重量，如2" />
+              <Input placeholder="请输入产品重量，如2" style={{width: 366}}/>&nbsp;&nbsp;kg
             </Form.Item>
             <Form.Item
               label="产品参数"
