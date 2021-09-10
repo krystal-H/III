@@ -39,20 +39,21 @@ const WarningList = props=>{
         });
     };
     const columns = [
-        { title: "告警时间", dataIndex: "alarmTime", key: "alarmTime",
+        { title: "告警时间", dataIndex: "alarmTime", key: "alarmTime",width:"180px",
             render(t) {
                 return t ? DateTool.utcToDev(t) : "--";
             }
         },
-        { title: "告警标题", dataIndex: "warningTitle", key: "warningTitle" },
-        { title: "告警状态", dataIndex: "state", key: "state",
-            render:s=><span>{{"1":"待处理","2": "已处理", "3" :"已发送"}[s]}</span>
-        },
-        { title: "告警消息类型", dataIndex: "warningWay", key: "warningWay",
+        { title: "告警标题", dataIndex: "warningTitle", key: "warningTitle" ,ellipsis:true},
+        { title: "产品名称", dataIndex: "productName", key: "productName",ellipsis:true },
+        { title: "告警消息类型", dataIndex: "warningWay", key: "warningWay",width:"130px",
             render:w=><span>{{"0":"站内","1": "站内+邮件"}[w]}</span>
         },
-        { title: "关联的告警规则", dataIndex: "ruleName", key: "ruleName" },
-        { title: "操作", dataIndex: "id", key: "id",
+        { title: "告警状态", dataIndex: "state", key: "state",width:"90px",
+            render:s=><span>{{"0":"草稿","1":"待处理","2": "已处理", "3" :"已发送"}[s]}</span>
+        },
+        { title: "关联的告警规则", dataIndex: "ruleName", key: "ruleName",ellipsis:true },
+        { title: "操作", dataIndex: "id", key: "id", width:"70px",
             render: (id,record)=>{
                 let {state} = record;
                 return <a onClick={()=>{warnDetail(id)} }  >{state=="1"&&"处理"||"查看"}</a>
@@ -87,10 +88,11 @@ const WarningList = props=>{
             pagination={{
                 defaultCurrent:pager.pageIndex, 
                 total:pager.totalRows, 
-                hideOnSinglePage:true,
                 onChange:getIndexPage,
                 current: pager.pageIndex,
-                showSizeChanger:false
+                showSizeChanger:false,
+                showQuickJumper: pager.totalPages > 5,
+                hideOnSinglePage:true,
             }}
         />
         <p>注：仅限站内消息类型有“待处理”和“已处理状态”，站内消息+邮件均为“已发送”状态</p>
@@ -120,15 +122,15 @@ const WarningConfigList = props=>{
         });
     };
     const columns = [
-        {title: "规则名称",dataIndex: "name",key: "name"},
-        {title: "描述",dataIndex: "remark", key: "remark"},
-        {title: "运行状态",dataIndex: "status",key: "status",
+        {title: "规则名称",dataIndex: "name",key: "name",ellipsis:true},
+        {title: "描述",dataIndex: "remark", key: "remark" ,ellipsis:true},
+        {title: "运行状态",dataIndex: "status",key: "status", width:"100px",
             render: s => <span>{ {'0':'初始状态','1':'运行中','2':'已停止'}[s] }</span>
         },
-        {title: "最近编辑时间",dataIndex: "updateTime",key: "updateTime",
+        {title: "最近编辑时间",dataIndex: "updateTime",key: "updateTime",width:"200px",
             render: t=>  t ? DateTool.utcToDev(t) : "--"
         },
-        {title: "操作",dataIndex: "id", key: "id",
+        {title: "操作",dataIndex: "id", key: "id",width:"180px",
             render: (t,record)=>{
                 const {id,name,status,remark,content} = record;
                 return <span>
@@ -204,10 +206,11 @@ const WarningConfigList = props=>{
             pagination={{
                 defaultCurrent:pager.pageIndex, 
                 total:pager.totalRows, 
-                hideOnSinglePage:true,
                 onChange:getIndexPage,
                 current: pager.pageIndex,
-                showSizeChanger:false
+                showSizeChanger:false,
+                showQuickJumper: pager.totalPages > 5,
+                hideOnSinglePage:true,
             }}
         />
         <ActionConfirmModal
