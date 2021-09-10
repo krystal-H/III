@@ -8,7 +8,7 @@ import { Notification } from '../../../components/Notification';
 
 export default props=>{
     const {warningInof,closeDetailMod,delwithWarn} = props;
-    const {alarmTime,warningTitle,state,warningWay,ruleName,warningDetail,deviceIds,dealDetail,id} = warningInof;
+    const {alarmTime,warningTitle,state,warningWay,ruleName,warningDetail,deviceIds,dealDetail,id,productName} = warningInof;
 
     const [textval, setTextval] = useState("");
     const [_deviceIds, set_deviceIds] = useState("");
@@ -44,7 +44,7 @@ export default props=>{
             footer={footerdom}
         >
             <Row gutter={gutterspace}>
-                <Col span={5} className="detail-label">告1警时间：</Col>
+                <Col span={5} className="detail-label">告警时间：</Col>
                 <Col span={18}>
                     {DateTool.utcToDev(alarmTime) ||"--"}
                 </Col>
@@ -59,6 +59,10 @@ export default props=>{
                 <Col span={5} className="detail-label">告警内容：</Col>
                 <Col span={18}>
                    <div>{warningDetail||"--"}</div>
+                </Col>
+                <Col span={5} className="detail-label">产品名称：</Col>
+                <Col span={18}>
+                    {productName||"--"}
                 </Col>
                 <Col span={5} className="detail-label">告警设备ID：</Col>
                 <Col span={16}>
