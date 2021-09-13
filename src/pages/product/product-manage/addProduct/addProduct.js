@@ -172,7 +172,8 @@ class MakeProductModal extends Component {
           deviceSubtypeId: item.defaultDeviceSubtype.deviceSubtypeId,
           devSubKeyId: item.defaultDeviceSubtype.devSubKeyId,
           controlClass: item.defaultDeviceSubtype.controlClass, // 0/1   1显示控制端口数
-          deviceTypeName: item.deviceTypeName
+          deviceTypeName: item.deviceTypeName,
+          productIcon: item.deviceIcon
         })
         this.setState({
           thirdCategoryId: item.deviceTypeId
