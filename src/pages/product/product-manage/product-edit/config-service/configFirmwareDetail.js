@@ -53,6 +53,7 @@ function ConfigFirmwareDetail({ productId, firmwareDetailData = [], firmwareDeta
       title="配置产品固件模块"
       visible={firmwareDetailVisible}
       width={857}
+      onOk={cancelHandle}
       onCancel={cancelHandle}
       maskClosable={false}
       wrapClassName="replace-module-modal">

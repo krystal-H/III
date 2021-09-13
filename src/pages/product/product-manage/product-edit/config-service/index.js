@@ -9,6 +9,7 @@ import { Paths, post, get } from '../../../../../api'
 import { cloneDeep } from 'lodash'
 
 import './index.scss';
+import { Notification } from '../../../../../components/Notification'
 
 
 const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
@@ -91,9 +92,15 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [firmwareDetailData, setFirmwareDetailData] = useState([])
   const [showType, setShowType] = useState('add')
   const [editData, setEditData] = useState({})
+
+  const [customCount, setCustomCount] = useState(0)
   //验证函数
   const subNextConFirm = () => {
-    nextStep()
+    if (requiredList.every(item => item.isConfiged === true)) {
+      nextStep()
+    } else {
+      Notification({ description: '请完善必选配置信息！', type: 'warn' })
+    }
   }
   useImperativeHandle(ref, () => ({
     onFinish: subNextConFirm
@@ -129,6 +136,9 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const getFirmwareList = () => {
     post(Paths.getFirmwareList, { productId }, { loading: true }).then(res => {
       if (res.data && res.data.length > 0) {
+        const customList = res.data.filter(item => item.isCustom === 0)
+        console.log(customList.length, 'customList.length')
+        setCustomCount(customList.length)
         setFirmwareDetailData(res.data)
         const list = cloneDeep(optionalList)
         list[0].isConfiged = true
@@ -165,7 +175,11 @@ function ServiceSelect({ productId, nextStep }, ref) {
         setSecurityVisible(true)
         break;
       case 'addFirmware':
-        setFirmwareVisible(true)
+        if (customCount >= 5) {
+          Notification({description: '产品固件模块最多配置5个！', type: 'warn'})
+        } else {
+          setFirmwareVisible(true)
+        }
         break;
       case 'gateway':
         setGatewayVisible(true)
@@ -301,6 +315,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
           productId={productId}
           type={showType}
           editData={editData}
+          customCount={customCount}
           firmwareVisible={firmwareVisible}
           confirmHandle={() => { setFirmwareVisible(false); getFirmwareList() }}
           cancelHandle={() => { setFirmwareVisible(false) }} />

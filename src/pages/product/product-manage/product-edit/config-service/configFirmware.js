@@ -5,7 +5,7 @@ import './configFirmware.scss'
 import { Paths, post } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
 
-function ConfigFirmware({ productId, firmwareVisible, cancelHandle, type, editData, confirmHandle }) {
+function ConfigFirmware({ productId, firmwareVisible, cancelHandle, type, editData, confirmHandle, customCount }) {
   const [form] = Form.useForm()
   const onFinish = (values) => {
     console.log('Received values of form: ', values, type, 'type');
@@ -35,7 +35,7 @@ function ConfigFirmware({ productId, firmwareVisible, cancelHandle, type, editDa
           })
         })
       }
-  
+
       post(Paths.addFirmwareModule, arr).then(res => {
         Notification({ description: '操作成功！', type: 'success' })
         confirmHandle()
@@ -123,7 +123,10 @@ function ConfigFirmware({ productId, firmwareVisible, cancelHandle, type, editDa
                       <div className="delete-btn" onClick={() => remove(name)}><DeleteOutlined />&nbsp;&nbsp;删除</div>
                     </div>
                   ))}
-                  <div className="add-btn" onClick={() => add()}>新增</div>
+                  {
+                    4 - fields.length - Number(customCount) > 0 &&
+                    <div className="add-btn" onClick={() => add()}>新增</div>
+                  }
                 </>
               )}
             </Form.List>
