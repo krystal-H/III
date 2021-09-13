@@ -46,7 +46,7 @@ function DeviceImportErrorLogModal({ visible, errorList, onCancel }) {
           pagination={{
             total: errorList.length,
             defaultCurrent: 1,
-            defaultPageSize: 10,
+            defaultPageSize: 5,
             showQuickJumper: false,
             hideOnSinglePage: true,
             size: 'small',
