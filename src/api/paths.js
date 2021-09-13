@@ -594,6 +594,7 @@ let Paths = {
     panelOffLine:'/panelManage/offlineUiDesign',//下线
     panelList:'/panelManage/getProjectPage',//获取产品下的所有项目
     panelApplicationList:'/panelManage/getAppsByProductId',//应用列表
+    standardPanelList:'/panelManage/getTemplateMarketByProduct',//标准面板列表
 
     //场景服务
     scenceList:'/deviceProtocol/queryProtocolFromDevice',//获取场景规则列表
@@ -608,7 +609,7 @@ let Paths = {
     delDeviceRemoset:'/remoteConfig/device/delete',//删除单个设备的远程配置任务
     saveDeviceRemoset:'/remoteConfig/device/save',//保存单个设备的远程配置任务
     addDeviceRemoset:'/remoteConfig/product/submit',//提交单个产品的远程配置任务
-
+    excelDevTask:'/remoteConfig/device/submit',//执行设备下的任务
 };
 
 // 拼接 urlPrefix
