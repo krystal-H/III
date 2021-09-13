@@ -62,12 +62,15 @@ export default function DeviceRegist() {
     }, [pager.pageIndex, pager.pageRows, selectType])
     //获取列表
     const getList = (loading = true) => {
-        let params = { ...form.getFieldsValue(), ...pager }
+        let params = {...pager}
+        if(form.getFieldValue('status') != -1){
+            params.status=form.getFieldValue('status')
+        }
+        if(form.getFieldValue('id') && form.getFieldValue('id').trim()){
+            params.id=form.getFieldValue('id')
+        }
         if (selectType) {
             params.productId = selectType
-        }
-        if (!params.id || !params.id.trim()) {
-            delete params.id
         }
         post(Paths.proReledRegist, params, { loading }).then((res) => {
             setDataSource(res.data.list)
@@ -191,10 +194,9 @@ export default function DeviceRegist() {
             <div className='comm-shadowbox device-content'>
                 <div className='content-top'>
                     <div className='content-top-left'>
-                        <Form className='device-filter-form' form={form} layout='inline'>
+                        <Form className='device-filter-form' form={form} layout='inline' initialValues={{status:'-1'}}>
                             <Form.Item name="status" label="入网状态" >
                                 <Select
-                                    allowClear
                                     style={{ width: '200px' }}
                                 >
                                     {

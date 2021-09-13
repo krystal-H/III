@@ -45,7 +45,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
     setSelectPro(value)
   }
   const downfile = () => {
-    window.open('http://skintest.hetyj.com/31438/6b0b20891e06ac31d0eed37a5083cca9.xlsx')
+    window.open('https://skintest.hetyj.com/31438/6b0b20891e06ac31d0eed37a5083cca9.xlsx')
   }
   return (
     <Modal title="注册设备" visible={isModalVisible} onOk={subData} onCancel={cancelModel} width='555px' wrapClassName='add-protocols-wrap'>

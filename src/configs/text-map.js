@@ -72,10 +72,15 @@ export const OpetateLogType = {
 }
 
 // 入网昨天
-export const netStatus = [{
-    "value": "已入网 ",
-    "key": "1 ",
-}, {
-    "key": "0 ",
-    "value": "未入网 ",
-}]
+export const netStatus = [
+    {
+        "value": "全部状态 ",
+        "key": "-1",
+    },
+    {
+        "value": "已入网 ",
+        "key": "1 ",
+    }, {
+        "key": "0 ",
+        "value": "未入网 ",
+    }]
