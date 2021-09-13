@@ -16,7 +16,8 @@
             }
         }
         .application-content {
-            height: 100%;
+            // height: 100%;
+            height: calc(100% - 38px);
             &-tip {
                 @include flex(flex-start);
                 padding: 10px 16px;
@@ -35,7 +36,7 @@
                 @include flex(flex-start, flex-start);
                 flex-wrap: wrap;
                 .list-item {
-                    @include wh(32%, 27%);
+                    @include wh(32%, 28%);
                     margin: 0 14px 14px 0;
                     background-color: $sectionBgColor;
                     border-radius: $borderRadius;
@@ -45,6 +46,9 @@
                         position: relative;
                         height: 100%;
                         padding: 16px 12px;
+                        .icon-wrapper {
+                            @include wh(20%, 74%);
+                        }
                         .application-info {
                             padding-left: 12px;
                             @include text(12px, #666666);
@@ -106,6 +110,9 @@
     }
 }
 @media screen and (max-width: 1367px) {
+    .application-wrapper .application-content-wrapper .application-content .lists-wrapper .list-item {
+        // @include wh(32%, 24%);
+    }
     .application-wrapper {
         .application-content-wrapper {
             .application-content {

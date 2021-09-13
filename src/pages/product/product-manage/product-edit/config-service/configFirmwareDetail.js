@@ -27,9 +27,14 @@ function ConfigFirmwareDetail({ productId, firmwareDetailData = [], firmwareDeta
       title: '操作',
       render: (text, record, index) => (
         <div className="edit-ope" >
-          <span onClick={() => showEditFirmware(record)}>编辑</span>
-          <Divider type="vertical" />
-          <span onClick={() => deleteFirmwareItem(record)}>删除</span>
+          {
+            record.isCustom === 0 &&
+            <>
+              <span onClick={() => showEditFirmware(record)}>编辑</span>
+              <Divider type="vertical" />
+              <span onClick={() => deleteFirmwareItem(record)}>删除</span>
+            </>
+          }
         </div>
       )
     }
@@ -37,7 +42,7 @@ function ConfigFirmwareDetail({ productId, firmwareDetailData = [], firmwareDeta
 
   // 删除固件
   const deleteFirmwareItem = (record) => {
-    post(Paths.delFirmwareModule, {productId, id: record.id}).then(res => {
+    post(Paths.delFirmwareModule, { productId, id: record.id }).then(res => {
       Notification({ description: '操作成功！', type: 'success' })
       getFirmwareList()
     })
