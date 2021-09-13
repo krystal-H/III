@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select, Checkbox, Form } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { post, Paths } from '../../../../../api';
+import { Notification } from '../../../../../components/Notification';
 import './grayDebugg.scss';
 const { TabPane } = Tabs;
 export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDebugg, actionObj }) {
@@ -92,6 +93,17 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
     const selectApp = (type, appId) => {
         setSelectAppId(appId)
     }
+    //添加枚举参数
+    const AddEnums = (add, count) => {
+        if (count > 10) {
+            Notification({
+                description: `不能超过10条数据`,
+                type: 'warn'
+            });
+            return
+        }
+        add()
+    }
     const getAppListDOM = (type) => {
         let _apps = applist.filter(item => type ? item.isOfficialApp : !item.isOfficialApp),
             className = 'app-icon';
@@ -174,7 +186,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                     ))}
                                                     <Form.Item {...(fields.length === 0 ? formItemLayout : formItemLayoutWithOutLabel)} label={fields.length === 0 ? '指定调试账号：' : ''}>
                                                         <a
-                                                            onClick={() => add()}
+                                                            onClick={() => AddEnums(add, fields.length)}
                                                         >
                                                             添加调试账号
                                                         </a>
@@ -230,7 +242,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                     ))}
                                                     <Form.Item {...(fields.length === 0 ? formItemLayout : formItemLayoutWithOutLabel)} label={fields.length === 0 ? '指定调试账号：' : ''}>
                                                         <a
-                                                            onClick={() => add()}
+                                                            onClick={() =>{AddEnums(add, fields.length)}}
                                                         >
                                                             添加调试账号
                                                         </a>

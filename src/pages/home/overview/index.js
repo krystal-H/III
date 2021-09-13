@@ -199,6 +199,7 @@ export default function OverviewWrap() {
     const goAppDetail = item => {
         history.push(`/open/app/details/${item.appId}`)
     }
+    //消息类型
     const getMessageType = (text) => {
         if (text == 1) {
             return '系统公告'

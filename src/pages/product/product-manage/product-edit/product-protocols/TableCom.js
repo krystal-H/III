@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef, useContext } from 'react'
+import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef, useContext, useMemo } from 'react'
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
 import moment from 'moment';
 import { Table, Button, Space } from 'antd';
@@ -31,6 +31,17 @@ export default function TableCom({ dataSource, reFreshData, type }) {
         }
 
     }
+    //id集合
+    const IdArr = useMemo(() => {
+        let arr = []
+        dataSource.forEach(item => {
+            if (arr.indexOf(item.funcIdentifier) < 0) {
+                arr.push(item.funcIdentifier)
+            }
+        })
+        return arr
+    }, [dataSource])
+
     //删除弹窗
     const [isDelVisible, setIsDelVisible] = useState(false)
     const [actionData, setActionData] = useState({})
@@ -78,14 +89,17 @@ export default function TableCom({ dataSource, reFreshData, type }) {
     }
     const columns = [
         {
-            title: 'DP ID', dataIndex: 'key', render: (value, row, index) => {
-                return getRowSpanCount(
+            title: 'DP ID', dataIndex: 'key',
+            render: (value, row, index) => {
+                let obj = getRowSpanCount(
                     getComData(),
-                    "funcType",
+                    "funcIdentifier",
                     index,
-                    value,
+                    row.funcIdentifier,
                     "funcIdentifier"
                 );
+                obj.children = <span>{IdArr.indexOf(row.funcIdentifier)+1}</span>
+                return obj
             },
         },
         {
@@ -225,9 +239,9 @@ export default function TableCom({ dataSource, reFreshData, type }) {
                 onChange: pagerChange,
                 pageSize: pager.pageRows,
                 total: pager.totalRows,
-                showQuickJumper: true,
+                showQuickJumper: false,
                 pageSizeOptions: [10],
-                showTotal: () => <span>共 <a>{dataSource.length}</a> 条</span>
+                showTotal: () => <span>共 <a>{IdArr.length}</a> 条</span>
             }}
         />
         {/* 新增自定义 */}

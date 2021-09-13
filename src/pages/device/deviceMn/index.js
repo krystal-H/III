@@ -5,6 +5,7 @@ import PageTitle from '../../../components/page-title/PageTitle';
 import CountNum from '../../../components/CountNum/index';
 import { post, Paths, get } from '../../../api';
 import downpng from '../../../assets/images/product/download.png';
+
 import './index.scss'
 // import GroupDetailt from '../../product/device/device-group/groupDeviceList';
 const { Option } = Select;
@@ -312,7 +313,8 @@ export default function DeviceList() {
                 <img onClick={exportFile} src={downpng} style={{ marginRight: '15px' }} alt='' />
             </div>
             <div>
-                <Table rowKey='deviceId' dataSource={dataSource} columns={columns} pagination={{
+                <Table rowKey='deviceId' dataSource={dataSource} columns={columns}
+                 pagination={{
                     defaultCurrent: 1,
                     current: pager.pageIndex,
                     onChange: pagerChange,

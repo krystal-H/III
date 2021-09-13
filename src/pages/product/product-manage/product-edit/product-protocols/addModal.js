@@ -98,7 +98,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
       Notification({
         description: `至少勾选一条数据`,
         type: 'warn'
-    });
+      });
       return
     }
     if (currentTab === '1') {

@@ -219,7 +219,6 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
                 <Steps current={-1} initial={0}>
                     <Step title="创建远程配置任务" description="创建远程配置任务，填写任务的目的或备注信息。" />
                     <Step title="添加配置数据" description="添加要更新的产品配置数据字段和更新的数值。" />
-                    <Step title="选择设备" description="可通过设备ID/物理地址，设备标签，本地导入确定要配置的设备。" />
                     <Step title="执行任务" description="提交执行远程配置任务，设备更新结果实时可见。" />
                 </Steps>
             </div>

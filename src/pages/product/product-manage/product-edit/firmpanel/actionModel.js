@@ -33,12 +33,12 @@ export default function CloudUpdate({ operate, visible, updateOkHandle, updateCa
             visible={visible}
             modalOKHandle={() => updateOkHandle(operate)}
             modalCancelHandle={updateCancelHandle}
-            targetName={actionObj.subscription}
+            targetName={actionObj.projectName}
             title={texts.title}
             descGray={true}
             needWarnIcon={texts.needWarnIcon}
-            descText={texts.desc}
-            tipText={texts.tip}
+            descText={'确定删除此面板'}
+            // tipText={texts.tip}
         // confirmLoading={updateLoading}
         ></ActionConfirmModal>
     )
