@@ -79,7 +79,7 @@ const AddApplicationForm = memo(Form.create({
                 let fileListUrl = uploadRef.current.getFileListUrl();
                 if (fileListUrl.length <= 0) {
                     Notification({
-                        description: '请选择文件！',
+                        description: '请选择应用图标！',
                         type:'warn'
                     });
                     return;

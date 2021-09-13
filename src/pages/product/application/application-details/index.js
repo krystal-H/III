@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import { Tabs, Button, Row, Col, Table } from 'antd';
+import { Tabs, Button, Row, Col, Table, Tooltip } from 'antd';
 import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
 import { Notification } from '../../../../components/Notification';
 import ProductIcon from '../../../../components/product-components/product-icon/ProductIcon';
@@ -16,7 +16,7 @@ import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
 import MyIcon from '../../../../components/my-icon/MyIcon';
 import { EditApplicationForm } from './form/editApplicationForm';
 import { withRouter } from 'react-router-dom';
-import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons'
+import { EyeOutlined, EyeInvisibleOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 
 import './style.scss';
 
@@ -322,7 +322,6 @@ class ApplicationDetail extends PureComponent {
     updateRelaProduct = (productIds) => {
         let { appId, currentAppType, relationProductList } = this.state;
         let relationProductListType = currentAppType === 1 ? relationProductList.listAndroid : relationProductList.listIos;
-        // let list = relationProductListType.map(item => item.productId);
         post(Paths.updateRelaProduct5x, {
             productIds: [...productIds],
             appId: Number(appId),
@@ -499,12 +498,13 @@ class ApplicationDetail extends PureComponent {
                             <span className="fl app-name">应用名称：{appName.value}</span>
                             <span className="fl app-id">APPID：{appId.value}</span>
                             <span className="fl app-secret">
-                                APPSecret：{appSecretText}
-                                {
+                                {/* APPSecret：{appSecretText} */}
+                                APPSecret：{strToAsterisk(appSecret.value, 10)}
+                                {/* {
                                     showSecret ?
                                         <EyeInvisibleOutlined className="eye-icon" onClick={() => this.changeState('showSecret')} /> :
                                         <EyeOutlined className="eye-icon" onClick={() => this.changeState('showSecret')} />
-                                }
+                                } */}
                             </span>
                         </DetailInHeader>
                     </PageTitle>
@@ -522,16 +522,44 @@ class ApplicationDetail extends PureComponent {
                                     <Col span={2} className="detail-left">应用名称：</Col>
                                     <Col span={10} className="detail-right">{appName.value}</Col>
                                 </Row>
-                                <Row gutter={8} className="detail-line app-icon">
-                                    <Col span={2} className="detail-left">应用图标：</Col>
-                                    <Col span={21} className="detail-right">
-                                        <ProductIcon icon={appIconLow.value} />
-                                    </Col>
-                                </Row>
                                 <Row gutter={8} className="detail-line">
                                     <Col span={2} className="detail-left">应用类型：</Col>
                                     <Col span={21} className="detail-right">
                                         {appType.value === 0 ? '移动应用' : '小程序应用'}
+                                    </Col>
+                                </Row>
+                                <Row gutter={8} className="detail-line">
+                                    <Col span={2} className="detail-left">APPID：</Col>
+                                    <Col span={21} className="detail-right">
+                                        {appId.value}&nbsp;&nbsp;&nbsp;
+                                        <Tooltip
+                                            title={'由系统自动分配的APP唯一标识码'}
+                                            placement="top">
+                                            <QuestionCircleOutlined className="tooltip-icon" />
+                                        </Tooltip>
+                                    </Col>
+                                </Row>
+                                <Row gutter={8} className="detail-line">
+                                    <Col span={2} className="detail-left">APPSecret：</Col>
+                                    <Col span={21} className="detail-right">
+                                        {appSecretText}
+                                        {
+                                            showSecret ?
+                                                <EyeInvisibleOutlined className="eye-icon" onClick={() => this.changeState('showSecret')} /> :
+                                                <EyeOutlined className="eye-icon" onClick={() => this.changeState('showSecret')} />
+                                        }&nbsp;&nbsp;&nbsp;
+                                        <Tooltip
+                                            title={'由系统自动分配的密码'}
+                                            placement="top">
+                                            <QuestionCircleOutlined className="tooltip-icon" />
+                                        </Tooltip>
+                                        {/* <span className="secret-desc">由系统自动分配的密码</span> */}
+                                    </Col>
+                                </Row>
+                                <Row gutter={8} className="detail-line app-icon">
+                                    <Col span={2} className="detail-left">应用图标：</Col>
+                                    <Col span={21} className="detail-right">
+                                        <ProductIcon icon={appIconLow.value} />
                                     </Col>
                                 </Row>
                                 <Row gutter={8} className="detail-line app-package">
@@ -555,25 +583,7 @@ class ApplicationDetail extends PureComponent {
                                         </div>
                                     </Col>
                                 </Row>
-                                <Row gutter={8} className="detail-line">
-                                    <Col span={2} className="detail-left">APPID：</Col>
-                                    <Col span={21} className="detail-right">
-                                        {appId.value}
-                                        <span className="appId-desc">由系统自动分配的APP唯一标识码</span>
-                                    </Col>
-                                </Row>
-                                <Row gutter={8} className="detail-line">
-                                    <Col span={2} className="detail-left">APPSecret：</Col>
-                                    <Col span={21} className="detail-right">
-                                        {appSecretText}
-                                        {
-                                            showSecret ?
-                                                <EyeInvisibleOutlined className="eye-icon" onClick={() => this.changeState('showSecret')} /> :
-                                                <EyeOutlined className="eye-icon" onClick={() => this.changeState('showSecret')} />
-                                        }
-                                        <span className="secret-desc">由系统自动分配的密码</span>
-                                    </Col>
-                                </Row>
+
                                 <Row gutter={8} className="detail-line">
                                     <Col span={2} className="detail-left">构建模式：</Col>
                                     <Col span={21} className="detail-right">开发模式</Col>
