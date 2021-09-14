@@ -22,7 +22,8 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
                 filePath: value.filePath[0].url,
                 projectType: 1,
                 projectName: value.projectName,
-                page1: value.page1[0].url
+                page1: value.page1[0].url,
+                panelType:3
             }
             post(Paths.cusSavePanel, params).then((res) => {
                 Notification({
@@ -56,15 +57,13 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
                         className="clearfix"
                         rules={[{ required: true, message: '请上传封面' }]}
                     >
-                        {
-                            <UploadFileHooks
-                                ref={$el}
-                                maxCount={1}
-                                preferSize={'750*1334'}
-                                format='.gif,.jpeg,.jpg,.png'
-                                maxSize={0.5} />
 
-                        }
+                        <UploadFileHooks
+                            ref={$el}
+                            maxCount={1}
+                            preferSize={'750*1334'}
+                            format='.gif,.jpeg,.jpg,.png'
+                            maxSize={0.5} />
                     </Form.Item>
                     <Form.Item
                         label="上传H5包"

@@ -1,42 +1,80 @@
+.GrayModal-tab {
+  min-height: 400px;
+}
+
 .change-modal-tab1 {
-  .model-arr-wrap-item {
-    width: 170px;
+  .model-arr-wrap {
+    display: flex;
 
+    .model-arr-wrap-item {
 
-    .model-arr-wrap-item-title {
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-      height: 23px;
-      margin-bottom: 13px;
       display: flex;
-      .model-arr-wrap-item-title-name{
-        font-size: 12px;
-        font-weight: 400;
-        color: #666666;
-        line-height: 17px;
-      }
-
-      button {
-        line-height: 100%;
-        padding: 0 10px;
-        height: 100%;
-      }
-    }
-
-    .model-arr-wrap-item-content {
-      width: 100%;
-      background: #B1BACA;
-      border-radius: 2px;
-      opacity: 0.49;
+      justify-content: space-between;
+      width: 280px;
       height: 302px;
+      margin-right: 20px;
+      
+      .model-arr-wrap-item-btn {
+        flex: 1;
+        height: 100%;
+        align-content: center;
+        justify-content: center;
+        margin-bottom: 13px;
+        text-align: center;
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+
+        button {
+          // width: 80px;
+          height: 28px;
+          line-height: 100%;
+          margin: auto;
+          margin-bottom: 10px;
+        }
+
+        .model-arr-wrap-item-title-name {
+          font-size: 12px;
+          font-weight: 400;
+          width: 100%;
+          color: #666666;
+          margin-bottom: 10px;
+        }
+
+      }
+
+      .model-arr-wrap-item-content {
+        width: 170px;
+        background: #B1BACA;
+        border-radius: 2px;
+        opacity: 0.49;
+        position: relative;
+
+        margin-right: 20px;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+
+        .model-status {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 62px;
+          height: 25px;
+          color: #fff;
+          background: rgba(0, 0, 0, 0.4);
+          border-radius: 0px 4px 0px 0px;
+          line-height: 25px;
+          text-align: center;
+        }
+      }
     }
   }
 }
 
 .change-modal-tab3 {
-
-
   .change-modal-tab3-top {
     display: flex;
     justify-content: space-between;

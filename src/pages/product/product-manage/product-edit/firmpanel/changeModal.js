@@ -10,7 +10,10 @@ import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
 import GrayDebugg from './grayDebugg'
 import ActionModel from './actionModel'
+import { cloneDeep } from "lodash";
 import RelPanModel from './relPanel'
+import { typed } from '../../../../../components/CodeView/jshint';
+import { async } from '_rxjs@6.6.7@rxjs';
 
 const { TabPane } = Tabs;
 
@@ -21,8 +24,9 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         productId = JSON.parse(sessionStorage.getItem('productItem')).productId
     }
     const history = useHistory();
+    //切换tab
     const callback = (key) => {
-        console.log(key);
+        // console.log(key);
     }
     const [actionType, setActionType] = useState(0)
     const [actionData, setActionData] = useState({})
@@ -30,25 +34,35 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     const goOrder = () => {
         history.push('/open/repairOrder');
     }
-    //
-    const [standard,setStandard]=useState([])
-    //标准列表
-    const getStandard = () => {
-        post(Paths.standardPanelList, { productId ,panelType:1}).then((res) => {
-            setStandard(res.data.list)
-        });
+    const [actionVis, setActionVis] = useState(false) //操作弹窗展示
+    //列表
+    const [standard, setStandard] = useState([]) //标准
+    const [data, setData] = useState([]) //自定义列表
+    const getList = async () => {
+        let arr1 = [], arr2 = [], ids = []
+        let res1 = await post(Paths.panelList, { productId })
+        res1.data.list.forEach(item => {
+            item.status = getPanelStatus(item)
+            if (item.panelType == 3) {
+                arr2.push(item)
+            }
+            if (item.panelType == 1) {
+                arr1.push(item)
+                ids.push(item.templateId)
+            }
+        })
+        setData(arr2)
+        let res2 = await post(Paths.standardPanelList, { productId, templateIds: ids })
+        res2.data.forEach(item => {
+            item.status = '模板'
+        })
+        setStandard(arr1.concat(res2.data).splice(0, 3))
     }
-    const getList = () => {
-        post(Paths.panelList, { productId ,panelType:3}).then((res) => {
-            setData(res.data.list)
-            setPager(pre => {
-                let obj = JSON.parse(JSON.stringify(pre))
-                return Object.assign(obj, { totalRows: res.data.pager.totalRows })
-            })
-        });
-    }
-    //新增面板
+    //新增自定义==============
     const [isAddModalVisible, setIsAddModalVisible] = useState(false)
+    const openAdd = () => {
+        setIsAddModalVisible(true)
+    }
     const closeAdd = () => {
         getList()
         setIsAddModalVisible(false)
@@ -56,11 +70,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     const CancelAdd = () => {
         setIsAddModalVisible(false)
     }
-    //新增
-    const openAdd = () => {
-        setIsAddModalVisible(true)
-    }
-    //编辑
+    //编辑自定义==============
     const [iseditModalVisible, setIseditModalVisible] = useState(false)
     const closeEdit = () => {
         getList()
@@ -73,15 +83,11 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         setActionData(data)
         setIseditModalVisible(true)
     }
-    //发布
-    const relData = (data) => {
-        alert(1)
-    }
+    //========================
     //标准面板选项
     //tab3
-    const [data, setData] = useState([])
-    const [actionVis, setActionVis] = useState(false)
-    const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
+
+
 
     //确定删除
     const delOkCancel = () => {
@@ -131,7 +137,11 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         setActionVis(false)
     }
     //删除
-    const openDel = (data, type) => {
+    const openDel = (data1, type) => {
+        let data = cloneDeep(data1)
+        if (type == 4) {
+            data.projectName = data.templateName
+        }
         setActionData(data)
         setActionType(type)
         setActionVis(true)
@@ -157,6 +167,26 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         setActionData(data)
         setIsGrayModalVisible(true)
     }
+    //使用
+    const useModel = () => {
+        let params = {
+            productId,
+            filePath: actionData.filePath,
+            projectType: 1,
+            projectName: actionData.templateName,
+            templateId: actionData.templateId,
+            page1: actionData.page1,
+            panelType: 1
+        }
+        post(Paths.cusSavePanel, params).then((res) => {
+            getList()
+            Notification({
+                type: 'success',
+                description: '提交使用成功！',
+            });
+            setActionVis(false)
+        });
+    }
     //发布
     const [relPanVis, setRelPanVis] = useState(false)
     //打开发布==============
@@ -175,14 +205,9 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         getList()
         setRelPanVis(false)
     }
-    //发布结束
-    //==============
     useEffect(() => {
         getList()
-    }, [pager.pageIndex, pager.pageRows])
-    useEffect(()=>{
-        getStandard()
-    },[])
+    }, [])
     //操作判断
     const updateOkHandle = () => {
         if (actionType === 1) {
@@ -191,31 +216,79 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             delOkCancel()
         } else if (actionType === 3) {
             offOkLine()
+        } else if (actionType === 4) {
+            useModel()
         }
     }
-    //回去自定义列表按钮
-    const getBtn = (record, verifyStatus, isGray) => {
-        if (!isGray && verifyStatus != 1) {
+    //回显自定义列表按钮
+    const getBtn = (record, status) => {
+        if (status == '草稿') {
             return (<Space size="middle">
                 <a onClick={() => { openDebugg(record) }}>灰度调试</a>
                 <a onClick={() => { openDel(record, 2) }}>删除</a>
                 <a onClick={() => { openEdit(record) }}>编辑</a>
             </Space>)
         }
-        if (verifyStatus == 0 || verifyStatus == 2) {
+        if (status == '已发布') {
+            return (<Space size="middle">
+                <a onClick={() => { openDel(record, 3) }}>下线</a>
+            </Space>)
+        }
+        if (status == '调试中') {
             return (<Space size="middle">
                 <a onClick={() => { openDebugg(record) }}>灰度调试</a>
                 <a onClick={() => { openDel(record, 2) }}>删除</a>
-                <a onClick={() => { openEdit(record) }}>编辑</a>
+                {/* <a onClick={() => { openEdit(record) }}>编辑</a> */}
                 <a onClick={() => { openRel(record) }}>发布</a>
             </Space>)
         }
-        if (verifyStatus == 1) {
-            return <a onClick={() => { openDel(record, 3) }}>下线</a>
+        return ''
+        // if (!isGray && verifyStatus != 1) {
+        //     return (<Space size="middle">
+        //         <a onClick={() => { openDebugg(record) }}>灰度调试</a>
+        //         <a onClick={() => { openDel(record, 2) }}>删除</a>
+        //         <a onClick={() => { openEdit(record) }}>编辑</a>
+        //     </Space>)
+        // }
+        // if (verifyStatus == 0 || verifyStatus == 2) {
+        //     return (<Space size="middle">
+        //         <a onClick={() => { openDebugg(record) }}>灰度调试</a>
+        //         <a onClick={() => { openDel(record, 2) }}>删除</a>
+        //         <a onClick={() => { openEdit(record) }}>编辑</a>
+        //         <a onClick={() => { openRel(record) }}>发布</a>
+        //     </Space>)
+        // }
+        // if (verifyStatus == 1) {
+        //     return <a onClick={() => { openDel(record, 3) }}>下线</a>
+        // }
+        // if (verifyStatus == 3) {
+        //     return <a onClick={() => { openRel(record) }}>发布</a>
+        // }
+    }
+    //回显标准面板按钮
+    const getStandardBtn = (record, status) => {
+        if (status == '模板') {
+            return (<div >
+                <Button onClick={() => { openDel(record, 4) }} type='primary'>使用</Button>
+            </div>)
         }
-        if (verifyStatus == 3) {
-            return <a onClick={() => { openRel(record) }}>发布</a>
+        if (status == '草稿') {
+            return (<div >
+                <Button onClick={() => { openDebugg(record) }} type='primary'>灰度调试</Button>
+            </div>)
         }
+        if (status == '调试中') {
+            return (<div >
+                <Button onClick={() => { openDebugg(record) }} type='primary'>灰度调试</Button>
+                <Button onClick={() => { openRel(record, 1) }} type='primary'>发布</Button>
+            </div>)
+        }
+        if (status == '已发布') {
+            return (<div >
+                <Button onClick={() => { openDel(record, 3) }} type='primary'>下线</Button>
+            </div>)
+        }
+        return ''
     }
     const columns = [
         {
@@ -238,31 +311,46 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             key: 'verifyStatus',
             dataIndex: 'verifyStatus',
             render: (text, record) => {
-                if (!record.isGray && text != 1) {
-                    return '草稿'
-                }
-                let arr = ['待审核', '已通过', '不通过', '审核中']
-                return arr[text]
+                return record.status
             }
         },
         {
             title: '操作',
             key: 'action',
             render: (text, record) => {
-                let { verifyStatus, isGray } = record;
+                // let { verifyStatus, isGray } = record;
                 // `verify_status` int(10) unsigned NOT NULL DEFAULT '1' COMMENT '审核状态：0 -待审核 1- 已通过 2-不通过 3-审核中',
-                return getBtn(record, verifyStatus, isGray)
+                return getBtn(record, record.status)
             },
         },
     ];
 
     //测试数据
-    const [testVis,setTestVis]=useState(false)
-    const closeTest=()=>{
+    const [testVis, setTestVis] = useState(false)
+    const closeTest = () => {
         setTestVis(false)
     }
-    const CancelTest=()=>{
+    const CancelTest = () => {
         setTestVis(false)
+    }
+    //获取面板状态
+    const getPanelStatus = (data) => {
+        let { projectStatus, verifyStatus, htmlShow, isGray } = data
+        if (projectStatus == 0 && verifyStatus == 0 && isGray == 0) {
+            return '草稿'
+        }
+        if (projectStatus == 1 && isGray == 1) {
+            return '调试中'
+        }
+        if (projectStatus == 1 && verifyStatus == 1 && isGray == 0 && htmlShow == 1) {
+            return '已发布'
+        }
+        if (projectStatus == 1 && verifyStatus == 3 && isGray == 0 && htmlShow == 0) {
+            return '审核中'
+        }
+        if (projectStatus == 1 && verifyStatus == 0 && isGray == 0 && htmlShow == 0) {
+            return '已下线'
+        }
     }
     return (
         <div >
@@ -276,17 +364,29 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                                     <div className='change-modal-tab3-dec'>
                                         <div>clife推荐的快速控制面板，既拿既用，一键开发，快速支持硬件的识别，适用于快速开发方案。</div>
                                         <div>均不满足，需要委托定制？直接联系Clife。<a onClick={goOrder}>提交工单</a></div>
-                                        <Button type='primary' onClick={()=>{setTestVis(true)}}>新增</Button>
+                                        {/* <Button type='primary' onClick={() => { setTestVis(true) }}>新增</Button> */}
                                     </div>
-                                    <div className='model-arr-wrap-item'>
-                                        <div className='model-arr-wrap-item-title'>
-                                            <span className='model-arr-wrap-item-title-name'> 面板1</span>
-                                            <Button type='primary' ghost onClick={() => { relData() }}>发布</Button>
-                                        </div>
-                                        <div className='model-arr-wrap-item-content'>
+                                    <div className='model-arr-wrap'>
+                                        {
+                                            standard.map((item, index) => {
+                                                return (
+                                                    <div className='model-arr-wrap-item' key={index}>
+                                                        <div className='model-arr-wrap-item-content'>
+                                                            <div className='model-status'>{item.status}</div>
+                                                            <img src={item.page1} alt='' />
+                                                        </div>
+                                                        <div className='model-arr-wrap-item-btn'>
+                                                            <span className='model-arr-wrap-item-title-name'> {item.status == '模板' ? item.templateName : item.projectName}</span>
+                                                            {
+                                                                getStandardBtn(item, item.status)
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
 
-                                        </div>
-                                    </div>
                                 </div>
                             </TabPane>
                             {/* <TabPane tab="自由配置面板" key="2">
@@ -315,9 +415,11 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             {
                 isAddModalVisible && <NewModal isAddModalVisible={isAddModalVisible} closeAdd={closeAdd} CancelAdd={CancelAdd}></NewModal>
             }
+            {/* 编辑 */}
             {
                 iseditModalVisible && <EditModal actionObj={actionData} isAddModalVisible={iseditModalVisible} closeAdd={closeEdit} CancelAdd={CancelEdit} />
             }
+            {/* 灰度 */}
             {
                 isGrayModalVisible && <GrayDebugg actionObj={actionData} isGrayModalVisible={isGrayModalVisible} closeDebugg={closeDebugg} CancelDebugg={CancelDebugg}></GrayDebugg>
             }
@@ -329,12 +431,13 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                     updateOkHandle={() => updateOkHandle()}
                     updateCancelHandle={() => closeAction()} />
             }
+            {/* 发布 */}
             {
                 relPanVis && <RelPanModel actionObj={actionData} relPanVis={relPanVis} CancelRel={CancelRel} closeOkRel={closeOkRel} />
             }
-            {
+            {/* {
                 testVis && <TestModal isAddModalVisible={testVis} closeAdd={closeTest} CancelAdd={CancelTest} />
-            }
+            } */}
         </div>
     )
 }

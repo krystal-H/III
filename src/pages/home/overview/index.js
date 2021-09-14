@@ -56,7 +56,8 @@ export default function OverviewWrap() {
     //消息列表 
     const [messageList, setMessageList] = useState([])
     const getMessageList = () => {
-        post(Paths.getNoticeList).then((res) => {
+        let params = { "pager": { "pageIndex": 1, "pageRows": 10 } }
+        post(Paths.getNoticeList,params).then((res) => {
             if (res.data.list.length > 3) {
                 setMessageList(res.data.list.slice(0, 3))
             } else {
