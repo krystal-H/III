@@ -55,38 +55,30 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                 accountList.push(Number(item))
             })
         }
-        
+        if(!accountList.length){
+            Notification({
+                description: `至少添加一个调试账号`,
+                type: 'warn'
+            });
+            return
+        }
         let params = {
             productId,
             projectId: actionObj.projectId,
             newAppIds: selectAppId,
-            accountList
+            accountList,
+            panelType:actionObj.panelType 
         }
         if(!selectAppId){
+            Notification({
+                description: `请选择一个app`,
+                type: 'warn'
+            });
             return
         }
-        // console.log(params,'=============')
-        // return
         post(Paths.greyModel, params).then((res) => {
             closeDebugg()
         });
-        // currentForm.validateFields().then(value => {
-        //     let accountList=[]
-        //     value.accountList.forEach(item=>{
-        //         accountList.push(Number(item))
-        //     })
-        //     let params = {
-        //         productId,
-        //         projectId: actionObj.projectId,
-        //         newAppIds: selectAppId,
-        //         accountList
-        //     }
-        //     post(Paths.greyModel, params).then((res) => {
-        //         closeDebugg()
-        //     });
-        // }).catch(err => {
-        //     // 验证不通过时进入
-        // });
     }
     //
     const [selectAppId, setSelectAppId] = useState('')
@@ -176,7 +168,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                                 <Input placeholder="请输入手机号码"
                                                                     style={{ width: '214px', marginRight: '10px' }} />
                                                             </Form.Item>
-                                                            {fields.length ? (
+                                                            {fields.length !== 1 ? (
                                                                 <MinusCircleOutlined
                                                                     className="dynamic-delete-button"
                                                                     onClick={() => remove(field.name)}
@@ -232,7 +224,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                                 <Input placeholder="请输入手机号码"
                                                                     style={{ width: '214px', marginRight: '10px' }} />
                                                             </Form.Item>
-                                                            {fields.length ? (
+                                                            {fields.length !==1 ? (
                                                                 <MinusCircleOutlined
                                                                     className="dynamic-delete-button"
                                                                     onClick={() => remove(field.name)}

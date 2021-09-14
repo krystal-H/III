@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react'
-import { Button,Modal } from 'antd';
+import { Button, Modal } from 'antd';
 import GrayDebugg from './grayDebugg'
 import ChangeModal from './changeModal'
 import { post, Paths, get } from '../../../../../api';
@@ -46,6 +46,7 @@ function confirmModel({ nextStep }, ref) {
                     return
                 }
             })
+            lastEst.status = getPanelStatus(lastEst)
             setShoaLast(lastEst)
         });
     }
@@ -71,15 +72,59 @@ function confirmModel({ nextStep }, ref) {
         nextStep()
     }
     const [showOffice, setShowOffice] = useState(false)
-    const openOffice=()=>{
+    const openOffice = () => {
         setShowOffice(true)
     }
-    const handleCancel=()=>{
+    const handleCancel = () => {
         setShowOffice(false)
     }
     useImperativeHandle(ref, () => ({
         onFinish: subNextConFirm
     }));
+    //回显标准面板按钮
+    const getStandardBtn = (record, status) => {
+        // if (status == '模板') {
+        //     return (<div >
+        //         <Button onClick={() => { openDel(record, 4) }} type='primary'>使用</Button>
+        //     </div>)
+        // }
+        // if (status == '草稿') {
+        //     return (<div >
+        //         <Button onClick={() => { openDebugg(record) }} type='primary'>灰度调试</Button>
+        //     </div>)
+        // }
+        // if (status == '调试中') {
+        //     return (<div >
+        //         <Button onClick={() => { openDebugg(record) }} type='primary'>灰度调试</Button>
+        //         <Button onClick={() => { openRel(record, 1) }} type='primary'>发布</Button>
+        //     </div>)
+        // }
+        // if (status == '已发布') {
+        //     return (<div >
+        //         <Button onClick={() => { openDel(record, 3) }} type='primary'>下线</Button>
+        //     </div>)
+        // }
+        return ''
+    }
+    //获取面板状态
+    const getPanelStatus = (data) => {
+        let { projectStatus, verifyStatus, htmlShow, isGray } = data
+        if (projectStatus == 0 && verifyStatus == 0 && isGray == 0) {
+            return '草稿'
+        }
+        if (projectStatus == 1 && isGray == 1) {
+            return '调试中'
+        }
+        if (projectStatus == 1 && verifyStatus == 1 && isGray == 0 && htmlShow == 1) {
+            return '已发布'
+        }
+        if (projectStatus == 1 && verifyStatus == 3 && isGray == 0 && htmlShow == 0) {
+            return '审核中'
+        }
+        if (projectStatus == 1 && verifyStatus == 0 && isGray == 0 && htmlShow == 0) {
+            return '已下线'
+        }
+    }
     return <div className='confirm-pannel'>
         <div className='confirm-pannel-title'>
             <div>已选面板：</div>
@@ -88,13 +133,16 @@ function confirmModel({ nextStep }, ref) {
         <div className='confirm-pannel-content'>
             <div className='pannel-cover-image'>
                 <img src={shoaLast.page1} alt='' />
+                <div className='pannel-status'>{shoaLast.status}</div>
             </div>
             <div>
                 <div className='confirm-pannel-content-left'>
                     {/* {
                         pathname.indexOf('edit') > -1 && <Button type="primary" onClick={openDebugg}>灰度调试</Button>
                     } */}
-
+                    {
+                        getStandardBtn(shoaLast, shoaLast.status)
+                    }
                     <Button type="primary" ghost onClick={openChange}>更换面板</Button>
                 </div>
                 <div className='confirm-pannel-content-right'>
@@ -131,7 +179,7 @@ function confirmModel({ nextStep }, ref) {
                         进入
                     </Button>
                 </div>
-                <div className='confirm-pannel-content-other'>均不满足，需要委托定制？直接联系Clife。<a onClick={()=>{history.push(`/open/repairOrder`)}}>提交工单</a></div>
+                <div className='confirm-pannel-content-other'>均不满足，需要委托定制？直接联系Clife。<a onClick={() => { history.push(`/open/repairOrder`) }}>提交工单</a></div>
             </div>
         </div>
         {
@@ -141,9 +189,9 @@ function confirmModel({ nextStep }, ref) {
             isChangeModalVisible && <ChangeModal isChangeModalVisible={isChangeModalVisible} defaultTab={defaultTab} closeChange={closeChange} CancelChange={CancelChange}></ChangeModal>
         }
         {
-            showOffice && <Modal title="安装“数联智能”App"  width='370px' visible={showOffice} footer={null} onCancel={handleCancel}>
+            showOffice && <Modal title="安装“数联智能”App" width='370px' visible={showOffice} footer={null} onCancel={handleCancel}>
                 <div className='down-office-modal'>
-                    <img src={demoAppOfficial}/>
+                    <img src={demoAppOfficial} />
                     <div>手机扫描二维码下载</div>
                 </div>
             </Modal>

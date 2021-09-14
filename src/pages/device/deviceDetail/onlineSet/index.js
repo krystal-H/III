@@ -16,7 +16,7 @@ import './index.scss'
 const { Option } = Select
 const { Step } = Steps
 const { Search } = Input
-const DESC = ['平台支持远程更新设备的配置数据，您可以提交远程配置任务，实时对设备的系统参数等数据进行远程更新，并且获取设备配置的更新状态；详细说明可参考文档']
+const DESC = ['平台支持远程更新设备的配置数据，您可以提交远程配置任务，实时对设备的系统参数等数据进行远程更新，并且获取设备配置的更新状态；<a onClick={downFile}>帮助文档</a>']
 const FLOWLIST = [
     {
         title: '创建远程配置任务'
@@ -226,6 +226,10 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
         getRemoteConfigList()
         setEditVisible(false)
     }
+    //帮助文档
+    const downFile = () => {
+        window.open('https://dp.clife.net/iotdoc/')
+    }
     return (
         <div id='remote-config'>
             <div className='comm-shadowbox setp-tip'>
@@ -233,7 +237,9 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
                     <img src={stepImg} alt="" />
                     <span>远程配置步骤</span>
                 </div>
-                <DescWrapper desc={DESC} style={{ marginBottom: 22 }}></DescWrapper>
+                <DescWrapper style={{ marginBottom: 18, width: '100%', display: 'flex', alignItems: 'center' }}
+                    desc={[<div>平台支持远程更新设备的配置数据，您可以提交远程配置任务，实时对设备的系统参数等数据进行远程更新，并且获取设备配置的更新状态。详细说明可参考<a onClick={downFile}>帮助文档</a></div>]}>
+                </DescWrapper>
                 <Steps current={-1} initial={0}>
                     <Step title="创建远程配置任务" description="创建远程配置任务，填写任务的目的或备注信息。" />
                     <Step title="添加配置数据" description="添加要更新的产品配置数据字段和更新的数值。" />

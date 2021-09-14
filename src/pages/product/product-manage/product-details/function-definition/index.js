@@ -1,6 +1,7 @@
 import React, { useRef, useState,useEffect } from 'react';
 import { Input, Button, Select, Table } from 'antd';
 import { post, Paths, get } from '../../../../../api';
+import LabelTip from '../../../../../components/form-com/LabelTip';
 import {
     ToTopOutlined
 } from '@ant-design/icons'
@@ -28,9 +29,8 @@ export default function ChangeModal() {
     const [standardData, setStandardData] = useState([]);
     //导出物模型
     const exportFile = () => {
-        get(Paths.downPhysicalModel, { productId: productId }).then((res) => {
-            // delaData(res.data)
-        });
+        let url = Paths.downPhysicalModel + '?productId=' + productId
+        window.open(url)
     }
     //获取列表
     const getList = (loading = true) => {
@@ -45,16 +45,16 @@ export default function ChangeModal() {
     }, [])
     return (<div id='product-detail-fun-defin'>
         <div>
-            <Button style={{ padding: 0 }} type="link" icon={<ToTopOutlined />} onClick={exportFile}>导出完整协议</Button>
+            <Button style={{ padding: 0 }} type="link" icon={<ToTopOutlined />} onClick={exportFile}>导出物模型</Button>
         </div>
         <div className='table-item'>
-            <h3>标准功能</h3>
+            <h3>标准功能<LabelTip tip="支持用户编辑修改功能点名称以及数值范围，但是不能修改功能点的数据标识、数据类型，数据传输类型。"></LabelTip></h3>
             <div>
                 <TableCom dataSource={standardData} type={'1'} />
             </div>
         </div>
         <div className='table-item'>
-            <h3>自定义功能</h3>
+            <h3>自定义功能<LabelTip tip="支持在标准功能的基础上，自定义适合客户自己硬件特色的定制功能点。"></LabelTip></h3>
             <div>
                 <TableCom dataSource={cusData} type={'2'} />
             </div>

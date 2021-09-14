@@ -10,6 +10,7 @@ import NewCusmFn from './addcusFn'
 import downpng from './../../../../../assets/images/product/download.png';
 import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
+import LabelTip from '../../../../../components/form-com/LabelTip';
 import TableCom from './TableCom';
 
 //处理数据
@@ -90,9 +91,6 @@ function ProtocolFn2({ nextStep, productId }, ref) {
     const exportFile = () => {
         let url = Paths.downPhysicalModel + '?productId=' + productId
         window.open(url)
-        // get(Paths.downPhysicalModel, { productId: productId }).then((res) => {
-        //     // delaData(res.data)
-        // });
     }
 
     const ref11 = useRef()
@@ -109,14 +107,14 @@ function ProtocolFn2({ nextStep, productId }, ref) {
             </div>
         </div>
         <div className='Protocol-download'>
-            <div>标准功能</div>
+            <div>标准功能<LabelTip tip="支持用户编辑修改功能点名称以及数值范围，但是不能修改功能点的数据标识、数据类型，数据传输类型。"></LabelTip></div>
             <Button type="primary" onClick={openAdd}>新建标准功能</Button >
         </div>
         <div className='Protocol-table'>
             <TableCom dataSource={standardData} reFreshData={getList} type={'1'} />
         </div>
         <div className='Protocol-download'>
-            <div>自定义功能</div>
+            <div>自定义功能<LabelTip tip="支持在标准功能的基础上，自定义适合客户自己硬件特色的定制功能点。"></LabelTip></div>
             <div>
                 <a >导出协议</a>
                 <img src={downpng} style={{ marginRight: '15px' }} alt='' />

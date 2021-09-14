@@ -6,7 +6,6 @@ import { Notification } from '../../../../../components/Notification';
 import './newModal.scss';
 export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd ,actionObj}) {
     const [form] = Form.useForm();
-    console.log(actionObj)
     const $apkel = useRef(null)
     const $el = useRef(null)
     const closeReqAdd = () => {
@@ -22,7 +21,8 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd ,actio
                 projectType:1,
                 projectName:value.projectName,
                 projectId:actionObj.projectId,
-                page1:value.page1[0].url
+                page1:value.page1[0].url,
+                panelType:1
             }
             post(Paths.cusSavePanel, params).then((res) => {
                 Notification({
