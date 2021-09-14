@@ -46,7 +46,7 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
     }
   }, [selectType])
   const getDom = (data) => {
-    if (!data.length) return
+    if (!data.length) return []
     let dom = []
     let type = []
     data.forEach(item => {
@@ -64,7 +64,8 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
     let params = {
       filter: false
     }
-    params.productId = 11979
+    // params.productId = 11979
+    params.productId = selectType
     if (!params.id || !params.id.trim()) {
       delete params.id
     }

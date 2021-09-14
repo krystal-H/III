@@ -292,8 +292,8 @@ export default function DeviceList() {
                             style={{ width: '102px' }}
                         >
                             <Option value={'1'}>全部状态</Option>
-                            <Option value={true}>正常运行</Option>
-                            <Option value={false}>今日故障</Option>
+                            <Option value={false}>正常运行</Option>
+                            <Option value={true}>今日故障</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item label=" " colon={false} style={{ marginRight: '2px' }}>

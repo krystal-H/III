@@ -32,9 +32,9 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     }
     //
     const [standard,setStandard]=useState([])
-    //列表
+    //标准列表
     const getStandard = () => {
-        post(Paths.panelList, { productId ,panelType:1}).then((res) => {
+        post(Paths.standardPanelList, { productId ,panelType:1}).then((res) => {
             setStandard(res.data.list)
         });
     }

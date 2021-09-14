@@ -43,6 +43,13 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
     const [status, setStatus] = useState('') // 状态
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     const { deletevisible, deleteItem, deleteLoading } = deleteParams
+    // 执行任务
+    const executeRemoteConfig = (record) => {
+        post(Paths.excelDevTask, { taskId: record.taskId }, { loading: true }).then(res => {
+            getRemoteConfigList()
+            Notification({ description: '执行成功！', type: 'success' })
+        })
+    }
     const PageColumns = [
         {
             title: '任务ID',
@@ -83,32 +90,43 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
             key: 'action',
             render: (text, record) => {
                 const { status, taskId } = record
-                return isDeviceRomote ? (
-                    <span>
-                        {
-                            ('' + status) === '1' ?
-                                <React.Fragment>
-                                    <a onClick={() => openEdit(record)}>编辑</a>
-                                    <Divider type="vertical" />
-                                    <a onClick={() => setDeleteParams({ deletevisible: true, deleteItem: record })}>删除</a>
-                                </React.Fragment> :
-                                <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
-                        }
-                        <Divider type="vertical" />
+                return (
+                    ('' + status) === '1' ?
+                        <React.Fragment>
+                            <a onClick={() => openEdit(record)}>编辑</a>
+                            <Divider type="vertical" />
+                            <a onClick={() => executeRemoteConfig(record)}>执行</a>
+                            <Divider type="vertical" />
+                            <a onClick={() => setDeleteParams({ deletevisible: true, deleteItem: record })}>删除</a>
+                        </React.Fragment> :
                         <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
-                    </span>) :
-                    (<span>
-                        <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
-                        {
-                            ('' + status) === '3' ?
-                                <React.Fragment>
-                                    <Divider type="vertical" />
-                                    <a onClick={() => retryForDeviceByTaskId(taskId)}>重试</a>
-                                    <Divider type="vertical" />
-                                    <a onClick={() => showErrorLogForDeviceByTaskId(record)}>日志</a>
-                                </React.Fragment> : null
-                        }
-                    </span>)
+                )
+                // return isDeviceRomote ? (
+                //     <span>
+                //         {
+                //             ('' + status) === '1' ?
+                //                 <React.Fragment>
+                //                     <a onClick={() => openEdit(record)}>编辑</a>
+                //                     <Divider type="vertical" />
+                //                     <a onClick={() => setDeleteParams({ deletevisible: true, deleteItem: record })}>删除</a>
+                //                 </React.Fragment> :
+                //                 <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
+                //         }
+                //         <Divider type="vertical" />
+                //         <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
+                //     </span>) :
+                //     (<span>
+                //         <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
+                //         {
+                //             ('' + status) === '3' ?
+                //                 <React.Fragment>
+                //                     <Divider type="vertical" />
+                //                     <a onClick={() => retryForDeviceByTaskId(taskId)}>重试</a>
+                //                     <Divider type="vertical" />
+                //                     <a onClick={() => showErrorLogForDeviceByTaskId(record)}>日志</a>
+                //                 </React.Fragment> : null
+                //         }
+                //     </span>)
             }
         }
     ]

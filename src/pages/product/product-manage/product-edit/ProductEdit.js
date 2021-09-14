@@ -139,8 +139,9 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
         setTitleVisible(false)
     }
     const onOkClose=(data)=>{
-        setProductItem(data)
-        sessionStorage.setItem('productItem',JSON.stringify(data))
+        let obj={...JSON.parse(sessionStorage.productItem),...data}
+        setProductItem(obj)
+        sessionStorage.setItem('productItem',JSON.stringify(obj))
         Notification({
             type: 'success',
             description: '更新成功！',
