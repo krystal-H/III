@@ -12,8 +12,6 @@ import GrayDebugg from './grayDebugg'
 import ActionModel from './actionModel'
 import { cloneDeep } from "lodash";
 import RelPanModel from './relPanel'
-import { typed } from '../../../../../components/CodeView/jshint';
-import { async } from '_rxjs@6.6.7@rxjs';
 
 const { TabPane } = Tabs;
 

@@ -74,9 +74,13 @@
     }
     .ant-modal-body{
         padding-bottom: 0;
+        padding-top: 0;
     }
     tr{
         th,td{padding: 12px 14;}
+    }
+    .ant-tabs-nav::before {
+        border-bottom: 0;
     }
 }
 
