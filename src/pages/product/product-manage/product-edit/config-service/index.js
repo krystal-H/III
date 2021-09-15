@@ -96,6 +96,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [customCount, setCustomCount] = useState(0)
   //验证函数
   const subNextConFirm = () => {
+    console.log('requiredList----', requiredList.every(item => item.isConfiged === true), '***', requiredList)
     if (requiredList.every(item => item.isConfiged === true)) {
       nextStep()
     } else {
