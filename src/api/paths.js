@@ -52,6 +52,7 @@ let Paths = {
     getCommunicationProtocol: '/module/type/all', // 通信协议
     createProduct: '/product/create', // 创建产品
     downloadData: '/product/dev/module/data/url', // 下载资料路径
+    getPanel: '/panelManage/getTemplateMarketByDeviceTypeId', // 获取品类下的面板
 
     // 5.x确定方案
     getScheme: '/scheme/list/deviceType', // 获取方案数据

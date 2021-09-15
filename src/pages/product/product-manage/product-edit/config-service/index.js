@@ -97,8 +97,6 @@ function ServiceSelect({ productId, nextStep }, ref) {
 
   //验证函数
   const subNextConFirm = () => {
-    const list = requiredList.filter(item => item.isConfiged === true)
-    console.log('required-list', list)
     console.log('requiredList----', requiredList.every(item => item.isConfiged === true), '***', requiredList)
     if (requiredList.every(item => item.isConfiged === true)) {
       nextStep()
@@ -111,7 +109,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
     return {
       onFinish: subNextConFirm
     }
-  }, [requiredList])
+  }, [requiredList]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // 是否配置过  配网信息、通信安全机制
   const isConfigedFunc = () => {
