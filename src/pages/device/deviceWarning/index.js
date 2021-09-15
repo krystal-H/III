@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Tabs} from "antd";
+import { Tabs } from "antd";
 import { DateTool } from "../../../util/util";
 import { get, Paths } from "../../../api";
 import PageTitle from "../../../components/page-title/PageTitle";
