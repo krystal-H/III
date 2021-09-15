@@ -87,6 +87,7 @@ export default class GroupDetailt extends PureComponent {
     }
     
     changeAddWay=(addWay)=>{
+        console.log(777,addWay)
         this.setState({addWay});
 
     }
@@ -108,7 +109,7 @@ export default class GroupDetailt extends PureComponent {
                 className="groupadd-device-modal"
             >
 
-                <Tabs defaultActiveKey={"1"} onChange={this.changeAddWay}>
+                <Tabs onChange={this.changeAddWay} activeKey={addWay}>
                     <Tabs.TabPane tab="查找选择" key="1">
                         {
                             addWay =="1" && <div>
@@ -128,7 +129,8 @@ export default class GroupDetailt extends PureComponent {
                                         defaultCurrent:pager.pageIndex, 
                                         total:pager.totalRows, 
                                         onChange:val=>{this.setQuestParams('pageIndex',val)},
-                                        current: pager.pageIndex
+                                        current: pager.pageIndex,
+                                        showSizeChanger:false
                                     }} 
                                 />
                             </div>
