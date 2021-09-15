@@ -61,6 +61,7 @@ class SwitchFreeDep extends Component {
 
   render() {
     const { currentActiveKey, btnList1, btnList2, btnList3 } = this.state
+    const { thirdCategoryId } = this.props
     return (
       <Tabs onChange={(activeKey) => this.handleChange(activeKey)} destroyInactiveTabPane>
         {/* 免开发方案 */}
@@ -70,6 +71,7 @@ class SwitchFreeDep extends Component {
             <SwitchTab
               tip="免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。"
               btnList={btnList1}
+              deviceTypeId={thirdCategoryId}
               onRef={ref => { this.refSwitchTab = ref }} />
           </TabPane>
         }
@@ -81,6 +83,7 @@ class SwitchFreeDep extends Component {
             <SwitchTab
               tip="独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。"
               btnList={btnList2}
+              deviceTypeId={thirdCategoryId}
               onRef={ref => { this.refSwitchTab = ref }} />
           </TabPane>
         }
@@ -92,6 +95,7 @@ class SwitchFreeDep extends Component {
             <SwitchTab
               tip="SoC方案，不提供通用固件程序，需自行开发模组固件。"
               btnList={btnList3}
+              deviceTypeId={thirdCategoryId}
               onRef={ref => { this.refSwitchTab = ref }} />
           </TabPane>
         }

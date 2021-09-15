@@ -35,7 +35,8 @@ class SwitchTab extends Component {
       picture: '', // 图片
       currentSchemList: [],
       currentPhysicalModelId: '', // 物模型id
-      dataSource: []
+      dataSource: [],
+      panelPic: '' // 展示面板
     }
     this.columns = [
       {
@@ -65,6 +66,7 @@ class SwitchTab extends Component {
       currentPhysicalModelId: this.props.btnList[0].physicalModelId
     }, () => {
       this.getPlanMsg(0)
+      this.getPanel()
     })
   }
 
@@ -87,6 +89,18 @@ class SwitchTab extends Component {
     }, () => {
       this.props.changeBtnIndex(index)
       this.getPlanMsg(index)
+      this.getPanel()
+    })
+  }
+
+  // 获取面板
+  getPanel() {
+    post(Paths.getPanel, {
+      deviceTypeId: this.props.deviceTypeId
+    }, { loading: true }).then(res => {
+      this.setState({
+        panelPic: res.data && res.data[0] && res.data[0].page1
+      })
     })
   }
 
@@ -135,7 +149,7 @@ class SwitchTab extends Component {
   }
 
   render() {
-    let { btnIndex, planActiveKey, summaryText, propertyText, suitableText, picture, dataSource } = this.state
+    let { btnIndex, planActiveKey, summaryText, propertyText, suitableText, picture, dataSource, panelPic } = this.state
     let { tip, btnList } = this.props
     return (
       <div className="dep-plan-block">
@@ -177,7 +191,9 @@ class SwitchTab extends Component {
             </TabPane>
             <TabPane tab="方案控制面板" key="2">
               <div className="dep-brief">
-                <div className="dep-brief-img"></div>
+                <div className="dep-brief-img">
+                  <img src={panelPic || require('../../../../assets/images/commonDefault/panel-pic.png')} alt="" />
+                </div>
               </div>
             </TabPane>
           </Tabs>

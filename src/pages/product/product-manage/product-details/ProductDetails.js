@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {
     EyeInvisibleTwoTone,
     EyeTwoTone,
@@ -29,16 +30,13 @@ const mapDispatchToProps = dispatch => {
 // 获取路由中的ID参数
 const getProductIdFromPath = (match) => +match.params.id;
 
-function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtocolLists, protocolLists }) {
-
-    let productIdInRoutePath = getProductIdFromPath(match);
+export default function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtocolLists, protocolLists }) {
+    let history = useHistory();
+    // let productIdInRoutePath = getProductIdFromPath(match);
     let productItem = {}
     if (sessionStorage.getItem('productItem')) {
         productItem = JSON.parse(sessionStorage.getItem('productItem'))
     } else {
-        return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
-    }
-    if (!productIdInRoutePath) {
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
     const [showSecret, setShowSecret] = useState(false)
@@ -80,13 +78,13 @@ function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtoco
     </div>)
     return (
         <div className="eidt-wrapper">
-            <PageTitle title={productItem.productName} titleTag={productItem.statusStr} backTitle='开发详情' children={titleCom} />
+            <PageTitle title={productItem.productName} backHandle={() => { history.push('/open/product/proManage/list') }} titleTag={productItem.schemeName} backTitle='开发详情' children={titleCom} />
             <div className='comm-shadowbox product-detail-wrap'>
-                <ProductTabs productId={productIdInRoutePath} protocolLists={protocolLists} productBaseInfo={productBaseInfo}
+                <ProductTabs productId={productItem.productId} 
                 ></ProductTabs>
             </div>
         </div>
     )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductDetails)
+// export default connect(mapStateToProps, mapDispatchToProps)(ProductDetails)

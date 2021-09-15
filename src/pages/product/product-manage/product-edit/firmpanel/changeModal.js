@@ -14,8 +14,6 @@ import { cloneDeep } from "lodash";
 import RelPanModel from './relPanel'
 
 const { TabPane } = Tabs;
-
-
 export default function ChangeModal({ isChangeModalVisible, closeChange, CancelChange, defaultTab = '1' }) {
     let productId = 0
     if (sessionStorage.getItem('productItem')) {
@@ -82,11 +80,6 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         setIseditModalVisible(true)
     }
     //========================
-    //标准面板选项
-    //tab3
-
-
-
     //确定删除
     const delOkCancel = () => {
         post(Paths.delPanel, { projectId: actionData.projectId }).then((res) => {
@@ -240,28 +233,12 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                 <a onClick={() => { openRel(record) }}>发布</a>
             </Space>)
         }
+        if (status == '已下线') {
+            return (<Space size="middle">
+                <a onClick={() => { openDebugg(record) }}>灰度调试</a>
+            </Space>)
+        }
         return ''
-        // if (!isGray && verifyStatus != 1) {
-        //     return (<Space size="middle">
-        //         <a onClick={() => { openDebugg(record) }}>灰度调试</a>
-        //         <a onClick={() => { openDel(record, 2) }}>删除</a>
-        //         <a onClick={() => { openEdit(record) }}>编辑</a>
-        //     </Space>)
-        // }
-        // if (verifyStatus == 0 || verifyStatus == 2) {
-        //     return (<Space size="middle">
-        //         <a onClick={() => { openDebugg(record) }}>灰度调试</a>
-        //         <a onClick={() => { openDel(record, 2) }}>删除</a>
-        //         <a onClick={() => { openEdit(record) }}>编辑</a>
-        //         <a onClick={() => { openRel(record) }}>发布</a>
-        //     </Space>)
-        // }
-        // if (verifyStatus == 1) {
-        //     return <a onClick={() => { openDel(record, 3) }}>下线</a>
-        // }
-        // if (verifyStatus == 3) {
-        //     return <a onClick={() => { openRel(record) }}>发布</a>
-        // }
     }
     //回显标准面板按钮
     const getStandardBtn = (record, status) => {
@@ -285,6 +262,11 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             return (<div >
                 <Button onClick={() => { openDel(record, 3) }} type='primary'>下线</Button>
             </div>)
+        }
+        if (status == '已下线') {
+            return (<Space size="middle">
+                <Button onClick={() => { openDebugg(record) }} type='primary'>灰度调试</Button>
+            </Space>)
         }
         return ''
     }
@@ -433,9 +415,6 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             {
                 relPanVis && <RelPanModel actionObj={actionData} relPanVis={relPanVis} CancelRel={CancelRel} closeOkRel={closeOkRel} />
             }
-            {/* {
-                testVis && <TestModal isAddModalVisible={testVis} closeAdd={closeTest} CancelAdd={CancelTest} />
-            } */}
         </div>
     )
 }

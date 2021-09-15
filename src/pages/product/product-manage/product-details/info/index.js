@@ -24,7 +24,7 @@ export default function productInfo() {
     const [imageInfo, setImageInfo] = useState({})
     const getBusinessInfo = () => {
         let productId = productBaseInfo.productId
-        post(Paths.getPublishProductBusinessInfo, { productId: 1 }).then((res) => {
+        post(Paths.getBusinessInfo, { productId }).then((res) => {
             setBusinessInfo(res.data)
         });
         post(Paths.proReledInfo, { productId }).then((res) => {

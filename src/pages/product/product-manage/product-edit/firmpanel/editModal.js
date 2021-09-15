@@ -22,7 +22,7 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd ,actio
                 projectName:value.projectName,
                 projectId:actionObj.projectId,
                 page1:value.page1[0].url,
-                panelType:1
+                panelType:3
             }
             post(Paths.cusSavePanel, params).then((res) => {
                 Notification({
