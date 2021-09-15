@@ -7,6 +7,7 @@ import TestModal from './test'
 import EditModal from './editModal'
 import './changeModal.scss'
 import { post, Paths, get } from '../../../../../api';
+import { DateTool } from '../../../../../util/util';
 import { Notification } from '../../../../../components/Notification';
 import GrayDebugg from './grayDebugg'
 import ActionModel from './actionModel'
@@ -285,6 +286,10 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             title: '最新修改时间',
             dataIndex: 'modifyTime',
             key: 'modifyTime',
+            
+            render: (text, record) => {
+                return <span>{text && DateTool.utcToDev(text)}</span> 
+            }
         },
         {
             title: '状态',

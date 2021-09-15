@@ -25,7 +25,7 @@ export default function productInfo() {
     const getBusinessInfo = () => {
         let productId = productBaseInfo.productId
         post(Paths.getBusinessInfo, { productId }).then((res) => {
-            setBusinessInfo(res.data)
+            setBusinessInfo(res.data | {})
         });
         post(Paths.proReledInfo, { productId }).then((res) => {
             setImageInfo(res.data)
