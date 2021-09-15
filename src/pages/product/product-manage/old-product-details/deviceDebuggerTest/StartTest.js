@@ -1557,7 +1557,6 @@ let httpProtocol = window.location.protocol;
 wsProtocol = httpProtocol.replace(/https?/, 'wss');
 let wsTimer; //websocket心跳连接定时器，页面销毁时，需要同时销毁定时器
 
-
 const mapStateToProps = state => {
     return {
         deviceAndWs: state.getIn(['oldProduct','deviceAndWs']).toJS(),
@@ -1568,6 +1567,8 @@ const mapStateToProps = state => {
         deviceDebugMacList: state.getIn(['oldProduct','deviceDebugMacList']).toJS(), 
         selectedData1: state.getIn(['oldProduct','selectedData1']).toJS(),
         selectedData2: state.getIn(['oldProduct','selectedData2']).toJS(),
+
+        developerInfo: state.getIn(['userCenter', 'developerInfo']).toJS(),
 
     }
 }
@@ -1680,7 +1681,7 @@ export default class StartTest  extends Component{
                     '[' +
                     this.props.deviceAndWs.token.data +
                     '|' +
-                    product.customerCode +
+                    this.props.developerInfo.userId +
                     '|' +
                     product.deviceTypeId +
                     '#' +
@@ -1816,7 +1817,7 @@ export default class StartTest  extends Component{
     }
     render () {
         let {visible,visibleExportData,activeKey,selectedMac,date,firmwareVersionType,mainVersion,totalVersion} = this.state;
-        let { deviceDebugAccountList, deviceDebugMacList, productBaseInfo } = this.props;
+        let { deviceDebugAccountList, deviceDebugMacList, productBaseInfo,developerInfo } = this.props;
         let pid = getUrlParam('productId')||this.props.productId;
         let hardwareType = getUrlParam('hardwareType')||this.props.productBaseInfo.hardwareType;
         return (
