@@ -43,7 +43,7 @@ const getProductIdFromPath = (match) => +match.params.id;
 
 function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
     // let productItem = {}
-    const [productItem,setProductItem]=useState( sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
+    const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
     let history = useHistory();
     // if (sessionStorage.getItem('productItem')) {
     //     productItem = JSON.parse(sessionStorage.getItem('productItem'))
@@ -138,10 +138,10 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
     const onCloseTitle = () => {
         setTitleVisible(false)
     }
-    const onOkClose=(data)=>{
-        let obj={...JSON.parse(sessionStorage.productItem),...data}
+    const onOkClose = (data) => {
+        let obj = { ...JSON.parse(sessionStorage.productItem), ...data }
         setProductItem(obj)
-        sessionStorage.setItem('productItem',JSON.stringify(obj))
+        sessionStorage.setItem('productItem', JSON.stringify(obj))
         Notification({
             type: 'success',
             description: '更新成功！',
@@ -168,7 +168,7 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
         <div>
             <div>产品密钥：</div>
             <div>{showText(productItem.deviceKey)}
-            <span onClick={changeState}>
+                <span onClick={changeState}>
                     {
                         showSecret ? <EyeInvisibleTwoTone /> : <EyeTwoTone />
                     }
@@ -179,7 +179,8 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
     return (
         <React.Fragment>
             <div className="eidt-wrapper">
-                <PageTitle title={productItem.productName} titleTag={productItem.schemeName} btnTxt='编辑' backTitle='开发流程' btnClickHandle={openTitle} >
+                <PageTitle title={productItem.productName} titleTag={productItem.schemeName} btnTxt='编辑'
+                    backHandle={() => { history.push('/open/product/proManage/list') }} backTitle='开发流程' btnClickHandle={openTitle} >
 
                     {titleCom}
 
@@ -225,7 +226,7 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
             {
                 titleVisible && <TitleSet titleVisible={titleVisible} onCloseTitle={onCloseTitle} onOkClose={onOkClose}></TitleSet>
             }
-            
+
         </React.Fragment>
     )
 }

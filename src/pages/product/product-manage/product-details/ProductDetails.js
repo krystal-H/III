@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {
     EyeInvisibleTwoTone,
     EyeTwoTone,
@@ -30,7 +31,7 @@ const mapDispatchToProps = dispatch => {
 const getProductIdFromPath = (match) => +match.params.id;
 
 function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtocolLists, protocolLists }) {
-
+    let history = useHistory();
     let productIdInRoutePath = getProductIdFromPath(match);
     let productItem = {}
     if (sessionStorage.getItem('productItem')) {
@@ -80,7 +81,7 @@ function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtoco
     </div>)
     return (
         <div className="eidt-wrapper">
-            <PageTitle title={productItem.productName} titleTag={productItem.statusStr} backTitle='开发详情' children={titleCom} />
+            <PageTitle title={productItem.productName} backHandle={() => { history.push('/open/product/proManage/list') }} titleTag={productItem.schemeName} backTitle='开发详情' children={titleCom} />
             <div className='comm-shadowbox product-detail-wrap'>
                 <ProductTabs productId={productIdInRoutePath} protocolLists={protocolLists} productBaseInfo={productBaseInfo}
                 ></ProductTabs>
