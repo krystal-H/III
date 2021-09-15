@@ -193,9 +193,11 @@ function confirmModel({ nextStep }, ref) {
         nextStep()
     }
     const [showOffice, setShowOffice] = useState(false)
+    //下载数联app
     const openOffice = () => {
         setShowOffice(true)
     }
+    //取消下载数联app
     const handleCancel = () => {
         setShowOffice(false)
     }
@@ -223,6 +225,11 @@ function confirmModel({ nextStep }, ref) {
         if (status == '已发布') {
             return (<div >
                 <Button onClick={() => { openDel(record, 3) }} type='primary'>下线</Button>
+            </div>)
+        }
+        if (status == '已下线') {
+            return (<div>
+                <Button onClick={() => { openDebugg(record) }} type='primary'>灰度调试</Button>
             </div>)
         }
         return ''
