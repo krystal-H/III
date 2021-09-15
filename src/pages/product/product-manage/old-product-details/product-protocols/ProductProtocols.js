@@ -340,20 +340,7 @@ export default class ProductProtocols extends Component {
                                                     this.getTable(protocols,0,index)
                                                 }
                                             </div>
-                                            {/* 自定义透传才有协议脚本   5.x版本取消旧产品的此功能 */}  
-                                            {/* {   
-                                                protocolFormat == 3 && 
-                                                <div className="protocol-script">
-                                                    <span className="protocol-name">数据解析</span>
-                                                    <div className="protocol-script-content">
-                                                        <div className="protocol-script-title">数据解析脚本</div>
-                                                            <div className="protocol-script-example">
-                                                                <span>支持开发者自定义解析脚本，将设备上下行的数据，分别解析成平台定义的标准数据格式。</span>
-                                                                <Button type="primary" className="protocol-script-btn" onClick={this.props.triggerDebugger.bind(this, true, productId)}>调试上传脚本</Button>
-                                                            </div>
-                                                    </div>
-                                                </div>
-                                            } */}
+                                            {/* 自定义透传才有协议脚本   5.x版本取消旧产品的此功能 */} 
                                         </div>
                                 </TabPane>
                             )

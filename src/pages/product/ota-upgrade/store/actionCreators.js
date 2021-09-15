@@ -3,11 +3,13 @@ import * as actionTypes from './actionTypes';
 
 export const getProductList = param => {
     return (dispatch) => {
-        get(Paths.getCreateProduct,param).then(res => {
-            let li = res.data.list || [];
+        get(Paths.getProductType,{},{ loading:true }).then(({data}) => {
+            const productList = Object.keys(data).map(id=>{
+                return {productId:id,productName:data[id]}
+            });
             dispatch({
                 type: actionTypes.GETPROLIST,
-                productList:li,
+                productList,
             });
         });
     }
@@ -55,7 +57,6 @@ export const getDeviceGroupLi = () => {
 }
 
 export const sendFirmwareDetails = detail => {
-    console.log(999,detail)
     return (dispatch) => {
         dispatch({
             type: actionTypes.FIRMWAREDETAIL,
@@ -64,6 +65,7 @@ export const sendFirmwareDetails = detail => {
         
     }
 }
+
 
 
 
