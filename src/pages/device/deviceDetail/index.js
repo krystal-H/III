@@ -5,11 +5,13 @@ import DevSet from './onlineSet'
 import { getUrlParam } from '../../../util/util';
 import React, { useState, useEffect, useMemo } from 'react'
 import PageTitle from '../../../components/page-title/PageTitle';
+import {  useHistory } from 'react-router-dom';
 import './index.scss'
 import { Tabs } from 'antd';
 const { TabPane } = Tabs;
 
-export default function DeviceInfo({ match, history }) {
+export default function DeviceInfo({ match }) {
+    let history = useHistory();
     const stepS = useMemo(() => {
         let step = getUrlParam('step') || '1'
         return step
@@ -23,7 +25,7 @@ export default function DeviceInfo({ match, history }) {
         baseInfo = JSON.parse(sessionStorage.DEVICE_DETAIL_BASE)
     }
     return (<div id='device-detail'>
-        <PageTitle backTitle='设备详情' >
+        <PageTitle backTitle='设备详情' backHandle={() => { history.push('/open/device/devManage/list') }}>
             {/* <div className='device-top-name'>{baseInfo.productName}</div> */}
             <div className='device-top'>
                 <div className='device-top-item'>

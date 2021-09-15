@@ -116,7 +116,7 @@ function ProtocolFn2({ nextStep, productId }, ref) {
         <div className='Protocol-download'>
             <div>自定义功能<LabelTip tip="支持在标准功能的基础上，自定义适合客户自己硬件特色的定制功能点。"></LabelTip></div>
             <div>
-                <a >导出协议</a>
+                <a >导入自定义功能</a>
                 <img src={downpng} style={{ marginRight: '15px' }} alt='' />
                 <Button type="primary" onClick={openCusmon}>新建自定义功能</Button >
             </div>
