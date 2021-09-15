@@ -186,7 +186,15 @@ export default class FirmwareManagement  extends Component {
     }
     //搜索
     search(value){
-        get(Paths.oldVersionList,{totalVersion:value,productId:this.props.productId,pageIndex:1,pageRows:10}).then((model) => {
+        let params = {
+            productId:this.props.productId,
+            pageIndex:1,
+            pageRows:10
+        }
+        if (value && !!value.trim()) {
+            params.totalVersion = value
+        }
+        get(Paths.oldVersionList,params, { loading: true }).then((model) => {
             let versionList = this.listData(model.data.list);
             this.setState({versionList,bindType:this.props.productBaseInfo.bindType,pager:model.data.pager});
         });
@@ -276,7 +284,7 @@ export default class FirmwareManagement  extends Component {
                     <div style={{"margin":"24px 0 12px"}}>
                         
                         <div className='comm-searchBox'>
-                            <Search placeholder="请输入固件标识查询" onSearch={value => this.search(value)} enterButton />
+                            <Search placeholder="请输入固件标识查询" allowClear onSearch={value => this.search(value)} enterButton />
                         </div>
                         <Button className='butFloatRight' onClick={this.addFirmware.bind(this,"")} type="primary">添加固件</Button>
                     </div>
