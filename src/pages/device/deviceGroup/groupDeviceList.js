@@ -3,6 +3,8 @@ import {Modal, Table,Radio,Form,Select,Upload,Button, Tabs } from 'antd';
 import { DateTool } from '../../../util/util';
 import { post, Paths} from '../../../api';
 import SearchProduct from './searchProduct';
+import {Notification} from '../../../components/Notification';
+
 import './deviceGroup.scss';
 
 export default class GroupDetailt extends PureComponent {
@@ -85,6 +87,7 @@ export default class GroupDetailt extends PureComponent {
     }
     
     changeAddWay=(addWay)=>{
+        console.log(777,addWay)
         this.setState({addWay});
 
     }
@@ -106,7 +109,7 @@ export default class GroupDetailt extends PureComponent {
                 className="groupadd-device-modal"
             >
 
-                <Tabs defaultActiveKey={"1"} onChange={this.changeAddWay}>
+                <Tabs onChange={this.changeAddWay} activeKey={addWay}>
                     <Tabs.TabPane tab="查找选择" key="1">
                         {
                             addWay =="1" && <div>
@@ -126,7 +129,8 @@ export default class GroupDetailt extends PureComponent {
                                         defaultCurrent:pager.pageIndex, 
                                         total:pager.totalRows, 
                                         onChange:val=>{this.setQuestParams('pageIndex',val)},
-                                        current: pager.pageIndex
+                                        current: pager.pageIndex,
+                                        showSizeChanger:false
                                     }} 
                                 />
                             </div>
@@ -171,7 +175,13 @@ const UploadDevice = forwardRef(({
                 _data = temp.response.data.url
             }
         }
-        post(Paths.groupUpDevice,{groupid,productId,data:_data}).then((res) => {
+        post(Paths.groupUpDevice,{groupid,productId,data:_data}).then(({data={}}) => {
+            const { failCount=0, totalCount=0 } = data;
+            Notification({
+                message:'导入结果',
+                description:`共导入${totalCount}条，成功了${totalCount-failCount}条，失败了${failCount}条`
+            });
+
             openCloseAdd(true); 
         });
     }

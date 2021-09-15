@@ -134,8 +134,9 @@ export default class GroupDetailt extends PureComponent {
         this.setState({addVisiable});
         // console.log(5555,this.addListRefs)
         if(addVisiable){
+            console.log(3333,this.addListRefs)
             this.addListRefs.current.setQuestParams("pageIndex",1);
-            this.addListRefs.current.setState({addWay:1});
+            this.addListRefs.current.changeAddWay("1");
         }else{
             if(getList){ //关闭弹窗时候，getList 为 true 则需要重新请求列表
                 this.getGroupDevList();
