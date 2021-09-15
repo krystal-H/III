@@ -161,6 +161,14 @@ export default class UserVisit extends Component {
         }
         this.setState({deleteModalVisible:false});
     }
+
+    keyDownEnter = (e)=>{
+        if (e.keyCode === 13) {
+            this.deleteModal(1);
+        }
+    }
+
+
     //添加用户
     addUserModal = (type) => {
         if(type==1){//1:确认 2：取消
@@ -268,6 +276,7 @@ export default class UserVisit extends Component {
                         placeholder="请输入“delete”确认删除该用户"
                         maxLength={20}
                         value={deleteInputValue}
+                        onKeyDown={(e)=>{this.keyDownEnter(e)} }
                     />
                 </ActionConfirmModal>
            </div>
