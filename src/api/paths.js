@@ -141,7 +141,7 @@ let Paths = {
     oldVersionDelete: '/firmware/old/device/version/delete',//固件删除
     versionCheckMac: '/firmware/device/version/importMac',//批量导入mac
     versionValidate: '/firmware/device/version/validate',//发起验证
-    versionPublish: '/firmware/device/upgrade/publish',//发布
+    oldVersionPublish: '/firmware/old/device/version/publish',//发布
 
     
     

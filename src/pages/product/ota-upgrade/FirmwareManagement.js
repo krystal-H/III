@@ -10,7 +10,7 @@ import { DateTool } from '../../../util/util';
 import {Notification} from '../../../components/Notification';
 import PageTitle from '../../../components/page-title/PageTitle'
 
-import {VERTYPE,STATUSTAG,UPDATESTATUS,PACKAGETYPE} from './store/constData'
+import {VERTYPE,STATUSTAG,UPDATESTATUS,PACKAGETYPE,schemeType} from './store/constData'
 import {getVersionList,getExtVerLi} from './store/actionCreators'
 import upIconImg from '../../../assets/images/upota.png';
 const { Step } = Steps;
@@ -45,7 +45,7 @@ export default class FirmwareManagement  extends Component {
             },
             //搜索字段
             productId:undefined,
-            deviceVersionType:undefined,
+            schemeType:undefined,
             deviceVersionName:undefined,
             addFirmwareDialog:false,//增加弹窗
             validationFirmwareDialog:false,//验证弹窗
@@ -64,43 +64,46 @@ export default class FirmwareManagement  extends Component {
         this.columns = [
 
             { title: '产品名称', dataIndex: 'productName'},
-            // { title: '开发方案', dataIndex: 'productName'},
+            { title: '开发方案', dataIndex: 'schemeType', 
+                render: s => s>0 && schemeType[s-1].nam || "脏数据"
+            },
             { title: '产品版本号', dataIndex: 'productFirmwareVersion'},
             { title: '固件名称', dataIndex: 'firmwareVersionTypeName'},
+
             { title: '运行状态',  dataIndex: 'updateStatus',
               render: u => {
                   const {nam,color} = STATUSTAG[u]
                   return <Tag color={color} >{nam}</Tag>
               }
             },
-            { title: '创建时间',dataIndex: 'uploadTime',
+            { title: '创建时间',dataIndex: 'releaseTime',
                 render: t => <span>{DateTool.utcToDev(t)}</span>
             },
             { title: '操作',dataIndex: 'action',
                 render:(a,recard) => {//runStatus 0：待验证 1：验证中 2：已发布,3 验证完成,4
                     const {
-                        runStatus,deviceVersionId,
+                        status,deviceVersionId,
                         macSet='',validateType=0,
                         productId,totalVersion,
-                        deviceVersionType,firmwareVersionType,
+                        schemeType,firmwareVersionType,
                         packageType
                     } = recard
                     return <span>
                         {
-                            runStatus==0?<a onClick={()=>{this.openValidation(deviceVersionId)}}>验证</a>:
-                            runStatus==1?<>
+                            status==0?<a onClick={()=>{this.openValidation(deviceVersionId)}}>验证</a>:
+                            status==1?<>
                                 <a onClick={()=>{this.openValidation(deviceVersionId,{macSet,validateType:validateType||0})}}>修改验证</a>
                                 <Divider type="vertical" />
                                 <a onClick={()=>{this.getValidateInfo(deviceVersionId)}}>查看验证</a>
                             </>:<>
                                 {
-                                    runStatus!=4&&<>
-                                        <a onClick={()=>{this.openRelease({deviceVersionId,packageType},{productId,totalVersion,deviceVersionType,firmwareVersionType})}}>发布</a>
+                                    status!=4&&<>
+                                        <a onClick={()=>{this.openRelease({deviceVersionId,packageType},{productId,totalVersion,schemeType,firmwareVersionType})}}>发布</a>
                                         <Divider type="vertical" />
                                     </>
                                 }
                                 {
-                                    runStatus!=3&&<a onClick={()=>{this.toFirmwareDetails(deviceVersionId)}}>查看批次</a>
+                                    status!=3&&<a onClick={()=>{this.toFirmwareDetails(deviceVersionId)}}>查看批次</a>
                                 }
                             </>
                         }
@@ -194,9 +197,9 @@ export default class FirmwareManagement  extends Component {
     }
     //获取固件列表
     pagerIndex=(pageIndex=1)=>{
-        let {productId,deviceVersionType,deviceVersionName} = this.state
+        let {productId,schemeType,deviceVersionName} = this.state
         let params ={pageIndex,productId}
-        deviceVersionType!=-1 && (params.deviceVersionType = deviceVersionType)
+        schemeType!=-1 && (params.schemeType = schemeType)
         deviceVersionName && (params.deviceVersionName = deviceVersionName)
 
         this.props.getVersionLi(params)
@@ -238,13 +241,15 @@ export default class FirmwareManagement  extends Component {
 
                 <div className='otacontent comm-shadowbox'>
                     <div className='otasearchbox'>
-                        <Group compact className="searchgroupbox">
-                            <Select className='typeselect' defaultValue={-1} onChange={val=>{this.changeState('deviceVersionType',val)}}>
+                        <div className="searchgroupbox">
+                            <span>方案类型：</span>
+                            <Select className='typeselect' defaultValue={-1} onChange={val=>{this.changeState('schemeType',val)}}>
                                 <Option value={-1}>全部类型</Option>
                                 {
-                                    VERTYPE.map(({id,nam},i)=><Option key={i} value={id}>{nam}</Option>)
+                                    schemeType.map(({id,nam},i)=><Option key={i} value={id}>{nam}</Option>)
                                 }
                             </Select>
+                            <span>固件包名称：</span>
                             <Search placeholder="输入升级包名称查找"
                                 className='serachinpt'
                                 enterButton
@@ -252,8 +257,8 @@ export default class FirmwareManagement  extends Component {
                                 onChange={e=>{this.changeState('deviceVersionName',e.target.value)}}
                                 onSearch={()=>{this.pagerIndex(1)}} 
                             />
-                        </Group>
-                        {/* <Button className='button' onClick={()=>{this.switchDialog('addFirmwareDialog')}} type="primary">添加固件</Button> */}
+                        </div>
+                        <Button className='button' onClick={()=>{this.switchDialog('addFirmwareDialog')}} type="primary">添加固件</Button>
                     </div>
                     
                    
@@ -269,19 +274,8 @@ export default class FirmwareManagement  extends Component {
                         }} 
                     />
 
-                    <Modal
-                        title='新增固件' 
-                        visible={addFirmwareDialog}
-                        onOk={()=>{this.refAddFirmware.handleSubmit()}}
-                        onCancel={()=>{this.switchDialog('addFirmwareDialog');this.refAddFirmware.resetForm()}}
-                        width={650}
-                        maskClosable={false}
-                    >
-                        <AddFirmwareDialog
-                            onRef={ref=>{this.refAddFirmware = ref}}
-                            changeState={this.changeState}
-                        />
-                    </Modal>
+                    <AddFirmwareDialog onRef={ref=>{this.refAddFirmware = ref}} changeState={this.changeState} />
+
                     {releaseFirmwareDialog&&
                         <Modal 
                             title='发布固件' 
