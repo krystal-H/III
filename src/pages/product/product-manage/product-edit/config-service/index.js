@@ -94,19 +94,24 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [editData, setEditData] = useState({})
 
   const [customCount, setCustomCount] = useState(0)
+
   //验证函数
   const subNextConFirm = () => {
     const list = requiredList.filter(item => item.isConfiged === true)
     console.log('required-list', list)
-    if (list.length) {
+    console.log('requiredList----', requiredList.every(item => item.isConfiged === true), '***', requiredList)
+    if (requiredList.every(item => item.isConfiged === true)) {
       nextStep()
     } else {
       Notification({ description: '请完善必选配置信息！', type: 'warn' })
     }
   }
-  useImperativeHandle(ref, () => ({
-    onFinish: subNextConFirm
-  }))
+
+  useImperativeHandle(ref, () => {
+    return {
+      onFinish: subNextConFirm
+    }
+  }, [requiredList])
 
   // 是否配置过  配网信息、通信安全机制
   const isConfigedFunc = () => {
