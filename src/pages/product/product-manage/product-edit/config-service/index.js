@@ -96,7 +96,9 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [customCount, setCustomCount] = useState(0)
   //验证函数
   const subNextConFirm = () => {
-    if (requiredList.every(item => item.isConfiged === true)) {
+    const list = requiredList.filter(item => item.isConfiged === true)
+    console.log('required-list', list)
+    if (list.length) {
       nextStep()
     } else {
       Notification({ description: '请完善必选配置信息！', type: 'warn' })

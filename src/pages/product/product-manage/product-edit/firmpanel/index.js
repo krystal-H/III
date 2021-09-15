@@ -1,46 +1,49 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react'
 import { Button, Modal } from 'antd';
-import GrayDebugg from './grayDebugg'
 import ChangeModal from './changeModal'
 import { post, Paths, get } from '../../../../../api';
 import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.png';
 import { useHistory } from 'react-router-dom';
+import { cloneDeep } from "lodash";
+import GrayDebugg from './grayDebugg'
+import ActionModel from './actionModel'
+import RelPanModel from './relPanel'
+import { Notification } from '../../../../../components/Notification';
 import './index.scss'
 function confirmModel({ nextStep }, ref) {
+    let productId = 0
+    if (sessionStorage.getItem('productItem')) {
+        productId = JSON.parse(sessionStorage.getItem('productItem')).productId
+    }
     let history = useHistory();
     useEffect(() => {
-        getHistory()
+        getList()
     }, [])
     const [defaultTab, setDefaultTab] = useState('1')
-    //灰色测试
-    const [isGrayModalVisible, setIsGrayModalVisible] = useState(false);
-    const CancelDebugg = () => {
-        setIsGrayModalVisible(false)
-    }
-    const closeDebugg = () => {
-        setIsGrayModalVisible(false)
-    }
-    const openDebugg = () => {
-        setIsGrayModalVisible(true)
-    }
+    const [actionVis, setActionVis] = useState(false) //操作弹窗展示
     //获取最近发布的数据
     const [shoaLast, setShoaLast] = useState({})
-    const getHistory = () => {
+    const getList = () => {
         let productId = 0
         if (sessionStorage.getItem('productItem')) {
             productId = JSON.parse(sessionStorage.getItem('productItem')).productId
         }
         post(Paths.panelList, { productId }).then((res) => {
+            let data = res.data.list.filter(item => {
+                if (item.panelType == 3) {
+                    return item
+                }
+            })
             let lastEst = {}
-            if (!res.data.list.length) return;
-            lastEst = res.data.list[0]
-            res.data.list.forEach(item => {
+            if (!data.length) return;
+            lastEst = data[0]
+            data.forEach(item => {
                 if (item.verifyStatus == 1) {
                     lastEst = item
                     return
                 }
             })
-            res.data.list.forEach(item => {
+            data.forEach(item => {
                 if (item.isLatest == 1) {
                     lastEst = item
                     return
@@ -49,6 +52,124 @@ function confirmModel({ nextStep }, ref) {
             lastEst.status = getPanelStatus(lastEst)
             setShoaLast(lastEst)
         });
+    }
+    const [actionType, setActionType] = useState(0)
+    const [actionData, setActionData] = useState({})
+    //确定发布
+    const relOkAc = () => {
+        let params = {
+            productId,
+            projectId: actionData.projectId,
+            status: 1,
+            appId: 1
+        }
+        post(Paths.modelRel, params).then((res) => {
+            Notification({
+                type: 'success',
+                description: '提交发布成功！'
+            })
+            setActionVis(false)
+            getList()
+        });
+    }
+    //确定下线
+    const offOkLine = () => {
+        let params = {
+            productId,
+            projectId: actionData.projectId,
+        }
+        post(Paths.panelOffLine, params).then((res) => {
+            Notification({
+                type: 'success',
+                description: '下线成功！'
+            })
+            setActionVis(false)
+            getList()
+        });
+    }
+    //取消
+    const closeAction = () => {
+        setActionVis(false)
+    }
+    //删除
+    const openDel = (data1, type) => {
+        let data = cloneDeep(data1)
+        if (type == 4) {
+            data.projectName = data.templateName
+        }
+        setActionData(data)
+        setActionType(type)
+        setActionVis(true)
+    }
+    //操作判断
+    const updateOkHandle = () => {
+        if (actionType === 1) {
+            relOkAc()
+        } else if (actionType === 2) {
+            delOkCancel()
+        } else if (actionType === 3) {
+            offOkLine()
+        } else if (actionType === 4) {
+            useModel()
+        }
+    }
+    //灰色测试
+    const [isGrayModalVisible, setIsGrayModalVisible] = useState(false);
+    //取消灰度
+    const CancelDebugg = () => {
+        setIsGrayModalVisible(false)
+    }
+    //更新灰度
+    const closeDebugg = () => {
+        getList()
+        Notification({
+            type: 'success',
+            description: '灰度调试成功！'
+        })
+        setIsGrayModalVisible(false)
+    }
+    //打开灰度
+    const openDebugg = (data) => {
+        setActionData(data)
+        setIsGrayModalVisible(true)
+    }
+    //使用
+    const useModel = () => {
+        let params = {
+            productId,
+            filePath: actionData.filePath,
+            projectType: 1,
+            projectName: actionData.templateName,
+            templateId: actionData.templateId,
+            page1: actionData.page1,
+            panelType: 1
+        }
+        post(Paths.cusSavePanel, params).then((res) => {
+            getList()
+            Notification({
+                type: 'success',
+                description: '提交使用成功！',
+            });
+            setActionVis(false)
+        });
+    }
+    //发布
+    const [relPanVis, setRelPanVis] = useState(false)
+    //打开发布==============
+    const openRel = (data) => {
+        setActionData(data)
+        setRelPanVis(true)
+    }
+    const CancelRel = () => {
+        setRelPanVis(false)
+    }
+    const closeOkRel = () => {
+        Notification({
+            type: 'success',
+            description: '发布成功！'
+        })
+        getList()
+        setRelPanVis(false)
     }
     //更改面板
     const [isChangeModalVisible, setIsChangeModalVisible] = useState(false);
@@ -83,27 +204,27 @@ function confirmModel({ nextStep }, ref) {
     }));
     //回显标准面板按钮
     const getStandardBtn = (record, status) => {
-        // if (status == '模板') {
-        //     return (<div >
-        //         <Button onClick={() => { openDel(record, 4) }} type='primary'>使用</Button>
-        //     </div>)
-        // }
-        // if (status == '草稿') {
-        //     return (<div >
-        //         <Button onClick={() => { openDebugg(record) }} type='primary'>灰度调试</Button>
-        //     </div>)
-        // }
-        // if (status == '调试中') {
-        //     return (<div >
-        //         <Button onClick={() => { openDebugg(record) }} type='primary'>灰度调试</Button>
-        //         <Button onClick={() => { openRel(record, 1) }} type='primary'>发布</Button>
-        //     </div>)
-        // }
-        // if (status == '已发布') {
-        //     return (<div >
-        //         <Button onClick={() => { openDel(record, 3) }} type='primary'>下线</Button>
-        //     </div>)
-        // }
+        if (status == '模板') {
+            return (<div >
+                <Button onClick={() => { openDel(record, 4) }} type='primary'>使用</Button>
+            </div>)
+        }
+        if (status == '草稿') {
+            return (<div >
+                <Button onClick={() => { openDebugg(record) }} type='primary'>灰度调试</Button>
+            </div>)
+        }
+        if (status == '调试中') {
+            return (<div >
+                <Button onClick={() => { openDebugg(record) }} type='primary'>灰度调试</Button>
+                <Button onClick={() => { openRel(record, 1) }} type='primary'>发布</Button>
+            </div>)
+        }
+        if (status == '已发布') {
+            return (<div >
+                <Button onClick={() => { openDel(record, 3) }} type='primary'>下线</Button>
+            </div>)
+        }
         return ''
     }
     //获取面板状态
@@ -137,9 +258,6 @@ function confirmModel({ nextStep }, ref) {
             </div>
             <div>
                 <div className='confirm-pannel-content-left'>
-                    {/* {
-                        pathname.indexOf('edit') > -1 && <Button type="primary" onClick={openDebugg}>灰度调试</Button>
-                    } */}
                     {
                         getStandardBtn(shoaLast, shoaLast.status)
                     }
@@ -183,9 +301,6 @@ function confirmModel({ nextStep }, ref) {
             </div>
         </div>
         {
-            isGrayModalVisible && <GrayDebugg isGrayModalVisible={isGrayModalVisible} closeDebugg={closeDebugg} CancelDebugg={CancelDebugg}></GrayDebugg>
-        }
-        {
             isChangeModalVisible && <ChangeModal isChangeModalVisible={isChangeModalVisible} defaultTab={defaultTab} closeChange={closeChange} CancelChange={CancelChange}></ChangeModal>
         }
         {
@@ -195,6 +310,21 @@ function confirmModel({ nextStep }, ref) {
                     <div>手机扫描二维码下载</div>
                 </div>
             </Modal>
+        }
+        {
+            isGrayModalVisible && <GrayDebugg actionObj={actionData} isGrayModalVisible={isGrayModalVisible} closeDebugg={closeDebugg} CancelDebugg={CancelDebugg}></GrayDebugg>
+        }
+        {
+            actionVis && <ActionModel
+                visible={actionVis}
+                operate={actionType}
+                actionObj={actionData}
+                updateOkHandle={() => updateOkHandle()}
+                updateCancelHandle={() => closeAction()} />
+        }
+        {/* 发布 */}
+        {
+            relPanVis && <RelPanModel actionObj={actionData} relPanVis={relPanVis} CancelRel={CancelRel} closeOkRel={closeOkRel} />
         }
     </div>
 }

@@ -14,8 +14,6 @@ import { cloneDeep } from "lodash";
 import RelPanModel from './relPanel'
 
 const { TabPane } = Tabs;
-
-
 export default function ChangeModal({ isChangeModalVisible, closeChange, CancelChange, defaultTab = '1' }) {
     let productId = 0
     if (sessionStorage.getItem('productItem')) {
@@ -82,11 +80,6 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         setIseditModalVisible(true)
     }
     //========================
-    //标准面板选项
-    //tab3
-
-
-
     //确定删除
     const delOkCancel = () => {
         post(Paths.delPanel, { projectId: actionData.projectId }).then((res) => {
@@ -433,9 +426,6 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             {
                 relPanVis && <RelPanModel actionObj={actionData} relPanVis={relPanVis} CancelRel={CancelRel} closeOkRel={closeOkRel} />
             }
-            {/* {
-                testVis && <TestModal isAddModalVisible={testVis} closeAdd={closeTest} CancelAdd={CancelTest} />
-            } */}
         </div>
     )
 }

@@ -9,7 +9,7 @@ function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, 
   const [selectionType] = useState('radio')
   const columns = [
     { title: '模组', dataIndex: 'moduleName' },
-    { title: '芯片', dataIndex: 'hetModuleTypeName' },
+    { title: '芯片', dataIndex: 'originalModuleTypeName' },
     {
       title: '尺寸', key: '',
       render: (text, record, index) => (
