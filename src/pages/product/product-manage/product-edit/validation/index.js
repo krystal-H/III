@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react'
+import { connect } from 'react-redux';
 import { Table, Tabs, Input, Button } from 'antd';
 import { cloneDeep } from "lodash";
 import {get, post, Paths} from '../../../../../api';
@@ -37,7 +38,14 @@ const columns = [
 let ws = null, //保存websocket连接
     wsTimer = null; //websocket心跳连接定时器，页面销毁时，需要同时销毁定时器
 
-function Validation({ nextStep, productId }, ref) {
+
+const mapStateToProps = state => {
+    return {
+        developerInfo: state.getIn(['userCenter', 'developerInfo']).toJS(),
+    }
+}
+// @connect(mapStateToProps, null)
+function Validation({ nextStep, productId,developerInfo,refInstance }) {
 
 
     const [releaseVisible, setReleaseVisible] = useState(false); // 发布产品
@@ -68,7 +76,7 @@ function Validation({ nextStep, productId }, ref) {
         } 
     }, [serverToken])
 
-    useImperativeHandle(ref, () => ({
+    useImperativeHandle(refInstance, () => ({
         showRelease
     }))
 
@@ -115,8 +123,9 @@ function Validation({ nextStep, productId }, ref) {
             clearInterval(wsTimer);
             wsTimer = setInterval(()=>{ws.send('')}, 5000); //告诉服务器“请保持联系”
             const product = JSON.parse(sessionStorage.getItem('productItem'));
-            const {customerCode,deviceTypeId,deviceSubTypeId,productVersion} = product;
-            const senmsg = `[${serverToken}|${customerCode}|${deviceTypeId}#${deviceSubTypeId}#${productVersion}#${debugInfo[0]}#${debugInfo[1]}]`;  
+            const {deviceTypeId,deviceSubTypeId,productVersion} = product;
+
+            const senmsg = `[${serverToken}|${developerInfo.userId}|${deviceTypeId}#${deviceSubTypeId}#${productVersion}#${debugInfo[0]}#${debugInfo[1]}]`;  
             ws.send(senmsg);
         };
         ws.onmessage =  (data)=> {//接收到消息
@@ -188,8 +197,9 @@ function Validation({ nextStep, productId }, ref) {
         }
     </div>
 }
+let Component = connect(mapStateToProps, null)(Validation)
 
-export default Validation = forwardRef(Validation)
+export default forwardRef( (props,ref) => <Component  {...props}  refInstance={ref} />   )
 
 
 
