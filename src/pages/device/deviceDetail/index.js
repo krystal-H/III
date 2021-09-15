@@ -26,7 +26,6 @@ export default function DeviceInfo({ match }) {
     }
     return (<div id='device-detail'>
         <PageTitle backTitle='设备详情' backHandle={() => { history.push('/open/device/devManage/list') }}>
-            {/* <div className='device-top-name'>{baseInfo.productName}</div> */}
             <div className='device-top'>
                 <div className='device-top-item'>
                     <label className='device-label'>设备ID：</label><span className='device-text'>{baseInfo.deviceId}</span>

@@ -39,9 +39,6 @@ export default function ProductDetails({ productBaseInfo, match, getProductBaseI
     } else {
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
-    // if (!productIdInRoutePath) {
-    //     return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
-    // }
     const [showSecret, setShowSecret] = useState(false)
     const changeState = () => {
         setShowSecret(!showSecret)
