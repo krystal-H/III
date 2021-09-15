@@ -92,17 +92,12 @@ export const ReleaseFirmware = Form.create({
                         });
                         return false;
                     }
-                    get(Paths.versionPublish,data).then((model) => {
-                        if(model.code==0){
-                            _this.setState({macList:''},()=>{
-                                releaseFirmware('修改成功，请求列表数据','','');
-                            });
-                        }else{
-                            // 错误提示
-                            Notification({
-                                description:model.msg
-                            });
-                        }
+                    get(Paths.oldVersionPublish,data).then((model) => {
+                        
+                        _this.setState({macList:''},()=>{
+                            releaseFirmware('修改成功，请求列表数据','','');
+                        });
+                        
                     });
                 }
             });

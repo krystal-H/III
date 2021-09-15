@@ -79,15 +79,11 @@ export default class GroupDetailt extends PureComponent {
                 });
             }
         }else if(addWay=="2"){
-
-            console.log(11, this.uploadForm.current );
-            console.log(22, this.uploadForm.current.getFieldsValue() )
             this.uploadForm.current.submit();
         } 
     }
     
     changeAddWay=(addWay)=>{
-        console.log(777,addWay)
         this.setState({addWay});
 
     }
