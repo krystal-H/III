@@ -51,10 +51,13 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
     const [releaseVisible, setReleaseVisible] = useState(false); // 发布产品
     const [original, setOriginal] = useState([]);//原始数据
     const [debugInfo, setDebugInfo] = useState(["",""]); //
-    const [serverIp, setServerIp] = useState(""); //ws 请求配置
-    const [serverToken, setServerToken] = useState(""); //ws 请求配置
+    const [serverIp, setServerIp] = useState(""); //ws 请求配置 ip
+    const [serverToken, setServerToken] = useState(""); //ws 请求配置 token
     const [webSocketStatu, setWebSocketStatu] = useState(0); //ws 连接状态 0失败，1成功
     const [mount, setmMount] = useState(0); //
+    const [historyVisiable, setHistoryVisiable] = useState(false);
+
+    
     
 
     useEffect(() => {
@@ -69,7 +72,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
         }
     }, [productId])
 
-    // 间接过之后，token再发生变化的时候（连接失败或者异常断开连接）重新连接
+    // 连接过之后，token再发生变化的时候（连接失败或者异常断开连接）重新连接
     useEffect(() => {
         if(mount){
             newWebSocket();
@@ -146,6 +149,10 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
         }
     }
 
+    const openHistory =  open =>{
+        setHistoryVisiable(open)
+    }
+
     const [ account, devMac ]= debugInfo
     return <div id='product-edit-validation'>
         <div className='validation-top'>在真实设备调试的配置调试信息步骤，添加设备物理地址后，既默认此设备在clife平台注册，不受通信安全校验机制（如一机一密）的影响</div>
@@ -160,7 +167,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
                             <Button type='primary' onClick={startDebug}>确定调试</Button>
                             <Button onClick={()=>{setDebugInfo(['',''])}}>重置</Button>
                         </div>
-                        <a>历史调试信息</a>                                       
+                        <a onClick={()=>{openHistory(true)} }>历史调试信息</a>                                       
                     </div>
                     <div className='tab-one-content'>
                         <div className='left-content'>
@@ -186,7 +193,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
                 </TabPane>
             </Tabs>
         </div>
-        {<History />}
+        <History historyVisiable={historyVisiable} openHistory={openHistory} />
         {/* 确认发布产品弹窗 */}
         {
             releaseVisible &&
