@@ -8,16 +8,11 @@ const mapStateToProps = state => {
         loadingShow: state.getIn(['loadingShow', 'loadingShow'])
     }
 }
-const mapDispatchToProps = dispatch => {
-    return {
-        // getCatalogList: () => dispatch(getCatalogListAction()),
-    }
-}
 
 const tops = [20,14.14214,0,-14.14214,-20,-14.14214,0,14.14214],
       lefts = [0,14.14214,20,14.14214,0,-14.14214,-20,-14.14214];
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps, null)
 export default class Loading extends Component  {
     render() {
         let {loadingShow} = this.props;
