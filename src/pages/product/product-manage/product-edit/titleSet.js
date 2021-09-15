@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef, useRef } from 'react'
-import moment from 'moment';
 import { Form, Input, Button, Space, Select, Radio, Tabs, Drawer } from 'antd';
 import { UploadFileHooks } from '../../../../components/upload-file';
 import { post, Paths, get } from '../../../../api';
+import LabelVisible from '../../../../components/form-com/LabelVisible';
 import './titleSet.scss'
 export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
     let productItem = {}
@@ -29,8 +29,14 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                 productCode: val.productCode
             }
             post(Paths.editProductInfo, params).then((res) => {
-                onOkClose(res.data)
-                // delaData(res.data)
+                let obj = {
+                    productName: val.productName,
+                    brandId: val.brandId,
+                    productIcon: val.productIcon[0].url,
+                    productCode: val.productCode,
+                    modifyTime:res.data.modifyTime
+                }
+                onOkClose(obj)
             });
         })
     }
@@ -137,7 +143,9 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     </Form.Item>
                     <Form.Item
                         label="产品密钥"
-                    ><span>{productItem.deviceKey}</span>
+                    ><span>
+                            <LabelVisible label={productItem.deviceKey} tip="" copy={false} />
+                        </span>
                     </Form.Item>
                     <Form.Item
                         label="产品图片"

@@ -110,7 +110,8 @@ export default function DeviceRegist() {
         // if (selectType) {
         //     params.productId = selectType
         // }
-        params.productId = 11979
+        // params.productId = 11979
+        params.productId = selectType
         if (!params.id || !params.id.trim()) {
             delete params.id
         }

@@ -56,7 +56,8 @@ export default function OverviewWrap() {
     //消息列表 
     const [messageList, setMessageList] = useState([])
     const getMessageList = () => {
-        post(Paths.getNoticeList).then((res) => {
+        let params = { "pager": { "pageIndex": 1, "pageRows": 10 } }
+        post(Paths.getNoticeList,params).then((res) => {
             if (res.data.list.length > 3) {
                 setMessageList(res.data.list.slice(0, 3))
             } else {
@@ -199,6 +200,25 @@ export default function OverviewWrap() {
     const goAppDetail = item => {
         history.push(`/open/app/details/${item.appId}`)
     }
+    //消息类型
+    const getMessageType = (text) => {
+        if (text == 1) {
+            return '系统公告'
+        }
+        if (text == 2) {
+            return '流程消息'
+        }
+        if (text == 31) {
+            return 'APP控制服务'
+        }
+        if (text == 32) {
+            return '云端定时服务'
+        }
+        if (text == 33) {
+            return '场景联动服务'
+        }
+        return ''
+    }
     return (
         <div className='over-view'>
             {
@@ -304,7 +324,7 @@ export default function OverviewWrap() {
                         <div className='over-view-device-content'>
                             <div className='over-view-device-content-item'>
                                 <div >
-                                    <div className='over-view-device-content-item-label' onClick={()=>{ goPage('/open/device/devManage/list') }}>
+                                    <div className='over-view-device-content-item-label' onClick={() => { goPage('/open/device/devManage/list') }}>
                                         设备管理
                                         <RightOutlined />
                                     </div>
@@ -327,7 +347,7 @@ export default function OverviewWrap() {
                                     <div>{devOneList.todayActive}</div>
                                 </div>
                             </div>
-                            <div className='over-view-device-content-item'>
+                            {/* <div className='over-view-device-content-item'>
                                 <div >
                                     <div className='over-view-device-content-item-label'>
                                         设备密钥
@@ -351,11 +371,11 @@ export default function OverviewWrap() {
                                     <div>未入网设备</div>
                                     <div>{devTwoList.unactive}</div>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className='over-view-device-content-item'>
                                 <div >
-                                    <div className='over-view-device-content-item-label'>
-                                        设备告警
+                                    <div className='over-view-device-content-item-label' onClick={() => { goPage('/open/device/devMsg') }}>
+                                        设备消息
                                         <RightOutlined />
                                     </div>
                                     <div></div>
@@ -426,13 +446,13 @@ export default function OverviewWrap() {
                         <div className='over-view-quick-entry'>
                             <div className='center-layout-wrap' onClick={openNewProduct}>
                                 <div >
-                                    <img src={quick1} />
+                                    <img src={quick1} alt='' />
                                     <div>创建产品</div>
                                 </div>
                             </div>
                             <div className='center-layout-wrap' onClick={() => { goPage('/open/product/proManage/list') }}>
                                 <div>
-                                    <img src={quick2} />
+                                    <img src={quick2} alt='' />
                                     <div>控制台</div>
                                 </div>
                             </div>
@@ -453,7 +473,8 @@ export default function OverviewWrap() {
                         <div className='over-view-message hover-commons-unite'>
                             {
                                 messageList.length ? (messageList.map((item, index) => {
-                                    return (<div className='over-view-message-item' onClick={() => { goMessageDetail(item.noticeId) }} key={index}>【{item.noticeTitle} 】{item.noticeContent}</div>)
+                                    return (<div className='over-view-message-item' onClick={() => { goMessageDetail(item.noticeId) }} key={index}>
+                                        【{getMessageType(item.noticeType)} 】{item.noticeTitle}</div>)
                                 })) : <div className='over-no-data'><img src={noData} alt='' /> <div>暂无消息</div></div>
 
                             }

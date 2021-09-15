@@ -5,13 +5,9 @@ import { Steps, Button, message } from 'antd';
 
 import { getProductBaseInfo } from '../store/ActionCreator';
 import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
-import ProductLinks from './product-links/ProductLinks';
 import './ProductEdit.scss'
 
 import ProductProtocols from './product-protocols/index.js';
-import { CommercialInfo } from './commercialInformation/CommercialInfo';
-import ApplyRelease from './commercialInformation/ApplyRelease';
-import ProductInfo from './product-info/ProductInfo';
 import PageTitle from '../../../../components/page-title/PageTitle';
 import Hardware from './dev-hardware';
 import ConfirmPanel from './firmpanel';
@@ -143,8 +139,9 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
         setTitleVisible(false)
     }
     const onOkClose=(data)=>{
-        setProductItem(data)
-        sessionStorage.setItem('productItem',JSON.stringify(data))
+        let obj={...JSON.parse(sessionStorage.productItem),...data}
+        setProductItem(obj)
+        sessionStorage.setItem('productItem',JSON.stringify(obj))
         Notification({
             type: 'success',
             description: '更新成功！',

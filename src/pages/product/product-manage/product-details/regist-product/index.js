@@ -14,7 +14,7 @@ export default function DeviceRegist() {
     let productItem = {}
     if (sessionStorage.getItem('productItem')) {
         productItem = JSON.parse(sessionStorage.getItem('productItem'))
-    } 
+    }
     const [form] = Form.useForm();
     const [dataSource, setDataSource] = useState([])
     const [countData, setCountData] = useState([{ label: '设备总数量', count: 0 }, { label: '已入网设备', count: 0 }, { label: '未入网设备', count: 0 }])
@@ -70,7 +70,7 @@ export default function DeviceRegist() {
     }, [])
     //获取统计
     const getStatistical = () => {
-        post(Paths.proReledCount,{productId: productItem.productId }).then((res) => {
+        post(Paths.proReledCount, { productId: productItem.productId }).then((res) => {
             setCountData([{ label: '设备总数量', count: res.data.total },
             { label: '已入网设备', count: res.data.activate },
             { label: '未入网设备', count: res.data.unactivate }])
@@ -101,12 +101,13 @@ export default function DeviceRegist() {
     }, [pager.pageIndex, pager.pageRows])
     //获取列表
     const getList = (loading = true) => {
-        // let productId=JSON.parse(sessionStorage.getItem('productItem')).productId
-        // let params = { ...form.getFieldsValue(), ...pager, productId }
-        // if (!params.id || !params.id.trim()) {
-        //     delete params.id
-        // }
-        let params = { ...form.getFieldsValue(), ...pager, productId: productItem.productId }
+        let params = { ...pager, productId: productItem.productId }
+        if (form.getFieldValue('status') != -1) {
+            params.status = form.getFieldValue('status')
+        }
+        if (form.getFieldValue('id') && form.getFieldValue('id').trim()) {
+            params.id = form.getFieldValue('id')
+        }
         post(Paths.proReledRegist, params, { loading }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {
@@ -158,10 +159,9 @@ export default function DeviceRegist() {
             <div className='comm-shadowbox device-content'>
                 <div className='content-top'>
                     <div className='content-top-left'>
-                        <Form className='device-filter-form' form={form} layout='inline'>
+                        <Form className='device-filter-form' form={form} layout='inline' initialValues={{status:'-1'}}>
                             <Form.Item name="status" label="入网状态" >
                                 <Select
-                                    allowClear
                                     style={{ width: '200px' }}
                                 >
                                     {

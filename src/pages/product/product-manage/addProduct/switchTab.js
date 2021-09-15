@@ -106,7 +106,8 @@ class SwitchTab extends Component {
     this.setState({
       summaryText: this.state.currentSchemList[index].summarize || '',
       propertyText: this.state.currentSchemList[index].feature || '',
-      suitableText: this.state.currentSchemList[index].illustrate || ''
+      suitableText: this.state.currentSchemList[index].illustrate || '',
+      picture: this.props.btnList[index].picture || ''
     })
   }
 

@@ -7,6 +7,7 @@ import { post, Paths, get } from '../../../api';
 import { netStatus } from '../../../configs/text-map'
 import { DateTool } from '../../../util/util';
 import { Notification } from '../../../components/Notification';
+import LabelVisible from '../../../components/form-com/LabelVisible';
 import './index.scss'
 import RegistModel from './regist'
 const { Option } = Select;
@@ -42,7 +43,7 @@ export default function DeviceRegist() {
     //产品种类列表
     const getProductType = () => {
         post(Paths.getProductPlus, {}).then((res) => {
-            res.data.unshift({ productId:0, productName: '全部产品' })
+            res.data.unshift({ productId: 0, productName: '全部产品' })
             setOptionArr(res.data)
         });
     }
@@ -62,12 +63,15 @@ export default function DeviceRegist() {
     }, [pager.pageIndex, pager.pageRows, selectType])
     //获取列表
     const getList = (loading = true) => {
-        let params = { ...form.getFieldsValue(), ...pager }
+        let params = { ...pager }
+        if (form.getFieldValue('status') != -1) {
+            params.status = form.getFieldValue('status')
+        }
+        if (form.getFieldValue('id') && form.getFieldValue('id').trim()) {
+            params.id = form.getFieldValue('id')
+        }
         if (selectType) {
             params.productId = selectType
-        }
-        if (!params.id || !params.id.trim()) {
-            delete params.id
         }
         post(Paths.proReledRegist, params, { loading }).then((res) => {
             setDataSource(res.data.list)
@@ -146,6 +150,10 @@ export default function DeviceRegist() {
             title: '设备秘钥',
             dataIndex: 'deviceSecret',
             key: 'deviceSecret',
+            width: '330px',
+            render: (text) => (
+                <span ><LabelVisible label={text} copy={false} /></span>
+            )
         }, {
             title: '入网状态',
             dataIndex: 'status',
@@ -191,10 +199,9 @@ export default function DeviceRegist() {
             <div className='comm-shadowbox device-content'>
                 <div className='content-top'>
                     <div className='content-top-left'>
-                        <Form className='device-filter-form' form={form} layout='inline'>
+                        <Form className='device-filter-form' form={form} layout='inline' initialValues={{ status: '-1' }}>
                             <Form.Item name="status" label="入网状态" >
                                 <Select
-                                    allowClear
                                     style={{ width: '200px' }}
                                 >
                                     {

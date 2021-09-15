@@ -14,7 +14,7 @@ const EditableCell = ({
     children,
     ...restProps
 }) => {
-    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+    const inputNode = inputType === 'number' ? <InputNumber /> : <Input maxLength={50}/>;
     return (
         <td {...restProps}>
             {editing ? (
@@ -178,9 +178,6 @@ export default function EditableTable({ devceId }) {
                         >
                             保存
                         </a>
-                        {/* <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                            <a href="#!">取消</a>
-                        </Popconfirm> */}
                     </span>
                 ) : (
                     <Space>

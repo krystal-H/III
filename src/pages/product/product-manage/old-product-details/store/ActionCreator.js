@@ -204,10 +204,6 @@ export const getPropertyConfigAction = (id) => {
 //调试MAC列表 debugSecretList
 export const getDeviceDebugMacList = (id) => {
   return (dispatch,getState) => {
-    // get(Paths.deviceDebugMacGetList,{productId: id}).then((data) => {
-    //   let action = updateDeviceDebugMacListAction(data);
-    //   dispatch(action)
-    // });
     get(Paths.debugSecretList,{productId: id},{loading:true}).then((data) => {
       console.log('data--------', data);
       let action = updateDeviceDebugMacListAction(data);
@@ -242,14 +238,6 @@ export const deleteDeviceDebugMacDataAction = (pid,deleteId,data) => {
       let action = changeDeviceDebugMacData(data);//改变调试MAC数据
       dispatch(action)
     }else{
-      // get(Paths.deviceDebugMacDelete,{productId: pid,debugMacId:deleteId}).then((data) => {
-      //   if(data.code==0){//删除成功调用mac列表请求
-      //     get(Paths.deviceDebugMacGetList,{productId: pid}).then((data) => {
-      //       let action = updateDeviceDebugMacListAction(data);
-      //       dispatch(action)
-      //     });
-      //   }
-      // });
       get(Paths.delDebugMac,{id:deleteId},{loading:true}).then((data) => {
         if(data.code==0){//删除成功调用mac列表请求
           get(Paths.debugSecretList,{productId: pid},{loading:true}).then((data) => {

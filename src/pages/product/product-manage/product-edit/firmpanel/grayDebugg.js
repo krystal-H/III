@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select, Checkbox, Form } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { post, Paths } from '../../../../../api';
+import { Notification } from '../../../../../components/Notification';
 import './grayDebugg.scss';
 const { TabPane } = Tabs;
 export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDebugg, actionObj }) {
@@ -54,43 +55,46 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                 accountList.push(Number(item))
             })
         }
-        
+        if(!accountList.length){
+            Notification({
+                description: `至少添加一个调试账号`,
+                type: 'warn'
+            });
+            return
+        }
         let params = {
             productId,
             projectId: actionObj.projectId,
             newAppIds: selectAppId,
-            accountList
+            accountList,
+            panelType:actionObj.panelType 
         }
         if(!selectAppId){
+            Notification({
+                description: `请选择一个app`,
+                type: 'warn'
+            });
             return
         }
-        // console.log(params,'=============')
-        // return
         post(Paths.greyModel, params).then((res) => {
             closeDebugg()
         });
-        // currentForm.validateFields().then(value => {
-        //     let accountList=[]
-        //     value.accountList.forEach(item=>{
-        //         accountList.push(Number(item))
-        //     })
-        //     let params = {
-        //         productId,
-        //         projectId: actionObj.projectId,
-        //         newAppIds: selectAppId,
-        //         accountList
-        //     }
-        //     post(Paths.greyModel, params).then((res) => {
-        //         closeDebugg()
-        //     });
-        // }).catch(err => {
-        //     // 验证不通过时进入
-        // });
     }
     //
     const [selectAppId, setSelectAppId] = useState('')
     const selectApp = (type, appId) => {
         setSelectAppId(appId)
+    }
+    //添加枚举参数
+    const AddEnums = (add, count) => {
+        if (count > 10) {
+            Notification({
+                description: `不能超过10条数据`,
+                type: 'warn'
+            });
+            return
+        }
+        add()
     }
     const getAppListDOM = (type) => {
         let _apps = applist.filter(item => type ? item.isOfficialApp : !item.isOfficialApp),
@@ -164,7 +168,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                                 <Input placeholder="请输入手机号码"
                                                                     style={{ width: '214px', marginRight: '10px' }} />
                                                             </Form.Item>
-                                                            {fields.length ? (
+                                                            {fields.length !== 1 ? (
                                                                 <MinusCircleOutlined
                                                                     className="dynamic-delete-button"
                                                                     onClick={() => remove(field.name)}
@@ -174,9 +178,9 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                     ))}
                                                     <Form.Item {...(fields.length === 0 ? formItemLayout : formItemLayoutWithOutLabel)} label={fields.length === 0 ? '指定调试账号：' : ''}>
                                                         <a
-                                                            onClick={() => add()}
+                                                            onClick={() => AddEnums(add, fields.length)}
                                                         >
-                                                            添加参数
+                                                            添加调试账号
                                                         </a>
                                                         <Form.ErrorList errors={errors} />
                                                     </Form.Item>
@@ -220,7 +224,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                                 <Input placeholder="请输入手机号码"
                                                                     style={{ width: '214px', marginRight: '10px' }} />
                                                             </Form.Item>
-                                                            {fields.length ? (
+                                                            {fields.length !==1 ? (
                                                                 <MinusCircleOutlined
                                                                     className="dynamic-delete-button"
                                                                     onClick={() => remove(field.name)}
@@ -230,9 +234,9 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                     ))}
                                                     <Form.Item {...(fields.length === 0 ? formItemLayout : formItemLayoutWithOutLabel)} label={fields.length === 0 ? '指定调试账号：' : ''}>
                                                         <a
-                                                            onClick={() => add()}
+                                                            onClick={() =>{AddEnums(add, fields.length)}}
                                                         >
-                                                            添加参数
+                                                            添加调试账号
                                                         </a>
                                                         <Form.ErrorList errors={errors} />
                                                     </Form.Item>

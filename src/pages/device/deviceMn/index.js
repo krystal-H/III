@@ -5,6 +5,7 @@ import PageTitle from '../../../components/page-title/PageTitle';
 import CountNum from '../../../components/CountNum/index';
 import { post, Paths, get } from '../../../api';
 import downpng from '../../../assets/images/product/download.png';
+
 import './index.scss'
 // import GroupDetailt from '../../product/device/device-group/groupDeviceList';
 const { Option } = Select;
@@ -250,7 +251,7 @@ export default function DeviceList() {
                                 name='field'
                                 noStyle
                             >
-                                <Input style={{ width: '228px' }} />
+                                <Input style={{ width: '228px' }} placeholder='请输入设备物理地址或者ID'/>
                             </Form.Item>
                         </Input.Group>
                     </Form.Item>
@@ -291,8 +292,8 @@ export default function DeviceList() {
                             style={{ width: '102px' }}
                         >
                             <Option value={'1'}>全部状态</Option>
-                            <Option value={true}>正常运行</Option>
-                            <Option value={false}>今日故障</Option>
+                            <Option value={false}>正常运行</Option>
+                            <Option value={true}>今日故障</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item label=" " colon={false} style={{ marginRight: '2px' }}>
@@ -312,7 +313,8 @@ export default function DeviceList() {
                 <img onClick={exportFile} src={downpng} style={{ marginRight: '15px' }} alt='' />
             </div>
             <div>
-                <Table rowKey='deviceId' dataSource={dataSource} columns={columns} pagination={{
+                <Table rowKey='deviceId' dataSource={dataSource} columns={columns}
+                 pagination={{
                     defaultCurrent: 1,
                     current: pager.pageIndex,
                     onChange: pagerChange,

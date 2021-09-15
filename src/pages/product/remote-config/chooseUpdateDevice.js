@@ -113,7 +113,7 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
     return copyTypeList
   }
 
-  // 移除单个 右侧数据
+  // 右侧---移除单个 
   const removeSigle = (record) => {
     setRightDeviceList({
       ...rightDeviceList,
@@ -275,9 +275,10 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
             errorList
           })
           if (successList.length > 0) {
+            const temp = uniqueItemInArrayByKey([...rightAllList, ...successList], 'deviceUniqueId')
             setRightDeviceList({
-              rightAllList: [...rightAllList, ...successList],
-              rightTempList: [...rightAllList, ...successList]
+              rightAllList: temp,
+              rightTempList: temp
             })
           }
           setExcelFileName(excel.name)
@@ -382,6 +383,18 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
             pagination={false}
             scroll={{ y: 344 }}
           />
+          {/* <Table columns={deviceRightColumns}
+            dataSource={rightTempList}
+            pagination={{
+              total: rightTempList.length,
+              defaultCurrent: 1,
+              defaultPageSize: 7,
+              showQuickJumper: false,
+              hideOnSinglePage: true,
+              size: 'small',
+              showTotal: total => <span>共 <a>{total}</a> 条</span>
+            }}
+          /> */}
         </div>
       </div>
 

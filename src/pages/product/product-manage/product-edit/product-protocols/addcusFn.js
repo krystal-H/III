@@ -2,7 +2,7 @@ import React, { useEffect, useState, useImperativeHandle, forwardRef, useRef } f
 import { Form, Input, Button, Space, Select, Radio, Tabs, Drawer } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { post, Paths, get } from '../../../../../api';
-
+import { Notification } from '../../../../../components/Notification';
 import './editInfo.scss'
 import { CloseOutlined } from '@ant-design/icons';
 //tab
@@ -165,6 +165,17 @@ function NumberTemp({ currentTab, sentReq }, ref) {
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
     }));
+    //添加枚举参数
+    const AddEnums = (add, count) => {
+        if (count > 12) {
+            Notification({
+                description: `不能超过12条数据`,
+                type: 'warn'
+            });
+            return
+        }
+        add()
+    }
     return (
         <Form
             name="numberT"
@@ -177,7 +188,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
             form={form}
         >
             <Form.Item
-                label="功能点名称："
+                label="功能点名称"
                 name='name'
                 rules={[
                     {
@@ -199,7 +210,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
             ><Input />
             </Form.Item>
             <Form.Item
-                label="数据类型："
+                label="数据类型"
                 name='type'
             >
                 <Select allowClear onChange={onTypeChange}>
@@ -276,7 +287,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                                                     </Space>
                                                 ))}
                                                 <Form.Item>
-                                                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                    <Button type="dashed" onClick={() => { AddEnums(add, fields.length) }} block icon={<PlusOutlined />}>
                                                         新加
                                                     </Button>
                                                 </Form.Item>
@@ -335,7 +346,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
             </Form.Item>
 
             <Form.Item
-                label="数据传输类型："
+                label="数据传输类型"
                 name="accessMode"
             >
                 <Radio.Group >
@@ -407,7 +418,7 @@ function EventTemp({ currentTab, sentReq }, ref) {
                 form={form}
             >
                 <Form.Item
-                    label="功能点名称："
+                    label="功能点名称"
                     name="name"
                     rules={[
                         {
@@ -429,13 +440,13 @@ function EventTemp({ currentTab, sentReq }, ref) {
                 ><Input />
                 </Form.Item>
                 <Form.Item
-                    label="事件类型："
+                    label="事件类型"
                     name="type"
                 >
                     <Radio.Group options={eventTabOptions} />
                 </Form.Item>
                 <Form.Item
-                    label="输出参数："
+                    label="输出参数"
                 >
                     <Button
                         type="dashed"
@@ -527,7 +538,7 @@ function ServeTemp({ sentReq }, ref) {
                 form={form}
             >
                 <Form.Item
-                    label="功能点名称："
+                    label="功能点名称"
                     name="name"
                     rules={[
                         {
@@ -558,7 +569,7 @@ function ServeTemp({ sentReq }, ref) {
                 }}
             >
                 <Form.Item
-                    label="输入参数："
+                    label="输入参数"
                 >
                     <Button
                         type="dashed"
@@ -584,7 +595,7 @@ function ServeTemp({ sentReq }, ref) {
                 }}
             >
                 <Form.Item
-                    label="输出参数："
+                    label="输出参数"
                 >
                     <Button
                         type="dashed"
@@ -648,6 +659,17 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
             sentAddData(false)
         })
     }
+    //添加枚举参数
+    const AddEnums = (add, count) => {
+        if (count > 12) {
+            Notification({
+                description: `不能超过12条数据`,
+                type: 'warn'
+            });
+            return
+        }
+        add()
+    }
     return (
         <div className='add-tempele-wrap add-params-wrap'>
             <Form form={form}
@@ -659,7 +681,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                 }}>
 
                 <Form.Item
-                    label="参数名称："
+                    label="参数名称"
                     name="name"
                     rules={[
                         {
@@ -681,7 +703,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                 </Form.Item>
 
                 <Form.Item
-                    label="数据类型："
+                    label="数据类型"
                     name='type'
                     rules={[
                         {
@@ -762,7 +784,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                                                         </Space>
                                                     ))}
                                                     <Form.Item>
-                                                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                        <Button type="dashed" onClick={() => { AddEnums(add, fields.length) }} block icon={<PlusOutlined />}>
                                                             新加
                                                         </Button>
                                                     </Form.Item>

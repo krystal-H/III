@@ -98,7 +98,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
       Notification({
         description: `至少勾选一条数据`,
         type: 'warn'
-    });
+      });
       return
     }
     if (currentTab === '1') {
@@ -125,7 +125,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
           </TabPane>
           <TabPane tab="其他品类" key="2">
             <div className='other-product-top'>
-              <Search placeholder="搜索功能点名称" value={searchname} onChange={(val) => { setSearchname(val.target.value) }} allowClear onSearch={onSearch} style={{ width: 465 }} />
+              <Search placeholder="搜索功能点名称" value={searchname} onChange={(val) => { setSearchname(val.target.value) }}  onSearch={onSearch} style={{ width: 465 }} />
               <Select
                 style={{ width: 142 }}
                 onChange={onselectChange}

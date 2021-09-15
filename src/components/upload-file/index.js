@@ -154,9 +154,9 @@ function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false
         const isLt = isLtMaxSize(file);
         if (!isLt) {
             Notification({
-                description: `文件必须小于 ${maxSize} MB!`,
+                description: isNotImg ? `文件必须小于 ${maxSize} MB!` : `文件必须小于 ${maxSize * 1000} kB!`,
                 type: 'warn'
-            });
+            })
             return false;
         }
         if (!isLtMaxCount()) {
@@ -428,8 +428,10 @@ export class UploadFileClass extends PureComponent {
         }
         let desc = '';
         if (isNotImg) {
+            console.log('不是图片')
             desc = <span className="upload-desc">支持{acceptFormat}格式，不超过{maxSize}MB。</span>
         } else {
+            console.log('是图片')
             desc = <span className="upload-desc">推荐尺寸{preferSize}。支持{acceptFormat}格式，不超过{maxSize * 1024}kB。</span>
         }
         return (

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useImperativeHandle, forwardRef, useRef, us
 import { Form, Input, Button, Space, Select, Radio, Tabs, Drawer } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { post, Paths, get } from '../../../../../api';
-
+import { Notification } from '../../../../../components/Notification';
 import './editInfo.scss'
 //tab
 const optionsWithDisabled = [
@@ -41,10 +41,7 @@ const eventTabOptions = [
     { label: '信息', value: 'info' }]
 
 export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList, modelType, actionData }) {
-    // alert(actionData.funcType)
-    // dealData(actionData)
     const originData = JSON.parse(JSON.stringify(actionData))
-    console.log(actionData, '原数据')
     const { TabPane } = Tabs;
     useEffect(() => {
     }, [])
@@ -105,13 +102,13 @@ export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList,
         >
             <div className='edit-left-protocol-wrap'> <Tabs activeKey={currentTab} defaultActiveKey={actionData.funcType} renderTabBar={renderTabBar}>
                 <TabPane tab="Tab 1" key="properties">
-                    <NumberTemp ref={oneRef} currentTab={currentTab} sentReq={sentReq} actionData={originData}></NumberTemp>
+                    <NumberTemp ref={oneRef} currentTab={currentTab} sentReq={sentReq} actionData={originData} modelType={modelType}></NumberTemp>
                 </TabPane>
                 <TabPane tab="Tab 2" key="events">
-                    <EventTemp ref={twoRef} sentReq={sentReq} key="events" actionData={originData}></EventTemp>
+                    <EventTemp ref={twoRef} sentReq={sentReq} key="events" actionData={originData} modelType={modelType}></EventTemp>
                 </TabPane>
                 <TabPane tab="Tab 3" key="services">
-                    <ServeTemp ref={threeRef} sentReq={sentReq} actionData={originData} />
+                    <ServeTemp ref={threeRef} sentReq={sentReq} actionData={originData} modelType={modelType} />
                 </TabPane>
             </Tabs>
             </div>
@@ -119,7 +116,7 @@ export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList,
 }
 
 //属性组件
-function NumberTemp({ currentTab, sentReq, actionData }, ref) {
+function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
     const [form] = Form.useForm();
     const onFinish = async () => {
         try {
@@ -190,7 +187,6 @@ function NumberTemp({ currentTab, sentReq, actionData }, ref) {
                 obj.specs = specs
             }
         })
-        console.log(obj, 999)
         return obj
     }, [])
     //数据类型改变
@@ -200,6 +196,17 @@ function NumberTemp({ currentTab, sentReq, actionData }, ref) {
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
     }));
+    //添加枚举参数
+    const AddEnums = (add, count) => {
+        if (count > 12) {
+            Notification({
+                description: `不能超过12条数据`,
+                type: 'warn'
+            });
+            return
+        }
+        add()
+    }
     return (
         <Form
             labelCol={{
@@ -212,7 +219,7 @@ function NumberTemp({ currentTab, sentReq, actionData }, ref) {
             initialValues={originOutput}
         >
             <Form.Item
-                label="功能点名称："
+                label="功能点名称"
                 name='name'
                 rules={[
                     {
@@ -232,10 +239,14 @@ function NumberTemp({ currentTab, sentReq, actionData }, ref) {
                         required: true,
                     },
                 ]}
-            ><Input readOnly />
+            >
+                {
+                    modelType == 1 ? <span>{actionData.funcIdentifier}</span> : <Input />
+                }
+
             </Form.Item>
             <Form.Item
-                label="数据类型："
+                label="数据类型"
                 name='type'
             >
                 <Select allowClear onChange={onTypeChange}>
@@ -312,7 +323,7 @@ function NumberTemp({ currentTab, sentReq, actionData }, ref) {
                                                     </Space>
                                                 ))}
                                                 <Form.Item>
-                                                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                    <Button type="dashed" onClick={() => { AddEnums(add, fields.length) }} block icon={<PlusOutlined />}>
                                                         新加
                                                     </Button>
                                                 </Form.Item>
@@ -371,7 +382,7 @@ function NumberTemp({ currentTab, sentReq, actionData }, ref) {
             </Form.Item>
 
             <Form.Item
-                label="数据传输类型："
+                label="数据传输类型"
                 name="accessMode"
             >
                 <Radio.Group >
@@ -387,7 +398,7 @@ NumberTemp = forwardRef(NumberTemp)
 //事件组件
 let testCount = 0
 let paramsWrap = []
-function EventTemp({ actionData, sentReq }, ref) {
+function EventTemp({ actionData, sentReq, modelType }, ref) {
     const [form] = Form.useForm();
 
     useImperativeHandle(ref, () => ({
@@ -483,7 +494,7 @@ function EventTemp({ actionData, sentReq }, ref) {
                 initialValues={{ name: actionData.funcName, identifier: actionData.funcIdentifier, type: actionData.eventType }}
             >
                 <Form.Item
-                    label="功能点名称："
+                    label="功能点名称"
                     name="name"
                     rules={[
                         {
@@ -502,16 +513,19 @@ function EventTemp({ actionData, sentReq }, ref) {
                             required: true,
                         },
                     ]}
-                ><Input />
+                >
+                    {
+                        modelType == 1 ? <span>{actionData.funcIdentifier}</span> : <Input />
+                    }
                 </Form.Item>
                 <Form.Item
-                    label="事件类型："
+                    label="事件类型"
                     name="type"
                 >
                     <Radio.Group options={eventTabOptions} />
                 </Form.Item>
                 <Form.Item
-                    label="输出参数："
+                    label="输出参数"
                 >
                     <Button
                         type="dashed"
@@ -537,7 +551,7 @@ EventTemp = forwardRef(EventTemp)
 let seviceCount = 0
 let inputparamsWrap = []
 let outputparamsWrap = []
-function ServeTemp({ sentReq, actionData }, ref) {
+function ServeTemp({ sentReq, actionData, modelType }, ref) {
     const [form] = Form.useForm();
     const originOutput = useMemo(() => {
         let obj = {
@@ -581,7 +595,7 @@ function ServeTemp({ sentReq, actionData }, ref) {
         })
         return obj
     }, [])
-    const [inputList, setInputList] = useState([])
+    const [inputList, setInputList] = useState(originOutput.input)
     const [outputList, setOutputList] = useState(originOutput.output)
     const [isCheck, setIsCheck] = useState(0)
     //添加输入框
@@ -646,7 +660,7 @@ function ServeTemp({ sentReq, actionData }, ref) {
                 initialValues={{ name: actionData.funcName, identifier: actionData.funcIdentifier }}
             >
                 <Form.Item
-                    label="功能点名称："
+                    label="功能点名称"
                     name="name"
                     rules={[
                         {
@@ -665,7 +679,10 @@ function ServeTemp({ sentReq, actionData }, ref) {
                             required: true,
                         },
                     ]}
-                ><Input />
+                >
+                    {
+                        modelType == 1 ? <span>{actionData.funcIdentifier}</span> : <Input />
+                    }
                 </Form.Item>
             </Form>
             <Form
@@ -677,7 +694,7 @@ function ServeTemp({ sentReq, actionData }, ref) {
                 }}
             >
                 <Form.Item
-                    label="输入参数："
+                    label="输入参数"
                 >
                     <Button
                         type="dashed"
@@ -703,7 +720,7 @@ function ServeTemp({ sentReq, actionData }, ref) {
                 }}
             >
                 <Form.Item
-                    label="输出参数："
+                    label="输出参数"
                 >
                     <Button
                         type="dashed"
@@ -767,6 +784,17 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
             sentAddData(false)
         })
     }
+    //添加枚举参数
+    const AddEnums = (add, count) => {
+        if (count > 12) {
+            Notification({
+                description: `不能超过12条数据`,
+                type: 'warn'
+            });
+            return
+        }
+        add()
+    }
     return (
         <div className='add-tempele-wrap add-params-wrap'>
             <Form form={form}
@@ -779,7 +807,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                 }}>
 
                 <Form.Item
-                    label="参数名称："
+                    label="参数名称"
                     name="name"
                     rules={[
                         {
@@ -801,7 +829,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                 </Form.Item>
 
                 <Form.Item
-                    label="数据类型："
+                    label="数据类型"
                     name='type'
                     rules={[
                         {
@@ -882,7 +910,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                                                         </Space>
                                                     ))}
                                                     <Form.Item>
-                                                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                        <Button type="dashed" onClick={() => { AddEnums(add, fields.length) }} block icon={<PlusOutlined />}>
                                                             新加
                                                         </Button>
                                                     </Form.Item>

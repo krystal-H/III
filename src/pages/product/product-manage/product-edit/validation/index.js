@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react'
-import moment from 'moment';
 import { Table, Tabs, Input, Button } from 'antd';
+import { cloneDeep } from "lodash";
+import {get, post, Paths} from '../../../../../api';
+import { Notification } from '../../../../../components/Notification';
 import DescWrapper from '../../../../../components/desc-wrapper/DescWrapper';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import History from './historyInfo';
 import './index.scss'
 import ReleaseProduct from './releaseProduct';
+const { TabPane } = Tabs;
 
 const columns = [
     {
@@ -30,50 +33,137 @@ const columns = [
         key: 'DID',
     }
 ];
-function Validation({ nextStep, productId }, ref) {
-    const { TabPane } = Tabs;
-    function callback(key) {
-        console.log(key);
-    }
-    const [data, setData] = useState([])
-    const [inputValue, setInputValue] = useState('')
-    const [inputAddress, setInputAddress] = useState('')
-    const [releaseVisible, setReleaseVisible] = useState(false) // 发布产品
 
-    // 展示发布产品弹窗
-    const showRelease = () => {
-        setReleaseVisible(true)
-    }
+let ws = null, //保存websocket连接
+    wsTimer = null; //websocket心跳连接定时器，页面销毁时，需要同时销毁定时器
+
+function Validation({ nextStep, productId }, ref) {
+
+
+    const [releaseVisible, setReleaseVisible] = useState(false); // 发布产品
+    const [original, setOriginal] = useState([]);//原始数据
+    const [debugInfo, setDebugInfo] = useState(["",""]); //
+    const [serverIp, setServerIp] = useState(""); //ws 请求配置
+    const [serverToken, setServerToken] = useState(""); //ws 请求配置
+    const [webSocketStatu, setWebSocketStatu] = useState(0); //ws 连接状态 0失败，1成功
+    const [mount, setmMount] = useState(0); //
+    
+
+    useEffect(() => {
+        get(Paths.queryServerConfig,{productId},{loading:true}).then(({data={}})=>{
+            setServerIp(data.ip)
+        })
+        getAccessToken();
+        return ()=>{
+            ws && ws.close();
+            clearInterval(wsTimer);
+            ws = null;
+        }
+    }, [productId])
+
+    // 间接过之后，token再发生变化的时候（连接失败或者异常断开连接）重新连接
+    useEffect(() => {
+        if(mount){
+            newWebSocket();
+        } 
+    }, [serverToken])
+
     useImperativeHandle(ref, () => ({
         showRelease
     }))
 
+    const getAccessToken = ()=>{
+        get(Paths.accessToken,{},{loading:true}).then(({data=""})=>{
+            setServerToken(data)
+        })
+    }
+    // 展示发布产品弹窗
+    const showRelease = () => { setReleaseVisible(true) }
+    //启动调试
+    const startDebug = ()=>{
+        if(account=="" || devMac==""){
+            Notification({
+                description: "账号和设备物理地址都不能为空",
+                type: 'warn'
+            })
+            return
+        }
+        newWebSocket();
+
+    }
+    //修改调试账号、设备
+    const set_DebugInfo = (e,i)=>{
+        let _Info = [...debugInfo];
+        _Info[i] = e.target.value;
+        setDebugInfo([..._Info])
+    }
+    //建立一个 ws 连接
+    const newWebSocket = ()=> {
+
+
+        let wsProtocol = 'wss:';
+        let httpProtocol = window.location.protocol;
+            wsProtocol = httpProtocol.replace(/https?/, 'wss');
+
+
+        ws = new WebSocket(wsProtocol + '//' + serverIp);
+        
+        
+        ws.onopen = ()=> {//连接成功
+            setmMount(1)
+            setWebSocketStatu(1);
+            clearInterval(wsTimer);
+            wsTimer = setInterval(()=>{ws.send('')}, 5000); //告诉服务器“请保持联系”
+            const product = JSON.parse(sessionStorage.getItem('productItem'));
+            const {customerCode,deviceTypeId,deviceSubTypeId,productVersion} = product;
+            const senmsg = `[${serverToken}|${customerCode}|${deviceTypeId}#${deviceSubTypeId}#${productVersion}#${debugInfo[0]}#${debugInfo[1]}]`;  
+            ws.send(senmsg);
+        };
+        ws.onmessage =  (data)=> {//接收到消息
+            let _d = JSON.parse(data.data);
+            let _original = cloneDeep(original);
+            if(_original.unshift(_d) == 901){//页面最多显示900条数据
+                _original.pop();
+            }
+            setOriginal(_original)
+        };
+        ws.onclose = (e) =>{//检测到断开连接
+            setWebSocketStatu(0);
+            clearInterval(wsTimer);
+            if (mount && e.code == '1006') {
+                setTimeout(getAccessToken,5000);//如果异常断开，会尝试重连
+            }
+            ws = null;
+        }
+    }
+
+    const [ account, devMac ]= debugInfo
     return <div id='product-edit-validation'>
-        <div className='validation-top'>在调试工具的【添加调试设备】步骤，添加设备物理地址后，既默认此设备在clife平台注册，不受通信安全校验机制（如一机一码）的影响</div>
+        <div className='validation-top'>在真实设备调试的配置调试信息步骤，添加设备物理地址后，既默认此设备在clife平台注册，不受通信安全校验机制（如一机一密）的影响</div>
         <div className='validation-tab'>
-            <Tabs defaultActiveKey="1" onChange={callback}>
+            <Tabs defaultActiveKey="1">
                 <TabPane tab="真实设备调试" key="1">
                     <div className='tab-one-title'>
                         <div className='tab-one-title-left'>
-                            <div className='btn-label'>配置调试信息：<LabelTip tip="产品标签是您给产品自定义的标识，您可以使用标签功能实现产品的分类统一管理。"></LabelTip></div>
-                            <Input value={inputValue} onChange={e => setInputValue(e.target.value)} placeholder='请输入数联智能App登录账号' />
-                            <Input value={inputAddress} onChange={e => setInputAddress(e.target.value)} placeholder='输入设备物理地址' />
-                            <Button type='primary'>确定调试</Button>
-                            <Button >重置</Button>
+                            <div className='btn-label'>配置调试信息<LabelTip tip="WiFi蓝牙设备需先登录数联智能App，并搜索绑定需要调试的设备，蜂窝设备不需要。"></LabelTip>：</div>
+                            <Input value={account} onChange={e => set_DebugInfo(e,0)} placeholder='请输入数联智能App登录账号' />
+                            <Input value={devMac} onChange={e => set_DebugInfo(e,1)} placeholder='输入设备物理地址' />
+                            <Button type='primary' onClick={startDebug}>确定调试</Button>
+                            <Button onClick={()=>{setDebugInfo(['',''])}}>重置</Button>
                         </div>
-                        <a>历史调试信息</a>
+                        <a>历史调试信息</a>                                       
                     </div>
                     <div className='tab-one-content'>
                         <div className='left-content'>
                             <div className='left-content-title'>
-                                <h3>标准功能</h3>
+                                <h3>原始数据</h3>
                                 <div>
                                     <Button type="primary" ghost>清空当前信息</Button>
                                     <Button type="primary" ghost>导出数据</Button>
                                 </div>
                             </div>
                             <div>
-                                <Table columns={columns} dataSource={data} />
+                                <Table columns={columns} dataSource={original} />
                             </div>
                         </div>
                         <div className='right-content'>
@@ -100,3 +190,22 @@ function Validation({ nextStep, productId }, ref) {
 }
 
 export default Validation = forwardRef(Validation)
+
+
+
+
+// {
+//     "cmd": 2004,
+//     "ver": "1.0",
+//     "dir": "03",
+//     "msgId": 0,
+//     "prio": 2,
+//     "timestamp": 8357,
+//     "data": "g2BOqToij62Wv0o8naKATL0SiLOeL0W8LzW2Ym5uHQ8CaMyEl/iUYGH0vzWW/UhztbyxzwgvqZMT26Q+nUkYaFEOaTK28V4ceAkXh6L5D2c=",
+//     "map": {
+//       "devId": "F0000002082E",
+//       "devMac": "4898CA511B74",
+//       "profileVer": "1"
+//     },
+//     "topic": "/1/2/3/4"
+//   }

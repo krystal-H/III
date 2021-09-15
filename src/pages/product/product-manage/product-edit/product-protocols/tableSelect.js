@@ -62,7 +62,7 @@ export default function TableCom({ dataSource, refreshCount }) {
     const columns = [
         {
             title: '勾选',
-            width: '50px',
+            width: '80px',
             render: (value, row, index) => {
                 let obj = getRowSpanCount(
                     dataSource,

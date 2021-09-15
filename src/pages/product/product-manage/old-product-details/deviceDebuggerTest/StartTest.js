@@ -1645,12 +1645,9 @@ export default class StartTest  extends Component{
                 this.props.updateDeviceDebugMacList(res);
                 if(accountList.length>0&&macList.length>0){
                     this._mount = true;
-                    this.props.updateDevice(pid);//
+                    this.props.updateDevice(pid);////获取产品信息+获取token+获取websokcet的IP
                     this.props.getDataTypeList(pid);//获取数据类型 // actions.DeviceDebugger.getDataTypeList({ productId: pid });
                     this.props.getPropertyConfig(pid);// actions.DeviceDebugger.getPropertyConfig({ productId: pid });
-                    // setTimeout ((()=>{
-                    //     this.setState({visible:false})
-                    // }),5000);//延迟五秒关闭弹窗
                 }
 
                 if(!macList.length) {
@@ -1720,12 +1717,16 @@ export default class StartTest  extends Component{
     }
     //退出后销毁websocket连接和心跳定时器，重置数据
     componentWillUnmount () {
+        this.goout()
+    }
+    goout = ()=>{
         this.props.resetData();//初始化数据 actions.DeviceDebugger.resetData();
         ws && ws.close();
         clearInterval(wsTimer);
         ws = null;
         this._mount = false;
     }
+
     visible(){
         this.setState({visible:!this.state.visible});
     }
