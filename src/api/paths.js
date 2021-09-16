@@ -480,8 +480,6 @@ let Paths = {
     firmwareFromProduct:'product/firmware/package',
 
     
-
-    
     //总览页
     homeBanner:'/cover/getBannerList',//banner图
     messageList:'/cover/getSystemNotice' ,//消息列表

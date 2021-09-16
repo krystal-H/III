@@ -8,14 +8,16 @@ const defaultState = {
     },
     extVerisonLi:[],
     deviceGorupLi:[],
-    firmwareDetails:{}
+    firmwareDetails:{},
+    firmwareFrPro:{}
 };
 const {
     GETPROLIST,
     GETVERLI,
     EXTVERLI,
     DEVGROUPLIST,
-    FIRMWAREDETAIL
+    FIRMWAREDETAIL,
+    FIRMWAREFROMPRO
 } = actionTypes
 
 
@@ -26,6 +28,7 @@ export default (state = defaultState, {
     extVerisonLi,
     deviceGorupLi,
     firmwareDetails,
+    firmwareFrPro,
 }) => {
     switch (type) {
         case GETPROLIST:
@@ -38,6 +41,11 @@ export default (state = defaultState, {
             return {...state,deviceGorupLi}
         case FIRMWAREDETAIL:
             return {...state,firmwareDetails}
+        case FIRMWAREFROMPRO:
+            return {...state,firmwareFrPro}
+
+
+            
         default:
             return state;
     }
