@@ -58,7 +58,6 @@ export default class MessageCenter extends Component {
     }
     componentDidMount() {
         // let {newMessageNums,getNewMessageNums,getDeveloperInfo,developerInfo} = this.props;
-
         // if (isEmpty(newMessageNums)) {
         //     getNewMessageNums()
         // }
@@ -67,7 +66,6 @@ export default class MessageCenter extends Component {
         // if (isEmpty(developerInfo)) {
         //     getDeveloperInfo()
         // }
-
         // this.getMessageList()
     }
     getMessageList = (_value, needChangeState) => {

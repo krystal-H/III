@@ -10,8 +10,18 @@ import defaultImg from '../../../../../assets/images/commonDefault/bind_net_dafa
 import carouselImg from '../../../../../assets/images/commonDefault/bind_net_Carousel.png'
 const contentStyle = {
     height: '160px',
-    with: '100px'
+    with: '100px',
+    display: 'block'
 };
+function dealData(data) {
+    let arr = data.replace(/\[|]/g, '').split(',').filter(item=>{
+        if(item){
+            return item
+        }
+    })
+    console.log(arr, '=======')
+    return arr
+}
 export default function productInfo() {
     useEffect(() => {
         getBusinessInfo()
@@ -25,10 +35,19 @@ export default function productInfo() {
     const getBusinessInfo = () => {
         let productId = productBaseInfo.productId
         post(Paths.getBusinessInfo, { productId }).then((res) => {
-            setBusinessInfo(res.data || {})
+            let data = res.data || {}
+            // if(data.productPic){
+            //     data.productPic=dealData(data.productPic)
+            //     console.log(data.productPic,9999999)
+            // }
+            setBusinessInfo(data)
         });
         post(Paths.proReledInfo, { productId }).then((res) => {
-            setImageInfo(res.data)
+            let data = res.data || {}
+            if (data.imageUrlList) {
+                data.imageUrlList = dealData(data.imageUrlList)
+            }
+            setImageInfo(data)
         });
     }
     const downFile = (url) => {
@@ -45,6 +64,7 @@ export default function productInfo() {
             return ''
         }
     }
+
     return (<div id='product-info'>
         <div className='product-info-item'>
             <h3 className='product-info-title'>产品信息</h3>
@@ -88,8 +108,8 @@ export default function productInfo() {
                     </div>
                 </div>
                 <div className='product-info-conten-wrap' style={{ paddingTop: '12px' }}>
-                    <div className='product-top-right-text'>配网方式：</div>
-                    <img className='product-top-right-img' alt='' />
+                    <div className='product-top-right-text'>产品头图：</div>
+                    <img className='product-top-right-img' src={businessInfo.productPic} alt='' />
                 </div>
             </div>
         </div>
@@ -107,19 +127,17 @@ export default function productInfo() {
                 <div className='product-info-conten-wrap '>
                     <span className='middle-text'>帮助轮播图：</span>
                     {
-                        !imageInfo.imageUrlList ? (<img src={carouselImg} />) :
+                        (!imageInfo.imageUrlList || !imageInfo.imageUrlList.length)? (<img src={carouselImg} />) :
                             (<div className='product-info-image-wrap'>
-                                <Carousel autoplay>
+                                <Carousel autoplay dots={false}>
                                     {
-                                        JSON.parse(imageInfo.imageUrlList).map((item, index) => {
-                                            return <img src={item} key={index} alt='' />
+                                        imageInfo.imageUrlList.map((item, index) => {
+                                            return <img className='product-carousel-img' src={item} key={index} alt='' style={contentStyle} />
                                         })
                                     }
                                 </Carousel>
                             </div>)
                     }
-
-
                 </div>
             </div>
         </div>
