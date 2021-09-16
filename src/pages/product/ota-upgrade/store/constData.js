@@ -106,8 +106,9 @@ export const TRIGGERTIME =['触发升级','定时升级']
 export const PACKAGETYPE =['整包','差分包']
 export const UPGRADESTATUS = ['升级中','已完成']
 
-export const schemeType = [
+export const SCHMETYPE = [
     {id:1,nam:'免开发'},
     {id:2,nam:'MCU'},
     {id:3,nam:'SoC'},
+    // {id:4,nam:'出错了！'},
 ]

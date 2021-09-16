@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback, useState } from 'react'
 import { Carousel, Button } from 'antd';
 import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
     RightOutlined,
 } from '@ant-design/icons';
@@ -57,7 +58,7 @@ export default function OverviewWrap() {
     const [messageList, setMessageList] = useState([])
     const getMessageList = () => {
         let params = { "pager": { "pageIndex": 1, "pageRows": 10 } }
-        post(Paths.getNoticeList,params).then((res) => {
+        post(Paths.getNoticeList, params).then((res) => {
             if (res.data.list.length > 3) {
                 setMessageList(res.data.list.slice(0, 3))
             } else {
@@ -177,9 +178,24 @@ export default function OverviewWrap() {
             setCurrentTip(1)
             setShowDialog(true)
         }
+
     }, [])
+    const menulist = useSelector(state => {
+           return  state.getIn(['userCenter', 'menulist']).toJS()
+    })
+    
     const getProductListNew = () => {
         history.push(`/open/product/proManage/list`)
+    }
+    //是否展示进入btn
+    const isShowBtn=(value)=>{
+        let isShow=false
+        menulist.forEach(item=>{
+            if(item.menuname == value){
+                isShow=true
+            }
+        })
+        return isShow
     }
     //产品详情
     const goProductDetail = (record) => {
@@ -224,7 +240,6 @@ export default function OverviewWrap() {
             {
                 showDialog && <div className='Guide-the-figure-dia'></div>
             }
-
             <div className='comm-shadowbox over-view-banner'>
                 <Carousel autoplay>
                     {
@@ -270,7 +285,7 @@ export default function OverviewWrap() {
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>产品管理</div>
-                                <a onClick={() => { goPage('/open/product/proManage/list') }}>进入</a>
+                                {isShowBtn('产品') && <a onClick={() => { goPage('/open/product/proManage/list') }}>进入</a>} 
                             </div>
                             <div className='over-view-productmn-content'>
                                 {
@@ -410,7 +425,7 @@ export default function OverviewWrap() {
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>APP开发</div>
-                                <a onClick={goApp}>进入</a>
+                                {isShowBtn('APP') && <a onClick={goApp}>进入</a>}
                             </div>
                             <div className='over-view-productmn-content' style={{ height: '80px' }}>
                                 {

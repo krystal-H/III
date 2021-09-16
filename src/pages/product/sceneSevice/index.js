@@ -179,8 +179,8 @@ export default function DeviceRegist() {
             }
         }, {
             title: '状态',
-            dataIndex: 'deviceSecret',
-            key: 'deviceSecret',
+            dataIndex: 'statusDesc',
+            key: 'statusDesc',
         }, {
             title: '功能名称',
             dataIndex: 'funcName',

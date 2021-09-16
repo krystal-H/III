@@ -10,7 +10,7 @@ import { DateTool } from '../../../util/util';
 import {Notification} from '../../../components/Notification';
 import PageTitle from '../../../components/page-title/PageTitle'
 
-import {VERTYPE,STATUSTAG,UPDATESTATUS,PACKAGETYPE,schemeType} from './store/constData'
+import {VERTYPE,STATUSTAG,UPDATESTATUS,PACKAGETYPE,SCHMETYPE} from './store/constData'
 import { getVersionList, getExtVerLi, getProductList } from './store/actionCreators'
 import upIconImg from '../../../assets/images/upota.png';
 const { Step } = Steps;
@@ -67,7 +67,7 @@ export default class FirmwareManagement  extends Component {
 
             { title: '产品名称', dataIndex: 'productName'},
             { title: '开发方案', dataIndex: 'schemeType', 
-                render: s => s>0 && schemeType[s-1].nam || "脏数据"
+                render: s => s>0 && SCHMETYPE[s-1].nam || "脏数据"
             },
             { title: '产品版本号', dataIndex: 'productFirmwareVersion'},
             { title: '固件名称', dataIndex: 'firmwareVersionTypeName'},
@@ -249,7 +249,7 @@ export default class FirmwareManagement  extends Component {
                             <Select className='typeselect' defaultValue={-1} onChange={val=>{this.changeState('schemeType',val)}}>
                                 <Option value={-1}>全部类型</Option>
                                 {
-                                    schemeType.map(({id,nam},i)=><Option key={i} value={id}>{nam}</Option>)
+                                    SCHMETYPE.map(({id,nam},i)=><Option key={i} value={id}>{nam}</Option>)
                                 }
                             </Select>
                             <span>固件包名称：</span>

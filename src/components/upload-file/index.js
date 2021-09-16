@@ -393,13 +393,13 @@ export class UploadFileClass extends PureComponent {
             });
             return false;
         }
-        if (!this.isLtMaxCount()) {
-            Notification({
-                description: `文件个数必须小于 ${maxCount} 个!`,
-                type: 'warn'
-            });
-            return false;
-        }
+        // if (!this.isLtMaxCount()) {
+        //     Notification({
+        //         description: `文件个数必须小于 ${maxCount} 个!`,
+        //         type: 'warn'
+        //     });
+        //     return false;
+        // }
         return true;
     };
 
@@ -450,6 +450,7 @@ export class UploadFileClass extends PureComponent {
                         accept={acceptFormat}
                         showUploadList={{ showDownloadIcon: false }}
                         disabled={disabled}
+                        maxCount={maxCount}
                     >
                         {(maxCount === fileList.length && !isNotImg) ? null : buttonType}
                     </Upload>
