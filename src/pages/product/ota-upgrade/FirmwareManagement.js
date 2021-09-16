@@ -11,23 +11,25 @@ import {Notification} from '../../../components/Notification';
 import PageTitle from '../../../components/page-title/PageTitle'
 
 import {VERTYPE,STATUSTAG,UPDATESTATUS,PACKAGETYPE,schemeType} from './store/constData'
-import {getVersionList,getExtVerLi} from './store/actionCreators'
+import { getVersionList, getExtVerLi, getProductList } from './store/actionCreators'
 import upIconImg from '../../../assets/images/upota.png';
 const { Step } = Steps;
 import './FirmwareManagement.scss';
 const { Search,Group } = Input;
 const { Option } = Select;
 const mapStateToProps = state => {
-    const {versionList,extVerisonLi} = state.get('otaUpgrade')
+    const { versionList, extVerisonLi, productList } = state.get('otaUpgrade')
     return {
         versionList,
-        extVerisonLi
+        extVerisonLi,
+        productList
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
         getVersionLi: param => dispatch(getVersionList(param)),
         getExtVerLi: param => dispatch(getExtVerLi(param)),
+        getProductList: param => dispatch(getProductList()),
         
     }
 }
@@ -47,7 +49,7 @@ export default class FirmwareManagement  extends Component {
             productId:undefined,
             schemeType:undefined,
             deviceVersionName:undefined,
-            addFirmwareDialog:false,//增加弹窗
+            addFirmwareVisiable:false,//增加弹窗
             validationFirmwareDialog:false,//验证弹窗
             deviceVersionId:'',//当前操作（验证、修改验证、发布）的固件id
             validationDetail:{macSet:'',validateType:0},//修改验证 详情
@@ -132,7 +134,8 @@ export default class FirmwareManagement  extends Component {
         ];
     }
     componentDidMount() {
-        this.pagerIndex()
+        this.pagerIndex();
+        this.props.getProductList();
     }
     toFirmwareDetails = deviceVersionId=>{
         window.location.hash = `#/open/bigData/OTA/firmwareDetails/${deviceVersionId}`;
@@ -218,15 +221,15 @@ export default class FirmwareManagement  extends Component {
     }
     render() {
         const {
-            addFirmwareDialog,releaseFirmwareDialog,validationFirmwareDialog,
+            addFirmwareVisiable,releaseFirmwareDialog,validationFirmwareDialog,
             deviceVersionId,validationDetail,validateInfo,releasePackageType,validationModTit
         } = this.state;
-        const {versionList:{list,pager}} = this.props;
+        const { versionList:{list,pager}, productList } = this.props;
         const {pageIndex,totalRows} =pager;
         
         return (
             <div className="ota-firmware-up">
-                <PageTitle title="固件升级" selectOnchange={val=>{this.changeState('productId',val)}} />
+                <PageTitle title="固件升级" selectOnchange={val=>{this.changeState('productId',val)} }  selectData={productList} />
                 <div className='comm-shadowbox comm-setp-ttip'>
                     <div className='step-title'>
                         <img src={upIconImg}/>
@@ -258,7 +261,7 @@ export default class FirmwareManagement  extends Component {
                                 onSearch={()=>{this.pagerIndex(1)}} 
                             />
                         </div>
-                        <Button className='button' onClick={()=>{this.switchDialog('addFirmwareDialog')}} type="primary">添加固件</Button>
+                        <Button className='button' onClick={()=>{this.switchDialog('addFirmwareVisiable')}} type="primary">添加固件</Button>
                     </div>
                     
                    
@@ -274,7 +277,11 @@ export default class FirmwareManagement  extends Component {
                         }} 
                     />
 
-                    <AddFirmwareDialog onRef={ref=>{this.refAddFirmware = ref}} changeState={this.changeState} />
+                    <AddFirmwareDialog 
+                        // onRef={ref=>{this.refAddFirmware = ref}} 
+                        changeState={this.changeState} 
+                        visiable={addFirmwareVisiable}
+                    />
 
                     {releaseFirmwareDialog&&
                         <Modal 

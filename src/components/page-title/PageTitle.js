@@ -25,6 +25,7 @@ function PageTitle({
 }) {
     const [dataList, setDataList] = useState([]);//产品列表
     useEffect( () => {
+        
         if(selectOnchange){
             if(!selectData && dataList.length==0){
                 get(Paths.getProductType,{},{ loading:true }).then(({data}) => {
@@ -39,7 +40,7 @@ function PageTitle({
             }
 
         }
-    },[])
+    },[selectData])
     const defaultGoback = () => history.goBack()
 
     const selectChange = selectOnchange && (id=>{

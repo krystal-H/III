@@ -343,26 +343,12 @@ let Paths = {
     getUnreadQuantity: '/systemNotice/getUnreadQuantity',
 
     /**
-     * 产品协议脚本 start
-     * zheng-2019-11-28
-     */
-    getJsContent: '/protoManage/getJsProtoScript',
-    sumbitJsContent: '/protoManage/saveJsProtoScript',
-    /* 产品协议脚本 end */
-
-    /**
      * 基础产品--产品--设备注册 start
      * xiao-2019-12-02
      */
     getStatisticsData: '/device/register/statistics',
     getDeviceRegisterList: '/device/register/list',
     registerImport: '/device/register/import',
-    /**
-     * 设备--设备秘钥管理 start
-     * xiao-2020-01-06
-     */
-    getStatistics: '/device/register/senior/statistics',
-    getSeniorDeviceList: '/device/register/senior/list',
 
     //设备告警
     getDeviceWarningTotal: '/device/warning/info/summary',
@@ -392,8 +378,6 @@ let Paths = {
     deleteRemoteConfig: '/remoteConfig/product/delete', // 删除单个产品的配置任务
     
 
-    
-
     // 远程配置
     getRomoteConfigListByProduct:'/remote/config/product/task/getPage',
     saveRomoteConfig:'/remote/config/product/task/save',
@@ -415,28 +399,6 @@ let Paths = {
     saveRomoteConfigForDevice:'/remote/config/device/task/saveAndSubmit',
     retryByTaskIdForDevice:'/remote/config/device/task/retry',
     getReceiveMsgForDevice:'/remote/config/device/task/getReceiveMsg',
-
-    //实例、授权、数据资产
-    getCaseList:'/instance/getList',//登录时获取实例
-    getCasePageList:'/instance/getPage',//实例管理实例列表
-    updateCaseStatus:'/instance/updateStatus',
-    addCase:'/instance/add',
-    applySource:'/instance/update',
-
-    getAuthorizeList:'/auth/getList',
-    deleAuthorize:'/auth/deleteAuth',
-    getAuthList:'/auth/authList',
-    addAuthorize:'/auth/add',
-    getDownProduct:'/project/device/getDownProduct',//获取下拉框产品列表 多处用到
-    getAuthorServeList:'/serve/getServerList',
-
-    getDataAssetsList:'/data/assets/getList',
-    getDataAssetsListAuth:'/data/assets/getAssetsList',
-    addDataAssets:'/data/assets/add',
-    delDataAssets:'/data/assets/delete',
-    updateDataAssets:'/data/assets/update',
-    getInfoDataAssets:'/data/assets/get',
-    testDataAssets:'/data/assets/test',
 
     //设备分组
     getGroupList:'/deviceGroup/getDeviceGroupList',
@@ -491,26 +453,6 @@ let Paths = {
     downTslHistory:'/dataoperate/search/download/history',
     addTslHistory: '/dataoperate/search/dataDownload',
     
-
-
-    // 数据管理
-    getDownDevice:'/project/device/getDevice',
-    getDownPropEvent:'/device5/getDownPropEvent',
-    getDownDatasource:'/data/assets/getDownDatasource',
-    getDownTableByDatasource:'/dataAccess/getDownTableByDatasource',
-    getDownFieldsByDatasourceTable:'/dataAccess/getDownFieldsByDatasourceTable',
-    getDownEventList:'/device5/getDownEventList',
-
-    //数据流转
-    getDataTransferList:'/transfer/getList',
-    delOneTransfer:'/transfer/delete',
-    saveTransfer:'/transfer/save',
-    getDataTransfer:'/transfer/get',
-    getTransferMenuList:'/transfer/getMenuList',
-    getTransferDataTable:'/transfer/getTableInfo',
-    checkSqlTransfer:'/transfer/checkSQL',
-    getRocketMQTopicList:'/transfer/getRocketMQTopicList',
-
     //设备监控
     geMonitorList:'/monitor/list',
     startMonitor:'/monitor/start',
@@ -533,9 +475,11 @@ let Paths = {
     otaGetVersionDetail:'/device/version/5/version/get',
     otaGetBatchDevice:'/device/version/5/publish/get',
     otaGetBatchInfo:'/device/version/5/publish/getBatchInfo',
-
     otaCancelDevicePub:'/device/version/5/publish/cancel',
     otaValiGetinfo:'/device/version/5/validate/getInfo',
+    firmwareFromProduct:'product/firmware/package',
+
+    
 
     
     //总览页
@@ -558,6 +502,7 @@ let Paths = {
     addPhticalStard:'/physicalModel/func/product/add',//产品-功能定义-物模型-新增标准模型
     downPhysicalModel:'/physicalModel/download/product',//产品-功能定义-下载物模型
     PhysicalModelList:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
+    exportFnFile:'/product/dev/custom/func/upload',//产品-功能定义-导入自定义功能
 
     // //设备-设备管理
     // getDeviceList

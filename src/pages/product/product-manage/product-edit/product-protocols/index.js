@@ -1,7 +1,8 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef, useContext } from 'react'
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
 import moment from 'moment';
-import { Table, Button, Space } from 'antd';
+import { Table, Button, Space, Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import './index.scss';
 import EditcusFn from './editcusFn'
 import Addfunction from './addModal'
@@ -97,7 +98,16 @@ function ProtocolFn2({ nextStep, productId }, ref) {
     useImperativeHandle(ref, () => ({
         onFinish: subNextConFirm
     }));
-
+    //导入
+    const customRequest = (option) => {
+        post(Paths.exportFnFile, { productId, file: option.file }, { needFormData: true }, { timeout: 1000 * 30 }).then(res => {
+            Notification({
+                type: 'success',
+                description: '导入成功！',
+            });
+            getList()
+        })
+    }
     return <div className='Protocol-wrap' ref={ref11}>
         <div className='Protocol-label'>
             <div>独立MCU方案，需选择下载MCU开发资料包等，进行相应开发</div>
@@ -115,9 +125,10 @@ function ProtocolFn2({ nextStep, productId }, ref) {
         </div>
         <div className='Protocol-download'>
             <div>自定义功能<LabelTip tip="支持在标准功能的基础上，自定义适合客户自己硬件特色的定制功能点。"></LabelTip></div>
-            <div>
-                <a >导入自定义功能</a>
-                <img src={downpng} style={{ marginRight: '15px' }} alt='' />
+            <div style={{display:'flex'}}>
+                <Upload customRequest={customRequest}>
+                    <Button type='text' style={{color:'#166AFF'}} icon={<UploadOutlined />}>导入自定义功能</Button>
+                </Upload>
                 <Button type="primary" onClick={openCusmon}>新建自定义功能</Button >
             </div>
 

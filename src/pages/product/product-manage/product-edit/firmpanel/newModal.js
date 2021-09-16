@@ -4,6 +4,20 @@ import { UploadFileHooks } from '../../../../../components/upload-file';
 import { post, Paths } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
 import './newModal.scss';
+function debounce(fn, wait = 1000, immediate) {
+    let timer = null
+    return function(...args) {
+        if (timer) clearTimeout(timer)
+        if (immediate && !timer) {
+            fn.apply(this, args)
+        }
+      	// ------ 新增部分 end ------ 
+      	
+        timer = setTimeout(() => {
+            fn.apply(this, args)
+        }, wait)
+    }
+}
 export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
     const [form] = Form.useForm();
     useEffect(() => {
@@ -23,7 +37,7 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
                 projectType: 1,
                 projectName: value.projectName,
                 page1: value.page1[0].url,
-                panelType:3
+                panelType: 3
             }
             post(Paths.cusSavePanel, params).then((res) => {
                 Notification({
@@ -37,7 +51,7 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
         });
     }
     return (
-        <Modal title="新增面板" visible={isAddModalVisible} onOk={closeReqAdd} onCancel={CancelAdd} width='570px' wrapClassName='add-modal-dialog-wrap'>
+        <Modal title="新增面板" visible={isAddModalVisible} onOk={ debounce(closeReqAdd) } onCancel={CancelAdd} width='570px' wrapClassName='add-modal-dialog-wrap'>
             <div>
                 <Form
                     form={form}

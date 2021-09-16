@@ -71,7 +71,7 @@ export const OpetateLogType = {
     "6": "调试工具"
 }
 
-// 入网昨天
+// 入网状态
 export const netStatus = [
     {
         "value": "全部状态 ",
@@ -84,3 +84,260 @@ export const netStatus = [
         "key": "0 ",
         "value": "未入网 ",
     }]
+//单位
+export const unitCollection = [{
+    "Symbol": "cal",
+    "Name": "卡路里"
+},
+{
+    "Symbol": "g",
+    "Name": "克"
+},
+{
+    "Symbol": "kg",
+    "Name": "千克"
+},
+{
+    "Symbol": "t",
+    "Name": "吨"
+},
+{
+    "Symbol": "mL",
+    "Name": "毫升"
+},
+{
+    "Symbol": "L",
+    "Name": "升"
+},
+{
+    "Symbol": "℉",
+    "Name": "华氏度"
+},
+{
+    "Symbol": "°C",
+    "Name": "摄氏度"
+},
+{
+    "Symbol": "%RH",
+    "Name": "相对湿度"
+},
+{
+    "Symbol": "nm",
+    "Name": "纳米"
+},
+{
+    "Symbol": "μm",
+    "Name": "微米"
+},
+{
+    "Symbol": "cm",
+    "Name": "厘米"
+},
+{
+    "Symbol": "m",
+    "Name": "米"
+},
+{
+    "Symbol": "km",
+    "Name": "千米"
+},
+{
+    "Symbol": "s",
+    "Name": "秒"
+},
+{
+    "Symbol": "min",
+    "Name": "分钟"
+},
+{
+    "Symbol": "h",
+    "Name": "小时"
+},
+{
+    "Symbol": "day",
+    "Name": "日"
+},
+{
+    "Symbol": "week",
+    "Name": "周"
+},
+{
+    "Symbol": "month",
+    "Name": "月"
+},
+{
+    "Symbol": "year",
+    "Name": "年"
+},
+{
+    "Symbol": "mmHg",
+    "Name": "血压"
+},
+{
+    "Symbol": "mmol/L",
+    "Name": "血糖"
+},
+{
+    "Symbol": "pH",
+    "Name": "PH值"
+},
+{
+    "Symbol": "dS/m",
+    "Name": "土壤EC值"
+},
+{
+    "Symbol": "W/㎡",
+    "Name": "太阳总辐射"
+},
+{
+    "Symbol": "mm/hour",
+    "Name": "降雨量"
+},
+{
+    "Symbol": "N",
+    "Name": "牛"
+},
+{
+    "Symbol": "aw",
+    "Name": "饱和度"
+},
+{
+    "Symbol": "pixel",
+    "Name": "像素"
+},
+{
+    "Symbol": "Lux",
+    "Name": "照度"
+},
+{
+    "Symbol": "grav",
+    "Name": "重力加速度"
+},
+{
+    "Symbol": "dB",
+    "Name": "分贝"
+},
+{
+    "Symbol": "lm",
+    "Name": "流明"
+},
+{
+    "Symbol": "bit",
+    "Name": "比特"
+},
+{
+    "Symbol": "count",
+    "Name": "次"
+},
+{
+    "Symbol": "turn/m",
+    "Name": "转每分钟"
+},
+{
+    "Symbol": "GB",
+    "Name": "吉字节"
+},
+{
+    "Symbol": "MB",
+    "Name": "兆字节"
+},
+{
+    "Symbol": "KB",
+    "Name": "千字节"
+},
+{
+    "Symbol": "B",
+    "Name": "字节"
+},
+{
+    "Symbol": "%",
+    "Name": "百分比"
+},
+{
+    "Symbol": "g/L",
+    "Name": "克每升"
+},
+{
+    "Symbol": "g/m³",
+    "Name": "克每立方米"
+},
+{
+    "Symbol": "kg/m³",
+    "Name": "千克每立方米"
+},
+{
+    "Symbol": "F",
+    "Name": "法拉"
+},
+{
+    "Symbol": "Ω",
+    "Name": "欧姆"
+},
+{
+    "Symbol": "mA",
+    "Name": "毫安"
+},
+{
+    "Symbol": "A",
+    "Name": "安培"
+},
+{
+    "Symbol": "V",
+    "Name": "伏特"
+},
+{
+    "Symbol": "kV",
+    "Name": "千伏"
+},
+{
+    "Symbol": "Hz",
+    "Name": "赫兹"
+},
+{
+    "Symbol": "W",
+    "Name": "瓦特"
+},
+{
+    "Symbol": "Wh",
+    "Name": "瓦时"
+},
+{
+    "Symbol": "eV",
+    "Name": "电子伏"
+},
+{
+    "Symbol": "J",
+    "Name": "焦耳"
+},
+{
+    "Symbol": "kJ",
+    "Name": "千焦"
+},
+{
+    "Symbol": "hPa",
+    "Name": "百帕"
+},
+{
+    "Symbol": "kPa",
+    "Name": "千帕"
+},
+{
+    "Symbol": "cm³",
+    "Name": "立方厘米"
+},
+{
+    "Symbol": "m³",
+    "Name": "立方米"
+},
+{
+    "Symbol": "h㎡",
+    "Name": "公顷"
+},
+{
+    "Symbol": "c㎡",
+    "Name": "平方厘米"
+},
+{
+    "Symbol": "㎡",
+    "Name": "平方米"
+}]

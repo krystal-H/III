@@ -3,6 +3,7 @@ import { Modal, Input, Form, Row, Col, Select } from 'antd';
 import './modifyFirmware.scss'
 import { Paths, post } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
+import { cloneDeep } from 'lodash'
 
 const { Option } = Select;
 
@@ -10,7 +11,7 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
   const [form] = Form.useForm()
 
   const [firmwareData, setFirmwareData] = useState({})
-  const [selectVal, setSelectVal] = useState('')
+  const [selectVal, setSelectVal] = useState([])
 
   const onFinish = (values) => {
     // console.log('接受的数据：', values)
@@ -42,16 +43,20 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
         res.data.firmwareModuleList.forEach(ele => {
           ele.firmwareFuncList.forEach(item => {
             // 输入框
-            item.dataType.type === 'int' && 
-            form.setFieldsValue({
-              [`${item.funcName}#${item.identifier}`]: item.dataType.specs.defaultValue
-            })
+            item.dataType.type === 'int' &&
+              form.setFieldsValue({
+                [`${item.funcName}#${item.identifier}`]: item.dataType.specs.defaultValue
+              })
             // 下拉框
             if (item.dataType.type === 'enum') {
               form.setFieldsValue({
                 [`${item.funcName}#${item.identifier}`]: item.dataType.specs.defaultValue[0].k
               })
-              setSelectVal(item.dataType.specs.defaultValue[0].k)
+              setSelectVal((pre) => {
+                const list = cloneDeep(pre)
+                list.push(item.dataType.specs.defaultValue[0].k)
+                return list
+              })
             }
           })
         })
@@ -62,6 +67,13 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
   useEffect(() => {
     modifyFirmware()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 切换下拉框赋值
+  const changeOptionVal = (val, index) => {
+    const list = cloneDeep(selectVal)
+    list[index] = val
+    setSelectVal(list)
+  }
 
   return (
     <Modal
@@ -89,7 +101,7 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
                 <React.Fragment key={item.funcModule}>
                   <div className="modify-firmware-title">{item.funcModule}</div>
                   {
-                    item.firmwareFuncList && item.firmwareFuncList.map(item2 => (
+                    item.firmwareFuncList && item.firmwareFuncList.map((item2, index2) => (
                       <React.Fragment key={item2.identifier}>
                         {
                           item2.dataType.type === 'int' &&
@@ -110,7 +122,7 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
                               key={item2.identifier}
                               wrapperCol={{ span: 10 }}
                               rules={[{ required: true, message: `选择${item2.funcName}` }]}>
-                              <Select onChange={(val) => setSelectVal(val)} allowClear>
+                              <Select onChange={(val) => { changeOptionVal(val, index2) }} allowClear>
                                 {
                                   item2.dataType.specs.def && item2.dataType.specs.def.map(optionItem => (
                                     <Option key={optionItem.k} value={optionItem.k}>{optionItem.v}</Option>
@@ -118,7 +130,7 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
                                 }
                               </Select>
                             </Form.Item>
-                            <Input className="son-item" value={selectVal} disabled style={{ width: 100 }} />
+                            <Input className="son-item" key={item2} value={selectVal[index2]} disabled style={{ width: 100 }} />
                           </div>
                         }
                       </React.Fragment>
