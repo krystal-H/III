@@ -51,6 +51,11 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
           resList.forEach(s => {
             if (s.identifier === item.identifier) {
               item.sendData = s.sendData
+              setSelectedProtocols((pre) => {
+                const list = cloneDeep(pre)
+                list.push(s.identifier)
+                return list
+              })
             }
           })
         })
