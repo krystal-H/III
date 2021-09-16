@@ -198,7 +198,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
     }));
     //添加枚举参数
     const AddEnums = (add, count) => {
-        if (count > 12) {
+        if (count > 11) {
             Notification({
                 description: `不能超过12条数据`,
                 type: 'warn'
@@ -786,7 +786,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
     }
     //添加枚举参数
     const AddEnums = (add, count) => {
-        if (count > 12) {
+        if (count > 11) {
             Notification({
                 description: `不能超过12条数据`,
                 type: 'warn'

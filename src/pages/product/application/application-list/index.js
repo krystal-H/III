@@ -146,7 +146,7 @@ export default class Application extends PureComponent {
                         </section>
                         <footer className="application-list-pagination">
                             {
-                                pager && pager.totalRows &&
+                                Object.keys(pager).length > 0 &&
                                 <Pagination
                                     className="self-pa"
                                     total={pager.totalRows}
@@ -157,6 +157,7 @@ export default class Application extends PureComponent {
                                     pageSize={pager.pageRows}
                                     showTotal={total => <span>共 <a>{total}</a> 条</span>}
                                     hideOnSinglePage
+                                    showSizeChanger={false}
                                     showQuickJumper = {pager.totalPages > 5}
                                 />
                             }

@@ -500,6 +500,7 @@ let Paths = {
     addPhticalStard:'/physicalModel/func/product/add',//产品-功能定义-物模型-新增标准模型
     downPhysicalModel:'/physicalModel/download/product',//产品-功能定义-下载物模型
     PhysicalModelList:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
+    exportFnFile:'/product/dev/custom/func/upload',//产品-功能定义-导入自定义功能
 
     // //设备-设备管理
     // getDeviceList

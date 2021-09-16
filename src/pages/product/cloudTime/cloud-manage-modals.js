@@ -8,7 +8,7 @@ import './cloud-manage-modals.scss'
 
 const { Option } = Select
 
-export function CloudAddForm({ visible, onCancel, type, editData }) {
+export function CloudAddForm({ visible, onCancel, type, editData, handleOk }) {
     const [form] = Form.useForm()
 
     const [isShowAddItem, setIsShowAddItem] = useState(false)
@@ -40,7 +40,7 @@ export function CloudAddForm({ visible, onCancel, type, editData }) {
         console.log('提交的参数', { ...values})
         post(Paths.saveTimeService, { ...values}, {loading:true}).then(res => {
             Notification({ description: '操作成功！', type: 'success' })
-            onCancel()
+            handleOk()
         })
     }
 
@@ -180,6 +180,7 @@ export function CloudAddForm({ visible, onCancel, type, editData }) {
                         name="productId"
                         rules={[{ required: true, message: '请选择归属产品' }]}>
                         <Select
+                            disabled={type === 'edit'}
                             onChange={val => getRelationProtocol(val)}>
                             {
                                 allProductList && allProductList.map(item => (

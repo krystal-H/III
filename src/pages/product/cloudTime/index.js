@@ -206,10 +206,11 @@ export default function CloudTime() {
                 <CloudAddForm
                     visible={cloudAddVisible}
                     type="add"
-                    onCancel={() => {
+                    handleOk={() => {
                         setCloudAddVisible(false)
                         getTimeList()
-                    }}></CloudAddForm>
+                    }}
+                    onCancel={() => setCloudAddVisible(false)}></CloudAddForm>
             }
             {/* 编辑 */}
             {
@@ -218,10 +219,11 @@ export default function CloudTime() {
                     visible={cloudEditVisible}
                     type="edit"
                     editData={editData}
-                    onCancel={() => {
+                    handleOk={() => {
                         setCloudEditVisible(false)
                         getTimeList()
-                    }} />
+                    }}
+                    onCancel={() => setCloudEditVisible(false)} />
             }
             {/* 发布、删除、下线 */}
             {
