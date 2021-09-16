@@ -87,7 +87,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
     }
     //添加枚举参数
     const AddEnums = (add, count) => {
-        if (count > 10) {
+        if (count > 9) {
             Notification({
                 description: `不能超过10条数据`,
                 type: 'warn'

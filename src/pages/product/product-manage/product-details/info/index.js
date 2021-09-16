@@ -25,7 +25,7 @@ export default function productInfo() {
     const getBusinessInfo = () => {
         let productId = productBaseInfo.productId
         post(Paths.getBusinessInfo, { productId }).then((res) => {
-            setBusinessInfo(res.data | {})
+            setBusinessInfo(res.data || {})
         });
         post(Paths.proReledInfo, { productId }).then((res) => {
             setImageInfo(res.data)
@@ -111,8 +111,8 @@ export default function productInfo() {
                             (<div className='product-info-image-wrap'>
                                 <Carousel autoplay>
                                     {
-                                        imageInfo.imageUrlList.map((item, index) => {
-                                            return <img src={carouselImg} key={index} alt='' />
+                                        JSON.parse(imageInfo.imageUrlList).map((item, index) => {
+                                            return <img src={item} key={index} alt='' />
                                         })
                                     }
                                 </Carousel>
