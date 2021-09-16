@@ -261,7 +261,7 @@ function confirmModel({ nextStep }, ref) {
         </div>
         <div className='confirm-pannel-content'>
             <div className='pannel-cover-image'>
-                <img src={shoaLast.page1} alt='' />
+                <img src={shoaLast.page1 || defaultCumPan} alt='' />
                 <div className='pannel-status'>{shoaLast.status}</div>
             </div>
             <div>

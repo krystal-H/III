@@ -19,7 +19,6 @@ function dealData(data) {
             return item
         }
     })
-    console.log(arr, '=======')
     return arr
 }
 export default function productInfo() {
