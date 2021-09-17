@@ -95,7 +95,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     </Select>
                 </Item>
                 <Item label="开发方案"> { SCHMETYPE[schemeType-1] && SCHMETYPE[schemeType-1].nam || "出错了！" }</Item>
-                { schemeType==1 && <Item label="产品版本"> { extVersion }</Item> }
+                {/* { schemeType==1 && <Item label="产品版本"> { extVersion }</Item> } */}
                 { ( schemeType==1 || schemeType==2 ) && <Item label="模组固件名称"> { moduleName }</Item> }
                 { schemeType==1 && updatePackgeName && <Item label="MCU升级包名称"> { updatePackgeName }</Item> }
 
@@ -112,21 +112,11 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     </Item>
 
                     {
-                        schemeType==2 ?
+                        schemeType==2 &&
                         <Item label="MCU升级" name='waringFreq' initialValue="0">
                             <Radio.Group onChange={e=>{setMcuIsUp(e.target.value)}}>
                                 <Radio.Button value="0">不升级</Radio.Button><Radio.Button value="1">升级</Radio.Button>
                             </Radio.Group>
-                        </Item> :
-                        <Item label="升级对象" name='qqqqqqqqqqqqqqq' rules={[{ required: true, message: '请选择升级对象' }]}>
-                            <Select placeholder="选择升级包类型" onChange={()=>{}} >
-                                {
-                                    VERTYPE.map(item => {
-                                        const {id,nam} = item;
-                                        return <Option key={id} value={id}>{nam}</Option>
-                                    })
-                                }
-                            </Select>
                         </Item>
                     }
                     {
