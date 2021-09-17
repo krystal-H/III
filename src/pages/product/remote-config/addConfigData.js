@@ -38,10 +38,10 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
   // 用于定义暴露给父组件的ref方法
   useImperativeHandle(ref, () => {
     return {
-    onFinish: validData
+      onFinish: validData
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedProtocols])
+  }, [selectedProtocols])
 
   // 获取关联协议列表
   const getRelationProtocol = () => {
