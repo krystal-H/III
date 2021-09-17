@@ -88,7 +88,7 @@ export default class GroupDetailt extends PureComponent {
 
     }
     render() {
-        let { addVisiable,openCloseAdd,productList,groupid} =this.props;
+        let { addVisiable,openCloseAdd,productList,groupid, id} =this.props;
         let { selectedRowKeys, list, pager, addWay,listLoading } =this.state;
         const rowSelection ={
             selectedRowKeys,
@@ -136,7 +136,7 @@ export default class GroupDetailt extends PureComponent {
                     </Tabs.TabPane>
                     <Tabs.TabPane tab="本地导入" key="2">
                     {
-                            addWay =="2" && <UploadDevice productList={productList} groupid={groupid} ref={this.uploadForm} openCloseAdd={openCloseAdd}></UploadDevice>
+                            addWay =="2" && <UploadDevice productList={productList} id={id} ref={this.uploadForm} openCloseAdd={openCloseAdd}></UploadDevice>
                     }
                         
                     </Tabs.TabPane>
@@ -155,7 +155,7 @@ const formItemLayout = {
 };
 const UploadDevice = forwardRef(({
     productList,
-    groupid,
+    id,
     openCloseAdd
 },_ref) =>{
    
@@ -171,7 +171,7 @@ const UploadDevice = forwardRef(({
                 _data = temp.response.data.url
             }
         }
-        post(Paths.groupUpDevice,{groupid,productId,data:_data}).then(({data={}}) => {
+        post(Paths.groupUpDevice,{id: Number(id),productId,data:_data}).then(({data={}}) => {
             const { failCount=0, totalCount=0 } = data;
             Notification({
                 message:'导入结果',
