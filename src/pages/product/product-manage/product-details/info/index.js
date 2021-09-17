@@ -29,6 +29,7 @@ export default function productInfo() {
     if (sessionStorage.getItem('productItem')) {
         productBaseInfo = JSON.parse(sessionStorage.getItem('productItem'))
     }
+    console.log(productBaseInfo,'==========')
     const [businessInfo, setBusinessInfo] = useState({})
     const [imageInfo, setImageInfo] = useState({})
     const getBusinessInfo = () => {
@@ -81,7 +82,7 @@ export default function productInfo() {
                         </div>
                         <div>
                             <span>网关子设备：</span>
-                            <span>{imageInfo.productClassId}</span>
+                            <span>{imageInfo.productClassId ? '是' : '否'}</span>
                         </div>
                         <div>
                             <span>通信安全验证：</span>
