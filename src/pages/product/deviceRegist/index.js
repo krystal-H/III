@@ -146,6 +146,10 @@ export default function DeviceRegist() {
             dataIndex: 'authorityType',
             key: 'authorityType',
             render: text => tableFilterFn(text)
+        },{
+            title: '归属产品名称',
+            dataIndex: 'productName',
+            key: 'productName'
         }, {
             title: '设备秘钥',
             dataIndex: 'deviceSecret',
@@ -165,13 +169,26 @@ export default function DeviceRegist() {
             title: '入网时间',
             dataIndex: 'activeTime',
             key: 'activeTime',
-            render(updateTime) {
-                return DateTool.utcToDev(updateTime);
+            render(activeTime) {
+                return activeTime && DateTool.utcToDev(activeTime);
             }
         }
     ];
+    //导出
     const exportFile=()=>{
-        
+        let params = {  }
+        if (form.getFieldValue('status') != -1) {
+            params.status = form.getFieldValue('status')
+        }
+        if (form.getFieldValue('id') && form.getFieldValue('id').trim()) {
+            params.id = form.getFieldValue('id')
+        }
+        if (selectType) {
+            params.productId = selectType
+        }
+        post(Paths.exportRegistFile,params).then((res) => {
+            window.open(res.data)
+        });
     }
     return (
         <div id='device-regist'>

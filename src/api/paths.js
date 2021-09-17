@@ -526,6 +526,7 @@ let Paths = {
     proReledExport:'/deviceRegister/importAddr',//设备注册导出
     proReledInfo:'/product/detail',//设备基本详情
     getProductPlus:'/productManage/getProductExtendList',//产品下拉带验证方式
+    exportRegistFile:'/deviceRegister/export',//导出设备注册文件
     
 
     //确定面板接口
