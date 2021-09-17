@@ -66,24 +66,27 @@ export default class Header extends PureComponent {
     goHome = () => {
         window.location = window.location.origin + window.location.pathname + '#/open/home';
     }
+    goMessAgeDetail=(id)=>{
+        window.location = window.location.origin + window.location.pathname + '#/messageCenter/detail/'+id;
+    }
     render() {
         const { onlyLogo, developerInfo = {}, newMessageNums = {}, history } = this.props,
             { userName, isSubUser } = developerInfo,
             { totalUnRead } = newMessageNums;
         let { childmenus } = userNavRoutes[0];
-        console.log(childmenus,'==========')
-        childmenus.forEach(item=>{
-            if(item.menuname=="基本资料"){
-                item.imgUrl=baseinfo
+        console.log(childmenus, '==========')
+        childmenus.forEach(item => {
+            if (item.menuname == "基本资料") {
+                item.imgUrl = baseinfo
             }
-            if(item.menuname=="安全设置"){
-                item.imgUrl=securitySet
+            if (item.menuname == "安全设置") {
+                item.imgUrl = securitySet
             }
-            if(item.menuname=="访问用户"){
-                item.imgUrl=inviteuser
+            if (item.menuname == "访问用户") {
+                item.imgUrl = inviteuser
             }
-            if(item.menuname=="用户角色"){
-                item.imgUrl=userrole
+            if (item.menuname == "用户角色") {
+                item.imgUrl = userrole
             }
         })
         if (isSubUser) {
@@ -104,12 +107,14 @@ export default class Header extends PureComponent {
                                 <div className='title'>消息</div>
                                 {
                                     messageList.map((item, index) => {
-                                        return <div key={index} className='message-item'>
-                                            <div className='name'>
-                                                <div className='text'>【{getMessageType(item.noticeType)} 】{item.noticeTitle}</div>
-                                                {!item.isRead && <div className='count-dot'></div>}
+                                        return <div key={index} className='message-item-wrap' onClick={this.goMessAgeDetail.bind(this, item.noticeId)}>
+                                            <div className='message-item'>
+                                                <div className='name'>
+                                                    <div className='text'>【{getMessageType(item.noticeType)} 】{item.noticeTitle}</div>
+                                                    {!item.isRead && <div className='count-dot'></div>}
+                                                </div>
+                                                <div className='time'>{item.updateTime}</div>
                                             </div>
-                                            <div className='time'>{item.updateTime}</div>
                                         </div>
                                     })
                                 }
@@ -133,11 +138,11 @@ export default class Header extends PureComponent {
                                     <div className='userbox'>
                                         {
                                             childmenus.map(({
-                                                menuname, path, menuicon,imgUrl
+                                                menuname, path, menuicon, imgUrl
                                             }, index) => {
                                                 return <Link key={index} className="li" to={path} target="_blank">
                                                     {/* <UserOutlined /> */}
-                                                    <img src={imgUrl}/>
+                                                    <img src={imgUrl} />
                                                     <span className='txt'>{menuname}</span>
                                                 </Link>
                                             })
