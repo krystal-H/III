@@ -41,7 +41,7 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
       onFinish: validData
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedProtocols])
+  }, [selectedProtocols, initialProtoclList])
 
   // 获取关联协议列表
   const getRelationProtocol = () => {
@@ -71,6 +71,11 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
   useEffect(() => {
     getRelationProtocol()
   }, [productId])  // eslint-disable-line react-hooks/exhaustive-deps
+
+
+  useEffect(() => {
+    console.log(selectedProtocols, 'selectedProtocolsselectedProtocolsselectedProtocols')
+  }, [selectedProtocols])
 
   // 输入参数
   const changeSendData = (value, index) => {

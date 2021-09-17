@@ -139,13 +139,12 @@ function RemoteConfig(remoteType = 'product') {
     }
 
     // 获取远程配置列表
-    const getRemoteConfigList = (_pageIndex, status = '', taskName = '') => {
+    const getRemoteConfigList = (status = '', taskName = '') => {
         const params = {
             productId: currentProductId,
-            pageRows: PAGE_ROWS,
-            pageIndex: _pageIndex || pageIndex,
             status,
-            taskName
+            taskName,
+            ...pager
         }
         post(Paths.getRomoteConfigListByProduct5x, params, { loading: true }).then(res => {
             setRemoteConfigList(addKeyToTableData(res.data.list))
@@ -170,7 +169,7 @@ function RemoteConfig(remoteType = 'product') {
 
     // 查询列表数据
     const searchListData = (val) => {
-        getRemoteConfigList(pageIndex, status, val)
+        getRemoteConfigList(status, val)
     }
 
     // 翻页

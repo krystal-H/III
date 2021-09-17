@@ -1,13 +1,20 @@
-import React from 'react'
+import React, { Component } from 'react'
 import AloneSection from '../../components/alone-section/AloneSection'
 import { DateTool } from '../../util/util';
 import { get, Paths, post } from '../../api';
 
-export default class MessageDetail extends React.PureComponent {
+export default class MessageDetail extends Component {
+
     state = {
         detail: null
     }
-
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.location.pathname != this.props.location.pathname) {
+            let id = nextProps.location.pathname.split('/').slice(-1)
+            this.getMessageDetail(id)
+        }
+        return true;
+    }
     componentDidMount() {
         this.getMessageDetail()
     }
@@ -18,13 +25,13 @@ export default class MessageDetail extends React.PureComponent {
         post(Paths.setRead, params).then((res) => {
         });
     }
-    getMessageDetail = () => {
+    getMessageDetail = (id) => {
         let { match = {}, location } = this.props,
             { params = {} } = match,
             { noticeId } = params,
             { state = {} } = location,
             { read } = state;
-
+        noticeId = id || noticeId
         if (noticeId) {
             post(Paths.getNoticeDetail, {
                 noticeId: noticeId - 0,
