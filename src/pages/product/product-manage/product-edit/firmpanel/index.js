@@ -9,6 +9,7 @@ import GrayDebugg from './grayDebugg'
 import ActionModel from './actionModel'
 import RelPanModel from './relPanel'
 import { Notification } from '../../../../../components/Notification';
+import defaultCumPan from '../../../../../assets/images/commonDefault/default-cumfn.png';
 import './index.scss'
 function confirmModel({ nextStep }, ref) {
     let productId = 0
@@ -29,11 +30,12 @@ function confirmModel({ nextStep }, ref) {
             productId = JSON.parse(sessionStorage.getItem('productItem')).productId
         }
         post(Paths.panelList, { productId }).then((res) => {
-            let data = res.data.list.filter(item => {
-                if (item.panelType == 3) {
-                    return item
-                }
-            })
+            // let data = res.data.list.filter(item => {
+            //     if (item.panelType == 3) {
+            //         return item
+            //     }
+            // })
+            let data = res.data.list
             let lastEst = {}
             if (!data.length) return;
             lastEst = data[0]
@@ -260,7 +262,7 @@ function confirmModel({ nextStep }, ref) {
         </div>
         <div className='confirm-pannel-content'>
             <div className='pannel-cover-image'>
-                <img src={shoaLast.page1} alt='' />
+                <img src={shoaLast.page1 || defaultCumPan} alt='' />
                 <div className='pannel-status'>{shoaLast.status}</div>
             </div>
             <div>
@@ -273,7 +275,7 @@ function confirmModel({ nextStep }, ref) {
                 <div className='confirm-pannel-content-right'>
                     <div>请使用“数联智能”App，扫描以下二维码，体验此面板。</div>
                     <div className='model-panal-code'>
-                        <img src={shoaLast.qrcode} alt='' />
+                        <img src={shoaLast.qrcode || demoAppOfficial} alt='' />
                     </div>
                     <div>
                         还没安装App？

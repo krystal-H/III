@@ -180,7 +180,8 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
     let obj={}
     obj.productId=selectType
     obj.data=arr.concat(arr2)
-    post(Paths.saveDeviceRemoset, obj).then((res) => {
+
+    post(Paths.saveScenceData, obj).then((res) => {
       addOk()
     });
   }

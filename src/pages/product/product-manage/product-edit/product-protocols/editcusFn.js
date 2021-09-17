@@ -3,6 +3,7 @@ import { Form, Input, Button, Space, Select, Radio, Tabs, Drawer } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
+import { unitCollection, multipleCollection } from '../../../../../configs/text-map';
 import './editInfo.scss'
 //tab
 const optionsWithDisabled = [
@@ -249,7 +250,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
                 label="数据类型"
                 name='type'
             >
-                <Select allowClear onChange={onTypeChange}>
+                <Select onChange={onTypeChange}>
                     {
                         dataOptions.map(item => (
                             <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
@@ -361,17 +362,21 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
                                 rules={[{ required: true }]}
                             ><Input /></Form.Item>
                             <Form.Item name={['specs', 'multiple']} label="倍数" >
-                                <Select allowClear >
-                                    <Select.Option value="10">10</Select.Option>
-                                    <Select.Option value="100">100</Select.Option>
-                                    <Select.Option value="1000">1000</Select.Option>
+                                <Select >
+                                    {
+                                        multipleCollection.map(item => {
+                                            return <Select.Option value={item.value} key={item.value}>{item.label}</Select.Option>
+                                        })
+                                    }
                                 </Select>
                             </Form.Item>
                             <Form.Item name={['specs', 'unit']} label="单位" >
-                                <Select allowClear >
-                                    <Select.Option value="male">male</Select.Option>
-                                    <Select.Option value="female">female</Select.Option>
-                                    <Select.Option value="other">other</Select.Option>
+                                <Select>
+                                    {
+                                        unitCollection.map(item => {
+                                            return <Select.Option value={item.Symbol} key={item.Symbol}>{item.Symbol}</Select.Option>
+                                        })
+                                    }
                                 </Select>
                             </Form.Item>
                         </>)
@@ -837,7 +842,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                         },
                     ]}
                 >
-                    <Select allowClear>
+                    <Select >
                         {
                             dataOptions.map(item => (
                                 <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
@@ -948,15 +953,21 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                                     rules={[{ required: true }]}
                                 ><Input /></Form.Item>
                                 <Form.Item name={['specs', 'multiple']} label="倍数" >
-                                    <Select allowClear >
-                                        <Select.Option value="10">10</Select.Option>
-                                        <Select.Option value="100">100</Select.Option>
-                                        <Select.Option value="1000">1000</Select.Option>
+                                    <Select >
+                                        {
+                                            multipleCollection.map(item => {
+                                                return <Select.Option value={item.value} key={item.value}>{item.label}</Select.Option>
+                                            })
+                                        }
                                     </Select>
                                 </Form.Item>
                                 <Form.Item name={['specs', 'unit']} label="单位" >
-                                    <Select allowClear >
-                                        <Select.Option value="cal">卡路里</Select.Option>
+                                    <Select>
+                                        {
+                                            unitCollection.map(item => {
+                                                return <Select.Option value={item.Symbol} key={item.Symbol}>{item.Symbol}</Select.Option>
+                                            })
+                                        }
                                     </Select>
                                 </Form.Item>
                             </>)

@@ -25,7 +25,7 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
         for (let index = 0; index < initialProtoclList.length; index++) {
           const ele = initialProtoclList[index]
           if (item === ele.identifier) {
-            if (!ele.sendData) return Notification({ description: '请为配置协议添加参数' })
+            if (!ele.sendData && ele.sendData != 0) return Notification({ description: '请为配置协议添加参数' })
           }
         }
       }
@@ -36,9 +36,12 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
   }
 
   // 用于定义暴露给父组件的ref方法
-  useImperativeHandle(ref, () => ({
-    onFinish: validData
-  }))
+  useImperativeHandle(ref, () => {
+    return {
+      onFinish: validData
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedProtocols])
 
   // 获取关联协议列表
   const getRelationProtocol = () => {

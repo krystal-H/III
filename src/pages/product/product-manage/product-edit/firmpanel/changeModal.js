@@ -3,7 +3,6 @@ import { Modal, Button, Tabs, Table, Input, Select, Checkbox, Form, Space } from
 import { useHistory } from 'react-router-dom';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import NewModal from './newModal'
-import TestModal from './test'
 import EditModal from './editModal'
 import './changeModal.scss'
 import { post, Paths, get } from '../../../../../api';

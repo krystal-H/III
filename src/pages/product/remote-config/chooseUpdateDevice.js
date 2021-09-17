@@ -92,9 +92,12 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
     }
   }
 
-  useImperativeHandle(ref, () => ({
-    onFinish: validData
-  }))
+  useImperativeHandle(ref, () => {
+    return {
+      onFinish: validData
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rightTempList])
 
   // 一键移除 右侧数据
   const deleteDeviceFromRightList = () => {
