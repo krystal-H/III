@@ -170,7 +170,9 @@ export default function DeviceRegist() {
             }
         }
     ];
-
+    const exportFile=()=>{
+        
+    }
     return (
         <div id='device-regist'>
             <PageTitle title='设备注册'>
@@ -226,7 +228,11 @@ export default function DeviceRegist() {
                             </Form.Item>
                         </Form>
                     </div>
-                    <Button type="primary" onClick={openRegist}>注册设备</Button>
+                    <div>
+                        <Button type="primary" onClick={exportFile} style={{marginRight:'15px'}}>导出数据</Button>
+                        <Button type="primary" onClick={openRegist}>注册设备</Button>
+                    </div>
+
                 </div>
                 <Table rowKey='did' dataSource={dataSource} columns={columns} pagination={{
                     defaultCurrent: 1,
