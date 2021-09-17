@@ -22,32 +22,6 @@
     npm run pro
 ```
 
-### 发布
-
-开发环境(https://dp.clife.net/)
-
-测试环境(https://itest.clife.net/)
-
-生产环境(https://cms.clife.cn/，https://open.clife.cn/)
-
-： dp  和 itest 环境的发布是打包提交到coding上后，对应构建计划里点击构建  即可完成发布；
-
-生产环境在构建计划构建后 生成对应的 制品库，再将制品库相关信息发给开发发布负责人（汪超）代为发布。
-
-####  制品信息模板
-
-制品地址：
-https://clife-devops-generic.pkg.coding.net/clifeiot/web-publish-package/wcloud-open.zip?version=c571876820b5246ac34348581dcc4e3851ad98d3
-
-发布目录：wcloudopen
-
-制品名称：wcloud-open.zip
-
-发布内容：OTA升级
-
-（发布目录 默认是cms域名下的fault，若是open下则需要添加域名 比如： open/wCloud/v4  这样）
-
-
 ## mock数据
 
 目前使用的是 `mocker-api` 插件进行数据模拟。 文档 ： https://github.com/jaywcjlove/mocker-api
