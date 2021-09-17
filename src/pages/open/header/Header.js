@@ -10,7 +10,10 @@ import { Link } from 'react-router-dom';
 import { post, Paths } from '../../../api'
 import { userNavRoutes } from '../../../configs/route.config';
 import DefaultUserIcon from '../../../assets/images/userIcon.png'
-
+import securitySet from './../../../assets/images/overImage/security-set.png';
+import userrole from './../../../assets/images/overImage/user-role.png';
+import baseinfo from './../../../assets/images/overImage/base-info.png';
+import inviteuser from './../../../assets/images/overImage/invite-user.png';
 import './Header.scss'
 
 const LOGO_TEXT = '物联网云平台';
@@ -60,27 +63,37 @@ export default class Header extends PureComponent {
                 })
             })
     }
-    goMore = () => {
-        window.location = window.location.origin + window.location.pathname + '#/messageCenter/list';
+    goHome = () => {
+        window.location = window.location.origin + window.location.pathname + '#/open/home';
     }
     render() {
         const { onlyLogo, developerInfo = {}, newMessageNums = {}, history } = this.props,
             { userName, isSubUser } = developerInfo,
             { totalUnRead } = newMessageNums;
         let { childmenus } = userNavRoutes[0];
-
+        console.log(childmenus,'==========')
+        childmenus.forEach(item=>{
+            if(item.menuname=="基本资料"){
+                item.imgUrl=baseinfo
+            }
+            if(item.menuname=="安全设置"){
+                item.imgUrl=securitySet
+            }
+            if(item.menuname=="访问用户"){
+                item.imgUrl=inviteuser
+            }
+            if(item.menuname=="用户角色"){
+                item.imgUrl=userrole
+            }
+        })
         if (isSubUser) {
             childmenus = childmenus.slice(0, 2) // 子账号只有前两项  基本资料  安全设置  两个菜单
         }
         const { messageList } = this.state
-        const menu = messageList.map(item => {
-            return <div key={item.noticeId}>{item}
-                【{getMessageType(item.noticeType)} 】{item.noticeTitle}</div>
-        })
 
         return (
             <header className="mainpage-header">
-                <span className="logo">{LOGO_TEXT}</span>
+                <span className="logo" onClick={this.goHome.bind(this, false)}>{LOGO_TEXT}</span>
                 {
                     !onlyLogo &&
                     <div className='right'>
@@ -120,10 +133,11 @@ export default class Header extends PureComponent {
                                     <div className='userbox'>
                                         {
                                             childmenus.map(({
-                                                menuname, path, menuicon
+                                                menuname, path, menuicon,imgUrl
                                             }, index) => {
                                                 return <Link key={index} className="li" to={path} target="_blank">
-                                                    <UserOutlined />
+                                                    {/* <UserOutlined /> */}
+                                                    <img src={imgUrl}/>
                                                     <span className='txt'>{menuname}</span>
                                                 </Link>
                                             })
