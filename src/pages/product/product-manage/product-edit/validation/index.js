@@ -12,27 +12,10 @@ import ReleaseProduct from './releaseProduct';
 const { TabPane } = Tabs;
 
 const columns = [
-    {
-        title: '序列号',
-        dataIndex: 'name',
-        key: 'name',
-        render: text => <a>{text}</a>,
-    },
-    {
-        title: 'topic数据内容',
-        dataIndex: 'age',
-        key: 'age',
-    },
-    {
-        title: '物理地址',
-        dataIndex: 'address',
-        key: 'address',
-    },
-    {
-        title: 'DID',
-        dataIndex: 'DID',
-        key: 'DID',
-    }
+    { title: '序列号', dataIndex: 'index' },
+    { title: 'topic数据内容', dataIndex: 'topic' },
+    { title: '物理地址', dataIndex: 'macAddress'},
+    { title: 'did', dataIndex: 'did'}
 ];
 
 let ws = null, //保存websocket连接
@@ -44,27 +27,30 @@ const mapStateToProps = state => {
         developerInfo: state.getIn(['userCenter', 'developerInfo']).toJS(),
     }
 }
-// @connect(mapStateToProps, null)
+
+const temp = [
+    {  topic:"topictopic", macAddress:"32423423", did:"11", map:"erwrwerer", index:1 },
+    {  topic:"topictopic", macAddress:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", macAddress:"rwerwe", did:"33", map:"erwe", index:3 }
+]
+
 function Validation({ nextStep, productId,developerInfo,refInstance }) {
-
-
+    const mountRef = useRef(-1);
     const [releaseVisible, setReleaseVisible] = useState(false); // 发布产品
-    const [original, setOriginal] = useState([]);//原始数据
+    const [dataList, setDataList] = useState(temp);//原始数据
     const [debugInfo, setDebugInfo] = useState(["",""]); //
     const [serverIp, setServerIp] = useState(""); //ws 请求配置 ip
     const [serverToken, setServerToken] = useState(""); //ws 请求配置 token
     const [webSocketStatu, setWebSocketStatu] = useState(0); //ws 连接状态 0失败，1成功
-    const [mount, setmMount] = useState(0); //
     const [historyVisiable, setHistoryVisiable] = useState(false);
 
-    
-    
+    const [analysisData, setAnalysisData] = useState("");
 
     useEffect(() => {
         get(Paths.queryServerConfig,{productId},{loading:true}).then(({data={}})=>{
-            setServerIp(data.ip)
+            setServerIp(data.ip && "t.wss.clife.net")
         })
-        getAccessToken();
+        
         return ()=>{
             ws && ws.close();
             clearInterval(wsTimer);
@@ -72,11 +58,13 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
         }
     }, [productId])
 
-    // 连接过之后，token再发生变化的时候（连接失败或者异常断开连接）重新连接
+    //拿到token后 发起ws连接
     useEffect(() => {
-        if(mount){
+        console.log("----serverToken---",serverToken)
+        if(serverToken){
             newWebSocket();
-        } 
+        }
+        
     }, [serverToken])
 
     useImperativeHandle(refInstance, () => ({
@@ -99,8 +87,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
             })
             return
         }
-        newWebSocket();
-
+        getAccessToken();
     }
     //修改调试账号、设备
     const set_DebugInfo = (e,i)=>{
@@ -111,42 +98,61 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
     //建立一个 ws 连接
     const newWebSocket = ()=> {
 
-
         let wsProtocol = 'wss:';
         let httpProtocol = window.location.protocol;
             wsProtocol = httpProtocol.replace(/https?/, 'wss');
-
-
         ws = new WebSocket(wsProtocol + '//' + serverIp);
         
         
         ws.onopen = ()=> {//连接成功
-            setmMount(1)
+            mountRef.current = 0
             setWebSocketStatu(1);
             clearInterval(wsTimer);
-            wsTimer = setInterval(()=>{ws.send('')}, 5000); //告诉服务器“请保持联系”
+            wsTimer = setInterval(()=>{ ws.send('') }, 5000); //告诉服务器“请保持联系”
             const product = JSON.parse(sessionStorage.getItem('productItem'));
             const {deviceTypeId,deviceSubTypeId,productVersion} = product;
 
-            const senmsg = `[${serverToken}|${developerInfo.userId}|${deviceTypeId}#${deviceSubTypeId}#${productVersion}#${debugInfo[0]}#${debugInfo[1]}]`;  
+            const senmsg = `[${serverToken}|${developerInfo.userId}|${deviceTypeId}#${deviceSubTypeId}#${productVersion}|${debugInfo[0]}|${debugInfo[1]}]`;  
             ws.send(senmsg);
         };
         ws.onmessage =  (data)=> {//接收到消息
-            let _d = JSON.parse(data.data);
-            let _original = cloneDeep(original);
-            if(_original.unshift(_d) == 901){//页面最多显示900条数据
-                _original.pop();
-            }
-            setOriginal(_original)
+            mountRef.current += 1;
+            toDataList(data.data || "{}")
+            
         };
         ws.onclose = (e) =>{//检测到断开连接
+            console.log("检测到断开连接",mountRef.current)
             setWebSocketStatu(0);
             clearInterval(wsTimer);
-            if (mount && e.code == '1006') {
-                setTimeout(getAccessToken,5000);//如果异常断开，会尝试重连
+            if (mountRef.current>-1 && e.code == '1006') {//如果异常断开，尝试重连
+                setTimeout(getAccessToken,5000);
             }
             ws = null;
+            mountRef.current = -1
         }
+    }
+
+    const toDataList = data=>{
+        const _d = JSON.parse(data);
+        const { topic, macAddress, did, map } = _d;
+        setDataList(preLi=>{
+            let li = cloneDeep(preLi);
+            if(li.unshift({
+                topic, 
+                macAddress, 
+                did, 
+                map,
+                index:mountRef.current
+            }) == 901){//页面最多显示900条数据
+                li.pop();
+            }
+            return li
+        })
+    }
+
+    const cleanDataLi = ()=>{
+        setDataList([])
+        
     }
 
     const openHistory =  open =>{
@@ -174,17 +180,23 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
                             <div className='left-content-title'>
                                 <h3>原始数据</h3>
                                 <div>
-                                    <Button type="primary" ghost>清空当前信息</Button>
+                                    <Button type="primary" ghost onClick={cleanDataLi} >清空当前信息</Button>
                                     <Button type="primary" ghost>导出数据</Button>
                                 </div>
                             </div>
                             <div>
-                                <Table columns={columns} dataSource={original} />
+                                <Table columns={columns} rowKey="index" dataSource={dataList} pagination={false}
+                                        onRow={r=> {
+                                            return {
+                                                onClick: e => { setAnalysisData(r.map) },
+                                            };
+                                        }}
+                                />
                             </div>
                         </div>
                         <div className='right-content'>
                             <h3>解析数据</h3>
-                            <div></div>
+                            <div>{analysisData}</div>
                         </div>
                     </div>
                 </TabPane>
@@ -207,22 +219,3 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
 let Component = connect(mapStateToProps, null)(Validation)
 
 export default forwardRef( (props,ref) => <Component  {...props}  refInstance={ref} />   )
-
-
-
-
-// {
-//     "cmd": 2004,
-//     "ver": "1.0",
-//     "dir": "03",
-//     "msgId": 0,
-//     "prio": 2,
-//     "timestamp": 8357,
-//     "data": "g2BOqToij62Wv0o8naKATL0SiLOeL0W8LzW2Ym5uHQ8CaMyEl/iUYGH0vzWW/UhztbyxzwgvqZMT26Q+nUkYaFEOaTK28V4ceAkXh6L5D2c=",
-//     "map": {
-//       "devId": "F0000002082E",
-//       "devMac": "4898CA511B74",
-//       "profileVer": "1"
-//     },
-//     "topic": "/1/2/3/4"
-//   }

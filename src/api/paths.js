@@ -477,7 +477,7 @@ let Paths = {
     otaGetBatchInfo:'/device/version/5/publish/getBatchInfo',
     otaCancelDevicePub:'/device/version/5/publish/cancel',
     otaValiGetinfo:'/device/version/5/validate/getInfo',
-    firmwareFromProduct:'product/firmware/package',
+    firmwareFromProduct:'/product/firmware/package',
 
     
     //总览页
