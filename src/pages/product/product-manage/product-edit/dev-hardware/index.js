@@ -200,7 +200,7 @@ class Hardware extends Component {
                         <div className="module-tip mar-t-b">已生成固件</div>
                         {
                             allInfo.firmwareDefList &&
-                            <Table rowKey="burnFileVersion"
+                            <Table rowKey="id"
                                 columns={this.columns}
                                 dataSource={dataSource}
                                 pagination={false}
@@ -311,9 +311,12 @@ class Hardware extends Component {
                         modifyFirmwareVisible={modifyFirmwareVisible}
                         firmwareId={firmwareId}
                         productId={this.props.productId}
-                        handleCancelFirmware={() => {
+                        handleOk={() => {
                             this.setState({ modifyFirmwareVisible: false })
                             this.getMoudleInfo(currentModuleId)
+                        }}
+                        handleCancelFirmware={() => {
+                            this.setState({ modifyFirmwareVisible: false })
                         }} />
                 }
                 {/* 更换固件 */}
