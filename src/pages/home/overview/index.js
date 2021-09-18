@@ -163,13 +163,16 @@ export default function OverviewWrap() {
     const [showDialog, setShowDialog] = useState(false)
     const changeTip = () => {
         let anchorElement = document.getElementById('show-shadow');
-        if (anchorElement) {
+        if (anchorElement && currentTip != 4) {
             anchorElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        if (currentTip ==4) {
+            let box1= document.querySelector(".right-wrapper-contentbox");
+            box1.scrollTop=0
         }
         setCurrentTip(currentTip + 1)
         if (currentTip >= 5) {
             setShowDialog(false)
-
         }
     }
     useEffect(() => {
@@ -178,21 +181,20 @@ export default function OverviewWrap() {
             setCurrentTip(1)
             setShowDialog(true)
         }
-
     }, [])
     const menulist = useSelector(state => {
-           return  state.getIn(['userCenter', 'menulist']).toJS()
+        return state.getIn(['userCenter', 'menulist']).toJS()
     })
-    
+
     const getProductListNew = () => {
         history.push(`/open/product/proManage/list`)
     }
     //是否展示进入btn
-    const isShowBtn=(value)=>{
-        let isShow=false
-        menulist.forEach(item=>{
-            if(item.menuname == value){
-                isShow=true
+    const isShowBtn = (value) => {
+        let isShow = false
+        menulist.forEach(item => {
+            if (item.menuname == value) {
+                isShow = true
             }
         })
         return isShow
@@ -285,7 +287,7 @@ export default function OverviewWrap() {
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>产品管理</div>
-                                {isShowBtn('产品') && <a onClick={() => { goPage('/open/product/proManage/list') }}>进入</a>} 
+                                {isShowBtn('产品') && <a onClick={() => { goPage('/open/product/proManage/list') }}>进入</a>}
                             </div>
                             <div className='over-view-productmn-content'>
                                 {

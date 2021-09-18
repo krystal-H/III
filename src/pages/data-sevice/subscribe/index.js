@@ -15,22 +15,10 @@ const { Step } = Steps;
 const { Search } = Input;
 export default function DeviceRegist() {
     const [form] = Form.useForm();
-    const [optionArr, setOptionArr] = useState([]) //产品列表
     const [productCount, SetproductCount] = useState('')
     const [dataSource, setDataSource] = useState([])
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
     // const [searchParams,setSearchParams]=useState({})
-    //产品种类列表
-    const getProductType = () => {
-        get(Paths.getProductType).then(res => {
-            let arr = []
-            for (let key in res.data) {
-                arr.push({ key, value: res.data[key] })
-            }
-            arr.unshift({ key:0, value: '全部产品' })
-            setOptionArr(arr)
-        });
-    }
     // table操作-发布、删除、下线
     const [tableAcVisible, setTableAcVisible] = useState(false)
     const [operate, setOperate] = useState(null)
@@ -39,7 +27,6 @@ export default function DeviceRegist() {
         setTableAcVisible(true)
         setSelectRow(data)
         setOperate(type)
-
     }
     const closeAction = () => {
         setTableAcVisible(false)
@@ -78,14 +65,14 @@ export default function DeviceRegist() {
     const onCloseRight = () => {
         setRightVisible(false)
     }
-    //===============
-    useEffect(()=>{
-        getProductType()
-    },[])
     useEffect(() => {
         getList()
-    }, [pager.pageRows, pager.pageIndex,productCount])
-    const productChange=(val)=>{
+    }, [pager.pageRows, pager.pageIndex, productCount])
+    const productChange = (val) => {
+        setPager(pre => {
+            let obj = JSON.parse(JSON.stringify(pre))
+            return Object.assign(obj, { pageIndex: 1 })
+        })
         SetproductCount(val)
     }
     //搜索
@@ -102,11 +89,11 @@ export default function DeviceRegist() {
     //获取列表
     const getList = (loading = true) => {
         let params = {
-            devicePushUrlConf: { ...form.getFieldsValue()},
+            devicePushUrlConf: { ...form.getFieldsValue() },
             pager: pager,
         }
-        if(productCount){
-            params.productId=productCount
+        if (productCount) {
+            params.productId = productCount
         }
         // setSearchParams(params.devicePushUrlConf)
         post(Paths.subscribeList, params, { loading }).then((res) => {
@@ -154,7 +141,7 @@ export default function DeviceRegist() {
     const [editData, setEditData] = useState({ devicePushDataConfList: [] })
     const openEdit = (data, loading = true) => {
         let url = Paths.subscribeDetail + '?urlConfId=' + data.urlConfId
-        post(url, { }, { loading }).then((res) => {
+        post(url, {}, { loading }).then((res) => {
             setEditData(res.data)
             setSelectRow(data)
             setEditModelVis(true)
@@ -222,19 +209,10 @@ export default function DeviceRegist() {
             )
         },
     ];
-    
+
     return (
         <div id='subscribe-data'>
-            <PageTitle title='数据订阅'>
-                <div className='top-select'>
-                    <Select style={{ width: 200 }} allowClear onChange={productChange} defaultValue={0}>
-                    {
-                        optionArr.map(item => {
-                            return (<Option value={item.key} key={item.key}>{item.value}</Option>)
-                        })
-                    }
-                    </Select>
-                </div>
+            <PageTitle title='数据订阅' selectOnchange={val => productChange(val)} isRelProductData={true}>
             </PageTitle>
             <div className='comm-shadowbox setp-ttip'>
                 <div className='step-title'>

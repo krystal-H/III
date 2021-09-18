@@ -17,13 +17,11 @@ const originCount = [
 export default function DeviceList() {
     const history = useHistory();
     const [countData, setCountData] = useState(originCount) //统计
-    const [optionArr, setOptionArr] = useState([]) //产品列表
     const [form] = Form.useForm();
     const [dataSource, setDataSource] = useState([]) //表格数据
     const [selectType, setSelectType] = useState('') //产品种类
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     useEffect(() => {
-        getProductType()
         getDevOneList()
     }, [])
     useEffect(() => {
@@ -36,6 +34,7 @@ export default function DeviceList() {
             return Object.assign(obj, { pageIndex: 1 })
         })
         setSelectType(value)
+        getDevOneList(value)
     }
     //获取列表
     const getList = (loading = true) => {
@@ -63,20 +62,13 @@ export default function DeviceList() {
             })
         });
     }
-    //产品种类列表
-    const getProductType = () => {
-        get(Paths.getProductType).then(res => {
-            let arr = []
-            for (let key in res.data) {
-                arr.push({ key, value: res.data[key] })
-            }
-            arr.unshift({ key:0, value: '全部产品' })
-            setOptionArr(arr)
-        });
-    }
     //获取统计
-    const getDevOneList = () => {
-        post(Paths.devMnCount).then((res) => {
+    const getDevOneList = (value) => {
+        let parmas={}
+        if(value){
+            parmas.productId=value
+        }
+        post(Paths.devMnCount,parmas).then((res) => {
             setCountData([
                 { label: '当前异常数', count: res.data.exception },
                 { label: '累积设备总数', count: res.data.total },
@@ -221,16 +213,7 @@ export default function DeviceList() {
 
     }
     return (<div id='device-manage'>
-        <PageTitle title='设备管理'>
-            <div className='top-select'>
-                <Select style={{ width: 200 }}  onChange={selectChange} defaultValue={0}>
-                    {
-                        optionArr.map(item => {
-                            return (<Option value={item.key} key={item.key}>{item.value}</Option>)
-                        })
-                    }
-                </Select>
-            </div>
+        <PageTitle title='设备管理' selectOnchange={val => selectChange(val)}>
         </PageTitle>
         <CountNum data={countData} />
         <div className='comm-shadowbox device-main'>
