@@ -292,7 +292,7 @@ export default function DeviceList() {
                 </Form>
             </div>
             <div className='export-wrap'>
-                <a onClick={exportFile}>导出协议</a>
+                <a onClick={exportFile}>导出数据</a>
                 <img onClick={exportFile} src={downpng} style={{ marginRight: '15px' }} alt='' />
             </div>
             <div>
