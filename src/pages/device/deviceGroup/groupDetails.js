@@ -10,6 +10,7 @@ import { DateTool } from '../../../util/util';
 import DeviceList from './groupDeviceList';
 import SearchProduct from './searchProduct';
 import './deviceGroup.scss';
+import { Notification } from '../../../components/Notification';
 
 export default class GroupDetailt extends PureComponent {
     constructor(props) {
@@ -119,7 +120,7 @@ export default class GroupDetailt extends PureComponent {
     getGroupDevList = () => {
         let params = cloneDeep(this.state.listParams);
         if (params.productId == -1) { delete params.productId }
-        post(Paths.getGroupDeviceList, params).then((res) => {
+        post(Paths.getGroupDeviceList, params, {loading: true}).then((res) => {
             let { list, pager } = res.data || {};
             this.setState({ groupDevList: list, pager });
         });
@@ -158,6 +159,7 @@ export default class GroupDetailt extends PureComponent {
         if (type == 'ok') {
             post(Paths.delGroupDevice, { id: this.id, deviceIds: delid || selectedRowKeys.join(',') }).then((res) => {
                 if (res.code == 0) {
+                    Notification({message: '操作成功！', type: 'success'})
                     this.getGroupDevList();
                     this.setState({ delid: '', delVisable: false, selectedRowKeys: [] });
                 }

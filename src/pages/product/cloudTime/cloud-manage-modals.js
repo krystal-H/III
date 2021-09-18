@@ -8,13 +8,13 @@ import './cloud-manage-modals.scss'
 
 const { Option } = Select
 
-export function CloudAddForm({ visible, onCancel, type, editData, handleOk }) {
+export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allProductList }) {
     const [form] = Form.useForm()
 
     const [isShowAddItem, setIsShowAddItem] = useState(false)
     const [protocolItemIndex, setProtocolItemIndex] = useState('') // 当前选中的协议
     const [selectedProtocolList, setSelectedProtocolList] = useState([]) // 弹框中所有被选中的协议
-    const [allProductList, setAllProductList] = useState([])
+    
 
     const onFinish = (values) => {
         let timeServerDetails = []
@@ -50,21 +50,14 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk }) {
 
     const [initialList, setInitialList] = useState([])
 
+    // 获取详情信息
     const showDetail = () => {
         getRelationProtocol(editData.productId)
         form.setFieldsValue(editData)
         setSelectedProtocolList(editData.timeServerDetails)
     }
 
-    // 获取所有产品列表
-    const getCloudGetProductList = () => {
-        get(Paths.cloudGetProductList).then(res => {
-            setAllProductList(res.data)
-        }, () => setAllProductList([]))
-    }
-
     useEffect(() => {
-        getCloudGetProductList()
         type === 'edit' && showDetail()
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
