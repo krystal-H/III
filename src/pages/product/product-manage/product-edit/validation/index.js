@@ -4,9 +4,9 @@ import { Table, Tabs, Input, Button } from 'antd';
 import { cloneDeep } from "lodash";
 import {get, post, Paths} from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
-import DescWrapper from '../../../../../components/desc-wrapper/DescWrapper';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import History from './historyInfo';
+import Simulat from './simulation';
 import './index.scss'
 import ReleaseProduct from './releaseProduct';
 const { TabPane } = Tabs;
@@ -20,7 +20,6 @@ const columns = [
 
 let ws = null, //保存websocket连接
     wsTimer = null; //websocket心跳连接定时器，页面销毁时，需要同时销毁定时器
-
 
 const mapStateToProps = state => {
     return {
@@ -44,7 +43,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
     const [webSocketStatu, setWebSocketStatu] = useState(0); //ws 连接状态 0失败，1成功
     const [historyVisiable, setHistoryVisiable] = useState(false);
 
-    const [analysisData, setAnalysisData] = useState("");
+    const [analysisData, setAnalysisData] = useState("点击左侧数据在此解析");
 
     useEffect(() => {
         get(Paths.queryServerConfig,{productId},{loading:true}).then(({data={}})=>{
@@ -64,7 +63,6 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
         if(serverToken){
             newWebSocket();
         }
-        
     }, [serverToken])
 
     useImperativeHandle(refInstance, () => ({
@@ -137,13 +135,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
         const { topic, macAddress, did, map } = _d;
         setDataList(preLi=>{
             let li = cloneDeep(preLi);
-            if(li.unshift({
-                topic, 
-                macAddress, 
-                did, 
-                map,
-                index:mountRef.current
-            }) == 901){//页面最多显示900条数据
+            if( li.unshift({ topic, macAddress, did, map, index:mountRef.current }) == 901 ){//页面最多显示900条数据
                 li.pop();
             }
             return li
@@ -151,8 +143,8 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
     }
 
     const cleanDataLi = ()=>{
-        setDataList([])
-        
+        setDataList([]);
+        setAnalysisData("点击左侧数据在此解析");
     }
 
     const openHistory =  open =>{
@@ -173,7 +165,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
                             <Button type='primary' onClick={startDebug}>确定调试</Button>
                             <Button onClick={()=>{setDebugInfo(['',''])}}>重置</Button>
                         </div>
-                        <a onClick={()=>{openHistory(true)} }>历史调试信息</a>                                       
+                        {/* <a onClick={()=>{openHistory(true)} }>历史调试信息</a> */}
                     </div>
                     <div className='tab-one-content'>
                         <div className='left-content'>
@@ -181,14 +173,14 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
                                 <h3>原始数据</h3>
                                 <div>
                                     <Button type="primary" ghost onClick={cleanDataLi} >清空当前信息</Button>
-                                    <Button type="primary" ghost>导出数据</Button>
+                                    {/* <Button type="primary" ghost>导出数据</Button> */}
                                 </div>
                             </div>
                             <div>
                                 <Table columns={columns} rowKey="index" dataSource={dataList} pagination={false}
                                         onRow={r=> {
                                             return {
-                                                onClick: e => { setAnalysisData(r.map) },
+                                                onClick: e => { setAnalysisData(r.map || "") },
                                             };
                                         }}
                                 />
@@ -201,7 +193,8 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
                     </div>
                 </TabPane>
                 <TabPane tab="虚拟设备调试" key="2">
-                    <DescWrapper style={{ marginBottom: 8, width: '100%' }} desc={['WiFi蓝牙设备需先登录数联智能App，并搜索绑定需要调试的设备，蜂窝设备不需要。']}></DescWrapper>
+                    <Simulat />
+                    
                 </TabPane>
             </Tabs>
         </div>
