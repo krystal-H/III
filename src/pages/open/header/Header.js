@@ -40,7 +40,7 @@ export default class Header extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            messageList: [], // 产品列表
+            messageList: [],
         }
     }
     logout = () => {
@@ -49,22 +49,25 @@ export default class Header extends PureComponent {
         })
     }
     componentDidMount() {
-        this.getProductListNew()
+        if(!this.props.onlyLogo){
+            this.getNoticeList()
+        }
+        
     }
-
-    // 获取产品列表
-    getProductListNew = () => {
+    getNoticeList = () => {
         let params = { "pager": { "pageIndex": 1, "pageRows": 4 } }
         post(Paths.getNoticeList, params)
             .then(res => {
-
                 this.setState({
                     messageList: res.data.list,
                 })
             })
     }
     goHome = () => {
-        window.location = window.location.origin + window.location.pathname + '#/open/home';
+        if(!this.props.onlyLogo){
+            window.location = window.location.origin + window.location.pathname + '#/open/home';
+        }
+        
     }
     goMessAgeDetail=(id)=>{
         window.location = window.location.origin + window.location.pathname + '#/messageCenter/detail/'+id;
