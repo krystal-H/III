@@ -270,17 +270,17 @@ export default class ProductProtocols extends Component {
         
         let _columns = cloneDeep(this.columns);
 
-        console.log('---bindType----',this.props.productBaseInfo.bindType)
-        if(this.props.productBaseInfo.bindType == 8){
-            _columns[6] = {
-                title: 'zigbeeDescribe',
-                dataIndex: 'command',
-                key: 'command',
-                render: (text, record, index) => {
-                    return this.dealWhatToShow(record,index,'command')
-                }
-            }
-        }
+        // console.log('---bindType----',this.props.productBaseInfo.bindType)
+        // if(this.props.productBaseInfo.bindType == 8){
+        //     _columns[6] = {
+        //         title: 'zigbeeDescribe',
+        //         dataIndex: 'command',
+        //         key: 'command',
+        //         render: (text, record, index) => {
+        //             return this.dealWhatToShow(record,index,'command')
+        //         }
+        //     }
+        // }
 
         return (temp.length > 0) 
         ? <Table

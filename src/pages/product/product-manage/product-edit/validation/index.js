@@ -15,7 +15,7 @@ const columns = [
     { title: '序列号', dataIndex: 'index' },
     { title: 'topic数据内容', dataIndex: 'topic' },
     { title: '物理地址', dataIndex: 'macAddress'},
-    { title: 'did', dataIndex: 'did'}
+    { title: 'DID', dataIndex: 'did'}
 ];
 
 let ws = null, //保存websocket连接
@@ -36,7 +36,7 @@ const temp = [
 function Validation({ nextStep, productId,developerInfo,refInstance }) {
     const mountRef = useRef(-1);
     const [releaseVisible, setReleaseVisible] = useState(false); // 发布产品
-    const [dataList, setDataList] = useState(temp);//原始数据
+    const [dataList, setDataList] = useState([]);//原始数据
     const [debugInfo, setDebugInfo] = useState(["",""]); //
     const [serverIp, setServerIp] = useState(""); //ws 请求配置 ip
     const [serverToken, setServerToken] = useState(""); //ws 请求配置 token
@@ -192,10 +192,10 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
                         </div>
                     </div>
                 </TabPane>
-                <TabPane tab="虚拟设备调试" key="2">
+                {/* <TabPane tab="虚拟设备调试" key="2">
                     <Simulat />
                     
-                </TabPane>
+                </TabPane> */}
             </Tabs>
         </div>
         <History historyVisiable={historyVisiable} openHistory={openHistory} />
