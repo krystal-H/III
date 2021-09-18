@@ -433,7 +433,7 @@ let Paths = {
     getAllRelatedProduct:'/project/device/getDownProduct',
     getAllRelatedDevice:'/project/device/getRelatedDevice',
     unrelaProduct:'/prod/unrelaProduct',
-    unrelaDevice:'/project/device/unrelaDevice', 
+    unrelaDevice:'/project/device/unrelaDevice',
     relaProduct:'/prod/relaProduct', 
     relaDevice:'/project/device/relaDevice', 
     addDevice:'/project/device/addDevice',
