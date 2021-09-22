@@ -36,11 +36,7 @@ export default class MessageDetail extends Component {
             post(Paths.getNoticeDetail, {
                 noticeId: noticeId - 0,
             }).then(data => {
-
-                if (read === false) {
-                    this.setReaded(noticeId)
-                }
-
+                this.setReaded(noticeId)
                 this.setState({
                     detail: data.data
                 })

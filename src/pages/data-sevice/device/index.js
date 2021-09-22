@@ -64,15 +64,7 @@ export default function Device() {
         const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
         return tooEarly || tooLate;
     };
-    const [optionArr, setOptionArr] = useState([])
     const [selectType, setSelectType] = useState('') //产品种类
-    //产品种类列表
-    const getProductType = () => {
-        post(Paths.getProductPlus, {}).then((res) => {
-            res.data.unshift({ productId:0, productName: '全部产品' })
-            setOptionArr(res.data)
-        });
-    }
     //产品改变
     const selectChange = (value) => {
         setSelectType(value)
@@ -98,9 +90,6 @@ export default function Device() {
         setValue(null)
         setCurrentTime(e.target.value)
     };
-    useEffect(() => {
-        getProductType()
-    }, [])
     useEffect(() => {
         getData()
     }, [currentTime, value, selectType])
@@ -257,16 +246,7 @@ export default function Device() {
 
     return (
         <div id='device-analysis'>
-            <PageTitle title='设备分析'>
-                <div className='top-select'>
-                    <Select style={{ width: 200 }}  onChange={selectChange} defaultValue={0}>
-                        {
-                            optionArr.map(item => {
-                                return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
-                            })
-                        }
-                    </Select>
-                </div>
+            <PageTitle title='设备分析' selectOnchange={val => setSelectType(val)} isRelProductData={true}>
             </PageTitle>
             <div className='comm-shadowbox filter-wrap'>
                 <Radio.Group

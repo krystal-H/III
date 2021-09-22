@@ -2,7 +2,7 @@ import React, {useState,useEffect} from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Button,Select } from 'antd';
 import { withRouter} from 'react-router-dom';
-import { get,Paths} from '../../api'
+import { get,Paths,post} from '../../api'
 
 import './PageTitle.scss'
 
@@ -22,18 +22,26 @@ function PageTitle({
     history,
     selectOnchange=null,    //公共下拉框的 onChange 方法 , 不传则代表无此下拉框
     selectData=null, // 自定义 selectOnchange 的下拉框的列表数据，不传则代表是 公共产品下拉数据
+    isRelProductData=false//是否是已发布产品列表
 }) {
     const [dataList, setDataList] = useState([]);//产品列表
     useEffect( () => {
         
         if(selectOnchange){
             if(!selectData && dataList.length==0){
-                get(Paths.getProductType,{},{ loading:true }).then(({data}) => {
-                    const productList = Object.keys(data).map(id=>{
-                        return {productId:id,productName:data[id]}
+                if(!isRelProductData){
+                    get(Paths.getProductType,{},{ loading:true }).then(({data}) => {
+                        const productList = Object.keys(data).map(id=>{
+                            return {productId:id,productName:data[id]}
+                        });
+                        setDataList(productList)
                     });
-                    setDataList(productList)
-                });
+                }else{
+                    post(Paths.getProductPlus, {}).then((res) => {
+                        setDataList(res.data)
+                    });
+                }
+                
 
             }else{
                 setDataList(selectData || [])
