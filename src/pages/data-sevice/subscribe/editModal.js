@@ -154,7 +154,9 @@ function StepContentOne({ continueStep, editData }, ref) {
                 label="归属产品"
                 rules={[{ required: true }]}
             >
-                <Select >
+                <Select showSearch optionFilterProp="children" filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }>
                     {
                         option.map(item => {
                             return <Select.Option value={item.productId} key={item.productId}>{item.productName}</Select.Option>

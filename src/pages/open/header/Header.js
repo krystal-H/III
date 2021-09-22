@@ -77,7 +77,6 @@ export default class Header extends PureComponent {
             { userName, isSubUser } = developerInfo,
             { totalUnRead } = newMessageNums;
         let { childmenus } = userNavRoutes[0];
-        console.log(childmenus, '==========')
         childmenus.forEach(item => {
             if (item.menuname == "基本资料") {
                 item.imgUrl = baseinfo
