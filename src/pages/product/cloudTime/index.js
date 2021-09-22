@@ -25,6 +25,7 @@ export default function CloudTime() {
     const [cloudEditVisible, setCloudEditVisible] = useState(false) // 编辑
     const [editData, setEditData] = useState([]) // 编辑数据
     const [changeStatus, setChangeStatus] = useState([]) // 操作数据状态
+    const [allProductList, setAllProductList] = useState([])
 
     const columns = [
         {
@@ -114,6 +115,17 @@ export default function CloudTime() {
     useEffect(() => {
         getTimeList()
     }, [pager.pageIndex, pager.pageRows, currentServiceName, currentProductId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    // 获取所有产品列表
+    const getCloudGetProductList = () => {
+        get(Paths.cloudGetProductList).then(res => {
+            setAllProductList(res.data)
+        }, () => setAllProductList([]))
+    }
+
+    useEffect(() => {
+        getCloudGetProductList()
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     // 编辑
     const editCloudTime = (record) => {
@@ -206,6 +218,7 @@ export default function CloudTime() {
                 <CloudAddForm
                     visible={cloudAddVisible}
                     type="add"
+                    allProductList={allProductList}
                     handleOk={() => {
                         setCloudAddVisible(false)
                         getTimeList()
@@ -219,6 +232,7 @@ export default function CloudTime() {
                     visible={cloudEditVisible}
                     type="edit"
                     editData={editData}
+                    allProductList={allProductList}
                     handleOk={() => {
                         setCloudEditVisible(false)
                         getTimeList()

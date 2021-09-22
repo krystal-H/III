@@ -8,6 +8,7 @@ import {
 import { post, Paths, get } from '../../../api';
 import moment from 'moment';
 import AddProductModal from '../../product/product-manage/addProduct/addProduct'
+import { Notification } from './../../../components/Notification';
 import './index.scss';
 //==产品管理图片
 import projectmn1 from './../../../assets/images/overImage/project1.png';
@@ -35,6 +36,7 @@ import help2 from './../../../assets/images/overImage/help2.png';
 import help3 from './../../../assets/images/overImage/help3.png';
 import banner from './../../../assets/images/overImage/banner.png';
 import noData from './../../../assets/images/overImage/noData.png';
+
 export default function OverviewWrap() {
     useEffect(() => {
         getBannerList()
@@ -119,10 +121,8 @@ export default function OverviewWrap() {
     //产品列表
     const [produList, setProductList] = useState([])
     const getProductList = () => {
-        post(Paths.getProductListNew, { "current": 1, "size": 6 }).then(res => {
-            if (res.data.records.length > 3) {
-                setProductList(res.data.records.slice(0, 3))
-            } else {
+        post(Paths.getProductListNew, { "current": 1, "size": 3 }).then(res => {
+            if (res.data.records && res.data.records.length) {
                 setProductList(res.data.records)
             }
         })
@@ -146,8 +146,28 @@ export default function OverviewWrap() {
     }
     //快捷入口
     const [newProductModal, setNewProductModal] = useState(false)
+    //新增产品
     const openNewProduct = () => {
-        setNewProductModal(true)
+        let isShow = false
+        function isGo(menuS) {
+            menuS.forEach(item => {
+                if (item.menuname == '产品管理') {
+                    isShow = true
+                }
+                if (item.childmenus) {
+                    isGo(item.childmenus)
+                }
+            })
+        }
+        isGo(menulist)
+        if (isShow) {
+            setNewProductModal(true)
+        } else {
+            Notification({
+                description: '无权限！',
+            });
+        }
+
     }
     const closeNewProduct = () => {
         setNewProductModal(false)
@@ -163,13 +183,16 @@ export default function OverviewWrap() {
     const [showDialog, setShowDialog] = useState(false)
     const changeTip = () => {
         let anchorElement = document.getElementById('show-shadow');
-        if (anchorElement) {
+        if (anchorElement && currentTip != 4) {
             anchorElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        if (currentTip == 4) {
+            let box1 = document.querySelector(".right-wrapper-contentbox");
+            box1.scrollTop = 0
         }
         setCurrentTip(currentTip + 1)
         if (currentTip >= 5) {
             setShowDialog(false)
-
         }
     }
     useEffect(() => {
@@ -178,21 +201,20 @@ export default function OverviewWrap() {
             setCurrentTip(1)
             setShowDialog(true)
         }
-
     }, [])
     const menulist = useSelector(state => {
-           return  state.getIn(['userCenter', 'menulist']).toJS()
+        return state.getIn(['userCenter', 'menulist']).toJS()
     })
-    
+
     const getProductListNew = () => {
         history.push(`/open/product/proManage/list`)
     }
     //是否展示进入btn
-    const isShowBtn=(value)=>{
-        let isShow=false
-        menulist.forEach(item=>{
-            if(item.menuname == value){
-                isShow=true
+    const isShowBtn = (value) => {
+        let isShow = false
+        menulist.forEach(item => {
+            if (item.menuname == value) {
+                isShow = true
             }
         })
         return isShow
@@ -234,6 +256,28 @@ export default function OverviewWrap() {
             return '场景联动服务'
         }
         return ''
+    }
+    //是否跳转
+    const goAuPage = (name, url) => {
+        let isShow = false
+        function isGo(menuS) {
+            menuS.forEach(item => {
+                if (item.menuname == name) {
+                    isShow = true
+                }
+                if (item.childmenus) {
+                    isGo(item.childmenus)
+                }
+            })
+        }
+        isGo(menulist)
+        if (isShow) {
+            history.push(url);
+        }else{
+            Notification({
+                description: '无权限！',
+            });
+        }
     }
     return (
         <div className='over-view'>
@@ -285,7 +329,7 @@ export default function OverviewWrap() {
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>产品管理</div>
-                                {isShowBtn('产品') && <a onClick={() => { goPage('/open/product/proManage/list') }}>进入</a>} 
+                                {isShowBtn('产品') && <a onClick={() => { goPage('/open/product/proManage/list') }}>进入</a>}
                             </div>
                             <div className='over-view-productmn-content'>
                                 {
@@ -305,25 +349,25 @@ export default function OverviewWrap() {
                         </div>
 
                         <div className='over-view-productmn-footer hover-commons-unite'>
-                            <div>
+                            <div onClick={() => { goAuPage('设备注册', '/open/product/devRegist') }}>
                                 <img src={projectmn1} />
-                                <div onClick={() => { goPage('/open/product/devRegist') }}>设备注册</div>
+                                <div  >设备注册</div>
                             </div>
-                            <div>
+                            <div onClick={() => { goAuPage('固件升级', '/open/product/otaUpdate/list') }}>
                                 <img src={projectmn2} />
-                                <div onClick={() => { goPage('/open/product/otaUpdate/list') }}>固件升级</div>
+                                <div >固件升级</div>
                             </div>
-                            <div>
+                            <div onClick={() => { goAuPage('场景服务', '/open/product/ruleEnginet') }}>
                                 <img src={projectmn3} />
-                                <div onClick={() => { goPage('/open/product/ruleEngine') }}>场景服务</div>
+                                <div >场景服务</div>
                             </div>
-                            <div>
+                            <div onClick={() => { goAuPage('云端定时', '/open/product/cloudTimer') }}>
                                 <img src={projectmn4} />
-                                <div onClick={() => { goPage('/open/product/cloudTimer') }}>云端定时</div>
+                                <div >云端定时</div>
                             </div>
-                            <div>
+                            <div onClick={() => { goAuPage('云端定时', '/open/product/remoteCofig') }}>
                                 <img src={projectmn5} />
-                                <div onClick={() => { goPage('/open/product/remoteCofig') }}>远程配置</div>
+                                <div>远程配置</div>
                             </div>
                         </div>
                         <div className='Guide-the-figure-content'>
@@ -339,7 +383,8 @@ export default function OverviewWrap() {
                         <div className='over-view-device-content'>
                             <div className='over-view-device-content-item'>
                                 <div >
-                                    <div className='over-view-device-content-item-label' onClick={() => { goPage('/open/device/devManage/list') }}>
+                                    <div className='over-view-device-content-item-label'
+                                        onClick={() => { goAuPage('设备管理', '/open/device/devManage/list') }}>
                                         设备管理
                                         <RightOutlined />
                                     </div>
@@ -362,34 +407,9 @@ export default function OverviewWrap() {
                                     <div>{devOneList.todayActive}</div>
                                 </div>
                             </div>
-                            {/* <div className='over-view-device-content-item'>
-                                <div >
-                                    <div className='over-view-device-content-item-label'>
-                                        设备密钥
-                                        <RightOutlined />
-                                    </div>
-                                    <div></div>
-                                </div>
-                                <div>
-                                    <div>通用ID/密钥对</div>
-                                    <div>{devTwoList.total}</div>
-                                </div>
-                                <div>
-                                    <div>已烧录使用</div>
-                                    <div>{devTwoList.burn}</div>
-                                </div>
-                                <div>
-                                    <div>已入网设备</div>
-                                    <div>{devTwoList.active}</div>
-                                </div>
-                                <div>
-                                    <div>未入网设备</div>
-                                    <div>{devTwoList.unactive}</div>
-                                </div>
-                            </div> */}
                             <div className='over-view-device-content-item'>
                                 <div >
-                                    <div className='over-view-device-content-item-label' onClick={() => { goPage('/open/device/devMsg') }}>
+                                    <div className='over-view-device-content-item-label' onClick={() => { goAuPage('设备消息', '/open/device/devMsg') }} >
                                         设备消息
                                         <RightOutlined />
                                     </div>
@@ -465,7 +485,7 @@ export default function OverviewWrap() {
                                     <div>创建产品</div>
                                 </div>
                             </div>
-                            <div className='center-layout-wrap' onClick={() => { goPage('/open/product/proManage/list') }}>
+                            <div className='center-layout-wrap' onClick={() => { goAuPage('产品管理', '/open/product/proManage/list') }}>
                                 <div>
                                     <img src={quick2} alt='' />
                                     <div>控制台</div>
@@ -526,19 +546,19 @@ export default function OverviewWrap() {
                         </div>
                         <div className='over-view-data-service'>
                             <div className='center-layout-wrap'>
-                                <div onClick={() => { history.push(`/open/serve/device`) }}>
+                                <div onClick={() => { goAuPage('设备分析', '/open/serve/device') }}>
                                     <img src={dataservice1} alt='' />
                                     <div >设备分析</div>
                                 </div>
                             </div>
                             <div className='center-layout-wrap'>
-                                <div onClick={() => { history.push(`/open/serve/user`) }}>
+                                <div onClick={() => { goAuPage('用户分析', '/open/serve/user') }}>
                                     <img src={dataservice2} alt='' />
                                     <div >用户分析</div>
                                 </div>
                             </div>
                             <div className='center-layout-wrap'>
-                                <div onClick={() => { history.push(`/open/serve/dataSub`) }}>
+                                <div onClick={() => { goAuPage('数据订阅', '/open/serve/dataSub') }}>
                                     <img src={dataservice3} alt='' />
                                     <div>数据订阅</div>
                                 </div>

@@ -178,7 +178,9 @@ function StepContentOne({ continueStep }, ref) {
                 label="归属产品"
                 rules={[{ required: true }]}
             >
-                <Select onChange={productIdChange}>
+                <Select onChange={productIdChange} showSearch optionFilterProp="children" filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }>
                     {
                         option.map(item => {
                             return <Select.Option value={item.productId} key={item.productId}>{item.productName}</Select.Option>
@@ -229,13 +231,20 @@ function StepContentTwo({ continueStep, oneData }, ref) {
         three: []
     })
     const [currentTab, setCurrentTab] = useState('a')
+    const [oneArr, setOneArr] = useState([])
+    const [twoArr, setTwoArr] = useState([])
+    const [threeArr, setThreeArr] = useState([])
     const tabChange = val => {
         setCurrentTab(val)
     }
     useEffect(() => {
         getList()
-    }, [])
+    }, [oneData.productId])
+    //初始化
     const getList = () => {
+        setOneArr([])
+        setTwoArr([])
+        setThreeArr([])
         post(Paths.standardFnList, { productId: oneData.productId }).then((res) => {
             let data = res.data.standard.concat(res.data.custom)
             let obj = {
@@ -259,10 +268,9 @@ function StepContentTwo({ continueStep, oneData }, ref) {
             setOption(obj)
         });
     }
-    const [oneArr, setOneArr] = useState([])
-    const [twoArr, setTwoArr] = useState([])
-    const [threeArr, setThreeArr] = useState([])
+    //勾选
     const rowSelection1 = {
+        
         onChange: (selectedRowKeys, selectedRows) => {
             let arr = []
             selectedRows.forEach(item => {

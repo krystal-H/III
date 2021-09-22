@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Input, Button, Radio, Checkbox, Row, Col } from 'antd';
-import VerificationCodeInput from '../../components/verification-code-input/VerificationCodeInput';
+import { Input, Button, Radio, Checkbox, Row, Col,Tooltip } from 'antd';
 import {post,Paths} from '../../api';
 import { encryption ,getVcodeImgUrl,psdPattern} from '../../util/util';
 
@@ -41,7 +40,7 @@ class EmailAuthWordForm extends Component {
                 if (type === 1) {
                     changeType({
                         type:1,
-                        email:_values.account
+                        email:_values.email
                     })
                 }
 
@@ -49,7 +48,7 @@ class EmailAuthWordForm extends Component {
                     changeType({
                         type:1,
                         isResetEmail:true,
-                        NewEmail:_values.account
+                        NewEmail:_values.email
                     })
                 }
 
@@ -64,7 +63,7 @@ class EmailAuthWordForm extends Component {
     }
     resetPswAndCode = () => {
         let {form,type = 1} = this.props,
-            _array = (type === 1) ?  ['account','veriCode'] : ['account'];
+            _array = (type === 1) ?  ['email','verifyCode'] : ['email'];
 
         form.resetFields(_array)
     }
@@ -76,7 +75,7 @@ class EmailAuthWordForm extends Component {
         return (
             <Form className="form-wrapper"  onSubmit={this.handleSubmit}>
                 <Form.Item>
-                    {getFieldDecorator('account', {
+                    {getFieldDecorator('email', {
                         rules:[{ required: true, message: '请输入注册邮箱' },
                         { type: 'email', message: '请确认输入邮箱格式是否正确' }
                         ],
@@ -86,9 +85,28 @@ class EmailAuthWordForm extends Component {
                 </Form.Item>
                 {
                     type === 1 && 
-                    <VerificationCodeInput getFieldDecorator={getFieldDecorator}
-                                           imgSrc={vCodeImgUrl}
-                                           refreshVeriCode={this.refreshVeriCode}></VerificationCodeInput>
+
+                    <Form.Item>
+                        <Row>
+                            <Col span={15}>
+                                {getFieldDecorator('verifyCode', {
+                                    rules:[{required:true,message:'请输入验证码'},{len:4,message:'验证码长度为4'}],
+                                    initialValue: '',
+                                    
+                                })(<Input placeholder="请输入验证码" />)}
+                            </Col>
+                            <Col span={8} offset={1}>
+                                <div className="code-img-wrapper">
+                                    <Tooltip title="点击刷新验证码">
+                                        <img style={{height:'100%',width:'100%',cursor:'pointer'}} 
+                                            src={vCodeImgUrl}
+                                            onClick={this.refreshVeriCode} 
+                                            alt="验证码图片"/>
+                                    </Tooltip>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Form.Item>
                 }
                 <Form.Item>
                     <Button type="primary" 
@@ -120,7 +138,7 @@ class SetPassWordForm extends Component {
             post(Paths.setPassword,{
                 ..._values,
                 code,
-                account:email,
+                email,
                 type:cType
             },{
               loading:true
@@ -195,7 +213,7 @@ class CloseAccountForm extends Component {
             post(Paths.cancelAccount,{
                 ..._values,
                 code,
-                account:email
+                email
             },{
               loading:true
             }).then(data => {
@@ -302,8 +320,8 @@ class SubResetPassWordForm extends Component {
         form.validateFields((err, values) => {
           if (!err) {
             let _values = {
-                oldPassword:encryption(values.oldPassword),
-                password : encryption(values.password)
+                // oldPassword:encryption(values.oldPassword),
+                newPwd : encryption(values.password)
             }
 
             post(Paths.subResetPassword,{

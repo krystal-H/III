@@ -433,7 +433,7 @@ let Paths = {
     getAllRelatedProduct:'/project/device/getDownProduct',
     getAllRelatedDevice:'/project/device/getRelatedDevice',
     unrelaProduct:'/prod/unrelaProduct',
-    unrelaDevice:'/project/device/unrelaDevice', 
+    unrelaDevice:'/project/device/unrelaDevice',
     relaProduct:'/prod/relaProduct', 
     relaDevice:'/project/device/relaDevice', 
     addDevice:'/project/device/addDevice',
@@ -466,7 +466,7 @@ let Paths = {
     //OTA升级
     otaDevVersionList:'/firmware/productFirmware/getList',
     otaGetExtVersion:'/device/version/5/getExtVersion',
-    otaAddVersion:'/device/version/5/add',
+    
     otaImportMac:'/device/version/5/importMac',
     otaValidate:'/device/version/5/validate',
     otaDeleteVer:'/device/version/5/delete',
@@ -477,7 +477,9 @@ let Paths = {
     otaGetBatchInfo:'/device/version/5/publish/getBatchInfo',
     otaCancelDevicePub:'/device/version/5/publish/cancel',
     otaValiGetinfo:'/device/version/5/validate/getInfo',
-    firmwareFromProduct:'product/firmware/package',
+    
+    firmwareFromProduct:'/product/firmware/package',
+    otaAddVersion:'/firmware/device/version/add',
 
     
     //总览页
@@ -526,6 +528,7 @@ let Paths = {
     proReledExport:'/deviceRegister/importAddr',//设备注册导出
     proReledInfo:'/product/detail',//设备基本详情
     getProductPlus:'/productManage/getProductExtendList',//产品下拉带验证方式
+    exportRegistFile:'/deviceRegister/export',//导出设备注册文件
     
 
     //确定面板接口

@@ -141,7 +141,19 @@ export default function DeviceRegist() {
             })
         }
     };
-
+    //导出
+    const exportFile = () => {
+        let params = {productId: productItem.productId,type:'product'}
+        if (form.getFieldValue('status') != -1) {
+            params.status = form.getFieldValue('status')
+        }
+        if (form.getFieldValue('id') && form.getFieldValue('id').trim()) {
+            params.id = form.getFieldValue('id')
+        }
+        post(Paths.exportRegistFile, params).then((res) => {
+            window.open(res.data)
+        });
+    }
     return (
         <div id='product-device-regist'>
             <div className='comm-shadowbox setp-ttip'>
@@ -159,7 +171,7 @@ export default function DeviceRegist() {
             <div className='comm-shadowbox device-content'>
                 <div className='content-top'>
                     <div className='content-top-left'>
-                        <Form className='device-filter-form' form={form} layout='inline' initialValues={{status:'-1'}}>
+                        <Form className='device-filter-form' form={form} layout='inline' initialValues={{ status: '-1' }}>
                             <Form.Item name="status" label="入网状态" >
                                 <Select
                                     style={{ width: '200px' }}
@@ -186,7 +198,11 @@ export default function DeviceRegist() {
                             </Form.Item>
                         </Form>
                     </div>
-                    <Button type="primary" onClick={openRegist}>注册设备</Button>
+                    {/* <Button type="primary" onClick={openRegist}>注册设备</Button> */}
+                    <div>
+                        <Button type="primary" onClick={exportFile} style={{ marginRight: '15px' }}>导出数据</Button>
+                        <Button type="primary" onClick={openRegist}>注册设备</Button>
+                    </div>
                 </div>
                 <Table rowKey='did' dataSource={dataSource} columns={columns} pagination={{
                     defaultCurrent: 1,

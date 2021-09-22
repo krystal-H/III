@@ -3,7 +3,7 @@ import { Select, Tabs, Input, Table, Button } from 'antd'
 import { Paths, post, get } from '../../../api'
 import { uniqueItemInArrayByKey, checkFileTypeAndSize } from '../../../util/util'
 import { MinusCircleOutlined, UploadOutlined } from '@ant-design/icons'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, uniq } from 'lodash'
 import { Notification } from '../../../components/Notification'
 import DeviceImportErrorLogModal from './errorLogModal'
 
@@ -92,9 +92,12 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
     }
   }
 
-  useImperativeHandle(ref, () => ({
-    onFinish: validData
-  }))
+  useImperativeHandle(ref, () => {
+    return {
+      onFinish: validData
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rightTempList])
 
   // 一键移除 右侧数据
   const deleteDeviceFromRightList = () => {
@@ -131,7 +134,11 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
   // 左侧list选择数据
   const leftSelectChange = selectedRowKeys => {
     console.log(selectedRowKeys, '左侧list选中的数据')
-    setSelectDeviceIndexToAdd(selectedRowKeys)
+    // 都存起来为了左侧的取消选中   copySelected.splice
+    setSelectDeviceIndexToAdd((pre) => {
+      const list = cloneDeep(pre)
+      return uniq(list.concat(selectedRowKeys))
+    })
   }
 
   const leftRowSelection = {

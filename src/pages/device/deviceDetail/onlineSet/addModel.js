@@ -178,18 +178,24 @@ export default function AddModel({ addVisible, addOk, CancelAdd }) {
           for (let index = 0; index < initialProtoclList.length; index++) {
             const ele = initialProtoclList[index]
             if (item === ele.identifier) {
-              if (!ele.sendData) return Notification({ description: '请为配置协议添加参数' })
+              let isCOntinue = ele.sendData ?? undefined
+              if (typeof isCOntinue == 'undefined') return Notification({ description: '请为配置协议添加参数' })
             }
           }
         }
-        let params={
-          taskName:formvalue.taskName,
-          deviceId:baseInfo.deviceId,
-          taskExplain:formvalue.taskExplain,
-          protocolJson:JSON.stringify(initialProtoclList.filter(item => item.sendData))
+        let params = {
+          taskName: formvalue.taskName,
+          deviceId: baseInfo.deviceId,
+          taskExplain: formvalue.taskExplain,
+          protocolJson: JSON.stringify(initialProtoclList.filter(item => {
+            let isCOntinue = item.sendData ?? undefined
+            if (typeof isCOntinue !== 'undefined') {
+              return item
+            }
+          }))
         }
         post(Paths.saveDeviceRemoset, params).then((res) => {
-          Notification({type: 'success', description: '添加成功' })
+          Notification({ type: 'success', description: '添加成功' })
           addOk()
         });
         // console.log('提交的数据', initialProtoclList,initialProtoclList.filter(item => item.sendData), params,'*************')

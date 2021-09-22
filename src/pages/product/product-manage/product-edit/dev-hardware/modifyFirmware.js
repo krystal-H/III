@@ -7,7 +7,7 @@ import { cloneDeep } from 'lodash'
 
 const { Option } = Select;
 
-export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCancelFirmware, firmwareId, productId }) {
+export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCancelFirmware, firmwareId, productId, handleOk }) {
   const [form] = Form.useForm()
 
   const [firmwareData, setFirmwareData] = useState({})
@@ -27,7 +27,7 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
     post(Paths.saveFirmwareSetting, { ...params })
       .then(res => {
         Notification({ description: '操作成功！', type: 'success' })
-        handleCancelFirmware()
+        handleOk()
       })
   }
 

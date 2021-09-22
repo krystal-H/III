@@ -35,21 +35,21 @@ export default function AddModel({ addVisible, addOk, CancelAdd, actionData }) {
     }
     const getTableData = (id) => {
         let arr = [post(Paths.getPhysicalModel, { productId: id }), post(Paths.singelDeviceRemoset, { taskId: actionData.taskId })]
-        Promise.all(arr).then(res=>{
-            let data1=res[0].data.properties
-            let data2=JSON.parse(res[1].data.remoteProtocol.protocolJson)
-            let arr=[]
-            data2.forEach(item2=>{
+        Promise.all(arr).then(res => {
+            let data1 = res[0].data.properties
+            let data2 = JSON.parse(res[1].data.remoteProtocol.protocolJson)
+            let arr = []
+            data2.forEach(item2 => {
                 arr.push(item2.identifier)
-                data1.forEach((item1,index)=>{
-                    if(item2.identifier == item1.identifier){
-                        data1.splice(index,1,item2)
+                data1.forEach((item1, index) => {
+                    if (item2.identifier == item1.identifier) {
+                        data1.splice(index, 1, item2)
                     }
                 })
             })
             form.setFieldsValue({
-                taskName:res[1].data.taskName,
-                taskExplain:res[1].data.taskExplain
+                taskName: res[1].data.taskName,
+                taskExplain: res[1].data.taskExplain
             })
             setInitialProtoclList(data1)
             setSelectedProtocols(arr)
@@ -195,7 +195,8 @@ export default function AddModel({ addVisible, addOk, CancelAdd, actionData }) {
                     for (let index = 0; index < initialProtoclList.length; index++) {
                         const ele = initialProtoclList[index]
                         if (item === ele.identifier) {
-                            if (!ele.sendData) return Notification({ description: '请为配置协议添加参数' })
+                            let isCOntinue = ele.sendData ?? undefined
+                            if (typeof isCOntinue == 'undefined') return Notification({ description: '请为配置协议添加参数' })
                         }
                     }
                 }
@@ -204,7 +205,12 @@ export default function AddModel({ addVisible, addOk, CancelAdd, actionData }) {
                     deviceId: baseInfo.deviceId,
                     taskExplain: formvalue.taskExplain,
                     taskId: actionData.taskId,
-                    protocolJson: JSON.stringify(initialProtoclList.filter(item => item.sendData))
+                    protocolJson: JSON.stringify(initialProtoclList.filter(item => {
+                        let isCOntinue = item.sendData ?? undefined
+                        if (typeof isCOntinue !== 'undefined') {
+                            return item
+                        }
+                    }))
                 }
                 post(Paths.saveDeviceRemoset, params).then((res) => {
                     Notification({ type: 'success', description: '编辑成功' })
