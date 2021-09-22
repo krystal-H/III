@@ -254,6 +254,7 @@ function confirmModel({ nextStep }, ref) {
         if (projectStatus == 1 && verifyStatus == 0 && isGray == 0 && htmlShow == 0) {
             return '已下线'
         }
+        return ''
     }
     return <div className='confirm-pannel'>
         <div className='confirm-pannel-title'>
@@ -263,7 +264,10 @@ function confirmModel({ nextStep }, ref) {
         <div className='confirm-pannel-content'>
             <div className='pannel-cover-image'>
                 <img src={shoaLast.page1 || defaultCumPan} alt='' />
-                <div className='pannel-status'>{shoaLast.status}</div>
+                {
+                   shoaLast.status && <div className='pannel-status'>{shoaLast.status}</div>
+                }
+                
             </div>
             <div>
                 <div className='confirm-pannel-content-left'>
