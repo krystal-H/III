@@ -90,7 +90,7 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
     // 确定选择协议
     const addProtocol = () => {
         if (protocolItemIndex === '') {
-            return Notification({ type: 'error', message: '参数缺失', description: '请先选择一个控制协议字段' })
+            return Notification({ type: 'error', description: '请先选择一个控制协议字段' })
         }
         setSelectedProtocolList((prev) => {
             const preArr = cloneDeep(prev)
