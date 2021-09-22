@@ -466,7 +466,7 @@ let Paths = {
     //OTA升级
     otaDevVersionList:'/firmware/productFirmware/getList',
     otaGetExtVersion:'/device/version/5/getExtVersion',
-    otaAddVersion:'/device/version/5/add',
+    
     otaImportMac:'/device/version/5/importMac',
     otaValidate:'/device/version/5/validate',
     otaDeleteVer:'/device/version/5/delete',
@@ -477,7 +477,9 @@ let Paths = {
     otaGetBatchInfo:'/device/version/5/publish/getBatchInfo',
     otaCancelDevicePub:'/device/version/5/publish/cancel',
     otaValiGetinfo:'/device/version/5/validate/getInfo',
+    
     firmwareFromProduct:'/product/firmware/package',
+    otaAddVersion:'/firmware/device/version/add',
 
     
     //总览页
