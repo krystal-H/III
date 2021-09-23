@@ -6,13 +6,13 @@ import { Notification } from '../../../../../components/Notification';
 import './newModal.scss';
 function debounce(fn, wait = 1000, immediate) {
     let timer = null
-    return function(...args) {
+    return function (...args) {
         if (timer) clearTimeout(timer)
         if (immediate && !timer) {
             fn.apply(this, args)
         }
-      	// ------ 新增部分 end ------ 
-      	
+        // ------ 新增部分 end ------ 
+
         timer = setTimeout(() => {
             fn.apply(this, args)
         }, wait)
@@ -51,7 +51,7 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
         });
     }
     return (
-        <Modal title="新增面板" visible={isAddModalVisible} onOk={ debounce(closeReqAdd) } onCancel={CancelAdd} width='570px' wrapClassName='add-modal-dialog-wrap'>
+        <Modal title="新增面板" visible={isAddModalVisible} onOk={debounce(closeReqAdd)} onCancel={CancelAdd} width='570px' wrapClassName='add-modal-dialog-wrap'>
             <div>
                 <Form
                     form={form}
@@ -75,8 +75,8 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
                         <UploadFileHooks
                             ref={$el}
                             maxCount={1}
-                            preferSize={'750*1334'}
-                            format='.gif,.jpeg,.jpg,.png'
+                            preferSize={'247*439'}
+                            format='.jpeg,.jpg,.png'
                             maxSize={0.5} />
                     </Form.Item>
                     <Form.Item
@@ -88,8 +88,8 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd }) {
                         <UploadFileHooks
                             ref={$apkel}
                             maxCount={1}
-                            format='.apk'
-                            maxSize={50}
+                            format='.zix'
+                            maxSize={5}
                             isNotImg={true}
                         />
                     </Form.Item>
