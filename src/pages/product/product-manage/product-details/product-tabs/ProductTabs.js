@@ -45,7 +45,7 @@ export default class ProductTabs  extends Component {
                         <ServiceConfig productId={productId}/>
                     </TabPane>
                     <TabPane key={'6'} tab={'调试验证'}>
-                        <Validation productId={productId}></Validation>
+                        <Validation productId={productId} />
                     </TabPane>
                     <TabPane key={'7'} tab={'设备注册'}>
                         <RegiserProduct />

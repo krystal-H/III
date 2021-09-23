@@ -1,7 +1,7 @@
 import * as actionTypes from './actionTypes';
 
 const defaultState = {
-    productList: [],
+    mcusocproLi: [],
     versionList:{
         list:[],
         pager:{}
@@ -23,7 +23,7 @@ const {
 
 export default (state = defaultState, {
     type,
-    productList,
+    mcusocproLi,
     versionList,
     extVerisonLi,
     deviceGorupLi,
@@ -32,7 +32,7 @@ export default (state = defaultState, {
 }) => {
     switch (type) {
         case GETPROLIST:
-            return {...state,productList}
+            return {...state,mcusocproLi}
         case GETVERLI:
             return {...state,versionList}
         case EXTVERLI:

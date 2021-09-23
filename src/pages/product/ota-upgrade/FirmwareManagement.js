@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Input, Button, Table, Divider, Tag, Modal,Select ,Steps} from 'antd';
+import { Link } from 'react-router-dom';
+import { Input, Button, Table, Tag, Modal,Select ,Steps, Space} from 'antd';
 import { get,Paths } from '../../../api';
 import AddFirmwareDialog from './AddFirmwareDialog';
 import {ReleaseFirmware} from './ReleaseFirmware';
@@ -10,26 +11,24 @@ import { DateTool } from '../../../util/util';
 import {Notification} from '../../../components/Notification';
 import PageTitle from '../../../components/page-title/PageTitle'
 
-import {VERTYPE,STATUSTAG,UPDATESTATUS,PACKAGETYPE,SCHMETYPE} from './store/constData'
-import { getVersionList, getExtVerLi, getProductList } from './store/actionCreators'
+import {VERTYPE,STATUSTAG,UPDATESTATUS,SCHMETYPE} from './store/constData'
+import { getVersionList, getExtVerLi, getMcuSocProLi } from './store/actionCreators'
 import upIconImg from '../../../assets/images/upota.png';
 const { Step } = Steps;
 import './FirmwareManagement.scss';
 const { Search,Group } = Input;
 const { Option } = Select;
 const mapStateToProps = state => {
-    const { versionList, extVerisonLi, productList } = state.get('otaUpgrade')
+    const { versionList } = state.get('otaUpgrade')
     return {
-        versionList,
-        extVerisonLi,
-        productList
+        versionList
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
         getVersionLi: param => dispatch(getVersionList(param)),
         getExtVerLi: param => dispatch(getExtVerLi(param)),
-        getProductList: param => dispatch(getProductList()),
+        getMcuSocProLi: param => dispatch(getMcuSocProLi()),
         
     }
 }
@@ -37,7 +36,6 @@ const mapDispatchToProps = dispatch => {
 export default class FirmwareManagement  extends Component {
     constructor(props){
         super(props);
-        this.refAddFirmware = {}
         this.refValidationFirmware = ()=>{}
         this.state = {
             versionList:[],
@@ -55,12 +53,11 @@ export default class FirmwareManagement  extends Component {
             validationDetail:{macSet:'',validateType:0},//修改验证 详情
             validationModTit:'验证',
             validateInfo:[
-                // {mac:111,upgradeTime:34234123443531,beforeVersion:1.1,updateStatus:2}
+                // {macAddress:111,upgradeTime:34234123443531,beforeVersion:1.1,upgradeStatus:2}
 
             ],//查看验证信息，同时根据validateInfo.lengt>0与否来判断查看验证弹窗是否可见
 
             releaseFirmwareDialog:false,//升级弹窗
-            releasePackageType:0
         }
         
         this.columns = [
@@ -79,46 +76,37 @@ export default class FirmwareManagement  extends Component {
               }
             },
             { title: '创建时间',dataIndex: 'releaseTime',
-                render: t => <span>{DateTool.utcToDev(t)}</span>
+                render: t => <span>{ t && DateTool.utcToDev(t) || "--"}</span>
             },
             { title: '操作',dataIndex: 'action',
                 render:(a,recard) => {//runStatus 0：待验证 1：验证中 2：已发布,3 验证完成,4
                     const {
-                        status,deviceVersionId,
+                        status = 0 ,deviceVersionId,
                         macSet='',validateType=0,
                         productId,totalVersion,
                         schemeType,firmwareVersionType,
-                        packageType
                     } = recard
-                    return <span>
+                    return <Space>
                         {
                             status==0?<a onClick={()=>{this.openValidation(deviceVersionId)}}>验证</a>:
-                            status==1?<>
+                            status==1?
+                            <>
                                 <a onClick={()=>{this.openValidation(deviceVersionId,{macSet,validateType:validateType||0})}}>修改验证</a>
-                                <Divider type="vertical" />
                                 <a onClick={()=>{this.getValidateInfo(deviceVersionId)}}>查看验证</a>
                             </>:<>
-                                {
-                                    status!=4&&<>
-                                        <a onClick={()=>{this.openRelease({deviceVersionId,packageType},{productId,totalVersion,schemeType,firmwareVersionType})}}>发布</a>
-                                        <Divider type="vertical" />
-                                    </>
-                                }
-                                {
-                                    status!=3&&<a onClick={()=>{this.toFirmwareDetails(deviceVersionId)}}>查看批次</a>
-                                }
+                            { status!=4 && <a onClick={()=>{this.openRelease(deviceVersionId)}}>发布</a> }
+                            { status!=3 && <Link to={`/open/product/otaUpdate/details/${deviceVersionId}`}>查看批次</Link> }
                             </>
                         }
-                        {/* <Divider type="vertical" />
-                        <a onClick={()=>{this.deleteConfirm(deviceVersionId)}}>删除</a> */}
-                    </span>
+                        {/* <a onClick={()=>{this.deleteConfirm(deviceVersionId)}}>删除</a> */}
+                    </Space>
                 },
             },
         ];
         this.valInfoColumns = [
             { title: 'Mac地址', dataIndex: 'macAddress'},
             { title: '验证时间',dataIndex: 'upgradeTime',
-                render: t => <span>{DateTool.utcToDev(t)}</span>
+                render: t => <span>{ t && DateTool.utcToDev(t) || "--"}</span>
             },
             { title: '升级前版本', dataIndex: 'beforeVersion'},
             { title: '验证状态',  dataIndex: 'upgradeStatus',
@@ -127,18 +115,15 @@ export default class FirmwareManagement  extends Component {
                   return <Tag color={color} >{nam}</Tag>
               }
             },
-            { title: '失败原因', dataIndex: 'remark', 
-                render: (r,{upgradeStatus})=>(upgradeStatus==3&&r||'--')
+            { title: '备注', dataIndex: 'remark', 
+                render: (r,{upgradeStatus})=>(upgradeStatus==3&&r||'')
             },
             
         ];
     }
     componentDidMount() {
         this.pagerIndex();
-        this.props.getProductList();
-    }
-    toFirmwareDetails = deviceVersionId=>{
-        window.location.hash = `#/open/bigData/OTA/firmwareDetails/${deviceVersionId}`;
+        this.props.getMcuSocProLi();
     }
 
     changeState=(k,v)=>{
@@ -153,9 +138,8 @@ export default class FirmwareManagement  extends Component {
             [dialog]:!pre
         })
     }
-    openRelease=({deviceVersionId,packageType},params)=>{
-        this.props.getExtVerLi(params)
-        this.setState({releaseFirmwareDialog:true,deviceVersionId,releasePackageType:packageType})
+    openRelease=(deviceVersionId)=>{
+        this.setState({releaseFirmwareDialog:true,deviceVersionId})
     }
     openValidation = (deviceVersionId,validationDetail={macSet:'',validateType:0})=>{
         // console.log(111,validationDetail)
@@ -222,14 +206,14 @@ export default class FirmwareManagement  extends Component {
     render() {
         const {
             addFirmwareVisiable,releaseFirmwareDialog,validationFirmwareDialog,
-            deviceVersionId,validationDetail,validateInfo,releasePackageType,validationModTit
+            deviceVersionId,validationDetail,validateInfo,validationModTit
         } = this.state;
-        const { versionList:{list,pager}, productList } = this.props;
+        const { versionList:{list,pager} } = this.props;
         const {pageIndex,totalRows} =pager;
         
         return (
             <div className="ota-firmware-up">
-                <PageTitle title="固件升级" selectOnchange={val=>{this.changeState('productId',val)} }  selectData={productList} />
+                <PageTitle title="固件升级" selectOnchange={val=>{this.changeState('productId',val)} } />
                 <div className='comm-shadowbox comm-setp-ttip'>
                     <div className='step-title'>
                         <img src={upIconImg}/>
@@ -276,12 +260,7 @@ export default class FirmwareManagement  extends Component {
                             onChange:this.pagerIndex
                         }} 
                     />
-                    { addFirmwareVisiable && 
-                        <AddFirmwareDialog 
-                            // onRef={ref=>{this.refAddFirmware = ref}}
-                            changeState={this.changeState}
-                        />
-                    }
+                    { addFirmwareVisiable && <AddFirmwareDialog changeState={this.changeState} /> }
 
 
                     {releaseFirmwareDialog&&
@@ -293,7 +272,7 @@ export default class FirmwareManagement  extends Component {
                             footer={null}
                             maskClosable={false}
                         >
-                            <ReleaseFirmware packageType={releasePackageType} deviceVersionId={deviceVersionId} close={()=>{this.switchDialog('releaseFirmwareDialog')}} />
+                            <ReleaseFirmware deviceVersionId={deviceVersionId} close={()=>{this.switchDialog('releaseFirmwareDialog')}} />
                         </Modal>
                     }
                     <Modal 
@@ -314,14 +293,7 @@ export default class FirmwareManagement  extends Component {
                             close = {this.closeValiFirm}
                         />
                     </Modal>
-                    <Modal 
-                        title='验证信息' 
-                        visible={!!validateInfo.length}
-                        onCancel={this.closeValidateInfo}
-                        width={800}
-                        footer={null}
-                        maskClosable={false}
-                    >
+                    <Modal title='验证信息' visible={!!validateInfo.length} onCancel={this.closeValidateInfo} width={800} footer={null} maskClosable={false}>
                         <Table rowKey="macAddress" columns={this.valInfoColumns} dataSource={validateInfo} pagination={false} />
                     </Modal>
                 </div>
