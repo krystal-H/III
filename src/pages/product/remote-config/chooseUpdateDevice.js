@@ -101,11 +101,13 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
 
   // 一键移除 右侧数据
   const deleteDeviceFromRightList = () => {
-    setRightDeviceList({
-      rightAllList: [],
-      rightTempList: []
-    })
-    setSelectDeviceIndexToAdd([])
+    if (rightTempList.length > 0) {
+      setRightDeviceList({
+        rightAllList: [],
+        rightTempList: []
+      })
+      setSelectDeviceIndexToAdd([])
+    }
   }
 
   // 处理

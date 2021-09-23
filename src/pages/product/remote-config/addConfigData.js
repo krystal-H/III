@@ -25,7 +25,7 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
         for (let index = 0; index < initialProtoclList.length; index++) {
           const ele = initialProtoclList[index]
           if (item === ele.identifier) {
-            if (!ele.sendData && ele.sendData != 0) return Notification({ description: '请为配置协议添加参数' })
+            if (!ele.sendData && ele.sendData !== 0) return Notification({ description: '请为配置协议添加参数' })
           }
         }
       }

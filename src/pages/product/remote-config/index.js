@@ -139,10 +139,10 @@ function RemoteConfig(remoteType = 'product') {
     }
 
     // 获取远程配置列表
-    const getRemoteConfigList = (status = '', taskName = '') => {
+    const getRemoteConfigList = (taskName = '') => {
         const params = {
             productId: currentProductId,
-            status,
+            status: status === -1 ? '' : status,
             taskName,
             ...pager
         }
@@ -169,7 +169,7 @@ function RemoteConfig(remoteType = 'product') {
 
     // 查询列表数据
     const searchListData = (val) => {
-        getRemoteConfigList(status, val)
+        getRemoteConfigList(val)
     }
 
     // 翻页
@@ -221,11 +221,13 @@ function RemoteConfig(remoteType = 'product') {
                             wrapperCol={{ span: 17 }}>
                             <Form.Item label="任务状态">
                                 <Select
-                                    allowClear
+                                    // allowClear
                                     onChange={val => setStatus(val)}
-                                    style={{ width: 150, marginRight: 40 }}>
+                                    style={{ width: 150, marginRight: 40 }}
+                                    defaultValue={-1}>
+                                    <Select.Option value={-1}>全部状态</Select.Option>
                                     {
-                                        statusText.filter(item => item).map((item, index) => (<Option key={item} value={index}>{item}</Option>))
+                                        statusText.filter(item => item).map((item, index) => (<Option key={item} value={index+1}>{item}</Option>))
                                     }
                                 </Select>
                             </Form.Item>

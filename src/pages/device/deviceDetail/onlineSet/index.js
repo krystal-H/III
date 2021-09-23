@@ -31,7 +31,6 @@ const FLOWLIST = [
         title: '执行任务'
     }
 ]
-const statusText = ['草稿', '待执行', '执行中', '已执行']
 const statusTextForDevice = ['草稿', '待执行', '执行成功', '执行失败']
 
 function RemoteConfig({ devceId, remoteType = 'device' }) {
@@ -40,7 +39,6 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
     const [actionData, setActionData] = useState({})
     const [deleteParams, setDeleteParams] = useState({ deletevisible: false, deleteItem: null, deleteLoading: false })
     const [remoteConfigList, setRemoteConfigList] = useState([]) // table-datasorce
-    const [status, setStatus] = useState('') // 状态
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     const { deletevisible, deleteItem, deleteLoading } = deleteParams
     // 执行任务
@@ -48,6 +46,8 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
         post(Paths.excelDevTask, { taskId: record.taskId }, { loading: true }).then(res => {
             getRemoteConfigList()
             Notification({ description: '执行成功！', type: 'success' })
+        }).catch(res => {
+            getRemoteConfigList()
         })
     }
     const PageColumns = [
@@ -73,7 +73,7 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
             key: 'status',
             render: (text, record) => {
                 let { status } = record;
-                return <span className={`h5-statu-${status + 1}`}>{_text[status]}</span>
+                return <span className={`device-h5-statu-${status + 1}`}>{statusTextForDevice[status]}</span>
             }
         },
         {
@@ -101,45 +101,18 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
                         </React.Fragment> :
                         <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
                 )
-                // return isDeviceRomote ? (
-                //     <span>
-                //         {
-                //             ('' + status) === '1' ?
-                //                 <React.Fragment>
-                //                     <a onClick={() => openEdit(record)}>编辑</a>
-                //                     <Divider type="vertical" />
-                //                     <a onClick={() => setDeleteParams({ deletevisible: true, deleteItem: record })}>删除</a>
-                //                 </React.Fragment> :
-                //                 <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
-                //         }
-                //         <Divider type="vertical" />
-                //         <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
-                //     </span>) :
-                //     (<span>
-                //         <a onClick={() => showRomoteConfigDetail(record)}>查看</a>
-                //         {
-                //             ('' + status) === '3' ?
-                //                 <React.Fragment>
-                //                     <Divider type="vertical" />
-                //                     <a onClick={() => retryForDeviceByTaskId(taskId)}>重试</a>
-                //                     <Divider type="vertical" />
-                //                     <a onClick={() => showErrorLogForDeviceByTaskId(record)}>日志</a>
-                //                 </React.Fragment> : null
-                //         }
-                //     </span>)
             }
         }
     ]
 
     const isDeviceRomote = remoteType === 'device'
 
-    let _FLOWLIST = cloneDeep(FLOWLIST)
+    // let _FLOWLIST = cloneDeep(FLOWLIST)
 
-    if (isDeviceRomote) {
-        _FLOWLIST.splice(2, 1)
-    }
+    // if (isDeviceRomote) {
+    //     _FLOWLIST.splice(2, 1)
+    // }
 
-    const _text = isDeviceRomote ? statusTextForDevice : statusText
 
 
     // 新增
@@ -155,9 +128,6 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
     const detailCancel = () => {
         setDetailVis(false)
     }
-    //=======================================
-    const retryForDeviceByTaskId = () => { }
-    const showErrorLogForDeviceByTaskId = () => { }
 
     useEffect(() => {
         getRemoteConfigList()
@@ -231,7 +201,7 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
         window.open('https://dp.clife.net/iotdoc/')
     }
     return (
-        <div id='remote-config'>
+        <div id='device-remote-config'>
             <div className='comm-shadowbox setp-tip'>
                 <div className='step-title'>
                     <img src={stepImg} alt="" />
@@ -249,7 +219,7 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
             <div className='comm-shadowbox device-content'>
                 {/* 查询 */}
                 <div className='content-top'>
-                    <div></div>
+                    <div> </div>
                     <Button type="primary" onClick={() => addOrEditRemoteConfig()}>创建任务</Button>
                 </div>
                 {/* table */}
