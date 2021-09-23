@@ -73,7 +73,7 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
             key: 'status',
             render: (text, record) => {
                 let { status } = record;
-                return <span className={`device-h5-statu-${status + 1}`}>{_text[status]}</span>
+                return <span className={`device-h5-statu-${status + 1}`}>{statusTextForDevice[status]}</span>
             }
         },
         {
@@ -107,13 +107,12 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
 
     const isDeviceRomote = remoteType === 'device'
 
-    let _FLOWLIST = cloneDeep(FLOWLIST)
+    // let _FLOWLIST = cloneDeep(FLOWLIST)
 
-    if (isDeviceRomote) {
-        _FLOWLIST.splice(2, 1)
-    }
+    // if (isDeviceRomote) {
+    //     _FLOWLIST.splice(2, 1)
+    // }
 
-    const _text = statusTextForDevice
 
 
     // 新增
@@ -129,9 +128,6 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
     const detailCancel = () => {
         setDetailVis(false)
     }
-    //=======================================
-    const retryForDeviceByTaskId = () => { }
-    const showErrorLogForDeviceByTaskId = () => { }
 
     useEffect(() => {
         getRemoteConfigList()
@@ -223,7 +219,7 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
             <div className='comm-shadowbox device-content'>
                 {/* 查询 */}
                 <div className='content-top'>
-                    <div></div>
+                    <div> </div>
                     <Button type="primary" onClick={() => addOrEditRemoteConfig()}>创建任务</Button>
                 </div>
                 {/* table */}
