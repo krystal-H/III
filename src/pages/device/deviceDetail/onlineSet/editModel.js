@@ -151,7 +151,7 @@ export default function AddModel({ addVisible, addOk, CancelAdd, actionData }) {
                             <Select
                                 value={record.sendData}
                                 onChange={value => changeSendData(value, index)}>
-                                <Option key={-1} value="">请选择参数</Option>
+                                {/* <Option key={-1} value="">请选择参数</Option> */}
                                 {
                                     Object.values(specs) && Object.values(specs).map((item, index) => (
                                         <Option key={index + item} value={item}>{item}</Option>
