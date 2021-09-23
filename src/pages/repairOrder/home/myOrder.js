@@ -125,7 +125,7 @@ export default function DeviceShadow({isRefresh}) {
                 </div>
                 <div className='order-item'>
                     <div className='order-item-label'>提交时间：</div>
-                    <div className='order-item-text'>{createTime && DateTool.utcToDev(createTime)}</div>
+                    <div className='order-item-text'>{detailInfo.createTime && DateTool.utcToDev(detailInfo.createTime)}</div>
                 </div>
                 <div className='order-item'>
                     <div className='order-item-label'>问题描述：</div>
