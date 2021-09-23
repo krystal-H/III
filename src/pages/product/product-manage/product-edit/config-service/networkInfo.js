@@ -17,6 +17,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
   const [guidePage, setGuidePage] = useState('')
   const [bindFailPage, setBindFailPage] = useState('')
   const [netData, setNetData] = useState({})
+  const [baseTypeId, setBaseTypeId] = useState()
 
   // 获取配网方式
   const getNetDataByProductId = () => {
@@ -146,7 +147,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
             label="配网方式"
             name="baseTypeId"
             rules={[{ required: true, message: '请选择配网方式！' }]}>
-            <Select style={{ width: 380 }}>
+            <Select style={{ width: 380 }} onChange={(val) => setBaseTypeId(val)}>
               {
                 netData.bindTypeList && netData.bindTypeList.map(item => (
                   <Option key={item.baseTypeId} value={item.baseTypeId}>{item.baseTypeName}</Option>
@@ -154,9 +155,9 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
               }
             </Select>
           </Form.Item>
-          {/* 通信是WIFI */}
+          {/* 通信是WIFI 且是WIFI AP配网方式*/}
           {
-            netData.bindTypeId === 1 &&
+            netData.bindTypeId === 1 && baseTypeId === 1 &&
             <Form.Item
               label="AP-SSID"
               name="ssid"
@@ -164,9 +165,9 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
               <Input maxLength={50} style={{ width: 380 }} />
             </Form.Item>
           }
-          {/* 通信是wifi、蓝牙 */}
+          {/* 通信是wifi切实smartLink配网方式、蓝牙 */}
           {
-            (netData.bindTypeId === 1 || netData.bindTypeId === 2) &&
+            (netData.bindTypeId === 1 && baseTypeId === 3) || (netData.bindTypeId === 2) &&
             <Form.Item
               label="广播名"
               name="radiocastName"
