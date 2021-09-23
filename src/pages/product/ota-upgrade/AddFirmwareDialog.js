@@ -25,9 +25,9 @@ const checkMainVersion = (rule, value, callback)=> {
 }
 
 const mapStateToProps = state => {
-    const { productList, firmwareFrPro } = state.get('otaUpgrade')
+    const { mcusocproLi, firmwareFrPro } = state.get('otaUpgrade')
     return {
-        productList, firmwareFrPro
+        mcusocproLi, firmwareFrPro
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -42,16 +42,22 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
 
     changeState,
 
-    firmwareFromProduct,productList,firmwareFrPro,getVersionLi
+    firmwareFromProduct,mcusocproLi,firmwareFrPro,getVersionLi
 })=>{
 
 
     const [mcuIsUp, setMcuIsUp] = useState(1);
     const [uploadType, setUploadType] = useState("0");
+    const [firmwareList, setFirmwareList] = useState([]);
 
     const [formInstance] = Form.useForm();
     const changedPro= productId =>{
         firmwareFromProduct(productId)
+        post(Paths.getFirmwareList,{productId}).then((res) => {
+            setFirmwareList(res.data || [])
+        }); 
+
+        
     }
     const onFinish=(values)=>{
         const { filePath1, filePath2, ...otherPar } = values,
@@ -90,7 +96,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 <Item label="产品名称" name='productId' rules={[{ required: true, message: '请选择产品' }]}>
                     <Select showSearch optionFilterProp="children" placeholder="请选择产品" onChange={changedPro}>
                         {
-                            productList.map(item => {
+                            mcusocproLi.map(item => {
                                 const {productName,productId} = item;
                                 return <Option key={productId} value={productId}>{productName}</Option>
                             })
@@ -125,9 +131,8 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     <Item label="固件模块" name='firmwareVersionType' rules={[{ required: true, message: '请选择固件模块' }]}>
                         <Select placeholder="选择固件模块" onChange={()=>{}} >
                             {
-                                VERTYPE.map(item => {
-                                    const {id,nam} = item;
-                                    return <Option key={id} value={id}>{nam}</Option>
+                                firmwareList.map(({firmwareTypeName,firmwareTypeNo,deviceVersionType}) => {
+                                    return <Option key={firmwareTypeNo} value={firmwareTypeNo}>{firmwareTypeName}</Option>
                                 })
                             }
                         </Select>

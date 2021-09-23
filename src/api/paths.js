@@ -466,21 +466,20 @@ let Paths = {
     //OTA升级
     otaDevVersionList:'/firmware/productFirmware/getList',
     otaGetExtVersion:'/device/version/5/getExtVersion',
-    
-    otaImportMac:'/device/version/5/importMac',
-    otaValidate:'/device/version/5/validate',
     otaDeleteVer:'/device/version/5/delete',
-    otaRelease:'/device/version/5/publish',
-    otaGetBatch:'/device/version/5/publish/getBatch',
-    otaGetVersionDetail:'/device/version/5/version/get',
-    otaGetBatchDevice:'/device/version/5/publish/get',
-    otaGetBatchInfo:'/device/version/5/publish/getBatchInfo',
-    otaCancelDevicePub:'/device/version/5/publish/cancel',
-    otaValiGetinfo:'/device/version/5/validate/getInfo',
-    
+
     firmwareFromProduct:'/product/firmware/package',
     otaAddVersion:'/firmware/device/version/add',
-
+    otaGetVersionDetail:'/firmware/device/version/get',
+    otaGetBatch:'/firmware/device/upgrade/publish/getBatch',
+    otaGetBatchDevice:'/firmware/device/upgrade/publish/get',
+    otaGetBatchInfo:'/firmware/device/upgrade/publish/getBatchInfo',
+    otaCancelDevicePub:'/firmware/device/upgrade/publish/cancel',
+    otaValiGetinfo:'/firmware/device/version/validate/getInfo',
+    otaImportMac:'/firmware/device/version/importMac',
+    otaValidate:'/firmware/device/version/validate',
+    otaRelease:'/firmware/device/upgrade/publish',
+    getMcuSocProLi:'productManage/getFilterSchemaSelList',
     
     //总览页
     homeBanner:'/cover/getBannerList',//banner图

@@ -2,6 +2,7 @@ export const VERTYPE = [
     {id:1,nam:'模组固件'},
     {id:2,nam:'MCU固件'},
     {id:4,nam:'系统固件'},
+    {id:5,nam:'产品固件'}
 ]
 export const STATUSTAG = [//0：待验证 1：验证中 2：已发布,3 验证完成
     { nam:'待验证', color:'blue'},

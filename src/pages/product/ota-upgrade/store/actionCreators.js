@@ -8,19 +8,22 @@ import {
     FIRMWAREDETAIL
 } from './actionTypes';
 
-export const getProductList = param => {
+export const getMcuSocProLi = param => {
     return (dispatch) => {
-        get(Paths.getProductType,{},{ loading:true }).then(({data}) => {
-            const productList = Object.keys(data).map(id=>{
-                return {productId:id,productName:data[id]}
+        post(Paths.getMcuSocProLi,{},{ loading:true }).then(({data}) => {
+            const d = Object.keys(data).map(id=>{
+                return { productId:id, productName:data[id] }
             });
+
             dispatch({
                 type: GETPROLIST,
-                productList,
+                mcusocproLi:d,
             });
         });
     }
 }
+
+
 export const firmwareFromProduct = (productId) => {
     return (dispatch) => {
         post(Paths.firmwareFromProduct,{productId},{loading:true}).then(({data={}}) => {
@@ -67,8 +70,9 @@ export const getExtVerLi = param => {
 }
 
 export const getDeviceGroupLi = () => {
+    
     return (dispatch) => {
-        get(Paths.getGroupList,{pageRows:9999}).then(({data={}}) => {
+        post(Paths.getGroupList,{pageRows:9999}).then(({data={}}) => {
             dispatch({
                 type: DEVGROUPLIST,
                 deviceGorupLi:data.list||[],

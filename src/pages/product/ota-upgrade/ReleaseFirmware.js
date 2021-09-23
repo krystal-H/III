@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from "moment";
@@ -19,10 +18,8 @@ const formItemLayout = {
     wrapperCol: {span: layoutper[1]  },
 };
 const mapStateToProps = state => {
-    const {extVerisonLi,deviceGorupLi} = state.get('otaUpgrade')
-    return {
-        extVerisonLi,deviceGorupLi
-    }
+    const {deviceGorupLi} = state.get('otaUpgrade')
+    return { deviceGorupLi }
 }
 const mapDispatchToProps = dispatch => {
     return {
@@ -30,6 +27,7 @@ const mapDispatchToProps = dispatch => {
         getVersionLi: param => dispatch(getVersionList(param)),
     }
 }
+@connect(mapStateToProps, mapDispatchToProps)
 export const ReleaseFirmware = Form.create({
     name: 'ota_reaease_ver'
 })(
@@ -39,7 +37,6 @@ export const ReleaseFirmware = Form.create({
             this.state = {
                 upgradeType:1,
                 upgradeRange:1,
-                stepcurrent:0,
                 triggerTime:0,
             }
         }
@@ -53,7 +50,6 @@ export const ReleaseFirmware = Form.create({
         }
         //mac模板下载
         downloadMac =()=>{
-            // let urls = window.location.origin+'/v1/web/open/device/mac/download?type=2';
             window.location.href = 'https://open.clife.cn/v1/web/open/device/mac/download?type=2';//v5版 域名换成cms 所以用绝对地址
         }
         //批量导入
@@ -78,28 +74,14 @@ export const ReleaseFirmware = Form.create({
             });
             return false;
         };
-        goPreStep = ()=>{
-            this.setState({stepcurrent:0})
-        }
-        goNextStep = ()=>{
-            const { form:{validateFieldsAndScroll} } = this.props;
-            validateFieldsAndScroll((err, values) => {
-                if (!err) {
-                    this.setState({stepcurrent:1})
-                }
-            })   
-        }
+       
         commit = ()=>{
             const { form:{validateFieldsAndScroll},deviceVersionId,close } = this.props;
             validateFieldsAndScroll((err, values) => {
                 
                 if (!err) {
-                    let {extVersion,upgradeDevice,
-                        beginDate,endDate,
-                        ...params} = values
-                    if(extVersion){
-                        params.extVersion=extVersion.join(',')
-                    }
+                    let { upgradeDevice, beginDate, endDate, ...params } = values
+                    
                     if(upgradeDevice){
                         params.upgradeDevice = upgradeDevice.join&&upgradeDevice.join(',')||upgradeDevice
                     }
@@ -116,20 +98,13 @@ export const ReleaseFirmware = Form.create({
         }
        
         render() {
-            const {form:{getFieldDecorator},extVerisonLi,deviceGorupLi,packageType} =this.props
-            const {upgradeType,upgradeRange,stepcurrent,triggerTime} =this.state
+            const {form:{getFieldDecorator},deviceGorupLi} =this.props
+            const {upgradeType,upgradeRange,triggerTime} =this.state
             const desc = UPDATETYPE.find(({id})=> id==upgradeType).desc
             return (
                 <div className="ota_release_dialog">
-                        <div className='stepbox'>
-                            <Steps current={stepcurrent} size='small'>
-                                <Step title='选择升级范围' />
-                                <Step title='配置升级策略' />
-                            </Steps>
-                            {upgradeType!=4&&<div className='disabled'></div>}
-                        </div>
                          <Form {...formItemLayout}>
-                            <div style={{'display':stepcurrent?'none':'block'}}>
+                            <div>
                                 <Form.Item label='升级方式' required help={desc} className='helpitem'>
                                     {getFieldDecorator('upgradeType', {initialValue:1})(
                                         <Radio.Group onChange={(v)=>{this.changeState('upgradeType',v)}} >
@@ -187,86 +162,65 @@ export const ReleaseFirmware = Form.create({
                                                 </Select>)}
                                             </Form.Item>
                                         }
-                                        {
-                                            packageType==1&&
-                                            <Form.Item label='外部版本号'>
-                                                {getFieldDecorator('extVersion', {
-                                                    rules: [{ required: true, message: '请选择版本号' }]
-                                                })(<Select placeholder="请选择待升级外部版本号" mode="multiple">
-                                                    {
-                                                        extVerisonLi.map((ver,i)=><Option key={i} value={ver}>{ver}</Option>)
-                                                    }
-                                                </Select>)}
-                                            </Form.Item>
-                                        }
-                                        
                                     </>
                                 }
+                                {
+                                    upgradeType==4&&
+                                    <div>
+                                        <Form.Item label='升级时间策略' required>
+                                            {getFieldDecorator('triggerTime', {initialValue:0})(
+                                                <Radio.Group onChange={(v)=>{this.changeState('triggerTime',v)}} >
+                                                    <Radio.Button value={0}>触发升级</Radio.Button>
+                                                    <Radio.Button value={1}>定时升级</Radio.Button>
+                                                </Radio.Group>
+                                            )}
+                                        </Form.Item>
+                                        {
+                                            triggerTime==1&&<>
+                                                <Form.Item label='升级开始时间'>
+                                                    {getFieldDecorator('beginDate',{rules: [{ required: true, message: '请选择开始时间' }],})(
+                                                        <DatePicker showTime
+                                                            placeholder="请选择开始时间"
+                                                            format="YYYY-MM-DD HH:mm:ss"
+                                                            showTime={{ defaultValue: moment("00:00:00", "HH:mm:ss") }}
+                                                        />
+                                                    )}
+                                                </Form.Item>
+                                                <Form.Item label='升级结束时间'>
+                                                    {getFieldDecorator('endDate',{rules: [{ required: true, message: '请选择结束时间' }],})(
+                                                        <DatePicker showTime
+                                                            placeholder="请选择结束时间"
+                                                            format="YYYY-MM-DD HH:mm:ss"
+                                                            showTime={{ defaultValue: moment("00:00:00", "HH:mm:ss") }}
+                                                        />
+                                                    )}
+                                                </Form.Item>
+                                            </>
+                                        }
+                                        <Form.Item label='失败重试时间' required>
+                                            {getFieldDecorator('retryTime', {initialValue:0})(
+                                                <Radio.Group >
+                                                    {RERTYTIME.map(({id,nam})=><Radio.Button key={id} value={id}>{nam}</Radio.Button>)}
+                                                </Radio.Group>
+                                            )}
+                                        </Form.Item>
+                                        <Form.Item label='失败重试次数' required>
+                                            {getFieldDecorator('retryCount', {initialValue:1})(
+                                                <Radio.Group >
+                                                    {RERTYCOUNT.map(({id,nam})=><Radio.Button key={id} value={id}>{nam}</Radio.Button>)}
+                                                </Radio.Group>
+                                            )}
+                                        </Form.Item>
+                                    </div>
+                                }
+
+
                             </div>
-                            {
-                                upgradeType==4&&stepcurrent==1&&
-                                <div>
-                                    <Form.Item label='升级时间策略' required>
-                                        {getFieldDecorator('triggerTime', {initialValue:0})(
-                                            <Radio.Group onChange={(v)=>{this.changeState('triggerTime',v)}} >
-                                                <Radio.Button value={0}>触发升级</Radio.Button>
-                                                <Radio.Button value={1}>定时升级</Radio.Button>
-                                            </Radio.Group>
-                                        )}
-                                    </Form.Item>
-                                    {
-                                        triggerTime==1&&<>
-                                            <Form.Item label='升级开始时间'>
-                                                {getFieldDecorator('beginDate',{rules: [{ required: true, message: '请选择开始时间' }],})(
-                                                    <DatePicker showTime
-                                                        placeholder="请选择开始时间"
-                                                        format="YYYY-MM-DD HH:mm:ss"
-                                                        showTime={{ defaultValue: moment("00:00:00", "HH:mm:ss") }}
-                                                    />
-                                                )}
-                                            </Form.Item>
-                                            <Form.Item label='升级结束时间'>
-                                                {getFieldDecorator('endDate',{rules: [{ required: true, message: '请选择结束时间' }],})(
-                                                    <DatePicker showTime
-                                                        placeholder="请选择结束时间"
-                                                        format="YYYY-MM-DD HH:mm:ss"
-                                                        showTime={{ defaultValue: moment("00:00:00", "HH:mm:ss") }}
-                                                    />
-                                                )}
-                                            </Form.Item>
-                                        </>
-                                    }
-                                    <Form.Item label='失败重试时间' required>
-                                        {getFieldDecorator('retryTime', {initialValue:0})(
-                                            <Radio.Group >
-                                                {RERTYTIME.map(({id,nam})=><Radio.Button key={id} value={id}>{nam}</Radio.Button>)}
-                                            </Radio.Group>
-                                        )}
-                                    </Form.Item>
-                                    <Form.Item label='失败重试次数' required>
-                                        {getFieldDecorator('retryCount', {initialValue:1})(
-                                            <Radio.Group >
-                                                {RERTYCOUNT.map(({id,nam})=><Radio.Button key={id} value={id}>{nam}</Radio.Button>)}
-                                            </Radio.Group>
-                                        )}
-                                    </Form.Item>
-                                    
-                                </div>
-                            }
+                            
                             
                          </Form>
                          <div className='btnbox'>
-                            {
-                                upgradeType==4?<>
-                                    {stepcurrent==0?
-                                        <Button onClick={this.goNextStep} type='primary'>下一步</Button>:
-                                        <>
-                                            <Button onClick={this.goPreStep}>上一步</Button>
-                                            <Button type='primary' onClick={this.commit}>确定</Button>
-                                        </>
-                                    }
-                                </>:<Button type='primary' onClick={this.commit}>确定</Button>
-                            }
+                            <Button type='primary' onClick={this.commit}>确定</Button>
                          </div>
 
                         </div>

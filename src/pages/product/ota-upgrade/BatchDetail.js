@@ -1,29 +1,10 @@
 import React, { PureComponent } from 'react'
-import { Link } from 'react-router-dom';
-import { Descriptions ,Button,Table,Divider,Input } from 'antd';
-import { connect } from 'react-redux';
+import { Descriptions ,Table,Input } from 'antd';
 import PageTitle from '../../../components/page-title/PageTitle';
-import AloneSection from '../../../components/alone-section/AloneSection';
-import { cloneDeep } from 'lodash';
 import {get,post, Paths} from '../../../api';
-import moment from 'moment';
 import { DateTool } from '../../../util/util';
 import {UPGRADESTATUS,VERFIRMTYPE,UPDATESTATUS,UPRANGE,TRIGGERTIME} from './store/constData'
-import {getVersionList,getExtVerLi} from './store/actionCreators'
 
-const mapStateToProps = state => {
-    const {firmwareDetails} = state.get('otaUpgrade')
-    return {
-        // firmwareDetails
-    }
-}
-const mapDispatchToProps = dispatch => {
-    return {
-        // getVersionLi: param => dispatch(getVersionList(param)),
-        // getExtVerLi: param => dispatch(getExtVerLi(param)),
-    }
-}
-@connect(mapStateToProps, mapDispatchToProps)
 export default class FirmwareDetails extends PureComponent {
     constructor(props) {
         super(props);
@@ -105,9 +86,8 @@ export default class FirmwareDetails extends PureComponent {
         });
     }
     render() {
-        const { pager:{pageIndex,totalRows},list,details:{
+        const { pager:{pageIndex,totalRows,totalPages},list,details:{
             deviceVersionName,
-
             upgradeStatus=0,
             upgradeRange=0,
             createTime,
@@ -116,53 +96,50 @@ export default class FirmwareDetails extends PureComponent {
             endTime,
             retryCount,
             retryTime,
-
-            deviceVersionType=1,
-            firmwareVersionType=1,
+            upgradeType,
         } } = this.state;
-
-        const versionType =  VERFIRMTYPE.find(({value})=> value==deviceVersionType)
-        const firmwareVersionTypeNam = versionType.children[firmwareVersionType-1].label
 
         return (
             <section className="ota-firmwaredetail flex-column">
-                <PageTitle title={`OTA升级 / ${deviceVersionName||'固件包'} / ${this.id}`}></PageTitle>
-                <header className="page-content-header">
-                    <Descriptions title="" className='descriptions' column={4}>
-                        <Descriptions.Item label="升级状态">{UPGRADESTATUS[upgradeStatus]}</Descriptions.Item>
-                        <Descriptions.Item label="升级范围">{UPRANGE[upgradeRange].nam}</Descriptions.Item>
-                        <Descriptions.Item label="发布时间">{createTime && DateTool.utcToDev(createTime)}</Descriptions.Item>
-                        <Descriptions.Item label="升级方式">{`${versionType.label}/${firmwareVersionTypeNam}`}</Descriptions.Item>
-                        <Descriptions.Item label="升级触发策略">{TRIGGERTIME[triggerTime]}</Descriptions.Item>
-                        <Descriptions.Item label="升级开始时间">{beginTime && DateTool.utcToDev(beginTime)}</Descriptions.Item>
-                        <Descriptions.Item label="升级结束时间">{endTime && DateTool.utcToDev(endTime)}</Descriptions.Item>
-                        <Descriptions.Item label="升级失败重试">{retryTime}次</Descriptions.Item>
-                        <Descriptions.Item label="失败重试次数">{retryCount}</Descriptions.Item>
-                    </Descriptions> 
-                </header>
-                <AloneSection title="设备列表">
-                    <div className="alone-section-content-default">
-                        <Input.Search placeholder="输入设备ID查询"
-                            className='search'
-                            enterButton
-                            maxLength={20}
-                            onSearch={value => this.search(value)} 
-                        />
-                        <Table 
-                            rowKey="index"
-                            columns={this.columns} 
-                            dataSource={list}
-                            pagination={{
-                                defaultCurrent:pageIndex, 
-                                total:totalRows,
-                                hideOnSinglePage:false,
-                                onChange:val=>{this.getList(val)},
-                                current: pageIndex
-                            }} 
-                        />
-                    </div>
-                </AloneSection>
+                <PageTitle title={`${deviceVersionName||'固件包'}/${this.id}`} titleBack={true} >
+                    <header className="page-content-header">
+                        <Descriptions title="" className='descriptions' column={4}>
+                            <Descriptions.Item label="升级状态">{UPGRADESTATUS[upgradeStatus]}</Descriptions.Item>
+                            <Descriptions.Item label="升级范围">{UPRANGE[upgradeRange].nam}</Descriptions.Item>
+                            <Descriptions.Item label="发布时间">{createTime && DateTool.utcToDev(createTime)}</Descriptions.Item>
+                            <Descriptions.Item label="升级方式">{UPDATETYPE[upgradeType-1].nam}</Descriptions.Item>
+                            <Descriptions.Item label="升级触发策略">{TRIGGERTIME[triggerTime]}</Descriptions.Item>
+                            <Descriptions.Item label="升级开始时间">{beginTime && DateTool.utcToDev(beginTime)}</Descriptions.Item>
+                            <Descriptions.Item label="升级结束时间">{endTime && DateTool.utcToDev(endTime)}</Descriptions.Item>
+                            <Descriptions.Item label="升级失败重试">{retryTime}</Descriptions.Item>
+                            <Descriptions.Item label="失败重试次数">{retryCount}次</Descriptions.Item>
+                        </Descriptions> 
+                    </header>
+                </PageTitle>
+                <div className='comm-shadowbox' style={{padding:"24px"}}>
+                    <Input.Search placeholder="输入设备ID查询"
+                        className='search'
+                        enterButton
+                        maxLength={20}
+                        onSearch={value => this.search(value)} 
+                    />
+                    <Table 
+                        rowKey="index"
+                        columns={this.columns} 
+                        dataSource={list}
+                        pagination={{
+                            defaultCurrent:pageIndex, 
+                            total:totalRows,
+                            hideOnSinglePage:false,
+                            onChange:val=>{this.getList(val)},
+                            current: pageIndex,
+                            showSizeChanger:false,
+                            showQuickJumper: totalPages > 5
 
+
+                        }} 
+                    />
+                </div>
             </section>
         )
     }
