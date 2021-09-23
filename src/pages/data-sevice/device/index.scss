@@ -64,11 +64,18 @@
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
-      &:not(.last-wrap){
-        &:hover{
-          background: #F0F1F3 
+
+      &:not(.last-wrap) {
+        &:hover {
+          .item-number {
+            font-size: 20px;
+            font-weight: 400;
+            color: #3079FF;
+            line-height: 32px;
+          }
         }
       }
+
       .item-label {
         height: 22px;
         font-size: 12px;
@@ -85,6 +92,8 @@
     }
 
     .current-tab {
+      background-color: #F0F1F3;
+
       .item-number {
         font-size: 20px;
         font-weight: 400;

@@ -36,6 +36,9 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
             })
             values.serviceId = editData.serviceId
         }
+        if (selectedProtocolList.length ===0) {
+            return Notification({ description: '请选择需要关联的协议!', type: 'warn' })
+        }
         values.timeServerDetails = timeServerDetails
         console.log('提交的参数', { ...values})
         post(Paths.saveTimeService, { ...values}, {loading:true}).then(res => {
@@ -184,7 +187,7 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
                     </Form.Item>
                     <Form.Item
                         label={<>
-                            关联协议
+                            <span className="required-relation">关联协议</span>
                             <Tooltip title={'仅支持可下发类型数据'} placement="top"><QuestionCircleOutlined /></Tooltip>
                         </>}>
 
