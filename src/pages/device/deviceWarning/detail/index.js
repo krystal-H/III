@@ -20,7 +20,7 @@ export default ({
     const [stepcurrent, setStepcurrent] = useState(0);
 
     useEffect( () => {
-        // console.log(777,editData)
+        console.log(777,editData)
         const { remark,content } = editData;
         if(id!==undefined){
             const contobj = JSON.parse(content);
@@ -53,7 +53,7 @@ export default ({
         let params = { ...baseFormData, id, content };
 
         post(Paths.saveWarningConfig, params, { loading: true }).then(res => {
-            closeEditMod()
+            closeEditMod(true)
         });
     }
     
@@ -64,7 +64,7 @@ export default ({
                 width={1000}
                 footer={null}
                 maskClosable={false}
-                onCancel={closeEditMod}
+                onCancel={()=>{closeEditMod(false)}}
                 className="page-devwarn-config-modal"
                 afterClose={afterCloseHandle}
             >
@@ -73,6 +73,7 @@ export default ({
                 </Steps>
 
                 <div className='formbox'>
+                  
                     <Tabs activeKey={stepcurrent+""}>
                         <TabPane tab="告警信息" key={'0'}>
                             <BaseInfoForm ref={ref0} setStepCur={setStepCur} formdata={baseFormData}/>
@@ -83,8 +84,7 @@ export default ({
                         <TabPane tab="通知方式"  key={'2'}>
                             <PublictypeForm ref={ref2} setStepCur={setStepCur} commitAll={commitAll} formdata={pubFormData}/>
                         </TabPane>
-                    </Tabs> 
-
+                    </Tabs>
 
                 </div>
 
