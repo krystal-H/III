@@ -1,15 +1,16 @@
-import React, { forwardRef,useState,useEffect } from 'react';
+import React, { forwardRef,useState } from 'react';
 import { connect } from 'react-redux';
-import { Input, Select, Radio, Cascader, AutoComplete ,Form, Modal} from 'antd';
-
+import { Input, Select, Radio, Button, Upload ,Form, Modal} from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import { get,post,Paths } from '../../../api';
 import {Notification} from '../../../components/Notification';
-import { UploadFileClass } from '../../../components/upload-file';
+import { getUploadUrl } from '../../../components/upload-file';
 import LabelTip from '../../../components/form-com/LabelTip';
 import { SCHMETYPE,formrules, VERTYPE } from './store/constData'
-import {getVersionList,getExtVerLi,firmwareFromProduct} from './store/actionCreators'
+import {getVersionList,firmwareFromProduct} from './store/actionCreators'
 const { Option } = Select;
 const { Item } = Form;
+
 const formItemLayout = {
     labelCol: { xs: { span: 24 }, sm: { span: 7 }, },
     wrapperCol: { xs: { span: 24 }, sm: { span: 15 }, },
@@ -24,66 +25,68 @@ const checkMainVersion = (rule, value, callback)=> {
 }
 
 const mapStateToProps = state => {
-    const { productList, firmwareFrPro, extVerisonLi } = state.get('otaUpgrade')
+    const { productList, firmwareFrPro } = state.get('otaUpgrade')
     return {
-        productList, firmwareFrPro,
-        // extVerisonLi
+        productList, firmwareFrPro
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        // getVersionLi: param => dispatch(getVersionList(param)),
-        // getExtVerLi: param => dispatch(getExtVerLi(param)),
-        firmwareFromProduct: id => dispatch(firmwareFromProduct(id)),
+        getVersionLi: param => dispatch(getVersionList(param)),
+        firmwareFromProduct: id => dispatch(firmwareFromProduct(id))
     }
 }
 
 const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     refInstance,
 
-    visiable,
     changeState,
 
-    firmwareFromProduct,productList,firmwareFrPro
+    firmwareFromProduct,productList,firmwareFrPro,getVersionLi
 })=>{
 
 
-    const [mcuIsUp, setMcuIsUp] = useState("0");
+    const [mcuIsUp, setMcuIsUp] = useState(1);
     const [uploadType, setUploadType] = useState("0");
 
-    
-
-    // useEffect( () => {
-    //     // console.log(777,editData)
-    //     const { remark,content } = editData;
-    //     if(id!==undefined){
-    //         const contobj = JSON.parse(content);
-    //         const {warningWay,warningTitle,warningDetails,waringFreq,emailAddress,...others} = contobj;
-    //         setBaseFormData({name,remark});
-    //         setRuleFormData(others);
-    //         setPubFormData({warningWay,warningTitle,warningDetails,waringFreq,emailAddress});
-    //     }
-    // },[editData])
-
+    const [formInstance] = Form.useForm();
     const changedPro= productId =>{
         firmwareFromProduct(productId)
     }
+    const onFinish=(values)=>{
+        const { filePath1, filePath2, ...otherPar } = values,
+              { schemeType, deviceVersionId } = firmwareFrPro;
+        const deviceVersionType = 5;
+        const filePath = schemeType==3 && (uploadType=="1" && filePath1 || getUploadUrl(filePath2)) || undefined;
 
-    const { schemeType = 2, extVersion, moduleName, updatePackgeName } = firmwareFrPro;
+        post(Paths.otaAddVersion,{...otherPar,deviceVersionId,deviceVersionType,filePath}).then((res) => {
+            Notification({type:'success',description:'新增成功！'});
+            getVersionLi();
+            changeState('addFirmwareVisiable',false); 
+        }); 
+    }
+
+    const normFile = (e) => {
+        if (Array.isArray(e)) {
+          return e;
+        }
+        return e && e.fileList;
+    };
+
+    const { schemeType = 3, moduleName } = firmwareFrPro;
 
     return (
         <Modal
             title='新增固件' 
             visible={true}
-            // onOk={()=>{this.refAddFirmware.handleSubmit()}}
+            onOk={formInstance.submit}
             onCancel={()=>{ 
-                changeState('addFirmwareVisiable',false);
-                // this.refAddFirmware.resetForm() 
+                changeState('addFirmwareVisiable',false); 
             }}
             width={650}
             maskClosable={false}
         >
-            <Form {...formItemLayout} className="ota_add_firmware_dialog" >
+            <Form form={formInstance} {...formItemLayout} className="ota_add_firmware_dialog" onFinish={onFinish}>
                 <Item label="产品名称" name='productId' rules={[{ required: true, message: '请选择产品' }]}>
                     <Select showSearch optionFilterProp="children" placeholder="请选择产品" onChange={changedPro}>
                         {
@@ -95,9 +98,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     </Select>
                 </Item>
                 { schemeType && <Item label="开发方案"> { SCHMETYPE[schemeType-1] && SCHMETYPE[schemeType-1].nam || "出错了！" }</Item> }
-                {/* { schemeType==1 && <Item label="产品版本"> { extVersion }</Item> } */}
-                { ( schemeType==1 || schemeType==2 ) && <Item label="模组固件名称"> { moduleName }</Item> }
-                {/* { schemeType==1 && updatePackgeName && <Item label="MCU升级包名称"> { updatePackgeName }</Item> } */}
+                { schemeType==2 && <Item label="模组固件名称"> { moduleName }</Item> }
                 <Item name="productFirmwareVersion"
                     label={<LabelTip label="产品版本号" tip="说明是啥我也不知道"/>}
                     rules={[{ required: true, message: '请输入产品版本号' },{
@@ -110,18 +111,18 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 </Item>
                 {
                     schemeType==2 &&
-                    <Item label="MCU升级" name='mcuUpgrade' initialValue="1">
+                    <Item label="MCU升级" name='mcuUpgrade' initialValue={1}>
                         <Radio.Group onChange={e=>{setMcuIsUp(e.target.value)}}>
-                            <Radio.Button value="1">不升级</Radio.Button><Radio.Button value="0">升级</Radio.Button>
+                            <Radio.Button value={1}>不升级</Radio.Button><Radio.Button value={0}>升级</Radio.Button>
                         </Radio.Group>
                     </Item>
                 }
-                { (schemeType==3||mcuIsUp=="1") && <>
+                { (schemeType==3||mcuIsUp==0) && <>
 
                     <Item  name='deviceVersionName' label={<LabelTip label="固件包名称" tip="说明是啥我也不知道"/>} rules={[{ required: true, message: '请输入升级包名称' }]} hasFeedback>
                         <Input maxLength={30} placeholder='请输入升级包名称' />
                     </Item>
-                    <Item label="固件模块" name='wwwwwww' rules={[{ required: true, message: '请选择固件模块' }]}>
+                    <Item label="固件模块" name='firmwareVersionType' rules={[{ required: true, message: '请选择固件模块' }]}>
                         <Select placeholder="选择固件模块" onChange={()=>{}} >
                             {
                                 VERTYPE.map(item => {
@@ -131,38 +132,43 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                             }
                         </Select>
                     </Item>
-                    <Item label={<LabelTip label="固件系列标识" tip="说明是啥我也不知道"/>} hasFeedback name='etret'
+                    <Item label={<LabelTip label="固件系列标识" tip="说明是啥我也不知道"/>} hasFeedback name='totalVersion'
                         rules={[{ required: true, message: '请输入固件系列标识' },{pattern: formrules.strextVer,message: '仅支持字母、数字、下划线、短横线、点号，不超过30个字符'}]}
                     >
                         <Input maxLength={30} placeholder='仅支持字母、数字、下划线、短横线、点号' />
                     </Item>
-                    <Item label={<LabelTip label="内部版本号" tip="同一系列标识的固件通过对比内部版本号决定是否升级"/>} hasFeedback name='fgdfg'
+                    <Item label={<LabelTip label="内部版本号" tip="同一系列标识的固件通过对比内部版本号决定是否升级"/>} hasFeedback name='mainVersion'
                         rules={[{ required: true, message: '请输入内部版本号' },{ pattern: formrules.mainVer,message: '须为不小于0的整数'},{ validator:checkMainVersion}]}
                     >
                         <Input maxLength={10} placeholder='内部版本须为不小于0的整数' />
                     </Item>
-                    <Item label="固件程序" name="dsdasdsdf" required initialValue="0">
+                    <Item label="固件程序" name="notneed" required initialValue="0">
                         <Radio.Group onChange={e=>{setUploadType(e.target.value)}}>
                             <Radio.Button value="0">本地上传</Radio.Button><Radio.Button value="1">填写URL</Radio.Button>
                         </Radio.Group>
                     </Item>
-
                     {
-                        uploadType=="1" ? <Item  className='filepathinpt' hasFeedback name="fdffsdfsdfsdfsdf"
-                                rules={[{ required: true, message: '请输入URL' },{pattern: formrules.url, message: '请输入正确的URL'}]}
-                            >
-                                <Input maxLength={100} placeholder='请输入URL' />
-                            </Item>  :
-                            <Item  className='filepathinpt' hasFeedback name="kjhkjk"
-                                rules={[{ required: true, message: '请上传文件' }] }
-                            >
-                                <UploadFileClass 
-                                    onRef={el => {}}
-                                    isNotImg={true}
-                                    format='.bin,.hex,.zip,.cyacd,.apk,.dpkg'
-                                    maxSize={200}
-                                />
-                            </Item>
+                        uploadType=="1" ? 
+                        <Item  className='filepathinpt' hasFeedback name="filePath1"
+                            rules={[{ required: true, message: '请输入URL' },{pattern: formrules.url, message: '请输入正确的URL'}]}
+                        ><Input maxLength={100} placeholder='请输入URL' />
+                        </Item>  
+                        :
+                        <Item name="filePath2" className='filepathinpt'
+                            valuePropName="fileList" getValueFromEvent={normFile}
+                            rules={[{ required: true, message: '请上传文件' }]}
+                        ><Upload
+                                accept='.bin,.hex,.zip,.cyacd,.apk,.dpkg'
+                                maxCount={1}
+                                action={Paths.upFileUrl}
+                                data={{
+                                    appId: 31438,
+                                    domainType: 4,
+                                }}>
+                                    <Button type="primary" ><UploadOutlined />上传附件</Button>
+                                    <div>支持.bin,.hex,.zip,.cyacd,.apk,.dpkg格式，不超过200MB。</div>
+                            </Upload>
+                        </Item>
                     }
                 </>
                 }

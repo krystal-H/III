@@ -45,4 +45,15 @@
     @include text(12px, $themeColor);
     border: 1px solid $themeColor;
   }
+  .required-relation {
+    &::before {
+      display: inline-block;
+      margin-right: 4px;
+      color: #f5222d;
+      font-size: 14px;
+      font-family: SimSun, sans-serif;
+      line-height: 1;
+      content: "*";
+    }
+  }
 }

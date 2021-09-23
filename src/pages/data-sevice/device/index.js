@@ -62,7 +62,8 @@ export default function Device() {
         }
         const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
         const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
-        return tooEarly || tooLate;
+        const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
+        return isBeyong || tooEarly || tooLate
     };
     const [selectType, setSelectType] = useState('') //产品种类
     //产品改变
@@ -148,6 +149,8 @@ export default function Device() {
             }
 
         });
+        xTime=xTime.reverse()
+        xData=xData.reverse()
         return {
             xTime,
             xData
@@ -272,8 +275,8 @@ export default function Device() {
                     {
                         countData.map((item, index) => {
                             return (
-                                <div key={index} className='count-item' onClick={() => { filterData(index) }} 
-                                className={[currentTab === index ? 'current-tab' : '', index == 4 ? 'last-wrap' : ''].join(' ')}>
+                                <div key={index} className='count-item' onClick={() => { filterData(index) }}
+                                    className={[currentTab === index ? 'current-tab' : '', index == 4 ? 'last-wrap' : ''].join(' ')}>
                                     <div className='item-label'>{item.label}</div>
                                     <div className='item-number'>{item.count}</div>
                                 </div>

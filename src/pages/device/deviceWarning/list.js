@@ -235,8 +235,12 @@ const WarningConfigList = props => {
         getWarningList(p)
 
     }
-    const closeEditMod = () => {
+    const closeEditMod = (update=false) => {
         setConfigVisible(false)
+        if(update){
+            setName("");
+            getWarningList({pageRows: 10, pageIndex: 1})
+        }
 
     }
     const openEditMod = (data) => {
