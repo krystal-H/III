@@ -1,15 +1,16 @@
-import React, { forwardRef,useState,useEffect } from 'react';
+import React, { forwardRef,useState } from 'react';
 import { connect } from 'react-redux';
-import { Input, Select, Radio, Cascader, AutoComplete ,Form, Modal} from 'antd';
-
+import { Input, Select, Radio, Button, Upload ,Form, Modal} from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import { get,post,Paths } from '../../../api';
 import {Notification} from '../../../components/Notification';
-import { UploadFileClass } from '../../../components/upload-file';
+import { getUploadUrl } from '../../../components/upload-file';
 import LabelTip from '../../../components/form-com/LabelTip';
 import { SCHMETYPE,formrules, VERTYPE } from './store/constData'
-import {getVersionList,getExtVerLi,firmwareFromProduct} from './store/actionCreators'
+import {getVersionList,firmwareFromProduct} from './store/actionCreators'
 const { Option } = Select;
 const { Item } = Form;
+
 const formItemLayout = {
     labelCol: { xs: { span: 24 }, sm: { span: 7 }, },
     wrapperCol: { xs: { span: 24 }, sm: { span: 15 }, },
@@ -24,27 +25,24 @@ const checkMainVersion = (rule, value, callback)=> {
 }
 
 const mapStateToProps = state => {
-    const { productList, firmwareFrPro, extVerisonLi } = state.get('otaUpgrade')
+    const { productList, firmwareFrPro } = state.get('otaUpgrade')
     return {
-        productList, firmwareFrPro,
-        // extVerisonLi
+        productList, firmwareFrPro
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        // getVersionLi: param => dispatch(getVersionList(param)),
-        // getExtVerLi: param => dispatch(getExtVerLi(param)),
-        firmwareFromProduct: id => dispatch(firmwareFromProduct(id)),
+        getVersionLi: param => dispatch(getVersionList(param)),
+        firmwareFromProduct: id => dispatch(firmwareFromProduct(id))
     }
 }
 
 const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     refInstance,
 
-    visiable,
     changeState,
 
-    firmwareFromProduct,productList,firmwareFrPro
+    firmwareFromProduct,productList,firmwareFrPro,getVersionLi
 })=>{
 
 
@@ -52,29 +50,19 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     const [uploadType, setUploadType] = useState("0");
 
     const [formInstance] = Form.useForm();
-
-    
-
-    // useEffect( () => {
-    //     // console.log(777,editData)
-    //     const { remark,content } = editData;
-    //     if(id!==undefined){
-    //         const contobj = JSON.parse(content);
-    //         const {warningWay,warningTitle,warningDetails,waringFreq,emailAddress,...others} = contobj;
-    //         setBaseFormData({name,remark});
-    //         setRuleFormData(others);
-    //         setPubFormData({warningWay,warningTitle,warningDetails,waringFreq,emailAddress});
-    //     }
-    // },[editData])
-
     const changedPro= productId =>{
         firmwareFromProduct(productId)
     }
     const onFinish=(values)=>{
-        console.log(333,values)
-        return;
-        post(Paths.otaAddVersion,{...values}).then((res) => {
+        const { filePath1, filePath2, ...otherPar } = values,
+              { schemeType, deviceVersionId } = firmwareFrPro;
+        const deviceVersionType = 5;
+        const filePath = schemeType==3 && (uploadType=="1" && filePath1 || getUploadUrl(filePath2)) || undefined;
+
+        post(Paths.otaAddVersion,{...otherPar,deviceVersionId,deviceVersionType,filePath}).then((res) => {
             Notification({type:'success',description:'新增成功！'});
+            getVersionLi();
+            changeState('addFirmwareVisiable',false); 
         }); 
     }
 
@@ -85,7 +73,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
         return e && e.fileList;
     };
 
-    const { schemeType = 2, extVersion, moduleName, updatePackgeName } = firmwareFrPro;
+    const { schemeType = 3, moduleName } = firmwareFrPro;
 
     return (
         <Modal
@@ -161,20 +149,25 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     </Item>
                     {
                         uploadType=="1" ? 
-
                         <Item  className='filepathinpt' hasFeedback name="filePath1"
                             rules={[{ required: true, message: '请输入URL' },{pattern: formrules.url, message: '请输入正确的URL'}]}
                         ><Input maxLength={100} placeholder='请输入URL' />
                         </Item>  
                         :
-                        <Item  className='filepathinpt' hasFeedback name="filePath2"
-                            rules={[{ required: true, message: '请上传文件' }] }
-                        ><UploadFileClass 
-                                onRef={el => {}}
-                                isNotImg={true}
-                                format='.bin,.hex,.zip,.cyacd,.apk,.dpkg'
-                                maxSize={200}
-                            />
+                        <Item name="filePath2" className='filepathinpt'
+                            valuePropName="fileList" getValueFromEvent={normFile}
+                            rules={[{ required: true, message: '请上传文件' }]}
+                        ><Upload
+                                accept='.bin,.hex,.zip,.cyacd,.apk,.dpkg'
+                                maxCount={1}
+                                action={Paths.upFileUrl}
+                                data={{
+                                    appId: 31438,
+                                    domainType: 4,
+                                }}>
+                                    <Button type="primary" ><UploadOutlined />上传附件</Button>
+                                    <div>支持.bin,.hex,.zip,.cyacd,.apk,.dpkg格式，不超过200MB。</div>
+                            </Upload>
                         </Item>
                     }
                 </>

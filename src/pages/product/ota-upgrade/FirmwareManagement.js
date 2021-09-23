@@ -109,8 +109,8 @@ export default class FirmwareManagement  extends Component {
                                 }
                             </>
                         }
-                        <Divider type="vertical" />
-                        <a onClick={()=>{this.deleteConfirm(deviceVersionId)}}>删除</a>
+                        {/* <Divider type="vertical" />
+                        <a onClick={()=>{this.deleteConfirm(deviceVersionId)}}>删除</a> */}
                     </span>
                 },
             },
