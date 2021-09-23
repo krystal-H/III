@@ -22,7 +22,7 @@ function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, 
     { title: '调试价格', dataIndex: 'price' },
     {
       title: '操作', dataIndex: '',
-      render: (text, record, index) => <a>说明书</a>
+      render: (text, record, index) => <a onClick={() => downInstructions(record.readmePdf)}>说明书</a>
     }
   ]
   const columns2 = [
@@ -32,6 +32,11 @@ function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, 
   ]
   const [dataSource, setdataSource] = useState([])
   const [selectedRowKeys, setSelectedRowKeys] = useState([moduleId])
+
+  // 下载说明书
+  const downInstructions = (readmePdf) => {
+    readmePdf ? window.location = readmePdf : alert('暂无数据！')
+  }
 
   // 搜索模组
   const onSearch = value => {

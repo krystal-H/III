@@ -149,8 +149,8 @@ export default function Device() {
             }
 
         });
-        xTime=xTime.reverse()
-        xData=xData.reverse()
+        xTime = xTime.reverse()
+        xData = xData.reverse()
         return {
             xTime,
             xData
@@ -222,6 +222,17 @@ export default function Device() {
                 bottom: '0%',
                 top: '4%',
                 containLabel: true
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function (params) {
+                    let html = params[0].name + "<br>";
+                    for (let i = 0; i < params.length; i++) {
+                        html += '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:' + params[i].color + ';"></span>'
+                        html += countData[currentTab].label + ":"  + params[i].value + "<br>";
+                    }
+                    return html;
+                }
             },
             series: [{
                 data: displayData.xData,

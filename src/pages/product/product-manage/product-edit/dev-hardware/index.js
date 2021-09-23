@@ -120,8 +120,8 @@ class Hardware extends Component {
     }
 
     // 下载说明书
-    downInstructions = () => {
-        alert('暂无！')
+    downInstructions = (readmePdf) => {
+        readmePdf ? window.location = readmePdf : alert('暂无数据！')
     }
 
     // 获取方案类型展示
@@ -183,7 +183,7 @@ class Hardware extends Component {
                                         3.通信通讯速率: {allInfo.communicateSpeed || '-'}bps；
                                         4.是否支持文件传输: {allInfo.supportFileTransfer === 0 ? '否' : '是'}
                                     </div>
-                                    <div className="more" onClick={this.downInstructions}>说明书<CaretRightOutlined /></div>
+                                    <div className="more" onClick={() => this.downInstructions(allInfo.readmePdf)}>说明书<CaretRightOutlined /></div>
                                 </div>
                             </div>
                             <div className="module-right-box">
