@@ -9,7 +9,7 @@ import GrayDebugg from './grayDebugg'
 import ActionModel from './actionModel'
 import RelPanModel from './relPanel'
 import { Notification } from '../../../../../components/Notification';
-import defaultCumPan from '../../../../../assets/images/commonDefault/default-cumfn.png';
+import defaultCumPan from '../../../../../assets/images/commonDefault/default-pannel.jpg';
 import './index.scss'
 function confirmModel({ nextStep }, ref) {
     let productId = 0

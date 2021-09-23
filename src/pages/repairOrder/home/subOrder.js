@@ -70,13 +70,9 @@ export default function DeviceShadow({ onSuccess }, ref) {
                     description: '提交成功！'
                 })
                 form.resetFields();
-                onSuccess('2')
-                // setOptions(res.data)
+                onSuccess()
             });
-        }).catch(err => {
-            // 验证不通过时进入
-            console.log(err);
-        });
+        })
     }
     useImperativeHandle(ref, () => ({
         subOrder
