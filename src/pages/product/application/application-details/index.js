@@ -87,6 +87,12 @@ class ApplicationDetail extends PureComponent {
         this._getAppInfo(appId);
     };
 
+    componentWillUnmount = () => {
+        this.setState = (state,callback)=>{
+          return
+        }
+    }
+
     handleChange = (type, activeKey) => {
         this.setState(() => {
             return { [type]: activeKey };

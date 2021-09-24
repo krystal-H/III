@@ -217,3 +217,13 @@
         }
     }
 }
+
+@media screen and (max-width: 1367px) {
+    .application-detail-wrapper {
+        .application-detail-header {
+            .app-name, .app-id, .app-secret {
+                margin-right: 80px;
+            }
+        }
+    }
+}

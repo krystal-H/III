@@ -56,9 +56,6 @@ function PageTitle({
         if (id == "-1") { id = undefined }
         selectOnchange(id)
     });
-    useEffect(() => {
-        console.log('defaultValue', defaultValue)
-    }, [defaultValue])
 
     return (
         <div className={`comm-shadowbox main-page-title${backTitle ? ' haveback' : ''}`}>
