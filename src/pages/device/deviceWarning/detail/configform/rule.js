@@ -45,18 +45,6 @@ function ruleForm({
     const [productId, setProductId] = useState(formdata.productId); //记录productId，因为 设备、属性等列表依赖productId，没选择产品时，禁用相关下拉框
     const [ruletype, setRuletype] = useState(formdata.connType||"0"); //比较方式，组合条件才有的字段，"and" / "or", 非组合条件仅前端用值"0"
 
-    //ant4 select list数据加载前赋值无效
-    const [initialForm,setInitialForm] = useState(false);//标记表单是否被初始化过，是则各个select异步加载后不需要再赋值
-    
-    // useEffect( () => {
-    //     if(formdata.productId){
-    //         setToFormData()
-    //     }else{
-    //         form.resetFields()
-    //     }
-    // },[formdata.productId])
-
-
     useEffect( () => {
         if(productList.length==0){
             getDownProduct()
@@ -69,52 +57,49 @@ function ruleForm({
     },[productId])
 
     useEffect( () => {
-        // console.log(111)
-        if(!initialForm){
-            // console.log(222)
-            if(formdata.productId){
-                // setToFormData()
-                // console.log("333-11")
-                if(productList.length>0&&deviceList>0){
-                    // console.log("333-11-aa")
-                    const { productId,deviceIds,triggerMode,props} = formdata;
-                    let values = { productId, deviceIds, triggerMode };
-                    if(triggerMode>1){
-                        form.setFieldsValue({...values});
-                    }else{
-                        values.ruletype = ruletype;
-                        for ( let i=0;i < props.length; i++){
-                            let {propName,propIdentifier,propFieldType, judge,propVal} = props[i];
-                            let str = i>0&&"_add"||"";
-                            values[`propName${str}`] = `${propIdentifier},${propFieldType},${propName}`;
-                            values[`judge${str}`]=judge;
-                            values[`propVal${str}`]=propVal;
-                        }
+        if(formdata.productId){
+            console.log("333-11-aa",formdata)
+            const { productId, deviceIds, triggerMode, props, connType="0", eventName, eventIdentifier } = formdata;
+            let values = { productId, deviceIds, triggerMode };
 
-                        if(triggerMode==1){//事件
-                            getEventList(productId);
-                            let {eventName,eventIdentifier} = formdata;
-                            let eventval = eventIdentifier+","+eventName;
-                            values.identifier = eventval;
-                            getProp(eventval);
-
-                            if(eventList.length>0&&propList.length>0){
-                                form.setFieldsValue({...values});
-                            }
-                        }else if(triggerMode==0){//属性
-                            getProp();
-                            if(propList.length>0){
-                                form.setFieldsValue({...values});
-                            }
-                        }
-                    }
-                }
+            if(triggerMode>1){
+                // form.setFieldsValue({...values});
             }else{
-                // console.log("333-22")
-                form.resetFields()
+                values.ruletype = connType;
+                for ( let i=0;i < props.length; i++){
+                    let {propName,propIdentifier,propFieldType, judge,propVal} = props[i];
+                    let str = i>0&&"_add"||"";
+                    values[`propName${str}`] = `${propIdentifier},${propFieldType},${propName}`;
+                    values[`judge${str}`]=judge;
+                    values[`propVal${str}`]=propVal;
+                }
+
+                if(triggerMode==1){//事件
+                    getEventList(productId);
+                    // let {eventName,eventIdentifier} = formdata;
+                    const eventval = eventIdentifier+","+eventName;
+                    values.identifier = eventval;
+                    getProp(eventval);
+                    // form.setFieldsValue({...values});
+                }else if(triggerMode==0){//属性
+                    getProp();
+                    // form.setFieldsValue({...values});
+                }
             }
+
+            console.log(999,values)
+            form.setFieldsValue({...values});
+        }else{
+            // form.resetFields()
         }
-    },[formdata.productId,productList,deviceList,propList,eventList,initialForm])
+    },[
+        formdata.productId,
+        // productList.length,
+        // deviceList.length,
+        // propList.length,
+        // eventList.length
+    ])
+
 
     useImperativeHandle(_ref, () => {
         
@@ -176,7 +161,6 @@ function ruleForm({
     const productChanged = productId=>{
         setProductId(productId);
         // getDownDevice(productId);
-        setInitialForm(true)
        
 
     }
@@ -192,11 +176,9 @@ function ruleForm({
         if(triggerMode===1){
             getEventList();
             setPropList([]);
-            setInitialForm(true)
         }
         if(triggerMode===0){
             getProp();
-            setInitialForm(true)
         }
         setTriggerMode(triggerMode);
     }
@@ -226,7 +208,6 @@ function ruleForm({
     //选择事件框值改变
     const eventChanged = (eventIdentifier)=>{
         getProp(eventIdentifier);
-        setInitialForm(true)
     }
 
     const onFinish=(values)=>{

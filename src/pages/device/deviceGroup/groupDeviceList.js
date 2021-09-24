@@ -19,7 +19,7 @@ export default class GroupDetailt extends PureComponent {
             selectedRowKeys:[],
             addListParams:{
                 pageIndex: 1,
-                pageRows: 10,
+                pageRows: 8,
                 id:props.id,
                 productId:-1,
                 deviceUniqueId:undefined,
@@ -127,6 +127,7 @@ export default class GroupDetailt extends PureComponent {
                                         onChange:val=>{this.setQuestParams('pageIndex',val)},
                                         current: pager.pageIndex,
                                         showSizeChanger:false,
+                                        pageSize:8
                                     }} 
                                 />
                             </div>

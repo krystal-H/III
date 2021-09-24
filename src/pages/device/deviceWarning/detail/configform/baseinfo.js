@@ -18,7 +18,7 @@ function baseForm({
         if(formdata.name){
             form.setFieldsValue({...formdata})
         }else{
-            form.resetFields()
+            // form.resetFields()
         }
     },[formdata.name])
 
