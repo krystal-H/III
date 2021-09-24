@@ -4,7 +4,7 @@ import { Input, Select, Radio, Button, Upload ,Form, Modal} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { get,post,Paths } from '../../../api';
 import {Notification} from '../../../components/Notification';
-import { getUploadUrl } from '../../../components/upload-file';
+import { getUploadUrl } from '../../../util/util';
 import LabelTip from '../../../components/form-com/LabelTip';
 import { SCHMETYPE,formrules, VERTYPE } from './store/constData'
 import {getVersionList,firmwareFromProduct} from './store/actionCreators'
@@ -63,7 +63,15 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
         const { filePath1, filePath2, ...otherPar } = values,
               { schemeType, deviceVersionId } = firmwareFrPro;
         const deviceVersionType = 5;
-        const filePath = schemeType==3 && (uploadType=="1" && filePath1 || getUploadUrl(filePath2)) || undefined;
+        let filePath=undefined;
+
+        if( schemeType ==3 || mcuIsUp==0){
+            // console.log(222,filePath1, getUploadUrl(filePath2) )
+            filePath = uploadType=="1" && filePath1 || getUploadUrl(filePath2);
+
+        }
+
+        // const filePath = schemeType==3 && (uploadType=="1" && filePath1 || getUploadUrl(filePath2)) || undefined;
 
         post(Paths.otaAddVersion,{...otherPar,deviceVersionId,deviceVersionType,filePath}).then((res) => {
             Notification({type:'success',description:'新增成功！'});

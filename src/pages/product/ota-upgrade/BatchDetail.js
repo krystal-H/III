@@ -3,7 +3,7 @@ import { Descriptions ,Table,Input } from 'antd';
 import PageTitle from '../../../components/page-title/PageTitle';
 import {get,post, Paths} from '../../../api';
 import { DateTool } from '../../../util/util';
-import {UPGRADESTATUS,VERFIRMTYPE,UPDATESTATUS,UPRANGE,TRIGGERTIME} from './store/constData'
+import {UPGRADESTATUS,VERFIRMTYPE,UPDATESTATUS,UPRANGE,TRIGGERTIME,UPDATETYPE} from './store/constData'
 
 export default class FirmwareDetails extends PureComponent {
     constructor(props) {
@@ -101,13 +101,13 @@ export default class FirmwareDetails extends PureComponent {
 
         return (
             <section className="ota-firmwaredetail flex-column">
-                <PageTitle title={`${deviceVersionName||'固件包'}/${this.id}`} titleBack={true} >
+                <PageTitle title={`${deviceVersionName||'固件包'} / ${this.id}`} titleBack={true} >
                     <header className="page-content-header">
                         <Descriptions title="" className='descriptions' column={4}>
                             <Descriptions.Item label="升级状态">{UPGRADESTATUS[upgradeStatus]}</Descriptions.Item>
                             <Descriptions.Item label="升级范围">{UPRANGE[upgradeRange].nam}</Descriptions.Item>
                             <Descriptions.Item label="发布时间">{createTime && DateTool.utcToDev(createTime)}</Descriptions.Item>
-                            <Descriptions.Item label="升级方式">{UPDATETYPE[upgradeType-1].nam}</Descriptions.Item>
+                            <Descriptions.Item label="升级方式">{upgradeType && UPDATETYPE[upgradeType-1].nam || "--"}</Descriptions.Item>
                             <Descriptions.Item label="升级触发策略">{TRIGGERTIME[triggerTime]}</Descriptions.Item>
                             <Descriptions.Item label="升级开始时间">{beginTime && DateTool.utcToDev(beginTime)}</Descriptions.Item>
                             <Descriptions.Item label="升级结束时间">{endTime && DateTool.utcToDev(endTime)}</Descriptions.Item>
