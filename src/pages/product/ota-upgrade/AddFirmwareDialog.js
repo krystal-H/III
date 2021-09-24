@@ -79,7 +79,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
         return e && e.fileList;
     };
 
-    const { schemeType = 3, moduleName } = firmwareFrPro;
+    const { schemeType, moduleName } = firmwareFrPro;
 
     return (
         <Modal
