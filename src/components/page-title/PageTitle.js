@@ -1,14 +1,14 @@
-import React, {useState,useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Button,Select } from 'antd';
-import { withRouter} from 'react-router-dom';
-import { get,Paths,post} from '../../api'
+import { Button, Select } from 'antd';
+import { withRouter } from 'react-router-dom';
+import { get, Paths, post } from '../../api'
 
 import './PageTitle.scss'
 
 
 function PageTitle({
-    defaultValue='-1',
+    defaultValue = -1,
     backTitle,          //返回按钮文本，例：'开发流程'，不传则代表无返回
     titleBack = false,
     backHandle,         //返回操作 ，默认 defaultGoback
@@ -21,46 +21,49 @@ function PageTitle({
     btnIcon = null,
     children = null,     // 标题下面额外的内容
     history,
-    selectOnchange=null,    //公共下拉框的 onChange 方法 , 不传则代表无此下拉框
-    selectData=null, // 自定义 selectOnchange 的下拉框的列表数据，不传则代表是 公共产品下拉数据
-    isRelProductData=false//是否是已发布产品列表
+    selectOnchange = null,    //公共下拉框的 onChange 方法 , 不传则代表无此下拉框
+    selectData = null, // 自定义 selectOnchange 的下拉框的列表数据，不传则代表是 公共产品下拉数据
+    isRelProductData = false//是否是已发布产品列表
 }) {
     const [dataList, setDataList] = useState([]);//产品列表
-    useEffect( () => {
-        
-        if(selectOnchange){
-            if(!selectData && dataList.length==0){
-                if(!isRelProductData){
-                    get(Paths.getProductType,{},{ loading:true }).then(({data}) => {
-                        const productList = Object.keys(data).map(id=>{
-                            return {productId:id,productName:data[id]}
+    useEffect(() => {
+
+        if (selectOnchange) {
+            if (!selectData && dataList.length == 0) {
+                if (!isRelProductData) {
+                    get(Paths.getProductType, {}, { loading: true }).then(({ data }) => {
+                        const productList = Object.keys(data).map(id => {
+                            return { productId: id, productName: data[id] }
                         });
                         setDataList(productList)
                     });
-                }else{
+                } else {
                     post(Paths.getProductPlus, {}).then((res) => {
                         setDataList(res.data)
                     });
                 }
-                
 
-            }else{
+
+            } else {
                 setDataList(selectData || [])
             }
 
         }
-    },[selectData])
+    }, [selectData])
     const defaultGoback = () => history.goBack()
 
-    const selectChange = selectOnchange && (id=>{
-        if (id == -1) { id = undefined}
+    const selectChange = selectOnchange && (id => {
+        if (id == "-1") { id = undefined }
         selectOnchange(id)
     });
-    
+    useEffect(() => {
+        console.log('defaultValue', defaultValue)
+    }, [defaultValue])
+
     return (
-        <div className={`comm-shadowbox main-page-title${backTitle?' haveback':''}`}>
+        <div className={`comm-shadowbox main-page-title${backTitle ? ' haveback' : ''}`}>
             {
-                backTitle && 
+                backTitle &&
                 <span className="back" onClick={backHandle || defaultGoback}>
                     <ArrowLeftOutlined />
                     <span className='backtit'>{backTitle}</span>
@@ -76,15 +79,15 @@ function PageTitle({
                 }
                 {title}
                 {
-                    titleTag && 
+                    titleTag &&
                     <span className='tag'>{titleTag}</span>
                 }
                 {
-                    btnTxt && 
+                    btnTxt &&
                     <Button
                         className='btn'
-                        type={btnStyle} 
-                        onClick={btnClickHandle} 
+                        type={btnStyle}
+                        onClick={btnClickHandle}
                         loading={btnLoading}
                     >
                         {btnTxt}
@@ -94,16 +97,16 @@ function PageTitle({
             </div>
             {
                 selectOnchange &&
-                <Select className="pagetitle-select" onChange={selectChange} showSearch optionFilterProp="children" defaultValue={defaultValue+""} >
-                    <Select.Option value={-1}>全部产品</Select.Option>
+                <Select className="pagetitle-select" onChange={selectChange} showSearch optionFilterProp="children" defaultValue={defaultValue + ""} >
+                    <Select.Option value={"-1"}>全部产品</Select.Option>
                     {
-                        dataList.map(({productId,productName},i)=><Select.Option key={i} value={productId +""}>{productName}</Select.Option>)
+                        dataList.map(({ productId, productName }, i) => <Select.Option key={i} value={productId + ""}>{productName}</Select.Option>)
                     }
                 </Select>
             }
 
             {
-                children && 
+                children &&
                 <div className='othercontent'>
                     {children}
                 </div>

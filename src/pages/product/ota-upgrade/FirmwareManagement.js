@@ -230,7 +230,7 @@ export default class FirmwareManagement extends Component {
 
         return (
             <div className="ota-firmware-up">
-                <PageTitle title="固件升级" selectOnchange={val => { this.changeState('productId', val) }} defaultValue={getUrlParam('productId')} />
+                <PageTitle title="固件升级" selectOnchange={val => { this.changeState('productId', val) }} defaultValue={getUrlParam('productId') || '-1'} />
                 <div className='comm-shadowbox comm-setp-ttip'>
                     <div className='step-title'>
                         <img src={upIconImg} alt=""/>
