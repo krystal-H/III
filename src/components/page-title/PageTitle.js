@@ -8,6 +8,7 @@ import './PageTitle.scss'
 
 
 function PageTitle({
+    defaultValue='-1',
     backTitle,          //返回按钮文本，例：'开发流程'，不传则代表无返回
     titleBack = false,
     backHandle,         //返回操作 ，默认 defaultGoback
@@ -93,10 +94,10 @@ function PageTitle({
             </div>
             {
                 selectOnchange &&
-                <Select className="pagetitle-select" onChange={selectChange} showSearch optionFilterProp="children" defaultValue={-1}>
+                <Select className="pagetitle-select" onChange={selectChange} showSearch optionFilterProp="children" defaultValue={defaultValue+""} >
                     <Select.Option value={-1}>全部产品</Select.Option>
                     {
-                        dataList.map(({productId,productName},i)=><Select.Option key={i} value={productId}>{productName}</Select.Option>)
+                        dataList.map(({productId,productName},i)=><Select.Option key={i} value={productId +""}>{productName}</Select.Option>)
                     }
                 </Select>
             }
