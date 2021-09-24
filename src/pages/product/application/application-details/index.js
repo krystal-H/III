@@ -87,6 +87,13 @@ class ApplicationDetail extends PureComponent {
         this._getAppInfo(appId);
     };
 
+    // 防止内存泄漏
+    componentWillUnmount = () => {
+        this.setState = (state, callback) => {
+            return
+        }
+    }
+
     handleChange = (type, activeKey) => {
         this.setState(() => {
             return { [type]: activeKey };
@@ -127,7 +134,6 @@ class ApplicationDetail extends PureComponent {
             appType: Number(params.appType),
             status: Number(params.status),
             appId: Number(appId),
-            // mainVersion: Number(params.mainVersion),
         }, { loading: true }).then((res) => {
             const code = res.code;
             if (code === REQUEST_SUCCESS) {
@@ -320,8 +326,7 @@ class ApplicationDetail extends PureComponent {
 
     // 保存关联的产品
     updateRelaProduct = (productIds) => {
-        let { appId, currentAppType, relationProductList } = this.state;
-        let relationProductListType = currentAppType === 1 ? relationProductList.listAndroid : relationProductList.listIos;
+        let { appId, currentAppType } = this.state;
         post(Paths.updateRelaProduct5x, {
             productIds: [...productIds],
             appId: Number(appId),
@@ -378,15 +383,13 @@ class ApplicationDetail extends PureComponent {
             appTypeAndroidHTML = (
                 <Button onClick={() => this.handleChange('currentAppType', 1)}
                     type={currentAppType === 1 ? 'primary' : 'default'}
-                    ghost={currentAppType === 1}
-                >Android端</Button>
+                    ghost={currentAppType === 1}>Android端</Button>
             )
 
             appTypeIosHTML = (
                 <Button onClick={() => this.handleChange('currentAppType', 2)}
                     type={currentAppType === 2 ? 'primary' : 'default'}
-                    ghost={currentAppType === 2}
-                >iOS端</Button>
+                    ghost={currentAppType === 2}>iOS端</Button>
             )
         } else {
             weChatHTML = (<Button type={'primary'} ghost >小程序</Button>);
@@ -415,12 +418,7 @@ class ApplicationDetail extends PureComponent {
             title: '版本号',
             dataIndex: 'externalVersion',
             key: 'externalVersion',
-        },
-        // {
-        //     title: '版本序列标志',
-        //     dataIndex: 'appSign',
-        //     key: 'appSign',
-        // }, 
+        }, 
         {
             title: '版本类型',
             dataIndex: 'appType',
@@ -476,19 +474,16 @@ class ApplicationDetail extends PureComponent {
         } = this.state;
         let {
             appId, appName, appSecret, appType, iosBundleId, androidPkg, appDesc,
-            androidSchema, iosSchema, appIconLow, appVersionType
+            androidSchema, iosSchema, appIconLow
         } = appInfo;
         let currentTab = Number(this.state.currentTab);
         let deleteType = currentTab === 1 ? 'relationProduct' : 'appVersion';
-        // let showSecretType = showSecret ? 'eye-invisible' : 'eye';
+
         let appSecretText = showSecret ? appSecret.value : strToAsterisk(appSecret.value, 10);
         let relationProductListType = currentAppType === 1 ? relationProductList.listAndroid : relationProductList.listIos;
         let { pager } = versionList;
         let appTypeHTML = this._getAppTypeHTML();
-        // let addBtn = true;
-        // if (appVersionType.value) {
-        //     addBtn = false;
-        // }
+
         const { antDVersionList, columns } = this.getAntDVersionList();
         return (
             <section className="application-detail-wrapper flex-column">
@@ -498,13 +493,7 @@ class ApplicationDetail extends PureComponent {
                             <span className="fl app-name">应用名称：{appName.value}</span>
                             <span className="fl app-id">APPID：{appId.value}</span>
                             <span className="fl app-secret">
-                                {/* APPSecret：{appSecretText} */}
                                 APPSecret：{strToAsterisk(appSecret.value, 10)}
-                                {/* {
-                                    showSecret ?
-                                        <EyeInvisibleOutlined className="eye-icon" onClick={() => this.changeState('showSecret')} /> :
-                                        <EyeOutlined className="eye-icon" onClick={() => this.changeState('showSecret')} />
-                                } */}
                             </span>
                         </DetailInHeader>
                     </PageTitle>
@@ -611,7 +600,6 @@ class ApplicationDetail extends PureComponent {
                                                 {appTypeHTML.weChatHTML}
                                             </div>
                                             <Button type="primary" className="add-relation"
-                                                // disabled={addBtn}
                                                 onClick={() => this.showDialog('showAddProductRelationDialog')}>添加</Button>
                                         </div>
                                         {(true) ?
@@ -643,18 +631,12 @@ class ApplicationDetail extends PureComponent {
                             <TabPane tab="版本发布" key="2">
                                 <div className="application-detail-content flex-column flex1">
                                     {
-                                        // (appVersionType.value) ? 
                                         <div className="add-version-wrapper">
                                             <h5>版本历史</h5>
                                             <Button className="add-version" type="primary"
                                                 onClick={this.addNewVersion}>
                                                 创建应用版本</Button>
                                         </div>
-                                        // : <div className="add-version-wrapper">
-                                        //     <h5>版本历史</h5>
-                                        //     <Button className="add-version" type="primary" disabled>
-                                        //         创建应用版本</Button>
-                                        // </div>
                                     }
                                     <Table
                                         className="version-content"

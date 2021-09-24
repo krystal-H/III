@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import { Button, Table, Tooltip } from 'antd'
+import { Table, Tooltip } from 'antd'
 import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons'
-import { Paths, post, get } from '../../../../../api'
+import { Paths, post } from '../../../../../api'
 import "./index.scss"
+import { Link } from 'react-router-dom';
 
 const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
 console.log(productItemData)
-export default class Hardware extends Component {
+class Hardware extends Component {
   constructor(props) {
     super(props)
     this.columns = [
@@ -33,9 +34,9 @@ export default class Hardware extends Component {
       {
         title: '操作',
         render: (text, record, index) => (
-          <div className="table-operation" onClick={() => this.updateFirmware(record.id)}>
-            固件升级
-          </div>
+          <Link to={{pathname: '/open/product/otaUpdate/list', search: `?productId=${props.productId}`}} target="_blank">
+            <div className="table-operation">固件升级</div>
+          </Link>
         )
       }
     ]
@@ -74,13 +75,8 @@ export default class Hardware extends Component {
   }
 
   // 下载说明书
-  downInstructions = () => {
-    alert('暂无说明书！')
-  }
-
-  // 固件升级
-  updateFirmware = () => {
-    alert('暂未开放！')
+  downInstructions = (readmePdf) => {
+    readmePdf ? window.location = readmePdf : alert('暂无数据！')
   }
 
   // 获取方案类型展示
@@ -141,7 +137,7 @@ export default class Hardware extends Component {
                     3.通信通讯速率: {allInfo.communicateSpeed || '-'}bps；
                     4.是否支持文件传输: {allInfo.supportFileTransfer === 0 ? '否' : '是'}
                   </div>
-                  <div className="more" onClick={this.downInstructions}>说明书<CaretRightOutlined /></div>
+                  <div className="more" onClick={() => this.downInstructions(allInfo.readmePdf)}>说明书<CaretRightOutlined /></div>
                 </div>
               </div>
               <div className="module-right-box">
@@ -242,3 +238,5 @@ export default class Hardware extends Component {
     )
   }
 }
+
+export default Hardware

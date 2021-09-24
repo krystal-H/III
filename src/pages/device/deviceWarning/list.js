@@ -284,14 +284,13 @@ const WarningConfigList = props => {
             needWarnIcon={true}
             targetName={operateId[1]}
         />
-
-        <ConfigModal
+        {configVisible&&<ConfigModal
             visible={configVisible}
             closeEditMod={closeEditMod}
             editData={{ ...editData }}
+        />}
 
-
-        />
+        
 
     </>
 
