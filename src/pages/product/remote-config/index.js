@@ -18,9 +18,8 @@ const { Step } = Steps
 const { Search } = Input
 const DESC = ['平台支持远程更新设备的配置数据，您可以提交远程配置任务，实时对设备的系统参数等数据进行远程更新，并且获取设备配置的更新状态；详细说明可参考文档']
 
-const PAGE_ROWS = 10
-const statusText = ['', '待执行', '执行中', '已执行']
-const statusTextForDevice = ['', '执行中', '执行成功', '执行失败']
+// ['', '待执行', '执行中', '已执行'] 测试李志远让把"执行中"状态去掉
+const statusText = ['', '待执行', '', '已执行']
 
 function RemoteConfig(remoteType = 'product') {
     const [configProtoclList, setConfigProtoclList] = useState([])

@@ -1,13 +1,10 @@
 import React, { PureComponent } from 'react';
-import { Link } from 'react-router-dom';
 import { Input, Pagination, Button } from 'antd';
 import ApplicationCard from './application-card/ApplicationCard';
 import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
-import { CheckPermissions } from '../../../../components/CheckPermissions';
-import { get, Paths, post } from '../../../../api';
+import { Paths, post } from '../../../../api';
 import { REQUEST_SUCCESS } from '../../../../configs/request.config';
 import PageTitle from '../../../../components/page-title/PageTitle';
-import DescWrapper from '../../../../components/desc-wrapper/DescWrapper';
 import { Notification } from '../../../../components/Notification';
 import { InfoCircleFilled } from '@ant-design/icons';
 
@@ -34,6 +31,13 @@ export default class Application extends PureComponent {
 
     componentDidMount = () => {
         this._getApplicationList(initPager)
+    }
+
+    // 防止内存泄漏
+    componentWillUnmount = () => {
+        this.setState = (state, callback) => {
+            return
+        }
     }
 
     // 翻页
@@ -89,9 +93,9 @@ export default class Application extends PureComponent {
                 <div className="list-item" key={item.appId}>
                     <ApplicationCard deleteApp={this.deleteApp} Info={item} />
                 </div>
-            );
-        }) : <NoSourceWarn style={{ margin: 'auto' }} />;
-    };
+            )
+        }) : <NoSourceWarn style={{ margin: 'auto' }} />
+    }
 
     // 创建应用
     addNewApplication = () => {
@@ -109,10 +113,8 @@ export default class Application extends PureComponent {
         let listWrapperClassName = list.length <= 5 ? "lists-wrapper flex-row flex1" : "lists-wrapper flex-row flex1 six-item";
         let desc = (
             <h6>C-Life平台提供完善的应用开发管理服务。您可以构建自主品牌的APP终端应用或小程序应用，您可以在这里对应用进行统一管理。
-                {/* &nbsp;&nbsp;<a href="https://opendoc.clife.cn/book/content?documentId=88&identify=develop" target='_blank'>获取开发指导</a>&nbsp;&nbsp; */}
-                {/* <a href="https://opendoc.clife.cn/download" target='_blank' >下载SDk</a> */}
             </h6>
-        );
+        )
         return (
             <section className="application-wrapper flex-column">
                 <PageTitle title="应用管理" />
@@ -124,15 +126,15 @@ export default class Application extends PureComponent {
                                 enterButton
                                 allowClear
                                 maxLength={100}
-                                onSearch={value => this.searchApplication(value)}
-                            />
+                                onSearch={value => this.searchApplication(value)} />
                         </div>
                         <div className='butFloatRight'>
                             {createAppJurisdiction ?
                                 <Button type="primary"
                                     onClick={this.addNewApplication}
                                     className="application-header-add">创建应用</Button>
-                                : null}
+                                : null
+                            }
                         </div>
                     </div>
                     {/* 内容 */}
@@ -158,7 +160,7 @@ export default class Application extends PureComponent {
                                     showTotal={total => <span>共 <a>{total}</a> 条</span>}
                                     hideOnSinglePage
                                     showSizeChanger={false}
-                                    showQuickJumper = {pager.totalPages > 5}
+                                    showQuickJumper={pager.totalPages > 5}
                                 />
                             }
                         </footer>
