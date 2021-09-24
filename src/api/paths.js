@@ -479,7 +479,7 @@ let Paths = {
     otaImportMac:'/firmware/device/version/importMac',
     otaValidate:'/firmware/device/version/validate',
     otaRelease:'/firmware/device/upgrade/publish',
-    getMcuSocProLi:'productManage/getFilterSchemaSelList',
+    getMcuSocProLi:'/productManage/getFilterSchemaSelList',
     
     //总览页
     homeBanner:'/cover/getBannerList',//banner图
