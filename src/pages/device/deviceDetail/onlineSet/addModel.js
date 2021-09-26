@@ -217,19 +217,20 @@ export default function AddModel({ addVisible, addOk, CancelAdd }) {
               rules={[{ required: true }]}
 
             >
-              <Input style={{ width: '300px' }} maxLength={20}/>
+              <Input style={{ width: '300px' }} maxLength={20} />
             </Form.Item>
             <Form.Item
               label="任务说明"
               name="taskExplain"
               rules={[{ required: true }]}
             >
-              <TextArea rows={4} maxLength={100}/>
+              <TextArea rows={4} maxLength={100} />
             </Form.Item>
           </Form>
           <div style={{ marginBottom: '10px' }}>请添加配置信息</div>
           <Table className="config-data-table" dataSource={initialProtoclList} scroll={{ y: 300 }}
-            columns={columns} rowKey='identifier' rowSelection={protocolSelection} pagination={false}/>
+            locale={{ emptyText: '暂无协议，请先去配置' }}
+            columns={columns} rowKey='identifier' rowSelection={protocolSelection} pagination={false} />
         </div>
       </Modal>
     </div>
