@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Modal, Button, Tabs, Table, Input, Select } from 'antd';
+import { Modal, Button, Tabs, Table, Input, Select,Form } from 'antd';
 import { useHistory } from "react-router-dom"
 import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
@@ -23,7 +23,7 @@ function delaData(data) {
 }
 export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
   const productItem = JSON.parse(sessionStorage.getItem('productItem'))
-  console.log(productItem)
+  const [form] = Form.useForm();
   const { TabPane } = Tabs, { Search } = Input, { Option } = Select;
   const [currentTab, setCurrentTab] = useState('1')
   const callback = (key) => {
@@ -65,24 +65,17 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
     getTwoList()
     getTypeList()
   }, [])
-  const [productType, setProductType] = useState(14)
-  const [searchname, setSearchname] = useState('')
   //搜索
   const onSearch = () => {
     let params = {
-      deviceTypeId: productType,
+      deviceTypeId: form.getFieldValue('proId'),
       eq: true,
       productId: productItem.productId,
-      funcName: searchname
+      funcName: form.getFieldValue('name')
     }
     post(Paths.PhysicalModelList, params).then((res) => {
       setOtherData(delaData(res.data))
     });
-  }
-  //===切换产品
-  const onselectChange = (value) => {
-    setProductType(value)
-    onSearch()
   }
   const [selectedMy, setSelectedMy] = useState([])
   const [selectedOther, setSelectedOther] = useState([])
@@ -125,17 +118,33 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
           </TabPane>
           <TabPane tab="其他品类" key="2">
             <div className='other-product-top'>
-              <Search placeholder="搜索功能点名称" value={searchname} onChange={(val) => { setSearchname(val.target.value) }}  onSearch={onSearch} style={{ width: 465 }} />
-              <Select
-                style={{ width: 142 }}
-                onChange={onselectChange}
-              >
-                {
-                  typelist.map(item => {
-                    return <Option value={item.deviceTypeId} key={item.deviceTypeId}>{item.deviceTypeName}</Option>
-                  })
-                }
-              </Select>
+              <Form className='device-filter-form' form={form} layout='inline' initialValues={{ proId: 14 }}>
+                <Form.Item name="proId">
+                  <Select
+                    style={{ width: '200px' }}
+                    placeholder="选择产品"
+                  >
+                    {
+                      typelist.map(item => {
+                        return (<Option value={item.deviceTypeId} key={item.deviceTypeId}>{item.deviceTypeName}</Option>)
+                      })
+                    }
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  label=""
+                >
+                  <Form.Item
+                    name='name'
+                    noStyle
+                  >
+                    <Input style={{ width: '465px' }} placeholder="输入功能点名称" />
+                  </Form.Item>
+                  <Button type="primary" onClick={onSearch}>
+                    查询
+                  </Button>
+                </Form.Item>
+              </Form>
             </div>
             <div>
               <TableShow dataSource={otherData} refreshCount={refreshOther} />
