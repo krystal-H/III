@@ -8,12 +8,14 @@ import {
 import { Menu, Dropdown } from 'antd';
 import { Link } from 'react-router-dom';
 import { post, Paths } from '../../../api'
+import { DateTool } from '../../../util/util';
 import { userNavRoutes } from '../../../configs/route.config';
 import DefaultUserIcon from '../../../assets/images/userIcon.png'
 import securitySet from './../../../assets/images/overImage/security-set.png';
 import userrole from './../../../assets/images/overImage/user-role.png';
 import baseinfo from './../../../assets/images/overImage/base-info.png';
 import inviteuser from './../../../assets/images/overImage/invite-user.png';
+
 import './Header.scss'
 
 const LOGO_TEXT = '物联网云平台';
@@ -115,7 +117,7 @@ export default class Header extends PureComponent {
                                                     <div className='text'>【{getMessageType(item.noticeType)} 】{item.noticeTitle}</div>
                                                     {!item.isRead && <div className='count-dot'></div>}
                                                 </div>
-                                                <div className='time'>{item.updateTime}</div>
+                                                <div className='time'>{ item.createTime &&  DateTool.utcToDev(item.createTime) }</div>
                                             </div>
                                         </div>
                                     })
@@ -127,7 +129,7 @@ export default class Header extends PureComponent {
                         } overlayClassName='home-message-top' >
                             <Link to="/messageCenter" target="_blank">
                                 <BellOutlined className='bellicon' />
-                                {totalUnRead && <span className='msgnum'> {totalUnRead > 99 ? 99 : totalUnRead} </span> || null}
+                                {totalUnRead && <span className='msgnum'> {totalUnRead > 99 ? '99+' : totalUnRead} </span> || null}
                             </Link>
                         </Dropdown>
 

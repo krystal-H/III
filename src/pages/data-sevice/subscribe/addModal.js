@@ -243,9 +243,7 @@ function StepContentTwo({ continueStep, oneData }, ref) {
         setThreeArr([])
         post(Paths.standardFnList, { productId: oneData.productId }).then((res) => {
             let data = res.data.standard.concat(res.data.custom)
-            let obj = {
-
-            }
+            let obj = { }
             obj.one = data.filter(item => {
                 if (item.funcType === 'properties') {
                     return item
@@ -341,17 +339,17 @@ function StepContentTwo({ continueStep, oneData }, ref) {
             <TabPane tab="属性" key="a">
                 <Table rowSelection={{
                     ...rowSelection1,
-                }} dataSource={option.one} columns={columns} rowKey='funcIdentifier' />
+                }} dataSource={option.one} columns={columns} rowKey='funcIdentifier'  pagination={false} scroll={{ y: 300 }}/>
             </TabPane>
             <TabPane tab="事件" key="b">
                 <Table dataSource={option.two} rowSelection={{
                     ...rowSelection2,
-                }} columns={columns} rowKey='funcIdentifier' />
+                }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }}/>
             </TabPane>
             <TabPane tab="服务" key="c">
                 <Table dataSource={option.three} rowSelection={{
                     ...rowSelection3,
-                }} columns={columns} rowKey='funcIdentifier' />
+                }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }}/>
             </TabPane>
         </Tabs>
     </div>)
