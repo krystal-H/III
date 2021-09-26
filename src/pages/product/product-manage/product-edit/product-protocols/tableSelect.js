@@ -13,7 +13,8 @@ export default function TableCom({ dataSource, refreshCount }) {
         let result = null
         let type = data.dataTypeEN
         switch (type) {
-            case 'double':
+            case 'int':
+            case 'float':
                 result = `数值范围：${data.propertyMap.min}-${data.propertyMap.max},间距：${data.propertyMap.interval},倍数：${data.propertyMap.multiple},单位：${data.propertyMap.unit}`
                 break;
             case 'bool':

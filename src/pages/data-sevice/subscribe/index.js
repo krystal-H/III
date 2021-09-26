@@ -100,7 +100,7 @@ export default function DeviceRegist() {
             pager: pager,
         }
         if (productCount) {
-            params.productId = productCount
+            params.devicePushUrlConf.productId = productCount
         }
         // setSearchParams(params.devicePushUrlConf)
         post(Paths.subscribeList, params, { loading }).then((res) => {
