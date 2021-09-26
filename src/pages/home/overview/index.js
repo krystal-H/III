@@ -205,7 +205,7 @@ export default function OverviewWrap() {
     const menulist = useSelector(state => {
         return state.getIn(['userCenter', 'menulist']).toJS()
     })
-
+    console.log(menulist, '啧啧啧')
     const getProductListNew = () => {
         history.push(`/open/product/proManage/list`)
     }
@@ -221,18 +221,33 @@ export default function OverviewWrap() {
     }
     //产品详情
     const goProductDetail = (record) => {
-        let pathroute = 'details';
-        if (record.status !== 1) {
-            pathroute = 'edit';
-        } else if (record.isOldProduct) {
-            pathroute = 'detail';
+        let isShow = false
+        function isGo(menuS) {
+            menuS.forEach(item => {
+                if (item.menuname == '产品管理') {
+                    isShow = true
+                }
+                if (item.childmenus) {
+                    isGo(item.childmenus)
+                }
+            })
         }
-        // 保存当前产品，为后边继续开发取数据使用
-        sessionStorage.setItem('productItem', JSON.stringify(record))
-        history.push(`/open/product/proManage/${pathroute}/${record.productId}`);
-        // 保存当前产品，为后边继续开发取数据使用
-        // sessionStorage.setItem('productItem', JSON.stringify(item))
-        // history.push(`/open/product/proManage/edit/${item.productId}/protocols`);
+        isGo(menulist)
+        if (isShow) {
+            let pathroute = 'details';
+            if (record.status !== 1) {
+                pathroute = 'edit';
+            } else if (record.isOldProduct) {
+                pathroute = 'detail';
+            }
+            // 保存当前产品，为后边继续开发取数据使用
+            sessionStorage.setItem('productItem', JSON.stringify(record))
+            history.push(`/open/product/proManage/${pathroute}/${record.productId}`);
+        } else {
+            Notification({
+                description: '无权限！',
+            });
+        }
     }
     //app详情
     const goAppDetail = item => {
@@ -273,7 +288,7 @@ export default function OverviewWrap() {
         isGo(menulist)
         if (isShow) {
             history.push(url);
-        }else{
+        } else {
             Notification({
                 description: '无权限！',
             });
@@ -451,7 +466,7 @@ export default function OverviewWrap() {
                                 {
                                     appList.length ? (appList.map((item, index) => {
                                         return (<div className='over-view-productmn-content-item over-view-productmn-content-two'
-                                            key={index} onClick={() => { goAppDetail(item) }}>
+                                            key={index} onClick={() => { goAuPage('APP', `/open/app/details/${item.appId}`) }}>
                                             <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.appIconLow} /></div>
                                             <div className='over-view-productmn-content-content'>
                                                 <div>{item.appName}</div>
@@ -461,7 +476,6 @@ export default function OverviewWrap() {
                                     })) : <div className='over-no-data'><img src={noData} /> <div>暂无App</div></div>
 
                                 }
-
                             </div>
                         </div>
                         <div className='Guide-the-figure-content-top'>
