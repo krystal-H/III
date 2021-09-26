@@ -3,6 +3,7 @@ import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, Table } from 'a
 import './addModal.scss'
 import LabelTip from '../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../api';
+import { cloneDeep } from "lodash";
 const { Step } = Steps;
 const { TabPane } = Tabs;
 export default function AddFuncModal({ editModelVis, colseMoadl, cancelModel, id, editData }) {
@@ -58,21 +59,20 @@ export default function AddFuncModal({ editModelVis, colseMoadl, cancelModel, id
     const continueStep = (val, data) => {
         if (currentTab == 0) {
             setSubObj(pre => {
-                let obj = JSON.parse(JSON.stringify(pre))
-                obj.one = JSON.parse(JSON.stringify(data))
+                let obj = cloneDeep(pre)
+                obj.one = cloneDeep(data)
                 return obj
             })
         } else if (currentTab == 1) {
             setSubObj(pre => {
-                let obj = JSON.parse(JSON.stringify(pre))
-                obj.two = JSON.parse(JSON.stringify(data))
+                let obj = cloneDeep(pre)
+                obj.two = cloneDeep(data)
                 return obj
             })
         }
         setCurrentTab(val);
     }
     const finishSub = (val) => {
-        console.log(subObj, val, '=========')
         let params = {
             ...subObj.one,
             devicePushDataConfList: subObj.two,
@@ -119,7 +119,7 @@ function StepContentOne({ continueStep, editData }, ref) {
         )
     }, [])
     const getList = () => {
-        get(Paths.productList).then((res) => {
+        get(Paths.getProductPlus).then((res) => {
             setOption(res.data)
         });
     }

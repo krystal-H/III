@@ -10,6 +10,7 @@ import { Notification } from '../../../components/Notification';
 import LabelVisible from '../../../components/form-com/LabelVisible';
 import './index.scss'
 import RegistModel from './regist'
+import { cloneDeep } from "lodash";
 const { Option } = Select;
 const { Step } = Steps;
 export default function DeviceRegist() {
@@ -26,7 +27,7 @@ export default function DeviceRegist() {
         getCount()
     }, [])
     const downFile = () => {
-        // alert(10)
+        alert('暂无')
     }
     //统计
     const getCount = (productId) => {
@@ -50,7 +51,7 @@ export default function DeviceRegist() {
     //产品改变
     const selectChange = (value) => {
         setPager(pre => {
-            let obj = JSON.parse(JSON.stringify(pre))
+            let obj = cloneDeep(pre)
             return Object.assign(obj, { pageIndex: 1 })
         })
         getCount(value)

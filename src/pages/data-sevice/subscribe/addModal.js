@@ -3,6 +3,7 @@ import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, Table, Checkbox
 import './addModal.scss'
 import LabelTip from '../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../api';
+import { cloneDeep } from "lodash";
 const { Step } = Steps;
 const { TabPane } = Tabs;
 export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }) {
@@ -19,11 +20,9 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
         } else if (currentTab == 1) {
             refTwo.current.onFinish()
         }
-
     };
 
     const prev = () => {
-
         setCurrentTab((currentTab - 0 - 1).toString());
     };
     //提交数据
@@ -59,14 +58,14 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
     const continueStep = (val, data) => {
         if (currentTab == 0) {
             setSubObj(pre => {
-                let obj = JSON.parse(JSON.stringify(pre))
-                obj.one = JSON.parse(JSON.stringify(data))
+                let obj = cloneDeep(pre)
+                obj.one = cloneDeep(data)
                 return obj
             })
         } else if (currentTab == 1) {
             setSubObj(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))
-                obj.two = JSON.parse(JSON.stringify(data))
+                obj.two = cloneDeep(data)
                 return obj
             })
         }
@@ -113,24 +112,23 @@ function StepContentOne({ continueStep }, ref) {
         getList()
     }, [])
     const getList = () => {
-        get(Paths.productList).then((res) => {
+        post(Paths.getProductPlus, {}).then((res) => {
             setOption(res.data)
         });
     }
     const onFinish = () => {
-        form.validateFields().then(res => {
-            res = JSON.parse(JSON.stringify(res))
+        form.validateFields().then(formData => {
+            let res = cloneDeep(formData)
             let name = ''
+            console.log(res,'======')
             option.forEach(item => {
                 if (item.productId == res.productId) {
                     name = item.productName
                 }
             })
-            console.log(res.labelVoList, '=======')
             if (res.labelVoList && res.labelVoList.length) {
                 let laberA = []
                 laberArr.forEach(item => {
-                    console.log(item.value, res.labelVoList)
                     if (res.labelVoList.indexOf(item.value) > -1) {
                         laberA.push(item)
                     }
@@ -148,7 +146,6 @@ function StepContentOne({ continueStep }, ref) {
         setShowLabel(e.target.value);
     }
     //获取标签
-
     const getLabel = (val) => {
         post(Paths.getLabelByAddress, { productId: val, developerId: 1 }).then((res) => {
             let arr = []
@@ -207,7 +204,6 @@ function StepContentOne({ continueStep }, ref) {
                     ) : null
                 }
             </Form.Item>
-
         </Form>
     </div>)
 }
@@ -377,7 +373,7 @@ function StepContentThree({ finishSub }, ref) {
     }
     return (<div className='step-one'>
         <Form form={form} labelAlign='right'>
-            <Form.Item name="pushWay" label="订阅方式" rules={[{ required: true }]}>
+            <Form.Item name="pushWay" label="订阅方式" rules={[{ required: true , message: '请选择订阅方式'}]}>
                 <Radio.Group onChange={radioChange}>
                     <Radio value="0">API数据PUSH形式</Radio>
                     <Radio value="1">MQTT主题订阅</Radio>
@@ -387,7 +383,7 @@ function StepContentThree({ finishSub }, ref) {
                 showWay === '0' && <Form.Item
                     name="url"
                     label={<LabelTip label="数据订阅URL" tip="第三方云服务接口的唯一标识，供C-life云推送服务给第三方云推送数据使用，现仅支持http方式" />}
-                    rules={[{ required: true, whitespace: true, message: '请输入' }]}
+                    rules={[{ required: true, whitespace: true, message: '请输入数据订阅URL' }]}
                 >
                     <Input />
                 </Form.Item>
@@ -396,25 +392,11 @@ function StepContentThree({ finishSub }, ref) {
                 showWay === '0' && <Form.Item
                     name="pushToken"
                     label={<LabelTip label="Token" tip="第三方云服务接口对接C-life云推送服务的凭证，用来验证厂商服务接口的合法性" />}
-                    rules={[{ required: true, whitespace: true, message: '请输入' }]}
+                    rules={[{ required: true, whitespace: true, message: '请输入Token' }]}
                 >
                     <Input />
                 </Form.Item>
             }
-            {/* <Form.Item
-                name="url"
-                label={<LabelTip label="数据订阅URL" tip="第三方云服务接口的唯一标识，供C-life云推送服务给第三方云推送数据使用，现仅支持http方式" />}
-                rules={[{ required: true, message: '请输入' }]}
-            >
-                <Input />
-            </Form.Item>
-            <Form.Item
-                name="pushToken"
-                label={<LabelTip label="Token" tip="第三方云服务接口对接C-life云推送服务的凭证，用来验证厂商服务接口的合法性" />}
-                rules={[{ required: true, message: '请输入' }]}
-            >
-                <Input />
-            </Form.Item> */}
             <Form.Item label=" " colon={false}>
                 <a>订阅帮助文档</a>
             </Form.Item>
