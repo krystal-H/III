@@ -160,7 +160,7 @@ function ruleForm({
     //产品改变
     const productChanged = productId=>{
         setProductId(productId);
-        // getDownDevice(productId);
+        form.resetFields(["deviceIds"])
        
 
     }
@@ -173,13 +173,17 @@ function ruleForm({
 
     //选择触发方式框值改变
     const triggerModeChanged=(triggerMode)=>{
+        let resetvalue = [];
         if(triggerMode===1){
             getEventList();
             setPropList([]);
+            resetvalue.push("identifier")
         }
         if(triggerMode===0){
             getProp();
         }
+        form.resetFields([...resetvalue, "propName","judge","propVal","propName_add","judge_add","propVal_add"])
+        
         setTriggerMode(triggerMode);
     }
 
