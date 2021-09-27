@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import ProductIcon from '../../../../../components/product-components/product-icon/ProductIcon';
-import MyIcon from '../../../../../components/my-icon/MyIcon';
-import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
+import ProductIcon from '../../../../components/product-components/product-icon/ProductIcon';
+import MyIcon from '../../../../components/my-icon/MyIcon';
+import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
 import { withRouter } from 'react-router-dom';
 
 function ApplicationCard(props) {
