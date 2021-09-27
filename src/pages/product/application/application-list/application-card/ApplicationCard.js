@@ -39,8 +39,10 @@ function ApplicationCard(props) {
                 </div>
             </div>
             <div className="del-app" onClick={() => setDelDialog(true)}>
-                <MyIcon type="icon-delete" style={{ fontSize: 16 }} />
-                <span>删除</span>
+                <div className="del-app-inner">
+                    <MyIcon type="icon-delete" style={{ fontSize: 16 }} />
+                    <span>删除</span>
+                </div>
             </div>
             {delDialog && <ActionConfirmModal
                 visible={delDialog}
