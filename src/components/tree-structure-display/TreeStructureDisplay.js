@@ -36,11 +36,11 @@ export default ({
     const { checkBoxGroupMenuList=[], menu="[]" } = treeData
     
     const   dataMenu = JSON.parse(menu) || [],
-            dataObject = checkBoxGroupMenuList[0]&&checkBoxGroupMenuList[0].checkBoxGroupList || [],
-            dataDimension = checkBoxGroupMenuList[1]&&checkBoxGroupMenuList[1].checkBoxGroupList || [];
+            dataObject = checkBoxGroupMenuList[0]&&checkBoxGroupMenuList[0].checkBoxGroupList || [];
+            // dataDimension = checkBoxGroupMenuList[1]&&checkBoxGroupMenuList[1].checkBoxGroupList || [];
     const treeMenu = fitherChecked(dataMenu);
     const treeObj = fitherChecked(dataObject);
-    const treeDimen = fitherChecked(dataDimension);
+    // const treeDimen = fitherChecked(dataDimension);
 
     // console.log(5555,treeObj,treeDimen)
 
@@ -54,10 +54,10 @@ export default ({
             name:"数据对象",
             data:treeObj,
         },
-        {
-            name:"设备标签",
-            data:treeDimen,
-        }
+        // {
+        //     name:"设备标签",
+        //     data:treeDimen,
+        // }
     ]
 
     return <div className="power-tree-box">
