@@ -104,7 +104,7 @@ export default class Header extends PureComponent {
                 {
                     !onlyLogo &&
                     <div className='right'>
-                        <a href="https://dp.clife.net/iotdoc" target="_blank">帮助文档</a>
+                        <a href="https://cms.clife.cn/clifeIotDoc/" target="_blank">帮助文档</a>
                         <Link to="/open/repairOrder" >工单</Link>
                         <Dropdown overlay={
                             <div className='message-wrap'>

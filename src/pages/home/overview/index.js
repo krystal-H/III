@@ -592,7 +592,7 @@ export default function OverviewWrap() {
                                 <img src={help2} alt='' />
                                 <div>工单</div>
                             </div>
-                            <div onClick={() => { window.open('https://dp.clife.net/iotdoc/') }}>
+                            <div onClick={() => { window.open('https://cms.clife.cn/clifeIotDoc/') }}>
                                 <img src={help3} alt='' />
                                 <div>帮助文档</div>
                             </div>

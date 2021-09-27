@@ -198,7 +198,7 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
     }
     //帮助文档
     const downFile = () => {
-        window.open('https://dp.clife.net/iotdoc/')
+        window.open('https://cms.clife.cn/clifeIotDoc/')
     }
     return (
         <div id='device-remote-config'>
