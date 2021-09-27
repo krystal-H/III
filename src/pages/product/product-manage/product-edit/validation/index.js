@@ -47,7 +47,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
 
     useEffect(() => {
         get(Paths.queryServerConfig,{productId},{loading:true}).then(({data={}})=>{
-            setServerIp(data.ip && "t.wss.clife.net")
+            setServerIp(data.ip)
         })
         
         return ()=>{

@@ -1612,6 +1612,7 @@ export default class StartTest  extends Component{
             firmwareVersionType:{value:undefined},
             mainVersion:{value:undefined},
             totalVersion:{value:undefined},
+            newSocketStatu:0,
         }
         this.webSocketStatu = null; // 链接状态
         this.onCloseDialog = this.onCloseDialog.bind(this);
@@ -1660,18 +1661,26 @@ export default class StartTest  extends Component{
     componentWillUpdate (nextProps, nextState) {
             if (nextProps.deviceAndWs.wsUrl.data.ip && nextProps.deviceAndWs.wsUrl.data.ip !== this.props.deviceAndWs.wsUrl.data.ip) {
                 if (!WebSocket || ws) return;
+                console.log(99999,nextProps.deviceAndWs.wsUrl.data.ip)
                 ws = new WebSocket(wsProtocol + '//' + nextProps.deviceAndWs.wsUrl.data.ip);
+                
+                // ws = new WebSocket(wsProtocol + '//' + "t.wss.clife.net");
                 bindEvent.call(this);
             }
             //如果token发生改变就当做 需要重连了
             if (ws == null && nextState.token && nextState.token !== this.state.token) {
+                console.log(222,nextProps.queryServerConfig.ip)
                 ws = new WebSocket(wsProtocol + '//' + nextProps.queryServerConfig.ip);
+                // ws = new WebSocket(wsProtocol + '//' + "t.wss.clife.net");
                 bindEvent.call(this);
             }
         function bindEvent() {
             //连接成功
             ws.onopen = function () {
+                console.log("this.webSocketStatu = ===;",this.webSocketStatu)
                 this.webSocketStatu = 1;
+                this.setState({newSocketStatu:1});
+                console.log("this.webSocketStatu ,,,,,",this.webSocketStatu)
                 clearInterval(wsTimer);
                 wsTimer = setInterval(function () {
                     ws.send('');
@@ -1701,6 +1710,8 @@ export default class StartTest  extends Component{
             //检测到断开连接
             ws.onclose = function (e) {
                 this.webSocketStatu = 0;
+
+                this.setState({newSocketStatu:0})
                 clearInterval(wsTimer);
                 if (this._mount && e.code == '1006') {
                     //如果异常断开，会尝试重连
@@ -1816,7 +1827,8 @@ export default class StartTest  extends Component{
         this.setState({...changedFields});
     }
     render () {
-        let {visible,visibleExportData,activeKey,selectedMac,date,firmwareVersionType,mainVersion,totalVersion} = this.state;
+        console.log("--render----",this.webSocketStatu,newSocketStatu)
+        let {visible,visibleExportData,activeKey,selectedMac,date,firmwareVersionType,mainVersion,totalVersion,newSocketStatu} = this.state;
         let { deviceDebugAccountList, deviceDebugMacList, productBaseInfo,developerInfo } = this.props;
         let pid = getUrlParam('productId')||this.props.productId;
         let hardwareType = getUrlParam('hardwareType')||this.props.productBaseInfo.hardwareType;
@@ -1836,7 +1848,7 @@ export default class StartTest  extends Component{
                                 <TabPane tab="数据设备调试" key="1"></TabPane>
                                 <TabPane tab="升级调试" key="2"></TabPane>
                             </Tabs>
-                            <div className={this.webSocketStatu==1?'linkState':'linkState linkError'}>{this.webSocketStatu==1?'链接成功':'链接失败'}</div>
+                            <div className={newSocketStatu==1?'linkState':'linkState linkError'}>{newSocketStatu==1?'链接成功':'链接失败'}</div>
                             <div className="dev-test-header-right">
                                 <DevTestBtnReceive
                                     className={this.state.activeKey == 1 ? 'line' : ''}

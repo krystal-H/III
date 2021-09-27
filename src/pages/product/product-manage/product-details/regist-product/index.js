@@ -60,8 +60,8 @@ export default function DeviceRegist() {
             title: '入网时间',
             dataIndex: 'activeTime',
             key: 'activeTime',
-            render(updateTime) {
-                return DateTool.utcToDev(updateTime);
+            render(activeTime) {
+                return activeTime && DateTool.utcToDev(activeTime);
             }
         }
     ];
@@ -143,7 +143,7 @@ export default function DeviceRegist() {
     };
     //导出
     const exportFile = () => {
-        let params = {productId: productItem.productId,type:'product'}
+        let params = { productId: productItem.productId, type: 'product' }
         if (form.getFieldValue('status') != -1) {
             params.status = form.getFieldValue('status')
         }

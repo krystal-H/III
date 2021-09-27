@@ -22,8 +22,11 @@ const dataOptions = [{
     value: 'text',
     label: '字符型',
 }, {
-    value: 'double',
-    label: '数值型',
+    value: 'float',
+    label: '浮点型',
+}, {
+    value: 'int',
+    label: '整数型',
 }]
 function dealData(data1) {
     let data = JSON.parse(JSON.stringify(data1))
@@ -142,7 +145,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
                 origin.content = value
             } else if (value.type === 'text') {
                 origin.content = value
-            } else if (value.type === 'double') {
+            } else if (value.type === 'int' || value.type === 'float') {
                 origin.content = value
             }
             origin.content.dataType = {
@@ -173,7 +176,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
                     })
                 }
                 obj.emusList = emusList
-            } else if (item.dataTypeEN === "double") {
+            } else if (item.dataTypeEN === "int" || item.dataTypeEN === "float") {
                 let keys = ['interval', 'min', 'max', 'multiple', 'unit']
                 let specs = {}
                 keys.forEach(key => {
@@ -335,7 +338,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
                             </>
                         )
                     }
-                    if (getFieldValue('type') === 'double') {
+                    if (getFieldValue('type') === 'int' || getFieldValue('type') === 'float') {
                         return (<>
                             <Form.Item label="数值范围">
                                 <div className='number-input-wrap'>
@@ -449,7 +452,7 @@ function EventTemp({ actionData, sentReq, modelType }, ref) {
                     })
                 }
                 newItem.emusList = emusList
-            } else if (item.dataTypeEN === "double") {
+            } else if (item.dataTypeEN === "int" || item.dataTypeEN === "float") {
                 let keys = ['interval', 'min', 'max', 'multiple', 'unit']
                 let specs = {}
                 keys.forEach(key => {
@@ -578,7 +581,7 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
                     })
                 }
                 newItem.emusList = emusList
-            } else if (item.dataTypeEN === "double") {
+            } else if (item.dataTypeEN === "int" || item.dataTypeEN === "float") {
                 let keys = ['interval', 'min', 'max', 'multiple', 'unit']
                 let specs = {}
                 keys.forEach(key => {
@@ -775,7 +778,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                 origin.content = value
             } else if (value.type === 'text') {
                 origin.content = value
-            } else if (value.type === 'double') {
+            } else if (value.type === 'int' || value.type === 'float') {
                 origin.content = value
             }
             origin.content.dataType = {
@@ -926,7 +929,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                                 </>
                             )
                         }
-                        if (getFieldValue('type') === 'double') {
+                        if (getFieldValue('type') === 'int' || getFieldValue('type') === 'float') {
                             return (<>
                                 <Form.Item label="数值范围">
                                     <div className='number-input-wrap'>

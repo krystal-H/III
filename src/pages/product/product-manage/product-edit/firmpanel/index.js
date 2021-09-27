@@ -30,11 +30,6 @@ function confirmModel({ nextStep }, ref) {
             productId = JSON.parse(sessionStorage.getItem('productItem')).productId
         }
         post(Paths.panelList, { productId }).then((res) => {
-            // let data = res.data.list.filter(item => {
-            //     if (item.panelType == 3) {
-            //         return item
-            //     }
-            // })
             let data = res.data.list
             let lastEst = {}
             if (!data.length) return;

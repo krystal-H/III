@@ -22,9 +22,12 @@ const dataOptions = [{
 }, {
     value: 'text',
     label: '字符型',
+},{
+    value: 'int',
+    label: '整数型',
 }, {
-    value: 'double',
-    label: '数值型',
+    value: 'float',
+    label: '浮点型',
 }]
 //事件类型
 const eventTabOptions = [
@@ -144,7 +147,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                 origin.content = value
             } else if (value.type === 'text') {
                 origin.content = value
-            } else if (value.type === 'double') {
+            } else if (value.type === 'float' || value.type === 'int') {
                 origin.content = value
             }
             origin.content.dataType = {
@@ -299,7 +302,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                             </>
                         )
                     }
-                    if (getFieldValue('type') === 'double') {
+                    if (getFieldValue('type') === 'float' || getFieldValue('type') === 'int') {
                         return (<>
                             <Form.Item label="数值范围">
                                 <div className='number-input-wrap'>
@@ -650,7 +653,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                 origin.content = value
             } else if (value.type === 'text') {
                 origin.content = value
-            } else if (value.type === 'double') {
+            } else if (value.type === 'float' || value.type === 'int') {
                 origin.content = value
             }
             origin.content.dataType = {
@@ -800,7 +803,7 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
                                 </>
                             )
                         }
-                        if (getFieldValue('type') === 'double') {
+                        if (getFieldValue('type') === 'float' || getFieldValue('type') === 'int') {
                             return (<>
                                 <Form.Item label="数值范围">
                                     <div className='number-input-wrap'>

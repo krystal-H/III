@@ -16,21 +16,6 @@ import './index.scss'
 const { Option } = Select
 const { Step } = Steps
 const { Search } = Input
-const DESC = ['平台支持远程更新设备的配置数据，您可以提交远程配置任务，实时对设备的系统参数等数据进行远程更新，并且获取设备配置的更新状态；<a onClick={downFile}>帮助文档</a>']
-const FLOWLIST = [
-    {
-        title: '创建远程配置任务'
-    },
-    {
-        title: '添加配置数据'
-    },
-    {
-        title: '选择设备'
-    },
-    {
-        title: '执行任务'
-    }
-]
 const statusTextForDevice = ['草稿', '待执行', '执行成功', '执行失败']
 
 function RemoteConfig({ devceId, remoteType = 'device' }) {
@@ -198,7 +183,7 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
     }
     //帮助文档
     const downFile = () => {
-        window.open('https://dp.clife.net/iotdoc/')
+        window.open('https://cms.clife.cn/clifeIotDoc/')
     }
     return (
         <div id='device-remote-config'>
