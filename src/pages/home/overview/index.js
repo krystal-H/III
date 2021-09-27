@@ -43,7 +43,7 @@ export default function OverviewWrap() {
         getMessageList()
         getAppList()
         getDevOneList()
-        getDevTwoList()
+        // getDevTwoList()
         getDevThreeList()
         getProductCount()
         getProductList()
@@ -96,12 +96,12 @@ export default function OverviewWrap() {
             setDevOneList(res.data)
         });
     }
-    const [devTwoList, setDevTwoList] = useState({ burn: 0, total: 0, active: 0, unactive: 0 })
-    const getDevTwoList = () => {
-        post(Paths.devSecreCount).then((res) => {
-            setDevTwoList(res.data)
-        });
-    }
+    // const [devTwoList, setDevTwoList] = useState({ burn: 0, total: 0, active: 0, unactive: 0 })
+    // const getDevTwoList = () => {
+    //     post(Paths.devSecreCount).then((res) => {
+    //         setDevTwoList(res.data)
+    //     });
+    // }
     const [devThreeList, setDevThreeList] = useState({ processed: 0, lastWarnTime: "-", pending: 0, send: 0 })
     const getDevThreeList = () => {
         post(Paths.devWarnCount).then((res) => {
@@ -202,7 +202,6 @@ export default function OverviewWrap() {
     const menulist = useSelector(state => {
         return state.getIn(['userCenter', 'menulist']).toJS()
     })
-    console.log(menulist, '啧啧啧')
     const getProductListNew = () => {
         history.push(`/open/product/proManage/list`)
     }

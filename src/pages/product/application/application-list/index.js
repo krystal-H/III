@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Input, Pagination, Button } from 'antd';
-import ApplicationCard from './application-card/ApplicationCard';
+import ApplicationCard from './ApplicationCard';
 import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
 import { Paths, post } from '../../../../api';
 import { REQUEST_SUCCESS } from '../../../../configs/request.config';

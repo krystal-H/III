@@ -45,7 +45,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
       desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
       isConfiged: false,
       type: 'firmwareUpdate',
-      routePath: '/open/product/otaUpdate',
+      routePath: '/open/product/otaUpdate/list',
       url: require('../../../../../assets/images/commonDefault/service-firmwareUpdate.png')
     },
     {
@@ -261,7 +261,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
                     !item.isConfiged ?
                       ['firmwareUpdate', 'cloud', 'deviceWarning', 'scene'].includes(item.type) ?
                         <div className="config-card-right-btn">
-                          <Link to={item.routePath} target="_blank">配置</Link>
+                          <Link to={{pathname: item.routePath, search: `?productId=${productId}`}} target="_blank">配置</Link>
                         </div> :
                         <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
                       : ''

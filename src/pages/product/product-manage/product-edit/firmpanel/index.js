@@ -254,7 +254,7 @@ function confirmModel({ nextStep }, ref) {
     return <div className='confirm-pannel'>
         <div className='confirm-pannel-title'>
             <div>已选面板：</div>
-            <div>{shoaLast.projectName}</div>
+            <div>{shoaLast.projectName || '自定义开发上传'}</div>
         </div>
         <div className='confirm-pannel-content'>
             <div className='pannel-cover-image'>

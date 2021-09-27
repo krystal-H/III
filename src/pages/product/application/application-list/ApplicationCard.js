@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import ProductIcon from '../../../../../components/product-components/product-icon/ProductIcon';
-import MyIcon from '../../../../../components/my-icon/MyIcon';
-import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
+import ProductIcon from '../../../../components/product-components/product-icon/ProductIcon';
+import MyIcon from '../../../../components/my-icon/MyIcon';
+import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
 import { withRouter } from 'react-router-dom';
 
 function ApplicationCard(props) {
@@ -39,8 +39,10 @@ function ApplicationCard(props) {
                 </div>
             </div>
             <div className="del-app" onClick={() => setDelDialog(true)}>
-                <MyIcon type="icon-delete" style={{ fontSize: 16 }} />
-                <span>删除</span>
+                <div className="del-app-inner">
+                    <MyIcon type="icon-delete" style={{ fontSize: 16 }} />
+                    <span>删除</span>
+                </div>
             </div>
             {delDialog && <ActionConfirmModal
                 visible={delDialog}
