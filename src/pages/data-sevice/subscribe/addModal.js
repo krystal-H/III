@@ -366,7 +366,7 @@ function StepContentThree({ finishSub }, ref) {
     }));
     const [showWay, setShowWay] = useState('0')
     const radioChange = (e) => {
-        // setShowWay(e.target.value);
+        setShowWay(e.target.value);
     }
     return (<div className='step-one'>
         <Form form={form} labelAlign='right'>
