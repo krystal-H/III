@@ -131,14 +131,7 @@ export default class FirmwareManagement extends Component {
         ];
     }
     componentDidMount() {
-        const path = this.props.location.pathname.split('/')
-        if (!isNaN(Number(path[path.length - 1]))) { // 地址上有参数
-            this.setState({
-                productId: Number(path[path.length - 1])
-            }, () => this.pagerIndex())
-        } else {
-            this.pagerIndex()
-        }
+        this.pagerIndex()
         this.props.getMcuSocProLi();
     }
 
@@ -200,9 +193,9 @@ export default class FirmwareManagement extends Component {
     }
     //获取固件列表
     pagerIndex = (pageIndex = 1) => {
-        console.log(this.state.productId, 'product')
+        console.log(getUrlParam('productId'), 'product')
         let { productId, schemeType, deviceVersionName } = this.state
-        let params = { pageIndex, productId }
+        let params = { pageIndex, productId: productId || getUrlParam('productId') }
         schemeType != -1 && (params.schemeType = schemeType)
         deviceVersionName && (params.deviceVersionName = deviceVersionName)
 
@@ -233,7 +226,7 @@ export default class FirmwareManagement extends Component {
                 <PageTitle title="固件升级" selectOnchange={val => { this.changeState('productId', val) }} defaultValue={getUrlParam('productId') || '-1'} />
                 <div className='comm-shadowbox comm-setp-ttip'>
                     <div className='step-title'>
-                        <img src={upIconImg} alt=""/>
+                        <img src={upIconImg} alt="" />
                         <span>固件升级步骤</span>
                     </div>
                     <Steps current={-1} initial={0}>
