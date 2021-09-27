@@ -120,7 +120,6 @@ function StepContentOne({ continueStep }, ref) {
         form.validateFields().then(formData => {
             let res = cloneDeep(formData)
             let name = ''
-            console.log(res,'======')
             option.forEach(item => {
                 if (item.productId == res.productId) {
                     name = item.productName
@@ -147,10 +146,10 @@ function StepContentOne({ continueStep }, ref) {
     }
     //获取标签
     const getLabel = (val) => {
-        post(Paths.getLabelByAddress, { productId: val, developerId: 1 }).then((res) => {
+        post(Paths.getLabelByAddress, { productId: val }).then((res) => {
             let arr = []
             res.data.forEach(item => {
-                arr.push({ ...item, label: item.labelKey + '-' + item.labelValue, value: item.id })
+                arr.push({ ...item, label:  item.labelValue, value: item.id })
             })
             setLaberArr(arr)
         });
@@ -186,18 +185,18 @@ function StepContentOne({ continueStep }, ref) {
 
                 </Select>
             </Form.Item>
-            <Form.Item name="radiogroup" label="选择设备">
+            <Form.Item name="all" label="选择设备">
                 <Radio.Group onChange={radioChange}>
-                    <Radio value="a">全部设备</Radio>
-                    <Radio value="b">根据标签筛选设备</Radio>
+                    <Radio value={true}>全部设备</Radio>
+                    <Radio value={false}>根据标签筛选设备</Radio>
                 </Radio.Group>
             </Form.Item>
             <Form.Item
                 noStyle
-                shouldUpdate={(prevValues, currentValues) => prevValues.radiogroup !== currentValues.radiogroup}
+                shouldUpdate={(prevValues, currentValues) => prevValues.all !== currentValues.all}
             >
                 {({ getFieldValue }) =>
-                    getFieldValue('radiogroup') === 'b' ? (
+                    getFieldValue('all') == false ? (
                         <Form.Item name="labelVoList" label="选择标签">
                             <Checkbox.Group options={laberArr} />
                         </Form.Item>
@@ -243,7 +242,7 @@ function StepContentTwo({ continueStep, oneData }, ref) {
         setThreeArr([])
         post(Paths.standardFnList, { productId: oneData.productId }).then((res) => {
             let data = res.data.standard.concat(res.data.custom)
-            let obj = { }
+            let obj = {}
             obj.one = data.filter(item => {
                 if (item.funcType === 'properties') {
                     return item
@@ -264,7 +263,7 @@ function StepContentTwo({ continueStep, oneData }, ref) {
     }
     //勾选
     const rowSelection1 = {
-        
+
         onChange: (selectedRowKeys, selectedRows) => {
             let arr = []
             selectedRows.forEach(item => {
@@ -339,17 +338,17 @@ function StepContentTwo({ continueStep, oneData }, ref) {
             <TabPane tab="属性" key="a">
                 <Table rowSelection={{
                     ...rowSelection1,
-                }} dataSource={option.one} columns={columns} rowKey='funcIdentifier'  pagination={false} scroll={{ y: 300 }}/>
+                }} dataSource={option.one} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
             </TabPane>
             <TabPane tab="事件" key="b">
                 <Table dataSource={option.two} rowSelection={{
                     ...rowSelection2,
-                }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }}/>
+                }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
             </TabPane>
             <TabPane tab="服务" key="c">
                 <Table dataSource={option.three} rowSelection={{
                     ...rowSelection3,
-                }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }}/>
+                }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
             </TabPane>
         </Tabs>
     </div>)
@@ -367,11 +366,11 @@ function StepContentThree({ finishSub }, ref) {
     }));
     const [showWay, setShowWay] = useState('0')
     const radioChange = (e) => {
-        setShowWay(e.target.value);
+        // setShowWay(e.target.value);
     }
     return (<div className='step-one'>
         <Form form={form} labelAlign='right'>
-            <Form.Item name="pushWay" label="订阅方式" rules={[{ required: true , message: '请选择订阅方式'}]}>
+            <Form.Item name="pushWay" label="订阅方式" rules={[{ required: true, message: '请选择订阅方式' }]}>
                 <Radio.Group onChange={radioChange}>
                     <Radio value="0">API数据PUSH形式</Radio>
                     <Radio value="1">MQTT主题订阅</Radio>
