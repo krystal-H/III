@@ -151,7 +151,7 @@ function ReleaseProduct({ releaseVisible, cancelHandle, productId }) {
                   ref={$imgel1}
                   isNotImg={true}
                   format='.doc,.docx,.pdf,.jpg,.png'
-                  maxSize={20}
+                  maxSize={30}
                   maxCount={5} />
               }
             </Form.Item>
