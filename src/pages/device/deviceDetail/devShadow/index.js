@@ -29,7 +29,7 @@ export default function DeviceShadow() {
     }
     //帮助文档
     const downFile = () => {
-        window.open('https://dp.clife.net/iotdoc/')
+        window.open('https://cms.clife.cn/clifeIotDoc/')
     }
     // const getJsonView = () => {
     //     const { result = {} } = this.state;

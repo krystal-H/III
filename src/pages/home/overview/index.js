@@ -69,9 +69,6 @@ export default function OverviewWrap() {
 
         });
     }
-    const goMoreMessAge = () => {
-        history.push('/messageCenter/list');
-    }
     const goMessageDetail = (id) => {
         history.push(`/messageCenter/detail/${id}`);
     }
@@ -248,10 +245,6 @@ export default function OverviewWrap() {
                 description: '无权限！',
             });
         }
-    }
-    //app详情
-    const goAppDetail = item => {
-        history.push(`/open/app/details/${item.appId}`)
     }
     //消息类型
     const getMessageType = (text) => {
@@ -592,7 +585,7 @@ export default function OverviewWrap() {
                                 <img src={help2} alt='' />
                                 <div>工单</div>
                             </div>
-                            <div onClick={() => { window.open('https://dp.clife.net/iotdoc/') }}>
+                            <div onClick={() => { window.open('https://cms.clife.cn/clifeIotDoc/') }}>
                                 <img src={help3} alt='' />
                                 <div>帮助文档</div>
                             </div>

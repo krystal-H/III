@@ -62,7 +62,7 @@ class AccountFlowTemplate extends Component {
             {cType} = this.props, 
             path = Paths.registerConfirm,
             data = {
-                account:email,
+                email,
                 uuid,
                 type:cType 
             };
@@ -70,7 +70,7 @@ class AccountFlowTemplate extends Component {
         if (updateEmailComfirm) {
             path = Paths.registerConfirm
             data = {
-                account:email,
+                email,
                 uuid
             }
         }
@@ -128,12 +128,12 @@ class AccountFlowTemplate extends Component {
         if (cType === 1) {
             path = Paths.resendRegisterEmail
             data = {
-                account:email
+                email
             }
         } else if (isResetEmail) {
             path = Paths.resetEmail
             data = {
-                account: newEmail,
+                email: newEmail,
                 code
             }
         } else {

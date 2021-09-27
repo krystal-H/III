@@ -114,7 +114,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 { schemeType && <Item label="开发方案"> { SCHMETYPE[schemeType-1] && SCHMETYPE[schemeType-1].nam || "出错了！" }</Item> }
                 { schemeType==2 && <Item label="模组固件名称"> { moduleName }</Item> }
                 <Item name="productFirmwareVersion"
-                    label={<LabelTip label="产品版本号" tip="说明是啥我也不知道"/>}
+                    label={<LabelTip label="产品版本号" tip="产品整体的版本编号，概括产品下系统、模组、MCU固件各部分。"/>}
                     rules={[{ required: true, message: '请输入产品版本号' },{
                         pattern: formrules.strextVer,
                         message: '仅支持字母、数字、下划线、短横线、点号，不超过30个字符',
@@ -133,10 +133,10 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 }
                 { (schemeType==3||mcuIsUp==0) && <>
 
-                    <Item  name='deviceVersionName' label={<LabelTip label="固件包名称" tip="说明是啥我也不知道"/>} rules={[{ required: true, message: '请输入升级包名称' }]} hasFeedback>
+                    <Item  name='deviceVersionName' label={<LabelTip label="固件包名称" tip="固件包的具体业务名称，如具体产品的WiFi模组固件升级包。"/>} rules={[{ required: true, message: '请输入升级包名称' }]} hasFeedback>
                         <Input maxLength={30} placeholder='请输入升级包名称' />
                     </Item>
-                    <Item label="固件模块" name='firmwareVersionType' rules={[{ required: true, message: '请选择固件模块' }]}>
+                    <Item label={<LabelTip label="固件模块" tip="硬件固件的细分模块，比如MCU的驱动板固件模组或者主板固件模块。"/>} name='firmwareVersionType' rules={[{ required: true, message: '请选择固件模块' }]}>
                         <Select placeholder="选择固件模块" onChange={()=>{}} >
                             {
                                 firmwareList.map(({firmwareTypeName,firmwareTypeNo,deviceVersionType}) => {
@@ -145,7 +145,8 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                             }
                         </Select>
                     </Item>
-                    <Item label={<LabelTip label="固件系列标识" tip="说明是啥我也不知道"/>} hasFeedback name='totalVersion'
+
+                    <Item label={<LabelTip label="固件系列标识" tip="区分不同固件包，只有相同的固件才能升级"/>} hasFeedback name='totalVersion'
                         rules={[{ required: true, message: '请输入固件系列标识' },{pattern: formrules.strextVer,message: '仅支持字母、数字、下划线、短横线、点号，不超过30个字符'}]}
                     >
                         <Input maxLength={30} placeholder='仅支持字母、数字、下划线、短横线、点号' />
