@@ -202,7 +202,6 @@ export default function OverviewWrap() {
     const menulist = useSelector(state => {
         return state.getIn(['userCenter', 'menulist']).toJS()
     })
-    console.log(menulist, '啧啧啧')
     const getProductListNew = () => {
         history.push(`/open/product/proManage/list`)
     }
