@@ -69,9 +69,6 @@ export default function OverviewWrap() {
 
         });
     }
-    const goMoreMessAge = () => {
-        history.push('/messageCenter/list');
-    }
     const goMessageDetail = (id) => {
         history.push(`/messageCenter/detail/${id}`);
     }
@@ -248,10 +245,6 @@ export default function OverviewWrap() {
                 description: '无权限！',
             });
         }
-    }
-    //app详情
-    const goAppDetail = item => {
-        history.push(`/open/app/details/${item.appId}`)
     }
     //消息类型
     const getMessageType = (text) => {

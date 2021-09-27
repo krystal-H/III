@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, forwardRef, useImperativeHandle } from 'react';
-import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, Table } from 'antd';
+import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, Table,Checkbox  } from 'antd';
 import './addModal.scss'
 import LabelTip from '../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../api';
@@ -108,6 +108,7 @@ export default function AddFuncModal({ editModelVis, colseMoadl, cancelModel, id
 }
 function StepContentOne({ continueStep, editData }, ref) {
     const [form] = Form.useForm();
+    const [laberArr, setLaberArr] = useState([])//标签
     const [option, setOption] = useState([])
     useEffect(() => {
         getList()
@@ -115,13 +116,29 @@ function StepContentOne({ continueStep, editData }, ref) {
             {
                 subscription: editData.subscription,
                 productId: editData.productId,
+                all:editData.all
             }
         )
+        getLabel(editData.productId)
     }, [])
+    //产品列表
     const getList = () => {
         post(Paths.getProductPlus).then((res) => {
             setOption(res.data)
         });
+    }
+    //获取标签
+    const getLabel = (val) => {
+        post(Paths.getLabelByAddress, { productId: val}).then((res) => {
+            let arr = []
+            res.data.forEach(item => {
+                arr.push({ ...item, label: item.labelValue, value: item.id })
+            })
+            setLaberArr(arr)
+        });
+    }
+    const productIdChange = val => {
+        getLabel(val)
     }
     const onFinish = () => {
         form.validateFields().then(res => {
@@ -145,7 +162,6 @@ function StepContentOne({ continueStep, editData }, ref) {
                 name="subscription"
                 label="订阅名称"
                 rules={[{ required: true }]}
-
             >
                 <Input />
             </Form.Item>
@@ -154,7 +170,7 @@ function StepContentOne({ continueStep, editData }, ref) {
                 label="归属产品"
                 rules={[{ required: true }]}
             >
-                <Select showSearch optionFilterProp="children" filterOption={(input, option) =>
+                <Select onChange={productIdChange} showSearch optionFilterProp="children" filterOption={(input, option) =>
                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }>
                     {
@@ -165,19 +181,31 @@ function StepContentOne({ continueStep, editData }, ref) {
 
                 </Select>
             </Form.Item>
-            <Form.Item name="radio-group" label="选择设备">
+            <Form.Item name="all" label="选择设备">
                 <Radio.Group>
-                    <Radio value="a">全部设备</Radio>
-                    <Radio value="b">根据标签筛选设备</Radio>
+                    <Radio value={true}>全部设备</Radio>
+                    <Radio value={false}>根据标签筛选设备</Radio>
                 </Radio.Group>
             </Form.Item>
-            {
-                form.getFieldValue('radio-group') === 'a' && (<Form.Item name="address" label="">
+            <Form.Item
+                noStyle
+                shouldUpdate={(prevValues, currentValues) => prevValues.all !== currentValues.all}
+            >
+                {({ getFieldValue }) =>
+                    getFieldValue('all') == false ? (
+                        <Form.Item name="labelVoList" label="选择标签">
+                            <Checkbox.Group options={laberArr} />
+                        </Form.Item>
+                    ) : null
+                }
+            </Form.Item>
+            {/* {
+                form.getFieldValue('all') == false && (<Form.Item name="address" label="">
                     <div>
                         <div>标签</div>
                     </div>
                 </Form.Item>)
-            }
+            } */}
 
         </Form>
     </div>)
@@ -213,21 +241,26 @@ function StepContentTwo({ continueStep, oneData, editData }, ref) {
         getSelectData()
     }, [])
     const getSelectData = () => {
-        let arr1 = [], arr2 = [], arr3 = []
+        let arr1 = [], arr2 = [], arr3 = [], tab = 'a'
         editData.devicePushDataConfList.forEach(item => {
             item.funcIdentifier = item.protocolProperty
             if (item.dataType == 5) {
-
                 arr1.push(item.protocolProperty)
+                tab = 'a'
             }
             if (item.dataType == 6) {
                 arr2.push(item.protocolProperty)
+                tab = 'b'
             }
             if (item.dataType == 7) {
                 arr3.push(item.protocolProperty)
+                tab = 'c'
             }
         })
         setOneArr(arr1)
+        setTwoArr(arr2)
+        setThreeArr(arr3)
+        setCurrentTab(tab)
     }
     //======获取协议
     const getList = () => {
@@ -265,13 +298,13 @@ function StepContentTwo({ continueStep, oneData, editData }, ref) {
         onChange: (selectedRowKeys, selectedRows) => {
             setTwoArr(selectedRowKeys)
         },
-        getCheckboxProps: twoArr
+        selectedRowKeys: twoArr
     };
     const rowSelection3 = {
         onChange: (selectedRowKeys, selectedRows) => {
             setThreeArr(selectedRowKeys)
         },
-        getCheckboxProps: threeArr
+        selectedRowKeys: threeArr
     };
     const onFinish = () => {
         let arr = []
