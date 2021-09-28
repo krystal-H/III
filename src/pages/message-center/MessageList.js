@@ -49,7 +49,7 @@ const columns = [
         dataIndex: 'updateTime',
         render: (text, record) => {
             let { updateTime } = record;
-            return <span>{DateTool.utcToDev(updateTime)}</span>
+            return <span>{updateTime && DateTool.utcToDev(updateTime)}</span>
         }
     }
 ];

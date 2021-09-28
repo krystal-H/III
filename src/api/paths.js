@@ -169,16 +169,16 @@ let Paths = {
     dataTypeList: '/device/debug/getDataTypeList', //获取数据类型
     propertyConfig: '/device/debug/getPropertyConfig_v1.1',//根据产品ID获取协议信息
     deviceDebugAccountGetList: "/device/debug/account/getList",//调试账号列表
-    deviceDebugAccountInsert: "/device/debug/account/insert",//调试账号添加
+    
     deviceDebugAccountDelete: "/device/debug/account/delete",//调试账号删除
     deviceDebugMacGetList: "/device/debug/mac/getList",//调试MAC列表
-    deviceDebugMacInsert: "/device/debug/mac/insert",//调试MAC添加
     deviceDebugMacDelete: "/device/debug/mac/delete",//调试MAC删除
     upgradeDebug: "/device/debug/upgradeDebug",//固件升级调试
 
     debugSecretList:'/device/debug/mac/debugSecretList',//调试密钥列表
-    addDebugMac:'/device/debug/mac/addDebugMac',//调试密钥列表
-    delDebugMac:'/device/debug/mac/delDebugMac',//调试密钥列表
+    deviceDebugAccountInsert: "/device/debug/account/insert",//调试账号添加
+    addDebugMac:'/device/debug/mac/addDebugMac',
+    delDebugMac:'/device/debug/mac/delDebugMac',
 
 
     /* 设备数据api start */
