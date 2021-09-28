@@ -56,19 +56,16 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
         </Steps>)
     }
     const continueStep = (val, data) => {
-        console.log("---continueStep--",val,data)
         if (currentTab == 0) {
             setSubObj(pre => {
                 let obj = cloneDeep(pre)
                 obj.one = cloneDeep(data)
-                console.log("---obj-one--",obj)
                 return obj
             })
         } else if (currentTab == 1) {
             setSubObj(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))
                 obj.two = cloneDeep(data)
-                console.log("---obj-two--",obj)
                 return obj
             })
         }
@@ -85,7 +82,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
         });
     }
     return (
-        <Modal title={"新 "+ JSON.stringify(subObj) } visible={isModalVisible} onCancel={cancelModel}
+        <Modal title="新增订阅" visible={isModalVisible} onCancel={cancelModel}
             width='900px' wrapClassName='add-subscribe-modal'
             footer={footer}>
             <div className='add-subscribe'>
@@ -156,12 +153,9 @@ function StepContentOne({ continueStep }, ref) {
             setLaberArr(arr)
         });
     }
-    useImperativeHandle(ref, () => {
-        return {
-          onFinish: onFinish
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [option])
+    useImperativeHandle(ref, () => ({
+        onFinish: onFinish
+    }),[option.length]);
     return (<div className='step-one'>
         <Form form={form} labelAlign='right'>
             <Form.Item
@@ -210,7 +204,6 @@ function StepContentOne({ continueStep }, ref) {
 }
 StepContentOne = forwardRef(StepContentOne)
 function StepContentTwo({ continueStep, oneData }, ref) {
-    console.log(111,oneData)
     const columns = [
         {
             title: '数据名称',
