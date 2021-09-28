@@ -121,9 +121,14 @@ function StepContentOne({ continueStep }, ref) {
     }
     const onFinish = () => {
         form.validateFields().then(formData => {
+            console.log("---formData---",formData)
+            console.log("---cloneDeep---",cloneDeep)
             let res = cloneDeep(formData)
+            console.log("---cloneDeep-formData---",res)
             let name = ''
+            console.log("---option---",option)
             option.forEach(item => {
+                console.log("---forEach-id--",item.productId)
                 if (item.productId == res.productId) {
                     name = item.productName
                 }
