@@ -15,6 +15,11 @@ function delaData(data, typeS) {
     if (!item.funcParamList || !item.funcParamList.length) return
     item.funcParamList.forEach(item2 => {
       let newItem = JSON.parse(JSON.stringify(item))
+      if(typeS){
+        
+      }else{
+
+      }
       newData.push({ ...newItem, ...item2 })
     })
   })

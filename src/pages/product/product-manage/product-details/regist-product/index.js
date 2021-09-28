@@ -173,7 +173,7 @@ export default function DeviceRegist() {
                 <Steps current={-1} initial={0}>
                     <Step title="选择不同校验机制" description="注册设备，产品发布前，需在配置服务步骤，确定安全通信安全机制。" />
                     <Step title="注册设备物理地址" description="Clife平台提供产品密钥验证、产品密钥&设备ID验证、设备ID&设备密钥验证多种安全通信机制。" />
-                    <Step title="查看入网设备" description={<><span>Clife平台提供产品密钥验证、产品密钥&设备ID验证、设备ID&设备密钥验证多种安全通信机制。</span><a onClick={downFile}>下载密钥烧录工具</a></>} />
+                    <Step title="查看入网设备" description="安全级别最高的设备ID&设备密钥验证，即一机一码，需要下载密钥文件。" />
                 </Steps>
             </div>
             <CountNum data={countData} />
