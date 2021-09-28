@@ -140,16 +140,16 @@ export default function DeviceList() {
             dataIndex: 'productType',
             key: 'productType',
         },
-        {
-            title: '标签',
-            dataIndex: 'labelInfo',
-            key: 'labelInfo',
-        },
-        {
-            title: '所属分组',
-            dataIndex: 'groupName',
-            key: 'groupName',
-        },
+        // {
+        //     title: '标签',
+        //     dataIndex: 'labelInfo',
+        //     key: 'labelInfo',
+        // },
+        // {
+        //     title: '所属分组',
+        //     dataIndex: 'groupName',
+        //     key: 'groupName',
+        // },
         {
             title: '类型',
             dataIndex: 'productClass',
@@ -238,7 +238,7 @@ export default function DeviceList() {
                             </Form.Item>
                         </Input.Group>
                     </Form.Item>
-                    <Form.Item label="设备标签">
+                    {/* <Form.Item label="设备标签">
                         <Form.Item
                             name="labelKey"
                             style={{ display: 'inline-block', width: '174px', marginRight: '2px' }}
@@ -251,14 +251,14 @@ export default function DeviceList() {
                         >
                             <Input placeholder='请输入标签Value' />
                         </Form.Item>
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item name="innet" label="入网状态" >
                         <Select
                             style={{ width: '102px' }}
                         >
                             <Option value={'1'}>全部状态</Option>
-                            <Option value={true}>已入网</Option>
-                            <Option value={false}>未入网</Option>
+                            <Option value={1}>已入网</Option>
+                            <Option value={0}>未入网</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item name="online" label="在线状态" >

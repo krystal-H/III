@@ -22,11 +22,7 @@ function delaData(data) {
     })
     return newData
 }
-export default function DeviceShadow() {
-    let baseInfo = {}
-    if (sessionStorage.DEVICE_DETAIL_BASE) {
-        baseInfo = JSON.parse(sessionStorage.DEVICE_DETAIL_BASE)
-    }
+export default function DeviceShadow({baseInfo}) {
     //帮助文档
     const downFile = () => {
         window.open('https://cms.clife.cn/clifeIotDoc/')

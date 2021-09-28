@@ -4,8 +4,9 @@ import DevShadow from './devShadow'
 import DevSet from './onlineSet'
 import { getUrlParam } from '../../../util/util';
 import React, { useState, useEffect, useMemo } from 'react'
+import { post, Paths, get } from '../../../api';
 import PageTitle from '../../../components/page-title/PageTitle';
-import {  useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import './index.scss'
 import { Tabs } from 'antd';
 const { TabPane } = Tabs;
@@ -20,10 +21,13 @@ export default function DeviceInfo({ match }) {
     const tabCallback = value => {
         history.push(match.url + '?' + `step=${value}`);
     }
-    let baseInfo = {}
-    if (sessionStorage.DEVICE_DETAIL_BASE) {
-        baseInfo = JSON.parse(sessionStorage.DEVICE_DETAIL_BASE)
-    }
+    const [baseInfo, setBaseInfo] = useState({})
+    useEffect(() => {
+        let parmas = { "infoType": "1", "field": devceId, "pageIndex": 1,"pageRows": 1 }
+        post(Paths.getDeviceList, parmas).then((res) => {
+            setBaseInfo(res.data.list[0])
+        });
+    }, [devceId])
     return (<div id='device-detail'>
         <PageTitle backTitle='设备详情' backHandle={() => { history.push('/open/device/devManage/list') }}>
             <div className='device-top'>
@@ -45,7 +49,7 @@ export default function DeviceInfo({ match }) {
                     <DevTag devceId={devceId} />
                 </TabPane>
                 <TabPane key={'3'} tab={'设备影子'}>
-                    <DevShadow devceId={devceId} />
+                    <DevShadow devceId={devceId} baseInfo={baseInfo}/>
                 </TabPane>
                 <TabPane key={'4'} tab={'远程配置'}>
                     <DevSet devceId={devceId} />

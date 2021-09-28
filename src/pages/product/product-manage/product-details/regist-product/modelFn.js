@@ -5,7 +5,7 @@ import { UploadFileHooks } from '../../../../../components/upload-file';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../../../api';
 import './index.scss'
-export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }) {
+export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel ,authWay}) {
   // let productItem = {}
 
   // if (sessionStorage.getItem('productItem')) {
@@ -31,8 +31,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
     });
   }
   const $dom = useMemo(() => {
-    let count = 0
-
+    let count = authWay
     if (count === 0) {
       return (<span>一型一密<LabelTip tip="设备通信时，仅校验烧录的产品密钥，设备安全性较低。"></LabelTip></span>)
     } else if (count === 1) {
@@ -40,7 +39,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
     } else if (count === 2) {
       return (<span>一机一密<LabelTip tip="设备通信时，需校验烧录的设备密钥和设备ID，安全性最高。"></LabelTip></span>)
     }
-  }, [])
+  }, [authWay])
   const downfile = () => {
     window.open('http://skintest.hetyj.com/31438/6b0b20891e06ac31d0eed37a5083cca9.xlsx')
   }
