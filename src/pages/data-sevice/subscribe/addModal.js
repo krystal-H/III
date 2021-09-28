@@ -121,14 +121,14 @@ function StepContentOne({ continueStep }, ref) {
     }
     const onFinish = () => {
         form.validateFields().then(formData => {
-            console.log("---formData---",formData)
-            console.log("---cloneDeep---",cloneDeep)
+            // console.log("---formData---",formData)
+            // console.log("---cloneDeep---",cloneDeep)
             let res = cloneDeep(formData)
-            console.log("---cloneDeep-formData---",res)
+            // console.log("---cloneDeep-formData---",res)
             let name = ''
             console.log("---option---",option)
             option.forEach(item => {
-                console.log("---forEach-id--",item.productId)
+                // console.log("---forEach-id--",item.productId)
                 if (item.productId == res.productId) {
                     name = item.productName
                 }
@@ -161,9 +161,15 @@ function StepContentOne({ continueStep }, ref) {
             setLaberArr(arr)
         });
     }
-    useImperativeHandle(ref, () => ({
-        onFinish: onFinish
-    }));
+    // useImperativeHandle(ref, () => ({
+    //     onFinish: onFinish
+    // }));
+    useImperativeHandle(ref, () => {
+        return {
+          onFinish: onFinish
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [option])
     return (<div className='step-one'>
         <Form form={form} labelAlign='right'>
             <Form.Item
