@@ -155,7 +155,9 @@ export const ReleaseFirmware = Form.create({
                                             <Form.Item label='升级设备组'>
                                                 {getFieldDecorator('upgradeDevice', {
                                                     rules: [{ required: true, message: '请选择设备组' }]
-                                                })(<Select placeholder="选择待升级设备组" mode="multiple">
+                                                })(<Select placeholder="选择待升级设备组"
+                                                //  mode="multiple"
+                                                 >
                                                     {
                                                         deviceGorupLi.map(({id,name})=><Option key={id} value={id}>{name}</Option>)
                                                     }
