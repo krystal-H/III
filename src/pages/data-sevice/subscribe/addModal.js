@@ -161,15 +161,15 @@ function StepContentOne({ continueStep }, ref) {
             setLaberArr(arr)
         });
     }
-    // useImperativeHandle(ref, () => ({
-    //     onFinish: onFinish
-    // }));
-    useImperativeHandle(ref, () => {
-        return {
-          onFinish: onFinish
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [option])
+    useImperativeHandle(ref, () => ({
+        onFinish: onFinish
+    }));
+    // useImperativeHandle(ref, () => {
+    //     return {
+    //       onFinish: onFinish
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    //   }, [option])
     return (<div className='step-one'>
         <Form form={form} labelAlign='right'>
             <Form.Item
