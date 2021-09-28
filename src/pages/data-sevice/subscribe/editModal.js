@@ -112,11 +112,18 @@ function StepContentOne({ continueStep, editData }, ref) {
     const [option, setOption] = useState([])
     useEffect(() => {
         getList()
+        let arr=[]
+        if(editData.labelVoList){
+            editData.labelVoList.forEach(item=>{
+                arr.push(item.labelId)
+            })
+        }
         form.setFieldsValue(
             {
                 subscription: editData.subscription,
                 productId: editData.productId,
-                all:editData.all
+                all:false,
+                labelVoList:arr
             }
         )
         getLabel(editData.productId)
@@ -132,7 +139,7 @@ function StepContentOne({ continueStep, editData }, ref) {
         post(Paths.getLabelByAddress, { productId: val}).then((res) => {
             let arr = []
             res.data.forEach(item => {
-                arr.push({ ...item, label: item.labelValue, value: item.id })
+                arr.push({...item, label: item.labelValue, value: item.labelId,id:item.labelId})
             })
             setLaberArr(arr)
         });
@@ -141,7 +148,8 @@ function StepContentOne({ continueStep, editData }, ref) {
         getLabel(val)
     }
     const onFinish = () => {
-        form.validateFields().then(res => {
+        form.validateFields().then(formData => {
+            let res = cloneDeep(formData)
             let name = ''
             option.forEach(item => {
                 if (item.productId == res.productId) {
@@ -149,6 +157,15 @@ function StepContentOne({ continueStep, editData }, ref) {
                 }
             })
             res.productName = name
+            if (res.labelVoList && res.labelVoList.length) {
+                let laberA = []
+                laberArr.forEach(item => {
+                    if (res.labelVoList.indexOf(item.value) > -1) {
+                        laberA.push(item)
+                    }
+                })
+                res.labelVoList = laberA
+            }
             continueStep('1', res)
         })
     }

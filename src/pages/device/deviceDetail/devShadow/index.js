@@ -43,7 +43,7 @@ export default function DeviceShadow() {
     }, [])
     const getDetail = (loading = true) => {
         // Paths.getDeviceInfo
-        post(Paths.deviceShadow, { 'deviceUniqueId': baseInfo.deviceId }, { loading }).then((res) => {
+        post(Paths.deviceShadow, { 'deviceUniqueId': baseInfo.deviceUniqueId }, { loading }).then((res) => {
             setDataSource(delaData(res.data.list))
             let jsonData=res.data.jsonString || {}
             setJsonData( JSON.stringify(jsonData) )

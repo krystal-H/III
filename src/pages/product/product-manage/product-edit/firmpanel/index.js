@@ -22,6 +22,7 @@ function confirmModel({ nextStep }, ref) {
     }, [])
     const [defaultTab, setDefaultTab] = useState('1')
     const [actionVis, setActionVis] = useState(false) //操作弹窗展示
+    const [showTip,setShowTip]=useState(false)
     //获取最近发布的数据
     const [shoaLast, setShoaLast] = useState({})
     const getList = () => {
@@ -294,7 +295,7 @@ function confirmModel({ nextStep }, ref) {
                 <div className='confirm-pannel-content-item'>
                     <div>自由配置面板</div>
                     <div>直接拖拽可视化功能组件，所见即所得，DIY 出具有您的品牌风格的面板，适用于自定义开发方案。</div>
-                    <Button type="primary" ghost>
+                    <Button type="primary" ghost onClick={()=>{setShowTip(true)}}>
                         进入
                     </Button>
                 </div>
@@ -333,6 +334,14 @@ function confirmModel({ nextStep }, ref) {
         {/* 发布 */}
         {
             relPanVis && <RelPanModel actionObj={actionData} relPanVis={relPanVis} CancelRel={CancelRel} closeOkRel={closeOkRel} />
+        }
+        {/* 待开发功能 */}
+        {
+            showTip && <Modal title="温馨提示" width='370px' visible={showTip} footer={null} onCancel={()=>{setShowTip(false)}}>
+                <div className='down-office-modal'>
+                    <div>此功能正在升级维护中，敬请期待~</div>
+                </div>
+            </Modal>
         }
     </div>
 }
