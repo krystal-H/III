@@ -3,6 +3,7 @@ import { Form, Input, Table, Modal, Select, InputNumber, DatePicker } from 'antd
 import { Notification } from '../../../../components/Notification'
 import { cloneDeep } from 'lodash'
 import { Paths, get, post } from '../../../../api'
+import { useHistory } from 'react-router-dom';
 import './index.scss'
 import moment from 'moment'
 const { TextArea } = Input;
@@ -10,11 +11,8 @@ const { Option } = Select
 
 
 export default function AddModel({ addVisible, addOk, CancelAdd }) {
-  let baseInfo = {}
-  if (sessionStorage.DEVICE_DETAIL_BASE) {
-    baseInfo = JSON.parse(sessionStorage.DEVICE_DETAIL_BASE)
-  }
-  // const [tableData, setTableData] = useState([])
+  let history = useHistory();
+  const deviceId=history.location.pathname.split('/').slice(-1)[0]
   const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
   const [selectedProtocols, setSelectedProtocols] = useState([]) // rowSelection
   const [sendDataCheck, setSendDataCheck] = useState([])
@@ -25,7 +23,7 @@ export default function AddModel({ addVisible, addOk, CancelAdd }) {
   }, [])
   const [productId, setProductId] = useState('')
   const getProductDetail = (loading = true) => {
-    post(Paths.getDeviceInfo, { 'deviceId': baseInfo.deviceId }).then((res) => {
+    post(Paths.getDeviceInfo, { deviceId }).then((res) => {
       if (res.data.productId) {
         getTableData(res.data.productId)
         setProductId(res.data.productId)
@@ -184,7 +182,7 @@ export default function AddModel({ addVisible, addOk, CancelAdd }) {
         }
         let params = {
           taskName: formvalue.taskName,
-          deviceId: baseInfo.deviceId,
+          deviceId,
           taskExplain: formvalue.taskExplain,
           protocolJson: JSON.stringify(initialProtoclList.filter(item => {
             let isCOntinue = item.sendData ?? undefined

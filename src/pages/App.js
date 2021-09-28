@@ -19,6 +19,15 @@ export default class App extends Component {
 
         return document.body
     }
+
+    componentDidCatch(error, info) {
+        console.log('Error::::', error);
+        console.log('info', info);
+        if (String(error).includes('Loading chunk')) {
+            window.location.reload();
+        }
+    }
+
     // 自定义确认弹框
     customConfirm = (message,callback) => {
         Modal.confirm({

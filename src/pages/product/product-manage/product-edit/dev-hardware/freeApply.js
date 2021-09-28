@@ -73,6 +73,7 @@ function FreeApplyModal({ freeApplyVisible, handleFreeApply, type, moduleName, f
                 <Form.Item label="固件名称/固件Key" className="txt-color">{firmwareData.burnFileName || '-'}</Form.Item>
                 <Form.Item label="固件版本" className="txt-color">{firmwareData.burnFileVersion || '-'}</Form.Item>
                 {
+                  JSON.parse(sessionStorage.getItem('productItem')).schemeType == 1 && 
                   firmwareData.firmwareModuleList && firmwareData.firmwareModuleList.map(item => (
                     item.firmwareFuncList && item.firmwareFuncList.map((ele, index) => (
                       <>

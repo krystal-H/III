@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
+import { useHistory } from 'react-router-dom';
 import { Table, Button, Space } from 'antd';
 import { post, Paths } from '../../../../api';
 import './index.scss';
@@ -11,17 +12,15 @@ import DetailModl from './detail'
 
 
 export default function TableCom({ dataSource }) {
-    let baseInfo = {}
-    if (sessionStorage.DEVICE_DETAIL_BASE) {
-        baseInfo = JSON.parse(sessionStorage.DEVICE_DETAIL_BASE)
-    }
+    let history = useHistory();
+    const deviceId = history.location.pathname.split('/').slice(-1)[0]
     //获取产品id
     useEffect(() => {
         getProductDetail()
     }, [])
     const [productId, setProductId] = useState('')
     const getProductDetail = (loading = true) => {
-        post(Paths.getDeviceInfo, { 'deviceId': baseInfo.deviceId }, { loading }).then((res) => {
+        post(Paths.getDeviceInfo, { deviceId }, { loading }).then((res) => {
             setProductId(res.data.productId)
         });
     }

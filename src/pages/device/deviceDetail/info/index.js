@@ -3,10 +3,6 @@ import { Descriptions, Divider, Icon } from 'antd';
 import { post, Paths, get } from '../../../../api';
 import { strToAsterisk, DateTool } from '../../../../util/util';
 import LabelVisible from '../../../../components/form-com/LabelVisible';
-import {
-    EyeInvisibleTwoTone,
-    EyeTwoTone,
-} from '@ant-design/icons';
 import './index.scss'
 export default function DeviceInfo({ devceId }) {
     const [data, setData] = useState({})

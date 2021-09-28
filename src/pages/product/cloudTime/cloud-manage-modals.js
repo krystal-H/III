@@ -64,13 +64,13 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
         type === 'edit' && showDetail()
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-    useEffect(() => {
-        console.log(selectedProtocolList)
-    }, [selectedProtocolList])
+    // useEffect(() => {
+    //     console.log(selectedProtocolList)
+    // }, [selectedProtocolList])
 
-    useEffect(() => {
-        console.log(protocolItemIndex, 'protocolItemIndex--------')
-    }, [protocolItemIndex])
+    // useEffect(() => {
+    //     console.log(protocolItemIndex, 'protocolItemIndex--------')
+    // }, [protocolItemIndex])
 
     // 获取关联协议
     const getRelationProtocol = (productId) => {

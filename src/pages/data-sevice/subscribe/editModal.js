@@ -122,7 +122,7 @@ function StepContentOne({ continueStep, editData }, ref) {
             {
                 subscription: editData.subscription,
                 productId: editData.productId,
-                all:false,
+                isAll:editData.isAll,
                 labelVoList:arr
             }
         )
@@ -157,12 +157,17 @@ function StepContentOne({ continueStep, editData }, ref) {
                 }
             })
             res.productName = name
-            if (res.labelVoList && res.labelVoList.length) {
+            if (typeof res.isAll == 'number') {
                 let laberA = []
-                laberArr.forEach(item => {
-                    if (res.labelVoList.indexOf(item.value) > -1) {
+                 laberArr.forEach(item => {
+                    if (res.isAll) {
                         laberA.push(item)
+                    } else {
+                        if (res.labelVoList && res.labelVoList.indexOf(item.value) > -1) {
+                            laberA.push(item)
+                        }
                     }
+
                 })
                 res.labelVoList = laberA
             }
@@ -197,18 +202,18 @@ function StepContentOne({ continueStep, editData }, ref) {
 
                 </Select>
             </Form.Item>
-            <Form.Item name="all" label="选择设备">
+            <Form.Item name="isAll" label="选择设备">
                 <Radio.Group>
-                    <Radio value={true}>全部设备</Radio>
-                    <Radio value={false}>根据标签筛选设备</Radio>
+                    <Radio value={1}>全部设备</Radio>
+                    <Radio value={0}>根据标签筛选设备</Radio>
                 </Radio.Group>
             </Form.Item>
             <Form.Item
                 noStyle
-                shouldUpdate={(prevValues, currentValues) => prevValues.all !== currentValues.all}
+                shouldUpdate={(prevValues, currentValues) => prevValues.isAll !== currentValues.isAll}
             >
                 {({ getFieldValue }) =>
-                    getFieldValue('all') == false ? (
+                    getFieldValue('isAll') == 0 ? (
                         <Form.Item name="labelVoList" label="选择标签">
                             <Checkbox.Group options={laberArr} />
                         </Form.Item>

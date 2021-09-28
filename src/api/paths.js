@@ -179,6 +179,9 @@ let Paths = {
     deviceDebugAccountInsert: "/device/debug/account/insert",//调试账号添加
     addDebugMac:'/device/debug/mac/addDebugMac',
     delDebugMac:'/device/debug/mac/delDebugMac',
+    getMockDeviceId:'/device/debug/mockDevice/active',//虚拟设备调试获得虚拟设备id
+
+    
 
 
     /* 设备数据api start */
@@ -263,6 +266,7 @@ let Paths = {
     deviceShadow:'/deviceManage/getProtocolList',//设备影子
     deviceShadowHis:'/deviceManage/getHistoryProtocolList',//设备影子历史数据
     exportShadowHis:'/deviceManage/exportHistoryProtocolList',//设备影子历史数据
+    getDeviceTitle:'/getDeviceDetailList',//设备头部
     
 
     /**
