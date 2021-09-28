@@ -179,6 +179,9 @@ let Paths = {
     deviceDebugAccountInsert: "/device/debug/account/insert",//调试账号添加
     addDebugMac:'/device/debug/mac/addDebugMac',
     delDebugMac:'/device/debug/mac/delDebugMac',
+    getMockDeviceId:'/device/debug/mockDevice/active',//虚拟设备调试获得虚拟设备id
+
+    
 
 
     /* 设备数据api start */
