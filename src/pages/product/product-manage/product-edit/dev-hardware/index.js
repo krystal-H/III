@@ -78,9 +78,6 @@ class Hardware extends Component {
                 // 更新存的 模组id
                 let copyData = this.state.productItemData
                 copyData.moduleId = res.data.moduleId
-                // this.setState({
-                //     productItemData: copyData
-                // })
                 sessionStorage.setItem('productItem', JSON.stringify(copyData))
             }
         })
