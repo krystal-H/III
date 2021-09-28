@@ -12,8 +12,6 @@ import './index.scss';
 import { Notification } from '../../../../../components/Notification'
 
 
-const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
-
 function ServiceSelect({ productId, nextStep }, ref) {
   const [requiredList, setRequiredList] = useState([
     {
@@ -94,6 +92,8 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [editData, setEditData] = useState({})
 
   const [customCount, setCustomCount] = useState(0)
+
+  const [productItemData, setProductItemData] = useState(JSON.parse(sessionStorage.getItem('productItem')) || {})
 
   //验证函数
   const subNextConFirm = () => {

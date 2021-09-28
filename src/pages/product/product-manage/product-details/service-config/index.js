@@ -9,7 +9,6 @@ import ConfigFirmwareDetail from './configFirmwareDetail.js'
 
 import './index.scss';
 
-const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
 const requiredList = [
   {
     title: '配网信息',
@@ -77,6 +76,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
   const [firmwareDetailVisible, setFirmwareDetailVisible] = useState(false)
   const [productExtend, setProductExtend] = useState('') // 通信安全
   const [firmwareDetailData, setFirmwareDetailData] = useState([])
+  const [productItemData, setProductItemData] = useState(JSON.parse(sessionStorage.getItem('productItem')) || {})
   //验证函数
   const subNextConFirm = () => {
     nextStep()
