@@ -285,7 +285,9 @@ export default class FirmwareManagement extends Component {
                             <ReleaseFirmware deviceVersionId={deviceVersionId} close={() => { this.switchDialog('releaseFirmwareDialog') }} />
                         </Modal>
                     }
-                    <Modal
+                    {
+                        validationFirmwareDialog && 
+                        <Modal
                         title={validationModTit}
                         visible={validationFirmwareDialog}
                         onOk={() => { this.refValidationFirmware() }}
@@ -303,6 +305,8 @@ export default class FirmwareManagement extends Component {
                             close={this.closeValiFirm}
                         />
                     </Modal>
+                    }
+                    
                     <Modal title='验证信息' visible={!!validateInfo.length} onCancel={this.closeValidateInfo} width={800} footer={null} maskClosable={false}>
                         <Table rowKey="macAddress" columns={this.valInfoColumns} dataSource={validateInfo} pagination={false} />
                     </Modal>
