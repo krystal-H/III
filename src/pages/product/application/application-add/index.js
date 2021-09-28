@@ -52,7 +52,6 @@ const AddApplicationForm = memo(Form.create({
     const [checkedAndroid, setCheckedAndroid] = useState(false);
     const [checkedIOS, setCheckedIOS] = useState(false);
     const { getFieldDecorator, getFieldValue } = props.form;
-    const [preLoading, setPreLoading]=useState(true)
     const formItemLayout = {
         labelCol: { span: 3 },
         wrapperCol: { span: 12 }
@@ -61,8 +60,6 @@ const AddApplicationForm = memo(Form.create({
     const uploadRef = useRef();
     const handleSubmit = e => {
         e.preventDefault();
-        if (preLoading) return
-        !preLoading && setPreLoading(true)
         const { validateFieldsAndScroll } = props.form;
         const { saveAppBaseInfo } = props;
         validateFieldsAndScroll((err, values) => {
@@ -71,8 +68,6 @@ const AddApplicationForm = memo(Form.create({
                 let fileListUrl = uploadRef.current.getFileListUrl();
                 values.appIconLow = fileListUrl[0];
                 saveAppBaseInfo(values);
-            } else {
-                setPreLoading(false)
             }
         })
     }
@@ -91,13 +86,13 @@ const AddApplicationForm = memo(Form.create({
                 })(<Input placeholder='最多可以输入20个字符' />)}
             </Form.Item>
             <Form.Item
-              className="upload-file"
-              label="应用图标">
-              {
-                  getFieldDecorator('appIconLow', {
-                    rules: [{ required: true, message: '请选择应用图标', }],
-                })(<UploadFileHooks ref={uploadRef} format='.png'/>)
-              }
+                className="upload-file"
+                label="应用图标">
+                {
+                    getFieldDecorator('appIconLow', {
+                        rules: [{ required: true, message: '请选择应用图标', }],
+                    })(<UploadFileHooks ref={uploadRef} format='.png' />)
+                }
             </Form.Item>
             <Form.Item label="应用类型">
                 {getFieldDecorator('appType', {
@@ -263,7 +258,7 @@ const AddApplicationForm = memo(Form.create({
                 getFieldValue={getFieldValue}
                 isRequired={true} />
             <Form.Item>
-                <DoubleBtns preHandle={handleSubmit} preLoading={preLoading} nextHandle={handleCancel} preText="确认" nextText="取消"
+                <DoubleBtns preHandle={handleSubmit} nextHandle={handleCancel} preText="确认" nextText="取消"
                     nextType='default' preType='primary' />
             </Form.Item>
         </Form>
