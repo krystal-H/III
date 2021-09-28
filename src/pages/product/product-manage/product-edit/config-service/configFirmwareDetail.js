@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Modal, Button, Table, Divider } from 'antd'
 import { Notification } from '../../../../../components/Notification'
 import { Paths, post } from '../../../../../api'
+import { DateTool } from '../../../../../util/util'
 
 import './configFirmwareDetail.scss'
 
@@ -21,7 +22,11 @@ function ConfigFirmwareDetail({ productId, firmwareDetailData = [], firmwareDeta
     {
       title: '配置时间',
       dataIndex: 'createTime',
-      key: 'createTime'
+      key: 'createTime',
+      render: (text, record) => {
+        let { createTime } = record;
+        return <span>{createTime ? DateTool.utcToDev(createTime) : '--'}</span>
+      }
     },
     {
       title: '操作',
