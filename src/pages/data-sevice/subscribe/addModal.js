@@ -117,6 +117,8 @@ function StepContentOne({ continueStep }, ref) {
         });
     }
     const onFinish = () => {
+        // console.log(form.getFieldValue('labelVoList'),'======')
+        // return
         form.validateFields().then(formData => {
             let res = cloneDeep(formData)
             let name = ''
@@ -143,7 +145,7 @@ function StepContentOne({ continueStep }, ref) {
         post(Paths.getLabelByAddress, { productId: val }).then((res) => {
             let arr = []
             res.data.forEach(item => {
-                arr.push({ ...item, label:  item.labelValue, value: item.id })
+                arr.push({...item, label: item.labelValue, value: item.labelId,id:item.labelId})
             })
             setLaberArr(arr)
         });
