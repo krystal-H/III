@@ -190,7 +190,6 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
         rightAllList: cloneDeep(list),
         rightTempList: cloneDeep(list)
       })
-      console.log(editData.remoteProductDevicePage.list.map(item => item.deviceUniqueId), '/////')
       setSelectDeviceIndexToAdd(editData.remoteProductDevicePage.list.map(item => item.deviceUniqueId))
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
