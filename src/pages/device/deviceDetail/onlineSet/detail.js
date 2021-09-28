@@ -16,10 +16,6 @@ export default function AddModel({ detailVis, onCancel, actionData }) {
         post(Paths.singelDeviceRemoset, params).then(data => {
             setDetailObj(data.data)
             setTableData(JSON.parse(data.data.remoteProtocol.protocolJson))
-            console.log(JSON.parse(data.data.remoteProtocol.protocolJson), 6666)
-            // if(data.data.remoteProtocol && data.data.remoteProtocol.protocolJson && JSON.parse(data.data.remoteProtocol.protocolJson).length){
-            //     // setTableData(JSON.parse(data.data.remoteProtocol.protocolJson))
-            // }
         })
     }
     const columns = [

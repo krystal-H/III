@@ -65,8 +65,17 @@ export default function DeviceRegist() {
             }
         }
     ];
+    const [authWay, setAuthWay] = useState(0)
+    const getBusinessInfo = () => {
+        let productId = productItem.productId
+        post(Paths.proReledInfo, { productId }).then((res) => {
+            let data = res.data || {}
+            setAuthWay(data.authorityType)
+        });
+    }
     useEffect(() => {
         getStatistical()
+        getBusinessInfo()
     }, [])
     //获取统计
     const getStatistical = () => {
@@ -216,7 +225,7 @@ export default function DeviceRegist() {
                 }} />
             </div>
             {
-                modelVis && <RegistModel isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl}></RegistModel>
+                modelVis && <RegistModel isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl} authWay={authWay}></RegistModel>
             }
         </div>
     )

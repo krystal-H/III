@@ -29,7 +29,6 @@ export default function productInfo() {
     if (sessionStorage.getItem('productItem')) {
         productBaseInfo = JSON.parse(sessionStorage.getItem('productItem'))
     }
-    console.log(productBaseInfo,'==========')
     const [businessInfo, setBusinessInfo] = useState({})
     const [imageInfo, setImageInfo] = useState({})
     const getBusinessInfo = () => {
