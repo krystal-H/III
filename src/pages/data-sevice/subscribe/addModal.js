@@ -112,7 +112,7 @@ function StepContentOne({ continueStep }, ref) {
         getList()
     }, [])
     const getList = () => {
-        post(Paths.getProductPlus, {}).then((res) => {
+        post(Paths.getProductPlus).then((res) => {
             setOption(res.data)
         });
     }
@@ -134,18 +134,12 @@ function StepContentOne({ continueStep }, ref) {
                 })
                 res.labelVoList = laberA
             }
-            res.productName = name
-            localStorage.SELECT_SUBSCRI_NAME = name
+            res.productName = name;
             continueStep('1', res)
         })
     }
-    //是否展示标签
-    const [showLabel, setShowLabel] = useState('0')
-    const radioChange = (e) => {
-        setShowLabel(e.target.value);
-    }
     //获取标签
-    const getLabel = (val) => {
+    const productIdChange = (val) => {
         post(Paths.getLabelByAddress, { productId: val }).then((res) => {
             let arr = []
             res.data.forEach(item => {
@@ -153,9 +147,6 @@ function StepContentOne({ continueStep }, ref) {
             })
             setLaberArr(arr)
         });
-    }
-    const productIdChange = val => {
-        getLabel(val)
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
@@ -186,7 +177,7 @@ function StepContentOne({ continueStep }, ref) {
                 </Select>
             </Form.Item>
             <Form.Item name="all" label="选择设备">
-                <Radio.Group onChange={radioChange}>
+                <Radio.Group >
                     <Radio value={true}>全部设备</Radio>
                     <Radio value={false}>根据标签筛选设备</Radio>
                 </Radio.Group>

@@ -149,7 +149,6 @@ function StepContentOne({ continueStep, editData }, ref) {
                 }
             })
             res.productName = name
-            localStorage.SELECT_SUBSCRI_NAME = name
             continueStep('1', res)
         })
     }
