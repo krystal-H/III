@@ -263,6 +263,7 @@ let Paths = {
     deviceShadow:'/deviceManage/getProtocolList',//设备影子
     deviceShadowHis:'/deviceManage/getHistoryProtocolList',//设备影子历史数据
     exportShadowHis:'/deviceManage/exportHistoryProtocolList',//设备影子历史数据
+    getDeviceTitle:'/getDeviceDetailList',//设备头部
     
 
     /**

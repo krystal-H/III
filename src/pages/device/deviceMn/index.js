@@ -140,16 +140,16 @@ export default function DeviceList() {
             dataIndex: 'productType',
             key: 'productType',
         },
-        {
-            title: '标签',
-            dataIndex: 'labelInfo',
-            key: 'labelInfo',
-        },
-        {
-            title: '所属分组',
-            dataIndex: 'groupName',
-            key: 'groupName',
-        },
+        // {
+        //     title: '标签',
+        //     dataIndex: 'labelInfo',
+        //     key: 'labelInfo',
+        // },
+        // {
+        //     title: '所属分组',
+        //     dataIndex: 'groupName',
+        //     key: 'groupName',
+        // },
         {
             title: '类型',
             dataIndex: 'productClass',
