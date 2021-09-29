@@ -16,11 +16,14 @@ function delaData(data, typeS) {
     item.funcParamList.forEach(item2 => {
       let newItem = JSON.parse(JSON.stringify(item))
       if(typeS){
-        
+        if(!newItem.funcParamList[0].statusQueryId){
+          newData.push({ ...newItem, ...item2 })
+        }
       }else{
-
+        if(!newItem.funcParamList[0].deviceFunctionId){
+          newData.push({ ...newItem, ...item2 })
+        }
       }
-      newData.push({ ...newItem, ...item2 })
     })
   })
   newData.forEach((item, index) => {
@@ -187,7 +190,7 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
     obj.data=arr.concat(arr2)
 
     post(Paths.saveScenceData, obj).then((res) => {
-      addOk()
+      addOk(selectType)
     });
   }
   return (
@@ -196,7 +199,7 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
         <div className='scene-sevice-model'>
           <div className='top'>
             <span>产品名称：</span>
-            <Select style={{ width: 220 }} value={selectType} onChange={selectChange}>
+            <Select style={{ width: 220 }} value={selectType} onChange={selectChange} showSearch optionFilterProp="children">
               {
                 optionArr.map(item => {
                   return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)

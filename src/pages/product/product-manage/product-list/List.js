@@ -125,6 +125,7 @@ class List extends PureComponent {
   handleChange = (value) => {
     const listParams = cloneDeep(this.state.listParams)
     listParams.mode = value
+    listParams.current = 1
     this.setState({
       listParams
     }, () => { this.getProductListNew() })

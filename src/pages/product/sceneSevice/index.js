@@ -5,7 +5,7 @@ import stepImg from '../../../assets/images/product-regist.png';
 import { cloneDeep } from 'lodash';
 import { post, Paths, get } from '../../../api';
 // import { netStatus } from '../../../configs/text-map'
-import { DateTool } from '../../../util/util';
+import { DateTool, getUrlParam } from '../../../util/util';
 import { Notification } from '../../../components/Notification';
 import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
 import './index.scss'
@@ -77,13 +77,43 @@ export default function DeviceRegist() {
     }
     //产品种类列表
     const getProductType = () => {
-        post(Paths.getProductPlus, {}).then((res) => {
-            if (res.data.length) {
-                setSelectType(res.data[0].productId)
-                setProductName(res.data[0].productName)
-                setOptionArr(res.data)
-            }
+        get(Paths.getProductType, {}, { loading: true }).then(({ data }) => {
+            const productList = Object.keys(data).map(id => {
+                return { productId: id, productName: data[id] }
+            });
+            // setDataList(productList)
+            let id = getUrlParam('productId')
+                if (id) {
+                    setSelectType(id)
+                    productList.forEach(item => {
+                        if (id == item.productId) {
+                            setProductName(item.productName)
+                        }
+                    })
+                } else {
+                    setSelectType(productList[0].productId)
+                    setProductName(productList[0].productName)
+                }
+                setOptionArr(productList)
         });
+        // post(Paths.getProductPlus, {}).then((res) => {
+        //     if (res.data.length) {
+
+        //         let id = getUrlParam('productId')
+        //         if (id) {
+        //             setSelectType(id)
+        //             res.data.forEach(item => {
+        //                 if (id == item.productId) {
+        //                     setProductName(item.productName)
+        //                 }
+        //             })
+        //         } else {
+        //             setSelectType(res.data[0].productId)
+        //             setProductName(res.data[0].productName)
+        //         }
+        //         setOptionArr(res.data)
+        //     }
+        // });
     }
     //产品改变
     const [productName, setProductName] = useState('')
@@ -107,10 +137,6 @@ export default function DeviceRegist() {
         let params = {
             filter: true
         }
-        // if (selectType) {
-        //     params.productId = selectType
-        // }
-        // params.productId = 11979
         params.productId = selectType
         if (!params.id || !params.id.trim()) {
             delete params.id
@@ -150,12 +176,19 @@ export default function DeviceRegist() {
     const cancelModel = () => {
         setModelVis(false)
     }
-    const colseMoadl = () => {
+    const colseMoadl = (id) => {
         Notification({
             type: 'success',
             description: '提交成功！',
         });
+        if(id == selectType){
+            getList()
+        }else{
+            selectChange(id)
+        }
+        
         setModelVis(false)
+
     }
     const columns = [
         {
@@ -198,7 +231,7 @@ export default function DeviceRegist() {
         <div id='device-regist2'>
             <PageTitle title='场景服务'>
                 <div className='top-select'>
-                    <Select style={{ width: 200 }} value={selectType} onChange={selectChange}>
+                    <Select style={{ width: 200 }} value={selectType} onChange={selectChange} showSearch optionFilterProp="children">
                         {
                             optionArr.map(item => {
                                 return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)

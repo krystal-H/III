@@ -6,6 +6,12 @@
     font-weight: bold;
     @include text(14px, #323232);
   }
+  .ant-form-item-with-help {
+    margin-bottom: 24px !important;
+  }
+  .ant-form-item-has-error {
+    margin-bottom: 0 !important;
+  }
   .unit-box {
     position: relative;
     &-item {
