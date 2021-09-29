@@ -137,10 +137,6 @@ export default function DeviceRegist() {
         let params = {
             filter: true
         }
-        // if (selectType) {
-        //     params.productId = selectType
-        // }
-        // params.productId = 11979
         params.productId = selectType
         if (!params.id || !params.id.trim()) {
             delete params.id
@@ -180,12 +176,19 @@ export default function DeviceRegist() {
     const cancelModel = () => {
         setModelVis(false)
     }
-    const colseMoadl = () => {
+    const colseMoadl = (id) => {
         Notification({
             type: 'success',
             description: '提交成功！',
         });
+        if(id == selectType){
+            getList()
+        }else{
+            selectChange(id)
+        }
+        
         setModelVis(false)
+
     }
     const columns = [
         {

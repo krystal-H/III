@@ -136,6 +136,9 @@ function StepContentOne({ continueStep, editData }, ref) {
     }
     //获取标签
     const getLabel = (val) => {
+        form.setFieldsValue({
+            labelVoList: []
+        });
         post(Paths.getLabelByAddress, { productId: val}).then((res) => {
             let arr = []
             res.data.forEach(item => {

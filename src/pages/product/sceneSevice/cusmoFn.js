@@ -190,7 +190,7 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
     obj.data=arr.concat(arr2)
 
     post(Paths.saveScenceData, obj).then((res) => {
-      addOk()
+      addOk(selectType)
     });
   }
   return (
