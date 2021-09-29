@@ -64,7 +64,7 @@ export default function DeviceRegist() {
         if (actionData.typeS) {
             url = Paths.delScenceRun + '?statusQueryId=' + actionData.statusQueryId
         } else {
-            url = Paths.delScenceControl + '?deviceFunctionId=' + actionData.statusQueryId
+            url = Paths.delScenceControl + '?deviceFunctionId=' + actionData.deviceFunctionId
         }
         post(url).then((res) => {
             callBack()

@@ -30,6 +30,11 @@ export default ({ productId }) => {
         <div className='debug-data-box'>
             <div className='databox'></div>
             <Button type='primary' onClick={ we => {}}>上报</Button>
+            <div className='h5page'></div>
+            <div className='codeimg'>
+                <p>请使用“数联智能”app，扫描<br/>以下二维码，模拟数据下发。</p>
+                <img src="" />
+            </div>
         </div>
         <div className="modtit">通信日志</div>
 

@@ -185,6 +185,8 @@ export const ReleaseFirmware = Form.create({
                                                             placeholder="请选择开始时间"
                                                             format="YYYY-MM-DD HH:mm:ss"
                                                             showTime={{ defaultValue: moment("00:00:00", "HH:mm:ss") }}
+                                                            disabledDate={disabledDate}
+                                                            disabledTime={disabledDateTime}
                                                         />
                                                     )}
                                                 </Form.Item>
@@ -194,6 +196,8 @@ export const ReleaseFirmware = Form.create({
                                                             placeholder="请选择结束时间"
                                                             format="YYYY-MM-DD HH:mm:ss"
                                                             showTime={{ defaultValue: moment("00:00:00", "HH:mm:ss") }}
+                                                            disabledDate={disabledDate}
+                                                            disabledTime={disabledDateTime}
                                                         />
                                                     )}
                                                 </Form.Item>
@@ -230,3 +234,28 @@ export const ReleaseFirmware = Form.create({
         }
     }
 );
+
+function disabledDate(current) {
+    return current && current < moment().startOf("day");
+  }
+
+  function disabledDateTime() {
+    return {
+      disabledHours:()=> getDisabledTime("h") ,
+      disabledMinutes: ()=> getDisabledTime("m"),
+    //   disabledSeconds: () => [55, 56],
+    };
+  }
+
+  function getDisabledTime(t){
+      let _now = moment().format(t)-0;
+      console.log(t,moment().format(t))
+      
+      let a = [];
+      for(let i=0; i< _now; i++){
+          a.push(i)
+      }
+      console.log(t,a)
+      return a
+
+  }
