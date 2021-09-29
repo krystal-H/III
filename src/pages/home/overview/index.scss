@@ -12,12 +12,11 @@
 
 .over-view-unified-wrap {
 
-
   >div {
 
     &:first-child {
       display: flex;
-      padding: 22px;
+      padding: 16px 22px;
       padding-bottom: 0;
       justify-content: space-between;
       align-items: center;
@@ -188,8 +187,8 @@
                 margin-right: 12px;
 
                 img {
-                  width: 20px;
-                  width: 100%;
+                  max-height: 100%;
+                  max-width: 100%;
                 }
               }
 
@@ -351,7 +350,7 @@
 
         >div {
           width: 146px;
-          height: 103px;
+          height: 50px;
           border-radius: 4px;
           flex-wrap: wrap;
           margin-right: 14px;
@@ -380,8 +379,8 @@
             }
 
             img {
-              height: 38px;
-              width: 38px;
+              height: 19px;
+              width: 19px;
             }
           }
         }

@@ -43,7 +43,6 @@ export default function OverviewWrap() {
         getMessageList()
         getAppList()
         getDevOneList()
-        // getDevTwoList()
         getDevThreeList()
         getProductCount()
         getProductList()
