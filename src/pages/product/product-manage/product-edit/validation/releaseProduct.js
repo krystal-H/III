@@ -71,9 +71,9 @@ function ReleaseProduct({ releaseVisible, cancelHandle, productId }) {
               name="supplier"
               rules={[
                 { required: true, message: '请输入公司名称' },
-                { pattern: new RegExp(/^[a-zA-Z\u4e00-\u9fa5]+$/, "g"), message: '请输入中文/英文品牌名称' }
+                { pattern: new RegExp(/^[a-zA-Z\u4e00-\u9fa5]+$/, "g"), message: '请输入中文/英文品牌名称,不超过50个字符' }
               ]}>
-              <Input placeholder="请输入公司名称" />
+              <Input placeholder="请输入公司名称" maxLength={50} />
             </Form.Item>
             <Form.Item
               label="产品联系人"
