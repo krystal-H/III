@@ -48,6 +48,7 @@
       color: #323232;
       line-height: 17px;
       width: 120px;
+      min-width: 120px;
       text-align: right;
     }
 
@@ -58,6 +59,7 @@
       line-height: 17px;
       flex: 1;
       position: relative;
+      width: calc( 100% - 120px);
 
       .order-item-span {
         width: 68px;

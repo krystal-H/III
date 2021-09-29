@@ -2,6 +2,7 @@ import React, { useState, useEffect ,useLayoutEffect } from 'react'
 import { Table, Drawer, Image, Divider } from 'antd';
 import { post, Paths, get } from '../../../api';
 import { DateTool } from '../../../util/util';
+import './index.scss'
 export default function DeviceShadow({isRefresh}) {
     const [visible, setVisible] = useState(false);
     const [tableData, setTableData] = useState([])

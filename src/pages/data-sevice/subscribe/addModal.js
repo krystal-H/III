@@ -326,7 +326,7 @@ function StepContentTwo({ continueStep, oneData }, ref) {
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }),[oneArr]);
+    }),[oneArr,twoArr,threeArr]);
     return (<div className='step-two'>
         <div className='product-title'>已选择产品：{oneData.productName}</div>
         <div className='select-tip'>选择协议类型</div>
