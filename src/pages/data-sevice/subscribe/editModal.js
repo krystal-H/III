@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo, forwardRef, useImperativeHandle } from 'react';
-import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, Table } from 'antd';
+import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, Table,Checkbox  } from 'antd';
 import './addModal.scss'
 import LabelTip from '../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../api';
+import { cloneDeep } from "lodash";
 const { Step } = Steps;
 const { TabPane } = Tabs;
 export default function AddFuncModal({ editModelVis, colseMoadl, cancelModel, id, editData }) {
@@ -58,21 +59,20 @@ export default function AddFuncModal({ editModelVis, colseMoadl, cancelModel, id
     const continueStep = (val, data) => {
         if (currentTab == 0) {
             setSubObj(pre => {
-                let obj = JSON.parse(JSON.stringify(pre))
-                obj.one = JSON.parse(JSON.stringify(data))
+                let obj = cloneDeep(pre)
+                obj.one = cloneDeep(data)
                 return obj
             })
         } else if (currentTab == 1) {
             setSubObj(pre => {
-                let obj = JSON.parse(JSON.stringify(pre))
-                obj.two = JSON.parse(JSON.stringify(data))
+                let obj = cloneDeep(pre)
+                obj.two = cloneDeep(data)
                 return obj
             })
         }
         setCurrentTab(val);
     }
     const finishSub = (val) => {
-        console.log(subObj, val, '=========')
         let params = {
             ...subObj.one,
             devicePushDataConfList: subObj.two,
@@ -108,23 +108,48 @@ export default function AddFuncModal({ editModelVis, colseMoadl, cancelModel, id
 }
 function StepContentOne({ continueStep, editData }, ref) {
     const [form] = Form.useForm();
+    const [laberArr, setLaberArr] = useState([])//标签
     const [option, setOption] = useState([])
     useEffect(() => {
         getList()
+        let arr=[]
+        if(editData.labelVoList){
+            editData.labelVoList.forEach(item=>{
+                arr.push(item.labelId)
+            })
+        }
         form.setFieldsValue(
             {
                 subscription: editData.subscription,
                 productId: editData.productId,
+                isAll:editData.isAll,
+                labelVoList:arr
             }
         )
+        getLabel(editData.productId)
     }, [])
+    //产品列表
     const getList = () => {
-        get(Paths.productList).then((res) => {
+        post(Paths.getProductPlus).then((res) => {
             setOption(res.data)
         });
     }
+    //获取标签
+    const getLabel = (val) => {
+        post(Paths.getLabelByAddress, { productId: val}).then((res) => {
+            let arr = []
+            res.data.forEach(item => {
+                arr.push({...item, label: item.labelValue, value: item.labelId,id:item.labelId})
+            })
+            setLaberArr(arr)
+        });
+    }
+    const productIdChange = val => {
+        getLabel(val)
+    }
     const onFinish = () => {
-        form.validateFields().then(res => {
+        form.validateFields().then(formData => {
+            let res = cloneDeep(formData)
             let name = ''
             option.forEach(item => {
                 if (item.productId == res.productId) {
@@ -132,7 +157,20 @@ function StepContentOne({ continueStep, editData }, ref) {
                 }
             })
             res.productName = name
-            localStorage.SELECT_SUBSCRI_NAME = name
+            if (typeof res.isAll == 'number') {
+                let laberA = []
+                 laberArr.forEach(item => {
+                    if (res.isAll) {
+                        laberA.push(item)
+                    } else {
+                        if (res.labelVoList && res.labelVoList.indexOf(item.value) > -1) {
+                            laberA.push(item)
+                        }
+                    }
+
+                })
+                res.labelVoList = laberA
+            }
             continueStep('1', res)
         })
     }
@@ -145,7 +183,6 @@ function StepContentOne({ continueStep, editData }, ref) {
                 name="subscription"
                 label="订阅名称"
                 rules={[{ required: true }]}
-
             >
                 <Input />
             </Form.Item>
@@ -154,7 +191,7 @@ function StepContentOne({ continueStep, editData }, ref) {
                 label="归属产品"
                 rules={[{ required: true }]}
             >
-                <Select showSearch optionFilterProp="children" filterOption={(input, option) =>
+                <Select onChange={productIdChange} showSearch optionFilterProp="children" filterOption={(input, option) =>
                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }>
                     {
@@ -165,25 +202,40 @@ function StepContentOne({ continueStep, editData }, ref) {
 
                 </Select>
             </Form.Item>
-            <Form.Item name="radio-group" label="选择设备">
+            <Form.Item name="isAll" label="选择设备">
                 <Radio.Group>
-                    <Radio value="a">全部设备</Radio>
-                    <Radio value="b">根据标签筛选设备</Radio>
+                    <Radio value={1}>全部设备</Radio>
+                    <Radio value={0}>根据标签筛选设备</Radio>
                 </Radio.Group>
             </Form.Item>
-            {
-                form.getFieldValue('radio-group') === 'a' && (<Form.Item name="address" label="">
+            <Form.Item
+                noStyle
+                shouldUpdate={(prevValues, currentValues) => prevValues.isAll !== currentValues.isAll}
+            >
+                {({ getFieldValue }) =>
+                    getFieldValue('isAll') == 0 ? (
+                        <Form.Item name="labelVoList" label="选择标签">
+                            <Checkbox.Group options={laberArr} />
+                        </Form.Item>
+                    ) : null
+                }
+            </Form.Item>
+            {/* {
+                form.getFieldValue('all') == false && (<Form.Item name="address" label="">
                     <div>
                         <div>标签</div>
                     </div>
                 </Form.Item>)
-            }
+            } */}
 
         </Form>
     </div>)
 }
 StepContentOne = forwardRef(StepContentOne)
-function StepContentTwo({ continueStep, oneData }, ref) {
+function StepContentTwo({ continueStep, oneData, editData }, ref) {
+    const [oneArr, setOneArr] = useState([])
+    const [twoArr, setTwoArr] = useState([])
+    const [threeArr, setThreeArr] = useState([])
     const columns = [
         {
             title: '数据名称',
@@ -207,7 +259,31 @@ function StepContentTwo({ continueStep, oneData }, ref) {
     }
     useEffect(() => {
         getList()
+        getSelectData()
     }, [])
+    const getSelectData = () => {
+        let arr1 = [], arr2 = [], arr3 = [], tab = 'a'
+        editData.devicePushDataConfList.forEach(item => {
+            item.funcIdentifier = item.protocolProperty
+            if (item.dataType == 5) {
+                arr1.push(item.protocolProperty)
+                tab = 'a'
+            }
+            if (item.dataType == 6) {
+                arr2.push(item.protocolProperty)
+                tab = 'b'
+            }
+            if (item.dataType == 7) {
+                arr3.push(item.protocolProperty)
+                tab = 'c'
+            }
+        })
+        setOneArr(arr1)
+        setTwoArr(arr2)
+        setThreeArr(arr3)
+        setCurrentTab(tab)
+    }
+    //======获取协议
     const getList = () => {
         post(Paths.standardFnList, { productId: oneData.productId }).then((res) => {
             let data = res.data.standard.concat(res.data.custom)
@@ -232,71 +308,60 @@ function StepContentTwo({ continueStep, oneData }, ref) {
             setOption(obj)
         });
     }
-    const [oneArr, setOneArr] = useState([])
-    const [twoArr, setTwoArr] = useState([])
-    const [threeArr, setThreeArr] = useState([])
+
     const rowSelection1 = {
         onChange: (selectedRowKeys, selectedRows) => {
-            let arr = []
-            selectedRows.forEach(item => {
-
-                let obj = {
-                    "dataType": 5,
-                    "dataTypeScope": selectedRows.length == option.one.length ? 2 : 1,
-                    protocolProperty: item.funcIdentifier
-                }
-                arr.push(obj)
-            })
-            setOneArr(arr)
+            setOneArr(selectedRowKeys)
         },
-        getCheckboxProps: (record) => ({
-            // Column configuration not to be checked
-            funcIdentifier: record.funcIdentifier,
-        }),
+        selectedRowKeys: oneArr,
     };
     const rowSelection2 = {
         onChange: (selectedRowKeys, selectedRows) => {
-            let arr = []
-            selectedRows.forEach(item => {
-                let obj = {
-                    "dataType": 6,
-                    "dataTypeScope": selectedRows.length == option.two.length ? 2 : 1,
-                    protocolProperty: item.funcIdentifier
-                }
-                arr.push(obj)
-            })
-            setTwoArr(arr)
+            setTwoArr(selectedRowKeys)
         },
-        getCheckboxProps: (record) => ({
-            // Column configuration not to be checked
-            name: record.funcIdentifier,
-        }),
+        selectedRowKeys: twoArr
     };
     const rowSelection3 = {
         onChange: (selectedRowKeys, selectedRows) => {
-            let arr = []
-            selectedRows.forEach(item => {
-                let obj = {
-                    "dataType": 7,
-                    "dataTypeScope": selectedRows.length == option.three.length ? 2 : 1,
-                    protocolProperty: item.funcIdentifier
-                }
-                arr.push(obj)
-            })
-            setThreeArr(arr)
+            setThreeArr(selectedRowKeys)
         },
-        getCheckboxProps: (record) => ({
-            name: record.funcIdentifier,
-        }),
+        selectedRowKeys: threeArr
     };
     const onFinish = () => {
         let arr = []
         if (currentTab == 'a') {
-            arr = oneArr
+            option.one.forEach(item => {
+                if (oneArr.indexOf(item.funcIdentifier) > -1) {
+                    let obj = {
+                        "dataType": 5,
+                        "dataTypeScope": oneArr.length == option.one.length ? 2 : 1,
+                        protocolProperty: item.funcIdentifier
+                    }
+                    arr.push(obj)
+                }
+            })
         } else if (currentTab == 'b') {
-            arr = twoArr
+            option.two.forEach(item => {
+                if (twoArr.indexOf(item.funcIdentifier) > -1) {
+                    let obj = {
+                        "dataType": 6,
+                        "dataTypeScope": twoArr.length == option.one.length ? 2 : 1,
+                        protocolProperty: item.funcIdentifier
+                    }
+                    arr.push(obj)
+                }
+            })
         } else {
-            arr = threeArr
+            option.three.forEach(item => {
+                if (threeArr.indexOf(item.funcIdentifier) > -1) {
+                    let obj = {
+                        "dataType": 7,
+                        "dataTypeScope": threeArr.length == option.one.length ? 2 : 1,
+                        protocolProperty: item.funcIdentifier
+                    }
+                    arr.push(obj)
+                }
+            })
         }
         continueStep('2', arr)
     }
@@ -310,17 +375,17 @@ function StepContentTwo({ continueStep, oneData }, ref) {
             <TabPane tab="属性" key="a">
                 <Table rowSelection={{
                     ...rowSelection1,
-                }} dataSource={option.one} columns={columns} rowKey='funcIdentifier' />
+                }} dataSource={option.one} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
             </TabPane>
             <TabPane tab="事件" key="b">
                 <Table dataSource={option.two} rowSelection={{
                     ...rowSelection2,
-                }} columns={columns} rowKey='funcIdentifier' />
+                }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
             </TabPane>
             <TabPane tab="服务" key="c">
                 <Table dataSource={option.three} rowSelection={{
                     ...rowSelection3,
-                }} columns={columns} rowKey='funcIdentifier' />
+                }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
             </TabPane>
         </Tabs>
     </div>)

@@ -58,15 +58,22 @@
     >div {
       font-weight: 400;
       width: 170px;
-      height: 56px;
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
-      &:not(.last-wrap){
-        &:hover{
-          background: #F0F1F3 
+      border: 1px solid #e8e8e8;
+      padding: 10px;
+      margin-right: 15px;
+      &:not(.last-wrap) {
+        &:hover {
+          .item-number {
+            font-size: 20px;
+            font-weight: 400;
+            color: #3079FF;
+            line-height: 32px;
+          }
         }
       }
       .item-label {
@@ -85,6 +92,9 @@
     }
 
     .current-tab {
+      // background-color: #F0F1F3;
+      border-width: 2px;
+      border-color: #1890ff;
       .item-number {
         font-size: 20px;
         font-weight: 400;

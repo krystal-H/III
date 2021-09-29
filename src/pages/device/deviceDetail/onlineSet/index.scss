@@ -1,9 +1,10 @@
 @charset 'utf-8';
 
-#remote-config {
+#device-remote-config {
   .main-page-title {
     @include flex();
   }
+
   .setp-tip {
     // height: 184px;
     background: #f4fbff;
@@ -64,54 +65,51 @@
         align-items: center;
       }
     }
+
+    // 表格中不同状态的字体颜色
+    .device-h5-statu-1 {
+      color: $draftColor;
+    }
+
+    .device-h5-statu-2 {
+      color: $underWayColor
+    }
+
+    .device-h5-statu-3 {
+      color: $doneColor
+    }
+
+    .device-h5-statu-4 {
+      color: $unusualColor
+    }
   }
 }
+
 .device-remote-config-modal {
-  // .ant-modal-footer {
-  //   height: 70px;
-  //   @include flex(center, center);
-  //   .ant-btn-primary[disabled] {
-  //     color: $_fff;
-  //     background: $_97B;
-  //     border-color: $_c3c;
-  //     text-shadow: none;
-  //     box-shadow: none;
-  //   }
-  //   .ant-btn {
-  //     padding: 4px 24px;
-  //     &:nth-of-type(2) {
-  //       margin-left: 14px;
-  //     }
-  //   }
-  // }
-  // .remote-config {
-  //   .step-box {
-  //     width: 650px;
-  //     margin: 12px auto 36px auto;
-  //   }
-  // }
 
   // 添加配置数据
   .config-data-table .ant-table-body {
     @include self-scroll-bar();
   }
-  .ant-table-tbody > tr > td .ant-input-number,
-  .romote-modal .ant-table-tbody > tr > td .ant-select,
-  .romote-modal .ant-table-tbody > tr > td input,
-  .romote-modal .ant-table-thead > tr > th,
+
+  .ant-table-tbody>tr>td .ant-input-number,
+  .romote-modal .ant-table-tbody>tr>td .ant-select,
+  .romote-modal .ant-table-tbody>tr>td input,
+  .romote-modal .ant-table-thead>tr>th,
   .ant-input-number,
-  .romote-modal .ant-table-thead > tr > th,
+  .romote-modal .ant-table-thead>tr>th,
   .ant-select,
-  .romote-modal .ant-table-thead > tr > th,
+  .romote-modal .ant-table-thead>tr>th,
   input {
     width: 182px;
   }
 
-  .ant-table-thead > tr > th,
-  .ant-table-tbody > tr > td {
+  .ant-table-thead>tr>th,
+  .ant-table-tbody>tr>td {
     padding: 4px !important;
 
     .config-send-data {
+
       input,
       .ant-input-number,
       .ant-select {
@@ -119,6 +117,7 @@
       }
 
       &.warn {
+
         .ant-select-selection,
         .ant-input-number,
         input {

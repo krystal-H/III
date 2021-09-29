@@ -6,6 +6,7 @@ import * as echarts from 'echarts';
 const { Option } = Select;
 const optionArr = [{ key: 1, value: '最近1小时' }, { key: 2, value: '最近6小时' }, { key: 3, value: '最近24小时' }, { key: 4, value: '最近7天' }]
 export default function AddFuncModal({ ModalVisible, closeOk, sentData ,productId}) {
+    const [timeType,setTimeType]=useState(1)
     const initData = (origin) => {
         let xData=[]
         let yData=[]
@@ -61,7 +62,6 @@ export default function AddFuncModal({ ModalVisible, closeOk, sentData ,productI
         option && myChart.setOption(option);
     }
     useEffect(() => {
-        
         getData()
     }, [])
     const getData = (val) => {
@@ -73,13 +73,25 @@ export default function AddFuncModal({ ModalVisible, closeOk, sentData ,productI
         if(val){
             params.selectType=val
         }
-        // params={"column":"base_null_status_null","productId":"11529","tslType":"properties"}
         post(Paths.deviceShadowHis, params).then((res) => {
             initData(res.data)
         });
     }
     function handleChange(value) {
+        setTimeType(value)
         getData(value)
+    }
+    //下载
+    const downFile=()=>{
+        let params = {
+            column: sentData.funcIdentifier,
+            productId: productId,
+            tslType: sentData.funcType,
+            selectType:timeType
+        }
+        post(Paths.exportShadowHis, params).then((res) => {
+            window.open(res.data)
+        });
     }
     return (
         <div >
@@ -93,7 +105,7 @@ export default function AddFuncModal({ ModalVisible, closeOk, sentData ,productI
                                 })
                             }
                         </Select>
-                        <a>导出数据</a>
+                        <a onClick={downFile}>导出数据</a>
                     </div>
                     <div style={{ height: '303px' }} id='echart-show'></div>
                 </div>

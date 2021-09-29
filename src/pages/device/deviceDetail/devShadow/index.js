@@ -22,14 +22,10 @@ function delaData(data) {
     })
     return newData
 }
-export default function DeviceShadow() {
-    let baseInfo = {}
-    if (sessionStorage.DEVICE_DETAIL_BASE) {
-        baseInfo = JSON.parse(sessionStorage.DEVICE_DETAIL_BASE)
-    }
+export default function DeviceShadow({baseInfo}) {
     //帮助文档
     const downFile = () => {
-        window.open('https://dp.clife.net/iotdoc/')
+        window.open('https://cms.clife.cn/clifeIotDoc/')
     }
     // const getJsonView = () => {
     //     const { result = {} } = this.state;
@@ -43,7 +39,7 @@ export default function DeviceShadow() {
     }, [])
     const getDetail = (loading = true) => {
         // Paths.getDeviceInfo
-        post(Paths.deviceShadow, { 'deviceUniqueId': baseInfo.deviceId }, { loading }).then((res) => {
+        post(Paths.deviceShadow, { 'deviceUniqueId': baseInfo.deviceUniqueId }, { loading }).then((res) => {
             setDataSource(delaData(res.data.list))
             let jsonData=res.data.jsonString || {}
             setJsonData( JSON.stringify(jsonData) )

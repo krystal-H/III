@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-import { Button, Table, Tooltip } from 'antd'
+import { Table, Tooltip } from 'antd'
 import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons'
-import { Paths, post, get } from '../../../../../api'
+import { Paths, post } from '../../../../../api'
 import "./index.scss"
+import { Link } from 'react-router-dom';
 
-const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
-console.log(productItemData)
-export default class Hardware extends Component {
+class Hardware extends Component {
   constructor(props) {
     super(props)
     this.columns = [
@@ -33,9 +32,9 @@ export default class Hardware extends Component {
       {
         title: '操作',
         render: (text, record, index) => (
-          <div className="table-operation" onClick={() => this.updateFirmware(record.id)}>
-            固件升级
-          </div>
+          <Link to={{pathname: '/open/product/otaUpdate/list', search: `?productId=${props.productId}`}} target="_blank">
+            <div className="table-operation">固件升级</div>
+          </Link>
         )
       }
     ]
@@ -43,12 +42,13 @@ export default class Hardware extends Component {
       dataSource: [], // 固件列表
       allInfo: {}, // 返回信息
       selectedId: '1', // 模组的id
+      productItemData: JSON.parse(sessionStorage.getItem('productItem')) || {}
     }
   }
 
   componentDidMount() {
     this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
-    this.getMoudleInfo(productItemData.moduleId)
+    this.getMoudleInfo(this.state.productItemData.moduleId)
   }
 
   // 获取展示模组及固件信息
@@ -62,8 +62,9 @@ export default class Hardware extends Component {
         this.setState({ dataSource: res.data.firmwareDefList })
         this.setState({ currentModuleId: res.data.moduleId })
         // 更新存的 模组id
-        productItemData.moduleId = res.data.moduleId
-        sessionStorage.setItem('productItem', JSON.stringify(productItemData))
+        let copyData = this.state.productItemData
+        copyData.moduleId = res.data.moduleId
+        sessionStorage.setItem('productItem', JSON.stringify(copyData))
       }
     })
   }
@@ -74,19 +75,14 @@ export default class Hardware extends Component {
   }
 
   // 下载说明书
-  downInstructions = () => {
-    alert('暂无说明书！')
-  }
-
-  // 固件升级
-  updateFirmware = () => {
-    alert('暂未开放！')
+  downInstructions = (readmePdf) => {
+    readmePdf ? window.location = readmePdf : alert('暂无数据！')
   }
 
   // 获取方案类型展示
   getSchemeType = () => {
-    if (productItemData.schemeType) {
-      switch (productItemData.schemeType) {
+    if (this.state.productItemData.schemeType) {
+      switch (this.state.productItemData.schemeType) {
         case 1:
           return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。'
         case 2:
@@ -112,7 +108,7 @@ export default class Hardware extends Component {
   }
 
   render() {
-    const { dataSource, allInfo } = this.state
+    const { dataSource, allInfo, productItemData } = this.state
     return (
       <div className="hardware-dev-page">
         <div className="hardware-wrap">
@@ -141,7 +137,7 @@ export default class Hardware extends Component {
                     3.通信通讯速率: {allInfo.communicateSpeed || '-'}bps；
                     4.是否支持文件传输: {allInfo.supportFileTransfer === 0 ? '否' : '是'}
                   </div>
-                  <div className="more" onClick={this.downInstructions}>说明书<CaretRightOutlined /></div>
+                  <div className="more" onClick={() => this.downInstructions(allInfo.readmePdf)}>说明书<CaretRightOutlined /></div>
                 </div>
               </div>
               <div className="module-right-box">
@@ -242,3 +238,5 @@ export default class Hardware extends Component {
     )
   }
 }
+
+export default Hardware

@@ -18,17 +18,16 @@ function pubForm({
     const [warningWay, setWarningWay] = useState(formdata.warningWay);
 
     useEffect( () => {
-        // console.log("---form1--",formdata)
+        console.log("---form3--",formdata)
         if(formdata.warningTitle){
             form.setFieldsValue({...formdata})
         }else{
-            form.resetFields()
+            // form.resetFields()
         }
     },[formdata.warningTitle])
 
     const onFinish=(values)=>{
         commitAll()
-        // console.log("---finish1---",form.getFieldsValue())
     }
 
     
@@ -49,8 +48,16 @@ function pubForm({
                         <Input placeholder="请输入邮件地址" />
                     </Item>
                 }
-                <Item label="告警内容" name='warningDetails' rules={[{ required: true, message: '请输入告警内容'},{ max: 100, message: '最大输入长度为100' }]} >
-                    <TextArea rows='3' maxLength={100} showCount={true} placeholder="请输入告警内容"/>
+                <Item label="告警内容" name='warningDetails' rules={[{ required: true, message: '请输入告警内容'},{ max: 100, message: '最大输入长度为100' }]}
+                    initialValue="您好，{pruductname}，{time}出现配置规则下的异常，请在站内消息查看详情！"
+                >
+                    <TextArea 
+                        rows='3' 
+                        // maxLength={100} 
+                        // showCount={true} 
+                        // placeholder="请输入告警内容" 
+                        disabled={true}
+                    />
                 </Item>
                 <Item label="发送频率" name='waringFreq' required initialValue="0">
                     <Radio.Group >

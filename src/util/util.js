@@ -422,3 +422,16 @@ export function openNewWindow(hash,search) {
 
 //密码校验正则式（8到18位须同时包含字母、数字、符号）
 export const psdPattern = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~!@#$%^&*])[0-9a-zA-Z~!@#$%^&*]{8,18}$/
+
+//获取 Upload 组件上传后返回的结果url
+export const getUploadUrl = (data)=>{
+    let url = "";
+    if (data && data.length) {
+        let temp = data[0]
+
+        if (temp && temp.response && temp.response.data) {
+            url = temp.response.data.url
+        }
+    }
+    return url
+}

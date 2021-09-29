@@ -169,16 +169,19 @@ let Paths = {
     dataTypeList: '/device/debug/getDataTypeList', //获取数据类型
     propertyConfig: '/device/debug/getPropertyConfig_v1.1',//根据产品ID获取协议信息
     deviceDebugAccountGetList: "/device/debug/account/getList",//调试账号列表
-    deviceDebugAccountInsert: "/device/debug/account/insert",//调试账号添加
+    
     deviceDebugAccountDelete: "/device/debug/account/delete",//调试账号删除
     deviceDebugMacGetList: "/device/debug/mac/getList",//调试MAC列表
-    deviceDebugMacInsert: "/device/debug/mac/insert",//调试MAC添加
     deviceDebugMacDelete: "/device/debug/mac/delete",//调试MAC删除
     upgradeDebug: "/device/debug/upgradeDebug",//固件升级调试
 
     debugSecretList:'/device/debug/mac/debugSecretList',//调试密钥列表
-    addDebugMac:'/device/debug/mac/addDebugMac',//调试密钥列表
-    delDebugMac:'/device/debug/mac/delDebugMac',//调试密钥列表
+    deviceDebugAccountInsert: "/device/debug/account/insert",//调试账号添加
+    addDebugMac:'/device/debug/mac/addDebugMac',
+    delDebugMac:'/device/debug/mac/delDebugMac',
+    getMockDeviceId:'/device/debug/mockDevice/active',//虚拟设备调试获得虚拟设备id
+
+    
 
 
     /* 设备数据api start */
@@ -263,6 +266,7 @@ let Paths = {
     deviceShadow:'/deviceManage/getProtocolList',//设备影子
     deviceShadowHis:'/deviceManage/getHistoryProtocolList',//设备影子历史数据
     exportShadowHis:'/deviceManage/exportHistoryProtocolList',//设备影子历史数据
+    getDeviceTitle:'/getDeviceDetailList',//设备头部
     
 
     /**
@@ -466,21 +470,20 @@ let Paths = {
     //OTA升级
     otaDevVersionList:'/firmware/productFirmware/getList',
     otaGetExtVersion:'/device/version/5/getExtVersion',
-    
-    otaImportMac:'/device/version/5/importMac',
-    otaValidate:'/device/version/5/validate',
     otaDeleteVer:'/device/version/5/delete',
-    otaRelease:'/device/version/5/publish',
-    otaGetBatch:'/device/version/5/publish/getBatch',
-    otaGetVersionDetail:'/device/version/5/version/get',
-    otaGetBatchDevice:'/device/version/5/publish/get',
-    otaGetBatchInfo:'/device/version/5/publish/getBatchInfo',
-    otaCancelDevicePub:'/device/version/5/publish/cancel',
-    otaValiGetinfo:'/device/version/5/validate/getInfo',
-    
+
     firmwareFromProduct:'/product/firmware/package',
     otaAddVersion:'/firmware/device/version/add',
-
+    otaGetVersionDetail:'/firmware/device/version/get',
+    otaGetBatch:'/firmware/device/upgrade/publish/getBatch',
+    otaGetBatchDevice:'/firmware/device/upgrade/publish/get',
+    otaGetBatchInfo:'/firmware/device/upgrade/publish/getBatchInfo',
+    otaCancelDevicePub:'/firmware/device/upgrade/publish/cancel',
+    otaValiGetinfo:'/firmware/device/version/validate/getInfo',
+    otaImportMac:'/firmware/device/version/importMac',
+    otaValidate:'/firmware/device/version/validate',
+    otaRelease:'/firmware/device/upgrade/publish',
+    getMcuSocProLi:'/productManage/getFilterSchemaSelList',
     
     //总览页
     homeBanner:'/cover/getBannerList',//banner图

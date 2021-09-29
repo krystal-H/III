@@ -18,9 +18,8 @@ const { Step } = Steps
 const { Search } = Input
 const DESC = ['平台支持远程更新设备的配置数据，您可以提交远程配置任务，实时对设备的系统参数等数据进行远程更新，并且获取设备配置的更新状态；详细说明可参考文档']
 
-const PAGE_ROWS = 10
-const statusText = ['', '待执行', '执行中', '已执行']
-const statusTextForDevice = ['', '执行中', '执行成功', '执行失败']
+// ['', '待执行', '执行中', '已执行'] 测试李志远让把"执行中"状态去掉
+const statusText = ['', '待执行', '', '已执行']
 
 function RemoteConfig(remoteType = 'product') {
     const [configProtoclList, setConfigProtoclList] = useState([])
@@ -139,10 +138,10 @@ function RemoteConfig(remoteType = 'product') {
     }
 
     // 获取远程配置列表
-    const getRemoteConfigList = (status = '', taskName = '') => {
+    const getRemoteConfigList = (taskName = '') => {
         const params = {
             productId: currentProductId,
-            status,
+            status: status === -1 ? '' : status,
             taskName,
             ...pager
         }
@@ -169,7 +168,7 @@ function RemoteConfig(remoteType = 'product') {
 
     // 查询列表数据
     const searchListData = (val) => {
-        getRemoteConfigList(status, val)
+        getRemoteConfigList(val)
     }
 
     // 翻页
@@ -221,11 +220,13 @@ function RemoteConfig(remoteType = 'product') {
                             wrapperCol={{ span: 17 }}>
                             <Form.Item label="任务状态">
                                 <Select
-                                    allowClear
+                                    // allowClear
                                     onChange={val => setStatus(val)}
-                                    style={{ width: 150, marginRight: 40 }}>
+                                    style={{ width: 150, marginRight: 40 }}
+                                    defaultValue={-1}>
+                                    <Select.Option value={-1}>全部状态</Select.Option>
                                     {
-                                        statusText.filter(item => item).map((item, index) => (<Option key={item} value={index}>{item}</Option>))
+                                        statusText.filter(item => item).map((item, index) => (<Option key={item} value={index+1}>{item}</Option>))
                                     }
                                 </Select>
                             </Form.Item>

@@ -43,7 +43,7 @@ export default function OverviewWrap() {
         getMessageList()
         getAppList()
         getDevOneList()
-        getDevTwoList()
+        // getDevTwoList()
         getDevThreeList()
         getProductCount()
         getProductList()
@@ -68,9 +68,6 @@ export default function OverviewWrap() {
             }
 
         });
-    }
-    const goMoreMessAge = () => {
-        history.push('/messageCenter/list');
     }
     const goMessageDetail = (id) => {
         history.push(`/messageCenter/detail/${id}`);
@@ -99,12 +96,12 @@ export default function OverviewWrap() {
             setDevOneList(res.data)
         });
     }
-    const [devTwoList, setDevTwoList] = useState({ burn: 0, total: 0, active: 0, unactive: 0 })
-    const getDevTwoList = () => {
-        post(Paths.devSecreCount).then((res) => {
-            setDevTwoList(res.data)
-        });
-    }
+    // const [devTwoList, setDevTwoList] = useState({ burn: 0, total: 0, active: 0, unactive: 0 })
+    // const getDevTwoList = () => {
+    //     post(Paths.devSecreCount).then((res) => {
+    //         setDevTwoList(res.data)
+    //     });
+    // }
     const [devThreeList, setDevThreeList] = useState({ processed: 0, lastWarnTime: "-", pending: 0, send: 0 })
     const getDevThreeList = () => {
         post(Paths.devWarnCount).then((res) => {
@@ -205,7 +202,6 @@ export default function OverviewWrap() {
     const menulist = useSelector(state => {
         return state.getIn(['userCenter', 'menulist']).toJS()
     })
-
     const getProductListNew = () => {
         history.push(`/open/product/proManage/list`)
     }
@@ -221,22 +217,33 @@ export default function OverviewWrap() {
     }
     //产品详情
     const goProductDetail = (record) => {
-        let pathroute = 'details';
-        if (record.status !== 1) {
-            pathroute = 'edit';
-        } else if (record.isOldProduct) {
-            pathroute = 'detail';
+        let isShow = false
+        function isGo(menuS) {
+            menuS.forEach(item => {
+                if (item.menuname == '产品管理') {
+                    isShow = true
+                }
+                if (item.childmenus) {
+                    isGo(item.childmenus)
+                }
+            })
         }
-        // 保存当前产品，为后边继续开发取数据使用
-        sessionStorage.setItem('productItem', JSON.stringify(record))
-        history.push(`/open/product/proManage/${pathroute}/${record.productId}`);
-        // 保存当前产品，为后边继续开发取数据使用
-        // sessionStorage.setItem('productItem', JSON.stringify(item))
-        // history.push(`/open/product/proManage/edit/${item.productId}/protocols`);
-    }
-    //app详情
-    const goAppDetail = item => {
-        history.push(`/open/app/details/${item.appId}`)
+        isGo(menulist)
+        if (isShow) {
+            let pathroute = 'details';
+            if (record.status !== 1) {
+                pathroute = 'edit';
+            } else if (record.isOldProduct) {
+                pathroute = 'detail';
+            }
+            // 保存当前产品，为后边继续开发取数据使用
+            sessionStorage.setItem('productItem', JSON.stringify(record))
+            history.push(`/open/product/proManage/${pathroute}/${record.productId}`);
+        } else {
+            Notification({
+                description: '无权限！',
+            });
+        }
     }
     //消息类型
     const getMessageType = (text) => {
@@ -273,7 +280,7 @@ export default function OverviewWrap() {
         isGo(menulist)
         if (isShow) {
             history.push(url);
-        }else{
+        } else {
             Notification({
                 description: '无权限！',
             });
@@ -451,7 +458,7 @@ export default function OverviewWrap() {
                                 {
                                     appList.length ? (appList.map((item, index) => {
                                         return (<div className='over-view-productmn-content-item over-view-productmn-content-two'
-                                            key={index} onClick={() => { goAppDetail(item) }}>
+                                            key={index} onClick={() => { goAuPage('APP', `/open/app/details/${item.appId}`) }}>
                                             <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.appIconLow} /></div>
                                             <div className='over-view-productmn-content-content'>
                                                 <div>{item.appName}</div>
@@ -461,7 +468,6 @@ export default function OverviewWrap() {
                                     })) : <div className='over-no-data'><img src={noData} /> <div>暂无App</div></div>
 
                                 }
-
                             </div>
                         </div>
                         <div className='Guide-the-figure-content-top'>
@@ -578,7 +584,7 @@ export default function OverviewWrap() {
                                 <img src={help2} alt='' />
                                 <div>工单</div>
                             </div>
-                            <div onClick={() => { window.open('https://dp.clife.net/iotdoc/') }}>
+                            <div onClick={() => { window.open('https://cms.clife.cn/clifeIotDoc/') }}>
                                 <img src={help3} alt='' />
                                 <div>帮助文档</div>
                             </div>

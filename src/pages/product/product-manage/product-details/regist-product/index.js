@@ -60,13 +60,22 @@ export default function DeviceRegist() {
             title: '入网时间',
             dataIndex: 'activeTime',
             key: 'activeTime',
-            render(updateTime) {
-                return DateTool.utcToDev(updateTime);
+            render(activeTime) {
+                return activeTime && DateTool.utcToDev(activeTime);
             }
         }
     ];
+    const [authWay, setAuthWay] = useState(0)
+    const getBusinessInfo = () => {
+        let productId = productItem.productId
+        post(Paths.proReledInfo, { productId }).then((res) => {
+            let data = res.data || {}
+            setAuthWay(data.authorityType)
+        });
+    }
     useEffect(() => {
         getStatistical()
+        getBusinessInfo()
     }, [])
     //获取统计
     const getStatistical = () => {
@@ -143,7 +152,7 @@ export default function DeviceRegist() {
     };
     //导出
     const exportFile = () => {
-        let params = {productId: productItem.productId,type:'product'}
+        let params = { productId: productItem.productId, type: 'product' }
         if (form.getFieldValue('status') != -1) {
             params.status = form.getFieldValue('status')
         }
@@ -164,7 +173,7 @@ export default function DeviceRegist() {
                 <Steps current={-1} initial={0}>
                     <Step title="选择不同校验机制" description="注册设备，产品发布前，需在配置服务步骤，确定安全通信安全机制。" />
                     <Step title="注册设备物理地址" description="Clife平台提供产品密钥验证、产品密钥&设备ID验证、设备ID&设备密钥验证多种安全通信机制。" />
-                    <Step title="查看入网设备" description={<><span>Clife平台提供产品密钥验证、产品密钥&设备ID验证、设备ID&设备密钥验证多种安全通信机制。</span><a onClick={downFile}>下载密钥烧录工具</a></>} />
+                    <Step title="查看入网设备" description="安全级别最高的设备ID&设备密钥验证，即一机一码，需要下载密钥文件。" />
                 </Steps>
             </div>
             <CountNum data={countData} />
@@ -216,7 +225,7 @@ export default function DeviceRegist() {
                 }} />
             </div>
             {
-                modelVis && <RegistModel isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl}></RegistModel>
+                modelVis && <RegistModel isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl} authWay={authWay}></RegistModel>
             }
         </div>
     )

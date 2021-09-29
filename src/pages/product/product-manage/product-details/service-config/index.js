@@ -9,7 +9,6 @@ import ConfigFirmwareDetail from './configFirmwareDetail.js'
 
 import './index.scss';
 
-const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
 const requiredList = [
   {
     title: '配网信息',
@@ -41,7 +40,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
       desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
       isConfiged: false,
       type: 'firmwareUpdate',
-      routePath: '/open/product/otaUpdate',
+      routePath: '/open/product/otaUpdate/list',
       url: require('../../../../../assets/images/commonDefault/service-firmwareUpdate.png')
     },
     {
@@ -77,6 +76,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
   const [firmwareDetailVisible, setFirmwareDetailVisible] = useState(false)
   const [productExtend, setProductExtend] = useState('') // 通信安全
   const [firmwareDetailData, setFirmwareDetailData] = useState([])
+  const [productItemData, setProductItemData] = useState(JSON.parse(sessionStorage.getItem('productItem')) || {})
   //验证函数
   const subNextConFirm = () => {
     nextStep()
@@ -207,7 +207,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
                   {
                     ['firmwareUpdate', 'cloud', 'deviceWarning', 'scene'].includes(item.type) ?
                       <div className="config-card-right-btn">
-                        <Link to={item.routePath} target="_blank">配置</Link>
+                        <Link to={{pathname: item.routePath, search: `?productId=${productId}`}} target="_blank">配置</Link>
                       </div> :
                       item.isConfiged ?
                         <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>

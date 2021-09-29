@@ -20,16 +20,17 @@ export default ({
     const [stepcurrent, setStepcurrent] = useState(0);
 
     useEffect( () => {
-        // console.log(777,editData)
+        
         const { remark,content } = editData;
         if(id!==undefined){
             const contobj = JSON.parse(content);
             const {warningWay,warningTitle,warningDetails,waringFreq,emailAddress,...others} = contobj;
+            console.log("--ruleFormData--",others)
             setBaseFormData({name,remark});
             setRuleFormData(others);
             setPubFormData({warningWay,warningTitle,warningDetails,waringFreq,emailAddress});
         }
-    },[editData])
+    },[editData.id])
 
     const setStepCur = (num=0)=>{
         setStepcurrent(num)
@@ -37,12 +38,12 @@ export default ({
     const ref0 = useRef();
     const ref1 = useRef();
     const ref2= useRef();
-    const afterCloseHandle = ()=>{
-        setStepcurrent(0);
-        setBaseFormData({});
-        setRuleFormData({});
-        setPubFormData({});
-    }
+    // const afterCloseHandle = ()=>{
+    //     setStepcurrent(0);
+    //     setBaseFormData({});
+    //     setRuleFormData({});
+    //     setPubFormData({});
+    // }
 
     const commitAll=()=>{
         let baseFormData = ref0.current.getFieldsValue(),
@@ -53,7 +54,7 @@ export default ({
         let params = { ...baseFormData, id, content };
 
         post(Paths.saveWarningConfig, params, { loading: true }).then(res => {
-            closeEditMod()
+            closeEditMod(true)
         });
     }
     
@@ -64,15 +65,16 @@ export default ({
                 width={1000}
                 footer={null}
                 maskClosable={false}
-                onCancel={closeEditMod}
+                onCancel={()=>{closeEditMod(false)}}
                 className="page-devwarn-config-modal"
-                afterClose={afterCloseHandle}
+                // afterClose={afterCloseHandle}
             >
                 <Steps current={stepcurrent} >
                     <Step title='告警信息' /><Step title='规则配置' /><Step title='通知方式' />
                 </Steps>
 
                 <div className='formbox'>
+                  
                     <Tabs activeKey={stepcurrent+""}>
                         <TabPane tab="告警信息" key={'0'}>
                             <BaseInfoForm ref={ref0} setStepCur={setStepCur} formdata={baseFormData}/>
@@ -83,8 +85,7 @@ export default ({
                         <TabPane tab="通知方式"  key={'2'}>
                             <PublictypeForm ref={ref2} setStepCur={setStepCur} commitAll={commitAll} formdata={pubFormData}/>
                         </TabPane>
-                    </Tabs> 
-
+                    </Tabs>
 
                 </div>
 

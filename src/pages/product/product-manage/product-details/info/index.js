@@ -29,7 +29,6 @@ export default function productInfo() {
     if (sessionStorage.getItem('productItem')) {
         productBaseInfo = JSON.parse(sessionStorage.getItem('productItem'))
     }
-    console.log(productBaseInfo,'==========')
     const [businessInfo, setBusinessInfo] = useState({})
     const [imageInfo, setImageInfo] = useState({})
     const getBusinessInfo = () => {
@@ -101,10 +100,10 @@ export default function productInfo() {
                             <span>AP-SSID：</span>
                             <span>{imageInfo.ssid}</span>
                         </div>
-                        <div>
+                        {/* <div>
                             <span>AP-密码：</span>
                             <span>{imageInfo.ssidPassword}</span>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className='product-info-conten-wrap' style={{ paddingTop: '12px' }}>

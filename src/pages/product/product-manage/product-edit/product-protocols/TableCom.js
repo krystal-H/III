@@ -61,11 +61,11 @@ export default function TableCom({ dataSource, reFreshData, type }) {
         let result = null
         let type = data.dataTypeEN
         switch (type) {
-            case 'double':
+            case 'float':
+            case 'int':
                 result = `数值范围：${data.propertyMap.min}-${data.propertyMap.max},间距：${data.propertyMap.interval},倍数：${data.propertyMap.multiple},单位：${data.propertyMap.unit}`
                 break;
             case 'bool':
-
                 result = `0：${data.propertyMap[0]},1：${data.propertyMap[1]}`
                 break;
             case 'enum':
@@ -98,7 +98,7 @@ export default function TableCom({ dataSource, reFreshData, type }) {
                     row.funcIdentifier,
                     "funcIdentifier"
                 );
-                obj.children = <span>{IdArr.indexOf(row.funcIdentifier)+1}</span>
+                obj.children = <span>{IdArr.indexOf(row.funcIdentifier) + 1}</span>
                 return obj
             },
         },

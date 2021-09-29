@@ -14,11 +14,11 @@ function baseForm({
 },_ref){
     const [form] = Form.useForm();
     useEffect( () => {
-        // console.log("---form1--",formdata)
+        console.log("---form1--",formdata)
         if(formdata.name){
             form.setFieldsValue({...formdata})
         }else{
-            form.resetFields()
+            // form.resetFields()
         }
     },[formdata.name])
 

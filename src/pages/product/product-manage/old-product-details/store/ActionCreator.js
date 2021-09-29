@@ -249,20 +249,6 @@ export const deleteDeviceDebugMacDataAction = (pid,deleteId,data) => {
     }
   }
 }
-//保存mac
-export const getDeviceDebugMacInsertAction = (productId,account,macId='') => {
-  return (dispatch,getState) => {
-    let data = macId?{productId, account}:{productId, account, macId};//新建保存跟编辑保存区分---有无macId
-    get(Paths.deviceDebugAccountInsert,data).then((data) => {
-      if(data.code==0){//保存成功调用mac列表请求
-        get(Paths.deviceDebugAccountGetList,{productId}).then((data) => {
-          let action = updateDeviceDebugMacListAction(data);
-          dispatch(action)
-        });
-      }
-    });
-  }
-}
 //编辑录入mac
 export const editDeviceDebugMacData = (data) => {
   return {
@@ -304,19 +290,7 @@ export const getDeviceDebugAccountListAction = (id) => {
     });
   }
 }
-//保存调试账号
-export const getDeviceDebugAccountInsertAction = (productId,account) => {
-  return (dispatch,getState) => {
-    get(Paths.deviceDebugAccountInsert,{productId,account}).then((data) => {
-      if(data.code==0){//保存成功调用账号列表请求
-        get(Paths.deviceDebugAccountGetList,{productId}).then((data) => {
-          let action = updateDeviceDebugAccountListAction(data);
-          dispatch(action)
-        });
-      }
-    });
-  }
-}
+
 //更新账号列表数据
 export const getRenewalAccountAction = (data) => {
   return (dispatch,getState) => {

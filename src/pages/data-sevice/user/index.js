@@ -3,7 +3,6 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import PageTitle from '../../../components/page-title/PageTitle';
 import { post, Paths, get } from '../../../api';
 import { Radio, DatePicker, Select, Table, Button, Space, Typography } from 'antd';
-import CountNum from '../../../components/CountNum/index';
 import '../device/index.scss'
 import dayjs from 'dayjs'
 
@@ -63,7 +62,8 @@ export default function Device() {
         }
         const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
         const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
-        return tooEarly || tooLate;
+        const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
+        return isBeyong || tooEarly || tooLate
     };
 
     const onOpenChange = open => {
@@ -167,6 +167,8 @@ export default function Device() {
             }
 
         });
+        xTime=xTime.reverse()
+        xData=xData.reverse()
         return {
             xTime,
             xData
@@ -193,7 +195,6 @@ export default function Device() {
                         color: '#000'
                     }
                 }
-
             },
             yAxis: {
                 type: 'value',
@@ -217,6 +218,17 @@ export default function Device() {
                 bottom: '0%',
                 top: '4%',
                 containLabel: true
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function (params) {
+                    let html = params[0].name + "<br>";
+                    for (let i = 0; i < params.length; i++) {
+                        html += '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:' + params[i].color + ';"></span>'
+                        html += countData[currentTab].label + ":"  + params[i].value + "<br>";
+                    }
+                    return html;
+                }
             },
             series: [{
                 data: displayData.xData,

@@ -6,6 +6,7 @@ import ServiceConfig from '../service-config'
 import ConfirmModal from '../../product-edit/firmpanel/index'
 import RegiserProduct from '../regist-product'
 import {getUrlParam} from '../../../../../util/util';
+import Validation from '../../product-edit/validation';
 
 import './ProductTabs.scss'
 
@@ -42,6 +43,9 @@ export default class ProductTabs  extends Component {
                     </TabPane>
                     <TabPane key={'5'} tab={'服务配置'}>
                         <ServiceConfig productId={productId}/>
+                    </TabPane>
+                    <TabPane key={'6'} tab={'调试验证'}>
+                        <Validation productId={productId} />
                     </TabPane>
                     <TabPane key={'7'} tab={'设备注册'}>
                         <RegiserProduct />

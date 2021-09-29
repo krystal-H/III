@@ -1,17 +1,19 @@
-@import '../../assets/css/variables.scss';
+@import "../../assets/css/variables.scss";
 
 // 下一步
-.next-btn{
+.next-btn {
     padding: $gap * 1.5 0;
     text-align: center;
     .ant-btn {
         line-height: 0;
     }
-    span {
+    span:not(.anticon-loading) {
         padding: 8px 9px;
-        button:first-of-type{
-            margin-right: $gap
+        button:first-of-type {
+            margin-right: $gap;
         }
-
+    }
+    span.ant-btn-loading-icon {
+        padding: 0;
     }
 }

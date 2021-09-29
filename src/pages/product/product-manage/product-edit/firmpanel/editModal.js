@@ -66,7 +66,7 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd ,actio
                                 ref={$el}
                                 maxCount={1}
                                 preferSize={'750*1334'}
-                                format='.gif,.jpeg,.jpg,.png'
+                                format='.jpeg,.jpg,.png'
                                 maxSize={0.5} />
 
                         }
@@ -80,7 +80,7 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd ,actio
                         <UploadFileHooks
                             ref={$apkel}
                             maxCount={1}
-                            format='.apk'
+                            format='.zix'
                             maxSize={50}
                             isNotImg={true}
                         />

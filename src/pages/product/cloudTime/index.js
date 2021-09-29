@@ -8,6 +8,7 @@ import { CloudAddForm } from './cloud-manage-modals'
 import CloudUpdate from './cloud-update'
 import { cloneDeep } from 'lodash'
 import { Notification } from '../../../components/Notification'
+import { getUrlParam } from '../../../util/util';
 import './index.scss'
 
 const { Option } = Select;
@@ -137,7 +138,7 @@ export default function CloudTime() {
     const getTimeList = () => {
         post(Paths.getTimeServiceList, {
             serviceName: currentServiceName || '',
-            productId: currentProductId || '',
+            productId: currentProductId || getUrlParam('productId') || '',
             ...pager
         }, { loading: true }).then((res) => {
             setDataSource(res.data.list)
@@ -176,8 +177,9 @@ export default function CloudTime() {
 
     return (
         <div id='cloud-time'>
-            <PageTitle title='云端定时' selectOnchange={val => setCurrentProductId(val)}>
+            <PageTitle title='云端定时' selectOnchange={val => setCurrentProductId(val)} defaultValue={getUrlParam('productId') || '-1'}>
             </PageTitle>
+            
             <div className='comm-shadowbox setp-tip'>
                 <div className='step-title'>
                     <img src={stepImg} alt="" />

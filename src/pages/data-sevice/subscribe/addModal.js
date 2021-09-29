@@ -3,6 +3,7 @@ import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, Table, Checkbox
 import './addModal.scss'
 import LabelTip from '../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../api';
+import { cloneDeep } from "lodash";
 const { Step } = Steps;
 const { TabPane } = Tabs;
 export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }) {
@@ -19,11 +20,9 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
         } else if (currentTab == 1) {
             refTwo.current.onFinish()
         }
-
     };
 
     const prev = () => {
-
         setCurrentTab((currentTab - 0 - 1).toString());
     };
     //提交数据
@@ -59,14 +58,14 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
     const continueStep = (val, data) => {
         if (currentTab == 0) {
             setSubObj(pre => {
-                let obj = JSON.parse(JSON.stringify(pre))
-                obj.one = JSON.parse(JSON.stringify(data))
+                let obj = cloneDeep(pre)
+                obj.one = cloneDeep(data)
                 return obj
             })
         } else if (currentTab == 1) {
             setSubObj(pre => {
                 let obj = JSON.parse(JSON.stringify(pre))
-                obj.two = JSON.parse(JSON.stringify(data))
+                obj.two = cloneDeep(data)
                 return obj
             })
         }
@@ -113,57 +112,50 @@ function StepContentOne({ continueStep }, ref) {
         getList()
     }, [])
     const getList = () => {
-        get(Paths.productList).then((res) => {
+        post(Paths.getProductPlus).then((res) => {
             setOption(res.data)
         });
     }
     const onFinish = () => {
-        form.validateFields().then(res => {
-            res = JSON.parse(JSON.stringify(res))
+        form.validateFields().then(formData => {
+            let res = cloneDeep(formData)
             let name = ''
             option.forEach(item => {
                 if (item.productId == res.productId) {
                     name = item.productName
                 }
             })
-            console.log(res.labelVoList, '=======')
-            if (res.labelVoList && res.labelVoList.length) {
+            if (typeof res.isAll == 'number') {
                 let laberA = []
-                laberArr.forEach(item => {
-                    console.log(item.value, res.labelVoList)
-                    if (res.labelVoList.indexOf(item.value) > -1) {
+                 laberArr.forEach(item => {
+                    if (res.isAll) {
                         laberA.push(item)
+                    } else {
+                        if (res.labelVoList && res.labelVoList.indexOf(item.value) > -1) {
+                            laberA.push(item)
+                        }
                     }
+
                 })
                 res.labelVoList = laberA
             }
-            res.productName = name
-            localStorage.SELECT_SUBSCRI_NAME = name
+            res.productName = name;
             continueStep('1', res)
         })
     }
-    //是否展示标签
-    const [showLabel, setShowLabel] = useState('0')
-    const radioChange = (e) => {
-        setShowLabel(e.target.value);
-    }
     //获取标签
-
-    const getLabel = (val) => {
-        post(Paths.getLabelByAddress, { productId: val, developerId: 1 }).then((res) => {
+    const productIdChange = (val) => {
+        post(Paths.getLabelByAddress, { productId: val }).then((res) => {
             let arr = []
             res.data.forEach(item => {
-                arr.push({ ...item, label: item.labelKey + '-' + item.labelValue, value: item.id })
+                arr.push({ ...item, label: item.labelValue, value: item.labelId, id: item.labelId })
             })
             setLaberArr(arr)
         });
     }
-    const productIdChange = val => {
-        getLabel(val)
-    }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }));
+    }),[option.length]);
     return (<div className='step-one'>
         <Form form={form} labelAlign='right'>
             <Form.Item
@@ -189,25 +181,24 @@ function StepContentOne({ continueStep }, ref) {
 
                 </Select>
             </Form.Item>
-            <Form.Item name="radiogroup" label="选择设备">
-                <Radio.Group onChange={radioChange}>
-                    <Radio value="a">全部设备</Radio>
-                    <Radio value="b">根据标签筛选设备</Radio>
+            <Form.Item name="isAll" label="选择设备">
+                <Radio.Group >
+                    <Radio value={1}>全部设备</Radio>
+                    <Radio value={0}>根据标签筛选设备</Radio>
                 </Radio.Group>
             </Form.Item>
             <Form.Item
                 noStyle
-                shouldUpdate={(prevValues, currentValues) => prevValues.radiogroup !== currentValues.radiogroup}
+                shouldUpdate={(prevValues, currentValues) => prevValues.isAll !== currentValues.isAll}
             >
                 {({ getFieldValue }) =>
-                    getFieldValue('radiogroup') === 'b' ? (
+                    getFieldValue('isAll') == 0 ? (
                         <Form.Item name="labelVoList" label="选择标签">
                             <Checkbox.Group options={laberArr} />
                         </Form.Item>
                     ) : null
                 }
             </Form.Item>
-
         </Form>
     </div>)
 }
@@ -247,9 +238,7 @@ function StepContentTwo({ continueStep, oneData }, ref) {
         setThreeArr([])
         post(Paths.standardFnList, { productId: oneData.productId }).then((res) => {
             let data = res.data.standard.concat(res.data.custom)
-            let obj = {
-
-            }
+            let obj = {}
             obj.one = data.filter(item => {
                 if (item.funcType === 'properties') {
                     return item
@@ -270,7 +259,7 @@ function StepContentTwo({ continueStep, oneData }, ref) {
     }
     //勾选
     const rowSelection1 = {
-        
+
         onChange: (selectedRowKeys, selectedRows) => {
             let arr = []
             selectedRows.forEach(item => {
@@ -345,17 +334,17 @@ function StepContentTwo({ continueStep, oneData }, ref) {
             <TabPane tab="属性" key="a">
                 <Table rowSelection={{
                     ...rowSelection1,
-                }} dataSource={option.one} columns={columns} rowKey='funcIdentifier' />
+                }} dataSource={option.one} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
             </TabPane>
             <TabPane tab="事件" key="b">
                 <Table dataSource={option.two} rowSelection={{
                     ...rowSelection2,
-                }} columns={columns} rowKey='funcIdentifier' />
+                }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
             </TabPane>
             <TabPane tab="服务" key="c">
                 <Table dataSource={option.three} rowSelection={{
                     ...rowSelection3,
-                }} columns={columns} rowKey='funcIdentifier' />
+                }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
             </TabPane>
         </Tabs>
     </div>)
@@ -377,7 +366,7 @@ function StepContentThree({ finishSub }, ref) {
     }
     return (<div className='step-one'>
         <Form form={form} labelAlign='right'>
-            <Form.Item name="pushWay" label="订阅方式" rules={[{ required: true }]}>
+            <Form.Item name="pushWay" label="订阅方式" rules={[{ required: true, message: '请选择订阅方式' }]}>
                 <Radio.Group onChange={radioChange}>
                     <Radio value="0">API数据PUSH形式</Radio>
                     <Radio value="1">MQTT主题订阅</Radio>
@@ -387,7 +376,7 @@ function StepContentThree({ finishSub }, ref) {
                 showWay === '0' && <Form.Item
                     name="url"
                     label={<LabelTip label="数据订阅URL" tip="第三方云服务接口的唯一标识，供C-life云推送服务给第三方云推送数据使用，现仅支持http方式" />}
-                    rules={[{ required: true, whitespace: true, message: '请输入' }]}
+                    rules={[{ required: true, whitespace: true, message: '请输入数据订阅URL' }]}
                 >
                     <Input />
                 </Form.Item>
@@ -396,25 +385,11 @@ function StepContentThree({ finishSub }, ref) {
                 showWay === '0' && <Form.Item
                     name="pushToken"
                     label={<LabelTip label="Token" tip="第三方云服务接口对接C-life云推送服务的凭证，用来验证厂商服务接口的合法性" />}
-                    rules={[{ required: true, whitespace: true, message: '请输入' }]}
+                    rules={[{ required: true, whitespace: true, message: '请输入Token' }]}
                 >
                     <Input />
                 </Form.Item>
             }
-            {/* <Form.Item
-                name="url"
-                label={<LabelTip label="数据订阅URL" tip="第三方云服务接口的唯一标识，供C-life云推送服务给第三方云推送数据使用，现仅支持http方式" />}
-                rules={[{ required: true, message: '请输入' }]}
-            >
-                <Input />
-            </Form.Item>
-            <Form.Item
-                name="pushToken"
-                label={<LabelTip label="Token" tip="第三方云服务接口对接C-life云推送服务的凭证，用来验证厂商服务接口的合法性" />}
-                rules={[{ required: true, message: '请输入' }]}
-            >
-                <Input />
-            </Form.Item> */}
             <Form.Item label=" " colon={false}>
                 <a>订阅帮助文档</a>
             </Form.Item>

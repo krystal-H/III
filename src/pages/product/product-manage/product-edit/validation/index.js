@@ -47,7 +47,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
 
     useEffect(() => {
         get(Paths.queryServerConfig,{productId},{loading:true}).then(({data={}})=>{
-            setServerIp(data.ip && "t.wss.clife.net")
+            setServerIp(data.ip)
         })
         
         return ()=>{
@@ -85,6 +85,25 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
             })
             return
         }
+        if(!devMac.match(/^[\da-zA-Z]{1,50}$/)){
+            Notification({
+                description:'物理地址格式应为50位以内的大小写字母加数字组成!',
+                type:'warn'
+            });
+            return
+        }
+
+        //虽然ws有传账号 和 mac，然前端仍需调用之前老版本的接口保存 账号 和 mac
+        post(Paths.deviceDebugAccountInsert,{
+            productId: +productId,
+            account,
+            remark: ""
+        },{needVersion:1.1,loading:true,needFormData:true}).then((model) => { });
+        post(Paths.addDebugMac,{
+            productId:+productId,
+            physicalAddr:devMac
+        },{loading:true,needFormData:true}).then((model) => {});
+
         getAccessToken();
     }
     //修改调试账号、设备
@@ -108,10 +127,12 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
             clearInterval(wsTimer);
             wsTimer = setInterval(()=>{ ws.send('') }, 5000); //告诉服务器“请保持联系”
             const product = JSON.parse(sessionStorage.getItem('productItem'));
-            const {deviceTypeId,deviceSubTypeId,productVersion} = product;
+            const {deviceTypeId,deviceSubtypeId,productVersion} = product;
+            console.log(333,deviceSubtypeId,product)
 
-            const senmsg = `[${serverToken}|${developerInfo.userId}|${deviceTypeId}#${deviceSubTypeId}#${productVersion}|${debugInfo[0]}|${debugInfo[1]}]`;  
+            const senmsg = `[${serverToken}|${developerInfo.userId}|${deviceTypeId}#${deviceSubtypeId}#${productVersion}|${debugInfo[0]}|${debugInfo[1]}]`;  
             ws.send(senmsg);
+
         };
         ws.onmessage =  (data)=> {//接收到消息
             mountRef.current += 1;
@@ -192,10 +213,10 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
                         </div>
                     </div>
                 </TabPane>
-                {/* <TabPane tab="虚拟设备调试" key="2">
-                    <Simulat />
+                <TabPane tab="虚拟设备调试" key="2">
+                    <Simulat productId={productId} />
                     
-                </TabPane> */}
+                </TabPane>
             </Tabs>
         </div>
         <History historyVisiable={historyVisiable} openHistory={openHistory} />

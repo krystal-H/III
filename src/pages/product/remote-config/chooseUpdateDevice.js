@@ -101,11 +101,13 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
 
   // 一键移除 右侧数据
   const deleteDeviceFromRightList = () => {
-    setRightDeviceList({
-      rightAllList: [],
-      rightTempList: []
-    })
-    setSelectDeviceIndexToAdd([])
+    if (rightTempList.length > 0) {
+      setRightDeviceList({
+        rightAllList: [],
+        rightTempList: []
+      })
+      setSelectDeviceIndexToAdd([])
+    }
   }
 
   // 处理
@@ -188,7 +190,6 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
         rightAllList: cloneDeep(list),
         rightTempList: cloneDeep(list)
       })
-      console.log(editData.remoteProductDevicePage.list.map(item => item.deviceUniqueId), '/////')
       setSelectDeviceIndexToAdd(editData.remoteProductDevicePage.list.map(item => item.deviceUniqueId))
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps

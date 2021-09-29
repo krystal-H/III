@@ -3,6 +3,7 @@ import { Form, Input, Table, Modal, Select, InputNumber, DatePicker } from 'antd
 import { Notification } from '../../../../components/Notification'
 import { cloneDeep } from 'lodash'
 import { Paths, get, post } from '../../../../api'
+import { useHistory } from 'react-router-dom';
 import './index.scss'
 import moment from 'moment'
 const { TextArea } = Input;
@@ -10,11 +11,8 @@ const { Option } = Select
 
 
 export default function AddModel({ addVisible, addOk, CancelAdd, actionData }) {
-    let baseInfo = {}
-    if (sessionStorage.DEVICE_DETAIL_BASE) {
-        baseInfo = JSON.parse(sessionStorage.DEVICE_DETAIL_BASE)
-    }
-    // const [tableData, setTableData] = useState([])
+    let history = useHistory();
+    const deviceId=history.location.pathname.split('/').slice(-1)[0]
     const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
     const [selectedProtocols, setSelectedProtocols] = useState([]) // rowSelection
     const [sendDataCheck, setSendDataCheck] = useState([])
@@ -25,7 +23,7 @@ export default function AddModel({ addVisible, addOk, CancelAdd, actionData }) {
     }, [])
     const [productId, setProductId] = useState('')
     const getProductDetail = (loading = true) => {
-        post(Paths.getDeviceInfo, { 'deviceId': baseInfo.deviceId }).then((res) => {
+        post(Paths.getDeviceInfo, { deviceId}).then((res) => {
             if (res.data.productId) {
                 getTableData(res.data.productId)
                 setProductId(res.data.productId)
@@ -151,7 +149,7 @@ export default function AddModel({ addVisible, addOk, CancelAdd, actionData }) {
                             <Select
                                 value={record.sendData}
                                 onChange={value => changeSendData(value, index)}>
-                                <Option key={-1} value="">请选择参数</Option>
+                                {/* <Option key={-1} value="">请选择参数</Option> */}
                                 {
                                     Object.values(specs) && Object.values(specs).map((item, index) => (
                                         <Option key={index + item} value={item}>{item}</Option>
@@ -202,7 +200,7 @@ export default function AddModel({ addVisible, addOk, CancelAdd, actionData }) {
                 }
                 let params = {
                     taskName: formvalue.taskName,
-                    deviceId: baseInfo.deviceId,
+                    deviceId,
                     taskExplain: formvalue.taskExplain,
                     taskId: actionData.taskId,
                     protocolJson: JSON.stringify(initialProtoclList.filter(item => {
@@ -233,21 +231,20 @@ export default function AddModel({ addVisible, addOk, CancelAdd, actionData }) {
                             label="任务名称"
                             name="taskName"
                             rules={[{ required: true }]}
-
                         >
-                            <Input style={{ width: '300px' }} />
+                            <Input style={{ width: '300px' }} maxLength={20} />
                         </Form.Item>
                         <Form.Item
                             label="任务说明"
                             name="taskExplain"
                             rules={[{ required: true }]}
                         >
-                            <TextArea rows={4} />
+                            <TextArea rows={4} maxLength={100} />
                         </Form.Item>
                     </Form>
                     <div style={{ marginBottom: '10px' }}>请添加配置信息</div>
                     <Table className="config-data-table" dataSource={initialProtoclList} scroll={{ y: 300 }}
-                        columns={columns} rowKey='identifier' rowSelection={protocolSelection} />
+                        columns={columns} rowKey='identifier' rowSelection={protocolSelection} pagination={false} />
                 </div>
             </Modal>
         </div>

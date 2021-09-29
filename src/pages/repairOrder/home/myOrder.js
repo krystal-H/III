@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect ,useLayoutEffect } from 'react'
 import { Table, Drawer, Image, Divider } from 'antd';
 import { post, Paths, get } from '../../../api';
 import { DateTool } from '../../../util/util';
-export default function DeviceShadow() {
+export default function DeviceShadow({isRefresh}) {
     const [visible, setVisible] = useState(false);
-    const [tableData, setTableData] = useState([
-    ])
-    const [hasRead, setHasRead] = useState(false)
+    const [tableData, setTableData] = useState([])
+    const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     const [detailInfo, setDetailInfo] = useState({})
     const onClose = () => {
         setVisible(false);
@@ -35,8 +34,8 @@ export default function DeviceShadow() {
             title: '提交时间',
             dataIndex: 'createTime',
             key: 'createTime',
-            render(updateTime) {
-                return DateTool.utcToDev(updateTime);
+            render(createTime) {
+                return <span>{createTime && DateTool.utcToDev(createTime)}</span>
             }
         },
         {
@@ -61,8 +60,12 @@ export default function DeviceShadow() {
         },
     ]
     const getList = (loading = true) => {
-        post(Paths.WorkOrderList, {}, { loading }).then((res) => {
+        post(Paths.WorkOrderList, pager, { loading }).then((res) => {
             setTableData(res.data.list)
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { totalRows: res.data.pager.totalRows })
+            })
         });
     }
     const getDetail = (id) => {
@@ -70,11 +73,41 @@ export default function DeviceShadow() {
             setDetailInfo(res.data)
         });
     }
+    //页码改变
+    const pagerChange = (pageIndex, pageRows) => {
+        if (pageRows === pager.pageRows) {
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { pageIndex, pageRows })
+            })
+        } else {
+            setPager(pre => {
+                let obj = JSON.parse(JSON.stringify(pre))
+                return Object.assign(obj, { pageIndex: 1, pageRows })
+            })
+        }
+
+    }
+    // useLayoutEffect (() => {
+    //     console.log(currentTab,'============aqs4')
+    //     if(currentTab == '2'){
+    //     }
+    // }, [currentTab])
     useEffect(() => {
         getList()
-    }, [])
+    }, [pager.pageRows, pager.pageIndex,isRefresh])
+    
     return (<div id='order-home-self'>
-        <Table dataSource={tableData} columns={columns} rowKey='workOrderId' />
+        <Table dataSource={tableData} columns={columns} rowKey='workOrderId' pagination={{
+            defaultCurrent: 1,
+            current: pager.pageIndex,
+            onChange: pagerChange,
+            pageSize: pager.pageRows,
+            total: pager.totalRows,
+            showQuickJumper: true,
+            pageSizeOptions: [10],
+            showTotal: () => <span>共 <a>{pager.totalRows}</a> 条</span>
+        }} />
         <Drawer
             title="工单详情"
             placement="right"
@@ -92,7 +125,7 @@ export default function DeviceShadow() {
                 </div>
                 <div className='order-item'>
                     <div className='order-item-label'>提交时间：</div>
-                    <div className='order-item-text'>{detailInfo.createTime}</div>
+                    <div className='order-item-text'>{detailInfo.createTime && DateTool.utcToDev(detailInfo.createTime)}</div>
                 </div>
                 <div className='order-item'>
                     <div className='order-item-label'>问题描述：</div>

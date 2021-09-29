@@ -76,22 +76,22 @@
                             }
                         }
                         .del-app {
-                            @include flex(center);
                             @include text(14px, #f42c2c);
-                            display: none;
                             position: absolute;
                             bottom: 0;
-                            left: 0;
-                            width: 100%;
-                            height: 30px;
-                            line-height: 30px;
+                            right: 0;
+                            width: 62px;
+                            height: 28px;
+                            line-height: 28px;
                             text-align: center;
                             cursor: pointer;
-                            background-color: $sectionBgColor;
-                            border-top: 1px solid #e9e9e9;
+                            &-inner {
+                                display: none;
+                                padding-right: 10px;
+                            }
                         }
-                        &:hover {
-                            .del-app {
+                        .del-app:hover {
+                            .del-app-inner {
                                 display: block;
                             }
                         }
@@ -122,6 +122,15 @@
                         &:nth-last-child(2),
                         &:nth-last-child(3) {
                             margin-bottom: 0;
+                        }
+                        .application-item-card {
+                            .application-info {
+                                overflow: hidden;
+                                &-title {
+                                    line-height: 16px;
+                                    font-size: 13px;
+                                }
+                            }
                         }
                     }
                 }

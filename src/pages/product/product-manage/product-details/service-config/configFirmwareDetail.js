@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Modal, Table } from 'antd'
+import { DateTool } from '../../../../../util/util'
 
 import './configFirmwareDetail.scss'
 
@@ -19,8 +20,12 @@ function ConfigFirmwareDetail({ firmwareDetailData = [], firmwareDetailVisible, 
     {
       title: '配置时间',
       dataIndex: 'createTime',
-      key: 'createTime'
-    }
+      key: 'createTime',
+      render: (text, record) => {
+        let { createTime } = record;
+        return <span>{createTime ? DateTool.utcToDev(createTime) : '--'}</span>
+      }
+    },
   ]
 
   return (

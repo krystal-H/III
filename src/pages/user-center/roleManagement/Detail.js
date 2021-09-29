@@ -22,21 +22,21 @@ export default class AddRole extends Component{
             remark:getUrlParam('remark') && decodeURI(getUrlParam('remark')) ||'',//备注
             dataMenu:[],//功能菜单
             dataObject:[],//数据对象
-            dataDimension:[],//设备标签
+            // dataDimension:[],//设备标签
 
             treeDataMenu:[],
             treeDataObject:[],
-            treeDataDimension:[],
+            // treeDataDimension:[],
 
             /*  用于权限操作区的UI变化 （不包括选中的 fatherid ）*/
             treeMenuCheckeys:[],
             treeDataObjectCheckeys:[],
-            treeDataDimensionCheckeys:[],
+            // treeDataDimensionCheckeys:[],
 
             /*  用于选中操作改变UI后，导致的“已选权限”展示区的UI变化  和  最终提交的数据所需要的id，（包括选中的 fatherid ）*/
             menuCheckedIds:[],
             dataObjectCheckedIds:[],
-            dataDimensionCheckedIds:[],
+            // dataDimensionCheckedIds:[],
 
             expandedKeys: [],
             searchValue: '',
@@ -50,7 +50,7 @@ export default class AddRole extends Component{
         /* 用于拿到数据 遍历的时候  一次性同时记录初始选中的id ，再更新到操作区的UI 的 state*/
         this.treeMenuCheckeys=[];
         this.treeDataObjectCheckeys=[];
-        this.treeDataDimensionCheckeys=[];
+        // this.treeDataDimensionCheckeys=[];
 
 
         this.keylist=[[],[],[]];
@@ -65,12 +65,12 @@ export default class AddRole extends Component{
             let { checkBoxGroupMenuList=[], menu="[]" } = res.data;
 
             let dataMenu = this.addFrontIdMenu(JSON.parse(menu)),
-                dataObject = this.addFrontId(checkBoxGroupMenuList[0].checkBoxGroupList),
-                dataDimension = this.addFrontId(checkBoxGroupMenuList[1].checkBoxGroupList);
+                dataObject = this.addFrontId(checkBoxGroupMenuList[0].checkBoxGroupList);
+                // dataDimension = this.addFrontId(checkBoxGroupMenuList[1].checkBoxGroupList);
 
             let treeDataMenu = this.getMenuTreeData(dataMenu),
-                treeDataObject = this.getOneTreeData(dataObject,"treeDataObjectCheckeys"),
-                treeDataDimension = this.getOneTreeData(dataDimension,"treeDataDimensionCheckeys");
+                treeDataObject = this.getOneTreeData(dataObject,"treeDataObjectCheckeys");
+                // treeDataDimension = this.getOneTreeData(dataDimension,"treeDataDimensionCheckeys");
 
             /* 把tree数据 解析成只有一层级的 同级的{title,key},便于做搜索操作（onSearch）时过滤数据 */
             // this.generateList(treeDataMenu,0);
@@ -80,15 +80,15 @@ export default class AddRole extends Component{
             this.setState({
                 dataMenu,
                 dataObject,
-                dataDimension,
+                // dataDimension,
 
                 treeDataMenu,
                 treeDataObject,
-                treeDataDimension,
+                // treeDataDimension,
 
                 treeMenuCheckeys:this.treeMenuCheckeys,
                 treeDataObjectCheckeys:this.treeDataObjectCheckeys,
-                treeDataDimensionCheckeys:this.treeDataDimensionCheckeys,
+                // treeDataDimensionCheckeys:this.treeDataDimensionCheckeys,
             })
         });
 
@@ -212,14 +212,21 @@ export default class AddRole extends Component{
 
     //获取权限树的提交接口所需的格式数据
     getOneComitData = (type)=>{
-        const { dataMenu, dataObject, dataDimension } = this.state;
-        const { menuCheckedIds, dataObjectCheckedIds, dataDimensionCheckedIds } = this.getAllCheckedIds();
+        const { dataMenu, dataObject
+            //  dataDimension 
+            } = this.state;
+        const { menuCheckedIds, dataObjectCheckedIds
+            //  dataDimensionCheckedIds 
+            } = this.getAllCheckedIds();
         
         let comitDataMenu = this.changChecked(dataMenu,menuCheckedIds),
-            comitDataObject = this.changChecked(dataObject,dataObjectCheckedIds),
-            comitDataDimension = this.changChecked(dataDimension,dataDimensionCheckedIds);
+            comitDataObject = this.changChecked(dataObject,dataObjectCheckedIds);
 
-        return { comitDataMenu, comitDataObject, comitDataDimension }
+            // comitDataDimension = this.changChecked(dataDimension,dataDimensionCheckedIds);
+
+        return { comitDataMenu, comitDataObject
+            // comitDataDimension 
+        }
     }
     //根据UI上的选中的id（frontId）， 设置 checked字段值，设置完成后删除 frontId 属性，
     changChecked = (data,checkeys)=>{
@@ -244,9 +251,13 @@ export default class AddRole extends Component{
         this.formRef.current.submit()
     }
     onFinish = (baseinfo)=>{
-        let { comitDataMenu, comitDataObject, comitDataDimension } = this.getOneComitData();
+        let { comitDataMenu, comitDataObject
+            //  comitDataDimension
+             } = this.getOneComitData();
         let menustr = JSON.stringify(comitDataMenu),
-            dataArr = [...comitDataObject,...comitDataDimension];
+            dataArr = [...comitDataObject
+                // ...comitDataDimension
+            ];
 
         let data = {
             ...baseinfo,
@@ -273,12 +284,15 @@ export default class AddRole extends Component{
 
     // ant选中的id 增加 有子节点选中的父节点的id
     getAllCheckedIds = ()=>{
-        const { treeMenuCheckeys,treeDataObjectCheckeys, treeDataDimensionCheckeys } = this.state;
+        const { treeMenuCheckeys,treeDataObjectCheckeys
+            // treeDataDimensionCheckeys 
+        } = this.state;
         const menuCheckedIds = this.addCheckedFatherId(treeMenuCheckeys),
-            dataObjectCheckedIds = this.addCheckedFatherId(treeDataObjectCheckeys),
-            dataDimensionCheckedIds = this.addCheckedFatherId(treeDataDimensionCheckeys);
+            dataObjectCheckedIds = this.addCheckedFatherId(treeDataObjectCheckeys);
+            // dataDimensionCheckedIds = this.addCheckedFatherId(treeDataDimensionCheckeys);
         return {
-            menuCheckedIds, dataObjectCheckedIds, dataDimensionCheckedIds
+            menuCheckedIds, dataObjectCheckedIds
+            // dataDimensionCheckedIds
         }
 
     }
@@ -286,8 +300,12 @@ export default class AddRole extends Component{
 
     //生成展示已选中的菜单树
     getCheckedTree = ()=>{
-        const { treeDataMenu, treeDataObject, treeDataDimension } = this.state;
-        const { menuCheckedIds, dataObjectCheckedIds, dataDimensionCheckedIds } = this.getAllCheckedIds();
+        const { treeDataMenu, treeDataObject
+            //  treeDataDimension
+             } = this.state;
+        const { menuCheckedIds, dataObjectCheckedIds
+            //  dataDimensionCheckedIds 
+            } = this.getAllCheckedIds();
 
         let _tree = [];
 
@@ -306,13 +324,13 @@ export default class AddRole extends Component{
                 children:this.fitherChecked(treeDataObject,dataObjectCheckedIds)
             })
         }
-        if(dataDimensionCheckedIds.length>0){
-            _tree.push({
-                title:"设备标签",
-                key:"dimension",
-                children:this.fitherChecked(treeDataDimension,dataDimensionCheckedIds)
-            })
-        }
+        // if(dataDimensionCheckedIds.length>0){
+        //     _tree.push({
+        //         title:"设备标签",
+        //         key:"dimension",
+        //         children:this.fitherChecked(treeDataDimension,dataDimensionCheckedIds)
+        //     })
+        // }
         return _tree;
         
     }
@@ -374,8 +392,9 @@ export default class AddRole extends Component{
     render(){
         const { 
             roleName, remark, treeDataMenu,treeDataObject,
-            treeDataDimension,treeMenuCheckeys,treeDataObjectCheckeys, 
-            treeDataDimensionCheckeys,
+            // treeDataDimension,
+            treeMenuCheckeys,treeDataObjectCheckeys, 
+            // treeDataDimensionCheckeys,
             searchValue, expandedKeys, autoExpandParent
         } = this.state;
         const checkedTreeData = this.getCheckedTree();
@@ -393,12 +412,12 @@ export default class AddRole extends Component{
                 checkKeysNam:treeDataObjectCheckeys,
                 type:"treeDataObjectCheckeys",
             },
-            {
-                name:"设备标签",
-                treeDataNam:treeDataDimension,
-                checkKeysNam:treeDataDimensionCheckeys,
-                type:"treeDataDimensionCheckeys",
-            }
+            // {
+            //     name:"设备标签",
+            //     treeDataNam:treeDataDimension,
+            //     checkKeysNam:treeDataDimensionCheckeys,
+            //     type:"treeDataDimensionCheckeys",
+            // }
         ]
 
 

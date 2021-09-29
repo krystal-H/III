@@ -57,7 +57,7 @@
 
 
 .ota_uploadbox{
-    margin: -12px 0 24px 98px;
+    margin: -4px 0 24px 110px;
     position: relative;
     .downbtn{
         position: absolute;
@@ -70,21 +70,6 @@
     .helpitem{
         margin-bottom: 24px;
     }
-    .stepbox{
-        width: 60%;
-        margin:0 0 20px 20%;
-        position: relative;
-        .disabled{
-            position: absolute;
-            top: 12px;
-            left: 66%;
-            width: 42px;
-            border-top: 1px solid rgba(0, 0, 0, 0.45);
-            -ms-transform: rotate(-32deg); /* IE 9 */
-            transform: rotate(-32deg); /* 标准语法 */
-
-        }
-    }
     .btnbox{
         text-align: center;
         padding-top: 20px;
@@ -96,9 +81,10 @@
 }
 .ota-firmwaredetail{
     .page-content-header{
-        height: max-content;
-        background-color: white;
-        padding: 12px 24px 16px;
+        // height: max-content;
+        // background-color: white;
+        padding: 20px 24px 0px;
+        margin-bottom: -12px;
     }
     .search{
         width: 300px;

@@ -15,13 +15,6 @@ import './style.scss';
 
 export const EditApplicationForm = memo(Form.create({
     name: 'editApplication',
-    // onFieldsChange(props, changedFields) {
-    //     // console.log('changedFields', changedFields);
-    //     if (JSON.stringify(changedFields) === '{}') {
-    //         return;
-    //     }
-    //     // props.changeCurApi(changedFields);
-    // },
     mapPropsToFields(props) {
         const { appInfo } = props;
         let appInfoMap = {};
@@ -36,7 +29,7 @@ export const EditApplicationForm = memo(Form.create({
 })(memo((props) => {
     const uploadRef = useRef();
     const [showSecret, setShowSecret] = useState(false);
-    const { getFieldDecorator,getFieldValue } = props.form;
+    const { getFieldDecorator, getFieldValue } = props.form;
     const formItemLayout = {
         labelCol: { span: 2 },
         wrapperCol: { span: 12 }
@@ -69,8 +62,8 @@ export const EditApplicationForm = memo(Form.create({
                 let fileListUrl = uploadRef.current.getFileListUrl();
                 if (fileListUrl.length <= 0) {
                     Notification({
-                        description:'请选择文件!',
-                        type:'warn'
+                        description: '请选择文件!',
+                        type: 'warn'
                     });
                     return;
                 }
@@ -87,23 +80,13 @@ export const EditApplicationForm = memo(Form.create({
             <Form.Item
                 label="应用名称"
                 wrapperCol={{ span: 10 }}
-                hasFeedback
-            >
+                hasFeedback>
                 {getFieldDecorator('appName', {
                     rules: [
-                        {
-                            required: true,
-                            message: '请输入应用名称',
-                        },
-                        {
-                            max: 20,
-                            message: '最多可以输入20个字符',
-                        },
+                        { required: true, message: '请输入应用名称', },
+                        { max: 20, message: '最多可以输入20个字符', },
                     ],
-                })
-                (<Input
-                    placeholder='最多可以输入20个字符'
-                />)}
+                })(<Input placeholder='最多可以输入20个字符' />)}
             </Form.Item>
             <Row gutter={8}>
                 <Col span={2} className="app-icon-low-label">
@@ -113,20 +96,15 @@ export const EditApplicationForm = memo(Form.create({
                     <UploadFileHooks ref={uploadRef} format=".png" />
                 </Col>
             </Row>
-            <Form.Item
-                label="应用类型"
-            >
+            <Form.Item label="应用类型">
                 {appType.value === 0 ? '移动应用' : '小程序应用'}
             </Form.Item>
             {
                 (appType.value === 0 || appType.value === undefined) && <Form.Item
                     className="appVersion"
-                    label="应用包"
-                >
+                    label="应用包">
                     <Row gutter={8}>
-                        <Col span={24}>
-                            Android版
-                        </Col>
+                        <Col span={24}>Android版</Col>
                     </Row>
                     <Row gutter={8}>
                         <Col span={16}>
@@ -136,8 +114,7 @@ export const EditApplicationForm = memo(Form.create({
                                 labelCol={{ span: 1 }}
                                 wrapperCol={{ span: 22 }}
                                 className="android-input"
-                                colon={false}
-                            >
+                                colon={false}>
                                 {getFieldDecorator('androidPkg', {
                                     rules: [
                                         {
@@ -145,10 +122,7 @@ export const EditApplicationForm = memo(Form.create({
                                             message: '最多可以输入200个字符',
                                         },
                                     ],
-                                })
-                                (<Input
-                                    placeholder='请输入应用包名，例如com.example.mirror'
-                                />)}
+                                })(<Input placeholder='请输入应用包名，例如com.example.mirror' />)}
                             </Form.Item>
                         </Col>
                         <Col span={8}>
@@ -158,26 +132,17 @@ export const EditApplicationForm = memo(Form.create({
                                 labelCol={{ span: 0 }}
                                 wrapperCol={{ span: 20 }}
                                 className="android-schema-input"
-                                colon={false}
-                            >
+                                colon={false}>
                                 {getFieldDecorator('androidSchema', {
-                                    rules: [
-                                        {
-                                            max: 50,
-                                            message: '最多可以输入50个字符',
-                                        },
-                                    ],
-                                })
-                                (<Input
+                                    rules: [{ max: 50, message: '最多可以输入50个字符', }],
+                                })(<Input
                                     placeholder='请输入分享Schema'
                                 />)}
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row gutter={8}>
-                        <Col span={24}>
-                            iOS版
-                        </Col>
+                        <Col span={24}>iOS版</Col>
                         <Col span={16}>
                             <Form.Item
                                 label=""
@@ -185,19 +150,10 @@ export const EditApplicationForm = memo(Form.create({
                                 labelCol={{ span: 1 }}
                                 wrapperCol={{ span: 22 }}
                                 className="ios-input"
-                                colon={false}
-                            >
+                                colon={false}>
                                 {getFieldDecorator('iosBundleId', {
-                                    rules: [
-                                        {
-                                            max: 200,
-                                            message: '最多可以输入200个字符',
-                                        },
-                                    ],
-                                })
-                                (<Input
-                                    placeholder='请输入应用包名，例如com.example.mirror'
-                                />)}
+                                    rules: [{ max: 200, message: '最多可以输入200个字符', }],
+                                })(<Input placeholder='请输入应用包名，例如com.example.mirror' />)}
                             </Form.Item>
                         </Col>
                         <Col span={8}>
@@ -207,19 +163,10 @@ export const EditApplicationForm = memo(Form.create({
                                 labelCol={{ span: 0 }}
                                 wrapperCol={{ span: 20 }}
                                 className="ios-schema-input"
-                                colon={false}
-                            >
+                                colon={false}>
                                 {getFieldDecorator('iosSchema', {
-                                    rules: [
-                                        {
-                                            max: 50,
-                                            message: '最多可以输入50个字符',
-                                        },
-                                    ],
-                                })
-                                (<Input
-                                    placeholder='请输入分享Schema'
-                                />)}
+                                    rules: [{ max: 50, message: '最多可以输入50个字符', },],
+                                })(<Input placeholder='请输入分享Schema' />)}
                             </Form.Item>
                         </Col>
                     </Row>
@@ -227,10 +174,7 @@ export const EditApplicationForm = memo(Form.create({
             }
             {
                 appType === '2' &&
-                <Form.Item
-                    label="微信应用ID"
-                    hasFeedback
-                >
+                <Form.Item label="微信应用ID" hasFeedback>
                     {getFieldDecorator('weChatAppId', {
                         rules: [
                             {
@@ -246,8 +190,7 @@ export const EditApplicationForm = memo(Form.create({
                                 message: 'APPID仅支持数字或字母',
                             },
                         ],
-                    })
-                    (<Input placeholder='请输入在微信申请时的APPID' />)}
+                    })(<Input placeholder='请输入在微信申请时的APPID' />)}
                 </Form.Item>
 
             }
@@ -255,8 +198,7 @@ export const EditApplicationForm = memo(Form.create({
                 appType === '2' &&
                 <Form.Item
                     label="微信应用Secret"
-                    hasFeedback
-                >
+                    hasFeedback>
                     {getFieldDecorator('secret', {
                         rules: [
                             {
@@ -272,31 +214,21 @@ export const EditApplicationForm = memo(Form.create({
                                 message: 'APP的Secret仅支持数字或字母',
                             },
                         ],
-                    })
-                    (<Input placeholder='请输入在微信申请时的APP的Secret' />)}
+                    })(<Input placeholder='请输入在微信申请时的APP的Secret' />)}
                 </Form.Item>
             }
-            <Form.Item
-                label="APPID"
-                className="app-id"
-            >
+            <Form.Item label="APPID" className="app-id">
                 <span>{appId.value}</span>
                 <span className="appId-desc">由系统自动分配的APP唯一标识码</span>
             </Form.Item>
-            <Form.Item
-                label="APPSecret"
-                className="app-secret"
-            >
+            <Form.Item label="APPSecret" className="app-secret">
                 {appSecretText}
                 <LegacyIcon type={showSecretType} className="icon-display" style={{ marginLeft: '10px', fontSize: '18px' }}
-                      theme="twoTone"
-                      twoToneColor="#2874FF" onClick={() => setShowSecret(!showSecret)} />
+                    theme="twoTone"
+                    twoToneColor="#2874FF" onClick={() => setShowSecret(!showSecret)} />
                 <span className="secret-desc">由系统自动分配的密码</span>
             </Form.Item>
-            <Form.Item
-                label="应用构建模式"
-                wrapperCol={{ span: 6 }}
-            >
+            <Form.Item label="应用构建模式" wrapperCol={{ span: 6 }}>
                 <span>开发模式</span>
             </Form.Item>
             <TextAreaCounter
@@ -306,11 +238,10 @@ export const EditApplicationForm = memo(Form.create({
                 placeholder="最多可以输入100个字符"
                 getFieldDecorator={getFieldDecorator}
                 isRequired={true}
-                getFieldValue={getFieldValue}
-            />
+                getFieldValue={getFieldValue} />
             <Form.Item>
                 <DoubleBtns preHandle={handleSubmit} nextHandle={handleCancel} preText="确认" nextText="取消"
-                            nextType='default' preType='primary' />
+                    nextType='default' preType='primary' />
             </Form.Item>
         </Form>
     );

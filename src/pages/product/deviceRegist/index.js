@@ -10,6 +10,7 @@ import { Notification } from '../../../components/Notification';
 import LabelVisible from '../../../components/form-com/LabelVisible';
 import './index.scss'
 import RegistModel from './regist'
+import { cloneDeep } from "lodash";
 const { Option } = Select;
 const { Step } = Steps;
 export default function DeviceRegist() {
@@ -26,7 +27,7 @@ export default function DeviceRegist() {
         getCount()
     }, [])
     const downFile = () => {
-        // alert(10)
+        alert('暂无')
     }
     //统计
     const getCount = (productId) => {
@@ -50,7 +51,7 @@ export default function DeviceRegist() {
     //产品改变
     const selectChange = (value) => {
         setPager(pre => {
-            let obj = JSON.parse(JSON.stringify(pre))
+            let obj = cloneDeep(pre)
             return Object.assign(obj, { pageIndex: 1 })
         })
         getCount(value)
@@ -211,7 +212,7 @@ export default function DeviceRegist() {
                 <Steps current={-1} initial={0}>
                     <Step title="选择不同校验机制" description="注册设备，产品发布前，需在配置服务步骤，确定安全通信安全机制。" />
                     <Step title="注册设备物理地址" description="Clife平台提供产品密钥验证、产品密钥&设备ID验证、设备ID&设备密钥验证多种安全通信机制。" />
-                    <Step title="查看入网设备" description={<><span>Clife平台提供产品密钥验证、产品密钥&设备ID验证、设备ID&设备密钥验证多种安全通信机制。</span><a onClick={downFile}>下载密钥烧录工具</a></>} />
+                    <Step title="查看入网设备" description="安全级别最高的设备ID&设备密钥验证，即一机一码，需要下载密钥文件。"/>
                 </Steps>
             </div>
             <CountNum data={countData} />
@@ -237,7 +238,7 @@ export default function DeviceRegist() {
                                     name='id'
                                     noStyle
                                 >
-                                    <Input style={{ width: '465px' }} placeholder="请输入设备ID" />
+                                    <Input style={{ width: '350px' }} placeholder="请输入设备ID" />
                                 </Form.Item>
                                 <Button type="primary" onClick={onSearch}>
                                     查询

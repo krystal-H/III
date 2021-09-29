@@ -9,7 +9,7 @@ import GrayDebugg from './grayDebugg'
 import ActionModel from './actionModel'
 import RelPanModel from './relPanel'
 import { Notification } from '../../../../../components/Notification';
-import defaultCumPan from '../../../../../assets/images/commonDefault/default-cumfn.png';
+import defaultCumPan from '../../../../../assets/images/commonDefault/default-pannel.jpg';
 import './index.scss'
 function confirmModel({ nextStep }, ref) {
     let productId = 0
@@ -22,6 +22,7 @@ function confirmModel({ nextStep }, ref) {
     }, [])
     const [defaultTab, setDefaultTab] = useState('1')
     const [actionVis, setActionVis] = useState(false) //操作弹窗展示
+    const [showTip,setShowTip]=useState(false)
     //获取最近发布的数据
     const [shoaLast, setShoaLast] = useState({})
     const getList = () => {
@@ -30,11 +31,6 @@ function confirmModel({ nextStep }, ref) {
             productId = JSON.parse(sessionStorage.getItem('productItem')).productId
         }
         post(Paths.panelList, { productId }).then((res) => {
-            // let data = res.data.list.filter(item => {
-            //     if (item.panelType == 3) {
-            //         return item
-            //     }
-            // })
             let data = res.data.list
             let lastEst = {}
             if (!data.length) return;
@@ -254,16 +250,20 @@ function confirmModel({ nextStep }, ref) {
         if (projectStatus == 1 && verifyStatus == 0 && isGray == 0 && htmlShow == 0) {
             return '已下线'
         }
+        return ''
     }
     return <div className='confirm-pannel'>
         <div className='confirm-pannel-title'>
             <div>已选面板：</div>
-            <div>{shoaLast.projectName}</div>
+            <div>{shoaLast.projectName || '自定义开发上传'}</div>
         </div>
         <div className='confirm-pannel-content'>
             <div className='pannel-cover-image'>
                 <img src={shoaLast.page1 || defaultCumPan} alt='' />
-                <div className='pannel-status'>{shoaLast.status}</div>
+                {
+                   shoaLast.status && <div className='pannel-status'>{shoaLast.status}</div>
+                }
+                
             </div>
             <div>
                 <div className='confirm-pannel-content-left'>
@@ -295,7 +295,7 @@ function confirmModel({ nextStep }, ref) {
                 <div className='confirm-pannel-content-item'>
                     <div>自由配置面板</div>
                     <div>直接拖拽可视化功能组件，所见即所得，DIY 出具有您的品牌风格的面板，适用于自定义开发方案。</div>
-                    <Button type="primary" ghost>
+                    <Button type="primary" ghost onClick={()=>{setShowTip(true)}}>
                         进入
                     </Button>
                 </div>
@@ -334,6 +334,14 @@ function confirmModel({ nextStep }, ref) {
         {/* 发布 */}
         {
             relPanVis && <RelPanModel actionObj={actionData} relPanVis={relPanVis} CancelRel={CancelRel} closeOkRel={closeOkRel} />
+        }
+        {/* 待开发功能 */}
+        {
+            showTip && <Modal title="温馨提示" width='370px' visible={showTip} footer={null} onCancel={()=>{setShowTip(false)}}>
+                <div className='down-office-modal'>
+                    <div>此功能正在升级维护中，敬请期待~</div>
+                </div>
+            </Modal>
         }
     </div>
 }

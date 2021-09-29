@@ -34,6 +34,7 @@ function ProtocolFn2({ nextStep, productId }, ref) {
     //展示
     const [cusData, setCusData] = useState([]);
     const [standardData, setStandardData] = useState([]);
+    const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
     //获取列表
     const getList = (loading = true) => {
         post(Paths.standardFnList, { productId }, { loading }).then((res) => {
@@ -98,6 +99,17 @@ function ProtocolFn2({ nextStep, productId }, ref) {
     useImperativeHandle(ref, () => ({
         onFinish: subNextConFirm
     }));
+    //====
+    const wayText = () => {
+        if (productItem.schemeName == '独立MCU方案') {
+            return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发'
+        } else if (productItem.schemeName == 'SoC方案') {
+            return 'SoC方案，不提供通用固件程序，需自行开发模组固件'
+        } else if (productItem.schemeName == '免开发方案') {
+            return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化'
+        }
+        return productItem.schemeName
+    }
     //导入
     const customRequest = (option) => {
         post(Paths.exportFnFile, { productId, file: option.file }, { needFormData: true }, { timeout: 1000 * 30 }).then(res => {
@@ -110,7 +122,7 @@ function ProtocolFn2({ nextStep, productId }, ref) {
     }
     return <div className='Protocol-wrap' ref={ref11}>
         <div className='Protocol-label'>
-            <div>独立MCU方案，需选择下载MCU开发资料包等，进行相应开发</div>
+            <div>{wayText()}</div>
             <div className='Protocol-download' onClick={exportFile}>
                 <a>导出物模型</a>
                 <img src={downpng} alt='' />
@@ -125,9 +137,9 @@ function ProtocolFn2({ nextStep, productId }, ref) {
         </div>
         <div className='Protocol-download'>
             <div>自定义功能<LabelTip tip="支持在标准功能的基础上，自定义适合客户自己硬件特色的定制功能点。"></LabelTip></div>
-            <div style={{display:'flex'}}>
+            <div style={{ display: 'flex' }}>
                 <Upload customRequest={customRequest} showUploadList={false}>
-                    <Button type='text' style={{color:'#166AFF'}} icon={<UploadOutlined />}>导入自定义功能</Button>
+                    <Button type='text' style={{ color: '#166AFF' }} icon={<UploadOutlined />}>导入自定义功能</Button>
                 </Upload>
                 <Button type="primary" onClick={openCusmon}>新建自定义功能</Button >
             </div>

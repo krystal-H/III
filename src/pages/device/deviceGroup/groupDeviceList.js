@@ -126,7 +126,8 @@ export default class GroupDetailt extends PureComponent {
                                         total:pager.totalRows, 
                                         onChange:val=>{this.setQuestParams('pageIndex',val)},
                                         current: pager.pageIndex,
-                                        showSizeChanger:false
+                                        showSizeChanger:false,
+                                        pageSize:8
                                     }} 
                                 />
                             </div>

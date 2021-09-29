@@ -88,12 +88,19 @@ export default function DeviceRegist() {
     };
     //获取列表
     const getList = (loading = true) => {
+        let obj = {}
+        if (form.getFieldValue('push_way') != -1) {
+            obj.push_way = form.getFieldValue('push_way')
+        }
+        if (form.getFieldValue('subscription')) {
+            obj.subscription = form.getFieldValue('subscription')
+        }
         let params = {
-            devicePushUrlConf: { ...form.getFieldsValue() },
+            devicePushUrlConf: obj,
             pager: pager,
         }
         if (productCount) {
-            params.productId = productCount
+            params.devicePushUrlConf.productId = productCount
         }
         // setSearchParams(params.devicePushUrlConf)
         post(Paths.subscribeList, params, { loading }).then((res) => {
@@ -228,12 +235,12 @@ export default function DeviceRegist() {
             <div className='comm-shadowbox device-content'>
                 <div className='content-top'>
                     <div className='content-top-left'>
-                        <Form className='device-filter-form' form={form} layout='inline'>
+                        <Form className='device-filter-form' form={form} initialValues={{ push_way: '-1' }} layout='inline'>
                             <Form.Item name="push_way" label="订阅方式" >
                                 <Select
-                                    allowClear
                                     style={{ width: '200px' }}
                                 >
+                                    <Option value='-1'>全部方式</Option>
                                     <Option value='0'>API数据PUSH形式</Option>
                                     <Option value='1'>MQTT主题订阅</Option>
                                 </Select>
