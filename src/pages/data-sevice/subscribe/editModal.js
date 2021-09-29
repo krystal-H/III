@@ -176,7 +176,7 @@ function StepContentOne({ continueStep, editData }, ref) {
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }));
+    }),[option,laberArr]);
     return (<div className='step-one'>
         <Form form={form} labelAlign='right' >
             <Form.Item
@@ -367,7 +367,7 @@ function StepContentTwo({ continueStep, oneData, editData }, ref) {
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }));
+    }),[oneArr]);
     return (<div className='step-two'>
         <div className='product-title'>已选择产品：{oneData.productName}</div>
         <div className='select-tip'>选择协议类型</div>
