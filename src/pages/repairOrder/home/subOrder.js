@@ -76,7 +76,7 @@ export default function DeviceShadow({ onSuccess }, ref) {
     }
     useImperativeHandle(ref, () => ({
         subOrder
-    }));
+    }),[options.length]);
     return (<div id='order-home-sub'>
         <Form
             name="basic"
@@ -95,7 +95,7 @@ export default function DeviceShadow({ onSuccess }, ref) {
                 name="problemDesc"
                 rules={[{ required: true, whitespace: true }]}
             >
-                <TextArea rows={4} style={{ width: '612px' }} />
+                <TextArea rows={4} maxLength={1000} style={{ width: '612px' }} />
             </Form.Item>
             <Form.Item
                 label="上传问题图片/视频"
