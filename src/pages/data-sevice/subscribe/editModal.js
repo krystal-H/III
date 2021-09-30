@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, forwardRef, useImperativeHandle } from 'react';
-import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, Table,Checkbox  } from 'antd';
+import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, Table, Checkbox } from 'antd';
 import './addModal.scss'
 import LabelTip from '../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../api';
@@ -112,9 +112,9 @@ function StepContentOne({ continueStep, editData }, ref) {
     const [option, setOption] = useState([])
     useEffect(() => {
         getList()
-        let arr=[]
-        if(editData.labelVoList){
-            editData.labelVoList.forEach(item=>{
+        let arr = []
+        if (editData.labelVoList) {
+            editData.labelVoList.forEach(item => {
                 arr.push(item.labelId)
             })
         }
@@ -122,8 +122,8 @@ function StepContentOne({ continueStep, editData }, ref) {
             {
                 subscription: editData.subscription,
                 productId: editData.productId,
-                isAll:editData.isAll,
-                labelVoList:arr
+                isAll: editData.isAll,
+                labelVoList: arr
             }
         )
         getLabel(editData.productId)
@@ -139,10 +139,10 @@ function StepContentOne({ continueStep, editData }, ref) {
         form.setFieldsValue({
             labelVoList: []
         });
-        post(Paths.getLabelByAddress, { productId: val}).then((res) => {
+        post(Paths.getLabelByAddress, { productId: val }).then((res) => {
             let arr = []
             res.data.forEach(item => {
-                arr.push({...item, label: item.labelValue, value: item.labelId,id:item.labelId})
+                arr.push({ ...item, label: item.labelValue, value: item.labelId, id: item.labelId })
             })
             setLaberArr(arr)
         });
@@ -162,7 +162,7 @@ function StepContentOne({ continueStep, editData }, ref) {
             res.productName = name
             if (typeof res.isAll == 'number') {
                 let laberA = []
-                 laberArr.forEach(item => {
+                laberArr.forEach(item => {
                     if (res.isAll) {
                         laberA.push(item)
                     } else {
@@ -179,7 +179,7 @@ function StepContentOne({ continueStep, editData }, ref) {
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }),[option,laberArr]);
+    }), [option, laberArr]);
     return (<div className='step-one'>
         <Form form={form} labelAlign='right' >
             <Form.Item
@@ -284,7 +284,7 @@ function StepContentTwo({ continueStep, oneData, editData }, ref) {
         setOneArr(arr1)
         setTwoArr(arr2)
         setThreeArr(arr3)
-        setCurrentTab(tab)
+        // setCurrentTab(tab)
     }
     //======获取协议
     const getList = () => {
@@ -299,7 +299,7 @@ function StepContentTwo({ continueStep, oneData, editData }, ref) {
                 }
             })
             obj.two = data.filter(item => {
-                if (item.funcType === 'event') {
+                if (item.funcType === 'events') {
                     return item
                 }
             })
@@ -332,45 +332,41 @@ function StepContentTwo({ continueStep, oneData, editData }, ref) {
     };
     const onFinish = () => {
         let arr = []
-        if (currentTab == 'a') {
-            option.one.forEach(item => {
-                if (oneArr.indexOf(item.funcIdentifier) > -1) {
-                    let obj = {
-                        "dataType": 5,
-                        "dataTypeScope": oneArr.length == option.one.length ? 2 : 1,
-                        protocolProperty: item.funcIdentifier
-                    }
-                    arr.push(obj)
+        option.one.forEach(item => {
+            if (oneArr.indexOf(item.funcIdentifier) > -1) {
+                let obj = {
+                    "dataType": 5,
+                    "dataTypeScope": oneArr.length == option.one.length ? 2 : 1,
+                    protocolProperty: item.funcIdentifier
                 }
-            })
-        } else if (currentTab == 'b') {
-            option.two.forEach(item => {
-                if (twoArr.indexOf(item.funcIdentifier) > -1) {
-                    let obj = {
-                        "dataType": 6,
-                        "dataTypeScope": twoArr.length == option.one.length ? 2 : 1,
-                        protocolProperty: item.funcIdentifier
-                    }
-                    arr.push(obj)
+                arr.push(obj)
+            }
+        })
+        option.two.forEach(item => {
+            if (twoArr.indexOf(item.funcIdentifier) > -1) {
+                let obj = {
+                    "dataType": 6,
+                    "dataTypeScope": twoArr.length == option.one.length ? 2 : 1,
+                    protocolProperty: item.funcIdentifier
                 }
-            })
-        } else {
-            option.three.forEach(item => {
-                if (threeArr.indexOf(item.funcIdentifier) > -1) {
-                    let obj = {
-                        "dataType": 7,
-                        "dataTypeScope": threeArr.length == option.one.length ? 2 : 1,
-                        protocolProperty: item.funcIdentifier
-                    }
-                    arr.push(obj)
+                arr.push(obj)
+            }
+        })
+        option.three.forEach(item => {
+            if (threeArr.indexOf(item.funcIdentifier) > -1) {
+                let obj = {
+                    "dataType": 7,
+                    "dataTypeScope": threeArr.length == option.one.length ? 2 : 1,
+                    protocolProperty: item.funcIdentifier
                 }
-            })
-        }
+                arr.push(obj)
+            }
+        })
         continueStep('2', arr)
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }),[oneArr,twoArr,threeArr]);
+    }), [oneArr, twoArr, threeArr]);
     return (<div className='step-two'>
         <div className='product-title'>已选择产品：{oneData.productName}</div>
         <div className='select-tip'>选择协议类型</div>
