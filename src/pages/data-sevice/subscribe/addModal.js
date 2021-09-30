@@ -248,7 +248,7 @@ function StepContentTwo({ continueStep, oneData }, ref) {
                 }
             })
             obj.two = data.filter(item => {
-                if (item.funcType === 'event') {
+                if (item.funcType === 'events') {
                     return item
                 }
             })
@@ -317,14 +317,14 @@ function StepContentTwo({ continueStep, oneData }, ref) {
         }),
     };
     const onFinish = () => {
-        let arr = []
-        if (currentTab == 'a') {
-            arr = oneArr
-        } else if (currentTab == 'b') {
-            arr = twoArr
-        } else {
-            arr = threeArr
-        }
+        let arr = [...oneArr,...twoArr,...threeArr]
+        // if (currentTab == 'a') {
+        //     arr = oneArr
+        // } else if (currentTab == 'b') {
+        //     arr = twoArr
+        // } else {
+        //     arr = threeArr
+        // }
         continueStep('2', arr)
     }
     useImperativeHandle(ref, () => ({
