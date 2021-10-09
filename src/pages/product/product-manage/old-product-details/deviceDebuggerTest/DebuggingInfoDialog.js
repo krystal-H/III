@@ -110,9 +110,10 @@ export default class DebuggingInfoDialog  extends Component {
             });
             return false;
         }
+        macStr = macStr.trim();
         if (macStr.match(/^[\da-zA-Z]{1,50}$/)) {
             let data = {
-                physicalAddr:this.state.macStr,
+                physicalAddr:macStr,
                 productId:+(this.props.pid)//接口参数规定number类型
             };
             post(Paths.addDebugMac,data,{loading:true,needFormData:true}).then((model) => {

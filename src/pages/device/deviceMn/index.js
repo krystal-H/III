@@ -122,8 +122,8 @@ export default function DeviceList() {
     const columns = [
         {
             title: '设备ID',
-            dataIndex: 'deviceId',
-            key: 'deviceId',
+            dataIndex: 'deviceUniqueId',
+            key: 'deviceUniqueId',
         },
         {
             title: '物理地址',
