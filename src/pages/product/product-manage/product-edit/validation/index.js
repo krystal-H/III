@@ -116,7 +116,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
     //修改调试账号、设备
     const set_DebugInfo = (e,i)=>{
         let _Info = [...debugInfo];
-        _Info[i] = e.target.value;
+        _Info[i] = e.target.value.trim();
         setDebugInfo([..._Info])
     }
     //建立 ws 连接
