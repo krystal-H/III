@@ -207,7 +207,7 @@ function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false
         const isLt = isLtMaxSize(file);
         if (!ifFormat(file)) {
             Notification({
-                description: `格式不支持上传此文件`,
+                description: `不支持上传此格式文件`,
                 type: 'warn'
             })
             return false;

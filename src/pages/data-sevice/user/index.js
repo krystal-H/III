@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom';
 import PageTitle from '../../../components/page-title/PageTitle';
 import { post, Paths, get } from '../../../api';
+import LabelTip from '../../../components/form-com/LabelTip';
 import { Radio, DatePicker, Select, Table, Button, Space, Typography, Tabs } from 'antd';
 import '../device/index.scss'
 import dayjs from 'dayjs'
@@ -122,9 +123,34 @@ export default function Device() {
             params.productId = selectType
         }
         post(Paths.userDataAn, params, { loading }).then((res) => {
-            initData(res.data.summaryList)
-            dealCount(res.data)
-            setTableData(res.data.summaryList)
+            if (Array.isArray(res.data)) {
+                let arr = [],tableArr=[]
+                while (dayjs(params.startDate).isBefore(params.endDate, 'day')) {
+                    arr.push(params.startDate)
+                    params.startDate =dayjs(params.startDate).add(1, 'day').format('YYYY-MM-DD')
+                    console.log(arr)
+                }
+                arr.push(params.endDate)
+                arr.reverse().forEach(item=>{
+                    let val={
+                        "activeNum":0,
+                        "activeRatio":0,
+                        "newRatio":0,
+                        "totalNum":0,
+                        "summaryDate":item,
+                        "newNum":0
+                    }
+                    tableArr.push(val)
+                })
+                initData(tableArr)
+                setTableData(tableArr)
+                dealCount({})
+            } else {
+                initData(res.data.summaryList || [])
+                dealCount(res.data || {})
+                setTableData(res.data.summaryList || [])
+            }
+
         });
     }
     const fownFile = () => {
@@ -155,11 +181,11 @@ export default function Device() {
     //处理统计
     const dealCount = (origin) => {
         let count = [
-            { label: '新增用户数', count: origin.newNum },
-            { label: '活跃用户数', count: origin.activeNum },
-            { label: '新增用户次日留存率(昨日)', count: origin.newRatio },
-            { label: '活跃用户次日留存率(昨日)', count: origin.activeRatio },
-            { label: '累计用户数', count: origin.totalNum }]
+            { label: '新增用户数', count: origin.newNum || 0 },
+            { label: '活跃用户数', count: origin.activeNum || 0 },
+            { label: '新增用户次日留存率(昨日)', count: origin.newRatio || 0 },
+            { label: '活跃用户次日留存率(昨日)', count: origin.activeRatio || 0 },
+            { label: '累计用户数', count: origin.totalNum || 0 }]
         setCountData(count)
     }
     //
@@ -287,7 +313,11 @@ export default function Device() {
 
             </div>
             <div className='comm-shadowbox main-echart'>
-                <h3>用户趋势分析</h3>
+                <h3>用户趋势分析<LabelTip tip="【新增用户数】：新增在当前账号下关联应用的注册用户数。
+【活跃用户数】：在当前账号下关联应用上有登录动作的人数（单日去重）。
+【新增用户次日留存】：当日新增用户中，第二日有启动过应用或控制面板的数量占比。
+【活跃用户次日留存】：当日活跃用户中，第二日有启动过应用或控制面板的数量占比。
+【累计用户数】：产品历史以来总的平台账号下关联注册用户总数"></LabelTip></h3>
                 <div className='echart-count-tab'>
                     {
                         countData.map((item, index) => {
@@ -303,7 +333,7 @@ export default function Device() {
                     }
                 </div>
                 {
-                    showTable ? <TableCom tableData={tableData}/> : null
+                    showTable ? <TableCom tableData={tableData} /> : null
                 }
                 <div style={{ height: showTable ? 0 : '303px', overflow: 'hidden' }} id='echart-show'></div>
             </div>
@@ -318,7 +348,7 @@ export default function Device() {
         </div>
     )
 }
-function TableCom({tableData}) {
+function TableCom({ tableData }) {
     const { TabPane } = Tabs;
     const columnList = [
         {
