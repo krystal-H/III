@@ -83,7 +83,11 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
     //
     const [selectAppId, setSelectAppId] = useState('')
     const selectApp = (type, appId) => {
-        setSelectAppId(appId)
+        if(appId == selectAppId){
+            setSelectAppId('')
+        }else{
+            setSelectAppId(appId)
+        }
     }
     //添加枚举参数
     const AddEnums = (add, count) => {
@@ -190,7 +194,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                     </Form>
                                 </div>
                             </TabPane>
-                            <TabPane tab="独立MCU方案" key="2">
+                            <TabPane tab="私有应用" key="2">
                                 <div className='GrayModal-img-wrap'>
                                     <div className="app-items-wrapper">
                                         {

@@ -26,7 +26,7 @@ export default function ProtocolDelete({ rightVisible, onCloseRight,id }) {
         });
     }
     return (
-        <Modal title="远程配置任务" footer={false} visible={rightVisible} onOk={onCloseRight} onCancel={onCloseRight} width='900px'>
+        <Modal title="订阅详情" footer={false} visible={rightVisible} onOk={onCloseRight} onCancel={onCloseRight} width='900px'>
             <div className='subscrbe-info'>
                 <div className='subscrbe-c'>
                     <div className='subscrbe-t'>订阅对象</div>

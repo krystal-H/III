@@ -11,13 +11,16 @@ import { getRowSpanCount } from '../../../../configs/tableCombine'
 import DetailModl from './detail'
 
 
-export default function TableCom({ dataSource }) {
+export default function TableCom({ dataSource,deviceId }) {
     let history = useHistory();
-    const deviceId = history.location.pathname.split('/').slice(-1)[0]
+    // const deviceId = history.location.pathname.split('/').slice(-1)[0]
     //获取产品id
     useEffect(() => {
-        getProductDetail()
-    }, [])
+        if(deviceId){
+            getProductDetail()
+        }
+        
+    }, [deviceId])
     const [productId, setProductId] = useState('')
     const getProductDetail = (loading = true) => {
         post(Paths.getDeviceInfo, { deviceId }, { loading }).then((res) => {

@@ -132,7 +132,7 @@ class SetPassWordForm extends Component {
           if (!err) {
               
             let _values = {
-                password : encryption(values.password)
+                newPwd : encryption(values.password)
             }
 
             post(Paths.setPassword,{
