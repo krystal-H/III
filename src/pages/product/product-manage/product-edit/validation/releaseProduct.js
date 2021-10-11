@@ -64,23 +64,26 @@ function ReleaseProduct({ releaseVisible, cancelHandle, productId }) {
           onFinish={onFinish}
           autoComplete="off"
           initialValues={{ portName: 'IOT' }}>
-          <div>
             <div className="release-item-title">公司信息</div>
             <Form.Item
               label="产品所属公司名称"
               name="supplier"
               rules={[
-                { required: true, message: '请输入公司名称' },
-                { pattern: new RegExp(/^[a-zA-Z\u4e00-\u9fa5]+$/, "g"), message: '请输入中文/英文品牌名称,不超过50个字符' }
+                {
+                  required: true,
+                  pattern: new RegExp(/^[a-zA-Z\u4e00-\u9fa5]+$/, "g"),
+                  message: '请输入中文/英文名称且不超过50个字符'
+                }
               ]}>
               <Input placeholder="请输入公司名称" maxLength={50} />
             </Form.Item>
+            <div></div>
             <Form.Item
               label="产品联系人"
               name="contact"
               rules={[
-                { required: true, message: '请输入联系人名称' },
-                { pattern: new RegExp(/^[a-zA-Z\u4e00-\u9fa5]+$/, "g"), message: '请输入联系人名称' }
+                // { required: true, message: '请输入联系人名称' },
+                { required: true, pattern: new RegExp(/^[a-zA-Z\u4e00-\u9fa5]+$/, "g"), message: '请输入联系人名称' }
               ]}>
               <Input placeholder="请输入联系人名称" />
             </Form.Item>
@@ -183,7 +186,6 @@ function ReleaseProduct({ releaseVisible, cancelHandle, productId }) {
                   maxCount={1} />
               }
             </Form.Item>
-          </div>
         </Form>
       </div>
     </Modal>
