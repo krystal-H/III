@@ -1,9 +1,12 @@
 @charset 'utf-8';
-
+// .right-wrapper-contentbox::-webkit-scrollbar {
+//     display: none;
+// }
 .application-wrapper {
     height: 100%;
     min-height: 520px;
     .application-content-wrapper {
+        min-height: 768px;
         background: #ffffff;
         box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.12);
         border-radius: 2px;
@@ -58,7 +61,15 @@
                                 font-size: 14px;
                                 font-weight: 600;
                                 color: #323232;
-                                line-height: 24px;
+                                span {
+                                    line-height: 22px;
+                                    display: inline-block;
+                                    /*下面是必需的*/
+                                    width: 250px;
+                                    white-space: nowrap; /*把文本强制显示在一行*/
+                                    overflow: hidden; /*隐藏超出部分的文字*/
+                                    text-overflow: ellipsis; /*超出显示省略号*/
+                                }
                             }
                             &-title:hover {
                                 cursor: pointer;
@@ -75,6 +86,7 @@
                                 @include limit-line(2);
                             }
                         }
+
                         .del-app {
                             @include text(14px, #f42c2c);
                             position: absolute;
@@ -90,11 +102,16 @@
                                 padding-right: 10px;
                             }
                         }
-                        .del-app:hover {
+                        &:hover {
                             .del-app-inner {
                                 display: block;
                             }
                         }
+                        // .del-app:hover {
+                        //     .del-app-inner {
+                        //         display: block;
+                        //     }
+                        // }
                     }
                 }
             }

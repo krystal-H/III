@@ -21,6 +21,15 @@ const columns = [
 let ws = null, //保存websocket连接
     wsTimer = null; //websocket心跳连接定时器，页面销毁时，需要同时销毁定时器
 
+// 如果存在连接的ws, 关闭，并置空（下次启动是新的连接） 
+const closeWebsocket = ()=>{
+    if(ws){
+        ws.close();
+        ws = null;
+    }
+    clearInterval(wsTimer);
+}
+
 const mapStateToProps = state => {
     return {
         developerInfo: state.getIn(['userCenter', 'developerInfo']).toJS(),
@@ -40,26 +49,24 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
     const [debugInfo, setDebugInfo] = useState(["",""]); //
     const [serverIp, setServerIp] = useState(""); //ws 请求配置 ip
     const [serverToken, setServerToken] = useState(""); //ws 请求配置 token
-    const [webSocketStatu, setWebSocketStatu] = useState(0); //ws 连接状态 0失败，1成功
+    // const [webSocketStatu, setWebSocketStatu] = useState(0); //ws 连接状态 0失败，1成功
     const [historyVisiable, setHistoryVisiable] = useState(false);
 
     const [analysisData, setAnalysisData] = useState("点击左侧数据在此解析");
+
+    const [tabShow, setTabShow] = useState("1"); 
 
     useEffect(() => {
         get(Paths.queryServerConfig,{productId},{loading:true}).then(({data={}})=>{
             setServerIp(data.ip)
         })
         
-        return ()=>{
-            ws && ws.close();
-            clearInterval(wsTimer);
-            ws = null;
-        }
+        return closeWebsocket //组件卸载时执行
     }, [productId])
 
-    //拿到token后 发起ws连接
+    //拿到token后 发起ws连接，（真实、虚拟设备的ws推送都通过监听 token 的变化来启动）
     useEffect(() => {
-        console.log("----serverToken---",serverToken)
+        console.log("----serverToken---",serverToken) 
         if(serverToken){
             newWebSocket();
         }
@@ -68,15 +75,15 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
     useImperativeHandle(refInstance, () => ({
         showRelease
     }))
+    // 展示发布产品弹窗
+    const showRelease = () => { setReleaseVisible(true) }
 
     const getAccessToken = ()=>{
         get(Paths.accessToken,{},{loading:true}).then(({data=""})=>{
             setServerToken(data)
         })
     }
-    // 展示发布产品弹窗
-    const showRelease = () => { setReleaseVisible(true) }
-    //启动调试
+    //启动真实设备调试
     const startDebug = ()=>{
         if(account=="" || devMac==""){
             Notification({
@@ -109,39 +116,47 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
     //修改调试账号、设备
     const set_DebugInfo = (e,i)=>{
         let _Info = [...debugInfo];
-        _Info[i] = e.target.value;
+        _Info[i] = e.target.value.trim();
         setDebugInfo([..._Info])
     }
-    //建立一个 ws 连接
+    //建立 ws 连接
     const newWebSocket = ()=> {
-
-        let wsProtocol = 'wss:';
-        let httpProtocol = window.location.protocol;
-            wsProtocol = httpProtocol.replace(/https?/, 'wss');
-        ws = new WebSocket(wsProtocol + '//' + serverIp);
+        // let wsProtocol = 'wss:';
+        // let httpProtocol = window.location.protocol;
+        //     wsProtocol = httpProtocol.replace(/https?/, 'wss');
+        ws = new WebSocket('wss://' + serverIp);
         
         
         ws.onopen = ()=> {//连接成功
             mountRef.current = 0
-            setWebSocketStatu(1);
+            // setWebSocketStatu(1);
             clearInterval(wsTimer);
             wsTimer = setInterval(()=>{ ws.send('') }, 5000); //告诉服务器“请保持联系”
             const product = JSON.parse(sessionStorage.getItem('productItem'));
             const {deviceTypeId,deviceSubtypeId,productVersion} = product;
-            console.log(333,deviceSubtypeId,product)
 
-            const senmsg = `[${serverToken}|${developerInfo.userId}|${deviceTypeId}#${deviceSubtypeId}#${productVersion}|${debugInfo[0]}|${debugInfo[1]}]`;  
-            ws.send(senmsg);
+            let sendMsg  = "["+serverToken+"|"+developerInfo.userId+"|"+
+                            deviceTypeId+"#"+deviceSubtypeId+"#"+productVersion+
+                            "|"+debugInfo[0]+"|"+debugInfo[1]+"]";
+            if(tabShow=="2"){
+                sendMsg=""//待定
+                
+            }
+
+            ws.send(sendMsg);
 
         };
         ws.onmessage =  (data)=> {//接收到消息
             mountRef.current += 1;
-            toDataList(data.data || "{}")
+            if(tabShow=="1"){
+                toDataList(data.data || "{}")
+            }
+            
             
         };
         ws.onclose = (e) =>{//检测到断开连接
             console.log("检测到断开连接",mountRef.current)
-            setWebSocketStatu(0);
+            // setWebSocketStatu(0);
             clearInterval(wsTimer);
             if (mountRef.current>-1 && e.code == '1006') {//如果异常断开，尝试重连
                 setTimeout(getAccessToken,5000);
@@ -151,6 +166,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
         }
     }
 
+    //真实设备上报数据显示
     const toDataList = data=>{
         const _d = JSON.parse(data);
         const { topic, macAddress, did, map } = _d;
@@ -172,11 +188,21 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
         setHistoryVisiable(open)
     }
 
+    const changeTab = tab=>{
+        setTabShow(tab)
+        //如果有ws，关掉
+        closeWebsocket()
+        if(tab=="2"){
+            getAccessToken();
+        }
+    }
+
+
     const [ account, devMac ]= debugInfo
     return <div id='product-edit-validation'>
         <div className='validation-top'>在真实设备调试的配置调试信息步骤，添加设备物理地址后，既默认此设备在clife平台注册，不受通信安全校验机制（如一机一密）的影响</div>
         <div className='validation-tab'>
-            <Tabs defaultActiveKey="1">
+            <Tabs defaultActiveKey="1" onChange={changeTab}>
                 <TabPane tab="真实设备调试" key="1">
                     <div className='tab-one-title'>
                         <div className='tab-one-title-left'>
@@ -213,10 +239,10 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
                         </div>
                     </div>
                 </TabPane>
-                <TabPane tab="虚拟设备调试" key="2">
-                    <Simulat productId={productId} />
+                {/* <TabPane tab="虚拟设备调试" key="2">
+                    <Simulat productId={productId} serverIp={serverIp}/>
                     
-                </TabPane>
+                </TabPane> */}
             </Tabs>
         </div>
         <History historyVisiable={historyVisiable} openHistory={openHistory} />

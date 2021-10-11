@@ -110,9 +110,39 @@
   }
   .debug-data-box{
     display: flex;
+    max-width: 1220px;
+    align-items:center;
+    justify-content:space-between;
     .databox{
-      // width: ;
+      width:400px ;
+      height: 470px;
+      border: 1px solid #E9E9E9;
+      border-radius: 5px;
     }
+    .h5page{
+      width: 250px;
+      height: 440px;
+      background-color: #F8F9FB;
+    }
+    .codeimg{
+      width: 166px;
+      text-align: center;
+      color: #666;
+      font-size: 12px;
+      img{
+        margin-top: 22px;
+        width: 114px;
+        height: 114px;
+      }
+    }
+    
+  }
+  .logbox{
+    // width:400px ;
+    height: 180px;
+    border: 1px solid #E9E9E9;
+    border-radius: 5px;
+
   }
 
 

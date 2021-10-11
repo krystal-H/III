@@ -179,7 +179,6 @@ export default function Device() {
         var chartDom = document.getElementById('echart-show');
         var myChart = echarts.init(chartDom);
         var option;
-
         option = {
             xAxis: {
                 type: 'category',

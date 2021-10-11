@@ -6,6 +6,8 @@ import { netStatus } from '../../../../../configs/text-map';
 import { post, Paths, get } from '../../../../../api';
 import { DateTool } from '../../../../../util/util';
 import { Notification } from '../../../../../components/Notification';
+import LabelVisible from '../../../../../components/form-com/LabelVisible';
+
 import './index.scss'
 import RegistModel from './modelFn'
 const { Option } = Select;
@@ -49,6 +51,10 @@ export default function DeviceRegist() {
             title: '设备秘钥',
             dataIndex: 'deviceSecret',
             key: 'deviceSecret',
+            width: '330px',
+            render: (deviceSecret) => (
+                <span ><LabelVisible label={deviceSecret} copy={false} /></span>
+            )
         }, {
             title: '入网状态',
             dataIndex: 'status',

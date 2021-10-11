@@ -16,11 +16,14 @@ function delaData(data, typeS) {
     item.funcParamList.forEach(item2 => {
       let newItem = JSON.parse(JSON.stringify(item))
       if(typeS){
-        
+        if(!newItem.funcParamList[0].statusQueryId){
+          newData.push({ ...newItem, ...item2 })
+        }
       }else{
-
+        if(!newItem.funcParamList[0].deviceFunctionId){
+          newData.push({ ...newItem, ...item2 })
+        }
       }
-      newData.push({ ...newItem, ...item2 })
     })
   })
   newData.forEach((item, index) => {
@@ -187,7 +190,7 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
     obj.data=arr.concat(arr2)
 
     post(Paths.saveScenceData, obj).then((res) => {
-      addOk()
+      addOk(selectType)
     });
   }
   return (
@@ -196,7 +199,7 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
         <div className='scene-sevice-model'>
           <div className='top'>
             <span>产品名称：</span>
-            <Select style={{ width: 220 }} value={selectType} onChange={selectChange}>
+            <Select style={{ width: 220 }} value={selectType} onChange={selectChange} showSearch optionFilterProp="children">
               {
                 optionArr.map(item => {
                   return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
@@ -211,7 +214,7 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
                 清空
               </Button>
             </div>
-            <div className='middle-tip'>场景出发条件设置以后该功能点即可出现在App-场景-我的场景-添加条件处，作为场景的触发条件来设置</div>
+            <div className='middle-tip'>场景触发条件设置以后该功能点即可出现在App-场景-我的场景-添加条件处，作为场景的触发条件来设置</div>
           </div>
           <div className='content'>
             {

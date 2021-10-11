@@ -127,7 +127,7 @@ function StepContentOne({ continueStep }, ref) {
             })
             if (typeof res.isAll == 'number') {
                 let laberA = []
-                 laberArr.forEach(item => {
+                laberArr.forEach(item => {
                     if (res.isAll) {
                         laberA.push(item)
                     } else {
@@ -145,6 +145,9 @@ function StepContentOne({ continueStep }, ref) {
     }
     //获取标签
     const productIdChange = (val) => {
+        form.setFieldsValue({
+            labelVoList: []
+        });
         post(Paths.getLabelByAddress, { productId: val }).then((res) => {
             let arr = []
             res.data.forEach(item => {
@@ -155,7 +158,7 @@ function StepContentOne({ continueStep }, ref) {
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }),[option.length]);
+    }), [option, laberArr]);
     return (<div className='step-one'>
         <Form form={form} labelAlign='right'>
             <Form.Item
@@ -245,7 +248,7 @@ function StepContentTwo({ continueStep, oneData }, ref) {
                 }
             })
             obj.two = data.filter(item => {
-                if (item.funcType === 'event') {
+                if (item.funcType === 'events') {
                     return item
                 }
             })
@@ -314,19 +317,19 @@ function StepContentTwo({ continueStep, oneData }, ref) {
         }),
     };
     const onFinish = () => {
-        let arr = []
-        if (currentTab == 'a') {
-            arr = oneArr
-        } else if (currentTab == 'b') {
-            arr = twoArr
-        } else {
-            arr = threeArr
-        }
+        let arr = [...oneArr,...twoArr,...threeArr]
+        // if (currentTab == 'a') {
+        //     arr = oneArr
+        // } else if (currentTab == 'b') {
+        //     arr = twoArr
+        // } else {
+        //     arr = threeArr
+        // }
         continueStep('2', arr)
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }));
+    }), [oneArr, twoArr, threeArr]);
     return (<div className='step-two'>
         <div className='product-title'>已选择产品：{oneData.productName}</div>
         <div className='select-tip'>选择协议类型</div>

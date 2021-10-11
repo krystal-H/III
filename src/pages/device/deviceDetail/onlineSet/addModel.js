@@ -10,9 +10,9 @@ const { TextArea } = Input;
 const { Option } = Select
 
 
-export default function AddModel({ addVisible, addOk, CancelAdd }) {
-  let history = useHistory();
-  const deviceId=history.location.pathname.split('/').slice(-1)[0]
+export default function AddModel({ addVisible, addOk, CancelAdd ,deviceId}) {
+  // let history = useHistory();
+  // const deviceId=history.location.pathname.split('/').slice(-1)[0]
   const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
   const [selectedProtocols, setSelectedProtocols] = useState([]) // rowSelection
   const [sendDataCheck, setSendDataCheck] = useState([])
@@ -222,7 +222,7 @@ export default function AddModel({ addVisible, addOk, CancelAdd }) {
               name="taskExplain"
               rules={[{ required: true }]}
             >
-              <TextArea rows={4} maxLength={100} />
+              <TextArea rows={4} maxLength={100} showCount/>
             </Form.Item>
           </Form>
           <div style={{ marginBottom: '10px' }}>请添加配置信息</div>

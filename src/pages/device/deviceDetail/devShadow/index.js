@@ -22,7 +22,7 @@ function delaData(data) {
     })
     return newData
 }
-export default function DeviceShadow({baseInfo}) {
+export default function DeviceShadow({ baseInfo, devceId }) {
     //帮助文档
     const downFile = () => {
         window.open('https://cms.clife.cn/clifeIotDoc/')
@@ -32,17 +32,28 @@ export default function DeviceShadow({baseInfo}) {
     //     const code = JSON.stringify(result);
     //     return <CodeMirrorView code={code} />;
     // };
+
     const [dataSource, setDataSource] = useState([])
     const [jsonData, setJsonData] = useState('')
+    const [currentTab, setCurrentTab] = useState('a')
     useEffect(() => {
-        getDetail()
-    }, [])
+        if (devceId) {
+            getDetail()
+        }
+    }, [devceId])
     const getDetail = (loading = true) => {
-        // Paths.getDeviceInfo
         post(Paths.deviceShadow, { 'deviceUniqueId': baseInfo.deviceUniqueId }, { loading }).then((res) => {
+            if (res.data.tslType == 'properties') {
+                setCurrentTab('a')
+            } else if (res.data.tslType == 'events') {
+                setCurrentTab('b')
+            } else if (res.data.tslType == 'services') {
+                setCurrentTab('c')
+            }
+
             setDataSource(delaData(res.data.list))
-            let jsonData=res.data.jsonString || {}
-            setJsonData( JSON.stringify(jsonData) )
+            let jsonData = res.data.jsonString || {}
+            setJsonData(JSON.stringify(jsonData))
         });
     }
     //筛选
@@ -58,18 +69,18 @@ export default function DeviceShadow({baseInfo}) {
         <Tabs defaultActiveKey='1' className='shadow-tab'>
             <TabPane key={'1'} tab={'表单模式'}>
                 <div >
-                    <Radio.Group defaultValue="a" size="middle" onChange={radioChange} style={{ margin: '6px 0  22px 0' }}>
-                        <Radio.Button value="a">属性</Radio.Button>
-                        <Radio.Button value="b">事件</Radio.Button>
-                        <Radio.Button value="c">服务</Radio.Button>
+                    <Radio.Group defaultValue={currentTab} size="middle" onChange={radioChange} style={{ margin: '6px 0  22px 0' }}>
+                        <Radio.Button value="a" disabled={currentTab != 'a'}>属性</Radio.Button>
+                        <Radio.Button value="b" disabled={currentTab != 'b'}>事件</Radio.Button>
+                        <Radio.Button value="c" disabled={currentTab != 'c'}>服务</Radio.Button>
                     </Radio.Group>
-                    <TableCom dataSource={dataSource} />
+                    <TableCom dataSource={dataSource} deviceId={devceId} />
                 </div>
             </TabPane>
             <TabPane key={'2'} tab={'Json模式'}>
                 {/* <DevTag /> */}
                 <div>
-                <CodeMirrorView code={jsonData} />
+                    <CodeMirrorView code={jsonData} />
                 </div>
             </TabPane>
         </Tabs>

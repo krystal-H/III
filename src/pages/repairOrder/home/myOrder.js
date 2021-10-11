@@ -2,6 +2,7 @@ import React, { useState, useEffect ,useLayoutEffect } from 'react'
 import { Table, Drawer, Image, Divider } from 'antd';
 import { post, Paths, get } from '../../../api';
 import { DateTool } from '../../../util/util';
+import './index.scss'
 export default function DeviceShadow({isRefresh}) {
     const [visible, setVisible] = useState(false);
     const [tableData, setTableData] = useState([])
@@ -16,9 +17,12 @@ export default function DeviceShadow({isRefresh}) {
     }
     const columns = [
         {
-            title: '订阅号',
-            dataIndex: 'workOrderId',
-            key: 'workOrderId',
+            title: '问题描述',
+            dataIndex: 'problemDesc',
+            key: 'problemDesc',
+            render: (text, record) => {
+                return <div className='single-text' style={{width:400}}>{text}</div>
+            },
         },
         {
             title: '问题分类',

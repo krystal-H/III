@@ -88,7 +88,7 @@ export default function DeviceList() {
     //去详情
     const GroupDetailt = (data) => {
         window.sessionStorage.setItem('DEVICE_DETAIL_BASE', JSON.stringify(data))
-        history.push(`/open/device/devManage/detail/${data.deviceId}?step=1`);
+        history.push(`/open/device/devManage/detail/${data.deviceUniqueId}?step=1`);
     }
     //过滤函数
     const fliterFn = (type, value) => {
@@ -122,8 +122,8 @@ export default function DeviceList() {
     const columns = [
         {
             title: '设备ID',
-            dataIndex: 'deviceId',
-            key: 'deviceId',
+            dataIndex: 'deviceUniqueId',
+            key: 'deviceUniqueId',
         },
         {
             title: '物理地址',
