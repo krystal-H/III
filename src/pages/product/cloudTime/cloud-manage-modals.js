@@ -177,7 +177,8 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
                         rules={[{ required: true, message: '请选择归属产品' }]}>
                         <Select
                             disabled={type === 'edit'}
-                            onChange={val => getRelationProtocol(val)}>
+                            onChange={val => getRelationProtocol(val)}
+                            showSearch optionFilterProp="children">
                             {
                                 allProductList && allProductList.map(item => (
                                     <Option key={item.productId} value={item.productId}>{item.productName}</Option>

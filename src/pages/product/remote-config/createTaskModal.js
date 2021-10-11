@@ -111,7 +111,7 @@ function CreateTask({ visible, onCancel, allProductList, editData, getRemoteConf
                             label="归属产品"
                             name="productId"
                             rules={[{ required: true, message: '请选择归属产品' }]}>
-                            <Select style={{ width: '100%' }} placeholder="请选择归属产品">
+                            <Select style={{ width: '100%' }} placeholder="请选择归属产品" showSearch optionFilterProp="children">
                                 {
                                     allProductList && allProductList.map(item => (
                                         <Option key={item.productId} value={item.productId}>{item.productName}</Option>
