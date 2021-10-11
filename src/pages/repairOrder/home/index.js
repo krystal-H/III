@@ -13,10 +13,14 @@ export default function DeviceShadow() {
     }
     const tabHandle = (val) => {
         setCurrentTab(val)
+        console.log('==============')
+        if(val != currentTab && val==2){
+            setIsRefresh(isRefresh+1)
+        }
+        
     }
     const goMyOrder = () => {
-        setCurrentTab('2')
-        setIsRefresh(isRefresh+1)
+        // setCurrentTab('2')
     }
     return (<div id='order-home'>
         <div className='common-tab comm-shadowbox'>

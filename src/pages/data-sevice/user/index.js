@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom';
 import PageTitle from '../../../components/page-title/PageTitle';
 import { post, Paths, get } from '../../../api';
-import { Radio, DatePicker, Select, Table, Button, Space, Typography } from 'antd';
+import { Radio, DatePicker, Select, Table, Button, Space, Typography, Tabs } from 'antd';
 import '../device/index.scss'
 import dayjs from 'dayjs'
 
@@ -91,9 +91,17 @@ export default function Device() {
     useEffect(() => {
         getData()
     }, [currentTime, value, selectType])
+    const [showTable, setShowTable] = useState(false)
     useEffect(() => {
         if (tableData.length) {
-            initData(tableData)
+            if (currentTab == 2) {
+                // initTableData()
+                setShowTable(true)
+            } else {
+                setShowTable(false)
+                initData(tableData)
+            }
+
         }
     }, [currentTab])
     const getData = (loading = true) => {
@@ -125,7 +133,7 @@ export default function Device() {
             params.endDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
             params.startDate = dayjs().subtract(8, 'day').format('YYYY-MM-DD')
 
-        } else if (currentTime === 2) {
+        } else if (currentTime == 2) {
             params.endDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
             params.startDate = dayjs().subtract(31, 'day').format('YYYY-MM-DD')
         }
@@ -140,6 +148,10 @@ export default function Device() {
             window.open(res.data.path)
         });
     }
+    //==
+    // const initTableData=()=>{
+
+    // }
     //处理统计
     const dealCount = (origin) => {
         let count = [
@@ -167,8 +179,8 @@ export default function Device() {
             }
 
         });
-        xTime=xTime.reverse()
-        xData=xData.reverse()
+        xTime = xTime.reverse()
+        xData = xData.reverse()
         return {
             xTime,
             xData
@@ -224,7 +236,7 @@ export default function Device() {
                     let html = params[0].name + "<br>";
                     for (let i = 0; i < params.length; i++) {
                         html += '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:' + params[i].color + ';"></span>'
-                        html += countData[currentTab].label + ":"  + params[i].value + "<br>";
+                        html += countData[currentTab].label + ":" + params[i].value + "<br>";
                     }
                     return html;
                 }
@@ -252,7 +264,6 @@ export default function Device() {
         }
         setCurrentTab(index)
     }
-
     return (
         <div id='device-analysis'>
             <PageTitle title='用户分析' selectOnchange={val => setSelectType(val)} isRelProductData={true}>
@@ -291,7 +302,10 @@ export default function Device() {
                         })
                     }
                 </div>
-                <div style={{ height: '303px' }} id='echart-show'></div>
+                {
+                    showTable ? <TableCom tableData={tableData}/> : null
+                }
+                <div style={{ height: showTable ? 0 : '303px', overflow: 'hidden' }} id='echart-show'></div>
             </div>
             <div className='comm-shadowbox main-echart'>
                 <h3>统计数据</h3>
@@ -302,5 +316,85 @@ export default function Device() {
             </div>
 
         </div>
+    )
+}
+function TableCom({tableData}) {
+    const { TabPane } = Tabs;
+    const columnList = [
+        {
+            title: '首次使用时间',
+            dataIndex: 'summaryDate',
+            key: 'summaryDate',
+        },
+        {
+            title: '新用户',
+            dataIndex: 'newNum',
+            key: 'newNum',
+            render: (text, record) => 0,
+        },
+        {
+            title: '1天后',
+            dataIndex: 'activeNum',
+            key: 'activeNum',
+            render: (text, record) => 0,
+        },
+        {
+            title: '2天后',
+            dataIndex: 'newRatio',
+            key: 'newRatio',
+            render: (text, record) => 0,
+        },
+        {
+            title: '3天后',
+            dataIndex: 'activeRatio',
+            key: 'activeRatio',
+            render: (text, record) => 0,
+        },
+        {
+            title: '4天后',
+            dataIndex: 'totalNum',
+            key: 'totalNum',
+            render: (text, record) => 0,
+        },
+        {
+            title: '5天后',
+            dataIndex: 'totalNum1',
+            key: 'totalNum1',
+            render: (text, record) => 0,
+        },
+        {
+            title: '6天后',
+            dataIndex: 'totalNum2',
+            key: 'totalNum2',
+            render: (text, record) => 0,
+        },
+        {
+            title: '7天后',
+            dataIndex: 'totalNum3',
+            key: 'totalNum3',
+            render: (text, record) => 0,
+        },
+        {
+            title: '14天后',
+            dataIndex: 'totalNum4',
+            key: 'totalNum4',
+            render: (text, record) => 0,
+        },
+        {
+            title: '30天后',
+            dataIndex: 'totalNum5',
+            key: 'totalNum5',
+            render: (text, record) => 0,
+        },
+    ];
+    return (
+        <Tabs defaultActiveKey="1" >
+            <TabPane tab="留存率" key="1">
+                <Table dataSource={tableData} columns={columnList} pagination={false} rowKey='summaryDate' />
+            </TabPane>
+            <TabPane tab="留存数" key="2">
+                <Table dataSource={tableData} columns={columnList} pagination={false} rowKey='summaryDate' />
+            </TabPane>
+        </Tabs>
     )
 }
