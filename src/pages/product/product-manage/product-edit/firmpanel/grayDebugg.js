@@ -83,7 +83,11 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
     //
     const [selectAppId, setSelectAppId] = useState('')
     const selectApp = (type, appId) => {
-        setSelectAppId(appId)
+        if(appId == selectAppId){
+            setSelectAppId('')
+        }else{
+            setSelectAppId(appId)
+        }
     }
     //添加枚举参数
     const AddEnums = (add, count) => {

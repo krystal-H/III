@@ -45,7 +45,12 @@ export default function DeviceShadow({ baseInfo, devceId }) {
         post(Paths.deviceShadow, { 'deviceUniqueId': baseInfo.deviceUniqueId }, { loading }).then((res) => {
             if (res.data.tslType == 'properties') {
                 setCurrentTab('a')
+            } else if (res.data.tslType == 'events') {
+                setCurrentTab('b')
+            } else if (res.data.tslType == 'services') {
+                setCurrentTab('c')
             }
+
             setDataSource(delaData(res.data.list))
             let jsonData = res.data.jsonString || {}
             setJsonData(JSON.stringify(jsonData))
