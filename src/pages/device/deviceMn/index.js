@@ -88,7 +88,7 @@ export default function DeviceList() {
     //去详情
     const GroupDetailt = (data) => {
         window.sessionStorage.setItem('DEVICE_DETAIL_BASE', JSON.stringify(data))
-        history.push(`/open/device/devManage/detail/${data.deviceId}?step=1`);
+        history.push(`/open/device/devManage/detail/${data.deviceUniqueId}?step=1`);
     }
     //过滤函数
     const fliterFn = (type, value) => {

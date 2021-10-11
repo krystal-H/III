@@ -43,16 +43,16 @@ export default function DeviceInfo({ match }) {
         <div className='comm-shadowbox common-tab device-content'>
             <Tabs defaultActiveKey={stepS} onChange={tabCallback}>
                 <TabPane key={'1'} tab={'基本信息'}>
-                    <DevInfo devceId={devceId} />
+                    <DevInfo devceId={baseInfo.deviceId} />
                 </TabPane>
                 <TabPane key={'2'} tab={'设备标签'}>
-                    <DevTag devceId={devceId} />
+                    <DevTag devceId={baseInfo.deviceId} />
                 </TabPane>
                 <TabPane key={'3'} tab={'设备影子'}>
-                    <DevShadow devceId={devceId} baseInfo={baseInfo}/>
+                    <DevShadow devceId={baseInfo.deviceId} baseInfo={baseInfo}/>
                 </TabPane>
                 <TabPane key={'4'} tab={'远程配置'}>
-                    <DevSet devceId={devceId} />
+                    <DevSet devceId={baseInfo.deviceId} />
                 </TabPane>
             </Tabs>
         </div>

@@ -26,7 +26,7 @@ function ApplicationCard(props) {
             <ProductIcon icon={appIconLow} />
             <div className="application-info flex-column flex1">
                 <div className="application-info-title" onClick={() => goDetail()}>
-                    <span>{appName}</span>
+                    <span title={appName}>{appName}</span>
                 </div>
                 <div className="application-info-bar">
                     <span className="title">APPID：</span>{appId}

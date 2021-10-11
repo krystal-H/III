@@ -91,7 +91,7 @@ export default function AddFuncModal({ relPanVis,  CancelRel, actionObj,closeOkR
                                         }
                                     </div>
                                 </div> </TabPane>
-                            <TabPane tab="独立MCU方案" key="2">
+                            <TabPane tab="私有应用" key="2">
                                 <div className='GrayModal-img-wrap'>
                                     <div className="app-items-wrapper">
                                         {

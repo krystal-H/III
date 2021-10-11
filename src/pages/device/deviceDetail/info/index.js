@@ -7,8 +7,10 @@ import './index.scss'
 export default function DeviceInfo({ devceId }) {
     const [data, setData] = useState({})
     useEffect(() => {
-        getDetail()
-    }, [])
+        if(devceId){
+            getDetail()
+        }
+    }, [devceId])
     const getDetail = (loading = true) => {
         post(Paths.getDeviceInfo, { 'deviceId': devceId }, { loading }).then((res) => {
             setData(res.data)

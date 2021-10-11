@@ -131,7 +131,7 @@ class SetupProduct extends Component {
           label="产品品牌"
           name="brandId"
           rules={[{ required: true, message: '请选择产品品牌' }]}>
-          <Select style={{ width: '100%' }}>
+          <Select style={{ width: '100%' }} showSearch optionFilterProp="children">
             {
               productBrandList.length > 0 && productBrandList.map(item => (
                 <Option value={item.brandId} key={item.brandId}>{item.fullName}</Option>

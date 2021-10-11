@@ -18,7 +18,7 @@ const { Step } = Steps
 const { Search } = Input
 const statusTextForDevice = ['草稿', '待执行', '执行成功', '执行失败']
 
-function RemoteConfig({ devceId, remoteType = 'device' }) {
+function RemoteConfig({ devceId }) {
     const [addVisible, setAddVisible] = useState(false)
     const [editVisible, setEditVisible] = useState(false)
     const [actionData, setActionData] = useState({})
@@ -50,7 +50,9 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
             title: '任务说明',
             dataIndex: 'taskExplain',
             key: 'taskExplain',
-            width: 300
+            render: (text, record) => {
+                return <div className='single-text' style={{width:400}}>{text}</div>
+            }
         },
         {
             title: '任务状态',
@@ -90,16 +92,6 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
         }
     ]
 
-    const isDeviceRomote = remoteType === 'device'
-
-    // let _FLOWLIST = cloneDeep(FLOWLIST)
-
-    // if (isDeviceRomote) {
-    //     _FLOWLIST.splice(2, 1)
-    // }
-
-
-
     // 新增
     const addOrEditRemoteConfig = () => {
         setAddVisible(true)
@@ -115,8 +107,10 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
     }
 
     useEffect(() => {
-        getRemoteConfigList()
-    }, [pager.pageRows, pager.pageIndex])
+        if(devceId){
+            getRemoteConfigList()
+        }
+    }, [pager.pageRows, pager.pageIndex,devceId])
 
     // 获取远程配置列表
     const getRemoteConfigList = (_pageIndex, status = '', taskName = '') => {
@@ -241,13 +235,13 @@ function RemoteConfig({ devceId, remoteType = 'device' }) {
                 </ActionConfirmModal>
             }
             {
-                addVisible && <AddModel addVisible={addVisible} addOk={addOk} CancelAdd={CancelAdd} />
+                addVisible && <AddModel addVisible={addVisible} addOk={addOk} CancelAdd={CancelAdd} deviceId={devceId}/>
             }
             {
-                detailVis && <DetailModel detailVis={detailVis} onCancel={detailCancel} actionData={actionData} />
+                detailVis && <DetailModel detailVis={detailVis} onCancel={detailCancel} actionData={actionData} deviceId={devceId}/>
             }
             {
-                editVisible && <EditModel addVisible={editVisible} actionData={actionData} addOk={EditOk} CancelAdd={CancelEdit} />
+                editVisible && <EditModel addVisible={editVisible} actionData={actionData} addOk={EditOk} CancelAdd={CancelEdit} deviceId={devceId}/>
             }
         </div>
     )

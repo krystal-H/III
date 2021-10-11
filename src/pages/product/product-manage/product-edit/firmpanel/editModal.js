@@ -59,7 +59,7 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd ,actio
                         label="封面："
                         name="page1"
                         className="clearfix"
-                        rules={[{ required: true }]}
+                        rules={[{ required: true, message: '请上传封面' }]}
                     >
                         {
                             <UploadFileHooks
@@ -75,7 +75,7 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd ,actio
                         label="上传H5包："
                         name="filePath"
                         className="clearfix"
-                        rules={[{ required: true }]}
+                        rules={[{ required: true, message: '请上传H5包'  }]}
                     >
                         <UploadFileHooks
                             ref={$apkel}
