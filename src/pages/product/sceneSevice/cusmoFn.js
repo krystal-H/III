@@ -214,7 +214,7 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
                 清空
               </Button>
             </div>
-            <div className='middle-tip'>场景出发条件设置以后该功能点即可出现在App-场景-我的场景-添加条件处，作为场景的触发条件来设置</div>
+            <div className='middle-tip'>场景触发条件设置以后该功能点即可出现在App-场景-我的场景-添加条件处，作为场景的触发条件来设置</div>
           </div>
           <div className='content'>
             {

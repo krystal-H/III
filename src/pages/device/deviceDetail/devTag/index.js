@@ -49,8 +49,10 @@ export default function EditableTable({ devceId }) {
     const isEditing = (record) => record.id === editingKey;
     const [cloudUpdateVisible, setCloudUpdateVisible] = useState(false) // 删除
     useEffect(() => {
-        getDetail()
-    }, [])
+        if(devceId){
+            getDetail()
+        }
+    }, [devceId])
     // table操作-发布、删除、下线
     const operateHandle = (type, id) => {
         setCloudUpdateVisible(true)
