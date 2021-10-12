@@ -28,7 +28,8 @@ export default function TableCom({ dataSource, reFreshData, type }) {
         let result = null
         let type = data.dataTypeEN
         switch (type) {
-            case 'double':
+            case 'float':
+            case 'int':
                 result = `数值范围：${data.propertyMap.min}-${data.propertyMap.max},间距：${data.propertyMap.interval},倍数：${data.propertyMap.multiple},单位：${data.propertyMap.unit}`
                 break;
             case 'bool':
@@ -56,13 +57,13 @@ export default function TableCom({ dataSource, reFreshData, type }) {
     }
     const columns = [
         {
-            title: 'DP ID', dataIndex: 'key', render: (value, row, index) => {
+            title: 'DP ID', dataIndex: 'dataPointId', render: (value, row, index) => {
                 return getRowSpanCount(
                     getComData(),
-                    "funcType",
+                    "funcIdentifier",
                     index,
                     value,
-                    "funcIdentifier"
+                    "dataPointId"
                 );
             },
         },
