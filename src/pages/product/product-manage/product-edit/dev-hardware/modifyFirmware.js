@@ -37,7 +37,7 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
 
   // 获取信息
   const modifyFirmware = () => {
-    post(Paths.modifyFirmware, { id: firmwareId })
+    post(Paths.modifyFirmware, { productId })
       .then(res => {
         // 动态设置默认值
         res.data.firmwareModuleList.forEach(ele => {
@@ -45,16 +45,16 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
             // 输入框
             item.dataType.type === 'int' &&
               form.setFieldsValue({
-                [`${item.funcName}#${item.identifier}`]: item.dataType.specs.defaultValue
+                [`${item.funcModule}#${item.identifier}`]: item.dataType.specs.value || item.dataType.specs.defaultValue
               })
             // 下拉框
             if (item.dataType.type === 'enum') {
               form.setFieldsValue({
-                [`${item.funcName}#${item.identifier}`]: item.dataType.specs.defaultValue[0].k
+                [`${item.funcModule}#${item.identifier}`]: item.dataType.specs.value || item.dataType.specs.defaultValue[0].k
               })
               setSelectVal((pre) => {
                 const list = cloneDeep(pre)
-                list.push(item.dataType.specs.defaultValue[0].k)
+                list.push(item.dataType.specs.value || item.dataType.specs.defaultValue[0].k)
                 return list
               })
             }
@@ -107,7 +107,7 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
                           item2.dataType.type === 'int' &&
                           <Form.Item
                             label={item2.funcName}
-                            name={`${item2.funcName}#${item2.identifier}`}
+                            name={`${item2.funcModule}#${item2.identifier}`}
                             key={item2.identifier}
                             rules={[{ required: true, message: `请输入${item2.funcName}` }]}>
                             <Input />
@@ -118,7 +118,7 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
                           <div className="parent-item">
                             <Form.Item
                               label={item2.funcName}
-                              name={`${item2.funcName}#${item2.identifier}`}
+                              name={`${item2.funcModule}#${item2.identifier}`}
                               key={item2.identifier}
                               wrapperCol={{ span: 10 }}
                               rules={[{ required: true, message: `选择${item2.funcName}` }]}>
