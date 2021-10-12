@@ -95,7 +95,7 @@ export default function Device() {
     const [showTable, setShowTable] = useState(false)
     useEffect(() => {
         if (tableData.length) {
-            if (currentTab == 2) {
+            if (currentTab == 2 || currentTab == 3) {
                 // initTableData()
                 setShowTable(true)
             } else {

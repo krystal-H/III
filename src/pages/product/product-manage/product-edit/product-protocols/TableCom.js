@@ -89,17 +89,26 @@ export default function TableCom({ dataSource, reFreshData, type }) {
     }
     const columns = [
         {
-            title: 'DP ID', dataIndex: 'key',
+            title: 'DP ID', dataIndex: 'dataPointId',
+            // render: (value, row, index) => {
+            //     let obj = getRowSpanCount(
+            //         getComData(),
+            //         "funcIdentifier",
+            //         index,
+            //         row.funcIdentifier,
+            //         "funcIdentifier"
+            //     );
+            //     obj.children = <span>{IdArr.indexOf(row.funcIdentifier) + 1}</span>
+            //     return obj
+            // },
             render: (value, row, index) => {
-                let obj = getRowSpanCount(
+                return getRowSpanCount(
                     getComData(),
                     "funcIdentifier",
                     index,
-                    row.funcIdentifier,
-                    "funcIdentifier"
+                    value,
+                    "dataPointId"
                 );
-                obj.children = <span>{IdArr.indexOf(row.funcIdentifier) + 1}</span>
-                return obj
             },
         },
         {

@@ -22,7 +22,7 @@ function confirmModel({ nextStep }, ref) {
     }, [])
     const [defaultTab, setDefaultTab] = useState('1')
     const [actionVis, setActionVis] = useState(false) //操作弹窗展示
-    const [showTip,setShowTip]=useState(false)
+    const [showTip, setShowTip] = useState(false)
     //获取最近发布的数据
     const [shoaLast, setShoaLast] = useState({})
     const getList = () => {
@@ -176,6 +176,12 @@ function confirmModel({ nextStep }, ref) {
         setIsChangeModalVisible(false)
     }
     const openChangeTab = (val) => {
+        // if (val == 1) {
+        //     console.log(JSON.parse(sessionStorage.getItem('productItem')), '=====')
+        //     if (JSON.parse(sessionStorage.getItem('productItem')).schemeName != '免开发方案'){
+        //         return
+        //     }
+        // }
         setDefaultTab(val)
         setIsChangeModalVisible(true)
     }
@@ -261,9 +267,9 @@ function confirmModel({ nextStep }, ref) {
             <div className='pannel-cover-image'>
                 <img src={shoaLast.page1 || defaultCumPan} alt='' />
                 {
-                   shoaLast.status && <div className='pannel-status'>{shoaLast.status}</div>
+                    shoaLast.status && <div className='pannel-status'>{shoaLast.status}</div>
                 }
-                
+
             </div>
             <div>
                 <div className='confirm-pannel-content-left'>
@@ -295,7 +301,7 @@ function confirmModel({ nextStep }, ref) {
                 <div className='confirm-pannel-content-item'>
                     <div>自由配置面板</div>
                     <div>直接拖拽可视化功能组件，所见即所得，DIY 出具有您的品牌风格的面板，适用于自定义开发方案。</div>
-                    <Button type="primary" ghost onClick={()=>{setShowTip(true)}}>
+                    <Button type="primary" ghost onClick={() => { setShowTip(true) }}>
                         进入
                     </Button>
                 </div>
@@ -337,7 +343,7 @@ function confirmModel({ nextStep }, ref) {
         }
         {/* 待开发功能 */}
         {
-            showTip && <Modal title="温馨提示" width='370px' visible={showTip} footer={null} onCancel={()=>{setShowTip(false)}}>
+            showTip && <Modal title="温馨提示" width='370px' visible={showTip} footer={null} onCancel={() => { setShowTip(false) }}>
                 <div className='down-office-modal'>
                     <div>此功能正在升级维护中，敬请期待~</div>
                 </div>
