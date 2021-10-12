@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select, Checkbox, Form, Space } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
@@ -8,6 +8,7 @@ import './changeModal.scss'
 import { post, Paths, get } from '../../../../../api';
 import { DateTool } from '../../../../../util/util';
 import { Notification } from '../../../../../components/Notification';
+import noData from '../../../../../assets/images/overImage/noData.png';
 import GrayDebugg from './grayDebugg'
 import ActionModel from './actionModel'
 import { cloneDeep } from "lodash";
@@ -15,10 +16,22 @@ import RelPanModel from './relPanel'
 
 const { TabPane } = Tabs;
 export default function ChangeModal({ isChangeModalVisible, closeChange, CancelChange, defaultTab = '1' }) {
+    // alert(defaultTab)
+    let defaultTabs = defaultTab
     let productId = 0
     if (sessionStorage.getItem('productItem')) {
+        if (JSON.parse(sessionStorage.getItem('productItem')).schemeName != '免开发方案' && defaultTabs == 1) {
+
+            defaultTabs = '3'
+        }
         productId = JSON.parse(sessionStorage.getItem('productItem')).productId
     }
+    const isShowOne = useMemo(() => {
+        if (JSON.parse(sessionStorage.getItem('productItem')).schemeName != '免开发方案') {
+            return false
+        }
+        return true
+    }, [])
     const history = useHistory();
     //切换tab
     const callback = (key) => {
@@ -309,7 +322,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         },
     ];
 
-    
+
     //获取面板状态
     const getPanelStatus = (data) => {
         let { projectStatus, verifyStatus, htmlShow, isGray } = data
@@ -335,37 +348,42 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
                 wrapClassName='add-protocols-wrap' footer={null}>
                 <div>
                     <div className='GrayModal-tab'>
-                        <Tabs defaultActiveKey={defaultTab} onChange={callback}>
-                            <TabPane tab="标准面板" key="1">
-                                <div className='change-modal-tab1'>
-                                    <div className='change-modal-tab3-dec'>
-                                        <div>clife推荐的快速控制面板，既拿既用，一键开发，快速支持硬件的识别，适用于快速开发方案。</div>
-                                        <div>均不满足，需要委托定制？直接联系Clife。<a onClick={goOrder}>提交工单</a></div>
-                                        {/* <Button type='primary' onClick={() => { setTestVis(true) }}>新增</Button> */}
-                                    </div>
-                                    <div className='model-arr-wrap'>
-                                        {
-                                            standard.map((item, index) => {
-                                                return (
-                                                    <div className='model-arr-wrap-item' key={index}>
-                                                        <div className='model-arr-wrap-item-content'>
-                                                            <div className='model-status'>{item.status}</div>
-                                                            <img src={item.page1} alt='' />
+                        <Tabs defaultActiveKey={defaultTabs} onChange={callback}>
+                            {isShowOne &&
+                                <TabPane tab="标准面板" key="1">
+                                    <div className='change-modal-tab1'>
+                                        <div className='change-modal-tab3-dec'>
+                                            <div>clife推荐的快速控制面板，既拿既用，一键开发，快速支持硬件的识别，适用于快速开发方案。</div>
+                                            <div>均不满足，需要委托定制？直接联系Clife。<a onClick={goOrder}>提交工单</a></div>
+                                            {/* <Button type='primary' onClick={() => { setTestVis(true) }}>新增</Button> */}
+                                        </div>
+                                        <div className='model-arr-wrap'>
+                                            {
+                                                standard.map((item, index) => {
+                                                    return (
+                                                        <div className='model-arr-wrap-item' key={index}>
+                                                            <div className='model-arr-wrap-item-content'>
+                                                                <div className='model-status'>{item.status}</div>
+                                                                <img src={item.page1} alt='' />
+                                                            </div>
+                                                            <div className='model-arr-wrap-item-btn'>
+                                                                <span className='model-arr-wrap-item-title-name'> {item.status == '模板' ? item.templateName : item.projectName}</span>
+                                                                {
+                                                                    getStandardBtn(item, item.status)
+                                                                }
+                                                            </div>
                                                         </div>
-                                                        <div className='model-arr-wrap-item-btn'>
-                                                            <span className='model-arr-wrap-item-title-name'> {item.status == '模板' ? item.templateName : item.projectName}</span>
-                                                            {
-                                                                getStandardBtn(item, item.status)
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                )
-                                            })
-                                        }
-                                    </div>
+                                                    )
+                                                })
+                                            }
+                                            {
+                                                !standard.length && <div className='none-standard-data'> <img src={noData} /><div>暂无数据</div></div>
+                                            }
+                                        </div>
 
-                                </div>
-                            </TabPane>
+                                    </div>
+                                </TabPane>
+                            }
                             {/* <TabPane tab="自由配置面板" key="2">
                                 Content of Tab Pane 2
                             </TabPane> */}
