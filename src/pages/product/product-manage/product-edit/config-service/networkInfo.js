@@ -23,20 +23,26 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
   const getNetDataByProductId = () => {
     post(Paths.getNetDataByProductId, { productId })
       .then(res => {
+        if (!res.data.ssid) { // 为了有个默认值
+          res.data.ssid = 'CLIFE'
+        }
         setNetData(res.data)
+        setBaseTypeId(res.data.baseTypeId)
         // form.resetFields()
         // formRef.current.setFieldsValue(res.data)
         formRef.current.setFieldsValue({
           baseTypeId: res.data.baseTypeId,
-          guidePage: res.data.guidePage.guidePage,
-          bindFailPage: res.data.guidePage.bindFailPage,
-          imageUrlList: res.data.helpPage.imageUrls,
+          guidePage: res.data.guidePage? res.data.guidePage.guidePage : '',
+          bindFailPage: res.data.guidePage ? res.data.guidePage.bindFailPage : '',
+          imageUrlList: res.data.helpPage ? res.data.helpPage.imageUrls : [],
           radiocastName: res.data.radiocastName || '',
           ssid: res.data.ssid || ''
         })
-        setGuidePage(res.data.guidePage.guidePage)
-        setBindFailPage(res.data.guidePage.bindFailPage)
-        imgRef.current.setFileList(res.data.helpPage.imageUrls.filter(item => item).map(item => {
+        if (res.data.guidePage) {
+          setGuidePage(res.data.guidePage.guidePage)
+          setBindFailPage(res.data.guidePage.bindFailPage)
+        }
+        res.data.helpPage && imgRef.current.setFileList(res.data.helpPage.imageUrls.filter(item => item).map(item => {
           return { url: item, status: 'done' }
         }))
       })
@@ -157,7 +163,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
           </Form.Item>
           {/* 通信是WIFI 且是WIFI AP配网方式*/}
           {
-            netData.bindTypeId === 1 && baseTypeId === 1 &&
+            (netData.bindTypeId === 1 && baseTypeId === 1) &&
             <Form.Item
               label="AP-SSID"
               name="ssid"
