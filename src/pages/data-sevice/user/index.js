@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom';
 import PageTitle from '../../../components/page-title/PageTitle';
 import { post, Paths, get } from '../../../api';
-import { Radio, DatePicker, Select, Table, Button, Space, Typography } from 'antd';
+import LabelTip from '../../../components/form-com/LabelTip';
+import { Radio, DatePicker, Select, Table, Button, Space, Typography, Tabs } from 'antd';
 import '../device/index.scss'
 import dayjs from 'dayjs'
 
@@ -91,9 +92,17 @@ export default function Device() {
     useEffect(() => {
         getData()
     }, [currentTime, value, selectType])
+    const [showTable, setShowTable] = useState(false)
     useEffect(() => {
         if (tableData.length) {
-            initData(tableData)
+            if (currentTab == 2 || currentTab == 3) {
+                // initTableData()
+                setShowTable(true)
+            } else {
+                setShowTable(false)
+                initData(tableData)
+            }
+
         }
     }, [currentTab])
     const getData = (loading = true) => {
@@ -114,9 +123,34 @@ export default function Device() {
             params.productId = selectType
         }
         post(Paths.userDataAn, params, { loading }).then((res) => {
-            initData(res.data.summaryList)
-            dealCount(res.data)
-            setTableData(res.data.summaryList)
+            if (Array.isArray(res.data)) {
+                let arr = [],tableArr=[]
+                while (dayjs(params.startDate).isBefore(params.endDate, 'day')) {
+                    arr.push(params.startDate)
+                    params.startDate =dayjs(params.startDate).add(1, 'day').format('YYYY-MM-DD')
+                    console.log(arr)
+                }
+                arr.push(params.endDate)
+                arr.reverse().forEach(item=>{
+                    let val={
+                        "activeNum":0,
+                        "activeRatio":0,
+                        "newRatio":0,
+                        "totalNum":0,
+                        "summaryDate":item,
+                        "newNum":0
+                    }
+                    tableArr.push(val)
+                })
+                initData(tableArr)
+                setTableData(tableArr)
+                dealCount({})
+            } else {
+                initData(res.data.summaryList || [])
+                dealCount(res.data || {})
+                setTableData(res.data.summaryList || [])
+            }
+
         });
     }
     const fownFile = () => {
@@ -125,7 +159,7 @@ export default function Device() {
             params.endDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
             params.startDate = dayjs().subtract(8, 'day').format('YYYY-MM-DD')
 
-        } else if (currentTime === 2) {
+        } else if (currentTime == 2) {
             params.endDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
             params.startDate = dayjs().subtract(31, 'day').format('YYYY-MM-DD')
         }
@@ -140,14 +174,18 @@ export default function Device() {
             window.open(res.data.path)
         });
     }
+    //==
+    // const initTableData=()=>{
+
+    // }
     //处理统计
     const dealCount = (origin) => {
         let count = [
-            { label: '新增用户数', count: origin.newNum },
-            { label: '活跃用户数', count: origin.activeNum },
-            { label: '新增用户次日留存率(昨日)', count: origin.newRatio },
-            { label: '活跃用户次日留存率(昨日)', count: origin.activeRatio },
-            { label: '累计用户数', count: origin.totalNum }]
+            { label: '新增用户数', count: origin.newNum || 0 },
+            { label: '活跃用户数', count: origin.activeNum || 0 },
+            { label: '新增用户次日留存率(昨日)', count: origin.newRatio || 0 },
+            { label: '活跃用户次日留存率(昨日)', count: origin.activeRatio || 0 },
+            { label: '累计用户数', count: origin.totalNum || 0 }]
         setCountData(count)
     }
     //
@@ -167,8 +205,8 @@ export default function Device() {
             }
 
         });
-        xTime=xTime.reverse()
-        xData=xData.reverse()
+        xTime = xTime.reverse()
+        xData = xData.reverse()
         return {
             xTime,
             xData
@@ -224,7 +262,7 @@ export default function Device() {
                     let html = params[0].name + "<br>";
                     for (let i = 0; i < params.length; i++) {
                         html += '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:' + params[i].color + ';"></span>'
-                        html += countData[currentTab].label + ":"  + params[i].value + "<br>";
+                        html += countData[currentTab].label + ":" + params[i].value + "<br>";
                     }
                     return html;
                 }
@@ -252,7 +290,6 @@ export default function Device() {
         }
         setCurrentTab(index)
     }
-
     return (
         <div id='device-analysis'>
             <PageTitle title='用户分析' selectOnchange={val => setSelectType(val)} isRelProductData={true}>
@@ -276,7 +313,11 @@ export default function Device() {
 
             </div>
             <div className='comm-shadowbox main-echart'>
-                <h3>用户趋势分析</h3>
+                <h3>用户趋势分析<LabelTip tip="【新增用户数】：新增在当前账号下关联应用的注册用户数。
+【活跃用户数】：在当前账号下关联应用上有登录动作的人数（单日去重）。
+【新增用户次日留存】：当日新增用户中，第二日有启动过应用或控制面板的数量占比。
+【活跃用户次日留存】：当日活跃用户中，第二日有启动过应用或控制面板的数量占比。
+【累计用户数】：产品历史以来总的平台账号下关联注册用户总数"></LabelTip></h3>
                 <div className='echart-count-tab'>
                     {
                         countData.map((item, index) => {
@@ -291,7 +332,10 @@ export default function Device() {
                         })
                     }
                 </div>
-                <div style={{ height: '303px' }} id='echart-show'></div>
+                {
+                    showTable ? <TableCom tableData={tableData} /> : null
+                }
+                <div style={{ height: showTable ? 0 : '303px', overflow: 'hidden' }} id='echart-show'></div>
             </div>
             <div className='comm-shadowbox main-echart'>
                 <h3>统计数据</h3>
@@ -302,5 +346,85 @@ export default function Device() {
             </div>
 
         </div>
+    )
+}
+function TableCom({ tableData }) {
+    const { TabPane } = Tabs;
+    const columnList = [
+        {
+            title: '首次使用时间',
+            dataIndex: 'summaryDate',
+            key: 'summaryDate',
+        },
+        {
+            title: '新用户',
+            dataIndex: 'newNum',
+            key: 'newNum',
+            render: (text, record) => 0,
+        },
+        {
+            title: '1天后',
+            dataIndex: 'activeNum',
+            key: 'activeNum',
+            render: (text, record) => 0,
+        },
+        {
+            title: '2天后',
+            dataIndex: 'newRatio',
+            key: 'newRatio',
+            render: (text, record) => 0,
+        },
+        {
+            title: '3天后',
+            dataIndex: 'activeRatio',
+            key: 'activeRatio',
+            render: (text, record) => 0,
+        },
+        {
+            title: '4天后',
+            dataIndex: 'totalNum',
+            key: 'totalNum',
+            render: (text, record) => 0,
+        },
+        {
+            title: '5天后',
+            dataIndex: 'totalNum1',
+            key: 'totalNum1',
+            render: (text, record) => 0,
+        },
+        {
+            title: '6天后',
+            dataIndex: 'totalNum2',
+            key: 'totalNum2',
+            render: (text, record) => 0,
+        },
+        {
+            title: '7天后',
+            dataIndex: 'totalNum3',
+            key: 'totalNum3',
+            render: (text, record) => 0,
+        },
+        {
+            title: '14天后',
+            dataIndex: 'totalNum4',
+            key: 'totalNum4',
+            render: (text, record) => 0,
+        },
+        {
+            title: '30天后',
+            dataIndex: 'totalNum5',
+            key: 'totalNum5',
+            render: (text, record) => 0,
+        },
+    ];
+    return (
+        <Tabs defaultActiveKey="1" >
+            <TabPane tab="留存率" key="1">
+                <Table dataSource={tableData} columns={columnList} pagination={false} rowKey='summaryDate' />
+            </TabPane>
+            <TabPane tab="留存数" key="2">
+                <Table dataSource={tableData} columns={columnList} pagination={false} rowKey='summaryDate' />
+            </TabPane>
+        </Tabs>
     )
 }

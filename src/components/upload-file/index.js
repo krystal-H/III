@@ -27,6 +27,45 @@ function getBase64(file) {
  * preferSize: 推荐尺寸 图片默认192px*192px
  * cb: 文件上传成功后的回调
  */
+function CheckUpFile(target) {
+    let format = target.getAttribute('data-format'), //格式（format）、大小（maxsize） 校验标准
+        maxsize = (target.getAttribute('data-maxsize') && target.getAttribute('data-maxsize') - 0) || 500, //默认限制不超过500KB
+        upsize = 1024 * 1024 * 10; //初始化实际上传文件的格式、大小
+    let localsrc = target.value;
+    if (maxsize) {
+        //验证文件占存大小
+        if (window.ActiveXObject && !target.files) {
+            let fileSystem = new ActiveXObject('Scripting.FileSystemObject');
+            let file = fileSystem.GetFile(localsrc);
+            upsize = file.Size;
+        } else {
+            upsize = target.files[0].size;
+        }
+        if (upsize > maxsize * 1024) {
+            prompt('文件大小不能超过' + maxsize + 'KB');
+            target.value = '';
+            return false;
+        }
+    }
+    if (format) {
+        //验证文件格式
+        let arr = format.split(',');
+        let upformat = localsrc.substring(localsrc.lastIndexOf('.') + 1).toLowerCase(),
+            find = false;
+        for (let i in arr) {
+            if (arr[i].toLowerCase() == upformat) {
+                find = true;
+                break;
+            }
+        }
+        if (!find) {
+            prompt('请选择' + format + '格式的文件');
+            target.value = '';
+            return false;
+        }
+    }
+    return true;
+};
 function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false, preferSize = '192px*192px', cb, value, onChange }, uploadRef) {
 
     //回显
@@ -93,6 +132,21 @@ function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false
     const isLtMaxCount = () => {
         return fileList.length < maxCount;
     };
+    const ifFormat = (file) => {
+        if (acceptFormat) {
+            let arr = acceptFormat.split(',');
+            let upformat = file.name.substring(file.name.lastIndexOf('.')).toLowerCase(),
+                find = false;
+            for (let i in arr) {
+                if (arr[i].toLowerCase() == upformat) {
+                    find = true;
+                    break;
+                }
+            }
+            return find
+        }
+        return true
+    }
     const getExtraData = () => {
         return {
             appId: 31438,
@@ -131,8 +185,7 @@ function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false
             return file;
         });
         // console.log(fileList,'===')
-        if (isLtMaxSize(file) && fileList.length <= maxCount) {
-            console.log(1)
+        if (isLtMaxSize(file) && fileList.length <= maxCount && ifFormat(file)) {
             setFileList(fileList);
             if (file.status === 'done') {
                 onChange(fileList)
@@ -152,6 +205,13 @@ function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false
     const onPreview = isNotImg ? null : handlePreview;
     const beforeUpload = (file) => {
         const isLt = isLtMaxSize(file);
+        if (!ifFormat(file)) {
+            Notification({
+                description: `不支持上传此格式文件`,
+                type: 'warn'
+            })
+            return false;
+        }
         if (!isLt) {
             Notification({
                 description: isNotImg ? `文件必须小于 ${maxSize} MB!` : `文件必须小于 ${maxSize * 1000} kB!`,

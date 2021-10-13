@@ -179,12 +179,12 @@ export default function OverviewWrap() {
     const [showDialog, setShowDialog] = useState(false)
     const changeTip = () => {
         let anchorElement = document.getElementById('show-shadow');
-        if (anchorElement && currentTip != 4) {
+        if (anchorElement && currentTip < 4) {
             anchorElement.scrollIntoView({ behavior: 'smooth' });
         }
         if (currentTip == 4) {
             let box1 = document.querySelector(".right-wrapper-contentbox");
-            box1.scrollTop = 0
+            box1.scrollTop = 20
         }
         setCurrentTip(currentTip + 1)
         if (currentTip >= 5) {

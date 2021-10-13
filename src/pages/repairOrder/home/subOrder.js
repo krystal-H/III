@@ -70,7 +70,7 @@ export default function DeviceShadow({ onSuccess }, ref) {
                     description: '提交成功！'
                 })
                 form.resetFields();
-                onSuccess()
+                // onSuccess()
             });
         })
     }
@@ -95,10 +95,10 @@ export default function DeviceShadow({ onSuccess }, ref) {
                 name="problemDesc"
                 rules={[{ required: true, whitespace: true }]}
             >
-                <TextArea rows={4} maxLength={1000} style={{ width: '612px' }} />
+                <TextArea rows={4} maxLength={1000} showCount style={{ width: '612px' }} />
             </Form.Item>
             <Form.Item
-                label="上传问题图片/视频"
+                label="上传问题图片"
                 name="image"
             >
                 <UploadFileHooks
@@ -106,7 +106,7 @@ export default function DeviceShadow({ onSuccess }, ref) {
                     ref={$el}
                     maxCount={10}
                     format='.jpg,.png,.gif'
-                    maxSize={5}
+                    preferSize='不限'
                 />
             </Form.Item>
             <Form.Item

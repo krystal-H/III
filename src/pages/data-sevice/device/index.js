@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import PageTitle from '../../../components/page-title/PageTitle';
 import { post, Paths } from '../../../api';
 import { Radio, DatePicker, Select, Table } from 'antd';
+import LabelTip from '../../../components/form-com/LabelTip';
 import './index.scss'
 import dayjs from 'dayjs'
 
@@ -117,19 +118,44 @@ export default function Device() {
             params.productId = selectType
         }
         post(Paths.deviceDataAn, params, { loading }).then((res) => {
-            initData(res.data.summaryList)
-            dealCount(res.data)
-            setTableData(res.data.summaryList)
+            if (Array.isArray(res.data)) {
+                let arr = [], tableArr = []
+                while (dayjs(params.startDate).isBefore(params.endDate, 'day')) {
+                    arr.push(params.startDate)
+                    params.startDate = dayjs(params.startDate).add(1, 'day').format('YYYY-MM-DD')
+                    console.log(arr)
+                }
+                arr.push(params.endDate)
+                arr.reverse().forEach(item => {
+                    let val = {
+                        "activeNum": 0,
+                        "exceptionNum": 0,
+                        "joinNum": 0,
+                        "totalNum": 0,
+                        "summaryDate": item,
+                        "newNum": 0
+                    }
+                    tableArr.push(val)
+                })
+                initData(tableArr)
+                setTableData(tableArr)
+                dealCount({})
+            } else {
+                initData(res.data.summaryList || [])
+                dealCount(res.data || {})
+                setTableData(res.data.summaryList || [])
+            }
+
         });
     }
     //处理统计
     const dealCount = (origin) => {
         let count = [
-            { label: '新增设备数', count: origin.newNum },
-            { label: '入网设备数', count: origin.joinNum },
-            { label: '活跃设备数', count: origin.activeNum },
-            { label: '异常设备数', count: origin.exceptionNum },
-            { label: '设备累计总数', count: origin.totalNum }]
+            { label: '新增设备数', count: origin.newNum || 0 },
+            { label: '入网设备数', count: origin.joinNum || 0 },
+            { label: '活跃设备数', count: origin.activeNum || 0 },
+            { label: '异常设备数', count: origin.exceptionNum || 0 },
+            { label: '设备累计总数', count: origin.totalNum || 0 }]
         setCountData(count)
     }
     //
@@ -229,7 +255,7 @@ export default function Device() {
                     let html = params[0].name + "<br>";
                     for (let i = 0; i < params.length; i++) {
                         html += '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:' + params[i].color + ';"></span>'
-                        html += countData[currentTab].label + ":"  + params[i].value + "<br>";
+                        html += countData[currentTab].label + ":" + params[i].value + "<br>";
                     }
                     return html;
                 }
@@ -281,7 +307,11 @@ export default function Device() {
 
             </div>
             <div className='comm-shadowbox main-echart'>
-                <h3>设备趋势分析</h3>
+                <h3>设备趋势分析<LabelTip tip="【新增设备数】：平台导入或者录入的设备数。
+【入网设备数】：首次入网统计激活的设备数。
+【活跃设备数】：和clife平台有过一次数据上行或下行的设备数。
+【异常设备数】：出现故障等异常的数据数量。
+【累计设备数】：产品历史以来总的平台入网设备总数"></LabelTip></h3>
                 <div className='echart-count-tab'>
                     {
                         countData.map((item, index) => {
