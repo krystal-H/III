@@ -521,7 +521,7 @@ class DataDebuggingPage extends React.Component{
         let productStr = [
             product.productVersion,
             product.deviceTypeId,
-            product.deviceSubTypeId,
+            product.deviceSubtypeId,
             this.state.selectedData1.command,
         ].join('-'); //"产品序号-大类-小类-命令字";
         // let protocolId= this.state.propertyConfigId["3-35-1-0401"];
@@ -1686,17 +1686,18 @@ export default class StartTest  extends Component{
                     ws.send('');
                 }, 5000);
                 let product = this.props.deviceAndWs.productInfo.data.productBaseInfo;
+                let {deviceTypeId,deviceSubtypeId,productVersion} = product
                 let productMsg =
                     '[' +
                     this.props.deviceAndWs.token.data +
                     '|' +
                     this.props.developerInfo.userId +
                     '|' +
-                    product.deviceTypeId +
+                    deviceTypeId +
                     '#' +
-                    product.deviceSubTypeId +
+                    deviceSubtypeId % 1000 +
                     '#' +
-                    product.productVersion +
+                    productVersion +
                     ']';
                 // let productMsg = "[144514545|1|11#3#1]";//测试数据
                 ws.send(productMsg);
