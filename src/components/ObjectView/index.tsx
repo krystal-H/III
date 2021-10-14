@@ -64,7 +64,8 @@ class ObjectView extends Component<ObjectViewProps, ObjectViewState> {
     const isString = type === Types.String,
       isArray = type === Types.Array,
       isObject = type === Types.Object,
-      key = parentType === Types.Array ? _key : '"' + _key + '"',
+      // key = parentType === Types.Array ? _key : '"' + _key + '"', 
+      key = parentType === Types.Array ? _key : _key,
       value = isString
         ? '"' + _value + '"'
         : type === Types.Boolean ||
