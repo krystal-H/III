@@ -521,7 +521,7 @@ class DataDebuggingPage extends React.Component{
         let productStr = [
             product.productVersion,
             product.deviceTypeId,
-            product.deviceSubTypeId,
+            product.deviceSubtypeId,
             this.state.selectedData1.command,
         ].join('-'); //"产品序号-大类-小类-命令字";
         // let protocolId= this.state.propertyConfigId["3-35-1-0401"];
@@ -1694,7 +1694,7 @@ export default class StartTest  extends Component{
                     '|' +
                     product.deviceTypeId +
                     '#' +
-                    product.deviceSubTypeId +
+                    product.deviceSubtypeId +
                     '#' +
                     product.productVersion +
                     ']';
