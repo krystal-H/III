@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Checkbox, Radio, Select } from 'antd'
+import { Form, Input, Radio, Select } from 'antd'
 import { Notification } from '../../../../components/Notification'
-import { Paths, post } from '../../../../api'
+import { get, Paths, post } from '../../../../api'
 import { connect } from 'react-redux'
 import {
   createProductFormAction,
@@ -40,6 +40,8 @@ class SetupProduct extends Component {
     this.state = {
       productBrandList: [], // 产品品牌
       protocolList: [], // 通信协议
+      networkList: [], // 动态配网列表
+      networkWayList: [], // 配网方式列表
     }
   }
   componentDidMount() {
@@ -47,6 +49,16 @@ class SetupProduct extends Component {
 
     this.getProductBrand()
     this.getCommunicationProtocol()
+    this.getBindTypeNetworkType()
+  }
+
+  // 获取配网方式
+  getBindTypeNetworkType = () => {
+    get(Paths.getBindTypeNetworkTypeMap, {}).then(res => {
+      this.setState({
+        networkWayList: res.data
+      })
+    })
   }
 
   // 获取产品品牌
@@ -87,7 +99,7 @@ class SetupProduct extends Component {
       ...this.props.schememData,
       ...values
     }
-    console.log('调用提交的接口', params)
+    console.log('submit', params)
     post(Paths.createProduct, { ...params }, { loading: true }).then(res => {
       Notification({ description: '创建成功！', type: 'success' })
       this.props.handleCancel()
@@ -102,8 +114,23 @@ class SetupProduct extends Component {
     console.log('Failed:', errorInfo);
   }
 
+  // 选择通信协议
+  changeProtocol = e => {
+    this.formRef.current.setFieldsValue({netTypeId: ''})
+    // 通过通信协议获取配网方式list
+    const id = e.target.value.split('#')[0]
+    this.state.networkWayList.forEach(item => {
+      if (id == item.txfs) {
+        this.setState({
+          networkList: item.pwfs
+        })
+      }
+    })
+
+  }
+
   render() {
-    const { productBrandList, protocolList } = this.state
+    const { productBrandList, protocolList, networkList } = this.state
     const { saveProductForm } = this.props
     return (
       <Form
@@ -150,7 +177,7 @@ class SetupProduct extends Component {
         </Form.Item>
         <Form.Item name="bindType" label="通信协议"
           rules={[{ required: true, message: '请选择通信协议' }]}>
-          <Radio.Group>
+          <Radio.Group onChange={(e) => this.changeProtocol(e)}>
             {
               protocolList.length > 0 && protocolList.map(item => (
                 <Radio
@@ -162,6 +189,18 @@ class SetupProduct extends Component {
               ))
             }
           </Radio.Group>
+        </Form.Item>
+        <Form.Item
+          label="配网方式"
+          name="netTypeId"
+          rules={[{ required: true, message: '请选择配网方式！' }]}>
+          <Select>
+            {
+              networkList && networkList.map(item => (
+                <Option key={item.netTypeId} value={item.netTypeId}>{item.baseTypeName}</Option>
+              ))
+            }
+          </Select>
         </Form.Item>
         {
           this.props.createProductCategory.deviceTypeName.indexOf('网关') !== -1 &&

@@ -53,6 +53,7 @@ let Paths = {
     createProduct: '/product/create', // 创建产品
     downloadData: '/product/dev/module/data/url', // 下载资料路径
     getPanel: '/panelManage/getTemplateMarketByDeviceTypeId', // 获取品类下的面板
+    getBindTypeNetworkTypeMap: '/product/getBindTypeNetworkTypeMap', // 获取配网方式
 
     // 5.x确定方案
     getScheme: '/scheme/list/deviceType', // 获取方案数据

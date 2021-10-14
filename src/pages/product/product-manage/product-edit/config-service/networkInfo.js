@@ -18,6 +18,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
   const [bindFailPage, setBindFailPage] = useState('')
   const [netData, setNetData] = useState({})
   const [baseTypeId, setBaseTypeId] = useState()
+  const [baseTypeName, setbaseTypeName] = useState('') // 显示配网方式
 
   // 获取配网方式
   const getNetDataByProductId = () => {
@@ -30,6 +31,10 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
         setBaseTypeId(res.data.baseTypeId)
         // form.resetFields()
         // formRef.current.setFieldsValue(res.data)
+        const arr = res.data.bindTypeList.filter(item => item.baseTypeId === res.data.baseTypeId)
+        if (arr && arr.length > 0) {
+          setbaseTypeName(arr[0].baseTypeName)
+        }
         formRef.current.setFieldsValue({
           baseTypeId: res.data.baseTypeId,
           guidePage: res.data.guidePage? res.data.guidePage.guidePage : '',
@@ -151,15 +156,15 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
           </Form.Item>
           <Form.Item
             label="配网方式"
-            name="baseTypeId"
-            rules={[{ required: true, message: '请选择配网方式！' }]}>
-            <Select style={{ width: 380 }} onChange={(val) => setBaseTypeId(val)}>
+            name="baseTypeId">
+              <span>{baseTypeName}</span>
+            {/* <Select style={{ width: 380 }} onChange={(val) => setBaseTypeId(val)}>
               {
                 netData.bindTypeList && netData.bindTypeList.map(item => (
                   <Option key={item.baseTypeId} value={item.baseTypeId}>{item.baseTypeName}</Option>
                 ))
               }
-            </Select>
+            </Select> */}
           </Form.Item>
           {/* 通信是WIFI 且是WIFI AP配网方式*/}
           {
