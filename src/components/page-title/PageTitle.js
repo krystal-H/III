@@ -31,11 +31,8 @@ function PageTitle({
         if (selectOnchange) {
             if (!selectData && dataList.length == 0) {
                 if (!isRelProductData) {
-                    get(Paths.getProductType, {}, { loading: true }).then(({ data }) => {
-                        const productList = Object.keys(data).map(id => {
-                            return { productId: id, productName: data[id] }
-                        });
-                        setDataList(productList)
+                    get(Paths.getProductType, {}, { loading: true }).then((res) => {
+                        setDataList(res.data)
                     });
                 } else {
                     post(Paths.getProductPlus, {}).then((res) => {

@@ -96,3 +96,19 @@
 .right-list-wrap {
   padding-left: 112px;
 }
+
+.right-list-wrap2 {
+  padding-left: 112px;
+
+  >div {
+    display: flex;
+
+    div {
+      &:first-child {
+        width: 92px;
+      }
+    }
+
+  }
+
+}
