@@ -249,6 +249,8 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
         if (status == '已下线') {
             return (<Space size="middle">
                 <a onClick={() => { openDebugg(record) }}>灰度调试</a>
+                <a onClick={() => { openDel(record, 2) }}>删除</a>
+                <a onClick={() => { openEdit(record) }}>编辑</a>
             </Space>)
         }
         return ''
