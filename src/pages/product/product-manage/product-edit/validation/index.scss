@@ -49,6 +49,7 @@
 
       .left-content {
         width: 60%;
+        
         margin-right: 30px;
 
         .left-content-title {
@@ -67,6 +68,11 @@
           button {
             margin-right: 8px;
           }
+        }
+        .tablebox{
+          height: 360px;
+          overflow-y: auto;
+          @include self-scroll-bar
         }
         tr{
           cursor: pointer;

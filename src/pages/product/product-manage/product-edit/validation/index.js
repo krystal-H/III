@@ -40,7 +40,25 @@ const mapStateToProps = state => {
 const temp = [
     {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
     {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
-    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 }
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
+    {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
+    {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
+    {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
+    {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
+    {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
+    {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
+    {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
+    {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
+    {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
+    {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
+    {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
+    {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
 ]
 
 function Validation({ nextStep, productId,developerInfo,refInstance }) {
@@ -224,7 +242,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
                                     {/* <Button type="primary" ghost>导出数据</Button> */}
                                 </div>
                             </div>
-                            <div>
+                            <div className="tablebox">
                                 <Table columns={columns} rowKey="index" dataSource={dataList} pagination={false}
                                         onRow={r=> {
                                             return {
