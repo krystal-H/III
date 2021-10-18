@@ -15,7 +15,7 @@ export default props => {
         getTotalData();
     }, [getTotalData]);
     const getTotalData = () => {
-        get(Paths.getDeviceWarningTotal, { loading: true }).then(res => {
+        get(Paths.getDeviceWarningTotal,{}, { loading: true }).then(res => {
             const data = res.data || {};
             setTotalData(data);
         });

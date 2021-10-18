@@ -80,7 +80,7 @@ export default class FirmwareManagement extends Component {
                 }
             },
             {
-                title: '创建时间', dataIndex: 'releaseTime',
+                title: '创建时间', dataIndex: 'uploadTime',
                 render: t => <span>{t && DateTool.utcToDev(t) || "--"}</span>
             },
             {
