@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
-import { Table, Tooltip } from 'antd'
+import { Table, Tooltip, Empty } from 'antd'
 import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { Paths, post, get } from '../../../../../api'
-import { cloneDeep } from 'lodash'
-import { connect } from 'react-redux'
 import ReplaceModule from './replaceModule'
 // import ModuleDetail from './moduleDetail'
 import FreeApplyModal from './freeApply'
@@ -62,7 +60,9 @@ class Hardware extends Component {
 
     componentDidMount() {
         this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
-        this.getMoudleInfo(this.state.productItemData.moduleId)
+        if (this.state.productItemData.moduleId != -1) {
+            this.getMoudleInfo(this.state.productItemData.moduleId)
+        }
     }
 
     // 获取展示模组及固件信息
@@ -166,42 +166,49 @@ class Hardware extends Component {
                             <div className="module-tip">已选模组</div>
                             <div className="replace-btn" onClick={() => this.setState({ replaceModalVisible: true })}>更换模组</div>
                         </div>
-                        <div className="module-cont">
-                            <div className="flex-s">
-                                <div className="module-cont-left">
-                                    <img src={allInfo.modulePicture || require('../../../../../assets/images/commonDefault/hardware.png')} alt="" />
+                        {
+                            this.state.productItemData.moduleId == -1 && 
+                            <div className="flex-c border"><Empty /></div>
+                        }
+                        {
+                            this.state.productItemData.moduleId != -1 &&
+                            <div className="module-cont">
+                                <div className="flex-s">
+                                    <div className="module-cont-left">
+                                        <img src={allInfo.modulePicture || require('../../../../../assets/images/commonDefault/hardware.png')} alt="" />
+                                    </div>
+                                    <div className="module-cont-right">
+                                        <div className="module-title">{allInfo.moduleName || '-'}</div>
+                                        <div className="flex">
+                                            <div className="desc-item"><span className="desc-item-title">芯片：</span>{allInfo.originalModuleTypeName || '-'}</div>
+                                            <div className="desc-item"><span className="desc-item-title">尺寸：</span>{allInfo.sizeWidth}x{allInfo.sizeHeight}x{allInfo.sizeThickness}</div>
+                                            <div className="desc-item"><span className="desc-item-title">适用：</span>{allInfo.applyScope || '-'}</div>
+                                        </div>
+                                        <div className="desc-item">
+                                            <span className="desc-item-title">特性：</span>
+                                            1.配网方式: {allInfo.netTypeName || '-'}；
+                                            2.支持协议: {allInfo.bindTypeName || '-'}；
+                                            3.通信通讯速率: {allInfo.communicateSpeed || '-'}bps；
+                                            4.是否支持文件传输: {allInfo.supportFileTransfer === 0 ? '否' : '是'}
+                                        </div>
+                                        <div className="more" onClick={() => this.downInstructions(allInfo.readmePdf)}>说明书<CaretRightOutlined /></div>
+                                    </div>
                                 </div>
-                                <div className="module-cont-right">
-                                    <div className="module-title">{allInfo.moduleName || '-'}</div>
-                                    <div className="flex">
-                                        <div className="desc-item"><span className="desc-item-title">芯片：</span>{allInfo.originalModuleTypeName || '-'}</div>
-                                        <div className="desc-item"><span className="desc-item-title">尺寸：</span>{allInfo.sizeWidth}x{allInfo.sizeHeight}x{allInfo.sizeThickness}</div>
-                                        <div className="desc-item"><span className="desc-item-title">适用：</span>{allInfo.applyScope || '-'}</div>
-                                    </div>
-                                    <div className="desc-item">
-                                        <span className="desc-item-title">特性：</span>
-                                        1.配网方式: {allInfo.netTypeName || '-'}；
-                                        2.支持协议: {allInfo.bindTypeName || '-'}；
-                                        3.通信通讯速率: {allInfo.communicateSpeed || '-'}bps；
-                                        4.是否支持文件传输: {allInfo.supportFileTransfer === 0 ? '否' : '是'}
-                                    </div>
-                                    <div className="more" onClick={() => this.downInstructions(allInfo.readmePdf)}>说明书<CaretRightOutlined /></div>
+                                <div className="module-right-box">
+                                    {
+                                        allInfo.price && <div className="price">¥{allInfo.price}/个</div>
+                                    }
+                                    <div className="apply-btn" onClick={() => { this.setState({ freeApplyVisible: true }) }}>免费申请</div>
                                 </div>
                             </div>
-                            <div className="module-right-box">
-                                {
-                                    allInfo.price && <div className="price">¥{allInfo.price}/个</div>
-                                }
-                                <div className="apply-btn" onClick={() => { this.setState({ freeApplyVisible: true }) }}>免费申请</div>
-                            </div>
-                        </div>
+                        }
                     </div>
                     {/* 已生成固件 */}
                     <div className="module-box">
                         {/* 有固件信息 */}
                         <div className="module-tip mar-t-b">已生成固件</div>
                         {
-                            allInfo.firmwareDefList &&
+                            this.state.productItemData.schemeType != 3 && allInfo.firmwareDefList &&
                             <Table rowKey="id"
                                 columns={this.columns}
                                 dataSource={dataSource}
@@ -210,7 +217,7 @@ class Hardware extends Component {
                         }
                         {/* 无固件信息 */}
                         {
-                            !allInfo.firmwareDefList === 0 &&
+                            this.state.productItemData.schemeType == 3 &&
                             <div className="no-match-firmware">
                                 <div className="no-match-firmware-img">
                                     <img src={require('../../../../../assets/images/no-source-tip.png')} alt="" />
