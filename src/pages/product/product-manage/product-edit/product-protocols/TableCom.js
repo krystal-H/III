@@ -14,7 +14,7 @@ import { getRowSpanCount } from '../../../../../configs/tableCombine'
 // import { getRowSpanCount } from './tableCombine'
 
 
-export default function TableCom({ dataSource, reFreshData, type }) {
+export default function TableCom({ dataSource, reFreshData, type,standardData=[] }) {
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     //页码改变
     const pagerChange = (pageIndex, pageRows) => {
@@ -88,29 +88,7 @@ export default function TableCom({ dataSource, reFreshData, type }) {
         return data
     }
     const columns = [
-        {
-            title: 'DP ID', dataIndex: 'dataPointId',
-            // render: (value, row, index) => {
-            //     let obj = getRowSpanCount(
-            //         getComData(),
-            //         "funcIdentifier",
-            //         index,
-            //         row.funcIdentifier,
-            //         "funcIdentifier"
-            //     );
-            //     obj.children = <span>{IdArr.indexOf(row.funcIdentifier) + 1}</span>
-            //     return obj
-            // },
-            render: (value, row, index) => {
-                return getRowSpanCount(
-                    getComData(),
-                    "funcIdentifier",
-                    index,
-                    value,
-                    "dataPointId"
-                );
-            },
-        },
+
         {
             title: '功能类型', dataIndex: 'funcTypeCN',
             render: (value, row, index) => {
@@ -146,6 +124,9 @@ export default function TableCom({ dataSource, reFreshData, type }) {
                     "funcIdentifier"
                 );
             },
+        },
+        {
+            title: 'DP ID', dataIndex: 'dataPointId',
         },
         {
             title: '参数名称', dataIndex: 'name',
@@ -260,6 +241,7 @@ export default function TableCom({ dataSource, reFreshData, type }) {
             rightVisible={rightEditVisible}
             onCloseRight={onCloseRight}
             onRefreshList={onRefreshList}
+            standardData={standardData}
             actionData={actionData}
             modelType={type}></EditcusFn>}
         {/* 新增标准 */}
