@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Select, Steps, Button, Input, Table, Form } from 'antd';
 import PageTitle from '../../../components/page-title/PageTitle';
-import stepImg from '../../../assets/images/product-regist.png';
+import stepImg from '../../../assets/images/scnece-img.png';
 import { cloneDeep } from 'lodash';
 import { post, Paths, get } from '../../../api';
 // import { netStatus } from '../../../configs/text-map'
@@ -232,7 +232,7 @@ export default function DeviceRegist() {
         <div id='device-regist2'>
             <PageTitle title='场景服务'>
                 <div className='top-select'>
-                    <Select style={{ width: 200 }} value={selectType} onChange={selectChange} showSearch optionFilterProp="children">
+                    <Select style={{ width: 150 }} value={selectType} onChange={selectChange} showSearch optionFilterProp="children">
                         {
                             optionArr.map(item => {
                                 return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)

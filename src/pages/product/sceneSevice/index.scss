@@ -3,7 +3,11 @@
     display: flex;
     justify-content: space-between;
   }
-
+.top-select{
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
   .device-content {
     padding: 22px;
     margin-top: 16px;
