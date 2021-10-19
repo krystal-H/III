@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Select, Steps, Button, Input, Table, Divider } from 'antd'
 import PageTitle from '../../../components/page-title/PageTitle'
-import stepImg from '../../../assets/images/product-regist.png'
+import stepImg from '../../../assets/images/cloud-time.png'
 import { cloudStatus } from '../../../configs/text-map'
 import { Paths, post, get } from '../../../api'
 import { CloudAddForm } from './cloud-manage-modals'
