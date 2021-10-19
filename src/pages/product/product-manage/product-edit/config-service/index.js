@@ -40,7 +40,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
     },
     {
       title: '固件升级',
-      desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
+      desc: 'MCU固件或SDK固件配置远程升级，无需烧录。需控制板支持。',
       isConfiged: false,
       type: 'firmwareUpdate',
       routePath: '/open/product/otaUpdate/list',
