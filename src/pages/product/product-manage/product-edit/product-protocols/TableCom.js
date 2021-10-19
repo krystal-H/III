@@ -4,6 +4,7 @@ import moment from 'moment';
 import { Table, Button, Space } from 'antd';
 import './index.scss';
 import EditcusFn from './editcusFn'
+import EditStaird from './stardEdit'
 import Addfunction from './addModal'
 import NewCusmFn from './addcusFn'
 // import TitleEdit from './titleEdit'
@@ -14,7 +15,7 @@ import { getRowSpanCount } from '../../../../../configs/tableCombine'
 // import { getRowSpanCount } from './tableCombine'
 
 
-export default function TableCom({ dataSource, reFreshData, type,standardData=[] }) {
+export default function TableCom({ dataSource, reFreshData, type, standardData = [] }) {
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     //页码改变
     const pagerChange = (pageIndex, pageRows) => {
@@ -215,6 +216,25 @@ export default function TableCom({ dataSource, reFreshData, type,standardData=[]
     const updateCancelHandle = () => {
         setIsDelVisible(false)
     }
+    //
+    const getCompinent = () => {
+        let dom = type == 1 ? <EditStaird
+            rightVisible={rightEditVisible}
+            onCloseRight={onCloseRight}
+            onRefreshList={onRefreshList}
+            standardData={standardData}
+            actionData={actionData}
+            modelType={type}></EditStaird>
+            :
+            <EditcusFn
+                rightVisible={rightEditVisible}
+                onCloseRight={onCloseRight}
+                onRefreshList={onRefreshList}
+                standardData={standardData}
+                actionData={actionData}
+                modelType={type}></EditcusFn>
+        return dom
+    }
     return <div>
         <Table
             rowKey="key"
@@ -237,15 +257,15 @@ export default function TableCom({ dataSource, reFreshData, type,standardData=[]
         {/* 新增自定义 */}
         {/* {1 && <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>} */}
         {/* 编辑操作 */}
-        {rightEditVisible && <EditcusFn
+        {/* {rightEditVisible && <EditcusFn
             rightVisible={rightEditVisible}
             onCloseRight={onCloseRight}
             onRefreshList={onRefreshList}
             standardData={standardData}
             actionData={actionData}
-            modelType={type}></EditcusFn>}
-        {/* 新增标准 */}
-        {/* {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>} */}
+            modelType={type}></EditcusFn>} */}
+
+        {rightEditVisible && getCompinent()}
         {/* 删除操作 */}
         {
             isDelVisible && <ActionConfirmModal
