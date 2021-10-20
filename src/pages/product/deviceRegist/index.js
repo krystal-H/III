@@ -43,7 +43,7 @@ export default function DeviceRegist() {
     }
     //产品种类列表
     const getProductType = () => {
-        post(Paths.getProductPlus, {}).then((res) => {
+        get(Paths.getProductType, {}).then((res) => {
             res.data.unshift({ productId: 0, productName: '全部产品' })
             setOptionArr(res.data)
         });
@@ -265,7 +265,7 @@ export default function DeviceRegist() {
             </div>
 
             {
-                modelVis && <RegistModel isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl} optionArr={optionArr}></RegistModel>
+                modelVis && <RegistModel isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl} optionArrs={optionArr}></RegistModel>
             }
         </div>
     )

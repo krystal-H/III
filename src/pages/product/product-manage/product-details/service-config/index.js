@@ -37,7 +37,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
     },
     {
       title: '固件升级',
-      desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
+      desc: 'MCU固件或SDK固件配置远程升级，无需烧录。需控制板支持。',
       isConfiged: false,
       type: 'firmwareUpdate',
       routePath: '/open/product/otaUpdate/list',
@@ -206,9 +206,10 @@ function ServiceConfig({ productId, nextStep }, ref) {
                 <div className="flex-start">
                   {
                     ['firmwareUpdate', 'cloud', 'deviceWarning', 'scene'].includes(item.type) ?
-                      <div className="config-card-right-btn">
-                        <Link to={{pathname: item.routePath, search: `?productId=${productId}`}} target="_blank">配置</Link>
-                      </div> :
+                      <Link to={{ pathname: item.routePath, search: `?productId=${productId}` }} target="_blank">
+                        <div className="config-card-right-btn">配置</div>
+                      </Link>
+                      :
                       item.isConfiged ?
                         <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
                         :

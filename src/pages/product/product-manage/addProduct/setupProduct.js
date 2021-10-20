@@ -140,7 +140,8 @@ class SetupProduct extends Component {
         wrapperCol={{ span: 19 }}
         initialValues={{
           productName: saveProductForm.productName || '',
-          brandId: saveProductForm.brandId || ''
+          // brandId: saveProductForm.brandId || ''
+          brandName: saveProductForm.brandName || ''
         }}
         onFinish={this.onFinish}
         onFinishFailed={this.onFinishFailed}>
@@ -154,7 +155,7 @@ class SetupProduct extends Component {
           <Input placeholder="请输入产品名称，不能超过50个字符" />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           label="产品品牌"
           name="brandId"
           rules={[{ required: true, message: '请选择产品品牌' }]}>
@@ -165,8 +166,17 @@ class SetupProduct extends Component {
               ))
             }
           </Select>
+        </Form.Item> */}
+        <Form.Item
+          label="产品品牌"
+          name="brandName"
+          rules={[
+            { required: true, message: '请输入产品品牌' },
+            { max: 50, message: '最大输入长度为50' },
+          ]}>
+          <Input placeholder="请输入产品品牌，不能超过50个字符" />
         </Form.Item>
-
+        
         <Form.Item
           label="产品型号"
           name="productCode"

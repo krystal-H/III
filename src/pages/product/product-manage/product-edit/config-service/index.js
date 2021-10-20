@@ -40,7 +40,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
     },
     {
       title: '固件升级',
-      desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
+      desc: 'MCU固件或SDK固件配置远程升级，无需烧录。需控制板支持。',
       isConfiged: false,
       type: 'firmwareUpdate',
       routePath: '/open/product/otaUpdate/list',
@@ -97,7 +97,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
 
   //验证函数
   const subNextConFirm = () => {
-    console.log('requiredList----', requiredList.every(item => item.isConfiged === true), '***', requiredList)
+    // console.log('requiredList----', requiredList.every(item => item.isConfiged === true), '***', requiredList)
     if (requiredList.every(item => item.isConfiged === true)) {
       nextStep()
     } else {
@@ -181,7 +181,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
         break;
       case 'addFirmware':
         if (customCount >= 5) {
-          Notification({description: '产品固件模块最多配置5个！', type: 'warn'})
+          Notification({ description: '产品固件模块最多配置5个！', type: 'warn' })
         } else {
           setFirmwareVisible(true)
         }
@@ -260,9 +260,10 @@ function ServiceSelect({ productId, nextStep }, ref) {
                   {
                     !item.isConfiged ?
                       ['firmwareUpdate', 'cloud', 'deviceWarning', 'scene'].includes(item.type) ?
-                        <div className="config-card-right-btn">
-                          <Link to={{pathname: item.routePath, search: `?productId=${productId}`}} target="_blank">配置</Link>
-                        </div> :
+                        <Link to={{ pathname: item.routePath, search: `?productId=${productId}` }} target="_blank">
+                          <div className="config-card-right-btn">配置</div>
+                        </Link>
+                        :
                         <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
                       : ''
                   }

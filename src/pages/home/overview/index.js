@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import { Carousel, Button } from 'antd';
+import { Carousel, Button,Modal } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
@@ -285,6 +285,8 @@ export default function OverviewWrap() {
             });
         }
     }
+    //未开发
+    const [showTip,setShowTip]=useState(false)
     return (
         <div className='over-view'>
             {
@@ -575,7 +577,7 @@ export default function OverviewWrap() {
                             <div>帮助</div>
                         </div>
                         <div className='over-view-help hover-commons-unite'>
-                            <div>
+                            <div onClick={()=>{setShowTip(true)}}>
                                 <img src={help1} alt='' />
                                 <div>客服</div>
                             </div>
@@ -598,6 +600,14 @@ export default function OverviewWrap() {
                     getProductListNew={getProductListNew}
                     cancelHandle={closeNewProduct}>
                 </AddProductModal>
+            }
+            {/* 待开发功能 */}
+            {
+                showTip && <Modal title="温馨提示" width='370px' visible={showTip} footer={null} onCancel={() => { setShowTip(false) }}>
+                    <div className='down-office-modal'>
+                        <div>此功能正在升级维护中，敬请期待~</div>
+                    </div>
+                </Modal>
             }
         </div>
     )
