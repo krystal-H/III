@@ -19,6 +19,7 @@ export default function DeviceRegist() {
     const [productCount, SetproductCount] = useState({})
     const [dataSource, setDataSource] = useState([])
     const [optionArr, setOptionArr] = useState([]) //产品列表
+    const [newoptionArr, setNewoptionArr] = useState([]) //新产品列表
     const [selectType, setSelectType] = useState('') //产品种类
     const [countData, setCountData] = useState([{ label: '设备总数量', count: 0 }, { label: '已入网设备', count: 0 }, { label: '未入网设备', count: 0 }])
 
@@ -44,6 +45,9 @@ export default function DeviceRegist() {
     //产品种类列表
     const getProductType = () => {
         post(Paths.getProductPlus, {}).then((res) => {
+            setNewoptionArr(res.data)
+        });
+        post(Paths.allProductPubList, {}).then((res) => {
             res.data.unshift({ productId: 0, productName: '全部产品' })
             setOptionArr(res.data)
         });
@@ -147,7 +151,7 @@ export default function DeviceRegist() {
             dataIndex: 'authorityType',
             key: 'authorityType',
             render: text => tableFilterFn(text)
-        },{
+        }, {
             title: '归属产品名称',
             dataIndex: 'productName',
             key: 'productName'
@@ -176,8 +180,8 @@ export default function DeviceRegist() {
         }
     ];
     //导出
-    const exportFile=()=>{
-        let params = {  }
+    const exportFile = () => {
+        let params = {}
         if (form.getFieldValue('status') != -1) {
             params.status = form.getFieldValue('status')
         }
@@ -187,7 +191,7 @@ export default function DeviceRegist() {
         if (selectType) {
             params.productId = selectType
         }
-        post(Paths.exportRegistFile,params).then((res) => {
+        post(Paths.exportRegistFile, params).then((res) => {
             window.open(res.data)
         });
     }
@@ -212,7 +216,7 @@ export default function DeviceRegist() {
                 <Steps current={-1} initial={0}>
                     <Step title="选择不同校验机制" description="注册设备，产品发布前，需在配置服务步骤，确定安全通信安全机制。" />
                     <Step title="注册设备物理地址" description="Clife平台提供产品密钥验证、产品密钥&设备ID验证、设备ID&设备密钥验证多种安全通信机制。" />
-                    <Step title="查看入网设备" description="安全级别最高的设备ID&设备密钥验证，即一机一码，需要下载密钥文件。"/>
+                    <Step title="查看入网设备" description="安全级别最高的设备ID&设备密钥验证，即一机一码，需要下载密钥文件。" />
                 </Steps>
             </div>
             <CountNum data={countData} />
@@ -247,7 +251,7 @@ export default function DeviceRegist() {
                         </Form>
                     </div>
                     <div>
-                        <Button type="primary" onClick={exportFile} style={{marginRight:'15px'}}>导出数据</Button>
+                        <Button type="primary" onClick={exportFile} style={{ marginRight: '15px' }}>导出数据</Button>
                         <Button type="primary" onClick={openRegist}>注册设备</Button>
                     </div>
 
@@ -265,7 +269,7 @@ export default function DeviceRegist() {
             </div>
 
             {
-                modelVis && <RegistModel isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl} optionArr={optionArr}></RegistModel>
+                modelVis && <RegistModel isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl} optionArr={newoptionArr}></RegistModel>
             }
         </div>
     )

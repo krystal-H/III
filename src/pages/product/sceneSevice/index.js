@@ -78,24 +78,22 @@ export default function DeviceRegist() {
     //产品种类列表
     const getProductType = () => {
         get(Paths.getProductType, {}, { loading: true }).then(({ data }) => {
-            // const productList = Object.keys(data).map(id => {
-            //     return { productId: id, productName: data[id] }
-            // });
-            const productList =data
+            const productList = data
             // setDataList(productList)
             let id = getUrlParam('productId')
-                if (id) {
-                    setSelectType(id)
-                    productList.forEach(item => {
-                        if (id == item.productId) {
-                            setProductName(item.productName)
-                        }
-                    })
-                } else {
-                    setSelectType(productList[0].productId)
-                    setProductName(productList[0].productName)
-                }
-                setOptionArr(productList)
+            if (id) {
+                id=Number(id)
+                setSelectType(id)
+                productList.forEach(item => {
+                    if (id == item.productId) {
+                        setProductName(item.productName)
+                    }
+                })
+            } else {
+                setSelectType(productList[0].productId)
+                setProductName(productList[0].productName)
+            }
+            setOptionArr(productList)
         });
         // post(Paths.getProductPlus, {}).then((res) => {
         //     if (res.data.length) {
@@ -182,12 +180,12 @@ export default function DeviceRegist() {
             type: 'success',
             description: '提交成功！',
         });
-        if(id == selectType){
+        if (id == selectType) {
             getList()
-        }else{
+        } else {
             selectChange(id)
         }
-        
+
         setModelVis(false)
 
     }

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'rea
 import { Button, Modal } from 'antd';
 import ChangeModal from './changeModal'
 import { post, Paths, get } from '../../../../../api';
-import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.png';
+import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.jpg';
 import { useHistory } from 'react-router-dom';
 import { cloneDeep } from "lodash";
 import GrayDebugg from './grayDebugg'
@@ -281,7 +281,7 @@ function confirmModel({ nextStep }, ref) {
                 <div className='confirm-pannel-content-right'>
                     <div>请使用“数联智能”App，扫描以下二维码，体验此面板。</div>
                     <div className='model-panal-code'>
-                        <img src={shoaLast.qrcode || demoAppOfficial} alt='' />
+                        <img src={shoaLast.qrcode } alt='' />
                     </div>
                     <div>
                         还没安装App？
@@ -319,8 +319,8 @@ function confirmModel({ nextStep }, ref) {
             isChangeModalVisible && <ChangeModal isChangeModalVisible={isChangeModalVisible} defaultTab={defaultTab} closeChange={closeChange} CancelChange={CancelChange}></ChangeModal>
         }
         {
-            showOffice && <Modal title="安装“数联智能”App" width='370px' visible={showOffice} footer={null} onCancel={handleCancel}>
-                <div className='down-office-modal'>
+            showOffice && <Modal title="安装“数联智能”App" width='470px' visible={showOffice} footer={null} onCancel={handleCancel}>
+                <div className='down-office-modal' >
                     <img src={demoAppOfficial} />
                     <div>手机扫描二维码下载</div>
                 </div>

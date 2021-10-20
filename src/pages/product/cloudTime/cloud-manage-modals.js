@@ -3,7 +3,7 @@ import { Modal, Input, Form, Select, Tooltip, Button } from 'antd'
 import { DeleteOutlined, QuestionCircleOutlined, CheckCircleOutlined } from '@ant-design/icons'
 import { Notification } from '../../../components/Notification'
 import { cloneDeep, difference } from 'lodash'
-import { Paths, post, get } from '../../../api'
+import { Paths, post } from '../../../api'
 import './cloud-manage-modals.scss'
 
 const { Option } = Select
@@ -40,7 +40,7 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
             return Notification({ description: '请选择需要关联的协议!', type: 'warn' })
         }
         values.timeServerDetails = timeServerDetails
-        console.log('提交的参数', { ...values})
+        // console.log('提交的参数', { ...values})
         post(Paths.saveTimeService, { ...values}, {loading:true}).then(res => {
             Notification({ description: '操作成功！', type: 'success' })
             handleOk()
@@ -64,19 +64,12 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
         type === 'edit' && showDetail()
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-    // useEffect(() => {
-    //     console.log(selectedProtocolList)
-    // }, [selectedProtocolList])
-
-    // useEffect(() => {
-    //     console.log(protocolItemIndex, 'protocolItemIndex--------')
-    // }, [protocolItemIndex])
-
     // 获取关联协议
     const getRelationProtocol = (productId) => {
         post(Paths.getPhysicalModel, { productId }).then(res => {
             console.log(res)
             setInitialList(res.data.properties)
+            setProtocolItemIndex('')
         })
     }
 

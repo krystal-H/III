@@ -373,6 +373,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                 rules={[
                     {
                         required: true,
+                        message:'请选择数据传输类型'
                     },
                 ]}
             >

@@ -206,9 +206,10 @@ function ServiceConfig({ productId, nextStep }, ref) {
                 <div className="flex-start">
                   {
                     ['firmwareUpdate', 'cloud', 'deviceWarning', 'scene'].includes(item.type) ?
-                      <div className="config-card-right-btn">
-                        <Link to={{pathname: item.routePath, search: `?productId=${productId}`}} target="_blank">配置</Link>
-                      </div> :
+                      <Link to={{ pathname: item.routePath, search: `?productId=${productId}` }} target="_blank">
+                        <div className="config-card-right-btn">配置</div>
+                      </Link>
+                      :
                       item.isConfiged ?
                         <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
                         :
