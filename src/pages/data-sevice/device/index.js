@@ -57,6 +57,7 @@ export default function Device() {
     const [dates, setDates] = useState([]);
     const [hackValue, setHackValue] = useState();
     const [value, setValue] = useState(); //时间值
+    const [optionArr, setOptionArr] = useState([]) //产品列表
     const disabledDate = current => {
         if (!dates || dates.length === 0) {
             return false;
@@ -66,10 +67,16 @@ export default function Device() {
         const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
         return isBeyong || tooEarly || tooLate
     };
-    const [selectType, setSelectType] = useState('') //产品种类
+    const [selectType, setSelectType] = useState(0) //产品种类
     //产品改变
     const selectChange = (value) => {
         setSelectType(value)
+    }
+    const getType = () => {
+        post(Paths.allProductPubList, {}).then(res => {
+            res.data.unshift({productId:0,productName:"全部产品"})
+            setOptionArr( res.data)
+        })
     }
     const onOpenChange = open => {
         if (open) {
@@ -100,6 +107,9 @@ export default function Device() {
             initData(tableData)
         }
     }, [currentTab])
+    useEffect(() => {
+        getType()
+    }, [])
     const getData = (loading = true) => {
         let params = {}
         if (currentTime === '1') {
@@ -286,7 +296,16 @@ export default function Device() {
 
     return (
         <div id='device-analysis'>
-            <PageTitle title='设备分析' selectOnchange={val => setSelectType(val)} isRelProductData={true}>
+            <PageTitle title='设备分析' >
+                <div className='top-select'>
+                    <Select style={{ width: 150 }} value={selectType} onChange={selectChange} showSearch optionFilterProp="children">
+                        {
+                            optionArr.map(item => {
+                                return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
+                            })
+                        }
+                    </Select>
+                </div>
             </PageTitle>
             <div className='comm-shadowbox filter-wrap'>
                 <Radio.Group

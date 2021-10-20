@@ -522,6 +522,7 @@ let Paths = {
     userDataAn:'/summary/account/dashboard',//用户分析
     deviceDataDown:'/summary/device/download',//设备分析下载
     userDataDown:'/summary/account/download',//用户分析下载
+    allProductPubList:'/productManage/getPublishProductList',
     //公共接口
     getProductType:'/productManage/getSelectList',//产品下拉列表
     

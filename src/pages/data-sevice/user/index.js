@@ -78,17 +78,27 @@ export default function Device() {
     const timeCall = (value) => {
         setValue(value)
     }
+
     //======
     const [currentTime, setCurrentTime] = useState('1') //当前选择时间
     const [countData, setCountData] = useState(originCount)
     const [currentTab, setCurrentTab] = useState(0)
     const [tableData, setTableData] = useState([])
+    const [optionArr, setOptionArr] = useState([]) //产品列表
     const onChange3 = e => {
         setValue(null)
         setCurrentTime(e.target.value)
     };
-    const [selectType, setSelectType] = useState('') //产品种类
-
+    const [selectType, setSelectType] = useState(0) //产品种类
+    const getType = () => {
+        post(Paths.allProductPubList, {}).then(res => {
+            res.data.unshift({ productId: 0, productName: "全部产品" })
+            setOptionArr(res.data)
+        })
+    }
+    useEffect(() => {
+        getType()
+    }, [])
     useEffect(() => {
         getData()
     }, [currentTime, value, selectType])
@@ -124,21 +134,21 @@ export default function Device() {
         }
         post(Paths.userDataAn, params, { loading }).then((res) => {
             if (Array.isArray(res.data)) {
-                let arr = [],tableArr=[]
+                let arr = [], tableArr = []
                 while (dayjs(params.startDate).isBefore(params.endDate, 'day')) {
                     arr.push(params.startDate)
-                    params.startDate =dayjs(params.startDate).add(1, 'day').format('YYYY-MM-DD')
+                    params.startDate = dayjs(params.startDate).add(1, 'day').format('YYYY-MM-DD')
                     console.log(arr)
                 }
                 arr.push(params.endDate)
-                arr.reverse().forEach(item=>{
-                    let val={
-                        "activeNum":0,
-                        "activeRatio":0,
-                        "newRatio":0,
-                        "totalNum":0,
-                        "summaryDate":item,
-                        "newNum":0
+                arr.reverse().forEach(item => {
+                    let val = {
+                        "activeNum": 0,
+                        "activeRatio": 0,
+                        "newRatio": 0,
+                        "totalNum": 0,
+                        "summaryDate": item,
+                        "newNum": 0
                     }
                     tableArr.push(val)
                 })
@@ -290,9 +300,22 @@ export default function Device() {
         }
         setCurrentTab(index)
     }
+    //产品改变
+    const selectChange = (value) => {
+        setSelectType(value)
+    }
     return (
         <div id='device-analysis'>
-            <PageTitle title='用户分析' selectOnchange={val => setSelectType(val)} isRelProductData={true}>
+            <PageTitle title='用户分析' >
+                <div className='top-select'>
+                    <Select style={{ width: 150 }} value={selectType} onChange={selectChange} showSearch optionFilterProp="children">
+                        {
+                            optionArr.map(item => {
+                                return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
+                            })
+                        }
+                    </Select>
+                </div>
             </PageTitle>
             <div className='comm-shadowbox filter-wrap'>
                 <Radio.Group

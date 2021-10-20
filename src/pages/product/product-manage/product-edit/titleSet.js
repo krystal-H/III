@@ -121,11 +121,6 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     <Form.Item
                         label="产品型号"
                         name="productCode"
-                        rules={[
-                            {
-                                required: true,
-                            },
-                        ]}
                     >
                         <Input />
                     </Form.Item>

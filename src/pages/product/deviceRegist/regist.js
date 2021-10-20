@@ -4,12 +4,9 @@ import { UploadFileHooks } from '../../../components/upload-file';
 import LabelTip from '../../../components/form-com/LabelTip';
 import './index.scss'
 import { post, Paths} from '../../../api';
-import { cloneDeep } from 'lodash'
-export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, optionArrs }) {
+export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, optionArr }) {
   const [form] = Form.useForm();
   const $el = useRef(null)
-  const optionArr=cloneDeep(optionArrs)
-   optionArr.shift()
   //提交数据
   const subData = () => {
     form.validateFields().then(value => {
