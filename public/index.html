@@ -20,6 +20,11 @@
         try{new Set();[].includes()}catch(error){var prejDom=document.getElementById("pre-j"),rootDom=document.getElementById("root");
         if(prejDom){prejDom.style.display="block";rootDom.style.display="none";window.stop?window.stop():document.execCommand("Stop")
         }};
+
+        if( location.hostname=="open.clife.cn" && !sessionStorage.getItem("firstin")){
+            sessionStorage.setItem("firstin",true);
+            location.href = './v4/';
+        }
     </script>
 </body>
 </html>
