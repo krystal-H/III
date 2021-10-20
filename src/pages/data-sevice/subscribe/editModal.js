@@ -426,6 +426,9 @@ function StepContentThree({ finishSub, editData }, ref) {
     const radioChange = (e) => {
         setShowWay(e.target.value);
     }
+    const downFile=()=>{
+        window.open("http://skintest.hetyj.com/10086/a9b97e2ef3c7465bb79b63374cbd4dd8.docx")
+    }
     return (<div className='step-one'>
         <Form form={form} labelAlign='right'>
             <Form.Item name="pushWay" label="订阅方式" rules={[{ required: true }]}>
@@ -453,7 +456,7 @@ function StepContentThree({ finishSub, editData }, ref) {
                 </Form.Item>
             }
             <Form.Item label=" " colon={false}>
-                <a>订阅帮助文档</a>
+                <a onClick={downFile}>订阅帮助文档</a>
             </Form.Item>
         </Form>
     </div>)
