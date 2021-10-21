@@ -89,10 +89,9 @@ export default function TableCom({ dataSource, reFreshData, type, standardData =
         return data
     }
     const columns = [
-
         {
             title: '功能类型', dataIndex: 'funcTypeCN',
-            width:'100px',
+            width: '100px',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     getComData(),
@@ -104,7 +103,7 @@ export default function TableCom({ dataSource, reFreshData, type, standardData =
             },
         },
         {
-            title: '功能点名称', dataIndex: 'funcName',width:'130px',
+            title: '功能点名称', dataIndex: 'funcName', width: '130px',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     getComData(),
@@ -116,7 +115,7 @@ export default function TableCom({ dataSource, reFreshData, type, standardData =
             },
         },
         {
-            title: '标识符', dataIndex: 'funcIdentifier',width:'160px',
+            title: '标识符', dataIndex: 'funcIdentifier', width: '160px',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     getComData(),
@@ -128,17 +127,17 @@ export default function TableCom({ dataSource, reFreshData, type, standardData =
             },
         },
         {
-            title: 'DP ID', dataIndex: 'dataPointId',width:'100px',
+            title: 'DP ID', dataIndex: 'dataPointId', width: '100px',
         },
         {
-            title: '参数名称', dataIndex: 'name',
+            title: '参数名称', dataIndex: 'name', width: '140px',
             render: (text, record) => {
                 return text
             }
         },
-        { title: '参数标识', dataIndex: 'identifier' ,width:'160px'},
+        { title: '参数标识', dataIndex: 'identifier', width: '160px' },
         {
-            title: '数据传输类型', dataIndex: 'accessMode',width:'140px',
+            title: '数据传输类型', dataIndex: 'accessMode', width: '240px',
             render: (text, record) => {
                 if (text == 'rw') {
                     return '可下发可上报'
@@ -153,11 +152,11 @@ export default function TableCom({ dataSource, reFreshData, type, standardData =
             }
         },
         {
-            title: '数据类型', dataIndex: 'dataType', render: (text, record) => (
+            title: '数据类型', dataIndex: 'dataType', width: '140px', render: (text, record) => (
                 <span>{record.dataTypCN}</span>
             )
         },
-        { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record)}</span> },
+        { title: '数据属性', dataIndex: 'propertyMap', width: '340px', render: (text, record) => <span>{filterFn(record)}</span> },
         {
             title: '操作',
             render: (value, row, index) => {

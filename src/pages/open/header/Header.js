@@ -15,7 +15,8 @@ import securitySet from './../../../assets/images/overImage/security-set.png';
 import userrole from './../../../assets/images/overImage/user-role.png';
 import baseinfo from './../../../assets/images/overImage/base-info.png';
 import inviteuser from './../../../assets/images/overImage/invite-user.png';
-
+import { getNavMess } from '../../message-center/store/ActionCreator'
+import { connect } from 'react-redux'
 import './Header.scss'
 
 const LOGO_TEXT = '物联网云平台';
@@ -38,11 +39,23 @@ function getMessageType(text) {
     }
     return ''
 }
+const mapStateToProps = state => {
+    return {
+        messageList: state.getIn(['message', 'titleMessage']).toJS()
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        getNavMess: () => dispatch(getNavMess()),
+    }
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class Header extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            messageList: [],
         }
     }
     logout = () => {
@@ -51,31 +64,33 @@ export default class Header extends PureComponent {
         })
     }
     componentDidMount() {
-        if(!this.props.onlyLogo){
-            this.getNoticeList()
+        if (!this.props.onlyLogo) {
+            this.props.getNavMess()
+            // this.getNoticeList()
+
         }
-        
+
     }
-    getNoticeList = () => {
-        let params = { "pager": { "pageIndex": 1, "pageRows": 4 } }
-        post(Paths.getNoticeList, params)
-            .then(res => {
-                this.setState({
-                    messageList: res.data.list,
-                })
-            })
-    }
+    // getNoticeList = () => {
+    //     let params = { "pager": { "pageIndex": 1, "pageRows": 4 } }
+    //     post(Paths.getNoticeList, params)
+    //         .then(res => {
+    //             this.setState({
+    //                 messageList: res.data.list,
+    //             })
+    //         })
+    // }
     goHome = () => {
-        if(!this.props.onlyLogo){
+        if (!this.props.onlyLogo) {
             window.location = window.location.origin + window.location.pathname + '#/open/home';
         }
-        
+
     }
-    goMessAgeDetail=(id)=>{
-        window.location = window.location.origin + window.location.pathname + '#/messageCenter/detail/'+id;
+    goMessAgeDetail = (id) => {
+        window.location = window.location.origin + window.location.pathname + '#/messageCenter/detail/' + id;
     }
     render() {
-        const { onlyLogo, developerInfo = {}, newMessageNums = {}, history } = this.props,
+        const { onlyLogo, developerInfo = {}, newMessageNums = {}, history, messageList=[] } = this.props,
             { userName, isSubUser } = developerInfo,
             { totalUnRead } = newMessageNums;
         let { childmenus } = userNavRoutes[0];
@@ -96,8 +111,7 @@ export default class Header extends PureComponent {
         if (isSubUser) {
             childmenus = childmenus.slice(0, 2) // 子账号只有前两项  基本资料  安全设置  两个菜单
         }
-        const { messageList } = this.state
-
+        console.log(newMessageNums,'=========')
         return (
             <header className="mainpage-header">
                 <span className="logo" onClick={this.goHome.bind(this, false)}>{LOGO_TEXT}</span>
@@ -117,7 +131,7 @@ export default class Header extends PureComponent {
                                                     <div className='text'>【{getMessageType(item.noticeType)} 】{item.noticeTitle}</div>
                                                     {!item.isRead && <div className='count-dot'></div>}
                                                 </div>
-                                                <div className='time'>{ item.createTime &&  DateTool.utcToDev(item.createTime) }</div>
+                                                <div className='time'>{item.createTime && DateTool.utcToDev(item.createTime)}</div>
                                             </div>
                                         </div>
                                     })

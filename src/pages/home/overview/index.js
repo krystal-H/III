@@ -365,7 +365,7 @@ export default function OverviewWrap() {
                                 <img src={projectmn2} />
                                 <div >固件升级</div>
                             </div>
-                            <div onClick={() => { goAuPage('场景服务', '/open/product/ruleEnginet') }}>
+                            <div onClick={() => { goAuPage('场景服务', '/open/product/ruleEngine') }}>
                                 <img src={projectmn3} />
                                 <div >场景服务</div>
                             </div>
@@ -373,7 +373,7 @@ export default function OverviewWrap() {
                                 <img src={projectmn4} />
                                 <div >云端定时</div>
                             </div>
-                            <div onClick={() => { goAuPage('云端定时', '/open/product/remoteCofig') }}>
+                            <div onClick={() => { goAuPage('远程配置', '/open/product/remoteCofig') }}>
                                 <img src={projectmn5} />
                                 <div>远程配置</div>
                             </div>

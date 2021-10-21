@@ -56,17 +56,7 @@ export default function TableCom({ dataSource, reFreshData, type }) {
         return data
     }
     const columns = [
-        {
-            title: 'DP ID', dataIndex: 'dataPointId', render: (value, row, index) => {
-                return getRowSpanCount(
-                    getComData(),
-                    "funcIdentifier",
-                    index,
-                    value,
-                    "dataPointId"
-                );
-            },
-        },
+
         {
             title: '功能类型', dataIndex: 'funcTypeCN',
             render: (value, row, index) => {
@@ -102,6 +92,9 @@ export default function TableCom({ dataSource, reFreshData, type }) {
                     "funcIdentifier"
                 );
             },
+        },
+        {
+            title: 'DP ID', dataIndex: 'dataPointId',
         },
         { title: '参数名称', dataIndex: 'name' },
         { title: '参数标识', dataIndex: 'identifier' },
