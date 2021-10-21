@@ -113,7 +113,7 @@ export default class GroupDetailt extends PureComponent {
             // for (let key in res.data) {
             //     productList.push({ productId: key, productName: res.data[key] })
             // }
-            this.setState(res.data);
+            this.setState({productList:res.data || []});
         });
     }
     //获取分组中的设备列表

@@ -78,7 +78,7 @@ export default function DeviceRegist() {
     //产品种类列表
     const getProductType = () => {
         get(Paths.getProductType, {}, { loading: true }).then(({ data }) => {
-            const productList = data
+            const productList = data || [];
             // setDataList(productList)
             let id = getUrlParam('productId')
             if (id) {

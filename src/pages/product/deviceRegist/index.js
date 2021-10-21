@@ -44,12 +44,13 @@ export default function DeviceRegist() {
     }
     //产品种类列表
     const getProductType = () => {
-        post(Paths.getProductPlus, {}).then((res) => {
-            setNewoptionArr(res.data)
+        post(Paths.getProductPlus).then((res) => {
+            setNewoptionArr(res.data || [])
         });
-        post(Paths.allProductPubList, {}).then((res) => {
-            res.data.unshift({ productId: 0, productName: '全部产品' })
-            setOptionArr(res.data)
+        post(Paths.allProductPubList).then((res) => {
+            let datali = res.data || [];
+            datali.unshift({ productId: 0, productName: '全部产品' })
+            setOptionArr(datali)
         });
     }
     //产品改变
