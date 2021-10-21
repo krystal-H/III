@@ -109,7 +109,7 @@ export default class Application extends PureComponent {
 
     render() {
         let { application, createAppJurisdiction } = this.state;
-        let { list, pager } = application;
+        let { list, pager = {} } = application;
         let listWrapperClassName = list.length <= 5 ? "lists-wrapper flex-row flex1" : "lists-wrapper flex-row flex1 six-item";
         let desc = (
             <h6>C-Life平台提供完善的应用开发管理服务。您可以构建自主品牌的APP终端应用或小程序应用，您可以在这里对应用进行统一管理。
