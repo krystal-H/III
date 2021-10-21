@@ -15,13 +15,14 @@ const { Option } = Select;
 const { Step } = Steps;
 export default function DeviceRegist() {
     const [form] = Form.useForm();
-    const [deviceNameS, setDeviceNameS] = useState([])
-    const [productCount, SetproductCount] = useState({})
     const [dataSource, setDataSource] = useState([])
     const [optionArr, setOptionArr] = useState([]) //产品列表
     const [newoptionArr, setNewoptionArr] = useState([]) //新产品列表
     const [selectType, setSelectType] = useState('') //产品种类
-    const [countData, setCountData] = useState([{ label: '设备总数量', count: 0 }, { label: '已入网设备', count: 0 }, { label: '未入网设备', count: 0 }])
+    const [countData, setCountData] = useState([
+        { label: '设备总数量', count: '--' }, 
+        { label: '已入网设备', count: '--' }, 
+        { label: '未入网设备', count: '--' }])
 
     useEffect(() => {
         getProductType()

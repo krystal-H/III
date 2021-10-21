@@ -10,10 +10,10 @@ import './index.scss'
 // import GroupDetailt from '../../product/device/device-group/groupDeviceList';
 const { Option } = Select;
 const originCount = [
-    { label: '当前异常数', count: 0 },
-    { label: '累积设备总数', count: 0 },
-    { label: '累积入网总数', count: 0 },
-    { label: '今日入网总数', count: 0 }]
+    { label: '当前异常数', count: '--' },
+    { label: '累积设备总数', count: '--' },
+    { label: '累积入网总数', count: '--' },
+    { label: '今日入网总数', count: '--' }]
 export default function DeviceList() {
     const history = useHistory();
     const [countData, setCountData] = useState(originCount) //统计

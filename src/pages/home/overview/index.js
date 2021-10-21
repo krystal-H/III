@@ -88,7 +88,7 @@ export default function OverviewWrap() {
     }
     //设备列表
     const [devOneList, setDevOneList] = useState({
-        exception: 0, total: 0, totalActive: 0, todayActive: 0
+        exception: '--', total: '--', totalActive: '--', todayActive: '--'
     })
     const getDevOneList = () => {
         post(Paths.devMnCount).then((res) => {
@@ -101,14 +101,14 @@ export default function OverviewWrap() {
     //         setDevTwoList(res.data)
     //     });
     // }
-    const [devThreeList, setDevThreeList] = useState({ processed: 0, lastWarnTime: "-", pending: 0, send: 0 })
+    const [devThreeList, setDevThreeList] = useState({ processed: '--', lastWarnTime: "--", pending: '--', send: '--' })
     const getDevThreeList = () => {
         post(Paths.devWarnCount).then((res) => {
             setDevThreeList(res.data)
         });
     }
     //产品统计
-    const [productCount, setProductCount] = useState({ online: 0, fault: 0, total: 0, devTotal: 0 })
+    const [productCount, setProductCount] = useState({ online: '--', fault: '--', total: '--', devTotal: '--' })
     const getProductCount = () => {
         post(Paths.productCount).then((res) => {
             setProductCount(res.data)
@@ -122,13 +122,6 @@ export default function OverviewWrap() {
                 setProductList(res.data.records)
             }
         })
-        // get(Paths.productList).then((res) => {
-        //     if (res.data.length > 3) {
-        //         setProductList(res.data.slice(0, 3))
-        //     } else {
-        //         setProductList(res.data)
-        //     }
-        // });
     }
     const productStatuFilter = (value) => {
         // (0开发模式 ,1生产模式，2-审核中)

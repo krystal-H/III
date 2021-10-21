@@ -287,7 +287,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
     }
     const columns = [
         {
-            title: 'APP ID',
+            title: '面板ID',
             dataIndex: 'projectId',
             key: 'projectId',
         },

@@ -14,11 +14,11 @@ const options = [
 ];
 const { RangePicker } = DatePicker;
 const originCount = [
-    { label: '新增设备数', count: 0 },
-    { label: '入网设备数', count: 0 },
-    { label: '活跃设备数', count: 0 },
-    { label: '异常设备数', count: 0 },
-    { label: '设备累计总数', count: 0 }]
+    { label: '新增设备数', count: '--' },
+    { label: '入网设备数', count: '--' },
+    { label: '活跃设备数', count: '--' },
+    { label: '异常设备数', count: '--' },
+    { label: '设备累计总数', count: '--' }]
 const columns = [
     {
         title: '日期',
