@@ -54,7 +54,7 @@
     display: flex;
     align-items: center;
     margin: 16px 0;
-
+    
     >div {
       font-weight: 400;
       width: 170px;
@@ -76,6 +76,7 @@
           }
         }
       }
+      
       .item-label {
         height: 22px;
         font-size: 12px;
@@ -90,7 +91,13 @@
         line-height: 32px;
       }
     }
-
+    .last-wrap{
+      border: none;
+      margin-left: 30px;
+      cursor: auto;
+      padding-left: 30px;
+      border-left: 2px dotted #666 ;
+    }
     .current-tab {
       // background-color: #F0F1F3;
       border-width: 2px;

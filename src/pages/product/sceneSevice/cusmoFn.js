@@ -15,12 +15,12 @@ function delaData(data, typeS) {
     if (!item.funcParamList || !item.funcParamList.length) return
     item.funcParamList.forEach(item2 => {
       let newItem = JSON.parse(JSON.stringify(item))
-      if(typeS){
-        if(!newItem.funcParamList[0].statusQueryId){
+      if (typeS) {
+        if (!newItem.funcParamList[0].statusQueryId) {
           newData.push({ ...newItem, ...item2 })
         }
-      }else{
-        if(!newItem.funcParamList[0].deviceFunctionId){
+      } else {
+        if (!newItem.funcParamList[0].deviceFunctionId) {
           newData.push({ ...newItem, ...item2 })
         }
       }
@@ -179,15 +179,15 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
   const subData = () => {
     let arr = []
     for (let key in selectData) {
-      arr=arr.concat(selectData[key])
+      arr = arr.concat(selectData[key])
     }
     let arr2 = []
     for (let key in selectData2) {
-      arr2=arr2.concat(selectData2[key])
+      arr2 = arr2.concat(selectData2[key])
     }
-    let obj={}
-    obj.productId=selectType
-    obj.data=arr.concat(arr2)
+    let obj = {}
+    obj.productId = selectType
+    obj.data = arr.concat(arr2)
 
     post(Paths.saveScenceData, obj).then((res) => {
       addOk(selectType)
@@ -223,10 +223,12 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
                   <div key={index} className='content-item'>
                     <h3>{item.title}</h3>
                     <div>
-                      <Checkbox indeterminate={indeterminate[item.title] || false}
-                        onChange={(e) => onCheckAllChange(e, item.title, item.content)} checked={checkAll[item.title] || false}>
-                        全选
-                      </Checkbox>
+                      <div className='scene-all-select'>
+                        <Checkbox indeterminate={indeterminate[item.title] || false}
+                          onChange={(e) => onCheckAllChange(e, item.title, item.content)} checked={checkAll[item.title] || false}>
+                          全选
+                        </Checkbox>
+                      </div>
                       <CheckboxGroup options={item.content} value={selectData[item.title] || []} onChange={(e) => onChange(e, item.title, item.content)} />
                     </div>
                   </div>
@@ -234,14 +236,14 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
               })
             }
           </div>
-          <div className='middle'>
+          <div className='middle dev-dotted-line'>
             <div className='middle-clear'>
               <span className='middle-title'> 场景执行动作设置<LabelTip tip="物模型的仅可下行、可上行可下行2种数据类型支持动作" /></span>
               <Button type="primary" ghost onClick={clearData2}>
                 清空
               </Button>
             </div>
-            <div className='middle-tip'>场景执行动作设置以后，该功能点即可出现在APP-场景-我的场景-添加动作处，作为场景的执行动作来设置</div>
+            <div className='middle-tip '>场景执行动作设置以后，该功能点即可出现在APP-场景-我的场景-添加动作处，作为场景的执行动作来设置</div>
           </div>
           <div className='content'>
             {
@@ -250,10 +252,12 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
                   <div key={index} className='content-item'>
                     <h3>{item.title}</h3>
                     <div>
-                      <Checkbox indeterminate={indeterminate2[item.title] || false}
-                        onChange={(e) => onCheckAllChange2(e, item.title, item.content)} checked={checkAll2[item.title] || false}>
-                        全选
-                      </Checkbox>
+                      <div className='scene-all-select'>
+                        <Checkbox indeterminate={indeterminate2[item.title] || false}
+                          onChange={(e) => onCheckAllChange2(e, item.title, item.content)} checked={checkAll2[item.title] || false}>
+                          全选
+                        </Checkbox>
+                      </div>
                       <CheckboxGroup options={item.content} value={selectData2[item.title] || []} onChange={(e) => onChange2(e, item.title, item.content)} />
                     </div>
                   </div>

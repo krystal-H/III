@@ -56,7 +56,7 @@ export default function productInfo() {
         if (count === 0) {
             return '一型一密'
         } else if (count === 1) {
-            return '一型一密plus'
+            return '一型一密pro'
         } else if (count === 2) {
             return '一机一密'
         } else {
@@ -107,7 +107,7 @@ export default function productInfo() {
                     </div>
                 </div>
                 <div className='product-info-conten-wrap' style={{ paddingTop: '12px' }}>
-                    <div className='product-top-right-text'>产品头图：</div>
+                    <div className='product-top-right-text'>产品图标：</div>
                     <img className='product-top-right-img' src={businessInfo.productPic} alt='' />
                 </div>
             </div>

@@ -130,7 +130,7 @@ export default function DeviceRegist() {
         if (count === 0) {
             return '一型一密'
         } else if (count === 1) {
-            return '一型一密plus'
+            return '一型一密pro'
         } else if (count === 2) {
             return '一机一密'
         }

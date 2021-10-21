@@ -24,7 +24,7 @@ export default function DeviceRegist() {
         if (data == 0) {
             return '一型一密'
         } else if (data == 1) {
-            return '一型一密plus'
+            return '一型一密pro'
         } else if (data == 2) {
             return '一机一密'
         }
