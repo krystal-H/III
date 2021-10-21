@@ -70,7 +70,7 @@ export default class FirmwareManagement extends Component {
                 render: s => s > 0 && SCHMETYPE[s - 1].nam || "脏数据"
             },
             { title: '产品版本号', dataIndex: 'productFirmwareVersion' },
-            { title: '固件名称', dataIndex: 'firmwareVersionTypeName' },
+            { title: '固件名称', dataIndex: 'deviceVersionName' },
 
             {
                 title: '运行状态', dataIndex: 'updateStatus',
