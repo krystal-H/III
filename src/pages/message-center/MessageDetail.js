@@ -3,7 +3,7 @@ import AloneSection from '../../components/alone-section/AloneSection'
 import { DateTool } from '../../util/util';
 import { get, Paths, post } from '../../api';
 import { connect } from 'react-redux'
-import { getNavMess } from './store/ActionCreator'
+import { getNavMess, getNewMessageNums } from './store/ActionCreator'
 const mapStateToProps = state => {
     return {
         messageList: state.getIn(['message', 'titleMessage']).toJS()
@@ -12,6 +12,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getNavMess: () => dispatch(getNavMess()),
+        getNewMessageNums: () => dispatch(getNewMessageNums()),
     }
 }
 @connect(mapStateToProps, mapDispatchToProps)
@@ -48,19 +49,23 @@ export default class MessageDetail extends Component {
             post(Paths.getNoticeDetail, {
                 noticeId: noticeId - 0,
             }).then(data => {
-                if(!data.data.isRead){
+                if (!data.data.isRead) {
+                    //已读
                     this.setReaded(noticeId)
                 }
-                
+
                 this.setState({
                     detail: data.data
                 })
             })
+            //是否是顶部的消息列表
             let isRefresh = messageList.some(item => {
                 if (item.noticeId == noticeId && !item.isRead) {
                     return true
                 }
             })
+            //更新未读数
+            this.props.getNewMessageNums()
             if (isRefresh) {
                 getNavMess()
             }

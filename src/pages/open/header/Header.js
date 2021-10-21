@@ -111,7 +111,6 @@ export default class Header extends PureComponent {
         if (isSubUser) {
             childmenus = childmenus.slice(0, 2) // 子账号只有前两项  基本资料  安全设置  两个菜单
         }
-        console.log(newMessageNums,'=========')
         return (
             <header className="mainpage-header">
                 <span className="logo" onClick={this.goHome.bind(this, false)}>{LOGO_TEXT}</span>

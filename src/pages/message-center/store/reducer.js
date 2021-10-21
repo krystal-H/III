@@ -5,7 +5,7 @@ const defaultState = fromJS({
     newMessageNums:{},
     titleMessage:[]
 });
-
+ 
 export default (state = defaultState, action) => {
   switch (action.type) {
     case ActionTypes.UPDATE_NEW_MESSAGE_NUMS:
