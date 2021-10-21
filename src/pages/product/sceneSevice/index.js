@@ -95,24 +95,6 @@ export default function DeviceRegist() {
             }
             setOptionArr(productList)
         });
-        // post(Paths.getProductPlus, {}).then((res) => {
-        //     if (res.data.length) {
-
-        //         let id = getUrlParam('productId')
-        //         if (id) {
-        //             setSelectType(id)
-        //             res.data.forEach(item => {
-        //                 if (id == item.productId) {
-        //                     setProductName(item.productName)
-        //                 }
-        //             })
-        //         } else {
-        //             setSelectType(res.data[0].productId)
-        //             setProductName(res.data[0].productName)
-        //         }
-        //         setOptionArr(res.data)
-        //     }
-        // });
     }
     //产品改变
     const [productName, setProductName] = useState('')
@@ -194,7 +176,7 @@ export default function DeviceRegist() {
             title: '类型',
             dataIndex: 'type',
             render: (text, record) => (
-                <span >{record.typeS ? '条件' : '任务'}</span>
+                <span >{record.typeS ? '条件' : '动作'}</span>
             )
         },
         {
