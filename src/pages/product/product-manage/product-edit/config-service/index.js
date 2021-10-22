@@ -92,7 +92,6 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [editData, setEditData] = useState({})
 
   const [customCount, setCustomCount] = useState(0)
-
   const [productItemData, setProductItemData] = useState(JSON.parse(sessionStorage.getItem('productItem')) || {})
 
   //验证函数
@@ -258,7 +257,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
                 <div className="config-card-right-title">{item.title}</div>
                 <div className="config-card-right-desc">{item.desc}</div>
                 <div className="flex-start">
-                  {/* 未配置的判断 */}
+                  {/* 未配置的判断    ！注意：配置产品固件模块——免开发没有，soc和mcu都有，所以出现，详情必有默认，否侧就是数据问题！*/}
                   {
                     !item.isConfiged ?
                       ['firmwareUpdate', 'cloud', 'deviceWarning', 'scene'].includes(item.type) ?
@@ -266,7 +265,12 @@ function ServiceSelect({ productId, nextStep }, ref) {
                           <div className="config-card-right-btn">配置</div>
                         </Link>
                         :
-                        <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
+                        item.type === 'addFirmware' ?
+                          <>
+                            <div className="config-card-right-btn" onClick={() => { showModal(item.type); setShowType('add') }}>配置</div>
+                            <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
+                          </> :
+                          <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
                       : ''
                   }
                   {/* 配置的判断 */}
