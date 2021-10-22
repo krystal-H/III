@@ -1,5 +1,3 @@
-@import './../../../../assets/css/variables.scss';
-
 .add-version-modal {
   font-size: 14px;
 
@@ -20,21 +18,20 @@
   textarea::-webkit-input-placeholder {
     color: #c7c5c5;
   }
-  /* Mozilla Firefox 4 to 18 */
 
+  /* Mozilla Firefox 4 to 18 */
   input:-moz-placeholder,
   textarea:-moz-placeholder {
     color: #c7c5c5;
   }
-  /* Mozilla Firefox 19+ */
 
+  /* Mozilla Firefox 19+ */
   input::-moz-placeholder,
   textarea::-moz-placeholder {
     color: #c7c5c5;
   }
 
   /* Internet Explorer 10+ */
-
   input:-ms-input-placeholder,
   textarea:-ms-input-placeholder {
     color: #c7c5c5;
