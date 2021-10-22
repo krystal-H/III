@@ -197,7 +197,7 @@ function RemoteConfig(remoteType = 'product') {
     return (
         <div id='remote-config'>
             <PageTitle title='远程配置' selectOnchange={val => setCurrentProductId(val)}></PageTitle>
-            <div className='comm-shadowbox setp-tip'>
+            <div className='comm-shadowbox setp-tip comm-setp-ttip'>
                 <div className='step-title'>
                     <img src={stepImg} alt="" />
                     <span>远程配置步骤</span>
