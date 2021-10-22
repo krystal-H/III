@@ -5,9 +5,8 @@ import { Paths, post } from '../../../../../api'
 import './replaceModule.scss'
 const { Search } = Input
 
-const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
-
 function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, handleCancel, schemeId, moduleId }) {
+  const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
   const [selectionType] = useState('radio')
   const columns = [
     { title: '模组', dataIndex: 'moduleName' },
