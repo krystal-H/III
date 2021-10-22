@@ -553,6 +553,9 @@
             font-weight: 400;
             color: #666666 !important;
             line-height: 20px;
+            white-space: pre-line;
+            word-break: break-word;
+            padding-right: 39px;
           }
       
           .ant-steps-item-title {

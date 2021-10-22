@@ -77,12 +77,11 @@ export default function DeviceRegist() {
     }
     //产品种类列表
     const getProductType = () => {
-        get(Paths.getProductType, {}, { loading: true }).then(({ data }) => {
+        post(Paths.getProductPlus, {}, { loading: true }).then(({ data }) => {
             const productList = data || [];
-            // setDataList(productList)
             let id = getUrlParam('productId')
             if (id) {
-                id=Number(id)
+                id = Number(id)
                 setSelectType(id)
                 productList.forEach(item => {
                     if (id == item.productId) {
@@ -171,6 +170,18 @@ export default function DeviceRegist() {
         setModelVis(false)
 
     }
+    const getStatus = (status) => {
+        if (status == 'UNCOMMITED') {
+            return '未审核'
+        } else if (status == 'COMMITED') {
+            return '审核中'
+        } else if (status == 'OK') {
+            return '已通过'
+        } else if (status == 'REJECTED') {
+            return '驳回'
+        }
+        return '--'
+    }
     const columns = [
         {
             title: '类型',
@@ -193,8 +204,11 @@ export default function DeviceRegist() {
             }
         }, {
             title: '状态',
-            dataIndex: 'statusDesc',
-            key: 'statusDesc',
+            dataIndex: 'status',
+            key: 'status',
+            render(status) {
+                return <span>{getStatus(status)}</span>
+            }
         }, {
             title: '功能名称',
             dataIndex: 'funcName',

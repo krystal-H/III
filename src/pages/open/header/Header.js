@@ -124,7 +124,7 @@ export default class Header extends PureComponent {
                                 <div className='title'>消息</div>
                                 {
                                     messageList.map((item, index) => {
-                                        return <div key={index} className='message-item-wrap' onClick={this.goMessAgeDetail.bind(this, item.noticeId)}>
+                                        return <div key={item.noticeId} className='message-item-wrap' onClick={this.goMessAgeDetail.bind(this, item.noticeId)}>
                                             <div className='message-item'>
                                                 <div className='name'>
                                                     <div className='text'>【{getMessageType(item.noticeType)} 】{item.noticeTitle}</div>
