@@ -205,7 +205,7 @@ export default function DeviceRegist() {
                                     name='id'
                                     noStyle
                                 >
-                                    <Input style={{ width: '465px' }} placeholder="请输入设备ID" />
+                                    <Input style={{ width: '200px' }} placeholder="请输入设备ID" />
                                 </Form.Item>
                                 <Button type="primary" onClick={onSearch}>
                                     查询
