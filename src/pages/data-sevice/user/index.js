@@ -15,11 +15,11 @@ const options = [
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const originCount = [
-    { label: '新增用户数', count: 0 },
-    { label: '活跃用户数', count: 0 },
-    { label: '新增用户次日留存率(昨日)', count: 0 },
-    { label: '活跃用户次日留存率(昨日)', count: 0 },
-    { label: '累计用户数', count: 0 }]
+    { label: '新增用户数', count: '--' },
+    { label: '活跃用户数', count: '--' },
+    { label: '新增用户次日留存率(昨日)', count: '--' },
+    { label: '活跃用户次日留存率(昨日)', count: '--' },
+    { label: '累计用户数', count: '--' }]
 const columns = [
     {
         title: '日期',

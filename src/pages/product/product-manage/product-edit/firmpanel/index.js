@@ -300,14 +300,14 @@ function confirmModel({ nextStep }, ref) {
                 </div>
                 <div className='confirm-pannel-content-item'>
                     <div>自由配置面板</div>
-                    <div>直接拖拽可视化功能组件，所见即所得，DIY 出具有您的品牌风格的面板，适用于自定义开发方案。</div>
+                    <div>直接拖拽可视化功能组件，所见即所得，DIY 出适合您品牌风格的面板，适用于自定义开发方案。</div>
                     <Button type="primary" ghost onClick={() => { setShowTip(true) }}>
                         进入
                     </Button>
                 </div>
                 <div className='confirm-pannel-content-item'>
                     <div>自定义开发上传</div>
-                    <div>通过clife提供的一系列开发工具包，便捷的开发调试出最具品牌风格的面板，适用于自定义开发方案。</div>
+                    <div>通过clife提供的一系列开发工具包，便捷的开发调试出你的品牌风格面板，适用于自定义开发方案。</div>
                     <Button type="primary" ghost onClick={() => { openChangeTab('3') }}>
                         进入
                     </Button>

@@ -180,7 +180,7 @@ export default function CloudTime() {
             <PageTitle title='云端定时' selectOnchange={val => setCurrentProductId(val)} defaultValue={getUrlParam('productId') || '-1'}>
             </PageTitle>
             
-            <div className='comm-shadowbox setp-tip'>
+            <div className='comm-shadowbox setp-tip comm-setp-ttip'>
                 <div className='step-title'>
                     <img src={stepImg} alt="" />
                     <span>云端定时步骤</span>

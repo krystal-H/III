@@ -3,7 +3,6 @@ import { Modal, Button, Tabs, Table, Input, Select, Checkbox, Form } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { post, Paths } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
-import { cloneDeep } from 'lodash'
 import './grayDebugg.scss';
 const { TabPane } = Tabs;
 export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDebugg, actionObj }) {
@@ -37,9 +36,10 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
     }, [])
     const [currentTab, setCurrentTab] = useState('1')
     const callback = (key) => {
+        // setCurrentTab(key);
         if(key !=currentTab){
             setCurrentTab(key);
-            setSelectAppId([])
+            setSelectAppId('')
         }
     }
     function onChange(e) {
@@ -54,12 +54,12 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
         }
         let value = currentForm.getFieldsValue()
         let accountList = []
-        if (value.accountList) {
+        if(value.accountList){
             value.accountList.forEach(item => {
                 accountList.push(Number(item))
             })
         }
-        if (!accountList.length) {
+        if(!accountList.length){
             Notification({
                 description: `至少添加一个调试账号`,
                 type: 'warn'
@@ -69,11 +69,11 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
         let params = {
             productId,
             projectId: actionObj.projectId,
-            newAppIds: selectAppId.join(','),
+            newAppIds: selectAppId,
             accountList,
-            panelType: actionObj.panelType
+            panelType:actionObj.panelType 
         }
-        if (!selectAppId.length) {
+        if(!selectAppId){
             Notification({
                 description: `请选择一个app`,
                 type: 'warn'
@@ -85,21 +85,12 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
         });
     }
     //
-    const [selectAppId, setSelectAppId] = useState([])
+    const [selectAppId, setSelectAppId] = useState('')
     const selectApp = (type, appId) => {
-        let index = selectAppId.indexOf(appId)
-        if (index > -1) {
-            setSelectAppId(pre => {
-                let arr = cloneDeep(pre)
-                arr.splice(index, 1)
-                return arr
-            })
-        } else {
-            setSelectAppId(pre => {
-                let arr = cloneDeep(pre)
-                arr.push(appId)
-                return arr
-            })
+        if(appId == selectAppId){
+            setSelectAppId('')
+        }else{
+            setSelectAppId(appId)
         }
     }
     //添加枚举参数
@@ -123,7 +114,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
 
                     className = 'app-icon'; // 重置class的值
 
-                    if ( selectAppId.indexOf(appId) >-1 ) {
+                    if (selectAppId == appId) {
                         className += ' active';
                     }
 
@@ -241,7 +232,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                                 <Input placeholder="请输入手机号码"
                                                                     style={{ width: '214px', marginRight: '10px' }} />
                                                             </Form.Item>
-                                                            {fields.length !== 1 ? (
+                                                            {fields.length !==1 ? (
                                                                 <MinusCircleOutlined
                                                                     className="dynamic-delete-button"
                                                                     onClick={() => remove(field.name)}
@@ -251,7 +242,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
                                                     ))}
                                                     <Form.Item {...(fields.length === 0 ? formItemLayout : formItemLayoutWithOutLabel)} label={fields.length === 0 ? '指定调试账号：' : ''}>
                                                         <a
-                                                            onClick={() => { AddEnums(add, fields.length) }}
+                                                            onClick={() =>{AddEnums(add, fields.length)}}
                                                         >
                                                             添加调试账号
                                                         </a>

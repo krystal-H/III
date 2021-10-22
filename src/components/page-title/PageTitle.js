@@ -32,11 +32,11 @@ function PageTitle({
             if (!selectData && dataList.length == 0) {
                 if (!isRelProductData) {
                     get(Paths.getProductType, {}, { loading: true }).then((res) => {
-                        setDataList(res.data)
+                        setDataList(res.data || [])
                     });
                 } else {
                     post(Paths.getProductPlus, {}).then((res) => {
-                        setDataList(res.data)
+                        setDataList(res.data || [])
                     });
                 }
 

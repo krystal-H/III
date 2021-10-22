@@ -2,15 +2,27 @@ import React, { Component } from 'react'
 import AloneSection from '../../components/alone-section/AloneSection'
 import { DateTool } from '../../util/util';
 import { get, Paths, post } from '../../api';
-
+import { connect } from 'react-redux'
+import { getNavMess, getNewMessageNums } from './store/ActionCreator'
+const mapStateToProps = state => {
+    return {
+        messageList: state.getIn(['message', 'titleMessage']).toJS()
+    }
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        getNavMess: () => dispatch(getNavMess()),
+        getNewMessageNums: () => dispatch(getNewMessageNums()),
+    }
+}
+@connect(mapStateToProps, mapDispatchToProps)
 export default class MessageDetail extends Component {
-
     state = {
         detail: null
     }
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.location.pathname != this.props.location.pathname) {
-            let id = nextProps.location.pathname.split('/').slice(-1)
+            let id = nextProps.location.pathname.split('/').slice(-1)[0]
             this.getMessageDetail(id)
         }
         return true;
@@ -26,21 +38,38 @@ export default class MessageDetail extends Component {
         });
     }
     getMessageDetail = (id) => {
-        let { match = {}, location } = this.props,
+        let { match = {}, location, messageList, getNavMess } = this.props,
             { params = {} } = match,
             { noticeId } = params,
             { state = {} } = location,
             { read } = state;
         noticeId = id || noticeId
+
         if (noticeId) {
             post(Paths.getNoticeDetail, {
                 noticeId: noticeId - 0,
             }).then(data => {
-                this.setReaded(noticeId)
+                if (!data.data.isRead) {
+                    //已读
+                    this.setReaded(noticeId)
+                }
+
                 this.setState({
                     detail: data.data
                 })
             })
+            //是否是顶部的消息列表
+            let isRefresh = messageList.some(item => {
+                if (item.noticeId == noticeId && !item.isRead) {
+                    return true
+                }
+            })
+            //更新未读数
+            this.props.getNewMessageNums()
+            if (isRefresh) {
+                getNavMess()
+            }
+
         }
     }
 

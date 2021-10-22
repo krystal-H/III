@@ -77,12 +77,11 @@ export default function DeviceRegist() {
     }
     //产品种类列表
     const getProductType = () => {
-        get(Paths.getProductType, {}, { loading: true }).then(({ data }) => {
-            const productList = data
-            // setDataList(productList)
+        post(Paths.getProductPlus, {}, { loading: true }).then(({ data }) => {
+            const productList = data || [];
             let id = getUrlParam('productId')
             if (id) {
-                id=Number(id)
+                id = Number(id)
                 setSelectType(id)
                 productList.forEach(item => {
                     if (id == item.productId) {
@@ -95,24 +94,6 @@ export default function DeviceRegist() {
             }
             setOptionArr(productList)
         });
-        // post(Paths.getProductPlus, {}).then((res) => {
-        //     if (res.data.length) {
-
-        //         let id = getUrlParam('productId')
-        //         if (id) {
-        //             setSelectType(id)
-        //             res.data.forEach(item => {
-        //                 if (id == item.productId) {
-        //                     setProductName(item.productName)
-        //                 }
-        //             })
-        //         } else {
-        //             setSelectType(res.data[0].productId)
-        //             setProductName(res.data[0].productName)
-        //         }
-        //         setOptionArr(res.data)
-        //     }
-        // });
     }
     //产品改变
     const [productName, setProductName] = useState('')
@@ -189,12 +170,24 @@ export default function DeviceRegist() {
         setModelVis(false)
 
     }
+    const getStatus = (status) => {
+        if (status == 'UNCOMMITED') {
+            return '未审核'
+        } else if (status == 'COMMITED') {
+            return '审核中'
+        } else if (status == 'OK') {
+            return '已通过'
+        } else if (status == 'REJECTED') {
+            return '驳回'
+        }
+        return '--'
+    }
     const columns = [
         {
             title: '类型',
             dataIndex: 'type',
             render: (text, record) => (
-                <span >{record.typeS ? '条件' : '任务'}</span>
+                <span >{record.typeS ? '条件' : '动作'}</span>
             )
         },
         {
@@ -211,8 +204,11 @@ export default function DeviceRegist() {
             }
         }, {
             title: '状态',
-            dataIndex: 'statusDesc',
-            key: 'statusDesc',
+            dataIndex: 'status',
+            key: 'status',
+            render(status) {
+                return <span>{getStatus(status)}</span>
+            }
         }, {
             title: '功能名称',
             dataIndex: 'funcName',
@@ -245,9 +241,9 @@ export default function DeviceRegist() {
                     <span>配置场景步骤</span>
                 </div>
                 <Steps current={-1} initial={0}>
-                    <Step title="配置自动化" description="进入产品设备联动服务，配置自动化条件和动作" />
+                    <Step title="配置自动化" description="可进入产品设备联动服务，配置自动化条件和动作。" />
                     <Step title="验证自动化" description="可通过调试验证工具，对条件和动作进行功能验证。" />
-                    <Step title="发布自动化" description="查看升级包各升级批次的具体设备列表，以及各设备的升级状态。" />
+                    <Step title="发布自动化" description="查提交后，此功能点将出席在App的智能场景条件或动作内。" />
                     <Step title="配置场景" description="使用已发布的自动化条件和动作配置场景。" />
                 </Steps>
             </div>

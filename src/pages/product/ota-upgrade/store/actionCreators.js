@@ -10,7 +10,7 @@ import {
 
 export const getMcuSocProLi = param => {
     return (dispatch) => {
-        post(Paths.getMcuSocProLi,{},{ loading:true }).then(({data}) => {
+        post(Paths.getMcuSocProLi,{},{ loading:true }).then(({data={}}) => {
             const d = Object.keys(data).map(id=>{
                 return { productId:id, productName:data[id] }
             });

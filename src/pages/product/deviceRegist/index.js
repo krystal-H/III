@@ -15,13 +15,14 @@ const { Option } = Select;
 const { Step } = Steps;
 export default function DeviceRegist() {
     const [form] = Form.useForm();
-    const [deviceNameS, setDeviceNameS] = useState([])
-    const [productCount, SetproductCount] = useState({})
     const [dataSource, setDataSource] = useState([])
     const [optionArr, setOptionArr] = useState([]) //产品列表
     const [newoptionArr, setNewoptionArr] = useState([]) //新产品列表
     const [selectType, setSelectType] = useState('') //产品种类
-    const [countData, setCountData] = useState([{ label: '设备总数量', count: 0 }, { label: '已入网设备', count: 0 }, { label: '未入网设备', count: 0 }])
+    const [countData, setCountData] = useState([
+        { label: '设备总数量', count: '--' }, 
+        { label: '已入网设备', count: '--' }, 
+        { label: '未入网设备', count: '--' }])
 
     useEffect(() => {
         getProductType()
@@ -44,12 +45,13 @@ export default function DeviceRegist() {
     }
     //产品种类列表
     const getProductType = () => {
-        post(Paths.getProductPlus, {}).then((res) => {
-            setNewoptionArr(res.data)
+        post(Paths.getProductPlus).then((res) => {
+            setNewoptionArr(res.data || [])
         });
-        post(Paths.allProductPubList, {}).then((res) => {
-            res.data.unshift({ productId: 0, productName: '全部产品' })
-            setOptionArr(res.data)
+        post(Paths.allProductPubList).then((res) => {
+            let datali = res.data || [];
+            datali.unshift({ productId: 0, productName: '全部产品' })
+            setOptionArr(datali)
         });
     }
     //产品改变
@@ -130,7 +132,7 @@ export default function DeviceRegist() {
         if (count === 0) {
             return '一型一密'
         } else if (count === 1) {
-            return '一型一密plus'
+            return '一型一密pro'
         } else if (count === 2) {
             return '一机一密'
         }

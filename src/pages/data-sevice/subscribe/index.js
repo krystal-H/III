@@ -227,9 +227,9 @@ export default function DeviceRegist() {
                     <span>数据订阅步骤</span>
                 </div>
                 <Steps current={-1} initial={0}>
-                    <Step title="选择产品" description="可根据产品订阅以及设备性能标签，选择需要的数据对象。" />
-                    <Step title="配置订阅内容" description="可知产品或设备的物模型，订阅详细的功能点数据信息。" />
-                    <Step title="确定订阅方式" description='支持数据发送服务或MQTT订阅，两种不同的方式。' />
+                    <Step title="选择产品" description="可根据产品订阅以及设备标签，选择需要的数据对象。" />
+                    <Step title="配置订阅内容" description="可根据产品或设备的物模型，订阅详细的功能点数据信息。" />
+                    <Step title="确定订阅方式" description='支持数据API推送服务或MQTT订阅，两种不同的方式。' />
                 </Steps>
             </div>
             <div className='comm-shadowbox device-content'>

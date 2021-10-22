@@ -150,12 +150,13 @@ function ruleForm({
 
     //获取产品列表
     const getDownProduct = () => {
-        get(Paths.getProductType, {}, { loading: true }).then(res => {
+        post(Paths.getProductPlus, {}, { loading: true }).then(res => {
+            let datali = res.data || [];
             // const li = Object.keys(data).map(id=>{
             //     return {id,name:data[id]}
             // })
             let arr = []
-            res.data.forEach(item => {
+            datali.forEach(item => {
                 arr.push({ id: item.productId, name: item.productName })
             })
             setProductList(arr)
