@@ -238,7 +238,7 @@ export default class FirmwareManagement extends Component {
                         <span>固件升级步骤</span>
                     </div>
                     <Steps current={-1} initial={0}>
-                        <Step title="添加升级包" description="添加升级包，区分不同的MCU、模组、系统，区分整体包、差分包等。" />
+                        <Step title="添加升级包" description="添加升级包，区分不同的MCU、模组、系统。" />
                         <Step title="配置升级策略" description="配置升级对象，配置升级批次、升级范围、升级时间等升级具体策略。" />
                         <Step title="查看升级详情" description="查看升级包各升级批次的具体设备列表，以及各设备的升级状态。" />
                     </Steps>
