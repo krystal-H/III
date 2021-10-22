@@ -145,9 +145,11 @@ function ServiceSelect({ productId, nextStep }, ref) {
         console.log(customList.length, 'customList.length')
         setCustomCount(customList.length)
         setFirmwareDetailData(res.data)
-        const list = cloneDeep(optionalList)
-        list[0].isConfiged = true
-        setOptionalList(list)
+        if (customList.length > 0) {
+          const list = cloneDeep(optionalList)
+          list[0].isConfiged = true
+          setOptionalList(list)
+        }
       }
     })
   }
