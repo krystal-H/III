@@ -4,9 +4,8 @@ import { Paths, post } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
 import './freeApply.scss'
 
-const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
-
 function FreeApplyModal({ freeApplyVisible, handleFreeApply, type, moduleName, firmwareName }) {
+  const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
   const [form] = Form.useForm()
   const [firmwareData, setFirmwareData] = useState({})
 
