@@ -112,7 +112,7 @@ function StepContentOne({ continueStep }, ref) {
         getList()
     }, [])
     const getList = () => {
-        post(Paths.getProductPlus).then((res) => {
+        post(Paths.allProductPubList).then((res) => {
             setOption(res.data)
         });
     }
