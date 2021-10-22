@@ -130,7 +130,7 @@ function StepContentOne({ continueStep, editData }, ref) {
     }, [])
     //产品列表
     const getList = () => {
-        post(Paths.getProductPlus).then((res) => {
+        post(Paths.allProductPubList).then((res) => {
             setOption(res.data)
         });
     }
