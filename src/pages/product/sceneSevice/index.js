@@ -243,7 +243,7 @@ export default function DeviceRegist() {
                 <Steps current={-1} initial={0}>
                     <Step title="配置自动化" description="可进入产品设备联动服务，配置自动化条件和动作。" />
                     <Step title="验证自动化" description="可通过调试验证工具，对条件和动作进行功能验证。" />
-                    <Step title="发布自动化" description="查提交后，此功能点将出席在App的智能场景条件或动作内。" />
+                    <Step title="发布自动化" description="提交后，此功能点将出现在App的智能场景条件或动作内。" />
                     <Step title="配置场景" description="使用已发布的自动化条件和动作配置场景。" />
                 </Steps>
             </div>
