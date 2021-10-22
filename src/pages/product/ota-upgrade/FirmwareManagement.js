@@ -46,7 +46,7 @@ export default class FirmwareManagement extends Component {
                 totalRows: 10,
             },
             //搜索字段
-            productId: undefined,
+            productId: getUrlParam('productId') || "-1",
             schemeType: undefined,
             deviceVersionName: undefined,
             addFirmwareVisiable: false,//增加弹窗
@@ -193,9 +193,9 @@ export default class FirmwareManagement extends Component {
     }
     //获取固件列表
     pagerIndex = (pageIndex = 1) => {
-        console.log(getUrlParam('productId'), 'product')
+        // console.log(getUrlParam('productId'), 'product')
         let { productId, schemeType, deviceVersionName } = this.state
-        let params = { pageIndex, productId: productId || getUrlParam('productId') }
+        let params = { pageIndex, productId }
         schemeType != -1 && (params.schemeType = schemeType)
         deviceVersionName && (params.deviceVersionName = deviceVersionName)
 
@@ -213,6 +213,14 @@ export default class FirmwareManagement extends Component {
             validationDetail: { ...validationDetail, [k]: v }
         })
     }
+
+    changeProduct = productId=>{
+        this.setState({productId},()=>{
+            this.pagerIndex(1)
+        });
+        
+    }
+    
     render() {
         const {
             addFirmwareVisiable, releaseFirmwareDialog, validationFirmwareDialog,
@@ -223,7 +231,7 @@ export default class FirmwareManagement extends Component {
 
         return (
             <div className="ota-firmware-up">
-                <PageTitle title="固件升级" selectOnchange={val => { this.changeState('productId', val) }} defaultValue={getUrlParam('productId') || '-1'} />
+                <PageTitle title="固件升级" selectOnchange={val => { this.changeProduct(val) }} defaultValue={getUrlParam('productId') || '-1'} />
                 <div className='comm-shadowbox comm-setp-ttip'>
                     <div className='step-title'>
                         <img src={upIconImg} alt="" />
