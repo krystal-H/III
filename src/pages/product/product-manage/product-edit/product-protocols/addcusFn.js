@@ -373,7 +373,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                 rules={[
                     {
                         required: true,
-                        message:'请选择数据传输类型'
+                        message: '请选择数据传输类型'
                     },
                 ]}
             >
@@ -390,10 +390,10 @@ NumberTemp = forwardRef(NumberTemp)
 //事件组件
 function EventTemp({ currentTab, sentReq }, ref) {
     const [form] = Form.useForm();
-
+    const [newParamsList, setNewParamsList] = useState([])
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }));
+    }), [newParamsList]);
     //验证回调
     function sentAddData(data2, params) {
         let data = cloneDeep(data2)
@@ -404,7 +404,7 @@ function EventTemp({ currentTab, sentReq }, ref) {
         })
     }
     //==================
-    const [newParamsList, setNewParamsList] = useState([])
+
     const addParams = () => {
         setNewParamsList(pre => {
             let obj = cloneDeep(pre)
@@ -539,7 +539,7 @@ function ServeTemp({ sentReq }, ref) {
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }));
+    }), [outputList,inputList]);
     return (
         <>
             <Form

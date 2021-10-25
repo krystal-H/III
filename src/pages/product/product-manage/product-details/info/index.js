@@ -108,7 +108,7 @@ export default function productInfo() {
                 </div>
                 <div className='product-info-conten-wrap' style={{ paddingTop: '12px' }}>
                     <div className='product-top-right-text'>产品图标：</div>
-                    <img className='product-top-right-img' src={businessInfo.productPic} alt='' />
+                    <img className='product-top-right-img' src={businessInfo.productPic || baseImg} alt='' />
                 </div>
             </div>
         </div>
