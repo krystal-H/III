@@ -160,7 +160,8 @@ class List extends PureComponent {
     // 保存当前产品，为后边继续开发取数据使用
     sessionStorage.setItem('productItem', JSON.stringify(record))
     this.props.history.push({
-      pathname: `/open/product/proManage/${pathroute}/${record.productId}`
+      pathname: `/open/product/proManage/${pathroute}/${record.productId}`,
+      state:{stepnum:record.step || 0}
     });
   }
 

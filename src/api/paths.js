@@ -507,6 +507,8 @@ let Paths = {
     PhysicalModelList:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
     exportFnFile:'/product/dev/custom/func/upload',//产品-功能定义-导入自定义功能
 
+    upProMaxStep:'/product/update/step',//记录产品最新配置步骤
+
     // //设备-设备管理
     // getDeviceList
     //工单

@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { Switch, Redirect, Route, useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { Steps, Button } from 'antd';
 
 import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
 import './ProductEdit.scss'
-
 import ProductProtocols from './product-protocols/index.js';
 import PageTitle from '../../../../components/page-title/PageTitle';
 import Hardware from './dev-hardware';
@@ -13,14 +11,14 @@ import ConfirmPanel from './firmpanel';
 import Validation from './validation'
 import ConfigService from './config-service';
 import TitleSet from './titleSet'
-import { MyContext } from './context'
 import { Notification } from '../../../../components/Notification';
-import { strToAsterisk, DateTool } from '../../../../util/util';
+import { strToAsterisk } from '../../../../util/util';
 import {
     EyeInvisibleTwoTone,
     EyeTwoTone,
 } from '@ant-design/icons';
-
+import { Paths, post, get } from '../../../../api'
+const { Step } = Steps;
 // 此部分路由不需要展示产品信息
 const NOT_SHOW = /(\/service\/appcontrol|cloudtime|scenelink)|\/applyRelease/;
 
@@ -29,85 +27,60 @@ const getProductIdFromPath = (match) => +match.params.id;
 
 
 function ProductEdit({ match, location }) {
-    // let productItem = {}
+    const origincurrent = location.state && location.state.stepnum || 0;
+
     const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
+    const [showSecret, setShowSecret] = useState(false)
+    const [current, setcurrent] = useState(origincurrent);
+    const [maxCurrent, setMaxCurrent] = useState(origincurrent);
+
+
     let history = useHistory();
-    // if (sessionStorage.getItem('productItem')) {
-    //     productItem = JSON.parse(sessionStorage.getItem('productItem'))
-    // } else {
-    //     return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
-    // }
+    
     let { path } = match,
         productIdInRoutePath = getProductIdFromPath(match);
 
-    const { Step } = Steps;
     const stepList = [
-        {
-            title: '定义功能',
-            content: 'protocols',
-        },
-        {
-            title: '确定面板',
-            content: 'firmpanel',
-        },
-        {
-            title: '开发硬件',
-            content: 'projectSelect',
-        },
-        {
-            title: '配置服务',
-            content: 'configService',
-        },
-        {
-            title: '调试验证',
-            content: 'validation',
-        },
+        { title: '定义功能', content: 'protocols', mod:ProductProtocols },
+        { title: '确定面板', content: 'firmpanel', mod:ConfirmPanel },
+        { title: '开发硬件', content: 'projectSelect', mod:Hardware },
+        { title: '配置服务', content: 'configService', mod:ConfigService},
+        { title: '调试验证', content: 'validation', mod:Validation},
     ];
-    let origincurrent = 0
-    stepList.forEach((item, index) => {
-        if (item.content == location.pathname.split('/')[6]) {
-            origincurrent = index
-        }
-    })
-    const [current, setcurrent] = useState(origincurrent);
-    const refArr = {
-        active_0: useRef(),
-        active_1: useRef(),
-        active_2: useRef(),
-        active_3: useRef(),
-        active_4: useRef(),
-    }
+
+    let refAll = useRef();
     const next = () => {
         if (current === 2) {
-            refArr['active_' + current].onFinish()
+            refAll.onFinish()
         } else {
-            refArr['active_' + current].current.onFinish()
+            refAll.current.onFinish()
         }
     };
     // 发布产品
     const releaseProduct = () => {
-        refArr['active_' + current].current.showRelease()
+        refAll.current.showRelease()
     }
     const nextStep = useCallback(() => {
-        setcurrent(current + 1)
+        let nxtc =  current + 1;
+        if(nxtc > maxCurrent){
+            setMaxCurrent(nxtc)
+            post(Paths.upProMaxStep, {
+                productId: productIdInRoutePath,
+                step:nxtc
+            })
+        }
+        setcurrent(nxtc)
     });
     //上一步
     const prev = () => {
         setcurrent(current - 1);
     };
-    //tab切换
-    useEffect(() => {
-        let p = location.pathname.split('/')[6], c = stepList[current].content;
-        // console.log(11111,p,c,)
-        if (p != c) {
-            history.push(match.url + '/' + c);
-        }
-    }, [current])
+   
     if (!productIdInRoutePath) {
 
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
-    const [showSecret, setShowSecret] = useState(false)
+    
     const changeState = () => {
         setShowSecret(!showSecret)
     }
@@ -161,6 +134,10 @@ function ProductEdit({ match, location }) {
             </div>
         </div>
     </div>)
+
+
+    const ModStep = stepList[current].mod;
+
     return (
         <React.Fragment>
             <div className="eidt-wrapper">
@@ -174,20 +151,11 @@ function ProductEdit({ match, location }) {
                     <div className='product-main-wrap_step'>
                         <Steps current={current}>
                             {stepList.map(item => (
-                                <Step key={item.title} title={item.title + "_" + current} />
+                                <Step key={item.title} title={item.title} />
                             ))}
                         </Steps>
                     </div>
-                    <MyContext.Provider value={{ productIdInRoutePath }}>
-                        <Switch>
-                            <Route path={`${path}/protocols`} render={(props) => <ProductProtocols ref={refArr.active_0} {...props} nextStep={nextStep} productId={productIdInRoutePath}></ProductProtocols>}></Route>
-                            <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel ref={refArr.active_1} {...props} nextStep={nextStep} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
-                            <Route path={`${path}/projectSelect`} render={(props) => <Hardware ref={ref => refArr.active_2 = ref} {...props} nextStep={nextStep} productId={productIdInRoutePath}></Hardware>}></Route>
-                            <Route path={`${path}/configService`} render={(props) => <ConfigService ref={refArr.active_3} {...props} nextStep={nextStep} productId={productIdInRoutePath}></ConfigService>}></Route>
-                            <Route path={`${path}/validation`} render={(props) => <Validation ref={refArr.active_4} {...props} nextStep={nextStep} productId={productIdInRoutePath}></Validation>}></Route>
-                            <Redirect to={`${path}/protocols`} />
-                        </Switch>
-                    </MyContext.Provider>
+                    <ModStep ref={ current==2 ? r=>{refAll=r} : refAll } nextStep={nextStep} productId={productIdInRoutePath} />
                 </div>
                 <div className='product-main-footer'>
                     {current > 0 && (
