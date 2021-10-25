@@ -77,8 +77,6 @@ function ProductEdit({ match, location }) {
         active_3: useRef(),
         active_4: useRef(),
     }
-    //下一步
-    const [isContinue, setIsContinue] = useState(false);
     const next = () => {
         if (current === 2) {
             refArr['active_' + current].onFinish()
@@ -99,8 +97,10 @@ function ProductEdit({ match, location }) {
     };
     //tab切换
     useEffect(() => {
-        if (location.pathname.split('/')[6] != stepList[current].content) {
-            history.push(match.url + '/' + stepList[current].content);
+        let p = location.pathname.split('/')[6], c = stepList[current].content;
+        // console.log(11111,p,c,)
+        if (p != c) {
+            history.push(match.url + '/' + c);
         }
     }, [current])
     if (!productIdInRoutePath) {
@@ -180,29 +180,29 @@ function ProductEdit({ match, location }) {
                     </div>
                     <MyContext.Provider value={{ productIdInRoutePath }}>
                         <Switch>
-                            <Route path={`${path}/protocols`} render={(props) => <ProductProtocols ref={refArr.active_0} isContinue={isContinue} {...props} nextStep={nextStep} productId={productIdInRoutePath}></ProductProtocols>}></Route>
-                            <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel ref={refArr.active_1} isContinue={isContinue} {...props} nextStep={nextStep} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
-                            <Route path={`${path}/projectSelect`} render={(props) => <Hardware ref={ref => refArr.active_2 = ref} isContinue={isContinue} {...props} nextStep={nextStep} productId={productIdInRoutePath}></Hardware>}></Route>
-                            <Route path={`${path}/configService`} render={(props) => <ConfigService ref={refArr.active_3} isContinue={isContinue} {...props} nextStep={nextStep} productId={productIdInRoutePath}></ConfigService>}></Route>
-                            <Route path={`${path}/validation`} render={(props) => <Validation ref={refArr.active_4} isContinue={isContinue} {...props} nextStep={nextStep} productId={productIdInRoutePath}></Validation>}></Route>
+                            <Route path={`${path}/protocols`} render={(props) => <ProductProtocols ref={refArr.active_0} {...props} nextStep={nextStep} productId={productIdInRoutePath}></ProductProtocols>}></Route>
+                            <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel ref={refArr.active_1} {...props} nextStep={nextStep} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
+                            <Route path={`${path}/projectSelect`} render={(props) => <Hardware ref={ref => refArr.active_2 = ref} {...props} nextStep={nextStep} productId={productIdInRoutePath}></Hardware>}></Route>
+                            <Route path={`${path}/configService`} render={(props) => <ConfigService ref={refArr.active_3} {...props} nextStep={nextStep} productId={productIdInRoutePath}></ConfigService>}></Route>
+                            <Route path={`${path}/validation`} render={(props) => <Validation ref={refArr.active_4} {...props} nextStep={nextStep} productId={productIdInRoutePath}></Validation>}></Route>
                             <Redirect to={`${path}/protocols`} />
                         </Switch>
                     </MyContext.Provider>
                 </div>
                 <div className='product-main-footer'>
                     {current > 0 && (
-                        <Button style={{ margin: '0 8px' }} onClick={() => prev()} type="primary" ghost>
+                        <Button style={{ margin: '0 8px' }} onClick={prev} type="primary" ghost>
                             上一步
                         </Button>
                     )}
                     {current < stepList.length - 1 && (
-                        <Button type="primary" onClick={() => next()}>
+                        <Button type="primary" onClick={next}>
                             下一步
                         </Button>
                     )}
 
                     {current === stepList.length - 1 && (
-                        <Button type="primary" onClick={() => releaseProduct()}>
+                        <Button type="primary" onClick={releaseProduct}>
                             发布产品
                         </Button>
                     )}
