@@ -155,4 +155,4 @@ function ProtocolFn2({ nextStep, productId }, ref) {
     </div>
 }
 
-export default ProtocolFn2 = forwardRef(ProtocolFn2)
+export default forwardRef(ProtocolFn2)

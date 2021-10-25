@@ -61,7 +61,7 @@ const temp = [
     {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
 ]
 
-function Validation({ nextStep, productId,developerInfo,refInstance }) {
+function Validation({ productId,developerInfo,refInstance }) {
     const mountRef = useRef(-1);
     const [releaseVisible, setReleaseVisible] = useState(false); // 发布产品
     const [dataList, setDataList] = useState([]);//原始数据
