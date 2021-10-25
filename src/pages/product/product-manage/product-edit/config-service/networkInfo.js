@@ -176,9 +176,9 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
               <Input maxLength={50} style={{ width: 380 }} />
             </Form.Item>
           }
-          {/* 通信是wifi切实smartLink配网方式、蓝牙 */}
+          {/* 通信是wifi且是smartLink配网方式 或者 通信方式是蓝牙 */}
           {
-            (netData.bindTypeId === 1 && baseTypeId === 3) || (netData.bindTypeId === 2) &&
+            ((netData.bindTypeId === 1 && baseTypeId === 3) || (netData.bindTypeId === 2)) &&
             <Form.Item
               label="广播名"
               name="radiocastName"
