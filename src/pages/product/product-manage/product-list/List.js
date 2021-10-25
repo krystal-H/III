@@ -346,7 +346,7 @@ class List extends PureComponent {
 
         {/* 开发中的旧产品 弹窗提示 */}
         <Modal title="更新升级" visible={oldProIngVisiable} onOk={this.toggleOldProVisiable} onCancel={this.toggleOldProVisiable}>
-          <p> clife平台全新升级，老版本的开发中状态产品，需要在新平台重新创建</p>
+          <p> clife平台全新升级，老版本的开发中或审核中状态的产品，需要在新平台重新创建</p>
         </Modal>
       </section>
     )
