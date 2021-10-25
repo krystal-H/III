@@ -24,8 +24,9 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
   const getNetDataByProductId = () => {
     post(Paths.getNetDataByProductId, { productId })
       .then(res => {
-        if (!res.data.ssid) { // 为了有个默认值
-          res.data.ssid = 'CLIFE'
+        // ssid和广播名共用一个字段 radiocastName   但是ssid时需要有个默认值CLIFE
+        if (!res.data.radiocastName && res.data.bindTypeId === 1 && res.data.baseTypeId === 1) { // 为了有个默认值
+          res.data.radiocastName = 'CLIFE'
         }
         setNetData(res.data)
         setBaseTypeId(res.data.baseTypeId)
@@ -41,7 +42,6 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
           bindFailPage: res.data.guidePage ? res.data.guidePage.bindFailPage : '',
           imageUrlList: res.data.helpPage ? res.data.helpPage.imageUrls : [],
           radiocastName: res.data.radiocastName || '',
-          ssid: res.data.ssid || ''
         })
         if (res.data.guidePage) {
           setGuidePage(res.data.guidePage.guidePage)
@@ -142,7 +142,6 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
           wrapperCol={{ span: 19 }}
           initialValues={{
             // baseTypeId: netData.baseTypeId || '',
-            // ssid: netData.ssid || '',
             // radiocastName: netData.radiocastName || '',
             // guidePage: netData.guidePage || '',
             // bindFailPage: netData.bindFailPage || '',
@@ -171,7 +170,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
             (netData.bindTypeId === 1 && baseTypeId === 1) &&
             <Form.Item
               label="AP-SSID"
-              name="ssid"
+              name="radiocastName"
               rules={[{ required: true, message: '请输入AP-SSID！' }]}>
               <Input maxLength={50} style={{ width: 380 }} />
             </Form.Item>
