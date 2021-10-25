@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { Switch, Redirect, Route, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Steps, Button, message } from 'antd';
+import { Steps, Button } from 'antd';
 
-import { getProductBaseInfo } from '../store/ActionCreator';
 import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
 import './ProductEdit.scss'
 
@@ -25,23 +24,11 @@ import {
 // 此部分路由不需要展示产品信息
 const NOT_SHOW = /(\/service\/appcontrol|cloudtime|scenelink)|\/applyRelease/;
 
-const mapStateToProps = state => {
-    return {
-        productBaseInfo: state.getIn(['product', 'productBaseInfo']).toJS()
-    }
-}
-
-const mapDispatchToProps = dispatch => {
-    return {
-        getProductBaseInfo: id => dispatch(getProductBaseInfo(id)) // 获取产品基本信息
-    }
-}
-
 // 获取路由中的ID参数
 const getProductIdFromPath = (match) => +match.params.id;
 
 
-function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
+function ProductEdit({ match, location }) {
     // let productItem = {}
     const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
     let history = useHistory();
@@ -51,9 +38,7 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
     //     return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     // }
     let { path } = match,
-        productIdInRoutePath = getProductIdFromPath(match),
-        { mode } = productBaseInfo,
-        canOperate = (mode === 0);
+        productIdInRoutePath = getProductIdFromPath(match);
 
     const { Step } = Steps;
     const stepList = [
@@ -189,17 +174,17 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
                     <div className='product-main-wrap_step'>
                         <Steps current={current}>
                             {stepList.map(item => (
-                                <Step key={item.title} title={item.title} />
+                                <Step key={item.title} title={item.title + "_" + current} />
                             ))}
                         </Steps>
                     </div>
                     <MyContext.Provider value={{ productIdInRoutePath }}>
                         <Switch>
-                            <Route path={`${path}/protocols`} render={(props) => <ProductProtocols ref={refArr.active_0} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ProductProtocols>}></Route>
-                            <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel ref={refArr.active_1} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} getProductBaseInfo={getProductBaseInfo} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
-                            <Route path={`${path}/projectSelect`} render={(props) => <Hardware ref={ref => refArr.active_2 = ref} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></Hardware>}></Route>
-                            <Route path={`${path}/configService`} render={(props) => <ConfigService ref={refArr.active_3} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ConfigService>}></Route>
-                            <Route path={`${path}/validation`} render={(props) => <Validation ref={refArr.active_4} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></Validation>}></Route>
+                            <Route path={`${path}/protocols`} render={(props) => <ProductProtocols ref={refArr.active_0} isContinue={isContinue} {...props} nextStep={nextStep} productId={productIdInRoutePath}></ProductProtocols>}></Route>
+                            <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel ref={refArr.active_1} isContinue={isContinue} {...props} nextStep={nextStep} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
+                            <Route path={`${path}/projectSelect`} render={(props) => <Hardware ref={ref => refArr.active_2 = ref} isContinue={isContinue} {...props} nextStep={nextStep} productId={productIdInRoutePath}></Hardware>}></Route>
+                            <Route path={`${path}/configService`} render={(props) => <ConfigService ref={refArr.active_3} isContinue={isContinue} {...props} nextStep={nextStep} productId={productIdInRoutePath}></ConfigService>}></Route>
+                            <Route path={`${path}/validation`} render={(props) => <Validation ref={refArr.active_4} isContinue={isContinue} {...props} nextStep={nextStep} productId={productIdInRoutePath}></Validation>}></Route>
                             <Redirect to={`${path}/protocols`} />
                         </Switch>
                     </MyContext.Provider>
@@ -231,4 +216,4 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
     )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductEdit)
+export default ProductEdit
