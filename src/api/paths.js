@@ -35,7 +35,6 @@ let Paths = {
     getProductList: '/product/listAllProductAndAccreditInfo',
     copyProduct: '/product/copy',
     delectProduct: '/product/deleteProduct',
-    getProductBaseInfo: '/product/detail/old',
     updateProductBaseInfo: '/product/update',
 
     // 5.x产品列表功能
