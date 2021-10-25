@@ -46,14 +46,14 @@ function ServiceSelect({ productId, nextStep }, ref) {
       routePath: '/open/product/otaUpdate/list',
       url: require('../../../../../assets/images/commonDefault/service-firmwareUpdate.png')
     },
-    {
-      title: '场景联动配置',
-      desc: '配置自动化联动的条件动作，以便加入场景，跟其他设备联动控制',
-      isConfiged: false,
-      type: 'scene',
-      routePath: '/open/product/ruleEngine',
-      url: require('../../../../../assets/images/commonDefault/service-scene.png')
-    },
+    // {
+    //   title: '场景联动配置',
+    //   desc: '配置自动化联动的条件动作，以便加入场景，跟其他设备联动控制',
+    //   isConfiged: false,
+    //   type: 'scene',
+    //   routePath: '/open/product/ruleEngine',
+    //   url: require('../../../../../assets/images/commonDefault/service-scene.png')
+    // },
     {
       title: '云端定时',
       desc: '云端设定开关时间及周循环，无需硬件嵌入式开发',
