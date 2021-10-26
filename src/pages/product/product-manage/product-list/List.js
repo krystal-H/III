@@ -145,23 +145,25 @@ class List extends PureComponent {
   // 继续开发  ——> detail 
   // 产品状态 statusStr -开发中，1-已发布，2-审核中）
   clickProductInfo(record) {
+    let { status, isOldProduct, productId, step=1} = record;
     //未发布的老产品禁止操作 弹窗提示
-    if (record.isOldProduct && record.status !== 1) {
+    if (isOldProduct && status !== 1) {
       this.toggleOldProVisiable()
       return
     }
+    
     //否则 老产品跳到老的详情页面 detail；新产品根据状态跳到详情页details 或者 编辑页edit
     let pathroute = 'details';
-    if (record.status !== 1) {
+    if (status !== 1) {
       pathroute = 'edit';
-    } else if (record.isOldProduct) {
+    } else if (isOldProduct) {
       pathroute = 'detail';
     }
     // 保存当前产品，为后边继续开发取数据使用
     sessionStorage.setItem('productItem', JSON.stringify(record))
     this.props.history.push({
-      pathname: `/open/product/proManage/${pathroute}/${record.productId}`,
-      state:{stepnum:record.step || 0}
+      pathname: `/open/product/proManage/${pathroute}/${productId}`,
+      state:{stepnum:step-1}
     });
   }
 

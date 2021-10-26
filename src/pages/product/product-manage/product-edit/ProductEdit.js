@@ -66,7 +66,7 @@ function ProductEdit({ match, location }) {
             setMaxCurrent(nxtc)
             post(Paths.upProMaxStep, {
                 productId: productIdInRoutePath,
-                step:nxtc
+                step:nxtc+1
             })
         }
         setcurrent(nxtc)
