@@ -353,7 +353,7 @@ export function getNavRoutes(menu) {
             if(menuname=="规则引擎"){
                 menuname="场景服务"
             }
-            let _nav = find(_navRoutes,(o)=>o.menuname === menuname) || {
+            let _nav = find(_navRoutes,(o)=>o.menuname == menuname) || {
                 menuname: menuname + "（暂不支持）",
                 path: '/open/home',
                 menuid:menuname,

@@ -70,9 +70,11 @@
           }
         }
         .tablebox{
-          height: 360px;
-          overflow-y: auto;
-          @include self-scroll-bar
+          .ant-table-body{
+            overflow-y: auto;
+            @include self-scroll-bar
+          }
+          
         }
         tr{
           cursor: pointer;

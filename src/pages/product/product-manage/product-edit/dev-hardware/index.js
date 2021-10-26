@@ -59,7 +59,8 @@ class Hardware extends Component {
     }
 
     componentDidMount() {
-        this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
+        // console.log('this.props.onRef---',this.props.onRef)
+        // this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
         if (this.state.productItemData.moduleId != -1) {
             this.getMoudleInfo(this.state.productItemData.moduleId)
         }

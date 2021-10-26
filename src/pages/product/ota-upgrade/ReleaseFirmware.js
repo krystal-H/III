@@ -126,7 +126,7 @@ export const ReleaseFirmware = Form.create({
                                         <Radio.Group onChange={(v)=>{this.changeState('upgradeRange',v)}} >
                                             {
                                                 UPRANGE.map(({id,nam})=>{
-                                                    if(upgradeType==4&&id==0){
+                                                    if( upgradeType==4&&id==0 || id==1 ){
                                                         return null
                                                     }
                                                     return <Radio.Button key={id} value={id}>{nam}</Radio.Button>

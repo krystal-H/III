@@ -61,7 +61,7 @@ const temp = [
     {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
 ]
 
-function Validation({ nextStep, productId,developerInfo,refInstance }) {
+function Validation({ productId,developerInfo,refInstance }) {
     const mountRef = useRef(-1);
     const [releaseVisible, setReleaseVisible] = useState(false); // 发布产品
     const [dataList, setDataList] = useState([]);//原始数据
@@ -243,12 +243,15 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
                                 </div>
                             </div>
                             <div className="tablebox">
-                                <Table columns={columns} rowKey="index" dataSource={dataList} pagination={false}
+                                <Table columns={columns} rowKey="index"
+                                dataSource={dataList}
+                                pagination={false}
                                         onRow={r=> {
                                             return {
                                                 onClick: e => { setAnalysisData(r.map || {}) },
                                             };
                                         }}
+                                        scroll={{ y: 305 }}
                                 />
                             </div>
                         </div>

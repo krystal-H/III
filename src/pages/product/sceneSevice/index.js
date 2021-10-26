@@ -15,7 +15,7 @@ const { Step } = Steps;
 const netStatus = [{
     value: '条件', key: true
 }, {
-    value: '任务', key: false
+    value: '动作', key: false
 }]
 //处理数据
 function delaData(data, typeS) {

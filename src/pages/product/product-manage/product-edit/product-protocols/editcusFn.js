@@ -412,25 +412,8 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
 }
 NumberTemp = forwardRef(NumberTemp)
 //事件组件
-let testCount = 0
-let paramsWrap = []
 function EventTemp({ actionData, sentReq, modelType }, ref) {
     const [form] = Form.useForm();
-
-    useImperativeHandle(ref, () => ({
-        onFinish: onFinish
-    }));
-    const [isCheck, setIsCheck] = useState(0)
-    //验证回调
-    function sentAddData(data2, params) {
-        let data = cloneDeep(data2)
-        setNewParamsList(pre => {
-            let obj = cloneDeep(pre)
-            console.log(pre,obj,'值======')
-            obj.splice(params.index, 1, data)
-            return obj
-        })
-    }
     const originOutput = useMemo(() => {
         let obj = {
             output: []
@@ -446,8 +429,24 @@ function EventTemp({ actionData, sentReq, modelType }, ref) {
         })
         return obj
     }, [])
-    //==================
+    
     const [newParamsList, setNewParamsList] = useState(originOutput.output)
+    useImperativeHandle(ref, () => ({
+        onFinish: onFinish
+    }), [newParamsList]);
+    const [isCheck, setIsCheck] = useState(0)
+    //验证回调
+    function sentAddData(data2, params) {
+        let data = cloneDeep(data2)
+        setNewParamsList(pre => {
+            let obj = cloneDeep(pre)
+            obj.splice(params.index, 1, data)
+            return obj
+        })
+    }
+    
+    //==================
+
     const addParams = () => {
         setNewParamsList(pre => {
             let obj = JSON.parse(JSON.stringify(pre))
@@ -457,7 +456,7 @@ function EventTemp({ actionData, sentReq, modelType }, ref) {
     }
 
     //触发验证及提交
-    const onFinish =  () => {
+    const onFinish = () => {
         let outputData = getParams(newParamsList)
         form.validateFields().then(val => {
             let value = cloneDeep(val)
@@ -607,7 +606,7 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }));
+    }), [inputList, outputList]);
     return (
         <>
             <Form

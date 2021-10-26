@@ -12,7 +12,7 @@ import {
 } from '../store/ActionCreator'
 
 const { Option } = Select;
-const gatewayTypeList = ['Wifi', '蓝牙', 'zigbee2.0', 'zigbee3.0', '超级开关/衣柜']
+const gatewayTypeList = ['Wifi', '蓝牙', 'zigbee3.0']
 
 const mapStateToProps = state => {
   // console.log(state.getIn(['product', 'createProductCategory']), '步骤3333333页面取得值')
