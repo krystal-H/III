@@ -16,6 +16,7 @@ function FreeApplyModal({ freeApplyVisible, handleFreeApply, type, moduleName, f
       firmwareName,
       productName: productItemData.productName,
       schemeType: productItemData.schemeType,
+      productId: productItemData.productId
     }
     post(Paths.freeApplyModule, { ...params, ...values }, { loading: true })
       .then(res => {
