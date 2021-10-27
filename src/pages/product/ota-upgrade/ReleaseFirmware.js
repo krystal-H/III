@@ -36,7 +36,7 @@ export const ReleaseFirmware = Form.create({
             super(props);
             this.state = {
                 upgradeType:1,
-                upgradeRange:1,
+                upgradeRange:2,
                 triggerTime:0,
             }
         }
@@ -122,7 +122,7 @@ export const ReleaseFirmware = Form.create({
                                     )}
                                 </Form.Item>
                                 <Form.Item label='升级范围' required help='若选择全部设备，则有且仅能发布一个批次，不能新增其他发布批次' className='helpitem'>
-                                    {getFieldDecorator('upgradeRange',{initialValue:1})(
+                                    {getFieldDecorator('upgradeRange',{initialValue:2})(
                                         <Radio.Group onChange={(v)=>{this.changeState('upgradeRange',v)}} >
                                             {
                                                 UPRANGE.map(({id,nam})=>{
