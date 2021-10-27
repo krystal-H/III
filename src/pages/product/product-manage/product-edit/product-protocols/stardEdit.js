@@ -4,13 +4,9 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
 import { unitCollection, multipleCollection } from '../../../../../configs/text-map';
+import { cloneDeep } from 'lodash'
 import './editInfo.scss'
 //tab
-const optionsWithDisabled = [
-    { label: '属性', value: 'properties' },
-    { label: '事件', value: 'events' },
-    { label: '服务', value: 'services' },
-]
 //数据类型
 const dataOptions = [{
     value: 'bool',
@@ -28,16 +24,7 @@ const dataOptions = [{
     value: 'int',
     label: '整数型',
 }]
-function dealData(data1) {
-    let data = JSON.parse(JSON.stringify(data1))
-    if (data.funcType === 'properties') {
-
-    } else if (data.funcType === 'events') {
-
-    } else if (data.funcType === 'services') {
-
-    }
-}
+let unikey = 0 //
 //事件类型
 const eventTabOptions = [
     { label: '故障', value: 'fault' },
@@ -408,40 +395,18 @@ let testCount = 0
 let paramsWrap = []
 function EventTemp({ actionData, sentReq, modelType }, ref) {
     const [form] = Form.useForm();
-
-    useImperativeHandle(ref, () => ({
-        onFinish: onFinish
-    }));
-    const [isCheck, setIsCheck] = useState(0)
-    //验证回调
-    function sentAddData(data2) {
-        let data = JSON.parse(JSON.stringify(data2))
-        testCount++
-        if (data) {
-            paramsWrap.push(data)
-        }
-        if (testCount === newParamsList.length) {
-            if (paramsWrap.length === testCount) {
-                let value = form.getFieldsValue()
-                value = JSON.parse(JSON.stringify(value))
-                let origin = {}
-                value.outputData = paramsWrap
-                origin.content = value
-                sentReq(origin)
-            }
-
-        }
-    }
     const originOutput = useMemo(() => {
         let obj = {
             input: [],
             output: []
         }
         actionData.funcParamList.forEach(item => {
+            unikey++
             let newItem = {
                 name: item.name,
                 identifier: item.identifier,
-                type: item.dataTypeEN
+                type: item.dataTypeEN,
+                unikey
             }
             if (item.dataTypeEN === "enum") {
                 let emusList = []
@@ -470,12 +435,38 @@ function EventTemp({ actionData, sentReq, modelType }, ref) {
         })
         return obj
     }, [])
-    //==================
     const [newParamsList, setNewParamsList] = useState(originOutput.output)
+    useImperativeHandle(ref, () => ({
+        onFinish: onFinish
+    }));
+    const [isCheck, setIsCheck] = useState(0)
+    //验证回调
+    function sentAddData(data2) {
+        let data = JSON.parse(JSON.stringify(data2))
+        testCount++
+        if (data) {
+            paramsWrap.push(data)
+        }
+        if (testCount === newParamsList.length) {
+            if (paramsWrap.length === testCount) {
+                let value = form.getFieldsValue()
+                value = JSON.parse(JSON.stringify(value))
+                let origin = {}
+                value.outputData = paramsWrap
+                origin.content = value
+                sentReq(origin)
+            }
+
+        }
+    }
+
+    //==================
+
     const addParams = () => {
+        unikey++
         setNewParamsList(pre => {
-            let obj = JSON.parse(JSON.stringify(pre))
-            obj.push({})
+            let obj = cloneDeep(pre)
+            obj.push({ unikey })
             return obj
         })
     }
@@ -486,6 +477,13 @@ function EventTemp({ actionData, sentReq, modelType }, ref) {
         testCount = 0
         form.validateFields().then(value => {
             setIsCheck(isCheck + 1)
+        })
+    }
+    const delItemObj = (index, type) => {
+        setNewParamsList(pre => {
+            let arr = cloneDeep(pre)
+            arr.splice(index, 1)
+            return arr
         })
     }
     return (
@@ -548,7 +546,8 @@ function EventTemp({ actionData, sentReq, modelType }, ref) {
 
             {
                 newParamsList.map((item, key) => {
-                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true} key={'params' + key} data={item} />
+                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true} 
+                    unikey={item.unikey} key={item.unikey} data={item} delItemObj={delItemObj} />
                 })
             }
         </>
@@ -570,7 +569,8 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
             let newItem = {
                 name: item.name,
                 identifier: item.identifier,
-                type: item.dataTypeEN
+                type: item.dataTypeEN,
+                unikey: unikey++
             }
             if (item.dataTypeEN === "enum") {
                 let emusList = []
@@ -608,27 +608,28 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
     const [isCheck, setIsCheck] = useState(0)
     //添加输入框
     const addinput = (isIn) => {
+        unikey++
         if (isIn) {
             setInputList(pre => {
-                let obj = JSON.parse(JSON.stringify(pre))
-                obj.push({})
+                let obj = cloneDeep(pre)
+                obj.push({ unikey })
                 return obj
             })
         } else {
             setOutputList(pre => {
-                let obj = JSON.parse(JSON.stringify(pre))
+                let obj = cloneDeep(pre)
                 obj.push({})
                 return obj
             })
         }
     }
     //接收参数
-    const sentAddData = (data2, type) => {
+    const sentAddData = (data2, params) => {
         let data = JSON.parse(JSON.stringify(data2))
         seviceCount++
-        if (type && data) {
+        if (params.type) {
             inputparamsWrap.push(data)
-        } else if (data) {
+        } else {
             outputparamsWrap.push(data)
         }
         if (seviceCount === (inputList.length + outputList.length)) {
@@ -655,6 +656,22 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
     }));
+    //删除
+    const delItemObj = (index, type) => {
+        if (type) {
+            setInputList(pre => {
+                let arr = cloneDeep(pre)
+                arr.splice(index, 1)
+                return arr
+            })
+        } else {
+            setOutputList(pre => {
+                let arr = cloneDeep(pre)
+                arr.splice(index, 1)
+                return arr
+            })
+        }
+    }
     return (
         <>
             <Form
@@ -716,7 +733,8 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
             </Form>
             {
                 inputList.map((item, key) => {
-                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true} key={'input' + key} data={item} />
+                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true}
+                        unikey={item.unikey} key={item.unikey} data={item} delItemObj={delItemObj} />
                 })
             }
             <Form
@@ -742,7 +760,8 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
             </Form>
             {
                 outputList.map((item, key) => {
-                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={false} key={'outputt' + key} data={item} />
+                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={false}
+                        unikey={item.unikey} key={item.unikey} data={item} delItemObj={delItemObj} />
                 })
             }
         </>
@@ -750,7 +769,7 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
 }
 ServeTemp = forwardRef(ServeTemp)
 //添加参数
-function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
+function AddParams({ sentAddData, type, data, isCheck, refIndex, unikey, delItemObj }, ref) {
     const [form] = Form.useForm();
     useEffect(() => {
         if (isCheck) {
@@ -803,8 +822,12 @@ function AddParams({ sentAddData, type, data, isCheck, refIndex }, ref) {
         }
         add()
     }
+    const delItem = () => {
+        delItemObj(refIndex, type)
+    }
     return (
         <div className='add-tempele-wrap add-params-wrap'>
+            <MinusCircleOutlined className='del-icon-params' onClick={delItem} />
             <Form form={form}
                 initialValues={data}
                 labelCol={{
