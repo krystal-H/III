@@ -90,7 +90,7 @@ export const UPDATETYPE = [
 
 export const UPRANGE = [
     {id:0,nam:'全部设备'},
-    // {id:1,nam:'设备分组'},
+    {id:1,nam:'设备分组'},
     {id:2,nam:'指定设备'},
 ]
 export const RERTYTIME = [

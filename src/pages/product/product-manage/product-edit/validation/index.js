@@ -243,12 +243,15 @@ function Validation({ productId,developerInfo,refInstance }) {
                                 </div>
                             </div>
                             <div className="tablebox">
-                                <Table columns={columns} rowKey="index" dataSource={dataList} pagination={false}
+                                <Table columns={columns} rowKey="index"
+                                dataSource={dataList}
+                                pagination={false}
                                         onRow={r=> {
                                             return {
                                                 onClick: e => { setAnalysisData(r.map || {}) },
                                             };
                                         }}
+                                        scroll={{ y: 305 }}
                                 />
                             </div>
                         </div>
