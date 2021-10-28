@@ -133,14 +133,14 @@ function ProtocolFn2({ nextStep, productId }, ref) {
             <Button type="primary" onClick={openAdd}>新建标准功能</Button >
         </div>
         <div className='Protocol-table'>
-            <TableCom dataSource={standardData} reFreshData={getList} type={'1'} />
+            <TableCom dataSource={standardData} standardData={standardData} reFreshData={getList} type={'1'} />
         </div>
         <div className='Protocol-download'>
             <div>自定义功能<LabelTip tip="支持在标准功能的基础上，自定义适合客户自己硬件特色的定制功能点。"></LabelTip></div>
             <div style={{ display: 'flex' }}>
-                <Upload customRequest={customRequest} showUploadList={false}>
+                {/* <Upload customRequest={customRequest} showUploadList={false}>
                     <Button type='text' style={{ color: '#166AFF' }} icon={<UploadOutlined />}>导入自定义功能</Button>
-                </Upload>
+                </Upload> */}
                 <Button type="primary" onClick={openCusmon}>新建自定义功能</Button >
             </div>
 

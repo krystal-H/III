@@ -4,13 +4,9 @@ import moment from 'moment';
 import { Table, Button, Space } from 'antd';
 import './index.scss';
 import EditcusFn from './editcusFn'
-import EditStaird from './stardEdit'
-import Addfunction from './addModal'
-import NewCusmFn from './addcusFn'
 // import TitleEdit from './titleEdit'
 import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
-import { MyContext } from '../context'
 import { getRowSpanCount } from '../../../../../configs/tableCombine'
 // import { getRowSpanCount } from './tableCombine'
 
@@ -216,25 +212,6 @@ export default function TableCom({ dataSource, reFreshData, type, standardData =
     const updateCancelHandle = () => {
         setIsDelVisible(false)
     }
-    //
-    const getCompinent = () => {
-        let dom = type == 1 ? <EditStaird
-            rightVisible={rightEditVisible}
-            onCloseRight={onCloseRight}
-            onRefreshList={onRefreshList}
-            standardData={standardData}
-            actionData={actionData}
-            modelType={type}></EditStaird>
-            :
-            <EditcusFn
-                rightVisible={rightEditVisible}
-                onCloseRight={onCloseRight}
-                onRefreshList={onRefreshList}
-                standardData={standardData}
-                actionData={actionData}
-                modelType={type}></EditcusFn>
-        return dom
-    }
     return <div>
         <Table
             rowKey="key"
@@ -265,7 +242,13 @@ export default function TableCom({ dataSource, reFreshData, type, standardData =
             actionData={actionData}
             modelType={type}></EditcusFn>} */}
 
-        {rightEditVisible && getCompinent()}
+        {rightEditVisible && <EditcusFn
+            rightVisible={rightEditVisible}
+            onCloseRight={onCloseRight}
+            onRefreshList={onRefreshList}
+            standardData={standardData}
+            actionData={actionData}
+            modelType={type}></EditcusFn>}
         {/* 删除操作 */}
         {
             isDelVisible && <ActionConfirmModal

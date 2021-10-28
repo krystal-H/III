@@ -4,7 +4,6 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
 import './editInfo.scss'
-import { CloseOutlined } from '@ant-design/icons';
 import { unitCollection, multipleCollection } from '../../../../../configs/text-map';
 import { cloneDeep } from 'lodash'
 //tab
@@ -35,6 +34,7 @@ const eventTabOptions = [
     { label: '故障', value: 'fault' },
     { label: '告警', value: 'alarm' },
     { label: '信息', value: 'info' }]
+let unikey = 0 //
 // 创建一个 context
 const Context = createContext(0)
 export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList, standardData }) {
@@ -399,6 +399,7 @@ function EventTemp({ currentTab, sentReq }, ref) {
         let data = cloneDeep(data2)
         setNewParamsList(pre => {
             let obj = cloneDeep(pre)
+            data.unikey = params.unikey
             obj.splice(params.index, 1, data)
             return obj
         })
@@ -406,10 +407,22 @@ function EventTemp({ currentTab, sentReq }, ref) {
     //==================
 
     const addParams = () => {
+        unikey++
         setNewParamsList(pre => {
             let obj = cloneDeep(pre)
-            obj.push({})
+            obj.push({ unikey })
             return obj
+        })
+    }
+    const delItemObj = (index, type) => {
+        setNewParamsList(pre => {
+            let arr = cloneDeep(pre)
+            arr = arr.filter(item => {
+                if (item.unikey != index) {
+                    return item
+                }
+            })
+            return arr
         })
     }
     //触发验证及提交
@@ -479,7 +492,8 @@ function EventTemp({ currentTab, sentReq }, ref) {
 
             {
                 newParamsList.map((item, key) => {
-                    return <AddParams sentAddData={sentAddData} refIndex={key} type={true} key={'params' + key} data={item} />
+                    return <AddParams sentAddData={sentAddData} delItemObj={delItemObj} refIndex={key} type={true}
+                        unikey={item.unikey} key={item.unikey} data={item} />
                 })
             }
         </>
@@ -491,26 +505,51 @@ function ServeTemp({ sentReq }, ref) {
     const [form] = Form.useForm();
     const [inputList, setInputList] = useState([])
     const [outputList, setOutputList] = useState([])
-    const [isCheck, setIsCheck] = useState(0)
     //添加输入框
     const addinput = (isIn) => {
+        unikey++
         if (isIn) {
             setInputList(pre => {
                 let obj = cloneDeep(pre)
-                obj.push({})
+                obj.push({ unikey })
                 return obj
             })
         } else {
             setOutputList(pre => {
                 let obj = cloneDeep(pre)
-                obj.push({})
+                obj.push({ unikey })
                 return obj
             })
         }
     }
+    const delItemObj = (index, type) => {
+        if (type) {
+            setInputList(pre => {
+                let arr = cloneDeep(pre)
+                arr = arr.filter(item => {
+                    if (item.unikey != index) {
+                        return item
+                    }
+                })
+                return arr
+            })
+        } else {
+            setOutputList(pre => {
+                let arr = cloneDeep(pre)
+                arr = arr.filter(item => {
+                    if (item.unikey != index) {
+                        return item
+                    }
+                })
+                return arr
+            })
+        }
+
+    }
     //接收参数
     const sentAddData = (data2, params) => {
         let data = cloneDeep(data2)
+        data.unikey = params.unikey
         if (params.type) {
             setInputList(pre => {
                 let obj = cloneDeep(pre)
@@ -539,7 +578,7 @@ function ServeTemp({ sentReq }, ref) {
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }), [outputList,inputList]);
+    }), [outputList, inputList]);
     return (
         <>
             <Form
@@ -597,7 +636,8 @@ function ServeTemp({ sentReq }, ref) {
             </Form>
             {
                 inputList.map((item, key) => {
-                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true} key={'input' + key} data={item} />
+                    return <AddParams sentAddData={sentAddData} delItemObj={delItemObj} refIndex={key} type={true}
+                        unikey={item.unikey} key={item.unikey} data={item} />
                 })
             }
             <Form
@@ -623,7 +663,8 @@ function ServeTemp({ sentReq }, ref) {
             </Form>
             {
                 outputList.map((item, key) => {
-                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={false} key={'outputt' + key} data={item} />
+                    return <AddParams sentAddData={sentAddData} delItemObj={delItemObj} refIndex={key} type={false}
+                        unikey={item.unikey} key={item.unikey} data={item} />
                 })
             }
         </>
@@ -631,18 +672,21 @@ function ServeTemp({ sentReq }, ref) {
 }
 ServeTemp = forwardRef(ServeTemp)
 //添加参数
-function AddParams({ sentAddData, type, data, refIndex }, ref) {
+function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, ref) {
     const standardDatas = useContext(Context);
     const [form] = Form.useForm();
     const [sentData, setSentData] = useState({})
     const [selectId, setSelectId] = useState(0)
     useEffect(() => {
-        onFinish()
+        if (selectId) {
+            onFinish()
+        }
     }, [selectId])
     const onFinish = () => {
         let parmas = {
             index: refIndex,
             type,
+            unikey
         }
         sentAddData(sentData, parmas)
     }
@@ -740,8 +784,12 @@ function AddParams({ sentAddData, type, data, refIndex }, ref) {
         }
         return ''
     }
+    const delItem = () => {
+        delItemObj(unikey, type)
+    }
     return (
         <div className='add-tempele-wrap add-params-wrap'>
+            <MinusCircleOutlined onClick={delItem} className='del-icon-params' />
             <Form form={form}
                 labelCol={{
                     span: 8,
