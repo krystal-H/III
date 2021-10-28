@@ -72,7 +72,7 @@
         .tablebox{
           .ant-table-body{
             overflow-y: auto;
-            @include self-scroll-bar
+            @include self-scroll-bar;
           }
           
         }
@@ -92,8 +92,9 @@
           margin-bottom: 13px;
         }
 
-        >div {
-
+        .analysisdata-box {
+          overflow-y: auto;
+          @include self-scroll-bar;
           height: 360px;
           background: #FFFFFF;
           border-radius: 4px;

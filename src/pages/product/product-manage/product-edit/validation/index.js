@@ -257,7 +257,7 @@ function Validation({ productId,developerInfo,refInstance }) {
                         </div>
                         <div className='right-content'>
                             <h3>解析数据</h3>
-                            <div>
+                            <div className="analysisdata-box">
                                 {
                                     analysisData && <ObjectView keyName="明文" data={analysisData} />  || "点击左侧原始数据在此解析"
                                 }
