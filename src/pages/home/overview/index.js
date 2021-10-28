@@ -46,6 +46,35 @@ export default function OverviewWrap() {
         getDevThreeList()
         getProductCount()
         getProductList()
+
+
+
+
+
+
+        let ws = new WebSocket('wss://dp.clife.net/v5x/web/open/tech/support/ws');
+        
+
+        
+        
+        ws.onopen = ()=> {//连接成功
+            console,log("111111")
+
+            ws.send("111111");
+
+        };
+        ws.onmessage =  (data)=> {//接收到消息
+            console,log("222222",data)
+            
+            
+        };
+        ws.onclose = (e) =>{//检测到断开连接
+            console.log("检测到断开连接")
+        }
+
+
+
+
     }, [])
     let history = useHistory();
     //轮播图

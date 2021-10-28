@@ -145,7 +145,6 @@ function Validation({ productId,developerInfo,refInstance }) {
         //     wsProtocol = httpProtocol.replace(/https?/, 'wss');
         ws = new WebSocket('wss://' + serverIp);
         
-        
         ws.onopen = ()=> {//连接成功
             mountRef.current = 0
             // setWebSocketStatu(1);
@@ -286,3 +285,21 @@ function Validation({ productId,developerInfo,refInstance }) {
 let Component = connect(mapStateToProps, null)(Validation)
 
 export default forwardRef( (props,ref) => <Component  {...props}  refInstance={ref} />   )
+
+
+
+// stage('上传制品库') {
+//     steps {
+//        dir(env.BUILD_DIR) {
+//           codingArtifactsGeneric(files: '**/**', zip: '${GENERIC_NAME}.zip', version: '${GIT_BUILD_REF}', repoName: '${REPO_NAME}', withBuildProps: true)
+//       }
+//     }
+//   }
+
+
+  
+//   stage('上传制品库') {
+//     steps {
+//       codingArtifactsGeneric(workspace: '${WORKSPACE}/${BUILD_DIR}', files: '**/**', zip: '${GENERIC_NAME}.zip', version: '${GIT_BUILD_REF}', repoName: '${REPO_NAME}', withBuildProps: true)
+//     }
+//   }
