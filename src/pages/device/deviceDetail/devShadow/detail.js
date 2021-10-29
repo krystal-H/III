@@ -88,7 +88,8 @@ export default function AddFuncModal({ ModalVisible, closeOk, sentData ,baseInfo
             column: sentData.funcIdentifier,
             productId: baseInfo.productId,
             tslType: sentData.funcType,
-            selectType:timeType
+            selectType:timeType,
+            deviceId:baseInfo.deviceId
         }
         post(Paths.exportShadowHis, params).then((res) => {
             window.open(res.data)
