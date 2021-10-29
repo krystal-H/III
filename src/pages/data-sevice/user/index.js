@@ -58,13 +58,14 @@ export default function Device() {
     const [hackValue, setHackValue] = useState();
     const [value, setValue] = useState(); //时间值
     const disabledDate = current => {
-        if (!dates || dates.length === 0) {
-            return false;
-        }
-        const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
-        const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
-        const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
-        return isBeyong || tooEarly || tooLate
+        // if (!dates || dates.length === 0) {
+        //     return false;
+        // }
+        // const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
+        // const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
+        // const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
+        // return isBeyong || tooEarly || tooLate
+        return current && current > dayjs().subtract(1, 'day') || current < dayjs().subtract(30, 'day')
     };
 
     const onOpenChange = open => {
@@ -75,9 +76,7 @@ export default function Device() {
             setHackValue(undefined);
         }
     };
-    const timeCall = (value) => {
-        setValue(value)
-    }
+    
 
     //======
     const [currentTime, setCurrentTime] = useState('1') //当前选择时间
@@ -89,6 +88,10 @@ export default function Device() {
         setValue(null)
         setCurrentTime(e.target.value)
     };
+    const timeCall = (value) => {
+        setCurrentTime('')
+        setValue(value)
+    }
     const [selectType, setSelectType] = useState(0) //产品种类
     const getType = () => {
         post(Paths.allProductPubList, {}).then(res => {
@@ -184,10 +187,6 @@ export default function Device() {
             window.open(res.data.path)
         });
     }
-    //==
-    // const initTableData=()=>{
-
-    // }
     //处理统计
     const dealCount = (origin) => {
         let count = [
@@ -332,6 +331,7 @@ export default function Device() {
                     onChange={val => timeCall(val)}
                     onOpenChange={onOpenChange}
                     format={'YYYY-MM-DD'}
+                    allowClear={false}
                 />
 
             </div>
