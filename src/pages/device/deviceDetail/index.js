@@ -52,7 +52,7 @@ export default function DeviceInfo({ match }) {
                     <DevShadow devceId={baseInfo.deviceId} baseInfo={baseInfo}/>
                 </TabPane>
                 <TabPane key={'4'} tab={'远程配置'}>
-                    <DevSet devceId={baseInfo.deviceId} />
+                    <DevSet devceId={baseInfo.deviceId} baseInfo={baseInfo}/>
                 </TabPane>
             </Tabs>
         </div>

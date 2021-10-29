@@ -4,8 +4,8 @@ import { post, Paths } from '../../../../api';
 import './detail.scss';
 import * as echarts from 'echarts';
 const { Option } = Select;
-const optionArr = [{ key: 1, value: '最近1小时' }, { key: 2, value: '最近6小时' }, { key: 3, value: '最近24小时' }, { key: 4, value: '最近7天' }]
-export default function AddFuncModal({ ModalVisible, closeOk, sentData ,productId}) {
+const optionArr = [{ key: 1, value: '最近1小时' }, { key: 2, value: '最近6小时' }, { key: 3, value: '最近24小时' }]
+export default function AddFuncModal({ ModalVisible, closeOk, sentData ,baseInfo}) {
     const [timeType,setTimeType]=useState(1)
     const initData = (origin) => {
         let xData=[]
@@ -38,9 +38,9 @@ export default function AddFuncModal({ ModalVisible, closeOk, sentData ,productI
                 containLabel: true
             },
             toolbox: {
-                feature: {
-                    saveAsImage: {}
-                }
+                // feature: {
+                //     saveAsImage: {}
+                // }
             },
             xAxis: {
                 type: 'category',
@@ -67,8 +67,9 @@ export default function AddFuncModal({ ModalVisible, closeOk, sentData ,productI
     const getData = (val) => {
         let params = {
             column: sentData.funcIdentifier,
-            productId: productId,
-            tslType: sentData.funcType
+            productId: baseInfo.productId,
+            tslType: sentData.funcType,
+            deviceId:baseInfo.deviceId
         }
         if(val){
             params.selectType=val
@@ -85,7 +86,7 @@ export default function AddFuncModal({ ModalVisible, closeOk, sentData ,productI
     const downFile=()=>{
         let params = {
             column: sentData.funcIdentifier,
-            productId: productId,
+            productId: baseInfo.productId,
             tslType: sentData.funcType,
             selectType:timeType
         }

@@ -76,7 +76,7 @@ export default function Device() {
             setHackValue(undefined);
         }
     };
-    
+
 
     //======
     const [currentTime, setCurrentTime] = useState('1') //当前选择时间
@@ -332,6 +332,7 @@ export default function Device() {
                     onOpenChange={onOpenChange}
                     format={'YYYY-MM-DD'}
                     allowClear={false}
+                    style={{ 'borderColor': value && value.length ? '#1890ff' : '' }}
                 />
 
             </div>
