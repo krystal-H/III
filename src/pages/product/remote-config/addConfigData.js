@@ -33,6 +33,7 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
       sessionStorage.setItem('addConfigData', JSON.stringify(initialProtoclList.filter(item => {
         let data = item.sendData ?? undefined
         if (typeof data != 'undefined' && selectedProtocols.indexOf(item.identifier) > -1) {
+          item.sendData = Number(item.sendData)
           return item
         }
       })))
@@ -79,7 +80,7 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
 
 
   useEffect(() => {
-    console.log(selectedProtocols, 'selectedProtocolsselectedProtocolsselectedProtocols')
+    console.log(selectedProtocols, 'selectedProtocol-----')
   }, [selectedProtocols])
 
   // 输入参数
@@ -181,7 +182,7 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
                 {
                   Object.keys(specs) && Object.keys(specs).map((item, index) => {
                     // console.log(item, '---', specs[item])
-                    return <Option key={index + item} value={item}>{specs[item]}</Option>
+                    return <Option key={index + item} value={Number(item)}>{specs[item]}</Option>
                   })
                 }
               </Select>
