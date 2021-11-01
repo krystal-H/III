@@ -110,6 +110,8 @@ function RemoteConfig(remoteType = 'product') {
 
     // 编辑
     const addOrEditRemoteConfig = (record) => {
+        sessionStorage.removeItem('addConfigData')
+        sessionStorage.removeItem('remoteConfigtaskDesc')
         // return alert('敬请期待！')
         if (record) { // 编辑
             post(Paths.getRemoteConfig5x, { taskId: record.taskId }, { loading: true }).then(res => {

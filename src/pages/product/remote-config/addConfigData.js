@@ -174,9 +174,10 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
                 onChange={value => changeSendData(value, index)}>
                 <Option key={-1} value="">请选择参数</Option>
                 {
-                  Object.values(specs) && Object.values(specs).map((item, index) => (
-                    <Option key={index + item} value={item}>{item}</Option>
-                  ))
+                  Object.keys(specs) && Object.keys(specs).map((item, index) => {
+                    // console.log(item, '---', specs[item])
+                    return <Option key={index + item} value={item}>{specs[item]}</Option>
+                  })
                 }
               </Select>
             )
