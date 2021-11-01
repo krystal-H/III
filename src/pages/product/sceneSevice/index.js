@@ -124,9 +124,12 @@ export default function DeviceRegist() {
         post(Paths.scenceList, params, { loading }).then((res) => {
             let arr1 = delaData(res.data.conditionFunc, true)
             let arr2 = delaData(res.data.controlFunc, false)
-            // setDataSource(arr1.concat(arr2))
-            setOriginData(arr1.concat(arr2))
-            onSearch(arr1.concat(arr2))
+            let arr = arr1.concat(arr2)
+            arr.forEach((item, index) => {
+                item.unikey = index
+            })
+            setOriginData(cloneDeep(arr))
+            onSearch(cloneDeep(arr))
         });
     }
     const onSearch = (data) => {
@@ -280,7 +283,7 @@ export default function DeviceRegist() {
                     </div>
                     <Button type="primary" onClick={openRegist}>自定义</Button>
                 </div>
-                <Table rowKey='funcIdentifier' dataSource={dataSource} columns={columns} />
+                <Table rowKey='unikey' dataSource={dataSource} columns={columns} />
             </div>
             {
                 modelVis && <AddModal addVisible={modelVis} addOk={colseMoadl} optionArr={optionArr} CancelAdd={cancelModel} />

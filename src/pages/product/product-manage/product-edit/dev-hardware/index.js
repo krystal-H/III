@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { Table, Tooltip, Empty } from 'antd'
+import { Table, Tooltip, Empty,Modal } from 'antd'
 import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { Paths, post, get } from '../../../../../api'
 import ReplaceModule from './replaceModule'
 // import ModuleDetail from './moduleDetail'
 import FreeApplyModal from './freeApply'
 import ModifyFirmwareModal from './modifyFirmware'
-
+import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.jpg';
 import "./index.scss"
 
 class Hardware extends Component {
@@ -54,7 +54,8 @@ class Hardware extends Component {
             allInfo: {}, // 返回信息
             currentModuleId: '', // 模组id
             firmwareId: '', // 修改固件id
-            productItemData: JSON.parse(sessionStorage.getItem('productItem')) || {}
+            productItemData: JSON.parse(sessionStorage.getItem('productItem')) || {},
+            officeVis: false
         }
     }
 
@@ -156,7 +157,7 @@ class Hardware extends Component {
 
     render() {
         const { replaceModalVisible, freeApplyVisible, modifyFirmwareVisible, replaceFirmwareVisible,
-            dataSource, allInfo, currentModuleId, firmwareId, productItemData } = this.state
+            dataSource, allInfo, currentModuleId, firmwareId, productItemData, officeVis } = this.state
         return (
             <div className="hardware-page">
                 <div className="hardware-wrap">
@@ -168,7 +169,7 @@ class Hardware extends Component {
                             <div className="replace-btn" onClick={() => this.setState({ replaceModalVisible: true })}>更换模组</div>
                         </div>
                         {
-                            this.state.productItemData.moduleId == -1 && 
+                            this.state.productItemData.moduleId == -1 &&
                             <div className="flex-c border"><Empty /></div>
                         }
                         {
@@ -284,7 +285,7 @@ class Hardware extends Component {
                             <div className="flex-c">
                                 <img className="debug-icon" src={require('../../../../../assets/images/product/network.png')} alt="" />
                                 <div>联网验证</div>
-                                <div className="blue">下载“数联智能”App</div>
+                                <div className="blue" onClick={() => this.setState({ officeVis: true })}>下载“数联智能”App</div>
                             </div>
                         </div>
                     </div>
@@ -340,7 +341,14 @@ class Hardware extends Component {
                         handleCancel={this.handleModalCancel}
                         selectedId={currentModuleId} />
                 } */}
-
+                {
+                    officeVis && <Modal title="安装“数联智能”App" width='470px' visible={officeVis} footer={null} onCancel={() => this.setState({ officeVis: false })}>
+                        <div className='down-office-modal' >
+                            <img src={demoAppOfficial} />
+                            <div>手机扫描二维码下载</div>
+                        </div>
+                    </Modal>
+                }
             </div>
         )
     }

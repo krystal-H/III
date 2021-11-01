@@ -6,7 +6,7 @@ import { Radio, DatePicker, Select, Table } from 'antd';
 import LabelTip from '../../../components/form-com/LabelTip';
 import './index.scss'
 import dayjs from 'dayjs'
-
+import moment from 'moment'
 import * as echarts from 'echarts';
 const options = [
     { label: '近7天', value: '1' },
@@ -59,13 +59,14 @@ export default function Device() {
     const [value, setValue] = useState(); //时间值
     const [optionArr, setOptionArr] = useState([]) //产品列表
     const disabledDate = current => {
-        if (!dates || dates.length === 0) {
-            return false;
-        }
+        // if (!dates || dates.length === 0) {
+        //     return false;
+        // }
         const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
         const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
-        const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
-        return isBeyong || tooEarly || tooLate
+        // const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
+        // return isBeyong || tooEarly || tooLate
+        return current && current > dayjs().subtract(1, 'day') || current < dayjs().subtract(30, 'day')
     };
     const [selectType, setSelectType] = useState(0) //产品种类
     //产品改变
@@ -87,9 +88,7 @@ export default function Device() {
         }
     };
 
-    const timeCall = (value) => {
-        setValue(value)
-    }
+    
     //======
     const [currentTime, setCurrentTime] = useState('1') //当前选择时间
     const [countData, setCountData] = useState(originCount)
@@ -99,6 +98,10 @@ export default function Device() {
         setValue(null)
         setCurrentTime(e.target.value)
     };
+    const timeCall = (value) => {
+        setCurrentTime('')
+        setValue(value)
+    }
     useEffect(() => {
         getData()
     }, [currentTime, value, selectType])
@@ -322,6 +325,8 @@ export default function Device() {
                     onChange={val => timeCall(val)}
                     onOpenChange={onOpenChange}
                     format={'YYYY-MM-DD'}
+                    allowClear={false}
+                    style={{'borderColor':value && value.length ? '#1890ff' : ''}}
                 />
 
             </div>

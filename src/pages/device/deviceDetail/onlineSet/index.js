@@ -18,7 +18,7 @@ const { Step } = Steps
 const { Search } = Input
 const statusTextForDevice = ['草稿', '待执行', '执行成功', '执行失败']
 
-function RemoteConfig({ devceId }) {
+function RemoteConfig({ devceId,baseInfo }) {
     const [addVisible, setAddVisible] = useState(false)
     const [editVisible, setEditVisible] = useState(false)
     const [actionData, setActionData] = useState({})
@@ -241,7 +241,7 @@ function RemoteConfig({ devceId }) {
                 detailVis && <DetailModel detailVis={detailVis} onCancel={detailCancel} actionData={actionData} deviceId={devceId}/>
             }
             {
-                editVisible && <EditModel addVisible={editVisible} actionData={actionData} addOk={EditOk} CancelAdd={CancelEdit} deviceId={devceId}/>
+                editVisible && <EditModel addVisible={editVisible} actionData={actionData} addOk={EditOk} CancelAdd={CancelEdit} deviceId={devceId} baseInfo={baseInfo}/>
             }
         </div>
     )
