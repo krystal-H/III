@@ -30,7 +30,12 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
         }
       }
       console.log('提交的数据', initialProtoclList.filter(item => item.sendData), '*************')
-      sessionStorage.setItem('addConfigData', JSON.stringify(initialProtoclList.filter(item => item.sendData)))
+      sessionStorage.setItem('addConfigData', JSON.stringify(initialProtoclList.filter(item => {
+        let data = item.sendData ?? undefined
+        if (typeof data != 'undefined' && selectedProtocols.indexOf(item.identifier) > -1) {
+          return item
+        }
+      })))
       nextStep()
     }
   }
