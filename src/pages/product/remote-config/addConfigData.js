@@ -33,7 +33,9 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
       sessionStorage.setItem('addConfigData', JSON.stringify(initialProtoclList.filter(item => {
         let data = item.sendData ?? undefined
         if (typeof data != 'undefined' && selectedProtocols.indexOf(item.identifier) > -1) {
-          item.sendData = Number(item.sendData)
+          // console.log('打印一下', Number(item.sendData) != NaN, item.sendData)
+          // 数值时要穿字符串  避免设备调不通
+          item.sendData = isNaN(Number(item.sendData)) ? item.sendData  : Number(item.sendData)
           return item
         }
       })))
