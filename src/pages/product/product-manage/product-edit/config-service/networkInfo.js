@@ -137,8 +137,9 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
         <Form
           ref={formRef}
           form={form}
+          labelAlign="left"
           onFinish={onFinish}
-          labelCol={{ span: 5 }}
+          // labelCol={{ span: 5 }}
           wrapperCol={{ span: 19 }}
           initialValues={{
             // baseTypeId: netData.baseTypeId || '',
@@ -194,7 +195,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
                 <Form.Item
                   label="默认联网指引"
                   name="guidePage"
-                  labelCol={{ span: 10 }}
+                  // labelCol={{ span: 10 }}
                   wrapperCol={{ span: 10 }}
                   className="upload-img">
                   {
@@ -220,7 +221,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
                 <Form.Item
                   label="默认联网失败提示"
                   name="bindFailPage"
-                  labelCol={{ span: 10 }}
+                  // labelCol={{ span: 10 }}
                   wrapperCol={{ span: 10 }}
                   className="upload-img">
                   {
@@ -248,7 +249,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
                 label="图片轮播帮助信息"
                 name="imageUrlList"
                 className="upload-img"
-                labelCol={{ span: 5 }}
+                // labelCol={{ span: 5 }}
                 wrapperCol={{ span: 20 }}>
                 {
                   <UploadFileHooks
