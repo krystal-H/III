@@ -12,12 +12,14 @@ function NetworkInfo({ networkModalVisible, productId, cancelHandle }) {
   const formRef = useRef()
   const [netData, setNetData] = useState({})
   const [imageUrlList, setImageUrlList] = useState([]) // 轮播图信息
+  const [baseTypeId, setBaseTypeId] = useState()
 
   // 获取配网方式
   const getNetDataByProductId = () => {
     post(Paths.getNetDataByProductId, { productId })
       .then(res => {
         setNetData(res.data)
+        setBaseTypeId(res.data.baseTypeId)
         setImageUrlList(() => {
           return res.data.helpPage ? res.data.helpPage.imageUrls.filter(item => item) : []
         })
@@ -50,22 +52,23 @@ function NetworkInfo({ networkModalVisible, productId, cancelHandle }) {
         <Form
           ref={formRef}
           form={form}
-          labelCol={{ span: 5 }}
+          labelAlign="left"
+          // labelCol={{ span: 5 }}
           wrapperCol={{ span: 19 }}>
           <div className="network-info-modal-title">配网方式</div>
-          <Form.Item label="已选通信协议"><span>{netData.bindTypeName}</span></Form.Item>
+          <Form.Item label="通信协议"><span>{netData.bindTypeName}</span></Form.Item>
           <Form.Item label="配网方式"><span>{dealData()}</span></Form.Item>
           {/* 通信是WIFI */}
           {
-            netData.bindTypeId === 1 &&
+            (netData.bindTypeId === 1 && baseTypeId === 1) &&
             <Form.Item label="AP-SSID" name="ssid">
-              <span>{netData.ssid || '-'}</span>
+              <span>{netData.radiocastName || '-'}</span>
             </Form.Item>
           }
 
           {/* 通信是wifi、蓝牙 */}
           {
-            (netData.bindTypeId === 1 || netData.bindTypeId === 2) &&
+            ((netData.bindTypeId === 1 && baseTypeId === 3) || (netData.bindTypeId === 2)) &&
             <Form.Item label="广播名" name="radiocastName">
               <span>{netData.radiocastName || '-'}</span>
             </Form.Item>
@@ -81,7 +84,7 @@ function NetworkInfo({ networkModalVisible, productId, cancelHandle }) {
               <Row>
                 <Col span={12}>
                   <Form.Item label="默认联网指引" name="guidePage"
-                    labelCol={{ span: 10 }}
+                    // labelCol={{ span: 10 }}
                     className="upload-img">
                     <div className="native-upload">
                       <div className="img-wrap">
@@ -92,7 +95,7 @@ function NetworkInfo({ networkModalVisible, productId, cancelHandle }) {
                 </Col>
                 <Col span={12}>
                   <Form.Item label="默认联网失败提示" name="bindFailPage"
-                    labelCol={{ span: 10 }}
+                    // labelCol={{ span: 10 }}
                     className="upload-img">
                     <div className="native-upload">
                       <div className="img-wrap">
