@@ -1046,9 +1046,9 @@ class CommandsDebugDialog extends React.Component{
         let obj = cloneDeep(this.state.param);
         obj.command = this.props.code;
         this.props.onConfirm && this.props.onConfirm(obj);
-        this.setState({
-            param: {},
-        });
+        // this.setState({
+        //     param: {},
+        // });
     }
     onCancel () {
         this.setState({
@@ -1878,20 +1878,24 @@ export default class StartTest  extends Component{
                             />
                         </div>
                     </div>
-                    <Modal className='old-commandsDebugSytle'
-                        title={this.state.command.code+"命令调试"} 
-                        visible={this.state.command.active}
-                        maskClosable={false} 
-                        onCancel={this.onCloseDialog}
-                        footer={null}
-                    >
-                        <CommandsDebugDialog
-                            code={this.state.command.code}
-                            defaultMac={this.state.command.mac}
-                            onConfirm={this.onSendCommand}
+                    {
+                        this.state.command.active &&
+                            <Modal className='old-commandsDebugSytle'
+                            title={this.state.command.code+"命令调试"} 
+                            visible={this.state.command.active}
+                            maskClosable={false} 
                             onCancel={this.onCloseDialog}
-                        />
-                    </Modal>
+                            footer={null}
+                        >
+                            <CommandsDebugDialog
+                                code={this.state.command.code}
+                                defaultMac={this.state.command.mac}
+                                onConfirm={this.onSendCommand}
+                                onCancel={this.onCloseDialog}
+                            />
+                        </Modal>
+                    }
+                    
                     <textarea id="copyInput" />
                     {
                         visibleExportData &&
