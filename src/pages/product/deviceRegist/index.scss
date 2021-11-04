@@ -3,14 +3,17 @@
     display: flex;
     justify-content: space-between;
   }
-  .top-select{
+
+  .top-select {
     position: absolute;
     top: 16px;
     right: 16px;
   }
+
   .device-content {
     padding: 22px;
     margin-top: 16px;
+
     .content-top {
       display: flex;
       white-space: nowrap;
@@ -29,6 +32,11 @@
 
 .device-regist {
   padding: 0 20px;
+
+  .regist-product-btn {
+    text-decoration: underline;
+    margin-left: 136px;
+  }
 
   .ant-form-item-label {
     width: 135px;

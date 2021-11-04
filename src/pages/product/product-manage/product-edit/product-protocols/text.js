@@ -6,7 +6,6 @@ import { Notification } from '../../../../../components/Notification';
 import './editInfo.scss'
 import { unitCollection, multipleCollection } from '../../../../../configs/text-map';
 import { cloneDeep } from 'lodash'
-import { async } from '_rxjs@6.6.7@rxjs';
 //tab
 const optionsWithDisabled = [
     { label: '属性', value: 'properties' },
@@ -395,17 +394,18 @@ function EventTemp({ currentTab, sentReq }, ref) {
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
     }), [newParamsList]);
-    //验证回调保存
+    //验证回调
     function sentAddData(data2, params) {
         let data = cloneDeep(data2)
         setNewParamsList(pre => {
             let obj = cloneDeep(pre)
-            // data.unikey = params.unikey
+            data.unikey = params.unikey
             obj.splice(params.index, 1, data)
             return obj
         })
     }
     //==================
+
     const addParams = () => {
         unikey++
         setNewParamsList(pre => {
@@ -427,36 +427,13 @@ function EventTemp({ currentTab, sentReq }, ref) {
     }
     //触发验证及提交
     const onFinish = async () => {
+        let outputData = getParams(newParamsList)
         form.validateFields().then(val => {
             let value = cloneDeep(val)
             let origin = {}
-            let arrFn = []
-            let arrData = []
-            if(newParamsList.length ==0){
-                Notification({
-                    description: `至少添加一个参数`,
-                    type: 'warn'
-                });
-                return
-            }
-            cloneDeep(newParamsList).forEach(item => {
-                arrFn.push(item.fn())
-                arrData.push(item.data)
-            })
-            // let outputData = getParams(arrData)
-            Promise.all(arrFn).then((formData) => {
-                formData.forEach((item, index) => {
-                    arrData[index].dataType.specs.default = item.specs.default
-                })
-                value.outputData = getParams(arrData)
-                origin.content = value
-                sentReq(origin)
-            }).catch(res => {
-                Notification({
-                    description: `添加参数有误`,
-                    type: 'warn'
-                });
-            })
+            value.outputData = outputData
+            origin.content = value
+            sentReq(origin)
         })
     }
     return (
@@ -587,38 +564,16 @@ function ServeTemp({ sentReq }, ref) {
             })
         }
     }
-    const onFinish = async () => {
+    const onFinish = () => {
+        let inputData = getParams(inputList)
+        let outputData = getParams(outputList)
         form.validateFields().then(val => {
             let value = cloneDeep(val)
             let origin = {}
-            let arrFn = []
-            let arrData = []
-            let allList = inputList.concat(outputList)
-            if(allList.length ==0){
-                Notification({
-                    description: `至少添加一个参数`,
-                    type: 'warn'
-                });
-                return
-            }
-            cloneDeep(allList).forEach(item => {
-                arrFn.push(item.fn())
-                arrData.push(item.data)
-            })
-            Promise.all(arrFn).then(res => {
-                res.forEach((item, index) => {
-                    arrData[index].dataType.specs.default = item.specs.default
-                })
-                value.inputData = getParams(arrData.splice(0, inputList.length))
-                value.outputData = getParams(arrData)
-                origin.content = value
-                sentReq(origin)
-            }).catch(res => {
-                Notification({
-                    description: `添加参数有误`,
-                    type: 'warn'
-                });
-            })
+            value.outputData = outputData
+            value.inputData = inputData
+            origin.content = value
+            sentReq(origin)
         })
     }
     useImperativeHandle(ref, () => ({
@@ -723,7 +678,9 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
     const [sentData, setSentData] = useState({})
     const [selectId, setSelectId] = useState(0)
     useEffect(() => {
-        onFinish()
+        if (selectId) {
+            onFinish()
+        }
     }, [selectId])
     const onFinish = () => {
         let parmas = {
@@ -731,14 +688,11 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
             type,
             unikey
         }
-        sentAddData({ fn: form.validateFields, unikey, data: sentData }, parmas)
+        sentAddData(sentData, parmas)
     }
     //选择功能点名称
     const setFormVal = (dataPointId) => {
         setSelectId(dataPointId)
-        form.setFieldsValue({
-            specs: { default: '' }
-        });
         standardDatas.forEach(item => {
             if (item.dataPointId == dataPointId) {
                 let dataType = {
@@ -776,44 +730,24 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                 <Form.Item label="数值范围">
                     <div className='number-input-wrap'>
                         <Form.Item
+                            name={['specs', 'min']}
                             noStyle
                         >
                             <span>{sentData.dataType.specs.min}&nbsp;  至&nbsp;  {sentData.dataType.specs.max}</span>
                         </Form.Item>
                     </div>
                 </Form.Item>
-
-                <Form.Item
-                    label="默认值"
-                    name={['specs', 'default']}
-                    rules={[
-                        {
-                            validator: (_, value) => {
-                                if (value) {
-                                    if (value >= sentData.dataType.specs.min && value <= sentData.dataType.specs.max) {
-                                        return Promise.resolve()
-                                    } else {
-                                        return Promise.reject(`默认值需在${sentData.dataType.specs.min}和${sentData.dataType.specs.max}之间`)
-                                    }
-                                } else {
-                                    return Promise.resolve()
-                                }
-
-                            }
-                        }
-                    ]}>
-                    <Input type='number' />
-                </Form.Item>
                 <Form.Item
                     label='数值间隔'
+                    name={['specs', 'interval']}
                 ><span>{sentData.dataType.specs.interval}</span></Form.Item>
-                <Form.Item label="倍数" >
+                <Form.Item name={['specs', 'multiple']} label="倍数" >
                     <span>{sentData.dataType.specs.multiple}</span>
                 </Form.Item>
-                <Form.Item label="单位" >
+                <Form.Item name={['specs', 'unit']} label="单位" >
                     <span>{sentData.dataType.specs.unit}</span>
                 </Form.Item>
-            </Form.Item >
+            </Form.Item>
         }
         if (sentData.dataType.dataTypCN == '布尔') {
             return (<>
@@ -822,18 +756,6 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                 >
                     <span>{'0：' + sentData.dataType.specs['0'] + ' - ' + '1：' + sentData.dataType.specs['1']}</span>
                 </Form.Item>
-                <Form.Item
-                    label="默认值"
-                    name={['specs', 'default']}
-                >
-                    <Select allowClear>
-                        {
-                            Object.keys(sentData.dataType.specs).map(item => (
-                                <Select.Option key={item} value={item}>{sentData.dataType.specs[item]}</Select.Option>
-                            ))
-                        }
-                    </Select>
-                </Form.Item>
             </>)
         }
         if (sentData.dataType.dataTypCN == '枚举') {
@@ -841,6 +763,7 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                 <>
                     <Form.Item
                         label="枚举型:"
+                        name="enumus_text"
                         className='enums-lise-nobottom'
                     ><span style={{ marginRight: '5px' }}>参数值</span>-<span style={{ marginLeft: '5px' }}>参数描述</span>
                     </Form.Item>
@@ -849,36 +772,15 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                         {
                             Object.keys(sentData.dataType.specs).map(item => {
                                 return <div key={item} style={{ display: 'flex' }}>
-                                    <div style={{ width: '40px' }}>{item}</div>
+                                    <div style={{ width: '30px' }}>{item}</div>
                                     <span style={{ marginRight: '10px' }}>-</span>
                                     <div>{sentData.dataType.specs[item]}</div>
                                 </div>
                             })
                         }
                     </div>
-                    <Form.Item
-                        label="默认值"
-                        name={['specs', 'default']}
-                    >
-                        <Select allowClear>
-                            {
-                                Object.keys(sentData.dataType.specs).map(item => (
-                                    <Select.Option key={item} value={item}>{sentData.dataType.specs[item]}</Select.Option>
-                                ))
-                            }
-                        </Select>
-                    </Form.Item>
                 </>
             )
-        }
-        if (sentData.dataType.dataTypCN == '字符') {
-            return <>
-                <Form.Item
-                    label="默认值"
-                    name={['specs', 'default']}
-                >
-                    <Input />
-                </Form.Item></>
         }
         return ''
     }
@@ -916,16 +818,19 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                     sentData.identifier && (<div>
                         <Form.Item
                             label="标识符"
+                            name='identifier'
                         ><span>{sentData.identifier}</span>
                         </Form.Item>
                         <Form.Item
                             label="数据类型"
+                            name='type'
                         >
                             <span>{sentData.dataType.dataTypCN}</span>
                         </Form.Item>
                         {getTypeDom()}
                         <Form.Item
                             label="数据传输类型"
+                            name="accessMode"
                         >
 
                             {
