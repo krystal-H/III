@@ -18,13 +18,169 @@ const Device = loadable(() => import('../device'));
 const DataSevice = loadable(() => import('../data-sevice'));
 const OrderHome = loadable(() => import('../repairOrder/home'));
 const Application = loadable(() => import('../product/application/Application.js'))
+const Project = loadable(() => import('../project'))
+
+// 有接口了menuList1这个要该回去的！！！！！
+const menuList1 = [
+    {
+        menuname: '总览',
+        path: '/open/home',
+        menuicon: 'zonglan',
+        menuid: '0'
+    }, {
+        menuname: '产品',
+        path: '/open/product',
+        menuicon: 'chanpin',
+        menuid: '1',
+        childmenus: [
+            {
+                menuname: '产品管理',
+                path: '/open/product/proManage',
+                menuid: '1-0',
+            },
+            {
+                menuname: '设备注册',
+                path: '/open/product/devRegist',
+                menuid: '1-1',
+            },
+            {
+                menuname: '固件升级',
+                path: '/open/product/otaUpdate',
+                menuid: '1-2',
+
+            },
+            {
+                menuname: '场景服务',
+                path: '/open/product/ruleEngine',
+                menuid: '1-3',
+            },
+            {
+                menuname: '云端定时',
+                path: '/open/product/cloudTimer',
+                menuid: '1-4',
+
+            },
+            {
+                menuname: '远程配置',
+                path: '/open/product/remoteCofig',
+                menuid: '1-5',
+            },
+        ]
+    }, {
+        menuname: '设备',
+        path: '/open/device',
+        menuicon: 'shebei',
+        menuid: '2',
+        childmenus: [
+            {
+                menuname: '设备管理',
+                path: '/open/device/devManage',
+                menuid: '2-0',
+
+            },
+            // {
+            //     menuname: '设备秘钥',
+            //     path: '/open/device/devSecret',
+            //     menuid:'2-1',
+            // },
+            {
+                menuname: '设备分组',
+                path: '/open/device/devGroup',
+                menuid: '2-2',
+
+            },
+            {
+                menuname: '设备消息',
+                path: '/open/device/devMsg',
+                menuid: '2-3',
+            }
+        ]
+    }, {
+        menuname: '应用',
+        path: '/open/app',
+        menuicon: 'app',
+        menuid: '3',
+        childmenus: [
+            {
+                menuname: '应用管理',
+                path: '/open/app',
+                menuid: '3-0',
+            },
+        ]
+    },
+    {
+        menuname: '数据',
+        path: '/open/serve',
+        menuicon: 'shujufw',
+        menuid: '4',
+        childmenus: [
+            {
+                menuname: '设备分析',
+                path: '/open/serve/device',
+                menuid: '4-0',
+
+            },
+            {
+                menuname: '用户分析',
+                path: '/open/serve/user',
+                menuid: '4-1',
+            },
+            {
+                menuname: '数据订阅',
+                path: '/open/serve/dataSub',
+                menuid: '4-2',
+
+            }
+        ]
+    },
+    {
+        menuname: '项目',
+        path: '/open/project',
+        menuicon: 'shujufw',
+        menuid: '5',
+        childmenus: [
+            {
+                menuname: '项目管理',
+                path: '/open/project/projectMgt',
+                menuid: '5-0',
+
+            },
+        ]
+    }
+    // {
+    //     menuname: '数据服务',
+    //     path: '/open/serve',
+    //     menuicon: 'shujufw',
+    //     menuid:'4',
+    // }
+    // {
+    //     menuname: '开发Studio',
+    //     path: '/open/studio',
+    //     menuicon: 'studio',
+    //     menuid:'5',
+    //     childmenus: [
+    //         {
+    //             menuname: '项目管理',
+    //             path: '/open/studio/project',
+    //             menuid:'5-0',
+
+    //         },
+    //         {
+    //             menuname: '服务开发',
+    //             path: '/open/studio/serve',
+    //             menuid:'5-1',
+    //         }
+    //     ]
+    // }
+]
 
 const RouteComponentLi = {
     '总览': Overview,
     '产品': Product,
     '设备': Device,
-    'APP': Application,
-    '数据服务': DataSevice,
+    '应用': Application,
+    '数据': DataSevice,
+    '项目': Project
     // '开发Studio': , 暂时取消 开发Studio 20210810
 }
 const RepairOrder = [{
@@ -71,7 +227,7 @@ export default class Open extends Component {
         }
     }
     render() {
-        const { developerInfo, newMessageNums, menulist} = this.props;
+        const { developerInfo, newMessageNums, menulist } = this.props;
         const { collapsed } = this.state;
         return (
             <OutsideWrapper>
@@ -110,7 +266,7 @@ export default class Open extends Component {
                                 } */}
 
                                 {
-                                    menulist.map(({
+                                    menuList1.map(({
                                         menuname, path, ...rest
                                     }, index) => {
                                         const RouteComponent = RouteComponentLi[menuname];
@@ -126,7 +282,7 @@ export default class Open extends Component {
                                         compo, path
                                     }, index) => {
                                         return <Route key={index} path={path}
-                                        component={compo}
+                                            component={compo}
                                         ></Route>
                                     })
                                 }
