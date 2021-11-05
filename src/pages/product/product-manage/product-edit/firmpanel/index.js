@@ -25,18 +25,15 @@ function confirmModel({ nextStep }, ref) {
     const [showTip, setShowTip] = useState(false)
     //获取最近发布的数据
     const [shoaLast, setShoaLast] = useState({})
-    const getList = (loading = true) => {
+    const getList = () => {
         let productId = 0
         if (sessionStorage.getItem('productItem')) {
             productId = JSON.parse(sessionStorage.getItem('productItem')).productId
         }
-        post(Paths.panelList, { productId }, { loading }).then((res) => {
+        post(Paths.panelList, { productId }).then((res) => {
             let data = res.data.list
             let lastEst = {}
-            if (!data.length) {
-                setShoaLast(lastEst)
-                return 
-            }
+            if (!data.length) return;
             lastEst = data[0]
             data.forEach(item => {
                 if (item.verifyStatus == 1) {
@@ -67,7 +64,7 @@ function confirmModel({ nextStep }, ref) {
         post(Paths.modelRel, params).then((res) => {
             Notification({
                 type: 'success',
-                description: '提交成功！'
+                description: '提交发布成功！'
             })
             setActionVis(false)
             getList()
@@ -90,7 +87,6 @@ function confirmModel({ nextStep }, ref) {
     }
     //取消
     const closeAction = () => {
-        getList()
         setActionVis(false)
     }
     //删除
@@ -165,8 +161,11 @@ function confirmModel({ nextStep }, ref) {
     const CancelRel = () => {
         setRelPanVis(false)
     }
-    //关闭发布
     const closeOkRel = () => {
+        Notification({
+            type: 'success',
+            description: '发布成功！'
+        })
         getList()
         setRelPanVis(false)
     }
@@ -174,16 +173,20 @@ function confirmModel({ nextStep }, ref) {
     const [isChangeModalVisible, setIsChangeModalVisible] = useState(false);
     const CancelChange = () => {
         setDefaultTab('1')
-        getList()
         setIsChangeModalVisible(false)
     }
     const openChangeTab = (val) => {
+        // if (val == 1) {
+        //     console.log(JSON.parse(sessionStorage.getItem('productItem')), '=====')
+        //     if (JSON.parse(sessionStorage.getItem('productItem')).schemeName != '免开发方案'){
+        //         return
+        //     }
+        // }
         setDefaultTab(val)
         setIsChangeModalVisible(true)
     }
     const closeChange = () => {
         setDefaultTab('1')
-        getList()
         setIsChangeModalVisible(false)
     }
     const openChange = () => {
@@ -278,8 +281,7 @@ function confirmModel({ nextStep }, ref) {
                 <div className='confirm-pannel-content-right'>
                     <div>请使用“数联智能”App，扫描以下二维码，体验此面板。</div>
                     <div className='model-panal-code'>
-                        {!shoaLast.qrcode && <div className='no-panal-img'>提示：需上传H5后生成二维码</div>}
-                        { shoaLast.qrcode && <img src={shoaLast.qrcode} alt='' />} 
+                        <img src={shoaLast.qrcode } alt='' />
                     </div>
                     <div>
                         还没安装App？

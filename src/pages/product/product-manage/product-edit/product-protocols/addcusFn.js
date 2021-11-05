@@ -6,6 +6,7 @@ import { Notification } from '../../../../../components/Notification';
 import './editInfo.scss'
 import { unitCollection, multipleCollection } from '../../../../../configs/text-map';
 import { cloneDeep } from 'lodash'
+import { async } from '_rxjs@6.6.7@rxjs';
 //tab
 const optionsWithDisabled = [
     { label: '属性', value: 'properties' },
