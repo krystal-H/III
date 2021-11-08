@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Table, Divider, Select, Steps, Input, Form } from 'antd'
-import {  useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { DateTool, addKeyToTableData } from '../../../../util/util'
 import PageTitle from '../../../../components/page-title/PageTitle'
 import { cloneDeep } from 'lodash'
 import { Paths, post, get } from '../../../../api'
-import { Notification } from '../../../../components/Notification'
+import CreateProject from '../project-add'
 import './list.scss'
 
 const { Search } = Input
 let testData = [{}]
 function ProjectList() {
-  const history = useHistory();
+  const history = useHistory()
+  const [projectName, setProjectName] = useState('')
   const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
+  const [createModal, setCreateModal] = useState(false) // 创建项目
+  const [opeType, setOpeType] = useState('add')
+  const [editData, setEditData] = useState({})
+  const [dataSource, setDataSource] = useState([])
 
   const PageColumns = [
     {
@@ -38,24 +43,54 @@ function ProjectList() {
     {
       title: '操作',
       key: 'action',
-      render: (text, record) => {
-        return <span onClick={() => { goDetail(record) }}>详情</span>
-      },
+      width: 200,
+      render: (text, record) => (
+        <div className="operation">
+          <a onClick={() => addOrEditProject(record, 'edit')}>编辑</a>
+          <Divider type="vertical" />
+          <a onClick={() => goDetail(record)}>查看详情</a>
+        </div>
+      )
     }
   ]
-  //详情
-  const goDetail = () => {
-    history.push(`/open/project/projectManage/detail/20?step=1`);
+
+  // 获取列表数据
+  const getTableList = () => {
+    let params = {
+      projectName,
+      ...pager
+    }
+    // post(Paths.ccc, params, { loading: true }).then(res => {
+    //   setDataSource(addKeyToTableData(res.data.list))
+    // })
   }
+
+  useEffect(() => {
+    getTableList()
+  }, [pager.pageIndex, pager.pageRows, projectName]) // eslint-disable-line react-hooks/exhaustive-deps
+
   // 翻页
   const pagerChange = (pageIndex, pageRows) => {
     setPager(pre => {
       return Object.assign(cloneDeep(pre), { pageIndex: pageRows === pager.pageRows ? pageIndex : 1, pageRows })
     })
   }
+
   // 查询项目
   const searchProject = (val) => {
+    setProjectName(val)
+  }
 
+  // 创建/编辑项目
+  const addOrEditProject = (record, type) => {
+    setCreateModal(true)
+    setOpeType(type)
+    setEditData(type === 'add' ? {} : record)
+  }
+
+  //查看详情
+  const goDetail = () => {
+    history.push(`/open/project/projectManage/detail/20?step=1`);
   }
 
   return (
@@ -70,7 +105,7 @@ function ProjectList() {
             style={{ width: 465, margin: '0 22px' }} />
         </div>
         <div className="page-header-right">
-          <Button type="primary">创建项目</Button>
+          <Button type="primary" onClick={() => addOrEditProject('', 'add')}>创建项目</Button>
         </div>
       </div>
       {/* table */}
@@ -91,8 +126,21 @@ function ProjectList() {
           }}
         />
       </div>
-
-    </div>
+      {/* 创建、编辑 */}
+      {
+        createModal &&
+        <CreateProject
+          opeType={opeType}
+          editData={editData}
+          visible={createModal}
+          handleCancel={() => setCreateModal(false)}
+          handleOk={() => {
+            setCreateModal(false)
+            getTableList()
+          }}>
+        </CreateProject>
+      }
+    </div >
   )
 }
 
