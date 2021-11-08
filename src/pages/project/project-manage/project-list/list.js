@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Table, Divider, Select, Steps, Input, Form } from 'antd'
+import {  useHistory } from 'react-router-dom';
 import { DateTool, addKeyToTableData } from '../../../../util/util'
 import PageTitle from '../../../../components/page-title/PageTitle'
 import { cloneDeep } from 'lodash'
@@ -8,8 +9,9 @@ import { Notification } from '../../../../components/Notification'
 import './list.scss'
 
 const { Search } = Input
-
+let testData = [{}]
 function ProjectList() {
+  const history = useHistory();
   const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
 
   const PageColumns = [
@@ -36,9 +38,15 @@ function ProjectList() {
     {
       title: '操作',
       key: 'action',
+      render: (text, record) => {
+        return <span onClick={() => { goDetail(record) }}>详情</span>
+      },
     }
   ]
-
+  //详情
+  const goDetail = () => {
+    history.push(`/open/project/projectManage/detail/20?step=1`);
+  }
   // 翻页
   const pagerChange = (pageIndex, pageRows) => {
     setPager(pre => {
@@ -47,7 +55,7 @@ function ProjectList() {
   }
   // 查询项目
   const searchProject = (val) => {
-    
+
   }
 
   return (
@@ -70,7 +78,7 @@ function ProjectList() {
         <Table columns={PageColumns}
           className="ant-table-fixed"
           rowKey="taskId"
-          dataSource={[]}
+          dataSource={testData}
           pagination={{
             defaultCurrent: 1,
             current: pager.pageIndex,

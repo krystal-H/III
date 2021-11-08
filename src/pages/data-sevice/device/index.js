@@ -62,10 +62,11 @@ export default function Device() {
         // if (!dates || dates.length === 0) {
         //     return false;
         // }
-        const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
-        const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
-        const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
-        return isBeyong || tooEarly || tooLate
+        // const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
+        // const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
+        // const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
+        // return isBeyong || tooEarly || tooLate
+        return current && current > dayjs().subtract(1, 'day') || current < dayjs().subtract(30, 'day')
     };
     const [selectType, setSelectType] = useState(0) //产品种类
     //产品改变
