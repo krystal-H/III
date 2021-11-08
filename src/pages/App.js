@@ -8,17 +8,11 @@ import store from '../store';
 import {mainRoutes,RouteWithSubRoutes} from '../configs/route.config';
 import GuideToLogin from '../pages/user-center/guide-to-login/GuideToLogin';
 import Loading from '../components/loading/Loading';
+import CustomerService from './customerService';
 
 import './App.scss';
 
 export default class App extends Component {
-    getParentNode (trigger) {
-        if (trigger) {
-            return trigger.parentNode
-        }
-
-        return document.body
-    }
 
     componentDidCatch(error, info) {
         console.log('Error::::', error);
@@ -55,9 +49,11 @@ export default class App extends Component {
                                 })
                             }
                         </Switch>
+                        {/* <CustomerService /> */}
                         <GuideToLogin></GuideToLogin>
                     </Router>
                 </Provider>
+                
             </ConfigProvider>
         )
     }
