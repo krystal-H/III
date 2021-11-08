@@ -59,6 +59,9 @@
         &.studio{
             background-image: url(../../../assets/images/icon/studio.png);
         }
+        &.project{
+            background-image: url(../../../assets/images/icon/project.jpg);
+        }
     }
     .ant-menu-item-selected,.ant-menu-submenu-selected{
         .selficon.zonglan{
@@ -78,6 +81,12 @@
         }
         .selficon.studio{
             background-image: url(../../../assets/images/icon/cur-studio.png);
+        }
+        .selficon.studio{
+            background-image: url(../../../assets/images/icon/cur-studio.png);
+        }
+        .selficon.project{
+            background-image: url(../../../assets/images/icon/cur-project.jpg);
         }
     }
 }
