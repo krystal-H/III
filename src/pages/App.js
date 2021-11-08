@@ -49,7 +49,7 @@ export default class App extends Component {
                                 })
                             }
                         </Switch>
-                        {/* <CustomerService /> */}
+                        <CustomerService />
                         <GuideToLogin></GuideToLogin>
                     </Router>
                 </Provider>
