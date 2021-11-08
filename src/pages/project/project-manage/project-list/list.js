@@ -74,7 +74,7 @@ function ProjectList() {
         </div>
       </div>
       {/* table */}
-      <div className='comm-shadowbox'>
+      <div className="comm-shadowbox pd22">
         <Table columns={PageColumns}
           className="ant-table-fixed"
           rowKey="taskId"
