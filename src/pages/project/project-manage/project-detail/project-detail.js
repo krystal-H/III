@@ -8,6 +8,8 @@ import { post, Paths, get } from '../../../../api';
 import PageTitle from '../../../../components/page-title/PageTitle';
 import { useHistory } from 'react-router-dom';
 import { Tabs } from 'antd';
+import './project-detail.scss'
+
 const { TabPane } = Tabs;
 
 export default function DeviceInfo({ match }) {
