@@ -1,0 +1,73 @@
+#device-detail {
+  .device-top-name {
+    width: 100px;
+    height: 28px;
+    font-size: 20px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.85);
+    line-height: 28px;
+  }
+
+  .device-top {
+    display: flex;
+    margin-top: 20px;
+
+    .device-top-item {
+      margin-right: 86px;
+      display: flex;
+      align-items: center;
+
+      .device-label {
+        height: 17px;
+        font-size: 12px;
+        font-weight: 400;
+        color: #323232;
+        line-height: 17px;
+      }
+
+      .device-text {
+        height: 17px;
+        font-size: 12px;
+        font-weight: 400;
+        color: #666666;
+        line-height: 17px;
+      }
+
+      .device-status {
+        border: 1px solid #D8DBE3;
+        padding: 3px 4px;
+        font-weight: 400;
+        color: #8E9197;
+        font-size: 12px;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .device-content {
+
+    // .ant-tabs-nav-wrap {
+    //   padding: 0 22px;
+    //   height: 60px;
+    //   .ant-tabs-tab-btn{
+    //     font-weight: 400;
+    //     color: #666666;
+    //   }
+    //   .ant-tabs-tab-active .ant-tabs-tab-btn{
+    //     font-weight: 500;
+    //     color: #2F78FF;
+    //   }
+    //   .ant-tabs-ink-bar{
+    //       background-color: #2F78FF;
+    //   }
+    //   .ant-tabs-tab + .ant-tabs-tab {
+    //       margin-left: 52px;
+    //   }
+    // }
+    .ant-tabs-content {
+      // padding: 6px 22px;
+      min-height: calc(100vh - 300px);
+    }
+  }
+}

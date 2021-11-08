@@ -138,7 +138,7 @@ export const navRoutes = [
     {
         menuname: '项目',
         path: '/open/project',
-        menuicon: 'shujufw',
+        menuicon: 'project',
         menuid: '5',
         childmenus: [
             {
