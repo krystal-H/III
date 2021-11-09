@@ -1,4 +1,4 @@
-#device-detail {
+.project-detail-page {
   .device-top-name {
     width: 100px;
     height: 28px;
@@ -68,6 +68,11 @@
     .ant-tabs-content {
       // padding: 6px 22px;
       min-height: calc(100vh - 300px);
+    }
+  }
+  .api-tab-style {
+    .ant-tabs-content {
+      padding: 0;
     }
   }
 }

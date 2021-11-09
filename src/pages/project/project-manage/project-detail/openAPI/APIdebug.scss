@@ -1,0 +1,45 @@
+@charset 'utf-8';
+
+.API-debug {
+  height: 100%;
+  max-height: 100%;
+  overflow: auto;
+  @include flex(space-between, flex-start);
+
+  &-left {
+    width: 300px;
+    height: 100%;
+    margin: 0 10px 0 0px;
+    padding: 0 10px 10px 10px;
+  }
+
+  &-center {
+    width: 320px;
+    margin-right: 10px;
+    padding: 0 10px 10px 10px;
+    border: 1px solid lightblue;
+  }
+
+  &-right {
+    flex: 1;
+    border: 1px solid lightpink;
+  }
+
+  .clickRowStyl {
+    background: rgba(47, 120, 255, 0.1);
+    color: #2F78FF;
+  }
+
+  .ant-table-tbody>.clickRowStyl:hover>td {
+    background: rgba(47, 120, 255, 0.1);
+    color: #2F78FF;
+  }
+
+  .ant-table-thead>tr>th,
+  .ant-table-tbody>tr>td,
+  .ant-table tfoot>tr>th,
+  .ant-table tfoot>tr>td {
+    padding: 10px 12px;
+    cursor: pointer;
+  }
+}

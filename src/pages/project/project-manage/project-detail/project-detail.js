@@ -13,6 +13,7 @@ import './project-detail.scss'
 const { TabPane } = Tabs
 
 export default function DeviceInfo({ match }) {
+    const [curStep, setCurStep] = useState('1')
     let history = useHistory();
     const stepS = useMemo(() => {
         let step = getUrlParam('step') || '1'
@@ -20,6 +21,7 @@ export default function DeviceInfo({ match }) {
     }, [])
     const devceId = match.params.id
     const tabCallback = value => {
+        setCurStep(value)
         history.push(`${match.url}?step=${value}`)
     }
     const [baseInfo, setBaseInfo] = useState({})
@@ -29,7 +31,13 @@ export default function DeviceInfo({ match }) {
         //     setBaseInfo(res.data.list[0])
         // });
     }, [devceId])
-    return (<div id='device-detail'>
+
+    // 为了判断openAPI  tab样式
+    useEffect(() => {
+        if (stepS === '2') setCurStep('2')
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+    return (<div className='project-detail-page'>
         <PageTitle backTitle='XXX' backHandle={() => { history.push('/open/project/projectManage/list') }}>
             <div className='device-top'>
                 <div className='device-top-item'><label className='device-label'>项目ID：</label><span className='device-text'></span>123123132131</div>
@@ -37,7 +45,7 @@ export default function DeviceInfo({ match }) {
                 <div className='device-top-item'><label className='device-label'>更新时间：</label><span className='device-text'>{baseInfo.productType}</span></div>
             </div>
         </PageTitle>
-        <div className='comm-shadowbox common-tab device-content'>
+        <div className={`comm-shadowbox common-tab device-content ${curStep === '2' ? 'api-tab-style' : ''} `}>
             <Tabs defaultActiveKey={stepS} onChange={tabCallback}>
                 <TabPane key={'1'} tab={'概述'}>
                     <Overview devceId={baseInfo.deviceId} />
