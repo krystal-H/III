@@ -1,0 +1,28 @@
+@charset 'utf-8';
+
+.device-info-wrap {
+  .top-but {
+    text-align: right;
+  }
+
+  .filter {
+    .ant-form-item {
+      padding: 20px 0;
+      margin-right: 40px;
+    }
+  }
+
+  .content {
+    .action {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.page-apilist {
+  .api-tab {
+    .ant-tabs-content {
+      padding: 6px 22px;
+    }
+  }
+}
