@@ -5,6 +5,25 @@ import './index.scss';
 import store from '../../store';
 import {showCustomerService} from './store/reducer'
 
+
+let hostname = location.hostname;
+if( hostname =='localhost' ){
+    hostname = 'dp.clife.net'
+
+}
+let ws = null, //保存websocket连接
+    wsTimer = null; //websocket心跳连接定时器，页面销毁时，需要同时销毁定时器
+
+// 如果存在连接的ws, 关闭，并置空（下次启动是新的连接） 
+const closeWebsocket = ()=>{
+    if(ws){
+        ws.close();
+        ws = null;
+    }
+    clearInterval(wsTimer);
+}
+
+
 const mapStateToProps = state => {
     return {
         showMod: state.getIn(['customerService', 'showCustomerService'])
@@ -14,14 +33,56 @@ function CustomerService({
     showMod  
 }) {
     useEffect(() => {
+
+        // newWebSocket();
        
     }, [])
+    const [wsConnect, setWsConnect] = useState(false)
+    const [inputValue, setInputValue] = useState("")
+
+    //建立 ws 连接
+    const newWebSocket = ()=> {
+
+        ws = new WebSocket(`wss://${hostname}/v5x/web/open/tech/support/ws`);
+        ws.onopen = ()=> {//连接成功
+            console.log("---连接成功----")
+            setWsConnect(true)
+            clearInterval(wsTimer);
+            wsTimer = setInterval(()=>{ ws.send('') }, 10000); //告诉服务器“请保持联系”
+            
+
+            let sendMsg  = {type:1,message:'1qweqweqweqwe'}
+            ws.send(JSON.stringify(sendMsg));
+
+        };
+        ws.onmessage =  (data)=> {//接收到消息
+
+            console.log('--get--',data)
+            
+        };
+        ws.onclose = (e) =>{//检测到断开连接
+            console.log("---断开连接----",wsConnect)
+            clearInterval(wsTimer);
+            ws = null;
+            if ( wsConnect && e.code == '1006') {//如果异常断开，尝试重连
+                setTimeout(newWebSocket,5000);
+            }
+            setWsConnect(false)
+            
+        }
+    }
    
-    const [a, setA] = useState([])
+    
 
     const switchOpen=()=>{
         let newShow = !showMod;
         store.dispatch(showCustomerService(newShow));
+        if(newShow && !ws){//开启连接
+            newWebSocket();
+        }else{//关闭连接
+            closeWebsocket()
+
+        }
     }
     
   
