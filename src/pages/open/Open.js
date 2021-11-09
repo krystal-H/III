@@ -8,10 +8,10 @@ import { getNewMessageNums } from '../message-center/store/ActionCreator';
 import OutsideWrapper from '../../components/outside-wrapper/OutsideWrapper';
 import Header from './header/Header';
 import NavMenu from './nav-menu/NavMenu';
+import CustomerService from '../customerService';
 import { MenuUnfoldOutlined, MenuFoldOutlined, } from '@ant-design/icons';
+
 // 模块懒加载
-// const BigDataProduct = loadable( () => import('../big-data-product/BigDataProduct'));
-// const DevelopCenter = loadable( () => import('../develop-center/DevelopCenter'));
 const Overview = loadable(() => import('../home/overview/index'));
 const Product = loadable(() => import('../product'));
 const Device = loadable(() => import('../device'));
@@ -144,6 +144,7 @@ export default class Open extends Component {
                         </div>
                     </section>
                 </div>
+                <CustomerService />
             </OutsideWrapper>
         )
     }

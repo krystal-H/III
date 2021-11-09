@@ -6,6 +6,8 @@ import {
     RightOutlined,
 } from '@ant-design/icons';
 import { post, Paths, get } from '../../../api';
+import store from '../../../store';
+import {showCustomerService} from '../../customerService/store/reducer'
 import moment from 'moment';
 import AddProductModal from '../../product/product-manage/addProduct/addProduct'
 import { Notification } from './../../../components/Notification';
@@ -575,7 +577,7 @@ export default function OverviewWrap() {
                             <div>帮助</div>
                         </div>
                         <div className='over-view-help hover-commons-unite'>
-                            <div onClick={() => { setShowTip(true) }}>
+                            <div onClick={() => { store.dispatch(showCustomerService(true)); }}>
                                 <img src={help1} alt='' />
                                 <div>客服</div>
                             </div>
