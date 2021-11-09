@@ -8,9 +8,9 @@ import './index.scss'
 const { Search } = Input;
 export default function Grouping() {
     const [actionData, setActionData] = useState({})
-    const [deletevisible,setDeletevisible]=useState(false)
-    const [infoVis,setInfoVis]=useState(false)
-    const [addVis,setAddVis]=useState(false)
+    const [deletevisible, setDeletevisible] = useState(false)
+    const [infoVis, setInfoVis] = useState(false)
+    const [addVis, setAddVis] = useState(false)
     const onSearch = value => {
 
     };
@@ -64,13 +64,13 @@ export default function Grouping() {
         },
     ];
     //打开新增
-    const openAdd=()=>{
+    const openAdd = () => {
         setAddVis(true)
     }
-    const closeAdd=()=>{
+    const closeAdd = () => {
         setAddVis(false)
     }
-    const refreshAdd=()=>{
+    const refreshAdd = () => {
         setAddVis(false)
     }
     //打开详情
@@ -79,20 +79,20 @@ export default function Grouping() {
         setInfoVis(true)
     }
     //取消详情
-    const closeAction=()=>{
+    const closeAction = () => {
         setInfoVis(false)
     }
     //确定详情
-    const closeSub=()=>{
+    const closeSub = () => {
         setInfoVis(false)
     }
     //打开删除
-    const openDel=(data)=>{
+    const openDel = (data) => {
         setActionData(data)
         setDeletevisible(true)
     }
     //确定删除
-    const deletelOKHandle=()=>{
+    const deletelOKHandle = () => {
 
     }
     return (<div id='project-grouping'>
@@ -111,24 +111,24 @@ export default function Grouping() {
             <Table dataSource={dataSource} columns={columns} />
         </div>
         {
-                deletevisible &&
-                <ActionConfirmModal
-                    visible={deletevisible}
-                    modalOKHandle={deletelOKHandle}
-                    modalCancelHandle={() => setDeletevisible(false)}
-                    targetName={actionData.taskName}
-                    title={'删除分组'}
-                    needWarnIcon={true}
-                    descText={'即将删除的分组'}
-                    tipText={'删除的信息，无法找回，请谨慎操作'}
-                >
-                </ActionConfirmModal>
-            }
-            {
-                infoVis && <InfoDia ModalVisible={infoVis} onCancel={closeAction} closeOk={closeSub}/>
-            }
-            {
-                addVis && <AddDia ModalVisible={addVis} onCancel={closeAdd} closeOk={refreshAdd}/>
-            }
+            deletevisible &&
+            <ActionConfirmModal
+                visible={deletevisible}
+                modalOKHandle={deletelOKHandle}
+                modalCancelHandle={() => setDeletevisible(false)}
+                targetName={actionData.taskName}
+                title={'删除分组'}
+                needWarnIcon={true}
+                descText={'即将删除的分组'}
+                tipText={'删除的信息，无法找回，请谨慎操作'}
+            >
+            </ActionConfirmModal>
+        }
+        {
+            infoVis && <InfoDia ModalVisible={infoVis} onCancel={closeAction} closeOk={closeSub} />
+        }
+        {
+            addVis && <AddDia ModalVisible={addVis} onCancel={closeAdd} closeOk={refreshAdd} />
+        }
     </div>)
 }
