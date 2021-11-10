@@ -8,8 +8,8 @@
   background-color:#fff;
   width: 600px;
   height: 500px;
-  right: 200px;
-  bottom: 300px;
+  right: 20px;
+  bottom: 30px;
   .tit{
     height: 48px;
     line-height: 48px;
@@ -42,6 +42,7 @@
         padding: 10px 16px;
         border-radius: 8px;
         line-height: 20px;
+        word-wrap: break-word;
       }
       &::before{
         position: absolute;
