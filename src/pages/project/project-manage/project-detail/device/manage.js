@@ -3,7 +3,6 @@ import { Modal, Button, Tabs, Table, Input, Select, Divider, Form } from 'antd';
 import { post, Paths } from '../../../../../api';
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal'
 import FileModel from './importFile'
-import { data } from '_browserslist@4.16.6@browserslist';
 export default function InfoModal() {
     const [form] = Form.useForm();
     const [typelist, setTypelist] = useState([])

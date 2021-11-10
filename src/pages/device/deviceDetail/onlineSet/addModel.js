@@ -137,8 +137,8 @@ export default function AddModel({ addVisible, addOk, CancelAdd ,deviceId}) {
                 value={record.sendData}
                 onChange={value => changeSendData(value, index)}>
                 {
-                  Object.values(specs) && Object.values(specs).map((item, index) => (
-                    <Option key={index + item} value={item}>{item}</Option>
+                  Object.keys(specs) && Object.keys(specs).map((item, index) => (
+                    <Option key={index + item} value={item}>{specs[item]}</Option>
                   ))
                 }
               </Select>
