@@ -6,39 +6,99 @@
   overflow: auto;
   @include flex(space-between, flex-start);
 
+  // 左
   &-left {
-    width: 300px;
+    width: 25%;
     height: 100%;
     margin: 0 10px 0 0px;
     padding: 0 10px 10px 10px;
   }
-
+  // 中
   &-center {
-    width: 320px;
+    width: 33%;
+    height: 100%;
     margin-right: 10px;
-    padding: 0 10px 10px 10px;
-    border: 1px solid lightblue;
-  }
+    .title {
+      padding: 0 10px;
+      background: #fafafa;
+      @include text(14px, #323232);
+    }
+    .cont {
+      padding: 0 10px 10px 10px;
 
+      .params-box {
+        .submit-btn {
+          width: 100%;
+          text-align: right;
+        }
+      }
+    }
+  }
+  // 右
   &-right {
     flex: 1;
-    border: 1px solid lightpink;
+    padding-right: 10px;
+    .tip-desc {
+      padding: 10px;
+      padding-left: 16px;
+      display: flex;
+      @include text(14px, #1890ff);
+      background: #e6f7ff;
+      border-radius: 4px;
+      border: 1px solid #bae7ff;
+      .icon {
+        width: 14px;
+        padding-top: 3px;
+      }
+      .tip-text {
+        flex: 1;
+        margin-left: 8px;
+        @include text(12px, rgba(0, 0, 0, 0.65));
+      }
+    }
+
+    .right-bar {
+      padding: 0 16px 16px 16px;
+      border: 1px solid #e9e9e9;
+      margin-top: 20px;
+      border-radius: 4px;
+      @include text(14px, #666666);
+      &-title {
+        border-bottom: 1px solid #e9e9e9;
+        @include flex();
+        .copy {
+          color: #2874ff;
+          cursor: pointer;
+        }
+      }
+      &-cont {
+        padding-top: 15px;
+      }
+    }
+  }
+
+  .line40 {
+    line-height: 40px;
+  }
+
+  .bold {
+    font-weight: bold;
   }
 
   .clickRowStyl {
     background: rgba(47, 120, 255, 0.1);
-    color: #2F78FF;
+    color: #2f78ff;
   }
 
-  .ant-table-tbody>.clickRowStyl:hover>td {
+  .ant-table-tbody > .clickRowStyl:hover > td {
     background: rgba(47, 120, 255, 0.1);
-    color: #2F78FF;
+    color: #2f78ff;
   }
 
-  .ant-table-thead>tr>th,
-  .ant-table-tbody>tr>td,
-  .ant-table tfoot>tr>th,
-  .ant-table tfoot>tr>td {
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td,
+  .ant-table tfoot > tr > th,
+  .ant-table tfoot > tr > td {
     padding: 10px 12px;
     cursor: pointer;
   }
