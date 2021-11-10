@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import { Carousel, Button, Modal } from 'antd';
+import { Carousel, Button,Modal } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
@@ -231,11 +231,7 @@ export default function OverviewWrap() {
             }
             // 保存当前产品，为后边继续开发取数据使用
             sessionStorage.setItem('productItem', JSON.stringify(record))
-            // history.push(`/open/product/proManage/${pathroute}/${record.productId}`);
-            sessionStorage.setItem("stepnum", record.step - 1)
-            history.push({
-                pathname: `/open/product/proManage/${pathroute}/${record.productId}`,
-            });
+            history.push(`/open/product/proManage/${pathroute}/${record.productId}`);
         } else {
             Notification({
                 description: '无权限！',
@@ -284,7 +280,7 @@ export default function OverviewWrap() {
         }
     }
     //未开发
-    const [showTip, setShowTip] = useState(false)
+    const [showTip,setShowTip]=useState(false)
     return (
         <div className='over-view'>
             {
@@ -575,7 +571,7 @@ export default function OverviewWrap() {
                             <div>帮助</div>
                         </div>
                         <div className='over-view-help hover-commons-unite'>
-                            <div onClick={() => { setShowTip(true) }}>
+                            <div onClick={()=>{setShowTip(true)}}>
                                 <img src={help1} alt='' />
                                 <div>客服</div>
                             </div>

@@ -29,10 +29,6 @@
     display: flex;
     justify-content: center;
 
-    .pannel-cover-image {
-      border: 1px dotted #999;
-    }
-
     >div {
       &:nth-child(1) {
         width: 247px;
@@ -40,13 +36,11 @@
         background: #F8F9FB;
         border-radius: 4px;
         position: relative;
-
-        img {
+        img{
           height: 100%;
           width: 100%;
         }
-
-        div {
+        div{
           position: absolute;
           left: 0;
           top: 0;
@@ -90,21 +84,11 @@
           justify-content: center;
 
           .model-panal-code {
-            img {
+            img{
               width: 114px;
               height: 114px;
             }
-            .no-panal-img{
-              width: 114px;
-              height: 114px;
-              border: 1px dotted #999;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              text-align: center;
-              color: #999;
-              font-size: 12px;
-            }
+            
           }
 
           >div {
@@ -197,12 +181,10 @@
     }
   }
 }
-
-.down-office-modal {
+.down-office-modal{
   text-align: center;
   padding-bottom: 30px;
-
-  img {
+  img{
     width: 80%;
   }
 }

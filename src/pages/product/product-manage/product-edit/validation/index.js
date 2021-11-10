@@ -265,10 +265,10 @@ function Validation({ productId,developerInfo,refInstance }) {
                         </div>
                     </div>
                 </TabPane>
-                <TabPane tab="虚拟设备调试" key="2">
+                {/* <TabPane tab="虚拟设备调试" key="2">
                     <Simulat productId={productId} serverIp={serverIp}/>
                     
-                </TabPane>
+                </TabPane> */}
             </Tabs>
         </div>
         <History historyVisiable={historyVisiable} openHistory={openHistory} />
