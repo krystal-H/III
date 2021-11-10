@@ -24,10 +24,6 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
   const getNetDataByProductId = () => {
     post(Paths.getNetDataByProductId, { productId })
       .then(res => {
-        // ssid和广播名共用一个字段 radiocastName   但是ssid时需要有个默认值CLIFE
-        if (!res.data.radiocastName && res.data.bindTypeId === 1 && res.data.baseTypeId === 1) { // 为了有个默认值
-          res.data.radiocastName = 'CLIFE'
-        }
         setNetData(res.data)
         setBaseTypeId(res.data.baseTypeId)
         // form.resetFields()
@@ -139,15 +135,8 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
           form={form}
           labelAlign="left"
           onFinish={onFinish}
-          // labelCol={{ span: 5 }}
           wrapperCol={{ span: 19 }}
-          initialValues={{
-            // baseTypeId: netData.baseTypeId || '',
-            // radiocastName: netData.radiocastName || '',
-            // guidePage: netData.guidePage || '',
-            // bindFailPage: netData.bindFailPage || '',
-            // imageUrlList: netData.imageUrlList || []
-          }}>
+          >
           <div className="network-info-modal-title">配网方式</div>
           <Form.Item
             label="已选通信协议">
@@ -161,18 +150,15 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
           {/* 通信是WIFI 且是WIFI AP配网方式*/}
           {
             (netData.bindTypeId === 1 && baseTypeId === 1) &&
-            <Form.Item label="AP-SSID" name="ssid">
+            <Form.Item label="AP-SSID" name="radiocastName">
               <span>{netData.radiocastName || '-'}</span>
             </Form.Item>
           }
           {/* 通信是wifi且是smartLink配网方式 或者 通信方式是蓝牙 */}
           {
             ((netData.bindTypeId === 1 && baseTypeId === 3) || (netData.bindTypeId === 2)) &&
-            <Form.Item
-              label="广播名"
-              name="radiocastName"
-              rules={[{ required: true, message: '请输入广播名！' }]}>
-              <Input maxLength={50} style={{ width: 380 }} />
+            <Form.Item label="广播名" name="radiocastName">
+              <span>{netData.radiocastName || '-'}</span>
             </Form.Item>
           }
           {/* WIFI或蓝牙 才需配置图片 */}
@@ -184,7 +170,6 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
                 <Form.Item
                   label="默认联网指引"
                   name="guidePage"
-                  // labelCol={{ span: 10 }}
                   wrapperCol={{ span: 10 }}
                   className="upload-img">
                   {
@@ -210,7 +195,6 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
                 <Form.Item
                   label="默认联网失败提示"
                   name="bindFailPage"
-                  // labelCol={{ span: 10 }}
                   wrapperCol={{ span: 10 }}
                   className="upload-img">
                   {
@@ -238,7 +222,6 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
                 label="图片轮播帮助信息"
                 name="imageUrlList"
                 className="upload-img"
-                // labelCol={{ span: 5 }}
                 wrapperCol={{ span: 20 }}>
                 {
                   <UploadFileHooks
