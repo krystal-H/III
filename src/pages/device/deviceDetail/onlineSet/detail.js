@@ -70,7 +70,14 @@ export default function AddModel({ detailVis, onCancel, actionData }) {
             title: '下发数据',
             dataIndex: 'sendData',
             key: 'sendData',
-            width: 180
+            width: 180,
+            render: (text, record) => {
+                if (record.dataType.type == 'bool') {
+                    return record.dataType.specs[text]
+                } else {
+                    return text 
+                }
+            }
         }
     ]
     return (
@@ -95,7 +102,7 @@ export default function AddModel({ detailVis, onCancel, actionData }) {
                         </Form.Item>
                     </Form>
                     <div style={{ marginBottom: '10px' }}>配置数据</div>
-                    <Table dataSource={tableData} columns={columns}  rowKey='identifier'/>
+                    <Table dataSource={tableData} columns={columns} rowKey='identifier' />
                 </div>
             </Modal>
         </div>
