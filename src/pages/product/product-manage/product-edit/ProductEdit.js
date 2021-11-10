@@ -19,15 +19,13 @@ import {
 } from '@ant-design/icons';
 import { Paths, post, get } from '../../../../api'
 const { Step } = Steps;
-// 此部分路由不需要展示产品信息
-const NOT_SHOW = /(\/service\/appcontrol|cloudtime|scenelink)|\/applyRelease/;
 
 // 获取路由中的ID参数
 const getProductIdFromPath = (match) => +match.params.id;
 
 
 function ProductEdit({ match, location }) {
-    const origincurrent = location.state && location.state.stepnum || 0;
+    const origincurrent = +sessionStorage.getItem("stepnum") || 0;
 
     const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
     const [showSecret, setShowSecret] = useState(false)
@@ -69,11 +67,13 @@ function ProductEdit({ match, location }) {
                 step:nxtc+1
             })
         }
-        setcurrent(nxtc)
+        setcurrent(nxtc);
+        sessionStorage.setItem("stepnum",nxtc)
     });
     //上一步
     const prev = () => {
         setcurrent(current - 1);
+        sessionStorage.setItem("stepnum",current - 1)
     };
    
     if (!productIdInRoutePath) {
