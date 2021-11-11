@@ -68,7 +68,7 @@ export default function TableCom({ dataSource, reFreshData, type, standardData =
             case 'enum':
                 let value = ''
                 for (let key in data.propertyMap) {
-                    value += key+'：' + data.propertyMap[key] + '; '
+                    value += key+'：' + data.propertyMap[key] + ', '
                 }
                 result = `枚举值：${value}`
                 break;
