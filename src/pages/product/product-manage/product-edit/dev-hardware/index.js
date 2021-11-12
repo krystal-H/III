@@ -124,7 +124,7 @@ class Hardware extends Component {
 
     // 下载说明书
     downInstructions = (readmePdf) => {
-        readmePdf ? window.location = readmePdf : alert('暂无数据！')
+        readmePdf ? window.open(readmePdf) : alert('暂无数据！')
     }
 
     // 获取方案类型展示
