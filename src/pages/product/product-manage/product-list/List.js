@@ -46,7 +46,7 @@ class List extends PureComponent {
     }
     this.columns = [
       {
-        title: "产品", dataIndex: "productName", key: "productName",
+        title: "产品", dataIndex: "productName", key: "productName",width: 380,
         render: (text, record, index) => {
           return (
             <div className="pro-show" >
@@ -69,7 +69,7 @@ class List extends PureComponent {
       },
       {
         title: "操作", key: "",
-        width: 300,
+        width: 250,
         render: (text, record, index) => (
           <div className="operation">
             <span className="continue" onClick={this.clickProductInfo.bind(this, record)}>{record.status === 1 ? '开发详情' : '继续开发'}</span>
