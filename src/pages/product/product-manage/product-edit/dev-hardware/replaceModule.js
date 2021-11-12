@@ -36,7 +36,7 @@ function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, 
 
   // 下载说明书
   const downInstructions = (readmePdf) => {
-    readmePdf ? window.location = readmePdf : alert('暂无数据！')
+    readmePdf ? window.open(readmePdf) : alert('暂无数据！')
   }
 
   // 搜索模组
