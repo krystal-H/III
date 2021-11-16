@@ -5,10 +5,11 @@ import { Paths, post } from '../../../../../api'
 import './replaceModule.scss'
 const { Search } = Input
 
-function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, handleCancel, schemeId, moduleId }) {
+function ReplaceModule({ title, desc = "", opeType, replaceModalVisible, handleOk, handleCancel, schemeId, moduleId }) {
   const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
   const [selectionType] = useState('radio')
-  const columns = [
+  const [searchVal, setSearchVal] = useState('') // 查询的字段
+  const moduleColumns = [
     { title: '模组', dataIndex: 'moduleName' },
     { title: '芯片', dataIndex: 'originalModuleTypeName' },
     {
@@ -26,9 +27,9 @@ function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, 
       render: (text, record, index) => <a onClick={() => downInstructions(record.readmePdf)}>说明书</a>
     }
   ]
-  const columns2 = [
+  const firmwareColumns = [
     { title: '方案', dataIndex: 'name' },
-    { title: '版本', dataIndex: 'id' },
+    { title: '版本', dataIndex: 'burnFileVersion' },
     { title: '适用说明', dataIndex: '' }
   ]
   const [dataSource, setdataSource] = useState([])
@@ -39,15 +40,6 @@ function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, 
     readmePdf ? window.open(readmePdf) : alert('暂无数据！')
   }
 
-  // 搜索模组
-  const onSearch = value => {
-    if (value && !!value.trim()) {
-      getReplaceModuleList(value.trim())
-    } else {
-      getReplaceModuleList('')
-    }
-  }
-
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setSelectedRowKeys(selectedRowKeys)
@@ -55,29 +47,39 @@ function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, 
   }
 
   // 获取模组列表
-  const getReplaceModuleList = (moduleName) => {
+  const getReplaceModuleList = () => {
     post(Paths.replaceModuleList, {
       schemeId,
-      moduleName,
+      moduleName: searchVal,
       moduleType: Number(productItemData.bindType) || -1,
       networkType: Number(productItemData.netTypeId) || -1
     }, { loading: true })
       .then(res => {
-        console.log(res)
         setdataSource(res.data)
       })
   }
 
+  // 获取固件列表
+  const getFirmwareList = (firmwareName) => {
+    console.log('=======等后端补充接口！！！')
+  }
+
+  // 判断执行  模组/固件方法
+  const judgeFunc = () => {
+    opeType === 'module' && getReplaceModuleList()
+    opeType === 'firmware' && getFirmwareList()
+  }
+
   useEffect(() => {
-    getReplaceModuleList('')
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    judgeFunc()
+  }, [searchVal]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Modal
       title={title}
       visible={replaceModalVisible}
       onOk={() => handleOk(selectedRowKeys)}
-      onCancel={() => handleCancel(type)}
+      onCancel={() => handleCancel(opeType)}
       maskClosable={false}
       width={857}
       wrapClassName="replace-module-modal">
@@ -86,9 +88,9 @@ function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, 
       {/* 搜索 */}
       <Search
         className="search-input"
-        placeholder="输入模组名称"
+        placeholder={opeType === 'module' ? "输入模组名称" : "请输入固件名称"}
         allowClear
-        onSearch={onSearch}
+        onSearch={(val) => setSearchVal(val)}
         style={{ width: 674 }} />
 
       {/* table */}
@@ -99,7 +101,7 @@ function ReplaceModule({ title, desc = "", type, replaceModalVisible, handleOk, 
           ...rowSelection,
         }}
         rowKey="moduleId"
-        columns={type === 'module' ? columns : columns2}
+        columns={opeType === 'module' ? moduleColumns : firmwareColumns}
         dataSource={dataSource}
         pagination={false} />
     </Modal>

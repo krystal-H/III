@@ -35,21 +35,20 @@ class Hardware extends Component {
             },
             {
                 title: '操作',
-                render: (text, record, index) => (
-                    <div className="table-operation" onClick={(e) => this.modifyFirmware(record.id, e)}>
-                        修改固件
-                    </div>
-                    // <div className="table-operation" onClick={(e) => this.goReplaceFirmware(record.value2, e)}>
-                    //     更换固件
-                    // </div>
-                )
+                render: (text, record, index) => {
+                    if (this.state.productItemData.schemeType === 1) {
+                        return <div className="table-operation" onClick={(e) => this.modifyFirmware(record.id, e)}> 修改固件 </div>
+                    } else if (this.state.productItemData.schemeType === 2) {
+                        return <div className="table-operation" onClick={(e) => this.goReplaceFirmware(record.value2, e)}>更换固件</div>
+                    }
+                }
             }
         ]
         this.state = {
             replaceModalVisible: false,  // 更换模组
             freeApplyVisible: false, // 免费申请
             modifyFirmwareVisible: false, // 修改固件
-            // replaceFirmwareVisible: false, // 更换固件
+            replaceFirmwareVisible: false, // 更换固件
             dataSource: [], // 固件列表
             allInfo: {}, // 返回信息
             currentModuleId: '', // 模组id
@@ -99,9 +98,9 @@ class Hardware extends Component {
     }
 
     // 更换固件
-    // goReplaceFirmware = () => {
-    //     this.setState({ replaceFirmwareVisible: true })
-    // }
+    goReplaceFirmware = () => {
+        this.setState({ replaceFirmwareVisible: true })
+    }
 
     // 弹窗确定
     handleModalOk = (id, type) => {
@@ -118,7 +117,7 @@ class Hardware extends Component {
         if (type === 'module') {
             this.setState({ replaceModalVisible: false })
         } else if (type === 'firmware') {
-            // this.setState({ replaceFirmwareVisible: false })
+            this.setState({ replaceFirmwareVisible: false })
         }
     }
 
@@ -294,7 +293,7 @@ class Hardware extends Component {
                 {replaceModalVisible &&
                     <ReplaceModule
                         title="更换模组"
-                        type="module"
+                        opeType="module"
                         replaceModalVisible={replaceModalVisible}
                         handleOk={(id) => this.handleModalOk(id, 'module')}
                         handleCancel={this.handleModalCancel}
@@ -331,16 +330,16 @@ class Hardware extends Component {
                         }} />
                 }
                 {/* 更换固件 */}
-                {/* {replaceFirmwareVisible &&
+                {replaceFirmwareVisible &&
                     <ReplaceModule
                         title="更换固件"
-                        type="firmware"
+                        opeType="firmware"
                         desc="clife为您提供经检测认证的通用固件，会直接在您采购的模组内烧录完成，并自动分配设备编码。通讯模组通用固件包含连接clife和数据透传功能。产品功能固件需要您自行研发。"
                         replaceModalVisible={replaceFirmwareVisible}
                         handleOk={this.handleModalOk}
                         handleCancel={this.handleModalCancel}
                         selectedId={currentModuleId} />
-                } */}
+                }
                 {
                     officeVis && <Modal title="安装“数联智能”App" width='470px' visible={officeVis} footer={null} onCancel={() => this.setState({ officeVis: false })}>
                         <div className='down-office-modal' >
