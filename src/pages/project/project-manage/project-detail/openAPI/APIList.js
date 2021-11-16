@@ -7,8 +7,7 @@ import { cloneDeep } from 'lodash'
 import { Paths, post, get } from '../../../../../api'
 
 const { Search } = Input
-let testData = [{}]
-function APIList({ changeKey }) {
+function APIList({ changeKey, projectId }) {
   const history = useHistory()
   const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
   const [createModal, setCreateModal] = useState(false) // 创建项目
@@ -17,18 +16,18 @@ function APIList({ changeKey }) {
   const PageColumns = [
     {
       title: 'API名称',
-      dataIndex: '',
-      key: '',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: 'API详情',
-      dataIndex: '',
-      key: ''
+      dataIndex: 'apiDetail',
+      key: 'apiDetail'
     },
     {
       title: '项目调用次数',
-      dataIndex: '',
-      key: '',
+      dataIndex: 'type',
+      key: 'type',
     },
     {
       title: '操作',
@@ -36,13 +35,18 @@ function APIList({ changeKey }) {
       width: 200,
       render: (text, record) => (
         <div className="operation">
-          <a>查看文档</a>
+          <a onClick={() => downloadDoc(record.doc)}>查看文档</a>
           <Divider type="vertical" />
           <a onClick={() => apidebug(record)}>调试</a>
         </div>
       )
     }
   ]
+
+  // 查看文档
+  const downloadDoc = (url) => {
+    url ? window.open(url) : alert('暂无数据！')
+  }
 
   // 调试
   const apidebug = () => {
@@ -51,12 +55,10 @@ function APIList({ changeKey }) {
 
   // 获取列表数据
   const getTableList = () => {
-    let params = {
-      ...pager
-    }
-    // post(Paths.ccc, params, { loading: true }).then(res => {
-    //   setDataSource(addKeyToTableData(res.data.list))
-    // })
+    let params = { projectId, ...pager }
+    post(Paths.getProjectApiList, params, { loading: true }).then(res => {
+      setDataSource(addKeyToTableData(res.data.list))
+    })
   }
 
   useEffect(() => {
@@ -75,8 +77,8 @@ function APIList({ changeKey }) {
       <div className="comm-shadowbox pd22">
         <Table columns={PageColumns}
           className="ant-table-fixed"
-          rowKey="taskId"
-          dataSource={testData}
+          rowKey="apiId"
+          dataSource={dataSource}
           pagination={{
             defaultCurrent: 1,
             current: pager.pageIndex,

@@ -76,6 +76,10 @@ function ProjectList() {
   }
 
   useEffect(() => {
+    sessionStorage.removeItem('d_data')
+  }, [])
+
+  useEffect(() => {
     getTableList()
   }, [pager.pageIndex, pager.pageRows, projectName]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -101,6 +105,7 @@ function ProjectList() {
 
   //查看详情
   const goDetail = (data) => {
+    sessionStorage.setItem('d_data', JSON.stringify(data))
     history.push(`/open/project/projectManage/detail/${data.projectId}?step=1`);
   }
 

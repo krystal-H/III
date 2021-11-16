@@ -8,12 +8,14 @@ import { post, Paths, get } from '../../../../api';
 import PageTitle from '../../../../components/page-title/PageTitle'
 import { useHistory } from 'react-router-dom'
 import { Tabs } from 'antd'
+import { DateTool, addKeyToTableData } from '../../../../util/util'
 import './project-detail.scss'
 
 const { TabPane } = Tabs
 
 export default function DeviceInfo({ match }) {
     const [curStep, setCurStep] = useState('1')
+    const [detailObj, setDetailObj] = useState(JSON.parse(sessionStorage.getItem('d_data')))
     let history = useHistory();
     const stepS = useMemo(() => {
         let step = getUrlParam('step') || '1'
@@ -39,11 +41,19 @@ export default function DeviceInfo({ match }) {
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (<div className='project-detail-page'>
-        <PageTitle backTitle='XXX' backHandle={() => { history.push('/open/project/projectManage/list') }}>
+        <PageTitle backTitle={detailObj.projectName} backHandle={() => { history.push('/open/project/projectManage/list') }}>
             <div className='device-top'>
-                <div className='device-top-item'><label className='device-label'>项目ID：</label><span className='device-text'></span>123123132131</div>
-                <div className='device-top-item'><label className='device-label'>创建时间：</label><span className='device-text'>{baseInfo.productName}</span></div>
-                <div className='device-top-item'><label className='device-label'>更新时间：</label><span className='device-text'>{baseInfo.productType}</span></div>
+                <div className='device-top-item'>
+                    <label className='device-label'>项目ID：</label>
+                    <span className='device-text'></span>{detailObj.projectId}</div>
+                <div className='device-top-item'>
+                    <label className='device-label'>创建时间：</label>
+                    <span className='device-text'>{detailObj.createTime && DateTool.utcToDev(detailObj.createTime)}</span>
+                </div>
+                <div className='device-top-item'>
+                    <label className='device-label'>更新时间：</label>
+                    <span className='device-text'>{detailObj.updateTime && DateTool.utcToDev(detailObj.updateTime)}</span>
+                </div>
             </div>
         </PageTitle>
         <div className={`comm-shadowbox common-tab device-content ${curStep === '2' ? 'api-tab-style' : ''} `}>
@@ -52,7 +62,7 @@ export default function DeviceInfo({ match }) {
                     <Overview baseInfo={baseInfo} projectId={projectId} />
                 </TabPane>
                 <TabPane key={'2'} tab={'openAPI'}>
-                    <OpenAPI />
+                    <OpenAPI projectId={projectId} />
                 </TabPane>
                 <TabPane key={'3'} tab={'分组'}>
                     <Grouping />

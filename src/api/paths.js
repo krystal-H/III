@@ -567,8 +567,11 @@ let Paths = {
     //项目列表
     projectList:'/projectInfo/listByPage',
 
-    // 项目新增
+    // 项目新增/编辑
     saveProjectInfo: '/projectInfo/saveProjectInfo',
+
+    // 项目详情-api列表
+    getProjectApiList: '/projectDetail/getProjectApiList',
 
     //项目详情-概述
     projectInfoOverview:'/projectDetail/getProjectAuth',// 项目详情-概述
