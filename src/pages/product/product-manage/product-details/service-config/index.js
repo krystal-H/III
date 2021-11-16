@@ -37,7 +37,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
     },
     {
       title: '固件升级',
-      desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
+      desc: 'MCU固件或SDK固件配置远程升级，无需烧录。需控制板支持',
       isConfiged: false,
       type: 'firmwareUpdate',
       routePath: '/open/product/otaUpdate/list',
@@ -45,7 +45,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
     },
     {
       title: '场景联动配置',
-      desc: '配置自动化联动的条件动作，以便加入场景，跟其他设备联动控制。',
+      desc: '配置自动化联动的条件动作，以便加入场景，跟其他设备联动控制',
       isConfiged: false,
       type: 'scene',
       routePath: '/open/product/ruleEngine',
@@ -120,9 +120,9 @@ function ServiceConfig({ productId, nextStep }, ref) {
     post(Paths.getFirmwareList, { productId }, { loading: true }).then(res => {
       if (res.data && res.data.length > 0) {
         setFirmwareDetailData(res.data)
-        const list = cloneDeep(optionalList)
-        list[0].isConfiged = true
-        setOptionalList(list)
+        // const list = cloneDeep(optionalList)
+        // list[0].isConfiged = true
+        // setOptionalList(list)
       } else {
         const tempList = cloneDeep(optionalList)
         tempList.splice(0, 1)
@@ -206,10 +206,11 @@ function ServiceConfig({ productId, nextStep }, ref) {
                 <div className="flex-start">
                   {
                     ['firmwareUpdate', 'cloud', 'deviceWarning', 'scene'].includes(item.type) ?
-                      <div className="config-card-right-btn">
-                        <Link to={{pathname: item.routePath, search: `?productId=${productId}`}} target="_blank">配置</Link>
-                      </div> :
-                      item.isConfiged ?
+                      <Link to={{ pathname: item.routePath, search: `?productId=${productId}` }} target="_blank">
+                        <div className="config-card-right-btn">配置</div>
+                      </Link>
+                      :
+                      (item.type === 'addFirmware' || item.isConfiged) ? 
                         <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
                         :
                         ''

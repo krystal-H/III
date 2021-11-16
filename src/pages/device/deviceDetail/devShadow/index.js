@@ -74,7 +74,7 @@ export default function DeviceShadow({ baseInfo, devceId }) {
                         <Radio.Button value="b" disabled={currentTab != 'b'}>事件</Radio.Button>
                         <Radio.Button value="c" disabled={currentTab != 'c'}>服务</Radio.Button>
                     </Radio.Group>
-                    <TableCom dataSource={dataSource} deviceId={devceId} />
+                    <TableCom dataSource={dataSource} deviceId={devceId} baseInfo={baseInfo}/>
                 </div>
             </TabPane>
             <TabPane key={'2'} tab={'Json模式'}>

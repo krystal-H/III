@@ -7,6 +7,7 @@ import { Notification } from '../../../../../components/Notification';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import History from './historyInfo';
 import Simulat from './simulation';
+import ObjectView from "../../../../../components/ObjectView";
 import './index.scss'
 import ReleaseProduct from './releaseProduct';
 const { TabPane } = Tabs;
@@ -14,7 +15,7 @@ const { TabPane } = Tabs;
 const columns = [
     { title: '序列号', dataIndex: 'index' },
     { title: 'topic数据内容', dataIndex: 'topic' },
-    { title: '物理地址', dataIndex: 'macAddress'},
+    { title: '物理地址', dataIndex: 'physicalAddr'},
     { title: 'DID', dataIndex: 'did'}
 ];
 
@@ -37,12 +38,30 @@ const mapStateToProps = state => {
 }
 
 const temp = [
-    {  topic:"topictopic", macAddress:"32423423", did:"11", map:"erwrwerer", index:1 },
-    {  topic:"topictopic", macAddress:"345345", did:"22", map:"wer", index:2 },
-    {  topic:"topictopic", macAddress:"rwerwe", did:"33", map:"erwe", index:3 }
+    {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
+    {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
+    {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
+    {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
+    {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
+    {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
+    {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
+    {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
+    {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
+    {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
+    {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
+    {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
+    {  topic:"topictopic", physicalAddr:"32423423", did:"11", map:{a:1,b:2,c:3}, index:1 },
+    {  topic:"topictopic", physicalAddr:"345345", did:"22", map:"wer", index:2 },
+    {  topic:"topictopic", physicalAddr:"rwerwe", did:"33", map:"erwe", index:3 },
 ]
 
-function Validation({ nextStep, productId,developerInfo,refInstance }) {
+function Validation({ productId,developerInfo,refInstance }) {
     const mountRef = useRef(-1);
     const [releaseVisible, setReleaseVisible] = useState(false); // 发布产品
     const [dataList, setDataList] = useState([]);//原始数据
@@ -52,7 +71,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
     // const [webSocketStatu, setWebSocketStatu] = useState(0); //ws 连接状态 0失败，1成功
     const [historyVisiable, setHistoryVisiable] = useState(false);
 
-    const [analysisData, setAnalysisData] = useState("点击左侧数据在此解析");
+    const [analysisData, setAnalysisData] = useState(null);
 
     const [tabShow, setTabShow] = useState("1"); 
 
@@ -126,7 +145,6 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
         //     wsProtocol = httpProtocol.replace(/https?/, 'wss');
         ws = new WebSocket('wss://' + serverIp);
         
-        
         ws.onopen = ()=> {//连接成功
             mountRef.current = 0
             // setWebSocketStatu(1);
@@ -169,10 +187,10 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
     //真实设备上报数据显示
     const toDataList = data=>{
         const _d = JSON.parse(data);
-        const { topic, macAddress, did, map } = _d;
+        const { topic, physicalAddr, did, map } = _d;
         setDataList(preLi=>{
             let li = cloneDeep(preLi);
-            if( li.unshift({ topic, macAddress, did, map, index:mountRef.current }) == 901 ){//页面最多显示900条数据
+            if( li.unshift({ topic, physicalAddr, did, map, index:mountRef.current }) == 901 ){//页面最多显示900条数据
                 li.pop();
             }
             return li
@@ -181,7 +199,7 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
 
     const cleanDataLi = ()=>{
         setDataList([]);
-        setAnalysisData("点击左侧数据在此解析");
+        setAnalysisData(null);
     }
 
     const openHistory =  open =>{
@@ -223,19 +241,27 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
                                     {/* <Button type="primary" ghost>导出数据</Button> */}
                                 </div>
                             </div>
-                            <div>
-                                <Table columns={columns} rowKey="index" dataSource={dataList} pagination={false}
+                            <div className="tablebox">
+                                <Table columns={columns} rowKey="index"
+                                dataSource={dataList}
+                                pagination={false}
                                         onRow={r=> {
                                             return {
-                                                onClick: e => { setAnalysisData(r.map || "") },
+                                                onClick: e => { setAnalysisData(r.map || {}) },
                                             };
                                         }}
+                                        scroll={{ y: 305 }}
                                 />
                             </div>
                         </div>
                         <div className='right-content'>
                             <h3>解析数据</h3>
-                            <div>{analysisData}</div>
+                            <div className="analysisdata-box">
+                                {
+                                    analysisData && <ObjectView keyName="明文" data={analysisData} />  || "点击左侧原始数据在此解析"
+                                }
+                            </div>
+                            
                         </div>
                     </div>
                 </TabPane>
@@ -259,3 +285,21 @@ function Validation({ nextStep, productId,developerInfo,refInstance }) {
 let Component = connect(mapStateToProps, null)(Validation)
 
 export default forwardRef( (props,ref) => <Component  {...props}  refInstance={ref} />   )
+
+
+
+// stage('上传制品库') {
+//     steps {
+//        dir(env.BUILD_DIR) {
+//           codingArtifactsGeneric(files: '**/**', zip: '${GENERIC_NAME}.zip', version: '${GIT_BUILD_REF}', repoName: '${REPO_NAME}', withBuildProps: true)
+//       }
+//     }
+//   }
+
+
+  
+//   stage('上传制品库') {
+//     steps {
+//       codingArtifactsGeneric(workspace: '${WORKSPACE}/${BUILD_DIR}', files: '**/**', zip: '${GENERIC_NAME}.zip', version: '${GIT_BUILD_REF}', repoName: '${REPO_NAME}', withBuildProps: true)
+//     }
+//   }

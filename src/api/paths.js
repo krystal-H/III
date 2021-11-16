@@ -35,7 +35,6 @@ let Paths = {
     getProductList: '/product/listAllProductAndAccreditInfo',
     copyProduct: '/product/copy',
     delectProduct: '/product/deleteProduct',
-    getProductBaseInfo: '/product/detail/old',
     updateProductBaseInfo: '/product/update',
 
     // 5.x产品列表功能
@@ -53,6 +52,7 @@ let Paths = {
     createProduct: '/product/create', // 创建产品
     downloadData: '/product/dev/module/data/url', // 下载资料路径
     getPanel: '/panelManage/getTemplateMarketByDeviceTypeId', // 获取品类下的面板
+    getBindTypeNetworkTypeMap: '/product/getBindTypeNetworkTypeMap', // 获取配网方式
 
     // 5.x确定方案
     getScheme: '/scheme/list/deviceType', // 获取方案数据
@@ -143,11 +143,8 @@ let Paths = {
     versionValidate: '/firmware/device/version/validate',//发起验证
     oldVersionPublish: '/firmware/old/device/version/publish',//发布
 
-    
-    
 
     /* 云端定时功能5x */
-    cloudGetProductList: '/productManage/getProductList', // 产品列表
     getTimeServiceList: '/timeServer/getList', // 获取列表
     getPhysicalModel: '/productManage/physicalModel/get', // 获取物模型  关联协议
     saveTimeService: '/timeServer/save', // 保存定时信息
@@ -507,6 +504,8 @@ let Paths = {
     PhysicalModelList:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
     exportFnFile:'/product/dev/custom/func/upload',//产品-功能定义-导入自定义功能
 
+    upProMaxStep:'/product/update/step',//记录产品最新配置步骤
+
     // //设备-设备管理
     // getDeviceList
     //工单
@@ -521,8 +520,9 @@ let Paths = {
     userDataAn:'/summary/account/dashboard',//用户分析
     deviceDataDown:'/summary/device/download',//设备分析下载
     userDataDown:'/summary/account/download',//用户分析下载
+    allProductPubList:'/productManage/getPublishProductList', // 已发布的产品列表  包含新旧产品
     //公共接口
-    getProductType:'/productManage/getSelectList',//产品下拉列表
+    getProductType:'/productManage/getSelectList',//所有的产品下拉列表
     
 
     // 产品发布后-设备注册

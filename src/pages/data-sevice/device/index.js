@@ -6,7 +6,7 @@ import { Radio, DatePicker, Select, Table } from 'antd';
 import LabelTip from '../../../components/form-com/LabelTip';
 import './index.scss'
 import dayjs from 'dayjs'
-
+import moment from 'moment'
 import * as echarts from 'echarts';
 const options = [
     { label: '近7天', value: '1' },
@@ -14,11 +14,11 @@ const options = [
 ];
 const { RangePicker } = DatePicker;
 const originCount = [
-    { label: '新增设备数', count: 0 },
-    { label: '入网设备数', count: 0 },
-    { label: '活跃设备数', count: 0 },
-    { label: '异常设备数', count: 0 },
-    { label: '设备累计总数', count: 0 }]
+    { label: '新增设备数', count: '--' },
+    { label: '入网设备数', count: '--' },
+    { label: '活跃设备数', count: '--' },
+    { label: '异常设备数', count: '--' },
+    { label: '设备累计总数', count: '--' }]
 const columns = [
     {
         title: '日期',
@@ -57,19 +57,27 @@ export default function Device() {
     const [dates, setDates] = useState([]);
     const [hackValue, setHackValue] = useState();
     const [value, setValue] = useState(); //时间值
+    const [optionArr, setOptionArr] = useState([]) //产品列表
     const disabledDate = current => {
-        if (!dates || dates.length === 0) {
-            return false;
-        }
+        // if (!dates || dates.length === 0) {
+        //     return false;
+        // }
         const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
         const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
-        const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
-        return isBeyong || tooEarly || tooLate
+        // const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
+        // return isBeyong || tooEarly || tooLate
+        return current && current > dayjs().subtract(1, 'day') || current < dayjs().subtract(30, 'day')
     };
-    const [selectType, setSelectType] = useState('') //产品种类
+    const [selectType, setSelectType] = useState(0) //产品种类
     //产品改变
     const selectChange = (value) => {
         setSelectType(value)
+    }
+    const getType = () => {
+        post(Paths.allProductPubList, {}).then(res => {
+            res.data.unshift({productId:0,productName:"全部产品"})
+            setOptionArr( res.data)
+        })
     }
     const onOpenChange = open => {
         if (open) {
@@ -80,9 +88,7 @@ export default function Device() {
         }
     };
 
-    const timeCall = (value) => {
-        setValue(value)
-    }
+    
     //======
     const [currentTime, setCurrentTime] = useState('1') //当前选择时间
     const [countData, setCountData] = useState(originCount)
@@ -92,6 +98,10 @@ export default function Device() {
         setValue(null)
         setCurrentTime(e.target.value)
     };
+    const timeCall = (value) => {
+        setCurrentTime('')
+        setValue(value)
+    }
     useEffect(() => {
         getData()
     }, [currentTime, value, selectType])
@@ -100,6 +110,9 @@ export default function Device() {
             initData(tableData)
         }
     }, [currentTab])
+    useEffect(() => {
+        getType()
+    }, [])
     const getData = (loading = true) => {
         let params = {}
         if (currentTime === '1') {
@@ -286,7 +299,16 @@ export default function Device() {
 
     return (
         <div id='device-analysis'>
-            <PageTitle title='设备分析' selectOnchange={val => setSelectType(val)} isRelProductData={true}>
+            <PageTitle title='设备分析' >
+                <div className='top-select'>
+                    <Select style={{ width: 150 }} value={selectType} onChange={selectChange} showSearch optionFilterProp="children">
+                        {
+                            optionArr.map(item => {
+                                return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
+                            })
+                        }
+                    </Select>
+                </div>
             </PageTitle>
             <div className='comm-shadowbox filter-wrap'>
                 <Radio.Group
@@ -303,6 +325,8 @@ export default function Device() {
                     onChange={val => timeCall(val)}
                     onOpenChange={onOpenChange}
                     format={'YYYY-MM-DD'}
+                    allowClear={false}
+                    style={{'borderColor':value && value.length ? '#1890ff' : ''}}
                 />
 
             </div>

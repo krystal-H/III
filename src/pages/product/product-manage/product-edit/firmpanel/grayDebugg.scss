@@ -108,9 +108,9 @@
             }
 
             &.active{
-                &::before{
-                    background:rgba(47,120,255,1);
-                }
+                // &::before{
+                //     background:rgba(47,120,255,1);
+                // }
 
                 &::after{
                     content: '';

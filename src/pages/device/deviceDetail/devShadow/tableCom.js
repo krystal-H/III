@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
 import { Table, Button, Space } from 'antd';
-import { post, Paths } from '../../../../api';
 import './index.scss';
 // import TitleEdit from './titleEdit'
 // import { getRowSpanCount } from './tableCombine'
@@ -11,22 +10,7 @@ import { getRowSpanCount } from '../../../../configs/tableCombine'
 import DetailModl from './detail'
 
 
-export default function TableCom({ dataSource,deviceId }) {
-    let history = useHistory();
-    // const deviceId = history.location.pathname.split('/').slice(-1)[0]
-    //获取产品id
-    useEffect(() => {
-        if(deviceId){
-            getProductDetail()
-        }
-        
-    }, [deviceId])
-    const [productId, setProductId] = useState('')
-    const getProductDetail = (loading = true) => {
-        post(Paths.getDeviceInfo, { deviceId }, { loading }).then((res) => {
-            setProductId(res.data.productId)
-        });
-    }
+export default function TableCom({ dataSource,deviceId,baseInfo }) {
 
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     //页码改变
@@ -49,17 +33,17 @@ export default function TableCom({ dataSource,deviceId }) {
         let result = null
         let type = data.dataTypeEN
         switch (type) {
-            case 'double':
+            case 'float':
+            case 'int':
                 result = `数值范围：${data.propertyMap.min}-${data.propertyMap.max},间距：${data.propertyMap.interval},倍数：${data.propertyMap.multiple},单位：${data.propertyMap.unit}`
                 break;
             case 'bool':
-
                 result = `0：${data.propertyMap[0]},1：${data.propertyMap[1]}`
                 break;
             case 'enum':
                 let value = ''
                 for (let key in data.propertyMap) {
-                    value += data.propertyMap[key] + '，'
+                    value += key+'：' + data.propertyMap[key] + ', '
                 }
                 result = `枚举值：${value}`
                 break;
@@ -165,7 +149,7 @@ export default function TableCom({ dataSource,deviceId }) {
             }}
         />
         {
-            ModalVisible && <DetailModl ModalVisible={ModalVisible} closeOk={closeOk} sentData={sentData} productId={productId} />
+            ModalVisible && <DetailModl ModalVisible={ModalVisible} closeOk={closeOk} sentData={sentData}  baseInfo={baseInfo}/>
         }
     </div>
 }

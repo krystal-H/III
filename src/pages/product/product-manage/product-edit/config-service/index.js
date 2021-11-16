@@ -40,20 +40,20 @@ function ServiceSelect({ productId, nextStep }, ref) {
     },
     {
       title: '固件升级',
-      desc: 'MCU固件或SDK估计配置远程升级，无需烧录。需控制板支持。',
+      desc: 'MCU固件或SDK固件配置远程升级，无需烧录。需控制板支持',
       isConfiged: false,
       type: 'firmwareUpdate',
       routePath: '/open/product/otaUpdate/list',
       url: require('../../../../../assets/images/commonDefault/service-firmwareUpdate.png')
     },
-    {
-      title: '场景联动配置',
-      desc: '配置自动化联动的条件动作，以便加入场景，跟其他设备联动控制。',
-      isConfiged: false,
-      type: 'scene',
-      routePath: '/open/product/ruleEngine',
-      url: require('../../../../../assets/images/commonDefault/service-scene.png')
-    },
+    // {
+    //   title: '场景联动配置',
+    //   desc: '配置自动化联动的条件动作，以便加入场景，跟其他设备联动控制',
+    //   isConfiged: false,
+    //   type: 'scene',
+    //   routePath: '/open/product/ruleEngine',
+    //   url: require('../../../../../assets/images/commonDefault/service-scene.png')
+    // },
     {
       title: '云端定时',
       desc: '云端设定开关时间及周循环，无需硬件嵌入式开发',
@@ -92,12 +92,11 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [editData, setEditData] = useState({})
 
   const [customCount, setCustomCount] = useState(0)
-
   const [productItemData, setProductItemData] = useState(JSON.parse(sessionStorage.getItem('productItem')) || {})
 
   //验证函数
   const subNextConFirm = () => {
-    console.log('requiredList----', requiredList.every(item => item.isConfiged === true), '***', requiredList)
+    // console.log('requiredList----', requiredList.every(item => item.isConfiged === true), '***', requiredList)
     if (requiredList.every(item => item.isConfiged === true)) {
       nextStep()
     } else {
@@ -145,9 +144,11 @@ function ServiceSelect({ productId, nextStep }, ref) {
         console.log(customList.length, 'customList.length')
         setCustomCount(customList.length)
         setFirmwareDetailData(res.data)
-        const list = cloneDeep(optionalList)
-        list[0].isConfiged = true
-        setOptionalList(list)
+        if (customList.length > 0) {
+          const list = cloneDeep(optionalList)
+          list[0].isConfiged = true
+          setOptionalList(list)
+        }
       }
     })
   }
@@ -181,7 +182,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
         break;
       case 'addFirmware':
         if (customCount >= 5) {
-          Notification({description: '产品固件模块最多配置5个！', type: 'warn'})
+          Notification({ description: '产品固件模块最多配置5个！', type: 'warn' })
         } else {
           setFirmwareVisible(true)
         }
@@ -256,14 +257,20 @@ function ServiceSelect({ productId, nextStep }, ref) {
                 <div className="config-card-right-title">{item.title}</div>
                 <div className="config-card-right-desc">{item.desc}</div>
                 <div className="flex-start">
-                  {/* 未配置的判断 */}
+                  {/* 未配置的判断    ！注意：配置产品固件模块——免开发没有，soc和mcu都有，所以出现，详情必有默认，否侧就是数据问题！*/}
                   {
                     !item.isConfiged ?
                       ['firmwareUpdate', 'cloud', 'deviceWarning', 'scene'].includes(item.type) ?
-                        <div className="config-card-right-btn">
-                          <Link to={{pathname: item.routePath, search: `?productId=${productId}`}} target="_blank">配置</Link>
-                        </div> :
-                        <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
+                        <Link to={{ pathname: item.routePath, search: `?productId=${productId}` }} target="_blank">
+                          <div className="config-card-right-btn">配置</div>
+                        </Link>
+                        :
+                        item.type === 'addFirmware' ?
+                          <>
+                            <div className="config-card-right-btn" onClick={() => { showModal(item.type); setShowType('add') }}>配置</div>
+                            <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
+                          </> :
+                          <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
                       : ''
                   }
                   {/* 配置的判断 */}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Select, Steps, Button, Input, Table, Divider } from 'antd'
 import PageTitle from '../../../components/page-title/PageTitle'
-import stepImg from '../../../assets/images/product-regist.png'
+import stepImg from '../../../assets/images/cloud-time.png'
 import { cloudStatus } from '../../../configs/text-map'
 import { Paths, post, get } from '../../../api'
 import { CloudAddForm } from './cloud-manage-modals'
@@ -118,14 +118,14 @@ export default function CloudTime() {
     }, [pager.pageIndex, pager.pageRows, currentServiceName, currentProductId]) // eslint-disable-line react-hooks/exhaustive-deps
 
     // 获取所有产品列表
-    const getCloudGetProductList = () => {
-        get(Paths.cloudGetProductList).then(res => {
+    const getProductList = () => {
+        get(Paths.getProductType).then(res => {
             setAllProductList(res.data)
         }, () => setAllProductList([]))
     }
 
     useEffect(() => {
-        getCloudGetProductList()
+        getProductList()
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     // 编辑
@@ -180,7 +180,7 @@ export default function CloudTime() {
             <PageTitle title='云端定时' selectOnchange={val => setCurrentProductId(val)} defaultValue={getUrlParam('productId') || '-1'}>
             </PageTitle>
             
-            <div className='comm-shadowbox setp-tip'>
+            <div className='comm-shadowbox setp-tip comm-setp-ttip'>
                 <div className='step-title'>
                     <img src={stepImg} alt="" />
                     <span>云端定时步骤</span>

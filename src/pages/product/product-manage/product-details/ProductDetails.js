@@ -5,7 +5,7 @@ import {
     EyeInvisibleTwoTone,
     EyeTwoTone,
 } from '@ant-design/icons';
-import { getProductBaseInfo, getProtocolLists } from '../store/ActionCreator';
+import { getProtocolLists } from '../store/ActionCreator';
 import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
 import PageTitle from '../../../../components/page-title/PageTitle';
 import ProductTabs from './product-tabs/ProductTabs';
@@ -22,7 +22,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getProductBaseInfo: id => dispatch(getProductBaseInfo(id)), // 获取产品基本信息
         getProtocolLists: id => dispatch(getProtocolLists(id))
     }
 }
@@ -30,7 +29,7 @@ const mapDispatchToProps = dispatch => {
 // 获取路由中的ID参数
 const getProductIdFromPath = (match) => +match.params.id;
 
-export default function ProductDetails({ productBaseInfo, match, getProductBaseInfo, getProtocolLists, protocolLists }) {
+export default function ProductDetails({ productBaseInfo, match, getProtocolLists, protocolLists }) {
     let history = useHistory();
     // let productIdInRoutePath = getProductIdFromPath(match);
     let productItem = {}

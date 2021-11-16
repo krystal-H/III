@@ -62,10 +62,10 @@ function CreateTask({ visible, onCancel, allProductList, editData, getRemoteConf
         if (stepcurrent === 0) { // 填写任务说明
             onOk()
         } else if (stepcurrent === 1) { // 添加配置数据
-            console.log(refConfig, '-----------refConfig')
+            // console.log(refConfig, '-----------refConfig')
             refConfig.current.onFinish()
         } else if (stepcurrent === 2) { // 选择配置更新的设备
-            console.log(refDevice, '-----------refDevice')
+            // console.log(refDevice, '-----------refDevice')
             refDevice.current.onFinish()
         }
     }

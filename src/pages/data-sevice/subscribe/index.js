@@ -15,8 +15,9 @@ const { Step } = Steps;
 const { Search } = Input;
 export default function DeviceRegist() {
     const [form] = Form.useForm();
-    const [productCount, SetproductCount] = useState('')
+    const [productCount, SetproductCount] = useState(0)
     const [dataSource, setDataSource] = useState([])
+    const [optionArr, setOptionArr] = useState([]) //产品列表
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
     // const [searchParams,setSearchParams]=useState({})
     // table操作-发布、删除、下线
@@ -58,13 +59,19 @@ export default function DeviceRegist() {
     //====详情
     const [rightVisible, setRightVisible] = useState(false)
     const openInfo = (data) => {
-        console.log(data, 99)
         setSelectRow(data)
         setRightVisible(true)
     }
     const onCloseRight = () => {
         setRightVisible(false)
     }
+    const getType = () => {
+        post(Paths.allProductPubList, {}).then(res => {
+            res.data.unshift({ productId: 0, productName: "全部产品" })
+            setOptionArr(res.data)
+        })
+    }
+    useEffect(() => { getType() }, [])
     useEffect(() => {
         getList()
     }, [pager.pageRows, pager.pageIndex, productCount])
@@ -219,7 +226,19 @@ export default function DeviceRegist() {
 
     return (
         <div id='subscribe-data'>
-            <PageTitle title='数据订阅' selectOnchange={val => productChange(val)} isRelProductData={true}>
+            {/* <PageTitle title='数据订阅' selectOnchange={val => productChange(val)} isRelProductData={true}>
+
+            </PageTitle> */}
+            <PageTitle title='数据订阅' >
+                <div className='top-select'>
+                    <Select style={{ width: 150 }} value={productCount} onChange={productChange} showSearch optionFilterProp="children">
+                        {
+                            optionArr.map(item => {
+                                return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
+                            })
+                        }
+                    </Select>
+                </div>
             </PageTitle>
             <div className='comm-shadowbox setp-ttip'>
                 <div className='step-title'>
@@ -227,9 +246,9 @@ export default function DeviceRegist() {
                     <span>数据订阅步骤</span>
                 </div>
                 <Steps current={-1} initial={0}>
-                    <Step title="选择产品" description="可根据产品订阅以及设备性能标签，选择需要的数据对象。" />
-                    <Step title="配置订阅内容" description="可知产品或设备的物模型，订阅详细的功能点数据信息。" />
-                    <Step title="确定订阅方式" description='支持数据发送服务或MQTT订阅，两种不同的方式。' />
+                    <Step title="选择产品" description="可根据产品订阅以及设备标签，选择需要的数据对象。" />
+                    <Step title="配置订阅内容" description="可根据产品或设备的物模型，订阅详细的功能点数据信息。" />
+                    <Step title="确定订阅方式" description='支持数据API推送服务或MQTT订阅，两种不同的方式。' />
                 </Steps>
             </div>
             <div className='comm-shadowbox device-content'>
@@ -274,8 +293,9 @@ export default function DeviceRegist() {
                     showTotal: () => <span>共 <a>{pager.totalRows}</a> 条</span>
                 }} />
             </div>
+            {/* 新增 */}
             {
-                modelVis && <AddSubScribe isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl}></AddSubScribe>
+                modelVis && <AddSubScribe isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl} ></AddSubScribe>
             }
             {
                 tableAcVisible &&

@@ -4,17 +4,14 @@ import moment from 'moment';
 import { Table, Button, Space } from 'antd';
 import './index.scss';
 import EditcusFn from './editcusFn'
-import Addfunction from './addModal'
-import NewCusmFn from './addcusFn'
 // import TitleEdit from './titleEdit'
 import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
-import { MyContext } from '../context'
 import { getRowSpanCount } from '../../../../../configs/tableCombine'
 // import { getRowSpanCount } from './tableCombine'
 
 
-export default function TableCom({ dataSource, reFreshData, type }) {
+export default function TableCom({ dataSource, reFreshData, type, standardData = [] }) {
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     //页码改变
     const pagerChange = (pageIndex, pageRows) => {
@@ -71,7 +68,7 @@ export default function TableCom({ dataSource, reFreshData, type }) {
             case 'enum':
                 let value = ''
                 for (let key in data.propertyMap) {
-                    value += data.propertyMap[key] + '，'
+                    value += key+'：' + data.propertyMap[key] + ', '
                 }
                 result = `枚举值：${value}`
                 break;
@@ -89,30 +86,8 @@ export default function TableCom({ dataSource, reFreshData, type }) {
     }
     const columns = [
         {
-            title: 'DP ID', dataIndex: 'dataPointId',
-            // render: (value, row, index) => {
-            //     let obj = getRowSpanCount(
-            //         getComData(),
-            //         "funcIdentifier",
-            //         index,
-            //         row.funcIdentifier,
-            //         "funcIdentifier"
-            //     );
-            //     obj.children = <span>{IdArr.indexOf(row.funcIdentifier) + 1}</span>
-            //     return obj
-            // },
-            render: (value, row, index) => {
-                return getRowSpanCount(
-                    getComData(),
-                    "funcIdentifier",
-                    index,
-                    value,
-                    "dataPointId"
-                );
-            },
-        },
-        {
             title: '功能类型', dataIndex: 'funcTypeCN',
+            width: '100px',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     getComData(),
@@ -124,7 +99,7 @@ export default function TableCom({ dataSource, reFreshData, type }) {
             },
         },
         {
-            title: '功能点名称', dataIndex: 'funcName',
+            title: '功能点名称', dataIndex: 'funcName', width: '130px',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     getComData(),
@@ -136,7 +111,7 @@ export default function TableCom({ dataSource, reFreshData, type }) {
             },
         },
         {
-            title: '标识符', dataIndex: 'funcIdentifier',
+            title: '标识符', dataIndex: 'funcIdentifier', width: '160px',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     getComData(),
@@ -148,14 +123,17 @@ export default function TableCom({ dataSource, reFreshData, type }) {
             },
         },
         {
-            title: '参数名称', dataIndex: 'name',
+            title: 'DP ID', dataIndex: 'dataPointId', width: '100px',
+        },
+        {
+            title: '参数名称', dataIndex: 'name', width: '140px',
             render: (text, record) => {
                 return text
             }
         },
-        { title: '参数标识', dataIndex: 'identifier' },
+        { title: '参数标识', dataIndex: 'identifier', width: '160px' },
         {
-            title: '数据传输类型', dataIndex: 'accessMode',
+            title: '数据传输类型', dataIndex: 'accessMode', width: '240px',
             render: (text, record) => {
                 if (text == 'rw') {
                     return '可下发可上报'
@@ -170,11 +148,11 @@ export default function TableCom({ dataSource, reFreshData, type }) {
             }
         },
         {
-            title: '数据类型', dataIndex: 'dataType', render: (text, record) => (
+            title: '数据类型', dataIndex: 'dataType', width: '140px', render: (text, record) => (
                 <span>{record.dataTypCN}</span>
             )
         },
-        { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record)}</span> },
+        { title: '数据属性', dataIndex: 'propertyMap', width: '340px', render: (text, record) => <span>{filterFn(record)}</span> },
         {
             title: '操作',
             render: (value, row, index) => {
@@ -256,14 +234,21 @@ export default function TableCom({ dataSource, reFreshData, type }) {
         {/* 新增自定义 */}
         {/* {1 && <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>} */}
         {/* 编辑操作 */}
+        {/* {rightEditVisible && <EditcusFn
+            rightVisible={rightEditVisible}
+            onCloseRight={onCloseRight}
+            onRefreshList={onRefreshList}
+            standardData={standardData}
+            actionData={actionData}
+            modelType={type}></EditcusFn>} */}
+
         {rightEditVisible && <EditcusFn
             rightVisible={rightEditVisible}
             onCloseRight={onCloseRight}
             onRefreshList={onRefreshList}
+            standardData={standardData}
             actionData={actionData}
             modelType={type}></EditcusFn>}
-        {/* 新增标准 */}
-        {/* {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>} */}
         {/* 删除操作 */}
         {
             isDelVisible && <ActionConfirmModal

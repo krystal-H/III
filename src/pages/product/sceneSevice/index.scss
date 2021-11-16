@@ -4,6 +4,12 @@
     justify-content: space-between;
   }
 
+  .top-select {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+
   .device-content {
     padding: 22px;
     margin-top: 16px;
@@ -27,6 +33,13 @@
 .scene-sevice-model {
   .top {
     margin-bottom: 20px;
+
+  }
+
+  .dev-dotted-line {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px dotted #666;
   }
 
   .middle {
@@ -35,8 +48,25 @@
       justify-content: space-between;
 
       .middle-title {
-        font-size: 18px;
-        color: #333;
+        height: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #323232;
+        line-height: 20px;
+      }
+
+      button {
+        width: 56px;
+        height: 30px;
+        border: 1px solid #2F78FF;
+        padding: 0;
+
+        span {
+          font-size: 12px;
+          font-weight: 400;
+          color: #2F78FF;
+          line-height: 17px;
+        }
       }
 
       margin-bottom: 6px;
@@ -44,16 +74,43 @@
 
     .middle-tip {
       margin-bottom: 10px;
+      height: 17px;
+      font-size: 12px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #666666;
+      line-height: 17px;
     }
   }
 
   .content {
     margin-bottom: 20px;
+
     .content-item {
       margin-bottom: 6px;
 
       h3 {
         margin-bottom: 4px;
+        height: 17px;
+        font-size: 12px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 600;
+        color: #323232;
+        line-height: 17px;
+      }
+    }
+
+    .ant-checkbox-wrapper {
+      margin-right: 30px;
+      padding: 5px 0;
+
+      .ant-checkbox+span {
+        height: 17px;
+        font-size: 12px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #323232;
+        line-height: 17px;
       }
     }
   }

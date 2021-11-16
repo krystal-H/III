@@ -1,12 +1,9 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { Switch, Redirect, Route, useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { Steps, Button, message } from 'antd';
+import { Steps, Button } from 'antd';
 
-import { getProductBaseInfo } from '../store/ActionCreator';
 import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
 import './ProductEdit.scss'
-
 import ProductProtocols from './product-protocols/index.js';
 import PageTitle from '../../../../components/page-title/PageTitle';
 import Hardware from './dev-hardware';
@@ -14,115 +11,76 @@ import ConfirmPanel from './firmpanel';
 import Validation from './validation'
 import ConfigService from './config-service';
 import TitleSet from './titleSet'
-import { MyContext } from './context'
 import { Notification } from '../../../../components/Notification';
-import { strToAsterisk, DateTool } from '../../../../util/util';
+import { strToAsterisk } from '../../../../util/util';
 import {
     EyeInvisibleTwoTone,
     EyeTwoTone,
 } from '@ant-design/icons';
-
-// 此部分路由不需要展示产品信息
-const NOT_SHOW = /(\/service\/appcontrol|cloudtime|scenelink)|\/applyRelease/;
-
-const mapStateToProps = state => {
-    return {
-        productBaseInfo: state.getIn(['product', 'productBaseInfo']).toJS()
-    }
-}
-
-const mapDispatchToProps = dispatch => {
-    return {
-        getProductBaseInfo: id => dispatch(getProductBaseInfo(id)) // 获取产品基本信息
-    }
-}
+import { Paths, post, get } from '../../../../api'
+const { Step } = Steps;
 
 // 获取路由中的ID参数
 const getProductIdFromPath = (match) => +match.params.id;
 
 
-function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
-    // let productItem = {}
-    const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
-    let history = useHistory();
-    // if (sessionStorage.getItem('productItem')) {
-    //     productItem = JSON.parse(sessionStorage.getItem('productItem'))
-    // } else {
-    //     return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
-    // }
-    let { path } = match,
-        productIdInRoutePath = getProductIdFromPath(match),
-        { mode } = productBaseInfo,
-        canOperate = (mode === 0);
+function ProductEdit({ match, location }) {
+    const origincurrent = +sessionStorage.getItem("stepnum") || 0;
 
-    const { Step } = Steps;
-    const stepList = [
-        {
-            title: '定义功能',
-            content: 'protocols',
-        },
-        {
-            title: '确定面板',
-            content: 'firmpanel',
-        },
-        {
-            title: '开发硬件',
-            content: 'projectSelect',
-        },
-        {
-            title: '配置服务',
-            content: 'configService',
-        },
-        {
-            title: '调试验证',
-            content: 'validation',
-        },
-    ];
-    let origincurrent = 0
-    stepList.forEach((item, index) => {
-        if (item.content == location.pathname.split('/')[6]) {
-            origincurrent = index
-        }
-    })
+    const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
+    const [showSecret, setShowSecret] = useState(false)
     const [current, setcurrent] = useState(origincurrent);
-    const refArr = {
-        active_0: useRef(),
-        active_1: useRef(),
-        active_2: useRef(),
-        active_3: useRef(),
-        active_4: useRef(),
-    }
-    //下一步
-    const [isContinue, setIsContinue] = useState(false);
+    const [maxCurrent, setMaxCurrent] = useState(origincurrent);
+
+
+    let history = useHistory();
+    
+    let { path } = match,
+        productIdInRoutePath = getProductIdFromPath(match);
+
+    const stepList = [
+        { title: '定义功能', content: 'protocols', mod:ProductProtocols },
+        { title: '确定面板', content: 'firmpanel', mod:ConfirmPanel },
+        { title: '开发硬件', content: 'projectSelect', mod:Hardware },
+        { title: '配置服务', content: 'configService', mod:ConfigService},
+        { title: '调试验证', content: 'validation', mod:Validation},
+    ];
+
+    let refAll = useRef();
     const next = () => {
         if (current === 2) {
-            refArr['active_' + current].onFinish()
+            refAll.onFinish()
         } else {
-            refArr['active_' + current].current.onFinish()
+            refAll.current.onFinish()
         }
     };
     // 发布产品
     const releaseProduct = () => {
-        refArr['active_' + current].current.showRelease()
+        refAll.current.showRelease()
     }
     const nextStep = useCallback(() => {
-        setcurrent(current + 1)
+        let nxtc =  current + 1;
+        if(nxtc > maxCurrent){
+            setMaxCurrent(nxtc)
+            post(Paths.upProMaxStep, {
+                productId: productIdInRoutePath,
+                step:nxtc+1
+            })
+        }
+        setcurrent(nxtc);
+        sessionStorage.setItem("stepnum",nxtc)
     });
     //上一步
     const prev = () => {
         setcurrent(current - 1);
+        sessionStorage.setItem("stepnum",current - 1)
     };
-    //tab切换
-    useEffect(() => {
-        if (location.pathname.split('/')[6] != stepList[current].content) {
-            history.push(match.url + '/' + stepList[current].content);
-        }
-    }, [current])
+   
     if (!productIdInRoutePath) {
 
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
-    const [showSecret, setShowSecret] = useState(false)
+    
     const changeState = () => {
         setShowSecret(!showSecret)
     }
@@ -176,6 +134,10 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
             </div>
         </div>
     </div>)
+
+
+    const ModStep = stepList[current].mod;
+
     return (
         <React.Fragment>
             <div className="eidt-wrapper">
@@ -193,31 +155,22 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
                             ))}
                         </Steps>
                     </div>
-                    <MyContext.Provider value={{ productIdInRoutePath }}>
-                        <Switch>
-                            <Route path={`${path}/protocols`} render={(props) => <ProductProtocols ref={refArr.active_0} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ProductProtocols>}></Route>
-                            <Route path={`${path}/firmpanel`} render={(props) => <ConfirmPanel ref={refArr.active_1} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} getProductBaseInfo={getProductBaseInfo} productId={productIdInRoutePath}></ConfirmPanel>}></Route>
-                            <Route path={`${path}/projectSelect`} render={(props) => <Hardware ref={ref => refArr.active_2 = ref} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></Hardware>}></Route>
-                            <Route path={`${path}/configService`} render={(props) => <ConfigService ref={refArr.active_3} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></ConfigService>}></Route>
-                            <Route path={`${path}/validation`} render={(props) => <Validation ref={refArr.active_4} isContinue={isContinue} {...props} nextStep={nextStep} canOperate={canOperate} productId={productIdInRoutePath}></Validation>}></Route>
-                            <Redirect to={`${path}/protocols`} />
-                        </Switch>
-                    </MyContext.Provider>
+                    <ModStep ref={ current==2 ? r=>{refAll=r} : refAll } nextStep={nextStep} productId={productIdInRoutePath} />
                 </div>
                 <div className='product-main-footer'>
                     {current > 0 && (
-                        <Button style={{ margin: '0 8px' }} onClick={() => prev()} type="primary" ghost>
+                        <Button style={{ margin: '0 8px' }} onClick={prev} type="primary" ghost>
                             上一步
                         </Button>
                     )}
                     {current < stepList.length - 1 && (
-                        <Button type="primary" onClick={() => next()}>
+                        <Button type="primary" onClick={next}>
                             下一步
                         </Button>
                     )}
 
                     {current === stepList.length - 1 && (
-                        <Button type="primary" onClick={() => releaseProduct()}>
+                        <Button type="primary" onClick={releaseProduct}>
                             发布产品
                         </Button>
                     )}
@@ -231,4 +184,4 @@ function ProductEdit({ productBaseInfo, getProductBaseInfo, match, location }) {
     )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductEdit)
+export default ProductEdit

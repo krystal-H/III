@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Table, Tooltip } from 'antd'
+import { Table, Tooltip,Modal  } from 'antd'
 import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { Paths, post } from '../../../../../api'
+import defaultImg from '../../../../../assets/images/commonDefault/hardware.png'
 import "./index.scss"
 import { Link } from 'react-router-dom';
 
@@ -32,7 +33,7 @@ class Hardware extends Component {
       {
         title: '操作',
         render: (text, record, index) => (
-          <Link to={{pathname: '/open/product/otaUpdate/list', search: `?productId=${props.productId}`}} target="_blank">
+          <Link to={{ pathname: '/open/product/otaUpdate/list', search: `?productId=${props.productId}` }} target="_blank">
             <div className="table-operation">固件升级</div>
           </Link>
         )
@@ -42,7 +43,9 @@ class Hardware extends Component {
       dataSource: [], // 固件列表
       allInfo: {}, // 返回信息
       selectedId: '1', // 模组的id
-      productItemData: JSON.parse(sessionStorage.getItem('productItem')) || {}
+      productItemData: JSON.parse(sessionStorage.getItem('productItem')) || {},
+      showImg: '',
+      imgUrl: '',
     }
   }
 
@@ -68,7 +71,9 @@ class Hardware extends Component {
       }
     })
   }
-
+  openImg = (url) => {
+    this.setState({ showImg: true, imgUrl: url })
+  }
   onFinish = (values) => {
     console.log('验证是否通过:', values);
     this.props.nextStep()
@@ -76,7 +81,7 @@ class Hardware extends Component {
 
   // 下载说明书
   downInstructions = (readmePdf) => {
-    readmePdf ? window.location = readmePdf : alert('暂无数据！')
+    readmePdf ? window.open(readmePdf) : alert('暂无数据！')
   }
 
   // 获取方案类型展示
@@ -106,9 +111,12 @@ class Hardware extends Component {
       res.data ? window.location = res.data : alert('暂无数据！')
     })
   }
-
+  //关闭图片
+  callImg = () => {
+    this.setState({ showImg: false })
+  }
   render() {
-    const { dataSource, allInfo, productItemData } = this.state
+    const { dataSource, allInfo, productItemData, showImg, imgUrl } = this.state
     return (
       <div className="hardware-dev-page">
         <div className="hardware-wrap">
@@ -121,7 +129,9 @@ class Hardware extends Component {
             <div className="module-cont">
               <div className="flex-s">
                 <div className="module-cont-left">
-                  <img src={allInfo.modulePicture || require('../../../../../assets/images/commonDefault/hardware.png')} alt="" />
+                  <img style={{ width: '100%' }} src={allInfo.modulePicture || defaultImg} alt=""
+                    onClick={() => { this.openImg(allInfo.modulePicture || defaultImg) }}
+                  />
                 </div>
                 <div className="module-cont-right">
                   <div className="module-title">{allInfo.moduleName || '-'}</div>
@@ -187,7 +197,7 @@ class Hardware extends Component {
                 {
                   productItemData.schemeType === 2 &&
                   <>
-                    <div>MCU模组 SDK开发</div>
+                    <div>MCU SDK开发</div>
                     <div className="blue">
                       <span onClick={() => this.downloadData()}>下载MCU开发资料包</span>
                       <Tooltip
@@ -201,11 +211,11 @@ class Hardware extends Component {
                 {
                   productItemData.schemeType === 3 &&
                   <>
-                    <div>模组SDK开发</div>
+                    <div>SDK开发</div>
                     <div className="blue">
-                      <span onClick={() => this.downloadData()}>下载模组SDK开发资料包</span>
+                      <span onClick={() => this.downloadData()}>下载SDK开发资料包</span>
                       <Tooltip
-                        title={'包含模组 SDK、Bin文件等'}
+                        title={'包含SDK等文件'}
                         placement="top">
                         <QuestionCircleOutlined className="tooltip-icon" />
                       </Tooltip>
@@ -234,6 +244,13 @@ class Hardware extends Component {
           </div>
         </div>
         {/* 固件升级 */}
+        {
+          showImg && <Modal title="图片展示" width='970px' visible={showImg} footer={null} onCancel={() => { this.callImg() }}>
+            <div style={{ textAlign: 'center' }}>
+              <img src={imgUrl} style={{ maxWidth: '800px' }} />
+            </div>
+          </Modal>
+        }
       </div>
     )
   }

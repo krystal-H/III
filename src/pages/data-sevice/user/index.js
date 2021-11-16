@@ -15,11 +15,11 @@ const options = [
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const originCount = [
-    { label: '新增用户数', count: 0 },
-    { label: '活跃用户数', count: 0 },
-    { label: '新增用户次日留存率(昨日)', count: 0 },
-    { label: '活跃用户次日留存率(昨日)', count: 0 },
-    { label: '累计用户数', count: 0 }]
+    { label: '新增用户数', count: '--' },
+    { label: '活跃用户数', count: '--' },
+    { label: '新增用户次日留存率(昨日)', count: '--' },
+    { label: '活跃用户次日留存率(昨日)', count: '--' },
+    { label: '累计用户数', count: '--' }]
 const columns = [
     {
         title: '日期',
@@ -58,13 +58,14 @@ export default function Device() {
     const [hackValue, setHackValue] = useState();
     const [value, setValue] = useState(); //时间值
     const disabledDate = current => {
-        if (!dates || dates.length === 0) {
-            return false;
-        }
-        const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
-        const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
-        const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
-        return isBeyong || tooEarly || tooLate
+        // if (!dates || dates.length === 0) {
+        //     return false;
+        // }
+        // const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
+        // const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
+        // const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
+        // return isBeyong || tooEarly || tooLate
+        return current && current > dayjs().subtract(1, 'day') || current < dayjs().subtract(30, 'day')
     };
 
     const onOpenChange = open => {
@@ -75,20 +76,32 @@ export default function Device() {
             setHackValue(undefined);
         }
     };
-    const timeCall = (value) => {
-        setValue(value)
-    }
+
+
     //======
     const [currentTime, setCurrentTime] = useState('1') //当前选择时间
     const [countData, setCountData] = useState(originCount)
     const [currentTab, setCurrentTab] = useState(0)
     const [tableData, setTableData] = useState([])
+    const [optionArr, setOptionArr] = useState([]) //产品列表
     const onChange3 = e => {
         setValue(null)
         setCurrentTime(e.target.value)
     };
-    const [selectType, setSelectType] = useState('') //产品种类
-
+    const timeCall = (value) => {
+        setCurrentTime('')
+        setValue(value)
+    }
+    const [selectType, setSelectType] = useState(0) //产品种类
+    const getType = () => {
+        post(Paths.allProductPubList, {}).then(res => {
+            res.data.unshift({ productId: 0, productName: "全部产品" })
+            setOptionArr(res.data)
+        })
+    }
+    useEffect(() => {
+        getType()
+    }, [])
     useEffect(() => {
         getData()
     }, [currentTime, value, selectType])
@@ -124,21 +137,21 @@ export default function Device() {
         }
         post(Paths.userDataAn, params, { loading }).then((res) => {
             if (Array.isArray(res.data)) {
-                let arr = [],tableArr=[]
+                let arr = [], tableArr = []
                 while (dayjs(params.startDate).isBefore(params.endDate, 'day')) {
                     arr.push(params.startDate)
-                    params.startDate =dayjs(params.startDate).add(1, 'day').format('YYYY-MM-DD')
+                    params.startDate = dayjs(params.startDate).add(1, 'day').format('YYYY-MM-DD')
                     console.log(arr)
                 }
                 arr.push(params.endDate)
-                arr.reverse().forEach(item=>{
-                    let val={
-                        "activeNum":0,
-                        "activeRatio":0,
-                        "newRatio":0,
-                        "totalNum":0,
-                        "summaryDate":item,
-                        "newNum":0
+                arr.reverse().forEach(item => {
+                    let val = {
+                        "activeNum": 0,
+                        "activeRatio": 0,
+                        "newRatio": 0,
+                        "totalNum": 0,
+                        "summaryDate": item,
+                        "newNum": 0
                     }
                     tableArr.push(val)
                 })
@@ -174,10 +187,6 @@ export default function Device() {
             window.open(res.data.path)
         });
     }
-    //==
-    // const initTableData=()=>{
-
-    // }
     //处理统计
     const dealCount = (origin) => {
         let count = [
@@ -290,9 +299,22 @@ export default function Device() {
         }
         setCurrentTab(index)
     }
+    //产品改变
+    const selectChange = (value) => {
+        setSelectType(value)
+    }
     return (
         <div id='device-analysis'>
-            <PageTitle title='用户分析' selectOnchange={val => setSelectType(val)} isRelProductData={true}>
+            <PageTitle title='用户分析' >
+                <div className='top-select'>
+                    <Select style={{ width: 150 }} value={selectType} onChange={selectChange} showSearch optionFilterProp="children">
+                        {
+                            optionArr.map(item => {
+                                return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
+                            })
+                        }
+                    </Select>
+                </div>
             </PageTitle>
             <div className='comm-shadowbox filter-wrap'>
                 <Radio.Group
@@ -309,6 +331,8 @@ export default function Device() {
                     onChange={val => timeCall(val)}
                     onOpenChange={onOpenChange}
                     format={'YYYY-MM-DD'}
+                    allowClear={false}
+                    style={{ 'borderColor': value && value.length ? '#1890ff' : '' }}
                 />
 
             </div>

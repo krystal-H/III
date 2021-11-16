@@ -2,7 +2,7 @@ import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'rea
 import { Button, Modal } from 'antd';
 import ChangeModal from './changeModal'
 import { post, Paths, get } from '../../../../../api';
-import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.png';
+import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.jpg';
 import { useHistory } from 'react-router-dom';
 import { cloneDeep } from "lodash";
 import GrayDebugg from './grayDebugg'
@@ -25,15 +25,18 @@ function confirmModel({ nextStep }, ref) {
     const [showTip, setShowTip] = useState(false)
     //获取最近发布的数据
     const [shoaLast, setShoaLast] = useState({})
-    const getList = () => {
+    const getList = (loading = true) => {
         let productId = 0
         if (sessionStorage.getItem('productItem')) {
             productId = JSON.parse(sessionStorage.getItem('productItem')).productId
         }
-        post(Paths.panelList, { productId }).then((res) => {
+        post(Paths.panelList, { productId }, { loading }).then((res) => {
             let data = res.data.list
             let lastEst = {}
-            if (!data.length) return;
+            if (!data.length) {
+                setShoaLast(lastEst)
+                return 
+            }
             lastEst = data[0]
             data.forEach(item => {
                 if (item.verifyStatus == 1) {
@@ -64,7 +67,7 @@ function confirmModel({ nextStep }, ref) {
         post(Paths.modelRel, params).then((res) => {
             Notification({
                 type: 'success',
-                description: '提交发布成功！'
+                description: '提交成功！'
             })
             setActionVis(false)
             getList()
@@ -87,6 +90,7 @@ function confirmModel({ nextStep }, ref) {
     }
     //取消
     const closeAction = () => {
+        getList()
         setActionVis(false)
     }
     //删除
@@ -161,11 +165,8 @@ function confirmModel({ nextStep }, ref) {
     const CancelRel = () => {
         setRelPanVis(false)
     }
+    //关闭发布
     const closeOkRel = () => {
-        Notification({
-            type: 'success',
-            description: '发布成功！'
-        })
         getList()
         setRelPanVis(false)
     }
@@ -173,20 +174,16 @@ function confirmModel({ nextStep }, ref) {
     const [isChangeModalVisible, setIsChangeModalVisible] = useState(false);
     const CancelChange = () => {
         setDefaultTab('1')
+        getList()
         setIsChangeModalVisible(false)
     }
     const openChangeTab = (val) => {
-        // if (val == 1) {
-        //     console.log(JSON.parse(sessionStorage.getItem('productItem')), '=====')
-        //     if (JSON.parse(sessionStorage.getItem('productItem')).schemeName != '免开发方案'){
-        //         return
-        //     }
-        // }
         setDefaultTab(val)
         setIsChangeModalVisible(true)
     }
     const closeChange = () => {
         setDefaultTab('1')
+        getList()
         setIsChangeModalVisible(false)
     }
     const openChange = () => {
@@ -281,7 +278,8 @@ function confirmModel({ nextStep }, ref) {
                 <div className='confirm-pannel-content-right'>
                     <div>请使用“数联智能”App，扫描以下二维码，体验此面板。</div>
                     <div className='model-panal-code'>
-                        <img src={shoaLast.qrcode || demoAppOfficial} alt='' />
+                        {!shoaLast.qrcode && <div className='no-panal-img'>提示：需上传H5后生成二维码</div>}
+                        { shoaLast.qrcode && <img src={shoaLast.qrcode} alt='' />} 
                     </div>
                     <div>
                         还没安装App？
@@ -300,14 +298,14 @@ function confirmModel({ nextStep }, ref) {
                 </div>
                 <div className='confirm-pannel-content-item'>
                     <div>自由配置面板</div>
-                    <div>直接拖拽可视化功能组件，所见即所得，DIY 出具有您的品牌风格的面板，适用于自定义开发方案。</div>
+                    <div>直接拖拽可视化功能组件，所见即所得，DIY 出适合您品牌风格的面板，适用于自定义开发方案。</div>
                     <Button type="primary" ghost onClick={() => { setShowTip(true) }}>
                         进入
                     </Button>
                 </div>
                 <div className='confirm-pannel-content-item'>
                     <div>自定义开发上传</div>
-                    <div>通过clife提供的一系列开发工具包，便捷的开发调试出最具品牌风格的面板，适用于自定义开发方案。</div>
+                    <div>通过clife提供的一系列开发工具包，便捷的开发调试出您的品牌风格面板，适用于自定义开发方案。</div>
                     <Button type="primary" ghost onClick={() => { openChangeTab('3') }}>
                         进入
                     </Button>
@@ -319,8 +317,8 @@ function confirmModel({ nextStep }, ref) {
             isChangeModalVisible && <ChangeModal isChangeModalVisible={isChangeModalVisible} defaultTab={defaultTab} closeChange={closeChange} CancelChange={CancelChange}></ChangeModal>
         }
         {
-            showOffice && <Modal title="安装“数联智能”App" width='370px' visible={showOffice} footer={null} onCancel={handleCancel}>
-                <div className='down-office-modal'>
+            showOffice && <Modal title="安装“数联智能”App" width='470px' visible={showOffice} footer={null} onCancel={handleCancel}>
+                <div className='down-office-modal' >
                     <img src={demoAppOfficial} />
                     <div>手机扫描二维码下载</div>
                 </div>

@@ -1,0 +1,1009 @@
+import React, { useEffect, useState, useImperativeHandle, forwardRef, useRef, useMemo } from 'react'
+import { Form, Input, Button, Space, Select, Radio, Tabs, Drawer } from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { post, Paths, get } from '../../../../../api';
+import { Notification } from '../../../../../components/Notification';
+import { unitCollection, multipleCollection } from '../../../../../configs/text-map';
+import { cloneDeep } from 'lodash'
+import './editInfo.scss'
+//tab
+//数据类型
+const dataOptions = [{
+    value: 'bool',
+    label: '布尔型',
+}, {
+    value: 'enum',
+    label: '枚举型',
+}, {
+    value: 'text',
+    label: '字符型',
+}, {
+    value: 'float',
+    label: '浮点型',
+}, {
+    value: 'int',
+    label: '整数型',
+}]
+let unikey = 0 //
+//事件类型
+const eventTabOptions = [
+    { label: '故障', value: 'fault' },
+    { label: '告警', value: 'alarm' },
+    { label: '信息', value: 'info' }]
+
+export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList, modelType, actionData }) {
+    const originData = JSON.parse(JSON.stringify(actionData))
+    const { TabPane } = Tabs;
+    useEffect(() => {
+    }, [])
+    const currentTab = actionData.funcType
+    const oneRef = useRef();
+    const twoRef = useRef();
+    const threeRef = useRef();
+    //tab自定义头部
+    const renderTabBar = (props, DefaultTabBar) => {
+        return (<div></div>)
+    }
+    //获取提交数据
+    const subData = () => {
+        if (currentTab === 'properties') {
+            oneRef.current.onFinish()
+        } else if (currentTab === 'events') {
+            twoRef.current.onFinish()
+        } else if (currentTab === 'services') {
+            threeRef.current.onFinish()
+        }
+    }
+    //提交数据
+    const sentReq = (data) => {
+        data.funcType = currentTab
+        data.type = 'update'
+        let productItem = JSON.parse(sessionStorage.getItem('productItem'))
+        data.productId = productItem.productId
+        data.content.standard = modelType == 1 ? true : false
+        data.content = JSON.stringify(data.content)
+
+        post(Paths.PhysicalModelAction, data).then((res) => {
+            onRefreshList()
+        });
+    }
+    return (
+        <Drawer
+            title={modelType === '1' ? '编辑标准功能' : '编辑自定义功能'}
+            placement="right"
+            closable={false}
+            onClose={onCloseRight}
+            visible={rightVisible}
+            destroyOnClose={true}
+            width={393}
+            footer={
+                <div
+                    style={{
+                        textAlign: 'right',
+                    }}
+                >
+                    <Button onClick={onCloseRight} style={{ marginRight: 8 }}>
+                        取消
+                    </Button>
+                    <Button onClick={subData} type="primary">
+                        确定
+                    </Button>
+                </div>
+            }
+        >
+            <div className='edit-left-protocol-wrap'> <Tabs activeKey={currentTab} defaultActiveKey={actionData.funcType} renderTabBar={renderTabBar}>
+                <TabPane tab="Tab 1" key="properties">
+                    <NumberTemp ref={oneRef} currentTab={currentTab} sentReq={sentReq} actionData={originData} modelType={modelType}></NumberTemp>
+                </TabPane>
+                <TabPane tab="Tab 2" key="events">
+                    <EventTemp ref={twoRef} sentReq={sentReq} key="events" actionData={originData} modelType={modelType}></EventTemp>
+                </TabPane>
+                <TabPane tab="Tab 3" key="services">
+                    <ServeTemp ref={threeRef} sentReq={sentReq} actionData={originData} modelType={modelType} />
+                </TabPane>
+            </Tabs>
+            </div>
+        </Drawer>)
+}
+
+//属性组件
+function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
+    const [form] = Form.useForm();
+    const onFinish = async () => {
+        try {
+            let value = await form.validateFields()
+            // 验证通过后进入
+            value = JSON.parse(JSON.stringify(value))
+            let origin = {}
+            origin.content = {}
+            if (value.type === 'bool') {
+                origin.content = value
+            } else if (value.type === 'enum') {
+                let emusList = value.emusList.filter(item => {
+                    if (item.key && item.value) {
+                        return item
+                    }
+                })
+                let specs = emusList.reduce((pre, cur) => {
+                    pre[cur.key.toString()] = cur.value
+                    return pre
+                }, {})
+                value.specs = specs
+                origin.content = value
+            } else if (value.type === 'text') {
+                origin.content = value
+            } else if (value.type === 'int' || value.type === 'float') {
+                origin.content = value
+            }
+            origin.content.dataType = {
+                type: origin.content.type,
+                specs: origin.content.specs
+            }
+            delete origin.content.type
+            delete origin.content.specs
+            sentReq(origin)
+        } catch (errInfo) {
+            console.log('Validate Failed:', errInfo);
+        }
+    }
+    const originOutput = useMemo(() => {
+        let obj = {}
+        obj.name = actionData.funcName
+        obj.identifier = actionData.funcIdentifier
+        obj.type = actionData.dataTypeEN
+
+        actionData.funcParamList.forEach(item => {
+            obj.accessMode = item.accessMode
+            if (item.dataTypeEN === "enum") {
+                let emusList = []
+                for (let key in item.propertyMap) {
+                    emusList.push({
+                        key,
+                        value: item.propertyMap[key]
+                    })
+                }
+                obj.emusList = emusList
+            } else if (item.dataTypeEN === "int" || item.dataTypeEN === "float") {
+                let keys = ['interval', 'min', 'max', 'multiple', 'unit']
+                let specs = {}
+                keys.forEach(key => {
+                    specs[key] = item.propertyMap[key]
+                })
+                obj.specs = specs
+            } else if (item.dataTypeEN === "bool") {
+                let specs = {
+                    '1': item.propertyMap['1'],
+                    '0': item.propertyMap['0']
+                }
+                obj.specs = specs
+            }
+        })
+        return obj
+    }, [])
+    //数据类型改变
+    const onTypeChange = (value) => {
+        console.log(value)
+    }
+    useImperativeHandle(ref, () => ({
+        onFinish: onFinish
+    }));
+    //添加枚举参数
+    const AddEnums = (add, count) => {
+        if (count > 11) {
+            Notification({
+                description: `不能超过12条数据`,
+                type: 'warn'
+            });
+            return
+        }
+        add()
+    }
+    return (
+        <Form
+            labelCol={{
+                span: 8,
+            }}
+            wrapperCol={{
+                span: 16,
+            }}
+            form={form}
+            initialValues={originOutput}
+        >
+            <Form.Item
+                label="功能点名称"
+                name='name'
+                rules={[
+                    {
+                        required: true,
+                    },
+                ]}
+
+            >
+                <Input />
+            </Form.Item>
+
+            <Form.Item
+                label="标识符"
+                name='identifier'
+                rules={[
+                    {
+                        required: true,
+                    },
+                ]}
+            >
+                {
+                    modelType == 1 ? <span>{actionData.funcIdentifier}</span> : <Input />
+                }
+
+            </Form.Item>
+            <Form.Item
+                label="数据类型"
+                name='type'
+            >
+                <Select onChange={onTypeChange}>
+                    {
+                        dataOptions.map(item => (
+                            <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
+                        ))
+                    }
+                </Select>
+            </Form.Item>
+
+            <Form.Item
+                noStyle
+                shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
+            >
+                {({ getFieldValue }) => {
+                    if (getFieldValue('type') === 'bool') {
+                        return (<>
+                            <Form.Item
+                                label="布尔值"
+                                rules={[{ required: true }]}
+                            >
+                                <Form.Item
+                                    name={['specs', '0']}
+                                    label="0"
+                                >
+                                    <Input placeholder="参数描述" />
+                                </Form.Item>
+                                <Form.Item
+                                    name={['specs', '1']}
+                                    label="1"
+                                >
+                                    <Input placeholder="参数描述" />
+                                </Form.Item>
+                            </Form.Item>
+                        </>)
+                    }
+                    if (getFieldValue('type') === 'enum') {
+                        return (
+                            <>
+                                <Form.Item
+                                    label="枚举型:"
+                                    name="enumus_text"
+                                    className='enums-lise-nobottom'
+                                ><span style={{ marginRight: '50px' }}>参数值</span>-<span style={{ marginLeft: '30px' }}>参数描述</span>
+                                </Form.Item>
+
+                                <div className='right-list-wrap' >
+                                    <Form.List name="emusList">
+                                        {(fields, { add, remove }) => (
+                                            <>
+                                                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                                                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                                        <Form.Item
+                                                            {...restField}
+                                                            name={[name, 'key']}
+                                                            fieldKey={[fieldKey, 'key']}
+                                                            className='enums-lise-nobottom'
+                                                            noStyle
+                                                        >
+                                                            <Input />
+                                                        </Form.Item>
+                                                        <span>-</span>
+                                                        <Form.Item
+                                                            {...restField}
+                                                            name={[name, 'value']}
+                                                            fieldKey={[fieldKey, 'value']}
+                                                            className='enums-lise-nobottom'
+                                                            noStyle
+                                                        >
+                                                            <Input />
+                                                        </Form.Item>
+                                                        <MinusCircleOutlined onClick={() => remove(name)} />
+                                                    </Space>
+                                                ))}
+                                                <Form.Item>
+                                                    <Button type="dashed" onClick={() => { AddEnums(add, fields.length) }} block icon={<PlusOutlined />}>
+                                                        新加
+                                                    </Button>
+                                                </Form.Item>
+                                            </>
+                                        )}
+                                    </Form.List>
+                                </div>
+                            </>
+                        )
+                    }
+                    if (getFieldValue('type') === 'int' || getFieldValue('type') === 'float') {
+                        return (<>
+                            <Form.Item label="数值范围">
+                                <div className='number-input-wrap'>
+                                    <Form.Item
+                                        name={['specs', 'min']}
+                                        noStyle
+                                        rules={[{ required: true, message: '请输入最小值' }]}
+                                    >
+                                        <Input style={{ width: '40%' }} />
+                                    </Form.Item>
+                                    <span style={{ margin: '0 10px' }}>至</span>
+                                    <Form.Item
+                                        name={['specs', 'max']}
+                                        noStyle
+                                        rules={[{ required: true, message: '请输入最小值' }]}
+                                    >
+                                        <Input style={{ width: '40%' }} />
+                                    </Form.Item>
+                                </div>
+                            </Form.Item>
+                            <Form.Item
+                                label='数值间隔'
+                                name={['specs', 'interval']}
+                                rules={[{ required: true }]}
+                            ><Input /></Form.Item>
+                            <Form.Item name={['specs', 'multiple']} label="倍数" >
+                                <Select >
+                                    {
+                                        multipleCollection.map(item => {
+                                            return <Select.Option value={item.value} key={item.value}>{item.label}</Select.Option>
+                                        })
+                                    }
+                                </Select>
+                            </Form.Item>
+                            <Form.Item name={['specs', 'unit']} label="单位" >
+                                <Select>
+                                    {
+                                        unitCollection.map(item => {
+                                            return <Select.Option value={item.Symbol} key={item.Symbol}>{item.Symbol}</Select.Option>
+                                        })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </>)
+                    }
+                    return null
+                }
+                }
+            </Form.Item>
+
+            <Form.Item
+                label="数据传输类型"
+                name="accessMode"
+            >
+                <Radio.Group >
+                    <Radio value="rw">可下发可上报</Radio>
+                    <Radio value="w">可下发</Radio>
+                    <Radio value="r">可上报</Radio>
+                </Radio.Group>
+            </Form.Item>
+        </Form>
+    )
+}
+NumberTemp = forwardRef(NumberTemp)
+//事件组件
+let testCount = 0
+let paramsWrap = []
+function EventTemp({ actionData, sentReq, modelType }, ref) {
+    const [form] = Form.useForm();
+    const originOutput = useMemo(() => {
+        let obj = {
+            input: [],
+            output: []
+        }
+        actionData.funcParamList.forEach(item => {
+            unikey++
+            let newItem = {
+                name: item.name,
+                identifier: item.identifier,
+                type: item.dataTypeEN,
+                unikey
+            }
+            if (item.dataTypeEN === "enum") {
+                let emusList = []
+                for (let key in item.propertyMap) {
+                    emusList.push({
+                        key,
+                        value: item.propertyMap[key]
+                    })
+                }
+                newItem.emusList = emusList
+            } else if (item.dataTypeEN === "int" || item.dataTypeEN === "float") {
+                let keys = ['interval', 'min', 'max', 'multiple', 'unit']
+                let specs = {}
+                keys.forEach(key => {
+                    specs[key] = item.propertyMap[key]
+                })
+                newItem.specs = specs
+            } else if (item.dataTypeEN === "bool") {
+                let specs = {
+                    '1': item.propertyMap['1'],
+                    '0': item.propertyMap['0']
+                }
+                newItem.specs = specs
+            }
+            obj.output.push(newItem)
+        })
+        return obj
+    }, [])
+    const [newParamsList, setNewParamsList] = useState(originOutput.output)
+    useImperativeHandle(ref, () => ({
+        onFinish: onFinish
+    }));
+    const [isCheck, setIsCheck] = useState(0)
+    //验证回调
+    function sentAddData(data2) {
+        let data = JSON.parse(JSON.stringify(data2))
+        testCount++
+        if (data) {
+            paramsWrap.push(data)
+        }
+        if (testCount === newParamsList.length) {
+            if (paramsWrap.length === testCount) {
+                let value = form.getFieldsValue()
+                value = JSON.parse(JSON.stringify(value))
+                let origin = {}
+                value.outputData = paramsWrap
+                origin.content = value
+                sentReq(origin)
+            }
+
+        }
+    }
+
+    //==================
+
+    const addParams = () => {
+        unikey++
+        setNewParamsList(pre => {
+            let obj = cloneDeep(pre)
+            obj.push({ unikey })
+            return obj
+        })
+    }
+
+    //触发验证及提交
+    const onFinish = async () => {
+        paramsWrap = []
+        testCount = 0
+        form.validateFields().then(value => {
+            setIsCheck(isCheck + 1)
+        })
+    }
+    const delItemObj = (index, type) => {
+        setNewParamsList(pre => {
+            let arr = cloneDeep(pre)
+            arr.splice(index, 1)
+            return arr
+        })
+    }
+    return (
+        <>
+            <Form
+                name="basic"
+                labelCol={{
+                    span: 8,
+                }}
+                wrapperCol={{
+                    span: 16,
+                }}
+                form={form}
+                initialValues={{ name: actionData.funcName, identifier: actionData.funcIdentifier, type: actionData.eventType }}
+            >
+                <Form.Item
+                    label="功能点名称"
+                    name="name"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="标识符"
+                    name="identifier"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    {
+                        modelType == 1 ? <span>{actionData.funcIdentifier}</span> : <Input />
+                    }
+                </Form.Item>
+                <Form.Item
+                    label="事件类型"
+                    name="type"
+                >
+                    <Radio.Group options={eventTabOptions} />
+                </Form.Item>
+                <Form.Item
+                    label="输出参数"
+                >
+                    <Button
+                        type="dashed"
+                        onClick={addParams}
+                        style={{ width: '60%' }}
+                        icon={<PlusOutlined />}
+                    >
+                        添加参数
+                    </Button>
+                </Form.Item>
+            </Form>
+
+            {
+                newParamsList.map((item, key) => {
+                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true} 
+                    unikey={item.unikey} key={item.unikey} data={item} delItemObj={delItemObj} />
+                })
+            }
+        </>
+    )
+}
+EventTemp = forwardRef(EventTemp)
+//服务组件
+let seviceCount = 0
+let inputparamsWrap = []
+let outputparamsWrap = []
+function ServeTemp({ sentReq, actionData, modelType }, ref) {
+    const [form] = Form.useForm();
+    const originOutput = useMemo(() => {
+        let obj = {
+            input: [],
+            output: []
+        }
+        actionData.funcParamList.forEach(item => {
+            let newItem = {
+                name: item.name,
+                identifier: item.identifier,
+                type: item.dataTypeEN,
+                unikey: unikey++
+            }
+            if (item.dataTypeEN === "enum") {
+                let emusList = []
+                for (let key in item.propertyMap) {
+                    emusList.push({
+                        key,
+                        value: item.propertyMap[key]
+                    })
+                }
+                newItem.emusList = emusList
+            } else if (item.dataTypeEN === "int" || item.dataTypeEN === "float") {
+                let keys = ['interval', 'min', 'max', 'multiple', 'unit']
+                let specs = {}
+                keys.forEach(key => {
+                    specs[key] = item.propertyMap[key]
+                })
+                newItem.specs = specs
+            } else if (item.dataTypeEN === "bool") {
+                let specs = {
+                    '1': item.propertyMap['1'],
+                    '0': item.propertyMap['0']
+                }
+                newItem.specs = specs
+            }
+            if (item.type === '输出') {
+                obj.output.push(newItem)
+            } else {
+                obj.input.push(newItem)
+            }
+        })
+        return obj
+    }, [])
+    const [inputList, setInputList] = useState(originOutput.input)
+    const [outputList, setOutputList] = useState(originOutput.output)
+    const [isCheck, setIsCheck] = useState(0)
+    //添加输入框
+    const addinput = (isIn) => {
+        unikey++
+        if (isIn) {
+            setInputList(pre => {
+                let obj = cloneDeep(pre)
+                obj.push({ unikey })
+                return obj
+            })
+        } else {
+            setOutputList(pre => {
+                let obj = cloneDeep(pre)
+                obj.push({})
+                return obj
+            })
+        }
+    }
+    //接收参数
+    const sentAddData = (data2, params) => {
+        let data = JSON.parse(JSON.stringify(data2))
+        seviceCount++
+        if (params.type) {
+            inputparamsWrap.push(data)
+        } else {
+            outputparamsWrap.push(data)
+        }
+        if (seviceCount === (inputList.length + outputList.length)) {
+            if ((inputparamsWrap.length + outputparamsWrap.length) === seviceCount) {
+                let value = form.getFieldsValue()
+                value = JSON.parse(JSON.stringify(value))
+                let origin = {}
+                value.outputData = outputparamsWrap
+                value.inputData = inputparamsWrap
+                origin.content = value
+                sentReq(origin)
+            }
+
+        }
+    }
+    const onFinish = async () => {
+        seviceCount = 0
+        inputparamsWrap = []
+        outputparamsWrap = []
+        form.validateFields().then(value => {
+            setIsCheck(isCheck + 1)
+        })
+    }
+    useImperativeHandle(ref, () => ({
+        onFinish: onFinish
+    }));
+    //删除
+    const delItemObj = (index, type) => {
+        if (type) {
+            setInputList(pre => {
+                let arr = cloneDeep(pre)
+                arr.splice(index, 1)
+                return arr
+            })
+        } else {
+            setOutputList(pre => {
+                let arr = cloneDeep(pre)
+                arr.splice(index, 1)
+                return arr
+            })
+        }
+    }
+    return (
+        <>
+            <Form
+                labelCol={{
+                    span: 8,
+                }}
+                wrapperCol={{
+                    span: 16,
+                }}
+                form={form}
+                initialValues={{ name: actionData.funcName, identifier: actionData.funcIdentifier }}
+            >
+                <Form.Item
+                    label="功能点名称"
+                    name="name"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="标识符"
+                    name="identifier"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    {
+                        modelType == 1 ? <span>{actionData.funcIdentifier}</span> : <Input />
+                    }
+                </Form.Item>
+            </Form>
+            <Form
+                labelCol={{
+                    span: 8,
+                }}
+                wrapperCol={{
+                    span: 16,
+                }}
+            >
+                <Form.Item
+                    label="输入参数"
+                >
+                    <Button
+                        type="dashed"
+                        onClick={() => { addinput(true) }}
+                        style={{ width: '60%' }}
+                        icon={<PlusOutlined />}
+                    >
+                        添加参数
+                    </Button>
+                </Form.Item>
+            </Form>
+            {
+                inputList.map((item, key) => {
+                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true}
+                        unikey={item.unikey} key={item.unikey} data={item} delItemObj={delItemObj} />
+                })
+            }
+            <Form
+                labelCol={{
+                    span: 8,
+                }}
+                wrapperCol={{
+                    span: 16,
+                }}
+            >
+                <Form.Item
+                    label="输出参数"
+                >
+                    <Button
+                        type="dashed"
+                        onClick={() => { addinput(false) }}
+                        style={{ width: '60%' }}
+                        icon={<PlusOutlined />}
+                    >
+                        添加参数
+                    </Button>
+                </Form.Item>
+            </Form>
+            {
+                outputList.map((item, key) => {
+                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={false}
+                        unikey={item.unikey} key={item.unikey} data={item} delItemObj={delItemObj} />
+                })
+            }
+        </>
+    )
+}
+ServeTemp = forwardRef(ServeTemp)
+//添加参数
+function AddParams({ sentAddData, type, data, isCheck, refIndex, unikey, delItemObj }, ref) {
+    const [form] = Form.useForm();
+    useEffect(() => {
+        if (isCheck) {
+            onFinish()
+        }
+    }, [isCheck])
+    const onFinish = async () => {
+        form.validateFields().then(value => {
+            value = JSON.parse(JSON.stringify(value))
+            let origin = {}
+            origin.content = {}
+            if (value.type === 'bool') {
+                origin.content = value
+            } else if (value.type === 'enum') {
+                let emusList = value.emusList.filter(item => {
+                    if (item.key && item.value) {
+                        return item
+                    }
+                })
+                let specs = emusList.reduce((pre, cur) => {
+                    pre[cur.key.toString()] = cur.value
+                    return pre
+                }, {})
+                value.specs = specs
+                origin.content = value
+            } else if (value.type === 'text') {
+                origin.content = value
+            } else if (value.type === 'int' || value.type === 'float') {
+                origin.content = value
+            }
+            origin.content.dataType = {
+                type: origin.content.type,
+                specs: origin.content.specs
+            }
+            delete origin.content.type
+            delete origin.content.specs
+            sentAddData(origin.content, type)
+        }).catch(err => {
+            sentAddData(false)
+        })
+    }
+    //添加枚举参数
+    const AddEnums = (add, count) => {
+        if (count > 11) {
+            Notification({
+                description: `不能超过12条数据`,
+                type: 'warn'
+            });
+            return
+        }
+        add()
+    }
+    const delItem = () => {
+        delItemObj(refIndex, type)
+    }
+    return (
+        <div className='add-tempele-wrap add-params-wrap'>
+            <MinusCircleOutlined className='del-icon-params' onClick={delItem} />
+            <Form form={form}
+                initialValues={data}
+                labelCol={{
+                    span: 8,
+                }}
+                wrapperCol={{
+                    span: 16,
+                }}>
+
+                <Form.Item
+                    label="参数名称"
+                    name="name"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    label="参数标识"
+                    name="identifier"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                ><Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="数据类型"
+                    name='type'
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <Select >
+                        {
+                            dataOptions.map(item => (
+                                <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
+                            ))
+                        }
+                    </Select>
+                </Form.Item>
+                <Form.Item
+                    noStyle
+                    shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
+                >
+                    {({ getFieldValue }) => {
+                        if (getFieldValue('type') === 'bool') {
+                            return (<>
+                                <Form.Item
+                                    label="布尔值"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Form.Item
+                                        name={['specs', '0']}
+                                        label="0"
+                                    >
+                                        <Input placeholder="参数描述" />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name={['specs', '1']}
+                                        label="1"
+                                    >
+                                        <Input placeholder="参数描述" />
+                                    </Form.Item>
+                                </Form.Item>
+                            </>)
+                        }
+                        if (getFieldValue('type') === 'enum') {
+                            return (
+                                <>
+                                    <Form.Item
+                                        label="枚举型:"
+                                        name="enumus_text"
+                                        className='enums-lise-nobottom'
+                                    ><span style={{ marginRight: '50px' }}>参数值</span>-<span style={{ marginLeft: '30px' }}>参数描述</span>
+                                    </Form.Item>
+
+                                    <div className='right-list-wrap' >
+                                        <Form.List name="emusList">
+                                            {(fields, { add, remove }) => (
+                                                <>
+                                                    {fields.map(({ key, name, fieldKey, ...restField }) => (
+                                                        <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                                            <Form.Item
+                                                                {...restField}
+                                                                name={[name, 'key']}
+                                                                fieldKey={[fieldKey, 'key']}
+                                                                className='enums-lise-nobottom'
+                                                                noStyle
+                                                            >
+                                                                <Input />
+                                                            </Form.Item>
+                                                            <span>-</span>
+                                                            <Form.Item
+                                                                {...restField}
+                                                                name={[name, 'value']}
+                                                                fieldKey={[fieldKey, 'value']}
+                                                                className='enums-lise-nobottom'
+                                                                noStyle
+                                                            >
+                                                                <Input />
+                                                            </Form.Item>
+                                                            <MinusCircleOutlined onClick={() => remove(name)} />
+                                                        </Space>
+                                                    ))}
+                                                    <Form.Item>
+                                                        <Button type="dashed" onClick={() => { AddEnums(add, fields.length) }} block icon={<PlusOutlined />}>
+                                                            新加
+                                                        </Button>
+                                                    </Form.Item>
+                                                </>
+                                            )}
+                                        </Form.List>
+                                    </div>
+                                </>
+                            )
+                        }
+                        if (getFieldValue('type') === 'int' || getFieldValue('type') === 'float') {
+                            return (<>
+                                <Form.Item label="数值范围">
+                                    <div className='number-input-wrap'>
+                                        <Form.Item
+                                            name={['specs', 'min']}
+                                            noStyle
+                                            rules={[{ required: true, message: '请输入最小值' }]}
+                                        >
+                                            <Input style={{ width: '40%' }} />
+                                        </Form.Item>
+                                        <span style={{ margin: '0 10px' }}>至</span>
+                                        <Form.Item
+                                            name={['specs', 'max']}
+                                            noStyle
+                                            rules={[{ required: true, message: '请输入最大值' }]}
+                                        >
+                                            <Input style={{ width: '40%' }} />
+                                        </Form.Item>
+                                    </div>
+                                </Form.Item>
+                                <Form.Item
+                                    label='数值间隔'
+                                    name={['specs', 'interval']}
+                                    rules={[{ required: true }]}
+                                ><Input /></Form.Item>
+                                <Form.Item name={['specs', 'multiple']} label="倍数" >
+                                    <Select >
+                                        {
+                                            multipleCollection.map(item => {
+                                                return <Select.Option value={item.value} key={item.value}>{item.label}</Select.Option>
+                                            })
+                                        }
+                                    </Select>
+                                </Form.Item>
+                                <Form.Item name={['specs', 'unit']} label="单位" >
+                                    <Select>
+                                        {
+                                            unitCollection.map(item => {
+                                                return <Select.Option value={item.Symbol} key={item.Symbol}>{item.Symbol}</Select.Option>
+                                            })
+                                        }
+                                    </Select>
+                                </Form.Item>
+                            </>)
+                        }
+                        return null
+                    }
+                    }
+                </Form.Item>
+
+            </Form>
+        </div>)
+
+}

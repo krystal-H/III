@@ -109,11 +109,11 @@ export default class GroupDetailt extends PureComponent {
     //获取产品下拉列表
     getDownProduct = () => {
         get(Paths.getProductType).then((res) => {
-            let productList = []
-            for (let key in res.data) {
-                productList.push({ productId: key, productName: res.data[key] })
-            }
-            this.setState({ productList });
+            // let productList = []
+            // for (let key in res.data) {
+            //     productList.push({ productId: key, productName: res.data[key] })
+            // }
+            this.setState({productList:res.data || []});
         });
     }
     //获取分组中的设备列表

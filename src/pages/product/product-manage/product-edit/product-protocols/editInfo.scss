@@ -66,16 +66,17 @@
     margin-bottom: 20px;
     position: relative;
 
-    // &:hover .del-icon-params {
-    //   display: block;
-    // }
+    &:hover .del-icon-params {
+      display: block;
+    }
 
-    // .del-icon-params {
-    //   position: absolute;
-    //   top: 0;
-    //   right: 0;
-    //   display: none;
-    // }
+    .del-icon-params {
+      position: absolute;
+      top: -5px;
+      right: 0;
+      display: none;
+      color: #666;
+    }
 
     .item-wrap {
       display: flex;
@@ -95,4 +96,20 @@
 
 .right-list-wrap {
   padding-left: 112px;
+}
+
+.right-list-wrap2 {
+  padding-left: 112px;
+
+  >div {
+    display: flex;
+
+    div {
+      &:first-child {
+        width: 92px;
+      }
+    }
+
+  }
+
 }

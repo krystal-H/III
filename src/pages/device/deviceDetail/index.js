@@ -32,7 +32,7 @@ export default function DeviceInfo({ match }) {
         <PageTitle backTitle='设备详情' backHandle={() => { history.push('/open/device/devManage/list') }}>
             <div className='device-top'>
                 <div className='device-top-item'>
-                    <label className='device-label'>设备ID：</label><span className='device-text'>{baseInfo.deviceId}</span>
+                    <label className='device-label'>设备ID：</label><span className='device-text'>{baseInfo.deviceUniqueId}</span>
                     <span className='device-status'>{baseInfo.onlineStatus == 1 ? '在线' : '离线'}</span>
                 </div>
                 <div className='device-top-item'><label className='device-label'>物理地址ID：</label><span className='device-text'></span>{baseInfo.deviceMac}</div>
@@ -52,7 +52,7 @@ export default function DeviceInfo({ match }) {
                     <DevShadow devceId={baseInfo.deviceId} baseInfo={baseInfo}/>
                 </TabPane>
                 <TabPane key={'4'} tab={'远程配置'}>
-                    <DevSet devceId={baseInfo.deviceId} />
+                    <DevSet devceId={baseInfo.deviceId} baseInfo={baseInfo}/>
                 </TabPane>
             </Tabs>
         </div>

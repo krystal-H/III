@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import { Carousel, Button } from 'antd';
+import { Carousel, Button,Modal } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
@@ -46,6 +46,7 @@ export default function OverviewWrap() {
         getDevThreeList()
         getProductCount()
         getProductList()
+
     }, [])
     let history = useHistory();
     //轮播图
@@ -88,7 +89,7 @@ export default function OverviewWrap() {
     }
     //设备列表
     const [devOneList, setDevOneList] = useState({
-        exception: 0, total: 0, totalActive: 0, todayActive: 0
+        exception: '--', total: '--', totalActive: '--', todayActive: '--'
     })
     const getDevOneList = () => {
         post(Paths.devMnCount).then((res) => {
@@ -101,14 +102,14 @@ export default function OverviewWrap() {
     //         setDevTwoList(res.data)
     //     });
     // }
-    const [devThreeList, setDevThreeList] = useState({ processed: 0, lastWarnTime: "-", pending: 0, send: 0 })
+    const [devThreeList, setDevThreeList] = useState({ processed: '--', lastWarnTime: "--", pending: '--', send: '--' })
     const getDevThreeList = () => {
         post(Paths.devWarnCount).then((res) => {
             setDevThreeList(res.data)
         });
     }
     //产品统计
-    const [productCount, setProductCount] = useState({ online: 0, fault: 0, total: 0, devTotal: 0 })
+    const [productCount, setProductCount] = useState({ online: '--', fault: '--', total: '--', devTotal: '--' })
     const getProductCount = () => {
         post(Paths.productCount).then((res) => {
             setProductCount(res.data)
@@ -122,13 +123,6 @@ export default function OverviewWrap() {
                 setProductList(res.data.records)
             }
         })
-        // get(Paths.productList).then((res) => {
-        //     if (res.data.length > 3) {
-        //         setProductList(res.data.slice(0, 3))
-        //     } else {
-        //         setProductList(res.data)
-        //     }
-        // });
     }
     const productStatuFilter = (value) => {
         // (0开发模式 ,1生产模式，2-审核中)
@@ -285,6 +279,8 @@ export default function OverviewWrap() {
             });
         }
     }
+    //未开发
+    const [showTip,setShowTip]=useState(false)
     return (
         <div className='over-view'>
             {
@@ -363,7 +359,7 @@ export default function OverviewWrap() {
                                 <img src={projectmn2} />
                                 <div >固件升级</div>
                             </div>
-                            <div onClick={() => { goAuPage('场景服务', '/open/product/ruleEnginet') }}>
+                            <div onClick={() => { goAuPage('场景服务', '/open/product/ruleEngine') }}>
                                 <img src={projectmn3} />
                                 <div >场景服务</div>
                             </div>
@@ -371,7 +367,7 @@ export default function OverviewWrap() {
                                 <img src={projectmn4} />
                                 <div >云端定时</div>
                             </div>
-                            <div onClick={() => { goAuPage('云端定时', '/open/product/remoteCofig') }}>
+                            <div onClick={() => { goAuPage('远程配置', '/open/product/remoteCofig') }}>
                                 <img src={projectmn5} />
                                 <div>远程配置</div>
                             </div>
@@ -575,7 +571,7 @@ export default function OverviewWrap() {
                             <div>帮助</div>
                         </div>
                         <div className='over-view-help hover-commons-unite'>
-                            <div>
+                            <div onClick={()=>{setShowTip(true)}}>
                                 <img src={help1} alt='' />
                                 <div>客服</div>
                             </div>
@@ -598,6 +594,14 @@ export default function OverviewWrap() {
                     getProductListNew={getProductListNew}
                     cancelHandle={closeNewProduct}>
                 </AddProductModal>
+            }
+            {/* 待开发功能 */}
+            {
+                showTip && <Modal title="温馨提示" width='370px' visible={showTip} footer={null} onCancel={() => { setShowTip(false) }}>
+                    <div className='down-office-modal'>
+                        <div>此功能正在升级维护中，敬请期待~</div>
+                    </div>
+                </Modal>
             }
         </div>
     )

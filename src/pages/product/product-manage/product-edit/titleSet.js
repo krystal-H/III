@@ -34,7 +34,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     brandId: val.brandId,
                     productIcon: val.productIcon[0].url,
                     productCode: val.productCode,
-                    modifyTime:res.data.modifyTime
+                    modifyTime: res.data.modifyTime
                 }
                 onOkClose(obj)
             });
@@ -109,23 +109,19 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                             },
                         ]}
                     >
-                        <Select  >
+                        <span>{productItem.brandName}</span>
+                        {/* <Select  >
                             {
                                 optionArr.map(item => {
                                     return (<Select.Option value={item.brandId} key={item.brandId}>{item.fullName}</Select.Option>)
                                 })
                             }
-                        </Select>
+                        </Select> */}
 
                     </Form.Item>
                     <Form.Item
                         label="产品型号"
                         name="productCode"
-                        rules={[
-                            {
-                                required: true,
-                            },
-                        ]}
                     >
                         <Input />
                     </Form.Item>

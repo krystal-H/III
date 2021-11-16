@@ -46,7 +46,7 @@ class List extends PureComponent {
     }
     this.columns = [
       {
-        title: "产品", dataIndex: "productName", key: "productName",
+        title: "产品", dataIndex: "productName", key: "productName",width: 380,
         render: (text, record, index) => {
           return (
             <div className="pro-show" >
@@ -69,7 +69,7 @@ class List extends PureComponent {
       },
       {
         title: "操作", key: "",
-        width: 300,
+        width: 250,
         render: (text, record, index) => (
           <div className="operation">
             <span className="continue" onClick={this.clickProductInfo.bind(this, record)}>{record.status === 1 ? '开发详情' : '继续开发'}</span>
@@ -145,22 +145,26 @@ class List extends PureComponent {
   // 继续开发  ——> detail 
   // 产品状态 statusStr -开发中，1-已发布，2-审核中）
   clickProductInfo(record) {
+    let { status, isOldProduct, productId, step=1} = record;
     //未发布的老产品禁止操作 弹窗提示
-    if (record.isOldProduct && record.status !== 1) {
+    if (isOldProduct && status !== 1) {
       this.toggleOldProVisiable()
       return
     }
+    
     //否则 老产品跳到老的详情页面 detail；新产品根据状态跳到详情页details 或者 编辑页edit
     let pathroute = 'details';
-    if (record.status !== 1) {
+    if (status !== 1) {
       pathroute = 'edit';
-    } else if (record.isOldProduct) {
+    } else if (isOldProduct) {
       pathroute = 'detail';
     }
     // 保存当前产品，为后边继续开发取数据使用
     sessionStorage.setItem('productItem', JSON.stringify(record))
+    sessionStorage.setItem("stepnum",step-1)
     this.props.history.push({
-      pathname: `/open/product/proManage/${pathroute}/${record.productId}`
+      pathname: `/open/product/proManage/${pathroute}/${productId}`,
+      // state:{stepnum:step-1}
     });
   }
 
@@ -346,7 +350,7 @@ class List extends PureComponent {
 
         {/* 开发中的旧产品 弹窗提示 */}
         <Modal title="更新升级" visible={oldProIngVisiable} onOk={this.toggleOldProVisiable} onCancel={this.toggleOldProVisiable}>
-          <p> clife平台全新升级，老版本的开发中状态产品，需要在新平台重新创建</p>
+          <p> clife平台全新升级，老版本的开发中或审核中状态的产品，需要在新平台重新创建</p>
         </Modal>
       </section>
     )

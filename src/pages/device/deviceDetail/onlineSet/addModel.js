@@ -33,7 +33,11 @@ export default function AddModel({ addVisible, addOk, CancelAdd ,deviceId}) {
   }
   const getTableData = (id) => {
     post(Paths.getPhysicalModel, { productId: id }).then((res) => {
-      setInitialProtoclList(res.data.properties)
+      let data=res.data ? res.data.properties : []
+      data.forEach((item,index)=>{
+        item.unikey=index
+      })
+      setInitialProtoclList(data)
     });
   }
   const protocolSelectChange = selectedRowKeys => {
@@ -133,8 +137,8 @@ export default function AddModel({ addVisible, addOk, CancelAdd ,deviceId}) {
                 value={record.sendData}
                 onChange={value => changeSendData(value, index)}>
                 {
-                  Object.values(specs) && Object.values(specs).map((item, index) => (
-                    <Option key={index + item} value={item}>{item}</Option>
+                  Object.keys(specs) && Object.keys(specs).map((item, index) => (
+                    <Option key={index + item} value={Number(item)}>{specs[item]}</Option>
                   ))
                 }
               </Select>
@@ -169,35 +173,27 @@ export default function AddModel({ addVisible, addOk, CancelAdd ,deviceId}) {
       if (selectedProtocols.length === 0) {
         return Notification({ description: '请至少选择一条配置协议' })
       } else {
-        console.log(selectedProtocols, '========')
+        let arr=[]
         for (let index = 0; index < selectedProtocols.length; index++) {
-          const item = selectedProtocols[index]
-          for (let index = 0; index < initialProtoclList.length; index++) {
-            const ele = initialProtoclList[index]
-            if (item === ele.identifier) {
-              let isCOntinue = ele.sendData ?? undefined
-              if (typeof isCOntinue == 'undefined') return Notification({ description: '请为配置协议添加参数' })
-            }
+          
+          let data=initialProtoclList[selectedProtocols[index]].sendData ?? undefined 
+          if(typeof data == 'undefined'){
+            Notification({ description: '请为配置协议添加参数' })
+            return
+          }else{
+            arr.push(initialProtoclList[selectedProtocols[index]])
           }
         }
         let params = {
           taskName: formvalue.taskName,
           deviceId,
           taskExplain: formvalue.taskExplain,
-          protocolJson: JSON.stringify(initialProtoclList.filter(item => {
-            let isCOntinue = item.sendData ?? undefined
-            if (typeof isCOntinue !== 'undefined') {
-              return item
-            }
-          }))
+          protocolJson: JSON.stringify(arr)
         }
         post(Paths.saveDeviceRemoset, params).then((res) => {
           Notification({ type: 'success', description: '添加成功' })
           addOk()
         });
-        // console.log('提交的数据', initialProtoclList,initialProtoclList.filter(item => item.sendData), params,'*************')
-        // sessionStorage.setItem('addConfigData', JSON.stringify(initialProtoclList.filter(item => item.sendData)))
-        // nextStep()
       }
     })
   }
@@ -228,7 +224,7 @@ export default function AddModel({ addVisible, addOk, CancelAdd ,deviceId}) {
           <div style={{ marginBottom: '10px' }}>请添加配置信息</div>
           <Table className="config-data-table" dataSource={initialProtoclList} scroll={{ y: 300 }}
             locale={{ emptyText: '暂无协议，请先去配置' }}
-            columns={columns} rowKey='identifier' rowSelection={protocolSelection} pagination={false} />
+            columns={columns} rowKey='unikey' rowSelection={protocolSelection} pagination={false} />
         </div>
       </Modal>
     </div>

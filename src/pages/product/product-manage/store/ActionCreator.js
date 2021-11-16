@@ -84,21 +84,6 @@ export const updateProductBaseInfo = (info) => {
   }
 }
 
-// 获取产品基本信息
-export const getProductBaseInfo = (productId) => {
-  return (dispatch,getState) => {
-    get(Paths.getProductBaseInfo,{
-      productId
-    },{
-      needVersion:1.1,
-      loading:true
-    }).then(data => {
-      let action = updateProductBaseInfo(data.data);
-      dispatch(action);
-    })
-  }
-}
-
 // 更新产品的协议列表
 export const updateProtocolLists= (list) => {
   return {

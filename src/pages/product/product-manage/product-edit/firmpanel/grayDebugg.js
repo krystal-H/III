@@ -36,7 +36,11 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
     }, [])
     const [currentTab, setCurrentTab] = useState('1')
     const callback = (key) => {
-        setCurrentTab(key);
+        // setCurrentTab(key);
+        if(key !=currentTab){
+            setCurrentTab(key);
+            setSelectAppId('')
+        }
     }
     function onChange(e) {
         console.log(`checked = ${e.target.checked}`);

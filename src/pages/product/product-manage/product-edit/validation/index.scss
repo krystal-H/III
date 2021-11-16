@@ -49,6 +49,7 @@
 
       .left-content {
         width: 60%;
+        
         margin-right: 30px;
 
         .left-content-title {
@@ -68,6 +69,13 @@
             margin-right: 8px;
           }
         }
+        .tablebox{
+          .ant-table-body{
+            overflow-y: auto;
+            @include self-scroll-bar;
+          }
+          
+        }
         tr{
           cursor: pointer;
         }
@@ -84,8 +92,9 @@
           margin-bottom: 13px;
         }
 
-        >div {
-
+        .analysisdata-box {
+          overflow-y: auto;
+          @include self-scroll-bar;
           height: 360px;
           background: #FFFFFF;
           border-radius: 4px;

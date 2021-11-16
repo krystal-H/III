@@ -18,25 +18,36 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
   const [bindFailPage, setBindFailPage] = useState('')
   const [netData, setNetData] = useState({})
   const [baseTypeId, setBaseTypeId] = useState()
+  const [baseTypeName, setbaseTypeName] = useState('') // 显示配网方式
 
   // 获取配网方式
   const getNetDataByProductId = () => {
     post(Paths.getNetDataByProductId, { productId })
       .then(res => {
+        // ssid和广播名共用一个字段 radiocastName   但是ssid时需要有个默认值CLIFE
+        if (!res.data.radiocastName && res.data.bindTypeId === 1 && res.data.baseTypeId === 1) { // 为了有个默认值
+          res.data.radiocastName = 'CLIFE'
+        }
         setNetData(res.data)
+        setBaseTypeId(res.data.baseTypeId)
         // form.resetFields()
         // formRef.current.setFieldsValue(res.data)
+        const arr = res.data.bindTypeList.filter(item => item.baseTypeId === res.data.baseTypeId)
+        if (arr && arr.length > 0) {
+          setbaseTypeName(arr[0].baseTypeName)
+        }
         formRef.current.setFieldsValue({
           baseTypeId: res.data.baseTypeId,
-          guidePage: res.data.guidePage.guidePage,
-          bindFailPage: res.data.guidePage.bindFailPage,
-          imageUrlList: res.data.helpPage.imageUrls,
+          guidePage: res.data.guidePage? res.data.guidePage.guidePage : '',
+          bindFailPage: res.data.guidePage ? res.data.guidePage.bindFailPage : '',
+          imageUrlList: res.data.helpPage ? res.data.helpPage.imageUrls : [],
           radiocastName: res.data.radiocastName || '',
-          ssid: res.data.ssid || ''
         })
-        setGuidePage(res.data.guidePage.guidePage)
-        setBindFailPage(res.data.guidePage.bindFailPage)
-        imgRef.current.setFileList(res.data.helpPage.imageUrls.filter(item => item).map(item => {
+        if (res.data.guidePage) {
+          setGuidePage(res.data.guidePage.guidePage)
+          setBindFailPage(res.data.guidePage.bindFailPage)
+        }
+        res.data.helpPage && imgRef.current.setFileList(res.data.helpPage.imageUrls.filter(item => item).map(item => {
           return { url: item, status: 'done' }
         }))
       })
@@ -126,12 +137,12 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
         <Form
           ref={formRef}
           form={form}
+          labelAlign="left"
           onFinish={onFinish}
-          labelCol={{ span: 5 }}
+          // labelCol={{ span: 5 }}
           wrapperCol={{ span: 19 }}
           initialValues={{
             // baseTypeId: netData.baseTypeId || '',
-            // ssid: netData.ssid || '',
             // radiocastName: netData.radiocastName || '',
             // guidePage: netData.guidePage || '',
             // bindFailPage: netData.bindFailPage || '',
@@ -145,29 +156,29 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
           </Form.Item>
           <Form.Item
             label="配网方式"
-            name="baseTypeId"
-            rules={[{ required: true, message: '请选择配网方式！' }]}>
-            <Select style={{ width: 380 }} onChange={(val) => setBaseTypeId(val)}>
+            name="baseTypeId">
+              <span>{baseTypeName}</span>
+            {/* <Select style={{ width: 380 }} onChange={(val) => setBaseTypeId(val)}>
               {
                 netData.bindTypeList && netData.bindTypeList.map(item => (
                   <Option key={item.baseTypeId} value={item.baseTypeId}>{item.baseTypeName}</Option>
                 ))
               }
-            </Select>
+            </Select> */}
           </Form.Item>
           {/* 通信是WIFI 且是WIFI AP配网方式*/}
           {
-            netData.bindTypeId === 1 && baseTypeId === 1 &&
+            (netData.bindTypeId === 1 && baseTypeId === 1) &&
             <Form.Item
               label="AP-SSID"
-              name="ssid"
+              name="radiocastName"
               rules={[{ required: true, message: '请输入AP-SSID！' }]}>
               <Input maxLength={50} style={{ width: 380 }} />
             </Form.Item>
           }
-          {/* 通信是wifi切实smartLink配网方式、蓝牙 */}
+          {/* 通信是wifi且是smartLink配网方式 或者 通信方式是蓝牙 */}
           {
-            (netData.bindTypeId === 1 && baseTypeId === 3) || (netData.bindTypeId === 2) &&
+            ((netData.bindTypeId === 1 && baseTypeId === 3) || (netData.bindTypeId === 2)) &&
             <Form.Item
               label="广播名"
               name="radiocastName"
@@ -184,7 +195,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
                 <Form.Item
                   label="默认联网指引"
                   name="guidePage"
-                  labelCol={{ span: 10 }}
+                  // labelCol={{ span: 10 }}
                   wrapperCol={{ span: 10 }}
                   className="upload-img">
                   {
@@ -210,7 +221,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
                 <Form.Item
                   label="默认联网失败提示"
                   name="bindFailPage"
-                  labelCol={{ span: 10 }}
+                  // labelCol={{ span: 10 }}
                   wrapperCol={{ span: 10 }}
                   className="upload-img">
                   {
@@ -238,7 +249,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
                 label="图片轮播帮助信息"
                 name="imageUrlList"
                 className="upload-img"
-                labelCol={{ span: 5 }}
+                // labelCol={{ span: 5 }}
                 wrapperCol={{ span: 20 }}>
                 {
                   <UploadFileHooks

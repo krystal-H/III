@@ -46,7 +46,7 @@ export default class FirmwareManagement extends Component {
                 totalRows: 10,
             },
             //搜索字段
-            productId: undefined,
+            productId: getUrlParam('productId') || "-1",
             schemeType: undefined,
             deviceVersionName: undefined,
             addFirmwareVisiable: false,//增加弹窗
@@ -70,7 +70,7 @@ export default class FirmwareManagement extends Component {
                 render: s => s > 0 && SCHMETYPE[s - 1].nam || "脏数据"
             },
             { title: '产品版本号', dataIndex: 'productFirmwareVersion' },
-            { title: '固件名称', dataIndex: 'firmwareVersionTypeName' },
+            { title: '固件名称', dataIndex: 'deviceVersionName' },
 
             {
                 title: '运行状态', dataIndex: 'updateStatus',
@@ -80,7 +80,7 @@ export default class FirmwareManagement extends Component {
                 }
             },
             {
-                title: '创建时间', dataIndex: 'releaseTime',
+                title: '创建时间', dataIndex: 'uploadTime',
                 render: t => <span>{t && DateTool.utcToDev(t) || "--"}</span>
             },
             {
@@ -193,9 +193,9 @@ export default class FirmwareManagement extends Component {
     }
     //获取固件列表
     pagerIndex = (pageIndex = 1) => {
-        console.log(getUrlParam('productId'), 'product')
+        // console.log(getUrlParam('productId'), 'product')
         let { productId, schemeType, deviceVersionName } = this.state
-        let params = { pageIndex, productId: productId || getUrlParam('productId') }
+        let params = { pageIndex, productId }
         schemeType != -1 && (params.schemeType = schemeType)
         deviceVersionName && (params.deviceVersionName = deviceVersionName)
 
@@ -213,6 +213,14 @@ export default class FirmwareManagement extends Component {
             validationDetail: { ...validationDetail, [k]: v }
         })
     }
+
+    changeProduct = productId=>{
+        this.setState({productId},()=>{
+            this.pagerIndex(1)
+        });
+        
+    }
+    
     render() {
         const {
             addFirmwareVisiable, releaseFirmwareDialog, validationFirmwareDialog,
@@ -223,14 +231,14 @@ export default class FirmwareManagement extends Component {
 
         return (
             <div className="ota-firmware-up">
-                <PageTitle title="固件升级" selectOnchange={val => { this.changeState('productId', val) }} defaultValue={getUrlParam('productId') || '-1'} />
+                <PageTitle title="固件升级" selectOnchange={val => { this.changeProduct(val) }} defaultValue={getUrlParam('productId') || '-1'} />
                 <div className='comm-shadowbox comm-setp-ttip'>
                     <div className='step-title'>
                         <img src={upIconImg} alt="" />
                         <span>固件升级步骤</span>
                     </div>
                     <Steps current={-1} initial={0}>
-                        <Step title="添加升级包" description="添加升级包，区分不同的MCU、模组、系统，区分整体包、差分包等。" />
+                        <Step title="添加升级包" description="添加升级包，区分不同的MCU、模组、系统。" />
                         <Step title="配置升级策略" description="配置升级对象，配置升级批次、升级范围、升级时间等升级具体策略。" />
                         <Step title="查看升级详情" description="查看升级包各升级批次的具体设备列表，以及各设备的升级状态。" />
                     </Steps>

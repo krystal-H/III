@@ -9,33 +9,33 @@ const { TextArea } = Input;
 const { Option } = Select
 
 
-export default function AddModel({ addVisible, addOk, CancelAdd, actionData,deviceId }) {
+export default function AddModel({ addVisible, addOk, CancelAdd, actionData,deviceId ,baseInfo}) {
     const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
     const [selectedProtocols, setSelectedProtocols] = useState([]) // rowSelection
     const [sendDataCheck, setSendDataCheck] = useState([])
     const [form] = Form.useForm();
     //获取产品id
     useEffect(() => {
-        getProductDetail()
+        getTableData(baseInfo.productId)
     }, [])
-    const [productId, setProductId] = useState('')
-    const getProductDetail = (loading = true) => {
-        post(Paths.getDeviceInfo, { deviceId}).then((res) => {
-            if (res.data.productId) {
-                getTableData(res.data.productId)
-                setProductId(res.data.productId)
-            }
+    // const [productId, setProductId] = useState('')
+    // const getProductDetail = (loading = true) => {
+    //     post(Paths.getDeviceInfo, { deviceId}).then((res) => {
+    //         if (res.data.productId) {
+    //             getTableData(res.data.productId)
+    //             setProductId(res.data.productId)
+    //         }
 
-        });
-    }
+    //     });
+    // }
     const getTableData = (id) => {
         let arr = [post(Paths.getPhysicalModel, { productId: id }), post(Paths.singelDeviceRemoset, { taskId: actionData.taskId })]
         Promise.all(arr).then(res => {
             let data1 = res[0].data.properties
             let data2 = JSON.parse(res[1].data.remoteProtocol.protocolJson)
-            let arr = []
+            let selectarr = []
             data2.forEach(item2 => {
-                arr.push(item2.identifier)
+                selectarr.push(item2.identifier)
                 data1.forEach((item1, index) => {
                     if (item2.identifier == item1.identifier) {
                         data1.splice(index, 1, item2)
@@ -47,7 +47,7 @@ export default function AddModel({ addVisible, addOk, CancelAdd, actionData,devi
                 taskExplain: res[1].data.taskExplain
             })
             setInitialProtoclList(data1)
-            setSelectedProtocols(arr)
+            setSelectedProtocols(selectarr)
         })
     }
     const protocolSelectChange = selectedRowKeys => {
@@ -148,8 +148,8 @@ export default function AddModel({ addVisible, addOk, CancelAdd, actionData,devi
                                 onChange={value => changeSendData(value, index)}>
                                 {/* <Option key={-1} value="">请选择参数</Option> */}
                                 {
-                                    Object.values(specs) && Object.values(specs).map((item, index) => (
-                                        <Option key={index + item} value={item}>{item}</Option>
+                                    Object.keys(specs) && Object.keys(specs).map((item, index) => (
+                                        <Option key={index + item} value={Number(item)}>{specs[item] }</Option>
                                     ))
                                 }
                             </Select>
@@ -184,7 +184,6 @@ export default function AddModel({ addVisible, addOk, CancelAdd, actionData,devi
             if (selectedProtocols.length === 0) {
                 return Notification({ description: '请至少选择一条配置协议' })
             } else {
-                console.log(selectedProtocols, '========')
                 for (let index = 0; index < selectedProtocols.length; index++) {
                     const item = selectedProtocols[index]
                     for (let index = 0; index < initialProtoclList.length; index++) {
@@ -211,9 +210,6 @@ export default function AddModel({ addVisible, addOk, CancelAdd, actionData,devi
                     Notification({ type: 'success', description: '编辑成功' })
                     addOk()
                 });
-                // console.log('提交的数据', initialProtoclList,initialProtoclList.filter(item => item.sendData), params,'*************')
-                // sessionStorage.setItem('addConfigData', JSON.stringify(initialProtoclList.filter(item => item.sendData)))
-                // nextStep()
             }
         })
     }

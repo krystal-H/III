@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Carousel, Image } from 'antd';
+import { Carousel, Image, Modal } from 'antd';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import './index.scss'
 import EditableTable from './editTable';
@@ -8,23 +8,27 @@ import baseImg from '../../../../../assets/images/commonDefault/prcduct_avtor.pn
 import guideImg from '../../../../../assets/images/commonDefault/bind_net_guide.png';
 import defaultImg from '../../../../../assets/images/commonDefault/bind_net_dafault.png'
 import carouselImg from '../../../../../assets/images/commonDefault/bind_net_Carousel.png'
+import { getUrlParam } from '../../../../../util/util';
 const contentStyle = {
     height: '160px',
     with: '100px',
     display: 'block'
 };
 function dealData(data) {
-    let arr = data.replace(/\[|]/g, '').split(',').filter(item=>{
-        if(item){
+    let arr = data.replace(/\[|]/g, '').split(',').filter(item => {
+        if (item) {
             return item
         }
     })
     return arr
 }
 export default function productInfo() {
+    let step = getUrlParam('step') || '1'
     useEffect(() => {
-        getBusinessInfo()
-    }, [])
+        if(step==1){
+            getBusinessInfo()  
+        }
+    }, [step])
     let productBaseInfo = {}
     if (sessionStorage.getItem('productItem')) {
         productBaseInfo = JSON.parse(sessionStorage.getItem('productItem'))
@@ -56,20 +60,25 @@ export default function productInfo() {
         if (count === 0) {
             return '一型一密'
         } else if (count === 1) {
-            return '一型一密plus'
+            return '一型一密pro'
         } else if (count === 2) {
             return '一机一密'
         } else {
             return ''
         }
     }
-
+    const [showImg, setShowImg] = useState(false)
+    const [imgUrl, setImgUrl] = useState('')
+    const openImg = (url) => {
+        setImgUrl(url)
+        setShowImg(true)
+    }
     return (<div id='product-info'>
         <div className='product-info-item'>
             <h3 className='product-info-title'>产品信息</h3>
             <div className='product-info-content'>
                 <div className='product-info-conten-wrap'>
-                    <img className='product-top-left-img' alt='' src={imageInfo.productIcon || baseImg} />
+                    <img className='product-top-left-img' alt='' src={imageInfo.productIcon || baseImg} onClick={() => { openImg(imageInfo.productIcon || baseImg) }} />
                     <div className='product-info-content-text'>
                         <div>
                             <span>产品品牌：</span>
@@ -107,8 +116,8 @@ export default function productInfo() {
                     </div>
                 </div>
                 <div className='product-info-conten-wrap' style={{ paddingTop: '12px' }}>
-                    <div className='product-top-right-text'>产品头图：</div>
-                    <img className='product-top-right-img' src={businessInfo.productPic} alt='' />
+                    <div className='product-top-right-text'>产品图标：</div>
+                    <img className='product-top-right-img' onClick={() => { openImg(businessInfo.productPic || baseImg) }} src={businessInfo.productPic || baseImg} alt='' />
                 </div>
             </div>
         </div>
@@ -117,16 +126,16 @@ export default function productInfo() {
             <div className='product-info-content'>
                 <div className='product-info-conten-wrap'>
                     <span className='middle-text'>配网引导图：</span>
-                    <img className='middle-img' alt='' src={imageInfo.guidePage || guideImg} />
+                    <img className='middle-img' onClick={() => { openImg(imageInfo.guidePage || guideImg) }} alt='' src={imageInfo.guidePage || guideImg} />
                 </div>
                 <div className='product-info-conten-wrap'>
                     <span className='middle-text'>失败引导图：</span>
-                    <img className='middle-img' alt='' src={imageInfo.bindFailPage || defaultImg} />
+                    <img className='middle-img' alt='' src={imageInfo.bindFailPage || defaultImg} onClick={() => { openImg(imageInfo.bindFailPage || defaultImg) }} />
                 </div>
                 <div className='product-info-conten-wrap '>
                     <span className='middle-text'>帮助轮播图：</span>
                     {
-                        (!imageInfo.imageUrlList || !imageInfo.imageUrlList.length)? (<img src={carouselImg} />) :
+                        (!imageInfo.imageUrlList || !imageInfo.imageUrlList.length) ? (<img src={carouselImg} />) :
                             (<div className='product-info-image-wrap'>
                                 <Carousel autoplay dots={false}>
                                     {
@@ -191,6 +200,13 @@ export default function productInfo() {
                 </div>
             </div>
         </div>
+        {
+            showImg && <Modal title="图片展示" width='970px' visible={showImg} footer={null} onCancel={() => { setShowImg(false) }}>
+                <div style={{ textAlign: 'center' }}>
+                    <img src={imgUrl} style={{ maxWidth: '800px' }} />
+                </div>
+            </Modal>
+        }
     </div>)
 
 }

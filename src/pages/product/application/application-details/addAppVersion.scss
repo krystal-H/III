@@ -1,16 +1,39 @@
-@import './../../../../assets/css/variables.scss';
-
 .add-version-modal {
-    font-family: PingFangSC-Medium, PingFang SC sans-serif;
-    font-weight: 400;
-    color: rgba(0, 0, 0, 0.85);
-    font-size: 14px;
-    .add-version-from {
-        .ant-form-item {
-            margin-bottom: 12px;
-        }
-        .app-apk-desc, .url-desc, .update-desc {
-            color: rgba(140, 140, 140, 1);
-        }
+  font-size: 14px;
+
+  .add-version-from {
+    .ant-form-item {
+      margin-bottom: 12px;
     }
+
+    .app-apk-desc,
+    .url-desc,
+    .update-desc {
+      color: rgb(146, 144, 144);
+    }
+  }
+
+  /* WebKit browsers */
+  input::-webkit-input-placeholder,
+  textarea::-webkit-input-placeholder {
+    color: #c7c5c5;
+  }
+
+  /* Mozilla Firefox 4 to 18 */
+  input:-moz-placeholder,
+  textarea:-moz-placeholder {
+    color: #c7c5c5;
+  }
+
+  /* Mozilla Firefox 19+ */
+  input::-moz-placeholder,
+  textarea::-moz-placeholder {
+    color: #c7c5c5;
+  }
+
+  /* Internet Explorer 10+ */
+  input:-ms-input-placeholder,
+  textarea:-ms-input-placeholder {
+    color: #c7c5c5;
+  }
 }
