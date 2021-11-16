@@ -118,14 +118,14 @@ export default function CloudTime() {
     }, [pager.pageIndex, pager.pageRows, currentServiceName, currentProductId]) // eslint-disable-line react-hooks/exhaustive-deps
 
     // 获取所有产品列表
-    const getCloudGetProductList = () => {
-        get(Paths.cloudGetProductList).then(res => {
+    const getProductList = () => {
+        get(Paths.getProductType).then(res => {
             setAllProductList(res.data)
         }, () => setAllProductList([]))
     }
 
     useEffect(() => {
-        getCloudGetProductList()
+        getProductList()
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     // 编辑

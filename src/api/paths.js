@@ -143,11 +143,8 @@ let Paths = {
     versionValidate: '/firmware/device/version/validate',//发起验证
     oldVersionPublish: '/firmware/old/device/version/publish',//发布
 
-    
-    
 
     /* 云端定时功能5x */
-    cloudGetProductList: '/productManage/getProductList', // 产品列表
     getTimeServiceList: '/timeServer/getList', // 获取列表
     getPhysicalModel: '/productManage/physicalModel/get', // 获取物模型  关联协议
     saveTimeService: '/timeServer/save', // 保存定时信息
@@ -523,9 +520,9 @@ let Paths = {
     userDataAn:'/summary/account/dashboard',//用户分析
     deviceDataDown:'/summary/device/download',//设备分析下载
     userDataDown:'/summary/account/download',//用户分析下载
-    allProductPubList:'/productManage/getPublishProductList',
+    allProductPubList:'/productManage/getPublishProductList', // 已发布的产品列表  包含新旧产品
     //公共接口
-    getProductType:'/productManage/getSelectList',//产品下拉列表
+    getProductType:'/productManage/getSelectList',//所有的产品下拉列表
     
 
     // 产品发布后-设备注册

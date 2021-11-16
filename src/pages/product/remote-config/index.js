@@ -159,14 +159,14 @@ function RemoteConfig(remoteType = 'product') {
         getRemoteConfigList()
     }, [pager.pageIndex, pager.pageRows, status, currentProductId])  // eslint-disable-line react-hooks/exhaustive-deps
 
-    // 获取所有产品列表
-    const getCloudGetProductList = () => {
-        get(Paths.cloudGetProductList, { loading: true }).then(res => {
+    // 获取所有已发布状态的产品列表
+    const getProductList = () => {
+        post(Paths.allProductPubList, { loading: true }).then(res => {
             setAllProductList(res.data)
         }, () => setAllProductList([]))
     }
 
-    useEffect(() => { getCloudGetProductList() }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    useEffect(() => { getProductList() }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     // 查询列表数据
     const searchListData = (val) => {
@@ -198,7 +198,7 @@ function RemoteConfig(remoteType = 'product') {
 
     return (
         <div id='remote-config'>
-            <PageTitle title='远程配置' selectOnchange={val => setCurrentProductId(val)}></PageTitle>
+            <PageTitle title='远程配置' selectOnchange={val => setCurrentProductId(val)} selectData={allProductList}></PageTitle>
             <div className='comm-shadowbox setp-tip comm-setp-ttip'>
                 <div className='step-title'>
                     <img src={stepImg} alt="" />
