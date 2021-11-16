@@ -68,8 +68,10 @@ function FreeApplyModal({ freeApplyVisible, handleFreeApply, type, moduleName, f
             <div className="firmware-msg">固件信息</div>
             <div>
               <Form
-                labelCol={{ span: 5 }}
-                wrapperCol={{ span: 12 }}>
+                labelAlign="left"
+                // labelCol={{ span: 5 }}
+                // wrapperCol={{ span: 12 }}
+                >
                 <Form.Item label="固件名称/固件Key" className="txt-color">{firmwareData.burnFileName || '-'}</Form.Item>
                 <Form.Item label="固件版本" className="txt-color">{firmwareData.burnFileVersion || '-'}</Form.Item>
                 {
