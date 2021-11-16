@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import { Icon as LegacyIcon } from '@ant-design/compatible';
 import { Tooltip } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { copyTextToClipBoard } from '../../util/util';
@@ -28,7 +27,6 @@ const LabelVisible = ({ defaultVisible = false, label = "", tip = "", copy = fal
             {
                 visible ? <EyeOutlined style={{ color: '#2F78FF' }} onClick={() => setVisible(!visible)} /> : <EyeInvisibleOutlined style={{ color: '#2F78FF' }} onClick={() => setVisible(!visible)} />
             }
-            {/* <LegacyIcon style={{color: '#2F78FF'}} type={visible ? "eye" : "eye-invisible"} onClick={() => setVisible(!visible)}/> */}
         </span>
     );
 }
