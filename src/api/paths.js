@@ -565,7 +565,10 @@ let Paths = {
     excelDevTask:'/remoteConfig/device/submit',//执行设备下的任务
 
     //项目列表
-    projectList:'/projectInfo/listByPage',//
+    projectList:'/projectInfo/listByPage',
+
+    // 项目新增
+    saveProjectInfo: '/projectInfo/saveProjectInfo',
 
     //项目详情-概述
     projectInfoOverview:'/projectDetail/getProjectAuth',// 项目详情-概述

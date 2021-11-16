@@ -104,7 +104,7 @@ export const navRoutes = [
         menuid: '3',
         childmenus: [
             {
-                menuname: '应用管理',
+                menuname: 'app管理',
                 path: '/open/app',
                 menuid: '3-0',
             },
@@ -387,7 +387,6 @@ export function RouteWithSubRoutes(route) {
 
 /* 获得有权限的菜单路由 和 相关页面内的tab元素权限 *  用户中心菜单改为前端控制，不在此处权限配置内  **/
 export function getNavRoutes(menu) {
-    // debugger
     let _navRoutes = navRoutes;
     function authorityMenu(menus) {
         let result = menus.map(({

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Input } from 'antd'
+import { Paths, post, get } from '../../../../api'
 import { Notification } from '../../../../components/Notification'
 
 function CreateProject({ visible, handleCancel, handleOk, opeType, editData = {} }) {
@@ -11,8 +12,15 @@ function CreateProject({ visible, handleCancel, handleOk, opeType, editData = {}
 
   const onFinish = (values) => {
     console.log('Success:', values)
-    Notification({ description: '操作成功！', type: 'success' })
-    handleOk()
+    let params = {...values}
+    if (opeType === 'edit') {
+      params.projectId = editData.projectId
+    }
+    post(Paths.saveProjectInfo, params, { loading: true })
+      .then(res => {
+        Notification({ description: '操作成功！', type: 'success' })
+        handleOk()
+      })
   }
 
   const onFinishFailed = (errorInfo) => {
@@ -44,13 +52,14 @@ function CreateProject({ visible, handleCancel, handleOk, opeType, editData = {}
       >
         <Form.Item
           label="项目名称"
-          name="name"
+          name="projectName"
+          initialValue={editData.projectName}
           rules={[
             { required: true, message: '请输入项目名称' },
             { max: 50, message: '最大输入长度为50' },]}>
-          <Input placeholder="请输入项目名称，不能超过50个字符" />
+          <Input placeholder="请输入项目名称，不能超过50个字符" style={{ width: 415 }} />
         </Form.Item>
-        <Form.Item name="desc" label="项目描述" >
+        <Form.Item name="projectDesc" label="项目描述" initialValue={editData.projectDesc} >
           <Input.TextArea showCount maxLength={50} />
         </Form.Item>
       </Form>

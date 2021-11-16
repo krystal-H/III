@@ -4,12 +4,11 @@ import { useHistory } from 'react-router-dom';
 import { DateTool, addKeyToTableData } from '../../../../util/util'
 import PageTitle from '../../../../components/page-title/PageTitle'
 import { cloneDeep } from 'lodash'
-import { Paths, post, get } from '../../../../api'
+import { Paths, post} from '../../../../api'
 import CreateProject from '../project-add'
 import './list.scss'
 
 const { Search } = Input
-let testData = [{}]
 function ProjectList() {
   const history = useHistory()
   const [projectName, setProjectName] = useState('')
