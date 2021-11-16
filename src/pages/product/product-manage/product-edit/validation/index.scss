@@ -114,8 +114,11 @@
   }
   .sim-devid{
     margin-top: 14px;
-    font-size: 12px;
+    font-size: 14px;
     color: #323232;
+    display: flex;
+    align-items: center;
+    
   }
   .debug-data-box{
     display: flex;

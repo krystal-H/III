@@ -3,10 +3,11 @@ import { Descriptions, Divider, Icon, Tooltip, Modal, Form, Input } from 'antd';
 import { post, Paths, get } from '../../../../../api';
 import LabelVisible from '../../../../../components/form-com/LabelVisible';
 import LabelTip from '../../../../../components/form-com/LabelTip';
+import { Notification } from '../../../../../components/Notification';
 import { copyTextToClipBoard, strToAsterisk, DateTool } from '../../../../../util/util';
 import EditableTable from './editTable'
 import './index.scss'
-export default function DeviceInfo({ devceId }) {
+export default function DeviceInfo({ baseInfo, projectId }) {
     const [data, setData] = useState({})
     const [form] = Form.useForm();
     //修改密码
@@ -18,7 +19,18 @@ export default function DeviceInfo({ devceId }) {
 
     const handleOk = () => {
         form.validateFields().then(val => {
-            // setIsModalVisible(false);
+            let params = {
+                accountId: baseInfo.accountId,
+                password: val.password,
+                oldPassword: val.oldPass
+            }
+            post(Paths.projectSavePS, params, { loading: true }).then(res => {
+                Notification({
+                    type: 'success',
+                    description: '修改成功！',
+                });
+                setIsModalVisible(false);
+            })
         })
 
     };
@@ -26,14 +38,6 @@ export default function DeviceInfo({ devceId }) {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
-    useEffect(() => {
-        if (devceId) {
-            getDetail()
-        }
-    }, [devceId])
-    const getDetail = (loading = true) => {
-
-    }
     const handleClick = (text) => {
         return copyTextToClipBoard(text)
     }
@@ -49,14 +53,14 @@ export default function DeviceInfo({ devceId }) {
                 <div className='item'>
                     <div className='label'>账号名称：</div>
                     <div className='name'>
-                        <span>产品标签是您给产品自定义的标识</span>
-                        <span className='copy' onClick={() => { handleClick('产品标签是您给产品自定义的标识') }} >复制</span>
+                        <span>{baseInfo.accountInitName}</span>
+                        <a className='copy' onClick={() => { handleClick(baseInfo.accountInitName) }} >复制</a>
                     </div>
                 </div>
                 <div className='item'>
                     <div className='label'>初始密码：</div>
                     <div className='name'>
-                        <LabelVisible label={'面对疾风吧'} tip="点击复制" copy={true} />
+                        <LabelVisible label={baseInfo.accountInitPassword} tip="点击复制" copy={true} />
                     </div>
                 </div>
             </div>
@@ -64,7 +68,7 @@ export default function DeviceInfo({ devceId }) {
                 <div className='item'>
                     <div className='label'>账号 ID：</div>
                     <div className='name'>
-                        <span>7778444</span>
+                        <span>{baseInfo.accountId}</span>
                     </div>
                 </div>
                 <div className='item'>
@@ -81,14 +85,15 @@ export default function DeviceInfo({ devceId }) {
                 <div className='item'>
                     <div className='label'>项目secretId：</div>
                     <div className='name'>
+                        {baseInfo.secretId}
                     </div>
                 </div>
             </div>
             <div className='item-content'>
                 <div className='item'>
-                    <div className='label'>项目SecretKey：：</div>
+                    <div className='label'>项目SecretKey：</div>
                     <div className='name'>
-                        <LabelVisible label={'面对疾风吧'} tip="点击复制" copy={true} />
+                        <LabelVisible label={baseInfo.secretKey} tip="点击复制" copy={true} />
                     </div>
                 </div>
             </div>
@@ -99,7 +104,7 @@ export default function DeviceInfo({ devceId }) {
                 <span>IP白名单</span>
             </div>
             <div>
-                <EditableTable />
+                <EditableTable projectId={projectId} />
             </div>
         </div>
         {
@@ -107,15 +112,31 @@ export default function DeviceInfo({ devceId }) {
                 <Form
                     form={form}
                 >
-                    <Form.Item label="输入旧密码" required >
-                        <Input  />
+                    <Form.Item label="输入旧密码" name='oldPass' rules={[
+                        {
+                            required: true,
+                            validator: (_, value) => {
+                                if (value) {
+                                    if (value == baseInfo.accountInitPassword) {
+                                        return Promise.resolve()
+                                    } else {
+                                        return Promise.reject(`原始密码有误`)
+                                    }
+                                } else {
+                                    return Promise.reject(`请输入旧密码`)
+                                }
+
+                            }
+                        }
+                    ]}>
+                        <Input />
                     </Form.Item>
-                    <Form.Item label="输入新密码" required >
-                        <Input  />
+                    <Form.Item label="输入新密码" name='password' rules={[{ required: true, message: '请输入新密码' }]}>
+                        <Input />
                     </Form.Item>
-                    <Form.Item label="确定新密码" required >
+                    {/* <Form.Item label="确定新密码" required >
                         <Input  />
-                    </Form.Item>
+                    </Form.Item> */}
                 </Form>
             </Modal>
         }

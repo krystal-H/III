@@ -5,7 +5,7 @@ import DeviceList from './list'
 import Manage from './manage'
 import './index.scss'
 const { TabPane } = Tabs;
-export default function Device() {
+export default function Device({baseInfo, projectId }) {
     const [activeKey, setactiveKey] = useState('1')
     const changeKey = (val) => {
         setactiveKey(val)
@@ -14,10 +14,10 @@ export default function Device() {
         <div className='comm-shadowbox common-tab'>
             <Tabs onChange={(val) => changeKey(val)} activeKey={activeKey}>
                 <TabPane tab="设备列表" key="1">
-                    <DeviceList />
+                    <DeviceList baseInfo={baseInfo} projectId={projectId}/>
                 </TabPane>
                 <TabPane tab="调试" key="2">
-                    <Manage />
+                    <Manage baseInfo={baseInfo} projectId={projectId}/>
                 </TabPane>
             </Tabs>
         </div>

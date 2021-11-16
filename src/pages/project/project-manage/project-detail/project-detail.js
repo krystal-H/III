@@ -19,19 +19,20 @@ export default function DeviceInfo({ match }) {
         let step = getUrlParam('step') || '1'
         return step
     }, [])
-    const devceId = match.params.id
+    const projectId = match.params.id
     const tabCallback = value => {
         setCurStep(value)
         history.push(`${match.url}?step=${value}`)
     }
     const [baseInfo, setBaseInfo] = useState({})
     useEffect(() => {
-        // let parmas = { "infoType": "1", "field": devceId, "pageIndex": 1,"pageRows": 1 }
-        // post(Paths.getDeviceList, parmas).then((res) => {
-        //     setBaseInfo(res.data.list[0])
-        // });
-    }, [devceId])
-
+        reFreshData()
+    }, [])
+    const reFreshData = () => {
+        post(Paths.projectInfoOverview, { projectId }).then((res) => {
+            setBaseInfo(res.data)
+        });
+    }
     // 为了判断openAPI  tab样式
     useEffect(() => {
         if (stepS === '2') setCurStep('2')
@@ -48,16 +49,16 @@ export default function DeviceInfo({ match }) {
         <div className={`comm-shadowbox common-tab device-content ${curStep === '2' ? 'api-tab-style' : ''} `}>
             <Tabs defaultActiveKey={stepS} onChange={tabCallback}>
                 <TabPane key={'1'} tab={'概述'}>
-                    <Overview devceId={baseInfo.deviceId} />
+                    <Overview baseInfo={baseInfo} projectId={projectId} />
                 </TabPane>
                 <TabPane key={'2'} tab={'openAPI'}>
-                    <OpenAPI devceId={baseInfo.deviceId} />
+                    <OpenAPI />
                 </TabPane>
                 <TabPane key={'3'} tab={'分组'}>
-                    <Grouping devceId={baseInfo.deviceId} baseInfo={baseInfo} />
+                    <Grouping />
                 </TabPane>
                 <TabPane key={'4'} tab={'设备'}>
-                    <Device devceId={baseInfo.deviceId} baseInfo={baseInfo} />
+                    <Device baseInfo={baseInfo} projectId={projectId} />
                 </TabPane>
             </Tabs>
         </div>

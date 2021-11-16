@@ -3,7 +3,9 @@ import { Modal, Button, Tabs, Table, Input, Select, Divider, Form } from 'antd';
 import { post, Paths } from '../../../../../api';
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal'
 import FileModel from './importFile'
-export default function InfoModal() {
+import { cloneDeep } from 'lodash'
+import { DateTool } from '../../../../../util/util'
+export default function InfoModal({ baseInfo, projectId }) {
     const [form] = Form.useForm();
     const [typelist, setTypelist] = useState([])
     const [addVisible, setAddVisible] = useState(false)
@@ -13,35 +15,26 @@ export default function InfoModal() {
     const [actionData, setActionData] = useState({})
     const [fileVisible, setFileVisible] = useState(false) //导入文件
     const [infoVisible, setInfoVisible] = useState(false) //详情
-    const dataSource = [
-        {
-            key: '1',
-            name: '胡彦斌',
-            age: 32,
-            address: '西湖区湖底公园1号',
-        },
-        {
-            key: '2',
-            name: '胡彦祖',
-            age: 42,
-            address: '西湖区湖底公园1号',
-        },
-    ];
+    const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
+    const [dataSource, setDataSource] = useState([])
     const columns = [
         {
             title: '批次名称',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'batchName',
+            key: 'batchName',
         },
         {
             title: '创建时间',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'createTime',
+            key: 'createTime',
+            render(createTime) {
+                return createTime && DateTool.utcToDev(createTime);
+            }
         },
         {
             title: '导入成功数量',
-            dataIndex: '',
-            key: '',
+            dataIndex: 'batchCount',
+            key: 'batchCount',
         }, {
             title: '操作',
             dataIndex: '',
@@ -54,14 +47,37 @@ export default function InfoModal() {
     const deletelOKHandle = () => { }
     //搜索
     const onSearch = () => {
-        let params = {
-            deviceTypeId: form.getFieldValue('proId'),
-            eq: true,
-            productId: productItem.productId,
-            funcName: form.getFieldValue('name')
+        if (pager.pageIndex == 1) {
+            getList()
+        } else {
+            setPager(pre => {
+                let obj = cloneDeep(pre)
+                obj.pageIndex = 1
+                return obj
+            })
         }
-        post(Paths.PhysicalModelList, params).then((res) => {
-            setOtherData(delaData(res.data))
+    }
+    useEffect(() => {
+        if (projectId) {
+            getList()
+        }
+    }, [pager.pageIndex, projectId])
+    //列表
+    const getList = (loading = true) => {
+        let params = {
+            ...pager,
+            projectId,
+        }
+        if (form.getFieldValue('batchName') && form.getFieldValue('batchName').trim()) {
+            params.batchName = form.getFieldValue('batchName')
+        }
+        post(Paths.projectInfoBatchList, params, { loading }).then((res) => {
+            setDataSource(res.data.list)
+            setPager(pre => {
+                let obj = cloneDeep(pre)
+                obj.totalRows = res.data.pager.totalRows
+                return obj
+            })
         });
     }
     //打开删除
@@ -115,7 +131,7 @@ export default function InfoModal() {
                             label='批次名称'
                         >
                             <Form.Item
-                                name='name'
+                                name='batchName'
                                 noStyle
                             >
                                 <Input style={{ width: '190px' }} placeholder="请输入批次名称" />

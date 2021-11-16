@@ -60,7 +60,6 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
                             </Form.Item>
                             <a className='down-model' onClick={downfile}>下载模板</a>
                         </Form.Item>
-
                     </Form>
                 </div>
             </Modal>
