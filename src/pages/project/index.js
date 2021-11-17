@@ -6,9 +6,7 @@ const ProjectManage = loadable(() => import('./project-manage'));
 const routes = {
     '项目管理': ProjectManage
 }
-
 export default function Project({ match: { path }, childmenus }) {
-    console.log(childmenus, 'childmenus')
     return (
         <Switch>
             {

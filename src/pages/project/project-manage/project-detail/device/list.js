@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select, Divider, Form } from 'antd';
 import { post, Paths } from '../../../../../api';
+import { DateTool } from '../../../../../util/util'
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal'
-export default function InfoModal() {
+import { cloneDeep } from 'lodash'
+export default function InfoModal({ baseInfo, projectId }) {
     const [form] = Form.useForm();
     const [typelist, setTypelist] = useState([])
     const [addVisible, setAddVisible] = useState(false)
@@ -10,47 +12,39 @@ export default function InfoModal() {
     const [delType, setDelType] = useState('singer')
     const [selectedKey, setSelectedKey] = useState([])
     const [actionData, setActionData] = useState({})
-    const dataSource = [
-        {
-            key: '1',
-            name: '胡彦斌',
-            age: 32,
-            address: '西湖区湖底公园1号',
-        },
-        {
-            key: '2',
-            name: '胡彦祖',
-            age: 42,
-            address: '西湖区湖底公园1号',
-        },
-    ];
+    const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
+    const [dataSource, setDataSource] = useState([])
     const columns = [
         {
             title: '设备ID',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'deviceId',
+            key: 'deviceId',
         },
         {
             title: '所属产品',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'productName',
+            key: 'productName',
         },
         {
             title: '绑定来源',
-            dataIndex: '',
-            key: '',
+            dataIndex: 'bindSource',
+            key: 'bindSource',
         }, {
             title: '绑定时间',
-            dataIndex: '',
-            key: '',
+            dataIndex: 'bindTime',
+            key: 'bindTime',
+            render(bindTime) {
+                return bindTime && DateTool.utcToDev(bindTime);
+            }
+
         }, {
             title: '状态',
-            dataIndex: '',
-            key: '',
+            dataIndex: 'onlineStatus',
+            key: 'onlineStatus',
         }, {
             title: '所属分组',
-            dataIndex: '',
-            key: '',
+            dataIndex: 'groupName',
+            key: 'groupName',
         }, {
             title: '操作',
             dataIndex: '',
@@ -60,17 +54,39 @@ export default function InfoModal() {
             }
         },
     ];
+    useEffect(() => {
+        if (baseInfo.accountId) {
+            getList()
+        }
+    }, [pager.pageIndex, projectId, baseInfo.accountId])
     const deletelOKHandle = () => { }
     //搜索
     const onSearch = () => {
-        let params = {
-            deviceTypeId: form.getFieldValue('proId'),
-            eq: true,
-            productId: productItem.productId,
-            funcName: form.getFieldValue('name')
+        if (pager.pageIndex == 1) {
+            getList()
+        } else {
+            setPager(pre => {
+                let obj = cloneDeep(pre)
+                obj.pageIndex = 1
+                return obj
+            })
         }
-        post(Paths.PhysicalModelList, params).then((res) => {
-            setOtherData(delaData(res.data))
+    }
+    const getList = (loading = true) => {
+        let formVal = form.getFieldsValue()
+        let params = {
+            ...pager,
+            projectId,
+            userId: baseInfo.accountId,
+            ...formVal
+        }
+        post(Paths.projectInfoDevlist, params, { loading }).then((res) => {
+            setDataSource(res.data.list)
+            setPager(pre => {
+                let obj = cloneDeep(pre)
+                obj.totalRows = res.data.pager.totalRows
+                return obj
+            })
         });
     }
     //打开删除
@@ -100,6 +116,12 @@ export default function InfoModal() {
     const closeAdd = () => {
         setAddVisible(false)
     }
+    // 翻页
+    const pagerChange = (pageIndex, pageRows) => {
+        setPager(pre => {
+            return Object.assign(cloneDeep(pre), { pageIndex: pageRows === pager.pageRows ? pageIndex : 1, pageRows })
+        })
+    }
     return (
         <div >
             <div className='device-info-wrap'>
@@ -110,10 +132,10 @@ export default function InfoModal() {
                 </div>
                 <div className='filter'>
                     <Form form={form} layout='inline' >
-                        <Form.Item name="proId" label='批次名称'>
+                        <Form.Item name="batchName" label='批次名称'>
                             <Input style={{ width: '190px' }} placeholder="请输入批次名称" />
                         </Form.Item>
-                        <Form.Item name="proId" label='产品类型'>
+                        <Form.Item name="productId" label='产品类型'>
                             <Select
                                 style={{ width: '200px' }}
                             >
@@ -124,14 +146,14 @@ export default function InfoModal() {
                                 }
                             </Select>
                         </Form.Item>
-                        <Form.Item name="proId" label='所属分组'>
+                        <Form.Item name="groupName" label='所属分组'>
                             <Input style={{ width: '190px' }} placeholder="请输入分组名称" />
                         </Form.Item>
                         <Form.Item
                             label='设备ID'
                         >
                             <Form.Item
-                                name='name'
+                                name='deviceId'
                                 noStyle
                             >
                                 <Input style={{ width: '190px' }} placeholder="输入设备ID" />
@@ -149,7 +171,17 @@ export default function InfoModal() {
                         <Divider type="vertical" style={{ borderColor: '#333' }} />
                         <a onClick={() => { openDel('many') }}>删除</a>
                     </div>
-                    <Table dataSource={dataSource} columns={columns} rowKey="key" rowSelection={{ ...rowSelection }} />
+                    <Table dataSource={dataSource} columns={columns} rowKey="deviceId" rowSelection={{ ...rowSelection }}
+                        pagination={{
+                            defaultCurrent: 1,
+                            current: pager.pageIndex,
+                            pageSize: pager.pageRows,
+                            total: pager.totalRows,
+                            showSizeChanger: false,
+                            showQuickJumper: pager.totalPages > 5,
+                            onChange: pagerChange,
+                            showTotal: total => <span>共 <a>{total}</a> 条</span>
+                        }} />
                 </div>
             </div>
             {

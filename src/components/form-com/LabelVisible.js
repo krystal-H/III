@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Icon as LegacyIcon } from '@ant-design/compatible';
 import { Tooltip } from 'antd';
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { copyTextToClipBoard } from '../../util/util';
 
 /**
@@ -8,23 +8,25 @@ import { copyTextToClipBoard } from '../../util/util';
  * copy控制点击复制
  */
 
-const LabelVisible = ({defaultVisible = false, label = "", tip = "", copy = false}) => {
+const LabelVisible = ({ defaultVisible = false, label = "", tip = "", copy = false }) => {
     const [visible, setVisible] = useState(defaultVisible);
     const handleClick = () => {
         return copy ? copyTextToClipBoard(label) : null
     }
 
-    if(label === null) {
+    if (label === null) {
         label = ""
     }
 
     return (
         <span >
             <Tooltip title={tip}>
-                <span onClick={handleClick} style={copy ? {cursor: "pointer"} : {}}>{(visible || (label && label.length < 9)) ? label : label.slice(0, 4)+label.slice(4, -4).replace(/\w/g, '*')+label.slice(-4)}</span>
+                <span onClick={handleClick} style={copy ? { cursor: "pointer" } : {}}>{(visible || (label && label.length < 9)) ? label : label.slice(0, 4) + label.slice(4, -4).replace(/\w/g, '*') + label.slice(-4)}</span>
             </Tooltip>
             &nbsp;
-            <LegacyIcon style={{color: '#2F78FF'}} type={visible ? "eye" : "eye-invisible"} onClick={() => setVisible(!visible)}/>
+            {
+                visible ? <EyeOutlined style={{ color: '#2F78FF' }} onClick={() => setVisible(!visible)} /> : <EyeInvisibleOutlined style={{ color: '#2F78FF' }} onClick={() => setVisible(!visible)} />
+            }
         </span>
     );
 }

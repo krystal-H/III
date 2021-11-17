@@ -4,12 +4,11 @@ import { useHistory } from 'react-router-dom';
 import { DateTool, addKeyToTableData } from '../../../../util/util'
 import PageTitle from '../../../../components/page-title/PageTitle'
 import { cloneDeep } from 'lodash'
-import { Paths, post, get } from '../../../../api'
+import { Paths, post} from '../../../../api'
 import CreateProject from '../project-add'
 import './list.scss'
 
 const { Search } = Input
-let testData = [{}]
 function ProjectList() {
   const history = useHistory()
   const [projectName, setProjectName] = useState('')
@@ -22,23 +21,29 @@ function ProjectList() {
   const PageColumns = [
     {
       title: '项目名称',
-      dataIndex: '',
-      key: '',
+      dataIndex: 'projectName',
+      key: 'projectName',
     },
     {
       title: '项目ID',
-      dataIndex: '',
-      key: ''
+      dataIndex: 'projectId',
+      key: 'projectId'
     },
     {
       title: '创建时间',
-      dataIndex: '',
-      key: '',
+      dataIndex: 'createTime',
+      key: 'createTime',
+      render(createTime) {
+        return createTime && DateTool.utcToDev(createTime);
+      }
     },
     {
       title: '更新时间',
-      dataIndex: '',
-      key: ''
+      dataIndex: 'updateTime',
+      key: 'updateTime',
+      render(updateTime) {
+        return updateTime && DateTool.utcToDev(updateTime);
+      }
     },
     {
       title: '操作',
@@ -60,10 +65,19 @@ function ProjectList() {
       projectName,
       ...pager
     }
-    // post(Paths.ccc, params, { loading: true }).then(res => {
-    //   setDataSource(addKeyToTableData(res.data.list))
-    // })
+    post(Paths.projectList, params, { loading: true }).then(res => {
+      setDataSource(res.data.list)
+      setPager(pre => {
+        let obj = cloneDeep(pre)
+        obj.totalRows = res.data.pager.totalRows
+        return obj
+      })
+    })
   }
+
+  useEffect(() => {
+    sessionStorage.removeItem('d_data')
+  }, [])
 
   useEffect(() => {
     getTableList()
@@ -79,6 +93,7 @@ function ProjectList() {
   // 查询项目
   const searchProject = (val) => {
     setProjectName(val)
+    setPager({ pageIndex: 1, totalRows: 0, pageRows: 10 })
   }
 
   // 创建/编辑项目
@@ -89,8 +104,9 @@ function ProjectList() {
   }
 
   //查看详情
-  const goDetail = () => {
-    history.push(`/open/project/projectManage/detail/20?step=1`);
+  const goDetail = (data) => {
+    sessionStorage.setItem('d_data', JSON.stringify(data))
+    history.push(`/open/project/projectManage/detail/${data.projectId}?step=1`);
   }
 
   return (
@@ -112,8 +128,8 @@ function ProjectList() {
       <div className="comm-shadowbox pd22">
         <Table columns={PageColumns}
           className="ant-table-fixed"
-          rowKey="taskId"
-          dataSource={testData}
+          rowKey="projectId"
+          dataSource={dataSource}
           pagination={{
             defaultCurrent: 1,
             current: pager.pageIndex,

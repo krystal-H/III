@@ -563,6 +563,26 @@ let Paths = {
     saveDeviceRemoset:'/remoteConfig/device/save',//保存单个设备的远程配置任务
     addDeviceRemoset:'/remoteConfig/product/submit',//提交单个产品的远程配置任务
     excelDevTask:'/remoteConfig/device/submit',//执行设备下的任务
+
+    //项目列表
+    projectList:'/projectInfo/listByPage',
+
+    // 项目新增/编辑
+    saveProjectInfo: '/projectInfo/saveProjectInfo',
+
+    // 项目详情-api列表
+    getProjectApiList: '/projectDetail/getProjectApiList',
+
+    //项目详情-概述
+    projectInfoOverview:'/projectDetail/getProjectAuth',// 项目详情-概述
+    projectWhiteList:'/projectDetail/getProjectWhiteList',//项目详情-白名单-列表
+    projectWhiteDel:'/projectDetail/delProjectWhite',//项目详情-白名单-删除
+    projectWhiteSave:'/projectDetail/saveProjectWhite',//项目详情-白名单-新增/保存
+    projectSavePS:'/projectDetail/setPassword',//设置密码
+    //项目详情-设备
+    projectInfoBatchList:'/projectDevice/getProjectBatch',//项目详情-设备-查询项目批次列表
+    projectInfoDevlist:'/projectDevice/getProjectDeviceList',// 项目详情-设备-查询项目设备列表
+    projectImportFile:'/projectDevice/importDevice',//项目详情-设备-导入设备
 };
 
 // 拼接 urlPrefix

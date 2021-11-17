@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Table, Input, InputNumber, Popconfirm, Form, Typography, Button, Space } from 'antd';
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
 import { post, Paths, get } from '../../../../../api';
+import { Notification } from '../../../../../components/Notification';
 
 // import DelModal from './actionOp'
 import './index.scss'
@@ -17,7 +18,6 @@ const EditableCell = ({
     children,
     ...restProps
 }) => {
-    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
     return (
         <td {...restProps}>
             {editing ? (
@@ -30,11 +30,11 @@ const EditableCell = ({
                     rules={[
                         {
                             required: true,
-                            message: `Please Input ${title}!`,
+                            message: `请输入IP地址`,
                         },
                     ]}
                 >
-                    {inputNode}
+                    <Input />
                 </Form.Item>
             ) : (
                 children
@@ -43,16 +43,15 @@ const EditableCell = ({
     );
 };
 
-export default function EditableTable({ devceId }) {
+export default function EditableTable({ projectId }) {
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
     const [operate, setOperate] = useState(null)
     const [delData, setDelData] = useState({})
     const [editingKey, setEditingKey] = useState('');
     const [delLabelId, setDelLabelId] = useState(null)
-    const isEditing = (record) => record.id === editingKey;
+    const isEditing = (record) => record.whiteListId === editingKey;
     const [cloudUpdateVisible, setCloudUpdateVisible] = useState(false) // 删除
-    const { pathname } = useLocation();
     // console.log(pathname,'===')
     useEffect(() => {
         getDetail()
@@ -65,7 +64,11 @@ export default function EditableTable({ devceId }) {
 
     // 删除弹框确定
     const updateOkHandle = () => {
-        post(Paths.getPublishProductLabelDel, { id: delData.id }).then((res) => {
+        post(Paths.projectWhiteDel, { whiteListId: delData.whiteListId }).then((res) => {
+            Notification({
+                type: 'success',
+                description: '删除成功！',
+            });
             setCloudUpdateVisible(false)
             getDetail()
         });
@@ -78,18 +81,18 @@ export default function EditableTable({ devceId }) {
     }
     const edit = (record) => {
         form.setFieldsValue({
-            name: '',
-            age: '',
+            value: '',
             ...record,
         });
-        setEditingKey(record.id);
+        setEditingKey(record.whiteListId);
     };
     //新增请求
     const addReq = (row, loading = true) => {
-        let id=pathname.split('/').slice(-1)
-        row.targetid = 1
-        row.labelType = 1
-        post(Paths.getPublishProductLabelAdd, row, { loading }).then((res) => {
+        post(Paths.projectWhiteSave, row, { loading }).then((res) => {
+            Notification({
+                type: 'success',
+                description: '新增成功！',
+            });
             setEditingKey('');
             getDetail()
         }).catch(err => {
@@ -99,8 +102,11 @@ export default function EditableTable({ devceId }) {
     }
     //编辑请求
     const editReq = (row, loading = true) => {
-        // row.deviceId = devceId
-        post(Paths.getPublishProductLabelEdit, row, { loading }).then((res) => {
+        post(Paths.projectWhiteSave, row, { loading }).then((res) => {
+            Notification({
+                type: 'success',
+                description: '保存成功！',
+            });
             setEditingKey('');
             getDetail()
         }).catch(err => {
@@ -111,8 +117,9 @@ export default function EditableTable({ devceId }) {
     const save = async (itemData) => {
         try {
             const row = await form.validateFields();
-            if (itemData.id) {
-                row.id = itemData.id
+            row.projectId = projectId
+            if (itemData.whiteListId) {
+                row.whiteListId = itemData.whiteListId
                 editReq(row)
             } else {
                 addReq(row)
@@ -129,7 +136,7 @@ export default function EditableTable({ devceId }) {
             coutinueAc = true
         }
         data.map(item => {
-            if (!item.id) {
+            if (!item.whiteListId) {
                 coutinueAc = true
             }
         })
@@ -139,8 +146,8 @@ export default function EditableTable({ devceId }) {
         let datas = JSON.parse(JSON.stringify(data))
         let item = {
             key: `${datas.length + 1}`,
-            labelKey: ``,
-            id: 0
+            value: ``,
+            whiteListId: 0
         }
         datas.push(item)
         setData(datas)
@@ -149,8 +156,8 @@ export default function EditableTable({ devceId }) {
     const columns = [
         {
             title: 'IP地址',
-            dataIndex: 'labelKey',
-            width:300,
+            dataIndex: 'value',
+            width: 300,
             editable: true,
         },
         {
@@ -199,8 +206,8 @@ export default function EditableTable({ devceId }) {
         };
     });
     //请求标签列表
-    const getDetail = (loading = true) => {
-        post(Paths.getPublishProductLabelList, { 'targetid': 1 }, { loading }).then((res) => {
+    const getDetail = () => {
+        post(Paths.projectWhiteList, { projectId }).then((res) => {
             setData(res.data)
         });
     }
@@ -216,7 +223,7 @@ export default function EditableTable({ devceId }) {
                     dataSource={data}
                     columns={mergedColumns}
                     rowClassName="editable-row"
-                    rowKey='id'
+                    rowKey='whiteListId'
                     pagination={false}
                 />
             </Form>
@@ -230,10 +237,9 @@ export default function EditableTable({ devceId }) {
                     title='删除'
                     descGray={true}
                     needWarnIcon={true}
-                    descText='确定删除此功能'
+                    descText='确定删除此白名单'
                 ></ActionConfirmModal>
             }
-
         </div>
     );
 };

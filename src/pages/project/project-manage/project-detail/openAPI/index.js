@@ -7,7 +7,7 @@ import APIdebug from "./APIdebug"
 import './index.scss'
 
 const { TabPane } = Tabs;
-function OpenAPI() {
+function OpenAPI({ projectId }) {
     const [activeKey, setactiveKey] = useState('1')
     const changeKey = (val) => {
         setactiveKey(val)
@@ -17,10 +17,10 @@ function OpenAPI() {
             <div className='comm-shadowbox common-tab'>
                 <Tabs onChange={(val) => changeKey(val)} activeKey={activeKey}>
                     <TabPane tab="API列表" key="1">
-                        <APIList changeKey={changeKey} />
+                        <APIList changeKey={changeKey} projectId={projectId}/>
                     </TabPane>
                     <TabPane tab="调试" key="2">
-                        <APIdebug/>
+                        <APIdebug />
                     </TabPane>
                 </Tabs>
             </div>
