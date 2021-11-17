@@ -130,6 +130,19 @@
       height: 470px;
       border: 1px solid #E9E9E9;
       border-radius: 5px;
+      .top{
+        height: 400px;
+        width: 100%;
+        padding-top: 20px;
+        overflow: auto;
+      }
+      .bottom{
+        padding-left: 26px;
+        .time{
+          margin-left: 138px;
+          margin-top: 5px;
+        }
+      }
     }
     .h5page{
       width: 250px;

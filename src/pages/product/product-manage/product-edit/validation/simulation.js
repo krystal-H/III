@@ -1,16 +1,36 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Modal, Table, Button, Input } from 'antd';
+import { Modal, Table, Button, Input, Form, Select, Radio,Divider  } from 'antd';
 import { get, post, Paths } from '../../../../../api';
 import DescWrapper from '../../../../../components/desc-wrapper/DescWrapper';
 import mqtt from 'mqtt'
 const { Search } = Input;
+//处理数据
+function delaData(data) {
+    let newData = []
+    data.forEach(item => {
+        if (!item.funcParamList || !item.funcParamList.length) return
+        item.funcParamList.forEach(item2 => {
+            let newItem = JSON.parse(JSON.stringify(item))
+            newData.push({ ...newItem, ...item2 })
+        })
+    })
+    newData.forEach((item, index) => {
+        item.key = index
+    })
+    return newData
+}
 export default ({ productId }) => {
-
-    const [mockId, setMockId] = useState("213456789");
+    const [form] = Form.useForm();
+    const [mockId, setMockId] = useState("");
     const [connectData, setConnectData] = useState({});
     const [client, setClient] = useState(null);
     const [connectStatus, setConnectStatus] = useState(null);
+    const [optionData, setOptionData] = useState([])
+    const [subWay, setSubWay] = React.useState(1);
 
+    const onWayChange = e => {
+        setSubWay(e.target.value);
+    };
     useEffect(() => {
         if (productId) {
             post(Paths.getMockDeviceId, { productId }, { needFormData: true }).then(({ data = {} }) => {
@@ -18,16 +38,29 @@ export default ({ productId }) => {
                 setConnectData(data.data)
             })
         }
+        getOption()
         // const product = JSON.parse(sessionStorage.getItem('productItem'));
         // const { code } = product;
-
+        return client && client.end()
     }, [])
+    const getOption = () => {
+        post(Paths.standardFnList, { productId }).then((res) => {
+            let data = res.data.standard.concat(res.data.custom).filter(item => {
+                if (item.funcType == "properties") {
+                    return item
+                }
+            })
+            console.log(data, '=======')
+            setOptionData(data)
+        });
+    }
     useEffect(() => {
+        console.log(999)
         if (client) {
             console.log(client)
             client.on('connect', () => {
                 console.log('连接成功了')
-                setConnectStatus('Connected');
+                // setConnectStatus('Connected');
             });
             client.on('error', (err) => {
                 console.error('Connection error: ', err);
@@ -37,7 +70,7 @@ export default ({ productId }) => {
                 setConnectStatus('Reconnecting');
             });
             client.on('message', (topic, message) => {
-                console.log(topic, message,'信息')
+                console.log(topic, message, '信息')
                 // const payload = { topic, message: message.toString() };
                 // setPayload(payload);
             });
@@ -59,7 +92,41 @@ export default ({ productId }) => {
 
 
     const onSearch = (val) => {
+        console.log(optionData, '==')
+        return
         initData()
+    }
+    const getDom = (data, origin) => {
+        if (data.dataTypCN == "布尔" || data.dataTypCN == "枚举") {
+            return (
+                <Form.Item name={'prop' + origin.dataPointId} label={origin.funcName}>
+                    <Select
+                        style={{ width: '200px' }}
+                        allowClear
+                    >
+                        {
+                            Object.keys(data.propertyMap).map(item => {
+                                return (<Select.OptGroup value={item} key={item}>{data.propertyMap[item]}</Select.OptGroup>)
+                            })
+                        }
+                    </Select>
+                </Form.Item>
+            )
+        } else if (data.dataTypCN == "字符串") {
+            return (
+                <Form.Item name={'prop' + origin.dataPointId} label={origin.funcName}>
+                    <Input style={{ width: '200px' }} />
+                </Form.Item>
+            )
+        } else if (data.dataTypCN == "数值") {
+            return (
+                <Form.Item name={'prop' + origin.dataPointId} label={origin.funcName}>
+                    <Input type='number' style={{ width: '200px' }} />
+                </Form.Item>
+            )
+        }
+
+        return ''
     }
     return (
         <div>
@@ -77,7 +144,43 @@ export default ({ productId }) => {
             </div>
             <div className="modtit">模拟设备</div>
             <div className='debug-data-box'>
-                <div className='databox'></div>
+                <div className='databox'>
+                    <div className='top'>
+                        <Form form={form} labelAlign='right' labelCol={{
+                            span: 6,
+                        }}
+                            wrapperCol={{
+                                span: 18,
+                            }}>
+                            {
+                                optionData.map(item => {
+                                    return (<div key={item.dataPointId}>
+                                        {
+                                            getDom(item.funcParamList[0], item)
+                                        }
+                                    </div>)
+                                })
+                            }
+                        </Form>
+                    </div>
+                    <Divider dashed={true} style={{margin:'0 0 5px 0'}}/>
+                    <div className='bottom'>
+                        <div className='way'>
+                            <span>发送机制：</span>
+                            <Radio.Group onChange={onWayChange} value={subWay}>
+                                <Radio value={1}>手动</Radio>
+                                <Radio value={2}>定时</Radio>
+                            </Radio.Group>
+                        </div>
+                        {
+                            subWay == 2 && <div className='time'>
+                                <span>定时时间：</span>
+                                <Input size='small' type='number' style={{ width: '80px', marginRight: '5px' }} />m
+                            </div>
+                        }
+
+                    </div>
+                </div>
                 <Button type='primary' onClick={we => { }}>上报</Button>
                 <div className='h5page'></div>
                 <div className='codeimg'>
@@ -89,8 +192,6 @@ export default ({ productId }) => {
             <div className="logbox">
 
             </div>
-
-
 
 
         </div>)

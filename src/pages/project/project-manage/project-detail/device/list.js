@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , forwardRef, useImperativeHandle } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select, Divider, Form } from 'antd';
 import { post, Paths } from '../../../../../api';
 import { DateTool } from '../../../../../util/util'
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal'
 import { cloneDeep } from 'lodash'
-export default function InfoModal({ baseInfo, projectId }) {
+ function InfoModal({ baseInfo, projectId },ref) {
     const [form] = Form.useForm();
     const [typelist, setTypelist] = useState([])
-    const [addVisible, setAddVisible] = useState(false)
     const [deletevisible, setDeletevisible] = useState(false)
     const [delType, setDelType] = useState('singer')
     const [selectedKey, setSelectedKey] = useState([])
@@ -115,30 +114,18 @@ export default function InfoModal({ baseInfo, projectId }) {
             // console.log(record, selected, selectedRows);
         },
     };
-    //新增
-    const openAdd = () => {
-        setAddVisible(true)
-    }
-    const confirmAdd = () => {
-        setAddVisible(false)
-    }
-    const closeAdd = () => {
-        setAddVisible(false)
-    }
     // 翻页
     const pagerChange = (pageIndex, pageRows) => {
         setPager(pre => {
             return Object.assign(cloneDeep(pre), { pageIndex: pageRows === pager.pageRows ? pageIndex : 1, pageRows })
         })
     }
+    useImperativeHandle(ref, () => ({
+        reFresh: getList
+    }));
     return (
         <div >
             <div className='device-info-wrap'>
-                <div className='top-but'>
-                    <Button type="primary" onClick={openAdd}>
-                        导入设备
-                    </Button>
-                </div>
                 <div className='filter'>
                     <Form form={form} layout='inline' >
                         <Form.Item name="batchName" label='批次名称'>
@@ -151,7 +138,7 @@ export default function InfoModal({ baseInfo, projectId }) {
                             >
                                 {
                                     typelist.map(item => {
-                                        return (<Option value={item.deviceTypeId} key={item.deviceTypeId}>{item.deviceTypeName}</Option>)
+                                        return (<Select.OptGroup value={item.deviceTypeId} key={item.deviceTypeId}>{item.deviceTypeName}</Select.OptGroup>)
                                     })
                                 }
                             </Select>
@@ -209,3 +196,4 @@ export default function InfoModal({ baseInfo, projectId }) {
         </div>
     )
 }
+export default forwardRef(InfoModal)
