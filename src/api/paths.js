@@ -583,6 +583,8 @@ let Paths = {
     projectInfoBatchList:'/projectDevice/getProjectBatch',//项目详情-设备-查询项目批次列表
     projectInfoDevlist:'/projectDevice/getProjectDeviceList',// 项目详情-设备-查询项目设备列表
     projectImportFile:'/projectDevice/importDevice',//项目详情-设备-导入设备
+    projectSaveFile:'/projectDevice/saveDevice',//项目详情-设备-导入设备-保存
+    projectBatchInfo:'/projectDevice/getProjectBatchDetail',//项目详情-设备-批次-明细
 };
 
 // 拼接 urlPrefix

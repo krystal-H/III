@@ -6,7 +6,7 @@ import Manage from './manage'
 import './index.scss'
 const { TabPane } = Tabs;
 export default function Device({baseInfo, projectId }) {
-    const [activeKey, setactiveKey] = useState('1')
+    const [activeKey, setactiveKey] = useState('2')
     const changeKey = (val) => {
         setactiveKey(val)
     }
@@ -16,7 +16,7 @@ export default function Device({baseInfo, projectId }) {
                 <TabPane tab="设备列表" key="1">
                     <DeviceList baseInfo={baseInfo} projectId={projectId}/>
                 </TabPane>
-                <TabPane tab="调试" key="2">
+                <TabPane tab="批次管理" key="2">
                     <Manage baseInfo={baseInfo} projectId={projectId}/>
                 </TabPane>
             </Tabs>

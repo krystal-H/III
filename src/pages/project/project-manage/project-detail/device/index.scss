@@ -26,3 +26,35 @@
     }
   }
 }
+
+.project-import-file-wrap {
+  .file-form-item {
+    margin-bottom: 0px
+  }
+
+  .project-import-file-list {
+    padding-left: 110px;
+>div{
+  display: flex;
+  align-items: center;
+}
+    span {
+      text-decoration: underline;
+    }
+
+    .name {
+      color: #0099FF;
+      display: inline-block;
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tip {
+      color: #E300AF;
+      margin-left: 20px;
+      cursor: pointer;
+    }
+  }
+}

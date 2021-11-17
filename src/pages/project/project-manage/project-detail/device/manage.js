@@ -11,7 +11,7 @@ export default function InfoModal({ baseInfo, projectId }) {
     const [addVisible, setAddVisible] = useState(false)
     const [deletevisible, setDeletevisible] = useState(false)
     const [delType, setDelType] = useState('singer')
-    const [selectedKey, setSelectedKey] = useState([])
+    const [selectedKey, setSelectedKey] = useState('')
     const [actionData, setActionData] = useState({})
     const [fileVisible, setFileVisible] = useState(false) //导入文件
     const [infoVisible, setInfoVisible] = useState(false) //详情
@@ -57,6 +57,7 @@ export default function InfoModal({ baseInfo, projectId }) {
             })
         }
     }
+   
     useEffect(() => {
         if (projectId) {
             getList()
@@ -71,6 +72,7 @@ export default function InfoModal({ baseInfo, projectId }) {
         if (form.getFieldValue('batchName') && form.getFieldValue('batchName').trim()) {
             params.batchName = form.getFieldValue('batchName')
         }
+        setSelectedKey('')
         post(Paths.projectInfoBatchList, params, { loading }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {
@@ -90,12 +92,13 @@ export default function InfoModal({ baseInfo, projectId }) {
     }
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows, typeof selectedRowKeys);
             setSelectedKey(selectedRowKeys)
         },
         onSelect: (record, selected, selectedRows) => {
             // console.log(record, selected, selectedRows);
         },
+        selectedRowKeys: selectedKey
     };
     //新增
     const openImport = () => {
@@ -108,6 +111,7 @@ export default function InfoModal({ baseInfo, projectId }) {
     //
     const closeFile = () => {
         setFileVisible(false)
+        getList()
     }
     //详情
     const openDia = (data) => {
@@ -116,6 +120,12 @@ export default function InfoModal({ baseInfo, projectId }) {
     }
     const closeInfo = () => {
         setInfoVisible(false)
+    }
+    // 翻页
+    const pagerChange = (pageIndex, pageRows) => {
+        setPager(pre => {
+            return Object.assign(cloneDeep(pre), { pageIndex: pageRows === pager.pageRows ? pageIndex : 1, pageRows })
+        })
     }
     return (
         <div >
@@ -149,7 +159,17 @@ export default function InfoModal({ baseInfo, projectId }) {
                         <Divider type="vertical" style={{ borderColor: '#333' }} />
                         <a onClick={() => { openDel('many') }}>删除</a>
                     </div>
-                    <Table dataSource={dataSource} columns={columns} rowKey="key" rowSelection={{ ...rowSelection }} />
+                    <Table dataSource={dataSource} columns={columns} rowKey="batchId" rowSelection={{ ...rowSelection }}
+                        pagination={{
+                            defaultCurrent: 1,
+                            current: pager.pageIndex,
+                            pageSize: pager.pageRows,
+                            total: pager.totalRows,
+                            showSizeChanger: false,
+                            showQuickJumper: pager.totalPages > 5,
+                            onChange: pagerChange,
+                            showTotal: total => <span>共 <a>{total}</a> 条</span>
+                        }} />
                 </div>
             </div>
             {
@@ -167,54 +187,49 @@ export default function InfoModal({ baseInfo, projectId }) {
                 </ActionConfirmModal>
             }
             {
-                fileVisible && <FileModel isModalVisible={fileVisible} colseMoadl={closeFile} cancelModel={cancelFile} />
+                fileVisible && <FileModel isModalVisible={fileVisible} colseMoadl={closeFile} cancelModel={cancelFile} projectId={projectId} />
             }
             {
-                <DetailInfo isModalVisible={infoVisible} colseMoadl={closeInfo} />
+                infoVisible && <DetailInfo isModalVisible={infoVisible} colseMoadl={closeInfo} actionData={actionData} />
             }
         </div>
     )
 }
-function DetailInfo({ isModalVisible, colseMoadl }) {
-    const dataSource = [
-        {
-            key: '1',
-            name: '胡彦斌',
-            age: 32,
-            address: '西湖区湖底公园1号',
-        },
-        {
-            key: '2',
-            name: '胡彦祖',
-            age: 42,
-            address: '西湖区湖底公园1号',
-        },
-    ];
+function DetailInfo({ isModalVisible, colseMoadl, actionData }) {
+    const [dataSource, setDataSource] = useState([])
+    useEffect(() => {
+        post(Paths.projectBatchInfo, { batchId: actionData.batchId }).then((res) => {
+            setDataSource(res.data.list)
+        });
+    }, [])
     const columns = [
         {
             title: '批次名称',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'batchName',
+            key: 'batchName',
         },
         {
             title: '物理地址',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'physicalAddress',
+            key: 'physicalAddress',
         },
         {
             title: '设备ID',
-            dataIndex: '',
-            key: '',
+            dataIndex: 'deviceUniqueId',
+            key: 'deviceUniqueId',
         }, {
             title: '设备IMEI',
             dataIndex: '',
             key: '',
+            render() {
+                return '--';
+            }
         }
     ];
     return <div>
-        <Modal title="查看详情" footer={null} visible={isModalVisible} onCancel={colseMoadl} width='804px' wrapClassName='add-protocols-wrap'>
+        <Modal title="查看详情" footer={null} visible={isModalVisible} onCancel={colseMoadl} width='904px' wrapClassName='add-protocols-wrap'>
             <div>
-                <Table dataSource={dataSource} columns={columns} scroll={{ y: 440 }} rowKey="key" pagination={null} />
+                <Table dataSource={dataSource} columns={columns} scroll={{ y: 440 }} rowKey="detailId" pagination={false} />
             </div>
         </Modal>
     </div>

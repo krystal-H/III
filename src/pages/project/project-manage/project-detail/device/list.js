@@ -59,6 +59,15 @@ export default function InfoModal({ baseInfo, projectId }) {
             getList()
         }
     }, [pager.pageIndex, projectId, baseInfo.accountId])
+    useEffect(()=>{
+        getTypeList()
+    },[])
+    //
+    const getTypeList=()=>{
+        post(Paths.getThirdCategory).then((res) => {
+            setTypelist(res.data)
+        });
+    }
     const deletelOKHandle = () => { }
     //搜索
     const onSearch = () => {
@@ -138,6 +147,7 @@ export default function InfoModal({ baseInfo, projectId }) {
                         <Form.Item name="productId" label='产品类型'>
                             <Select
                                 style={{ width: '200px' }}
+                                allowClear
                             >
                                 {
                                     typelist.map(item => {
