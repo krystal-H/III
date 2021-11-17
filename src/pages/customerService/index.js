@@ -58,7 +58,6 @@ function CustomerService({
         ws.onmessage =  ({data="{}"})=> {//接收到消息
             let onemsg = JSON.parse(data)
 
-            console.log('--get--',data.data)
             setContent(pre=>[...pre,onemsg])
             
         };
@@ -79,7 +78,7 @@ function CustomerService({
         store.dispatch(showCustomerService(newShow));
         if(newShow && !ws){//开启连接
             newWebSocket();
-        }else{//关闭连接
+        }else if(!newShow){//关闭连接
             closeWebsocket()
 
         }
@@ -107,8 +106,8 @@ function CustomerService({
             <div className='tit'>客服<span className="close" onClick={switchOpen}> </span></div>
             <div className='content'>
                 {
-                    content.map(({message,senderName,time})=>{
-                        return <div className={`onechat ${senderName=='客服'?'left':'right'}`}>
+                    content.map(({message,senderName,time},index)=>{
+                        return <div className={`onechat ${senderName=='客服'?'left':'right'}`}  key={index+'_'+time} >
                                     <span className='bubble'>{message}</span>
                                 </div>
 
