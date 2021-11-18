@@ -30,6 +30,7 @@ let Paths = {
     cancelAccount : '/common/cancelAccount',
     withdraw : '/common/withdraw',
     getGroupMenuList: '/common/getMenus',//获取账号权限菜单
+    customerServiceHistory: '/support/getHistory',//客服历史信息
 
     /* 产品信息 */
     getProductList: '/product/listAllProductAndAccreditInfo',
