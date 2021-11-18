@@ -108,7 +108,7 @@ export default function DeviceInfo({ baseInfo, projectId }) {
             </div>
         </div>
         {
-            <Modal title="设置密码" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+            isModalVisible && <Modal title="设置密码" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                 <Form
                     form={form}
                 >

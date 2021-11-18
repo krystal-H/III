@@ -586,6 +586,8 @@ let Paths = {
     projectImportFile:'/projectDevice/importDevice',//项目详情-设备-导入设备
     projectSaveFile:'/projectDevice/saveDevice',//项目详情-设备-导入设备-保存
     projectBatchInfo:'/projectDevice/getProjectBatchDetail',//项目详情-设备-批次-明细
+    projectDelDev:'/projectDevice/deleteDeviceList',//项目详情-设备-删除设备列表
+    projectRemoveDev:'/projectDevice/unbind',//项目详情-设备-移除绑定
 };
 
 // 拼接 urlPrefix

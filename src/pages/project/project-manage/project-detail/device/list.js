@@ -1,10 +1,12 @@
-import React, { useState, useEffect , forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select, Divider, Form } from 'antd';
 import { post, Paths } from '../../../../../api';
 import { DateTool } from '../../../../../util/util'
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal'
+import { Notification } from '../../../../../components/Notification';
 import { cloneDeep } from 'lodash'
- function InfoModal({ baseInfo, projectId },ref) {
+import { data } from '_browserslist@4.16.6@browserslist';
+function InfoModal({ baseInfo, projectId }, ref) {
     const [form] = Form.useForm();
     const [typelist, setTypelist] = useState([])
     const [deletevisible, setDeletevisible] = useState(false)
@@ -13,11 +15,12 @@ import { cloneDeep } from 'lodash'
     const [actionData, setActionData] = useState({})
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     const [dataSource, setDataSource] = useState([])
+    const [isModalVisible, setIsModalVisible] = useState(false)
     const columns = [
         {
             title: '设备ID',
-            dataIndex: 'deviceId',
-            key: 'deviceId',
+            dataIndex: 'deviceUniqueId',
+            key: 'deviceUniqueId',
         },
         {
             title: '所属产品',
@@ -40,6 +43,9 @@ import { cloneDeep } from 'lodash'
             title: '状态',
             dataIndex: 'onlineStatus',
             key: 'onlineStatus',
+            render(onlineStatus) {
+                return onlineStatus == 1 ? '在线' : '离线';
+            }
         }, {
             title: '所属分组',
             dataIndex: 'groupName',
@@ -49,7 +55,11 @@ import { cloneDeep } from 'lodash'
             dataIndex: '',
             key: '',
             render(text, record) {
-                return <span><a onClick={() => { openDel('singer', record) }}>移除绑定</a></span>
+                return <span>
+                    {record.bindSource && record.bindSource.indexOf('导入') > -1 &&
+                        <><a onClick={() => { openDel('singer', record) }}>移除绑定</a><Divider type="vertical" /></>}
+
+                    <a onClick={() => { openEdit(record) }}>编辑组</a></span>
             }
         },
     ];
@@ -58,16 +68,42 @@ import { cloneDeep } from 'lodash'
             getList()
         }
     }, [pager.pageIndex, projectId, baseInfo.accountId])
-    useEffect(()=>{
+    useEffect(() => {
         getTypeList()
-    },[])
+    }, [])
     //
-    const getTypeList=()=>{
+    const getTypeList = () => {
         post(Paths.getThirdCategory).then((res) => {
             setTypelist(res.data)
         });
     }
-    const deletelOKHandle = () => { }
+    const deletelOKHandle = () => {
+        if (delType == 'singer') {
+            let params = {
+                deviceUniqueId: actionData.deviceUniqueId,
+                userId: baseInfo.accountId
+            }
+            post(Paths.projectRemoveDev, params, { loading: true }).then((res) => {
+                Notification({
+                    type: 'success',
+                    description: '操作成功！',
+                });
+                getList()
+            });
+        } else {
+            let params = {
+                deviceUniqueIds: selectedKey,
+                projectId
+            }
+            post(Paths.projectDelDev, params, { loading: true }).then((res) => {
+                Notification({
+                    type: 'success',
+                    description: '操作成功！',
+                });
+                getList()
+            });
+        }
+    }
     //搜索
     const onSearch = () => {
         if (pager.pageIndex == 1) {
@@ -90,6 +126,7 @@ import { cloneDeep } from 'lodash'
         }
         post(Paths.projectInfoDevlist, params, { loading }).then((res) => {
             setDataSource(res.data.list)
+            setSelectedKey([])
             setPager(pre => {
                 let obj = cloneDeep(pre)
                 obj.totalRows = res.data.pager.totalRows
@@ -102,23 +139,41 @@ import { cloneDeep } from 'lodash'
         setDelType(type)
         if (type == 'singer') {
             setActionData(data)
+        } else {
+            if (!selectedKey.length) {
+                Notification({
+                    type: 'warn',
+                    description: '请先勾选要删除的设备',
+                });
+                return
+            }
         }
         setDeletevisible(true)
     }
+    //勾选
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
             setSelectedKey(selectedRowKeys)
         },
         onSelect: (record, selected, selectedRows) => {
             // console.log(record, selected, selectedRows);
         },
+        selectedRowKeys: selectedKey
     };
     // 翻页
     const pagerChange = (pageIndex, pageRows) => {
         setPager(pre => {
             return Object.assign(cloneDeep(pre), { pageIndex: pageRows === pager.pageRows ? pageIndex : 1, pageRows })
         })
+    }
+    //打开编辑
+    const openEdit = (data) => {
+        setActionData(data)
+        setIsModalVisible(true)
+    }
+    //取消编辑
+    const cancelModel = () => {
+        setIsModalVisible(false)
     }
     useImperativeHandle(ref, () => ({
         reFresh: getList
@@ -138,7 +193,7 @@ import { cloneDeep } from 'lodash'
                             >
                                 {
                                     typelist.map(item => {
-                                        return (<Select.OptGroup value={item.deviceTypeId} key={item.deviceTypeId}>{item.deviceTypeName}</Select.OptGroup>)
+                                        return (<Select.Option value={item.deviceTypeId} key={item.deviceTypeId}>{item.deviceTypeName}</Select.Option>)
                                     })
                                 }
                             </Select>
@@ -168,7 +223,7 @@ import { cloneDeep } from 'lodash'
                         <Divider type="vertical" style={{ borderColor: '#333' }} />
                         <a onClick={() => { openDel('many') }}>删除</a>
                     </div>
-                    <Table dataSource={dataSource} columns={columns} rowKey="deviceId" rowSelection={{ ...rowSelection }}
+                    <Table dataSource={dataSource} columns={columns} rowKey="deviceUniqueId" rowSelection={{ ...rowSelection }}
                         pagination={{
                             defaultCurrent: 1,
                             current: pager.pageIndex,
@@ -187,9 +242,9 @@ import { cloneDeep } from 'lodash'
                     visible={deletevisible}
                     modalOKHandle={deletelOKHandle}
                     modalCancelHandle={() => setDeletevisible(false)}
-                    title={'解除绑定'}
+                    title={delType == 'singer' ? '解除绑定' : '删除'}
                     needWarnIcon={true}
-                    tipText={'确认解除绑定？'}
+                    tipText={delType == 'singer' ? '确认解除绑定？' : '确定批量删除？'}
                 >
                 </ActionConfirmModal>
             }
@@ -197,3 +252,28 @@ import { cloneDeep } from 'lodash'
     )
 }
 export default forwardRef(InfoModal)
+function EditGroup({ isModalVisible, cancelModel }) {
+    const [form] = Form.useForm();
+    const subData = () => {
+
+    }
+    return <div>
+        <Modal title="导入设备" visible={isModalVisible} onOk={subData} onCancel={cancelModel} width='650px' wrapClassName='add-protocols-wrap'>
+            <div style={{ padding: '0 80px' }} className='project-import-file-wrap'>
+                <Form form={form} labelAlign='right' labelCol={{
+                    span: 6,
+                }}
+                    wrapperCol={{
+                        span: 18,
+                    }}>
+                    <Form.Item
+                        name="name"
+                        label="批次名称"
+                        rules={[{ required: true }]}
+                    ><Input />
+                    </Form.Item>
+                </Form>
+            </div>
+        </Modal>
+    </div>
+}
