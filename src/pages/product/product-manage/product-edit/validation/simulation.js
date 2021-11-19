@@ -2,8 +2,12 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Modal, Table, Button, Input, Form, Select, Radio, Divider } from 'antd';
 import { get, post, Paths } from '../../../../../api';
 import DescWrapper from '../../../../../components/desc-wrapper/DescWrapper';
+import ObjectView from "../../../../../components/ObjectView";
 import mqtt from 'mqtt'
 import QRCode from 'qrcode.react';
+import Base64 from 'crypto-js/enc-base64'
+import Utf8 from 'crypto-js/enc-utf8'
+import CryptoJS from 'crypto-js'
 export default ({ productId }) => {
     const product = JSON.parse(sessionStorage.getItem('productItem'));
     const [form] = Form.useForm();
@@ -13,6 +17,7 @@ export default ({ productId }) => {
     const [connectStatus, setConnectStatus] = useState(null);//连接状态
     const [optionData, setOptionData] = useState([])//物模型
     const [qrcodeUrl, setQrcodeUrl] = useState(null);//二维码
+    const [payload, setPayload] = useState(null)
     useEffect(() => {
         if (productId) {
             post(Paths.getMockDeviceId, { productId }, { needFormData: true }).then(({ data = {} }) => {
@@ -44,7 +49,7 @@ export default ({ productId }) => {
     }
     useEffect(() => {
         if (client) {
-
+            console.log('重复连接了')
             client.on('connect', () => {
                 console.log('连接成功了')
                 setConnectStatus('Connected');
@@ -60,18 +65,14 @@ export default ({ productId }) => {
                 setConnectStatus('Reconnecting');
             });
             client.on('message', (topic, message) => {
-                console.log(topic, message, '订阅成功后的信息')
-                // const payload = { topic, message: message.toString() };
-                // setPayload(payload);
+                let str = String.fromCharCode.apply(null, message);
+                let res = JSON.parse(str);
+                let encodeKey = CryptoJS.enc.Base64.parse(res.data)
+                let data = CryptoJS.enc.Utf8.stringify(encodeKey)
+                setPayload(JSON.parse(data));
             });
         }
     }, [client]);
-    // useEffect(() => {
-    //     if (connectStatus == 'Connected') {
-    //         let topic = `/device/${product.code}/${mockId}/downward`
-    //         client.subscribe(topic);
-    //     }
-    // }, [connectStatus])
     //连接mqtt
     const initData = (data) => {
         const options = {
@@ -131,6 +132,7 @@ export default ({ productId }) => {
             }
         }
         let timestamp = new Date().getTime()
+        arr = Base64.stringify(Utf8.parse(JSON.stringify({ params: arr })))
         let params = {
             cmd: 2006,
             ver: "1.0",
@@ -138,14 +140,13 @@ export default ({ productId }) => {
             timestamp,
             msgId: timestamp,
             data: {
-                "params": arr
+                params: arr
             }
         }
         let topic = `/device/${product.code}/${mockId}/upward`
-        client.publish(topic, params)
-        console.log(topic, params, '上报成功了=======')
+        client.publish(topic, JSON.stringify(params))
     }
-    const test=()=>{
+    const test = () => {
         let arr = []
         let data = form.getFieldsValue()
         for (let key in data) {
@@ -156,19 +157,17 @@ export default ({ productId }) => {
             }
         }
         let timestamp = new Date().getTime()
+        arr = Base64.stringify(Utf8.parse(JSON.stringify({ params: arr })))
         let params = {
             cmd: 2006,
             ver: "1.0",
             dir: "03",
             timestamp,
             msgId: timestamp,
-            data: {
-                "params": arr
-            }
+            data: arr
         }
         let topic = `/device/${product.code}/${mockId}/downward`
-        client.publish(topic, params)
-        alert(1)
+        client.publish(topic, JSON.stringify(params))
     }
     return (
         <div>
@@ -197,23 +196,6 @@ export default ({ productId }) => {
                             }
                         </Form>
                     </div>
-                    {/* <Divider dashed={true} style={{ margin: '0 0 5px 0' }} />
-                    <div className='bottom'>
-                        <div className='way'>
-                            <span>发送机制：</span>
-                            <Radio.Group onChange={onWayChange} value={subWay}>
-                                <Radio value={1}>立即发送</Radio>
-                                <Radio value={2}>定时时间后发</Radio>
-                            </Radio.Group>
-                        </div>
-                        {
-                            subWay == 2 && <div className='time'>
-                                <span>定时时间：</span>
-                                <Input size='small' type='number' style={{ width: '80px', marginRight: '5px' }} />分
-                            </div>
-                        }
-
-                    </div> */}
                 </div>
                 <Button type='primary' onClick={startSub}>上报</Button>
                 {/* <div className='h5page'></div> */}
@@ -232,7 +214,9 @@ export default ({ productId }) => {
             </div>
             <div className="modtit">通信日志</div>
             <div className="logbox">
-
+                {
+                    payload && <ObjectView keyName="下发" data={payload} /> || "无数据"
+                }
             </div>
 
 

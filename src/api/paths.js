@@ -604,6 +604,8 @@ let Paths = {
     projectBatchInfo:'/projectDevice/getProjectBatchDetail',//项目详情-设备-批次-明细
     projectDelDev:'/projectDevice/deleteDeviceList',//项目详情-设备-删除设备列表
     projectRemoveDev:'/projectDevice/unbind',//项目详情-设备-移除绑定
+    projectupdateGroup:'/projectGroup/updateGroupDevice',//项目详情-设备-修改设备分组
+    projectGroupList:"/projectGroup/getGroupList",//详情-设备-获取分组列表下拉
 };
 
 // 拼接 urlPrefix
