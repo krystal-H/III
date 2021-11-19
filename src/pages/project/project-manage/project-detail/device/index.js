@@ -25,7 +25,9 @@ export default function Device({ baseInfo, projectId }) {
     //
     const closeFile = () => {
         tabOne.current.reFresh()
-        tabTwo.current.reFresh()
+        if(tabTwo.current && tabTwo.current.reFresh){
+            tabTwo.current.reFresh()
+        }
         setFileVisible(false)
     }
     return (<div className='page-apilist project-device-wrap'>

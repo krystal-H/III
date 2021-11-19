@@ -80,14 +80,6 @@ import { DateTool } from '../../../../../util/util'
             })
         });
     }
-    //打开删除
-    const openDel = (type, data) => {
-        setDelType(type)
-        if (type == 'singer') {
-            setActionData(data)
-        }
-        setDeletevisible(true)
-    }
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows, typeof selectedRowKeys);
