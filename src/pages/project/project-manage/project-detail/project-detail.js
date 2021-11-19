@@ -65,7 +65,7 @@ export default function DeviceInfo({ match }) {
                     <OpenAPI projectId={projectId} />
                 </TabPane>
                 <TabPane key={'3'} tab={'分组'}>
-                    <Grouping />
+                    <Grouping projectId={projectId} />
                 </TabPane>
                 <TabPane key={'4'} tab={'设备'}>
                     <Device baseInfo={baseInfo} projectId={projectId} />
