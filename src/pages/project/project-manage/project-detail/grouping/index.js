@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { post, Paths} from '../../../../../api';
 import { Input, Button, Table, Divider } from 'antd';
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
 import ModeAddForm from './addForm';
+import GroupDetail from './groupDetails';
+
 import { DateTool } from '../../../../../util/util';
 import './deviceGroup.scss'
 
@@ -16,10 +17,12 @@ export default class DeviceGroup extends Component {
             caseList:[],
             pager:{},
             searchName:undefined,//搜索框
-            name:'',// 当前操作的分组名称
-            id:'',//当前操作的分组id
+            name:'',// 当前删除的分组名称
+            id:'',//当前删除的分组id
             addVisible:false,//新增分组弹窗
             pageIndex: 1,
+
+            viewDetailId:undefined
         };
         this.columns = [
             { title: '分组名称', dataIndex: 'groupName',ellipsis:true },
@@ -29,15 +32,18 @@ export default class DeviceGroup extends Component {
                 render: text => <span>{text && DateTool.utcToDev(text) || '--'}</span>
             },
             { title: '操作', key: 'action', width:'120px',
-                render: (text, record) => (
+                render: (text, {groupId,groupName}) => (
                     <span>
-                        <Link to={`/open/device/devGroup/details/${record.id}/${record.groupId}`}>查看</Link>
+                        <a onClick={ ()=>{ this.openDetail(groupId) } } >查看</a>
                         <Divider type="vertical" />
-                        <a onClick={this.openDel.bind(this,record.id,record.name)} >删除</a>
+                        <a onClick={ ()=>{ this.openDel(groupId,groupName) } } >删除</a>
                     </span>
                 ),
             },
         ];
+    }
+    openDetail = id=>{
+        this.setState({ viewDetailId:id })
     }
     //获取分组列表
     getList = (data={}) => {
@@ -70,7 +76,7 @@ export default class DeviceGroup extends Component {
     delOkCancel = (type)=>{
         if(type=='ok'){// 点击确认
             let {id} = this.state;
-            post(Paths.deleteGroup,{groupId}).then((res) => {
+            post(Paths.deleteGroup,{groupId:id}).then((res) => {
                 this.setState({loading:true,id:''},()=>{
                     this.getList();
                 });
@@ -93,7 +99,7 @@ export default class DeviceGroup extends Component {
         });
     }
     render() {
-        let { loading, addVisible,caseList, pager:{pageIndex=1,totalRows=0,totalPages=0},id,name } = this.state;
+        let { loading, addVisible,caseList, pager:{pageIndex=1,totalRows=0,totalPages=0},id,name,viewDetailId } = this.state;
         
         return (
            <div className='page-devicegroup'>
@@ -110,7 +116,7 @@ export default class DeviceGroup extends Component {
 
                 <div className='tablebox'>
                     <Table
-                        rowKey="id"
+                        rowKey="groupId"
                         columns={this.columns} 
                         dataSource={caseList} 
                         pagination={{
@@ -136,6 +142,12 @@ export default class DeviceGroup extends Component {
                     descText='即将删除分组'
                     targetName={name}
                 />
+                {
+                    viewDetailId && 
+                    <GroupDetail viewDetailId={viewDetailId} userId={this.props.userId} closeVisiable={this.openDetail}/>
+                }
+
+                
            </div>
         )
     }

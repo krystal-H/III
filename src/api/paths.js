@@ -423,11 +423,11 @@ let Paths = {
     // getGroupListAuth:'/group/getGroupList',
     updateGroup:'/projectGroup/saveProjectGroup',
     deleteGroup:'/projectGroup/deleteProjectGroup',
+    getGroupDeviceList:'/projectGroup/getGroupDeviceList',
+    getGroupSlctDev:'/projectDevice/getDeviceBindList',
     
-    getGroupDetail:'/deviceGroup/getDeviceGroupInfo',
-    getGroupDeviceList:'/deviceGroup/getGroupDeviceList',
     addGroupDevice:'/deviceGroup/groupRelaDevice',
-    getGroupSlctDev:'/deviceGroup/getRelaDeviceList',
+    
     delGroupDevice:'/deviceGroup/groupDeleteRelaDevice',
     getCreateProduct:'/prod/getCreateProduct',
     groupUpDevice:'/deviceGroup/importDevices',

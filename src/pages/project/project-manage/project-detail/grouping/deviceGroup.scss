@@ -62,9 +62,12 @@
         margin-bottom: 10px;
         text-align: right;
     }
+    .search-inpt{
+        margin: 24px 0;
+        width: 300px;
+    }
     .list-content{
-        margin-top: 20px;
-        height: 550px;
+        max-height: 550px;
         overflow-y: auto;
     }
     .ant-modal-body{
