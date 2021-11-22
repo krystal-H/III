@@ -1,115 +1,120 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Table, Divider, Select, Steps, Input, Form } from 'antd'
+import { Button, Table, Divider, Select, Steps, Input, Form, message } from 'antd'
 import { InfoCircleFilled } from '@ant-design/icons'
-import { copyTextToClipBoard,DateTool } from '../../../../../util/util';
+import { copyTextToClipBoard, DateTool } from '../../../../../util/util';
+import { Paths, post, get } from '../../../../../api'
+import { Notification } from '../../../../../components/Notification'
 import './APIdebug.scss'
 
 const { Search } = Input
-let testData = [{
-  key: '1',
-  name: '获取设备信息',
-  id: 123
-}, {
-  key: '2',
-  name: '批量移入设备',
-  id: 456
-},
-{
-  key: '3',
-  name: '修改设备信息',
-  id: 789
-}]
-const resTxt = "{'code': 1114, msg: 'hello word!'}"
-function APIdebug({ }) {
-  const [rowId, setRowId] = useState('')
+
+function APIdebug({ listItem = {}, projectId }) {
   const [form] = Form.useForm()
+  const [dataSource, setDataSource] = useState([])
+  const [pager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 100000000 })
+  const [rowId, setRowId] = useState('')
+  const [resultShow, setResultShow] = useState('')
+  const [curObj, setCurObj] = useState({})
+  const PageColumns = [{ title: '项目名称', dataIndex: 'name', key: 'name', }]
+  const [apiName, setApiName] = useState('')
 
-  const PageColumns = [
-    {
-      title: '项目名称',
-      dataIndex: 'name',
-      key: 'name',
-    },
-  ]
-  // 获取列表
-  const getTableList = (val = '') => {
+  useEffect(() => {
+    setCurObj(listItem)
+    setRowId(listItem.apiId)
+  }, [listItem])
 
+  // 获取列表数据
+  const getTableList = () => {
+    let params = { projectId, name: apiName, ...pager }
+    post(Paths.getProjectApiList, params, { loading: true }).then(res => {
+      setDataSource(res.data.list)
+    })
   }
 
+  // 发起调试
   const onFinish = (values) => {
-    console.log('Success:', values)
+    if (!rowId) return Notification({ description: '请选择需要调用的接口！', type: 'warn' })
+    const params = {
+      apiId: rowId,
+      reqParams: JSON.stringify({ ...values })
+    }
+    post(Paths.debugAPI, params, { loading: true })
+      .then(res => {
+        if (res) setResultShow(JSON.stringify(JSON.parse(res), null, 2))
+      })
   }
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo)
   }
 
-  // 查询
-  const searchApi = (val) => {
-    if (val && !!val.trim()) {
-      getTableList(val.trim())
-    }
-  }
-
   // 点击table行
   const onClickRow = (record) => {
     return {
       onClick: () => {
-        setRowId(record.id)
+        setRowId(record.apiId)
+        setCurObj(record)
       }
     }
   }
+
   // 设置选中的行样式
   const setRowClassName = (record) => {
-    return record.id === rowId ? 'clickRowStyl' : '';
+    return record.apiId === rowId ? 'clickRowStyl' : '';
   }
+
+  useEffect(() => {
+    getTableList()
+  }, [apiName]) // eslint-disable-line react-hooks/exhaustive-deps
+
 
   // 复制响应结果
   const copyResponse = () => {
-    return copyTextToClipBoard(resTxt)
+    return copyTextToClipBoard(resultShow)
   }
 
   return (
     <div className="API-debug">
-      {/* 左 */}
+      {/* left-block */}
       <div className="API-debug-left comm-shadowbox">
         {/* 搜索 */}
         <Search placeholder="搜索" allowClear
-          onSearch={value => searchApi(value)}
+          onSearch={value => setApiName(value)}
           style={{ width: '100%' }} />
         {/* 列表 */}
         <Table columns={PageColumns} showHeader={false}
           onRow={(record) => onClickRow(record)}
           rowClassName={(record) => setRowClassName(record)}
           className="ant-table-fixed"
-          rowKey="taskId"
-          dataSource={testData}
+          rowKey="apiId"
+          dataSource={dataSource}
           pagination={false}
         />
       </div>
-      {/* 中 */}
+      {/* center-block */}
       <div className="API-debug-center comm-shadowbox">
         <div className="title line40">获取设备信息</div>
         <div className="cont">
-          <div className="line40">参数（请求方式：GET）</div>
+          <div className="line40">参数（请求方式：{curObj.method || '--'}）</div>
           <div className="bold">params</div>
           <div className="params-box">
             <Form form={form}
               onFinish={onFinish}
               onFinishFailed={onFinishFailed}
               autoComplete="off">
-              <Form.Item
-                label="device_id"
-                name="device_id"
-                rules={[{ required: true, message: '请输入参数' }]}>
-                <Input placeholder="请输入参数" />
-              </Form.Item>
-              <Form.Item
-                label="device_id2"
-                name="device_id2"
-                rules={[{ required: true, message: '请输入参数' }]}>
-                <Input placeholder="请输入参数" />
-              </Form.Item>
+              {
+                Object.keys(curObj).length > 0 && JSON.parse(curObj.params) &&
+                JSON.parse(curObj.params).map(item => (
+                  <div key={item.name + item.desc}>
+                    <Form.Item
+                      label={item.desc}
+                      name={item.name}
+                      rules={[{ required: item.require, message: '请输入参数' }]}>
+                      <Input placeholder="请输入参数" />
+                    </Form.Item>
+                  </div>
+                ))
+              }
               <div className="submit-btn">
                 <Button type="primary" htmlType="submit">发起调用</Button>
               </div>
@@ -117,7 +122,7 @@ function APIdebug({ }) {
           </div>
         </div>
       </div>
-      {/* 右 */}
+      {/* right-block */}
       <div className="API-debug-right ">
         <div className="tip-desc">
           <InfoCircleFilled className="icon" /><span className="tip-text">API调试时，平台将使用当前项目的授权密钥（Access ID & Access Secret）获取临时token，对线上资源发起调用，请小心操作。</span>
@@ -127,11 +132,7 @@ function APIdebug({ }) {
             <span>响应结果</span>
             <span className="copy" onClick={() => copyResponse()}>复制</span>
           </div>
-          <div className="right-bar-cont">
-            {
-              resTxt
-            }
-          </div>
+          <div className="right-bar-cont">{resultShow}</div>
         </div>
       </div>
     </div>
