@@ -221,7 +221,7 @@ function UploadFileHooks({ maxCount = 1, format, maxSize = 0.2, isNotImg = false
         }
         if (!isLtMaxCount()) {
             Notification({
-                description: `文件个数必须小于 ${maxCount} 个!`,
+                description: `文件个数最多 ${maxCount} 个!`,
                 type: 'warn'
             });
             return false;

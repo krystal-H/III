@@ -85,7 +85,10 @@ export default ({ productId }) => {
             // 心跳时间
             keepalive: data.mqttKeepalive,
         }
-        setClient(mqtt.connect('ws://10.6.14.1:8083/mqtt', options))
+        let url=data.mqttUrl+'/mqtt'
+        url=url.replace('tcp','ws')
+        url=url.replace('1883','8083')
+        setClient(mqtt.connect(url, options))
     }
     //物模型渲染
     const getDom = (data, origin) => {
