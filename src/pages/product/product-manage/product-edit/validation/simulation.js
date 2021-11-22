@@ -86,7 +86,7 @@ export default ({ productId }) => {
             keepalive: data.mqttKeepalive,
         }
         let url=data.mqttUrl+'/mqtt'
-        url=url.replace('tcp','ws')
+        url=url.replace('tcp','wss')
         url=url.replace('1883','8083')
         setClient(mqtt.connect(url, options))
     }

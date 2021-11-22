@@ -16,7 +16,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
         productId: value.productId,
         data: value.upload[0].url
       }
-      post(Paths.proReledExport, params).then((res) => {
+      post(Paths.proReledExport, params,{loading:true}).then((res) => {
         colseMoadl()
       });
     }).catch(err => {
