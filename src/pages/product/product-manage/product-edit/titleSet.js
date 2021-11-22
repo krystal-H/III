@@ -110,13 +110,6 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                         ]}
                     >
                         <span>{productItem.brandName}</span>
-                        {/* <Select  >
-                            {
-                                optionArr.map(item => {
-                                    return (<Select.Option value={item.brandId} key={item.brandId}>{item.fullName}</Select.Option>)
-                                })
-                            }
-                        </Select> */}
 
                     </Form.Item>
                     <Form.Item
@@ -146,6 +139,11 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     <Form.Item
                         label="产品图片"
                         name='productIcon'
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
                     >
                         <UploadFileHooks
                             ref={oneRef}
