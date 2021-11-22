@@ -6,12 +6,12 @@ import { cloneDeep } from 'lodash';
 import { post, Paths, get } from '../../../api';
 // import { netStatus } from '../../../configs/text-map'
 import { DateTool, getUrlParam } from '../../../util/util';
-import { Notification } from '../../../components/Notification';
 import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
 import './index.scss'
 import AddModal from './cusmoFn';
 const { Option } = Select;
 const { Step } = Steps;
+import { Notification } from '../../../components/Notification'
 const netStatus = [{
     value: '条件', key: true
 }, {
@@ -89,8 +89,10 @@ export default function DeviceRegist() {
                     }
                 })
             } else {
-                setSelectType(productList[0].productId)
-                setProductName(productList[0].productName)
+                if (productList.length) {
+                    setSelectType(productList[0].productId)
+                    setProductName(productList[0].productName)
+                }
             }
             setOptionArr(productList)
         });
@@ -154,6 +156,13 @@ export default function DeviceRegist() {
     //自定义
     const [modelVis, setModelVis] = useState(false)
     const openRegist = () => {
+        if(!optionArr.length){
+            Notification({
+                type: 'warn',
+                description: '暂无已发布的产品',
+            });
+            return
+        }
         setModelVis(true)
     }
     const cancelModel = () => {
@@ -281,7 +290,7 @@ export default function DeviceRegist() {
                             </Form.Item>
                         </Form>
                     </div>
-                    <Button type="primary" onClick={openRegist}>自定义</Button>
+                    <Button type='primary'  disabled={optionArr.length ? false : true}  onClick={openRegist}>自定义</Button>
                 </div>
                 <Table rowKey='unikey' dataSource={dataSource} columns={columns} />
             </div>

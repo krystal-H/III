@@ -197,11 +197,11 @@ class Hardware extends Component {
                 {
                   productItemData.schemeType === 2 &&
                   <>
-                    <div>MCU模组 SDK开发</div>
+                    <div>MCU SDK开发</div>
                     <div className="blue">
                       <span onClick={() => this.downloadData()}>下载MCU开发资料包</span>
                       <Tooltip
-                        title={'包含MCU SDK、串口协议、模组调试助手等。SDK根据您产品的基本信息和功能定义生成对应的模组代码。若您的产品信息和功能定义发生变化，请重新生成。重新生成。'}
+                        title={'包含MCU SDK、串口协议、模组调试助手等。SDK根据您产品的基本信息和功能定义生成对应的模组代码。若您的产品信息和功能定义发生变化，请重新生成。'}
                         placement="top">
                         <QuestionCircleOutlined className="tooltip-icon" />
                       </Tooltip>
@@ -211,11 +211,11 @@ class Hardware extends Component {
                 {
                   productItemData.schemeType === 3 &&
                   <>
-                    <div>模组SDK开发</div>
+                    <div>SDK开发</div>
                     <div className="blue">
-                      <span onClick={() => this.downloadData()}>下载模组SDK开发资料包</span>
+                      <span onClick={() => this.downloadData()}>下载SDK开发资料包</span>
                       <Tooltip
-                        title={'包含模组 SDK、Bin文件等'}
+                        title={'包含SDK等文件'}
                         placement="top">
                         <QuestionCircleOutlined className="tooltip-icon" />
                       </Tooltip>

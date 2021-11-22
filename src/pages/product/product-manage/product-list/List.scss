@@ -44,8 +44,10 @@
         .page-table-wrapper {
             background-color: $sectionBgColor;
             .pro-show {
-                @include flex(flex-start);
+                // @include flex(flex-start);
+                display: flex;
                 &-cont {
+                    flex: 1;
                     margin-left: 12px;
                     &-title {
                         @include text(14px, $_323Color);

@@ -210,7 +210,9 @@ export function setFuncDataType (item){
  * @param {number} sizeKb 文件大小，以kb为单位，默认值为500
  */
 export function checkFileTypeAndSize(fileList,typeArray = [],sizeKb = 500) {
-
+    // console.log(fileList, '----fileList')
+    fileList = fileList ? Array.from(fileList) : fileList
+    // console.log('类数组转化', Array.from(fileList))
     let temp = {
         isOk : true,
         size : true,

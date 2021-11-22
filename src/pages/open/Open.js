@@ -8,23 +8,24 @@ import { getNewMessageNums } from '../message-center/store/ActionCreator';
 import OutsideWrapper from '../../components/outside-wrapper/OutsideWrapper';
 import Header from './header/Header';
 import NavMenu from './nav-menu/NavMenu';
+import CustomerService from '../customerService';
 import { MenuUnfoldOutlined, MenuFoldOutlined, } from '@ant-design/icons';
+
 // 模块懒加载
-// const BigDataProduct = loadable( () => import('../big-data-product/BigDataProduct'));
-// const DevelopCenter = loadable( () => import('../develop-center/DevelopCenter'));
 const Overview = loadable(() => import('../home/overview/index'));
 const Product = loadable(() => import('../product'));
 const Device = loadable(() => import('../device'));
 const DataSevice = loadable(() => import('../data-sevice'));
 const OrderHome = loadable(() => import('../repairOrder/home'));
 const Application = loadable(() => import('../product/application/Application.js'))
-
+const Project = loadable(() => import('../project'))
 const RouteComponentLi = {
     '总览': Overview,
     '产品': Product,
     '设备': Device,
-    'APP': Application,
-    '数据服务': DataSevice,
+    '应用': Application,
+    '数据': DataSevice,
+    '项目': Project
     // '开发Studio': , 暂时取消 开发Studio 20210810
 }
 const RepairOrder = [{
@@ -71,7 +72,7 @@ export default class Open extends Component {
         }
     }
     render() {
-        const { developerInfo, newMessageNums, menulist} = this.props;
+        const { developerInfo, newMessageNums, menulist } = this.props;
         const { collapsed } = this.state;
         return (
             <OutsideWrapper>
@@ -126,7 +127,7 @@ export default class Open extends Component {
                                         compo, path
                                     }, index) => {
                                         return <Route key={index} path={path}
-                                        component={compo}
+                                            component={compo}
                                         ></Route>
                                     })
                                 }
@@ -143,6 +144,7 @@ export default class Open extends Component {
                         </div>
                     </section>
                 </div>
+                <CustomerService />
             </OutsideWrapper>
         )
     }
