@@ -6,17 +6,24 @@ import { Paths, post, get } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
 import './APIdebug.scss'
 
-const { Search } = Input
+const { Search, TextArea } = Input
 
 function APIdebug({ listItem = {}, projectId }) {
   const [form] = Form.useForm()
   const [dataSource, setDataSource] = useState([])
   const [pager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 100000000 })
   const [rowId, setRowId] = useState('')
-  const [resultShow, setResultShow] = useState('')
+  const [resultShow, setResultShow] = useState()
   const [curObj, setCurObj] = useState({})
   const PageColumns = [{ title: '项目名称', dataIndex: 'name', key: 'name', }]
   const [apiName, setApiName] = useState('')
+
+  useEffect(() => {
+    if (!rowId) {
+      setResultShow('')
+      form.resetFields()
+    }
+  }, [rowId])
 
   useEffect(() => {
     setCurObj(listItem)
@@ -40,7 +47,7 @@ function APIdebug({ listItem = {}, projectId }) {
     }
     post(Paths.debugAPI, params, { loading: true })
       .then(res => {
-        if (res) setResultShow(JSON.stringify(JSON.parse(res), null, 2))
+        if (res) setResultShow(JSON.stringify(JSON.parse(res), undefined, 4))
       })
   }
 
@@ -54,6 +61,8 @@ function APIdebug({ listItem = {}, projectId }) {
       onClick: () => {
         setRowId(record.apiId)
         setCurObj(record)
+        setResultShow('')
+        form.resetFields()
       }
     }
   }
@@ -132,7 +141,7 @@ function APIdebug({ listItem = {}, projectId }) {
             <span>响应结果</span>
             <span className="copy" onClick={() => copyResponse()}>复制</span>
           </div>
-          <div className="right-bar-cont">{resultShow}</div>
+          <TextArea autoSize={{ minRows: 25, maxRows: 25 }} value={resultShow}></TextArea>
         </div>
       </div>
     </div>
