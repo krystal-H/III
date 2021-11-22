@@ -1,4 +1,4 @@
-import React,{ useState, useEffect, useRef } from 'react';
+import React,{ useState, useEffect, useRef,memo, useImperativeHandle, forwardRef } from 'react';
 import {Modal, Table,Input } from 'antd';
 import { DateTool } from '../../../../../util/util';
 import { post, Paths} from '../../../../../api';
@@ -80,10 +80,9 @@ const columns = [
         render: text => <span>{text && DateTool.utcToDev(text) || '--'}</span>
     }
 ];
-
-export default ({
+const DevUsed = ({
     userId
-})=>{
+},_ref)=>{
     const searchValRef = useRef(undefined);
     const [selectedRowKeys, setSelectedRowKeys] = useState([])
     const [listLoading, setListLoading] = useState(false)
@@ -109,6 +108,11 @@ export default ({
         });
         
     }
+
+    useImperativeHandle(_ref, () => {
+
+        return {selectedRowKeys}
+    }, [selectedRowKeys]);
 
     return <div>
                 <Input.Search enterButton maxLength={30} placeholder="请输入设备ID查询" className="search-inpt"
@@ -137,4 +141,7 @@ export default ({
             </div>
 
 }
+
+
+export default memo(forwardRef(DevUsed));
 
