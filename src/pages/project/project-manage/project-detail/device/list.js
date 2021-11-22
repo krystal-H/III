@@ -88,6 +88,7 @@ function InfoModal({ baseInfo, projectId }, ref) {
                     type: 'success',
                     description: '操作成功！',
                 });
+                setDeletevisible(false)
                 getList()
             });
         } else {
@@ -100,6 +101,7 @@ function InfoModal({ baseInfo, projectId }, ref) {
                     type: 'success',
                     description: '操作成功！',
                 });
+                setDeletevisible(false)
                 getList()
             });
         }
@@ -175,6 +177,11 @@ function InfoModal({ baseInfo, projectId }, ref) {
     const cancelModel = () => {
         setIsModalVisible(false)
     }
+    //编辑成功
+    const updateInfo = () => {
+        setIsModalVisible(false)
+        getList()
+    }
     useImperativeHandle(ref, () => ({
         reFresh: getList
     }));
@@ -205,7 +212,7 @@ function InfoModal({ baseInfo, projectId }, ref) {
                             label='设备ID'
                         >
                             <Form.Item
-                                name='deviceId'
+                                name='deviceIdParams'
                                 noStyle
                             >
                                 <Input style={{ width: '190px' }} placeholder="输入设备ID" />
@@ -248,17 +255,42 @@ function InfoModal({ baseInfo, projectId }, ref) {
                 >
                 </ActionConfirmModal>
             }
+            {
+                isModalVisible && <EditGroup isModalVisible={isModalVisible} cancelModel={cancelModel}
+                    updateInfo={updateInfo} actionData={actionData} projectId={projectId} />
+            }
         </div>
     )
 }
 export default forwardRef(InfoModal)
-function EditGroup({ isModalVisible, cancelModel }) {
+function EditGroup({ isModalVisible, cancelModel, updateInfo, actionData, projectId }) {
     const [form] = Form.useForm();
+    const [typelist, setTypelist] = useState([])
+    useEffect(() => {
+        getTypeList()
+    }, [])
+    const getTypeList = () => {
+        post(Paths.projectGroupList, { projectId }).then((res) => {
+            setTypelist(res.data)
+        });
+    }
     const subData = () => {
-
+        form.validateFields().then(val => {
+            let params = {
+                deviceId: actionData.deviceId,
+                groupId: val.groupId
+            }
+            post(Paths.projectupdateGroup, params).then((res) => {
+                Notification({
+                    type: 'success',
+                    description: '编辑成功！',
+                });
+                updateInfo()
+            });
+        })
     }
     return <div>
-        <Modal title="导入设备" visible={isModalVisible} onOk={subData} onCancel={cancelModel} width='650px' wrapClassName='add-protocols-wrap'>
+        <Modal title="编辑组" visible={isModalVisible} onOk={subData} onCancel={cancelModel} width='550px' wrapClassName='add-protocols-wrap'>
             <div style={{ padding: '0 80px' }} className='project-import-file-wrap'>
                 <Form form={form} labelAlign='right' labelCol={{
                     span: 6,
@@ -267,10 +299,29 @@ function EditGroup({ isModalVisible, cancelModel }) {
                         span: 18,
                     }}>
                     <Form.Item
-                        name="name"
-                        label="批次名称"
+                        label="设备ID"
                         rules={[{ required: true }]}
-                    ><Input />
+                    ><span>{actionData.deviceUniqueId}</span>
+                    </Form.Item>
+                    <Form.Item
+                        label="所属产品"
+                        rules={[{ required: true }]}
+                    ><span>{actionData.productName}</span>
+                    </Form.Item>
+                    <Form.Item
+                        label="所属分组"
+                        name='groupId'
+                        rules={[{ required: true }]}
+                    >
+                        <Select
+                            style={{ width: '200px' }}
+                        >
+                            {
+                                typelist.map(item => {
+                                    return (<Select.Option value={item.groupId} key={item.groupId}>{item.groupName}</Select.Option>)
+                                })
+                            }
+                        </Select>
                     </Form.Item>
                 </Form>
             </div>
