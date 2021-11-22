@@ -53,7 +53,16 @@
             float: right;
             margin-top: -32px;
         }
-    }  
+    }
+    .tabledel{
+        display: inline-block;
+        border-right: 1px solid #f0f0f0;
+        margin: 0 15px 10px 0;
+        padding-right: 15px;
+    }
+    .a_notcur{
+        color: #d9d9d9;
+    }
     
 }
 

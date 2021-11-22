@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef }  from 'react'
+import React, { useState, useEffect, useRef, memo, useImperativeHandle, forwardRef }  from 'react'
 import { Link } from 'react-router-dom';
 import { Button, Table, Divider, Modal } from 'antd';
 
@@ -10,8 +10,6 @@ import DeviceListUsed from './deviceListUsed';
 import SearchProduct from './searchProduct';
 import './deviceGroup.scss';
 import { Notification } from '../../../../../components/Notification';
-
-
 export default ({
     viewDetailId,
     userId,
@@ -25,9 +23,13 @@ export default ({
         pageIndex:1,
         pageRows:10
     });
+    const devicedUsedRef = useRef()
     const [productList, setProductList] = useState([])
     const [dataList, setDataList] = useState({list:[],pager:{}})
     const [addVisiable, setAddVisiable] = useState(false)
+    const [delids, setDelids] = useState([])
+    const [selectedRowKeys, setSelectedRowKeys] = useState([])
+    const selectedLen = selectedRowKeys.length;
 
     const columns = [
         { title: '设备id', dataIndex: 'deviceId'},
@@ -38,7 +40,7 @@ export default ({
             render: txt => <span>{{ '0': '有效', '1': '未激活', '2': '在线', '3': '离线', '4': '禁用' }[txt]}</span>
         },
         { title: '操作', key: 'action', width: '200px',
-            render: (text, { deviceId }) => <a onClick={ ()=>{}} >从分组中删除</a>
+            render: (text, { deviceId }) => <a onClick={ ()=>{setDelids([deviceId])}} >从分组中删除</a>
         },
     ];
 
@@ -70,6 +72,41 @@ export default ({
         paramsRef.current = params
     }
 
+    //删除组中设备
+    const delOk = () => {
+        post(Paths.delGroupDevice, { groupId:viewDetailId, deviceIds: delids }).then((res) => {
+            Notification({message: '操作成功！', type: 'success'})
+            getGroupDevList();
+            setDelids([])
+
+            //从列表中点击删除单条的时候 更新 selectedRowKeys
+            if(delids.length==1){
+                const i = selectedRowKeys.indexOf(delids[0])
+                if(i>-1){
+                    setSelectedRowKeys( pre =>{
+                        let res = [...pre]
+                        res.splice(i,1)
+                        return res
+                    })
+                    
+                }
+                
+
+            }
+        });
+
+    }
+    const addOk = ()=>{   
+        const selectids = devicedUsedRef.current.selectedRowKeys
+        if(selectids.length>0){
+            post(Paths.addGroupDevice,{groupId:viewDetailId, deviceIds:selectids}).then((res) => {
+                setAddVisiable(false)
+                getGroupDevList()
+
+            });
+        }
+    } 
+
 
 
     return <Modal title="分组详情" width={900} maskClosable={false} className="self-modal" footer={null}
@@ -86,12 +123,16 @@ export default ({
                         <Button className='but-add' type="primary" onClick={()=>setAddVisiable(true)}>新增设备到分组</Button>
                     </SearchProduct>
                     <div>
-                        {/* <Button disabled={selectedRowKeys.length == 0} className='but-del' type="primary" onClick={this.openDel.bind(this, 0)}>删除</Button> */}
+                        <span className="tabledel">已选择 {selectedLen} 项</span>
+                        <a onClick={()=>{setDelids([...selectedRowKeys])}} disabled={!selectedLen} className={`${!selectedLen&&'a_notcur'||''}`} >删除</a>
                         <Table
                             rowKey="deviceId"
                             columns={columns}
                             dataSource={dataList.list}p
-                            // rowSelection={rowSelection}
+                            rowSelection={{
+                                selectedRowKeys,
+                                onChange: setSelectedRowKeys,
+                            }}
                             pagination={{
                                 defaultCurrent: dataList.pager.pageIndex,
                                 total: dataList.pager.totalRows,
@@ -108,15 +149,26 @@ export default ({
                     addVisiable && 
                     <Modal title="添加项目下的设备到分组" width={700} maskClosable={false} className="self-modal groupadd-device-modal"
                         visible={true}
-                        onCancel={()=>setAddVisiable(false)}
-                        onOk={()=>{}}
+                        onCancel={ ()=>setAddVisiable(false)}
+                        onOk={addOk}
                     >
-                        <DeviceListUsed userId={userId} /> 
+                        <DeviceListUsed userId={userId} ref={devicedUsedRef}/> 
                     </Modal>
 
                 }
 
 
+                <ActionConfirmModal
+                    visible={delids.length>0}
+                    modalOKHandle={delOk}
+                    modalCancelHandle={()=>setDelids([])}
+                    title='从分组中删除'
+                    descText='即将删除设备'
+                    targetName={`${delids[0]}${delids[1]?"，...":""}`}
+                />
+
+
     </Modal>
 
 }
+

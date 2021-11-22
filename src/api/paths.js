@@ -402,35 +402,14 @@ let Paths = {
     retryByTaskIdForDevice:'/remote/config/device/task/retry',
     getReceiveMsgForDevice:'/remote/config/device/task/getReceiveMsg',
 
-    //设备分组,废弃待删除，迁移至项目下面的分组
-    // getGroupList:'/deviceGroup/getDeviceGroupList',
-    // getGroupListAuth:'/group/getGroupList',
-    // updateGroup:'/deviceGroup/addOrUpdate',
-    // deleteGroup:'/deviceGroup/deleteGroup',
-    // getGroupDetail:'/deviceGroup/getDeviceGroupInfo',
-    // getGroupDeviceList:'/deviceGroup/getGroupDeviceList',
-    // addGroupDevice:'/deviceGroup/groupRelaDevice',
-    // getGroupSlctDev:'/deviceGroup/getRelaDeviceList',
-    // delGroupDevice:'/deviceGroup/groupDeleteRelaDevice',
-    // getCreateProduct:'/prod/getCreateProduct',
-    // groupUpDevice:'/deviceGroup/importDevices',  
-
     //项目-设备分组
     getGroupList:'/projectGroup/getProjectGroupList',
-    // getGroupListAuth:'/group/getGroupList',
     updateGroup:'/projectGroup/saveProjectGroup',
     deleteGroup:'/projectGroup/deleteProjectGroup',
     getGroupDeviceList:'/projectGroup/getGroupDeviceList',
     getGroupSlctDev:'/projectDevice/getDeviceBindList',
-    
-    addGroupDevice:'/deviceGroup/groupRelaDevice',
-    
-    delGroupDevice:'/deviceGroup/groupDeleteRelaDevice',
-    getCreateProduct:'/prod/getCreateProduct',
-    groupUpDevice:'/deviceGroup/importDevices',
-
-
-    
+    delGroupDevice:'/projectGroup/deleteGroupDevice',
+    addGroupDevice:'/projectGroup/addGroupDevice',
     
     // 项目管理
     getProjectList:'/project/getList',    
