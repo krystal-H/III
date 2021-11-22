@@ -5,7 +5,6 @@ import { DateTool } from '../../../../../util/util'
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal'
 import { Notification } from '../../../../../components/Notification';
 import { cloneDeep } from 'lodash'
-import { data } from '_browserslist@4.16.6@browserslist';
 function InfoModal({ baseInfo, projectId }, ref) {
     const [form] = Form.useForm();
     const [typelist, setTypelist] = useState([])
