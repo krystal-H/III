@@ -30,6 +30,7 @@ let Paths = {
     cancelAccount : '/common/cancelAccount',
     withdraw : '/common/withdraw',
     getGroupMenuList: '/common/getMenus',//获取账号权限菜单
+    customerServiceHistory: '/support/getHistory',//客服历史信息
 
     /* 产品信息 */
     getProductList: '/product/listAllProductAndAccreditInfo',
@@ -401,19 +402,35 @@ let Paths = {
     retryByTaskIdForDevice:'/remote/config/device/task/retry',
     getReceiveMsgForDevice:'/remote/config/device/task/getReceiveMsg',
 
-    //设备分组
-    getGroupList:'/deviceGroup/getDeviceGroupList',
-    getGroupListAuth:'/group/getGroupList',
-    updateGroup:'/deviceGroup/addOrUpdate',
-    deleteGroup:'/deviceGroup/deleteGroup',
-    getGroupDetail:'/deviceGroup/getDeviceGroupInfo',
-    getGroupDeviceList:'/deviceGroup/getGroupDeviceList',
+    //设备分组,废弃待删除，迁移至项目下面的分组
+    // getGroupList:'/deviceGroup/getDeviceGroupList',
+    // getGroupListAuth:'/group/getGroupList',
+    // updateGroup:'/deviceGroup/addOrUpdate',
+    // deleteGroup:'/deviceGroup/deleteGroup',
+    // getGroupDetail:'/deviceGroup/getDeviceGroupInfo',
+    // getGroupDeviceList:'/deviceGroup/getGroupDeviceList',
+    // addGroupDevice:'/deviceGroup/groupRelaDevice',
+    // getGroupSlctDev:'/deviceGroup/getRelaDeviceList',
+    // delGroupDevice:'/deviceGroup/groupDeleteRelaDevice',
+    // getCreateProduct:'/prod/getCreateProduct',
+    // groupUpDevice:'/deviceGroup/importDevices',  
+
+    //项目-设备分组
+    getGroupList:'/projectGroup/getProjectGroupList',
+    // getGroupListAuth:'/group/getGroupList',
+    updateGroup:'/projectGroup/saveProjectGroup',
+    deleteGroup:'/projectGroup/deleteProjectGroup',
+    getGroupDeviceList:'/projectGroup/getGroupDeviceList',
+    getGroupSlctDev:'/projectDevice/getDeviceBindList',
+    
     addGroupDevice:'/deviceGroup/groupRelaDevice',
-    getGroupSlctDev:'/deviceGroup/getRelaDeviceList',
+    
     delGroupDevice:'/deviceGroup/groupDeleteRelaDevice',
     getCreateProduct:'/prod/getCreateProduct',
+    groupUpDevice:'/deviceGroup/importDevices',
 
-    groupUpDevice:'/deviceGroup/importDevices',  
+
+    
     
     // 项目管理
     getProjectList:'/project/getList',    
@@ -560,6 +577,34 @@ let Paths = {
     saveDeviceRemoset:'/remoteConfig/device/save',//保存单个设备的远程配置任务
     addDeviceRemoset:'/remoteConfig/product/submit',//提交单个产品的远程配置任务
     excelDevTask:'/remoteConfig/device/submit',//执行设备下的任务
+
+    //项目列表
+    projectList:'/projectInfo/listByPage',
+
+    // 项目新增/编辑
+    saveProjectInfo: '/projectInfo/saveProjectInfo',
+
+    // 项目详情-api列表
+    getProjectApiList: '/projectDetail/getProjectApiList',
+    // 项目详情-api调试
+    debugAPI: '/projectDetail/debugApiInterface',
+
+    //项目详情-概述
+    projectInfoOverview:'/projectDetail/getProjectAuth',// 项目详情-概述
+    projectWhiteList:'/projectDetail/getProjectWhiteList',//项目详情-白名单-列表
+    projectWhiteDel:'/projectDetail/delProjectWhite',//项目详情-白名单-删除
+    projectWhiteSave:'/projectDetail/saveProjectWhite',//项目详情-白名单-新增/保存
+    projectSavePS:'/projectDetail/setPassword',//设置密码
+    //项目详情-设备
+    projectInfoBatchList:'/projectDevice/getProjectBatch',//项目详情-设备-查询项目批次列表
+    projectInfoDevlist:'/projectDevice/getProjectDeviceList',// 项目详情-设备-查询项目设备列表
+    projectImportFile:'/projectDevice/importDevice',//项目详情-设备-导入设备
+    projectSaveFile:'/projectDevice/saveDevice',//项目详情-设备-导入设备-保存
+    projectBatchInfo:'/projectDevice/getProjectBatchDetail',//项目详情-设备-批次-明细
+    projectDelDev:'/projectDevice/deleteDeviceList',//项目详情-设备-删除设备列表
+    projectRemoveDev:'/projectDevice/unbind',//项目详情-设备-移除绑定
+    projectupdateGroup:'/projectGroup/updateGroupDevice',//项目详情-设备-修改设备分组
+    projectGroupList:"/projectGroup/getGroupList",//详情-设备-获取分组列表下拉
 };
 
 // 拼接 urlPrefix

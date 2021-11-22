@@ -11,6 +11,8 @@ import { reducer as otaUpgradeReducer } from "../pages/product/ota-upgrade/store
 /* 旧产品的详情页面 单独store */
 import oldProDetailReducer from "../pages/product/product-manage/old-product-details/store/reducer";
 
+import customerServiceReducer from "../pages/customerService/store/reducer";
+
 
 const reducer = combineReducers({
   oldProduct:oldProDetailReducer,
@@ -30,6 +32,8 @@ const reducer = combineReducers({
    * 开发画布
    */
   // drawView: drawViewReducer,
+
+  customerService:customerServiceReducer
 });
 
 export default reducer;
