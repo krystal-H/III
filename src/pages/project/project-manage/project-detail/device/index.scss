@@ -1,9 +1,12 @@
 @charset 'utf-8';
-
-.device-info-wrap {
+.project-device-wrap{
   .top-but {
     text-align: right;
+    padding-top: 10px;
   }
+}
+.device-info-wrap {
+  
 
   .filter {
     .ant-form-item {
@@ -34,10 +37,12 @@
 
   .project-import-file-list {
     padding-left: 110px;
->div{
-  display: flex;
-  align-items: center;
-}
+
+    >div {
+      display: flex;
+      align-items: center;
+    }
+
     span {
       text-decoration: underline;
     }

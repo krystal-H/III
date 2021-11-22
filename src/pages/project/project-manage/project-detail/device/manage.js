@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select, Divider, Form } from 'antd';
 import { post, Paths } from '../../../../../api';
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal'
-import FileModel from './importFile'
 import { cloneDeep } from 'lodash'
 import { DateTool } from '../../../../../util/util'
-export default function InfoModal({ baseInfo, projectId }) {
+ function InfoModal({ baseInfo, projectId },ref) {
     const [form] = Form.useForm();
     const [typelist, setTypelist] = useState([])
     const [addVisible, setAddVisible] = useState(false)
@@ -13,7 +12,6 @@ export default function InfoModal({ baseInfo, projectId }) {
     const [delType, setDelType] = useState('singer')
     const [selectedKey, setSelectedKey] = useState('')
     const [actionData, setActionData] = useState({})
-    const [fileVisible, setFileVisible] = useState(false) //导入文件
     const [infoVisible, setInfoVisible] = useState(false) //详情
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     const [dataSource, setDataSource] = useState([])
@@ -82,14 +80,6 @@ export default function InfoModal({ baseInfo, projectId }) {
             })
         });
     }
-    //打开删除
-    const openDel = (type, data) => {
-        setDelType(type)
-        if (type == 'singer') {
-            setActionData(data)
-        }
-        setDeletevisible(true)
-    }
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows, typeof selectedRowKeys);
@@ -100,19 +90,7 @@ export default function InfoModal({ baseInfo, projectId }) {
         },
         selectedRowKeys: selectedKey
     };
-    //新增
-    const openImport = () => {
-        setFileVisible(true)
-    }
-    //
-    const cancelFile = () => {
-        setFileVisible(false)
-    }
-    //
-    const closeFile = () => {
-        setFileVisible(false)
-        getList()
-    }
+    
     //详情
     const openDia = (data) => {
         setActionData(data)
@@ -127,14 +105,12 @@ export default function InfoModal({ baseInfo, projectId }) {
             return Object.assign(cloneDeep(pre), { pageIndex: pageRows === pager.pageRows ? pageIndex : 1, pageRows })
         })
     }
+    useImperativeHandle(ref, () => ({
+        reFresh: getList
+    }));
     return (
         <div >
             <div className='device-info-wrap'>
-                <div className='top-but'>
-                    <Button type="primary" onClick={openImport}>
-                        导入设备
-                    </Button>
-                </div>
                 <div className='filter'>
                     <Form form={form} layout='inline' >
                         <Form.Item
@@ -154,12 +130,12 @@ export default function InfoModal({ baseInfo, projectId }) {
 
                 </div>
                 <div className='content'>
-                    <div className='action'>
+                    {/* <div className='action'>
                         <span>{`已选择${selectedKey.length}项`}</span>
                         <Divider type="vertical" style={{ borderColor: '#333' }} />
                         <a onClick={() => { openDel('many') }}>删除</a>
-                    </div>
-                    <Table dataSource={dataSource} columns={columns} rowKey="batchId" rowSelection={{ ...rowSelection }}
+                    </div> */}
+                    <Table dataSource={dataSource} columns={columns} rowKey="batchId" 
                         pagination={{
                             defaultCurrent: 1,
                             current: pager.pageIndex,
@@ -185,9 +161,6 @@ export default function InfoModal({ baseInfo, projectId }) {
                     tipText={'删除的信息，无法找回，请谨慎操作'}
                 >
                 </ActionConfirmModal>
-            }
-            {
-                fileVisible && <FileModel isModalVisible={fileVisible} colseMoadl={closeFile} cancelModel={cancelFile} projectId={projectId} />
             }
             {
                 infoVisible && <DetailInfo isModalVisible={infoVisible} colseMoadl={closeInfo} actionData={actionData} />
@@ -234,3 +207,4 @@ function DetailInfo({ isModalVisible, colseMoadl, actionData }) {
         </Modal>
     </div>
 }
+export default forwardRef(InfoModal)
