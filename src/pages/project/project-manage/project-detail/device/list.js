@@ -211,7 +211,7 @@ function InfoModal({ baseInfo, projectId }, ref) {
                             label='设备ID'
                         >
                             <Form.Item
-                                name='deviceIdParams'
+                                name='deviceUniqueIdParams'
                                 noStyle
                             >
                                 <Input style={{ width: '190px' }} placeholder="输入设备ID" />
@@ -291,7 +291,7 @@ function EditGroup({ isModalVisible, cancelModel, updateInfo, actionData, projec
     return <div>
         <Modal title="编辑组" visible={isModalVisible} onOk={subData} onCancel={cancelModel} width='550px' wrapClassName='add-protocols-wrap'>
             <div style={{ padding: '0 80px' }} className='project-import-file-wrap'>
-                <Form form={form} labelAlign='right' labelCol={{
+                <Form form={form} labelAlign='right' initialValues={{groupId:actionData.groupId}} labelCol={{
                     span: 6,
                 }}
                     wrapperCol={{
