@@ -32,7 +32,7 @@ export default function DeviceInfo({ match }) {
     }, [])
     const reFreshData = () => {
         post(Paths.projectInfoOverview, { projectId }).then((res) => {
-            setBaseInfo(res.data)
+            setBaseInfo(res.data || {})
         });
     }
     // 为了判断openAPI  tab样式
