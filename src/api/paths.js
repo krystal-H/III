@@ -572,6 +572,8 @@ let Paths = {
 
     // 项目详情-api列表
     getProjectApiList: '/projectDetail/getProjectApiList',
+    // 项目详情-api调试
+    debugAPI: '/projectDetail/debugApiInterface',
 
     //项目详情-概述
     projectInfoOverview:'/projectDetail/getProjectAuth',// 项目详情-概述

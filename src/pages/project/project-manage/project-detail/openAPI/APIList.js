@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Table, Divider, Select, Steps, Input, Form } from 'antd'
-import { useHistory } from 'react-router-dom';
-import { DateTool, addKeyToTableData } from '../../../../../util/util'
-import PageTitle from '../../../../../components/page-title/PageTitle'
+import { Table, Divider } from 'antd'
+import { addKeyToTableData } from '../../../../../util/util'
 import { cloneDeep } from 'lodash'
-import { Paths, post, get } from '../../../../../api'
+import { Paths, post } from '../../../../../api'
 
-const { Search } = Input
 function APIList({ changeKey, projectId }) {
-  const history = useHistory()
   const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
-  const [createModal, setCreateModal] = useState(false) // 创建项目
   const [dataSource, setDataSource] = useState([])
 
   const PageColumns = [
@@ -43,14 +38,14 @@ function APIList({ changeKey, projectId }) {
     }
   ]
 
-  // 查看文档
+  // 查看下载文档
   const downloadDoc = (url) => {
     url ? window.open(url) : alert('暂无数据！')
   }
 
-  // 调试
-  const apidebug = () => {
-    changeKey('2')
+  // 操作-调试
+  const apidebug = (record) => {
+    changeKey('2', record)
   }
 
   // 获取列表数据
@@ -91,7 +86,7 @@ function APIList({ changeKey, projectId }) {
           }}
         />
       </div>
-    </div >
+    </div>
   )
 }
 
