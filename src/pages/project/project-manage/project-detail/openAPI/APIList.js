@@ -53,6 +53,11 @@ function APIList({ changeKey, projectId }) {
     let params = { projectId, ...pager }
     post(Paths.getProjectApiList, params, { loading: true }).then(res => {
       setDataSource(addKeyToTableData(res.data.list))
+      setPager(pre => {
+        let obj = cloneDeep(pre)
+        obj.totalRows = res.data.pager.totalRows
+        return obj
+      })
     })
   }
 
