@@ -77,7 +77,7 @@ function APIList({ changeKey, projectId }) {
       <div className="comm-shadowbox pd22">
         <Table columns={PageColumns}
           className="ant-table-fixed"
-          rowKey="apiId"
+          rowKey="configId"
           dataSource={dataSource}
           pagination={{
             defaultCurrent: 1,

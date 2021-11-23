@@ -183,7 +183,7 @@ function InfoModal({ baseInfo, projectId }, ref) {
     }
     useImperativeHandle(ref, () => ({
         reFresh: getList
-    }));
+    }),[baseInfo.accountId]);
     return (
         <div >
             <div className='device-info-wrap'>
