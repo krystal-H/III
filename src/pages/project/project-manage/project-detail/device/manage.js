@@ -6,11 +6,7 @@ import { cloneDeep } from 'lodash'
 import { DateTool } from '../../../../../util/util'
  function InfoModal({ baseInfo, projectId },ref) {
     const [form] = Form.useForm();
-    const [typelist, setTypelist] = useState([])
-    const [addVisible, setAddVisible] = useState(false)
     const [deletevisible, setDeletevisible] = useState(false)
-    const [delType, setDelType] = useState('singer')
-    const [selectedKey, setSelectedKey] = useState('')
     const [actionData, setActionData] = useState({})
     const [infoVisible, setInfoVisible] = useState(false) //详情
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
@@ -70,7 +66,6 @@ import { DateTool } from '../../../../../util/util'
         if (form.getFieldValue('batchName') && form.getFieldValue('batchName').trim()) {
             params.batchName = form.getFieldValue('batchName')
         }
-        setSelectedKey('')
         post(Paths.projectInfoBatchList, params, { loading }).then((res) => {
             setDataSource(res.data.list)
             setPager(pre => {
@@ -80,16 +75,6 @@ import { DateTool } from '../../../../../util/util'
             })
         });
     }
-    const rowSelection = {
-        onChange: (selectedRowKeys, selectedRows) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows, typeof selectedRowKeys);
-            setSelectedKey(selectedRowKeys)
-        },
-        onSelect: (record, selected, selectedRows) => {
-            // console.log(record, selected, selectedRows);
-        },
-        selectedRowKeys: selectedKey
-    };
     
     //详情
     const openDia = (data) => {
