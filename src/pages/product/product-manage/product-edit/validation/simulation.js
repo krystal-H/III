@@ -176,7 +176,7 @@ export default ({ productId }) => {
         <div>
             <DescWrapper style={{ marginBottom: 8, width: '100%' }} desc={['WiFi蓝牙设备需先登录数联智能App，并搜索绑定需要调试的设备，蜂窝设备不需要。']}></DescWrapper>
             <div className="sim-devid">
-                <div onClick={test}>虚拟设备ID：{mockId}</div>
+                <div >虚拟设备ID：{mockId}</div>
             </div>
             <div className="modtit">模拟设备</div>
             <div className='debug-data-box'>
