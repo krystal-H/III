@@ -27,7 +27,7 @@ function APIdebug({ listItem = {}, projectId }) {
 
   useEffect(() => {
     setCurObj(listItem)
-    setRowId(listItem.apiId)
+    setRowId(listItem.configId)
   }, [listItem])
 
   // 获取列表数据
@@ -42,7 +42,7 @@ function APIdebug({ listItem = {}, projectId }) {
   const onFinish = (values) => {
     if (!rowId) return Notification({ description: '请选择需要调用的接口！', type: 'warn' })
     const params = {
-      apiId: rowId,
+      configId: rowId,
       reqParams: JSON.stringify({ ...values })
     }
     post(Paths.debugAPI, params, { loading: true })
@@ -59,7 +59,7 @@ function APIdebug({ listItem = {}, projectId }) {
   const onClickRow = (record) => {
     return {
       onClick: () => {
-        setRowId(record.apiId)
+        setRowId(record.configId)
         setCurObj(record)
         setResultShow('')
         form.resetFields()
@@ -69,7 +69,7 @@ function APIdebug({ listItem = {}, projectId }) {
 
   // 设置选中的行样式
   const setRowClassName = (record) => {
-    return record.apiId === rowId ? 'clickRowStyl' : '';
+    return record.configId === rowId ? 'clickRowStyl' : '';
   }
 
   useEffect(() => {
@@ -95,7 +95,7 @@ function APIdebug({ listItem = {}, projectId }) {
           onRow={(record) => onClickRow(record)}
           rowClassName={(record) => setRowClassName(record)}
           className="ant-table-fixed"
-          rowKey="apiId"
+          rowKey="configId"
           dataSource={dataSource}
           pagination={false}
         />
@@ -116,10 +116,10 @@ function APIdebug({ listItem = {}, projectId }) {
                 JSON.parse(curObj.params).map(item => (
                   <div key={item.name + item.desc}>
                     <Form.Item
-                      label={item.desc}
+                      label={item.name}
                       name={item.name}
-                      rules={[{ required: item.require, message: '请输入参数' }]}>
-                      <Input placeholder="请输入参数" />
+                      rules={[{ required: item.require, message: `请输入${item.desc}` }]}>
+                      <Input placeholder={`请输入${item.desc}`} />
                     </Form.Item>
                   </div>
                 ))
@@ -141,7 +141,7 @@ function APIdebug({ listItem = {}, projectId }) {
             <span>响应结果</span>
             <span className="copy" onClick={() => copyResponse()}>复制</span>
           </div>
-          <TextArea autoSize={{ minRows: 25, maxRows: 25 }} value={resultShow}></TextArea>
+          <TextArea autoSize={{ minRows: 25, maxRows: 25 }} value={resultShow} readOnly className="scroll-y"></TextArea>
         </div>
       </div>
     </div>
