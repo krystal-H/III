@@ -23,6 +23,7 @@ function ProjectList() {
       title: '项目名称',
       dataIndex: 'projectName',
       key: 'projectName',
+      width: 450
     },
     {
       title: '项目ID',
@@ -48,7 +49,6 @@ function ProjectList() {
     {
       title: '操作',
       key: 'action',
-      width: 200,
       render: (text, record) => (
         <div className="operation">
           <a onClick={() => addOrEditProject(record, 'edit')}>编辑</a>
