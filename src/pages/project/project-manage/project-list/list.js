@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { DateTool, addKeyToTableData } from '../../../../util/util'
 import PageTitle from '../../../../components/page-title/PageTitle'
 import { cloneDeep } from 'lodash'
-import { Paths, post} from '../../../../api'
+import { Paths, post } from '../../../../api'
 import CreateProject from '../project-add'
 import './list.scss'
 
@@ -93,7 +93,9 @@ function ProjectList() {
   // 查询项目
   const searchProject = (val) => {
     setProjectName(val)
-    setPager({ pageIndex: 1, totalRows: 0, pageRows: 10 })
+    setPager(pre => {
+      return Object.assign(cloneDeep(pre), { pageIndex: 1 })
+    })
   }
 
   // 创建/编辑项目
