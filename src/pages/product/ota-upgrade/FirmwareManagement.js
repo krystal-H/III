@@ -20,7 +20,7 @@ const { Step } = Steps;
 const { Search, Group } = Input;
 const { Option } = Select;
 const mapStateToProps = state => {
-    const { versionList } = state.get('otaUpgrade')
+    const { versionList,mcusocproLi } = state.get('otaUpgrade')
     return {
         versionList
     }
@@ -67,7 +67,7 @@ export default class FirmwareManagement extends Component {
             { title: '产品名称', dataIndex: 'productName' },
             {
                 title: '开发方案', dataIndex: 'schemeType',
-                render: s => s > 0 && SCHMETYPE[s - 1].nam || "脏数据"
+                render: s => s > 0 && SCHMETYPE[s - 2].nam || "脏数据"
             },
             { title: '产品版本号', dataIndex: 'productFirmwareVersion' },
             { title: '固件名称', dataIndex: 'deviceVersionName' },
@@ -226,12 +226,16 @@ export default class FirmwareManagement extends Component {
             addFirmwareVisiable, releaseFirmwareDialog, validationFirmwareDialog,
             deviceVersionId, validationDetail, validateInfo, validationModTit
         } = this.state;
-        const { versionList: { list, pager } } = this.props;
+        const { versionList: { list, pager } ,mcusocproLi} = this.props;
         const { pageIndex, totalRows } = pager;
 
         return (
             <div className="ota-firmware-up">
-                <PageTitle title="固件升级" selectOnchange={val => { this.changeProduct(val) }} defaultValue={getUrlParam('productId') || '-1'} />
+                <PageTitle title="固件升级" 
+                    selectOnchange={val => { this.changeProduct(val) }} 
+                    defaultValue={getUrlParam('productId') || '-1'}
+                    selectData={mcusocproLi}
+                />
                 <div className='comm-shadowbox comm-setp-ttip'>
                     <div className='step-title'>
                         <img src={upIconImg} alt="" />
