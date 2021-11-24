@@ -111,7 +111,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                         }
                     </Select>
                 </Item>
-                { schemeType && <Item label="开发方案"> { SCHMETYPE[schemeType-1] && SCHMETYPE[schemeType-1].nam || "出错了！" }</Item> }
+                { schemeType && <Item label="开发方案"> { SCHMETYPE[schemeType-2] && SCHMETYPE[schemeType-2].nam || "出错了！" }</Item> }
                 { schemeType==2 && <Item label="模组固件名称"> { moduleName }</Item> }
                 <Item name="productFirmwareVersion"
                     label={<LabelTip label="产品版本号" tip="产品整体的版本编号，概括产品下系统、模组、MCU固件各部分。"/>}
