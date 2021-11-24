@@ -5,14 +5,15 @@ import LabelVisible from '../../../../../components/form-com/LabelVisible';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import { Notification } from '../../../../../components/Notification';
 import { copyTextToClipBoard, strToAsterisk, DateTool } from '../../../../../util/util';
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import EditableTable from './editTable'
 import './index.scss'
 export default function DeviceInfo({ baseInfo, projectId }) {
-    const [data, setData] = useState({})
     const [form] = Form.useForm();
     //修改密码
     const [isModalVisible, setIsModalVisible] = useState(false);
-
+    //
+    const [showPassWord, setShowPassWord] = useState(false);
     const showModal = () => {
         setIsModalVisible(true);
     };
@@ -41,9 +42,6 @@ export default function DeviceInfo({ baseInfo, projectId }) {
     const handleClick = (text) => {
         return copyTextToClipBoard(text)
     }
-    //过滤函数
-    const fliterFn = (value) => {
-    }
     return (<div id='project-detail-info'>
         <div className='wrap-item'>
             <div className='item-title'>
@@ -60,7 +58,16 @@ export default function DeviceInfo({ baseInfo, projectId }) {
                 <div className='item'>
                     <div className='label'>初始密码：</div>
                     <div className='name'>
-                        <LabelVisible label={baseInfo.accountInitPassword} tip="点击复制" copy={true} />
+                        <span style={{marginRight:'5px'}}>
+                        {
+                            showPassWord ? baseInfo.accountInitPassword : '*********'
+                        }
+                        </span>
+                        {
+                            showPassWord ? <EyeOutlined style={{ color: '#2F78FF' }} onClick={() => setShowPassWord(!showPassWord)} /> :
+                                <EyeInvisibleOutlined style={{ color: '#2F78FF' }} onClick={() => setShowPassWord(!showPassWord)} />
+                        }
+                        <a className='copy' onClick={() => { handleClick(baseInfo.accountInitPassword) }} >复制</a>
                     </div>
                 </div>
             </div>
@@ -134,9 +141,25 @@ export default function DeviceInfo({ baseInfo, projectId }) {
                     <Form.Item label="输入新密码" name='password' rules={[{ required: true, message: '请输入新密码' }]}>
                         <Input />
                     </Form.Item>
-                    {/* <Form.Item label="确定新密码" required >
-                        <Input  />
-                    </Form.Item> */}
+                    <Form.Item label="确定新密码" name='conFirmPs' rules={[
+                        {
+                            required: true,
+                            validator: (_, value) => {
+                                if (value) {
+                                    if (value == form.getFieldValue('password')) {
+                                        return Promise.resolve()
+                                    } else {
+                                        return Promise.reject(`密码不一致`)
+                                    }
+                                } else {
+                                    return Promise.reject(`请再次输入新密码`)
+                                }
+
+                            }
+                        }
+                    ]} >
+                        <Input />
+                    </Form.Item>
                 </Form>
             </Modal>
         }
