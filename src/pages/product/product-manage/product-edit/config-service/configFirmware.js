@@ -110,12 +110,12 @@ function ConfigFirmware({
     })
 
     firmwareTypeNo && tempArr.push(Number(firmwareTypeNo))
-    console.log(tempArr, '-----tempArr')
     // if (tempArr.slice(0, tempArr.length - 1).indexOf(Number(value)) == -1) {
     //   return Promise.resolve()
     // }
     const index = tempArr.findIndex(item => item == value)
     tempArr.splice(index, 1)
+    console.log(tempArr, '-----tempArr')
     if (tempArr.indexOf(Number(value)) == -1) return Promise.resolve()
     return Promise.reject(new Error('此编号已被使用，请重新输入'));
   }
