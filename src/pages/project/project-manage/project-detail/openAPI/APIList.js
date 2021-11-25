@@ -21,8 +21,8 @@ function APIList({ changeKey, projectId }) {
     },
     {
       title: '项目调用次数',
-      dataIndex: 'type',
-      key: 'type',
+      dataIndex: 'value',
+      key: 'value',
     },
     {
       title: '操作',
