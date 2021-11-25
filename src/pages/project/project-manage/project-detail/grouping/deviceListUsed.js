@@ -75,7 +75,7 @@ const columns = [
     { title: '设备id', dataIndex: 'deviceId'},
     { title: '所属产品', dataIndex: 'productName' },
     { title: '状态', dataIndex: 'onlineStatus',
-        render: txt => <span>{ {'0':'有效','1':'未激活','2':'在线','3':'离线','4':'禁用'}[txt] }</span>},
+        render: txt => <span>{ {'1':'在线','2':'离线'}[txt] }</span>},
     { title: '绑定时间', dataIndex: 'bindTime',
         render: text => <span>{text && DateTool.utcToDev(text) || '--'}</span>
     }
