@@ -55,7 +55,7 @@ function InfoModal({ baseInfo, projectId }, ref) {
             key: '',
             render(text, record) {
                 return <span>
-                    {record.bindSource && record.bindSource.indexOf('导入') > -1 &&
+                    {record.bindType == 1 &&
                         <><a onClick={() => { openDel('singer', record) }}>移除绑定</a><Divider type="vertical" /></>}
 
                     <a onClick={() => { openEdit(record) }}>编辑组</a></span>
@@ -183,7 +183,7 @@ function InfoModal({ baseInfo, projectId }, ref) {
     }
     useImperativeHandle(ref, () => ({
         reFresh: getList
-    }),[baseInfo.accountId]);
+    }), [baseInfo.accountId]);
     return (
         <div >
             <div className='device-info-wrap'>
@@ -291,7 +291,7 @@ function EditGroup({ isModalVisible, cancelModel, updateInfo, actionData, projec
     return <div>
         <Modal title="编辑组" visible={isModalVisible} onOk={subData} onCancel={cancelModel} width='550px' wrapClassName='add-protocols-wrap'>
             <div style={{ padding: '0 80px' }} className='project-import-file-wrap'>
-                <Form form={form} labelAlign='right' initialValues={{groupId:actionData.groupId}} labelCol={{
+                <Form form={form} labelAlign='right' initialValues={{ groupId: actionData.groupId }} labelCol={{
                     span: 6,
                 }}
                     wrapperCol={{
