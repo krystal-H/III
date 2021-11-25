@@ -45,7 +45,7 @@ export default function DeviceInfo({ baseInfo, projectId }) {
     return (<div id='project-detail-info'>
         <div className='wrap-item'>
             <div className='item-title'>
-                <span>设备信息<LabelTip tip="产品标签是您给产品自定义的标识，您可以使用标签功能实现产品的分类统一管理。"></LabelTip></span>
+                <span>设备信息</span>
             </div>
             <div className='item-content'>
                 <div className='item'>

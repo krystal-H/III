@@ -114,7 +114,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
                             name="name"
                             label="批次名称"
                             rules={[{ required: true }]}
-                        ><Input readOnly placeholder='默认批次名称为导入时间+导入字样后缀' />
+                        ><Input  placeholder='默认批次名称为导入时间+导入字样后缀' />
                         </Form.Item>
                         <Form.Item
                             label="上传文件"
