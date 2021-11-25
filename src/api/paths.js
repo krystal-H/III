@@ -462,6 +462,7 @@ let Paths = {
 
     //OTA升级
     otaDevVersionList:'/firmware/productFirmware/getList',
+    otaProDevVersionList:'/firmware/productFirmware/getProductFirmwareList',
     otaGetExtVersion:'/device/version/5/getExtVersion',
     otaDeleteVer:'/device/version/5/delete',
 
