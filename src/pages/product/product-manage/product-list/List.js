@@ -131,7 +131,6 @@ class List extends PureComponent {
 
   // 翻页
   changePage = (current, pageSize) => {
-    console.log(current, pageSize, 'hahahahah')
     let newparams = { ...this.state.listParams }
     newparams.current = current
     // newparams.size = pageSize
