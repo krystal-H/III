@@ -17,17 +17,14 @@ const formItemLayout = {
     labelCol: { span: layoutper[0]  },
     wrapperCol: {span: layoutper[1]  },
 };
-const mapStateToProps = state => {
-    const {deviceGorupLi} = state.get('otaUpgrade')
-    return { deviceGorupLi }
-}
+
 const mapDispatchToProps = dispatch => {
     return {
         getGroupLi: () => dispatch(getDeviceGroupLi()),
         getVersionLi: param => dispatch(getVersionList(param)),
     }
 }
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(null, mapDispatchToProps)
 export const ReleaseFirmware = Form.create({
     name: 'ota_reaease_ver'
 })(
@@ -98,7 +95,7 @@ export const ReleaseFirmware = Form.create({
         }
        
         render() {
-            const {form:{getFieldDecorator},deviceGorupLi} =this.props
+            const {form:{getFieldDecorator}} =this.props
             const {upgradeType,upgradeRange,triggerTime} =this.state
             const desc = UPDATETYPE.find(({id})=> id==upgradeType).desc
             return (
@@ -122,11 +119,11 @@ export const ReleaseFirmware = Form.create({
                                     )}
                                 </Form.Item>
                                 <Form.Item label='升级范围' required help='若选择全部设备，则有且仅能发布一个批次，不能新增其他发布批次' className='helpitem'>
-                                    {getFieldDecorator('upgradeRange',{initialValue:2})(
+                                    {getFieldDecorator('upgradeRange')(
                                         <Radio.Group onChange={(v)=>{this.changeState('upgradeRange',v)}} >
                                             {
                                                 UPRANGE.map(({id,nam})=>{
-                                                    if( upgradeType==4&&id==0 || id==1 ){
+                                                    if( upgradeType==4&&id==0 || id==1 ){ //取消了设备分组
                                                         return null
                                                     }
                                                     return <Radio.Button key={id} value={id}>{nam}</Radio.Button>
@@ -136,7 +133,7 @@ export const ReleaseFirmware = Form.create({
                                     )}
                                 </Form.Item>
                                 {
-                                    upgradeRange==2?<>
+                                    upgradeRange==2&&<>
                                         <Form.Item label='设备Mac' >
                                             {getFieldDecorator('upgradeDevice', {
                                                 rules: [{ required: true, message: '请输入或导入要升级的设备Mac' }]
@@ -150,20 +147,6 @@ export const ReleaseFirmware = Form.create({
                                             </Upload>
                                             <Button className='downbtn' type="link" onClick={this.downloadMac}>下载模板</Button>
                                         </div>
-                                    </>:<>
-                                        {upgradeRange==1&&
-                                            <Form.Item label='升级设备组'>
-                                                {getFieldDecorator('upgradeDevice', {
-                                                    rules: [{ required: true, message: '请选择设备组' }]
-                                                })(<Select placeholder="选择待升级设备组"
-                                                //  mode="multiple"
-                                                 >
-                                                    {
-                                                        deviceGorupLi.map(({id,name})=><Option key={id} value={id}>{name}</Option>)
-                                                    }
-                                                </Select>)}
-                                            </Form.Item>
-                                        }
                                     </>
                                 }
                                 {

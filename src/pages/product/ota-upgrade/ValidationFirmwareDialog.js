@@ -44,7 +44,6 @@ export class ValidationFirmwareDialog  extends Component{
     }
     //mac模板下载
     downloadMac =()=>{
-        // let urls = window.location.origin+'/v1/web/open/device/mac/download?type=2';
         window.location.href = 'https://open.clife.cn/v1/web/open/device/mac/download?type=2';//v5版 域名换成cms 所以用绝对地址
     }
     //批量导入
@@ -58,15 +57,8 @@ export class ValidationFirmwareDialog  extends Component{
         }
         const {deviceVersionId} = this.props
         post(Paths.otaImportMac,{multipartFile:file,deviceVersionId},{needFormData:true}).then(({data={}}) => {
-            const {successes,fails,totalCount,successCount,failCount} = data
+            const {successes,totalCount,successCount,failCount} = data
             let macSet = successes.join(','),failsStr='';
-            // if(failCount>0){
-            //     let failmac = fails.slice(0,4).join(',')
-            //     if(failCount>4){
-            //         failmac += ',....'
-            //     }
-            //     failsStr = `（失败：${failmac})`
-            // }
             this.props.setValidationDetail('macSet',macSet)
             Notification({
                 message:'Mac导入结果',
@@ -77,7 +69,6 @@ export class ValidationFirmwareDialog  extends Component{
         return false;
     };
     changeStatus = status=>{
-        console.log(1111,status);
         this.setState({status})
     }
     changeValue = (key,e)=>{

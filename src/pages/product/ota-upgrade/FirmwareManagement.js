@@ -312,7 +312,7 @@ export default class FirmwareManagement extends Component {
                     }
                     <ViewFirmList productFirmwareId={viewFirmid} schemeType={viewFirmtype} openClose={this.openCloseViewFirmList} />
                     
-                    <Modal title='验证信息' visible={!!validateInfo.length} onCancel={this.closeValidateInfo} width={800} footer={null} maskClosable={false}>
+                    <Modal title='验证信息' visible={!!validateInfo.length} onCancel={this.closeValidateInfo} width={800} footer={null} >
                         <Table rowKey="macAddress" columns={this.valInfoColumns} dataSource={validateInfo} pagination={false} />
                     </Modal>
                 </div>
