@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Input, Button, Table, Tag, Modal, Select, Steps, Space } from 'antd';
+import { Button, Table, Tag, Modal, Select, Steps, Space } from 'antd';
 import { get, Paths } from '../../../api';
 import AddFirmwareDialog from './AddFirmwareDialog';
 import { ReleaseFirmware } from './ReleaseFirmware';
 import { ValidationFirmwareDialog } from './ValidationFirmwareDialog';
-
+import ViewFirmList from './viewFirmList';
 import { DateTool } from '../../../util/util';
 import { Notification } from '../../../components/Notification';
 import PageTitle from '../../../components/page-title/PageTitle'
@@ -17,12 +17,11 @@ import upIconImg from '../../../assets/images/upota.png';
 import './FirmwareManagement.scss';
 import { getUrlParam } from '../../../util/util';
 const { Step } = Steps;
-const { Search, Group } = Input;
 const { Option } = Select;
 const mapStateToProps = state => {
     const { versionList,mcusocproLi } = state.get('otaUpgrade')
     return {
-        versionList
+        versionList,mcusocproLi
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -48,10 +47,9 @@ export default class FirmwareManagement extends Component {
             //搜索字段
             productId: getUrlParam('productId') || "-1",
             schemeType: undefined,
-            deviceVersionName: undefined,
             addFirmwareVisiable: false,//增加弹窗
             validationFirmwareDialog: false,//验证弹窗
-            deviceVersionId: '',//当前操作（验证、修改验证、发布）的固件id
+            productFirmwareId: '',//当前操作（验证、修改验证、发布）的id
             validationDetail: { macSet: '', validateType: 0 },//修改验证 详情
             validationModTit: '验证',
             validateInfo: [
@@ -60,6 +58,9 @@ export default class FirmwareManagement extends Component {
             ],//查看验证信息，同时根据validateInfo.lengt>0与否来判断查看验证弹窗是否可见
 
             releaseFirmwareDialog: false,//升级弹窗
+
+            viewFirmid:undefined,//查看固件的产品id，同时控制查看弹窗是否可见
+            viewFirmtype:undefined,
         }
 
         this.columns = [
@@ -69,42 +70,40 @@ export default class FirmwareManagement extends Component {
                 title: '开发方案', dataIndex: 'schemeType',
                 render: s => s > 0 && SCHMETYPE[s - 2].nam || "脏数据"
             },
-            { title: '产品版本号', dataIndex: 'productFirmwareVersion' },
-            { title: '固件名称', dataIndex: 'deviceVersionName' },
-
+            { title: '产品版本号', dataIndex: 'extVersion' },
+            { title: '产品版本名称', dataIndex: 'productFirmwareName' },
             {
-                title: '运行状态', dataIndex: 'updateStatus',
+                title: '运行状态', dataIndex: 'status',
                 render: u => {
                     const { nam, color } = STATUSTAG[u]
                     return <Tag color={color} >{nam}</Tag>
                 }
             },
             {
-                title: '创建时间', dataIndex: 'uploadTime',
+                title: '创建时间', dataIndex: 'createTime',
                 render: t => <span>{t && DateTool.utcToDev(t) || "--"}</span>
             },
             {
                 title: '操作', dataIndex: 'action',
-                render: (a, recard) => {//runStatus 0：待验证 1：验证中 2：已发布,3 验证完成,4
+                render: (a, recard) => {//status 0：待验证 1：验证中 2：已发布,3 验证完成
                     const {
-                        runStatus = 0, deviceVersionId,
-                        macSet = '', validateType = 0,
-                        productId, totalVersion,
+                        status = 0, macSet = '', validateType = 0,
+                        productId, productFirmwareId,
                         schemeType, firmwareVersionType,
                     } = recard
                     return <Space>
+                        <a onClick={() => { this.openCloseViewFirmList(productFirmwareId,schemeType) }}>查看固件</a>
                         {
-                            runStatus == 0 ? <a onClick={() => { this.openValidation(deviceVersionId) }}>验证</a> :
-                            runStatus == 1 ?
+                            status == 0 ? <a onClick={() => { this.openValidation(productFirmwareId) }}>验证</a> :
+                            status == 1 ?
                                     <>
-                                        <a onClick={() => { this.openValidation(deviceVersionId, { macSet, validateType: validateType || 0 }) }}>修改验证</a>
-                                        <a onClick={() => { this.getValidateInfo(deviceVersionId) }}>查看验证</a>
-                                    </> : <>
-                                        {runStatus != 4 && <a onClick={() => { this.openRelease(deviceVersionId) }}>发布</a>}
-                                        {runStatus != 3 && <Link to={`/open/product/otaUpdate/details/${deviceVersionId}`}>查看批次</Link>}
-                                    </>
+                                        <a onClick={() => { this.openValidation(productFirmwareId, { macSet, validateType: validateType || 0 }) }}>修改验证</a>
+                                        <a onClick={() => { this.getValidateInfo(productFirmwareId) }}>查看验证</a>
+                                    </> : 
+                            status == 2 ? <Link to={`/open/product/otaUpdate/details/${productFirmwareId}`}>查看批次</Link> :
+                            <a onClick={() => { this.openRelease(productFirmwareId) }}>发布</a>
                         }
-                        {/* <a onClick={()=>{this.deleteConfirm(deviceVersionId)}}>删除</a> */}
+                        {/* <a onClick={()=>{this.deleteConfirm(productFirmwareId)}}>删除</a> */}
                     </Space>
                 },
             },
@@ -147,14 +146,14 @@ export default class FirmwareManagement extends Component {
             [dialog]: !pre
         })
     }
-    openRelease = (deviceVersionId) => {
-        this.setState({ releaseFirmwareDialog: true, deviceVersionId })
+    openRelease = (productFirmwareId) => {
+        this.setState({ releaseFirmwareDialog: true, productFirmwareId })
     }
-    openValidation = (deviceVersionId, validationDetail = { macSet: '', validateType: 0 }) => {
+    openValidation = (productFirmwareId, validationDetail = { macSet: '', validateType: 0 }) => {
         // console.log(111,validationDetail)
         this.setState({
             validationFirmwareDialog: true,
-            deviceVersionId,
+            productFirmwareId,
             validationDetail,
             validationModTit: validationDetail.macSet && '修改验证' || '验证'
         })
@@ -193,12 +192,10 @@ export default class FirmwareManagement extends Component {
     }
     //获取固件列表
     pagerIndex = (pageIndex = 1) => {
-        // console.log(getUrlParam('productId'), 'product')
-        let { productId, schemeType, deviceVersionName } = this.state
-        let params = { pageIndex, productId }
-        schemeType != -1 && (params.schemeType = schemeType)
-        deviceVersionName && (params.deviceVersionName = deviceVersionName)
-
+        let { productId, schemeType } = this.state
+        let params = { pageIndex }
+        productId != "-1" && (params.productId = productId)
+        schemeType != "-1" && (params.schemeType = schemeType)
         this.props.getVersionLi(params)
     }
     closeValiFirm = () => {
@@ -214,17 +211,20 @@ export default class FirmwareManagement extends Component {
         })
     }
 
-    changeProduct = productId=>{
-        this.setState({productId},()=>{
-            this.pagerIndex(1)
-        });
-        
+    changeParamsGet = (k,v)=>{
+        this.setState({
+            [k]: v
+        },()=>{
+            this.pagerIndex(1) 
+        })
     }
-    
+    openCloseViewFirmList = (viewFirmid,viewFirmtype)=>{
+        this.setState({viewFirmid,viewFirmtype})
+    }
     render() {
         const {
             addFirmwareVisiable, releaseFirmwareDialog, validationFirmwareDialog,
-            deviceVersionId, validationDetail, validateInfo, validationModTit
+            productFirmwareId, validationDetail, validateInfo, validationModTit,viewFirmid,viewFirmtype
         } = this.state;
         const { versionList: { list, pager } ,mcusocproLi} = this.props;
         const { pageIndex, totalRows } = pager;
@@ -232,7 +232,7 @@ export default class FirmwareManagement extends Component {
         return (
             <div className="ota-firmware-up">
                 <PageTitle title="固件升级" 
-                    selectOnchange={val => { this.changeProduct(val) }} 
+                    selectOnchange={val => { this.changeParamsGet('productId',val) }} 
                     defaultValue={getUrlParam('productId') || '-1'}
                     selectData={mcusocproLi}
                 />
@@ -252,27 +252,19 @@ export default class FirmwareManagement extends Component {
                     <div className='otasearchbox'>
                         <div className="searchgroupbox">
                             <span>方案类型：</span>
-                            <Select className='typeselect' defaultValue={-1} onChange={val => { this.changeState('schemeType', val) }}>
+                            <Select className='typeselect' defaultValue={-1} onChange={val => { this.changeParamsGet('schemeType', val) }}>
                                 <Option value={-1}>全部类型</Option>
                                 {
                                     SCHMETYPE.map(({ id, nam }, i) => <Option key={i} value={id}>{nam}</Option>)
                                 }
                             </Select>
-                            <span>固件包名称：</span>
-                            <Search placeholder="输入升级包名称查找"
-                                className='serachinpt'
-                                enterButton
-                                maxLength={20}
-                                onChange={e => { this.changeState('deviceVersionName', e.target.value) }}
-                                onSearch={() => { this.pagerIndex(1) }}
-                            />
                         </div>
                         <Button className='button' onClick={() => { this.switchDialog('addFirmwareVisiable') }} type="primary">添加固件</Button>
                     </div>
 
 
                     <Table
-                        rowKey={({ deviceVersionId }) => deviceVersionId + "_"}
+                        rowKey={({ productFirmwareId }) => productFirmwareId + "_"}
                         columns={this.columns}
                         dataSource={list}
                         pagination={{
@@ -294,30 +286,31 @@ export default class FirmwareManagement extends Component {
                             footer={null}
                             maskClosable={false}
                         >
-                            <ReleaseFirmware deviceVersionId={deviceVersionId} close={() => { this.switchDialog('releaseFirmwareDialog') }} />
+                            <ReleaseFirmware deviceVersionId={productFirmwareId} close={() => { this.switchDialog('releaseFirmwareDialog') }} />
                         </Modal>
                     }
                     {
                         validationFirmwareDialog && 
                         <Modal
-                        title={validationModTit}
-                        visible={validationFirmwareDialog}
-                        onOk={() => { this.refValidationFirmware() }}
-                        onCancel={this.closeValiFirm}
-                        width={650}
-                        maskClosable={false}
-                    >
-                        <ValidationFirmwareDialog
-                            deviceVersionId={deviceVersionId}
-                            validationDetail={{ ...validationDetail }}
-                            setValidationDetail={this.setValidationDetail}
-                            pagerIndex={this.pagerIndex}
-                            pageIndex={pageIndex}
-                            onRef={ref => { this.refValidationFirmware = ref }}
-                            close={this.closeValiFirm}
-                        />
-                    </Modal>
+                            title={validationModTit}
+                            visible={true}
+                            onOk={() => { this.refValidationFirmware() }}
+                            onCancel={this.closeValiFirm}
+                            width={650}
+                            maskClosable={false}
+                        >
+                            <ValidationFirmwareDialog
+                                deviceVersionId={productFirmwareId}
+                                validationDetail={{ ...validationDetail }}
+                                setValidationDetail={this.setValidationDetail}
+                                pagerIndex={this.pagerIndex}
+                                pageIndex={pageIndex}
+                                onRef={ref => { this.refValidationFirmware = ref }}
+                                close={this.closeValiFirm}
+                            />
+                        </Modal>
                     }
+                    <ViewFirmList productFirmwareId={viewFirmid} schemeType={viewFirmtype} openClose={this.openCloseViewFirmList} />
                     
                     <Modal title='验证信息' visible={!!validateInfo.length} onCancel={this.closeValidateInfo} width={800} footer={null} maskClosable={false}>
                         <Table rowKey="macAddress" columns={this.valInfoColumns} dataSource={validateInfo} pagination={false} />

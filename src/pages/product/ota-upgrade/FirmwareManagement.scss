@@ -91,3 +91,10 @@
         margin-bottom: 18px;
     }
 }
+
+.viewFirmList-modal{
+    .ant-table-body{
+        overflow-y: auto;
+        @include self-scroll-bar;
+      }
+}

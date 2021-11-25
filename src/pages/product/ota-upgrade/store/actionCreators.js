@@ -42,7 +42,7 @@ export const firmwareFromProduct = (productId) => {
 export const getVersionList = (params={}) => {
     const defaultparams  = {pageIndex:1,pageRows:10}
     return (dispatch) => {
-        post(Paths.otaDevVersionList,{...defaultparams,...params}).then(({data={}}) => {
+        post(Paths.otaProDevVersionList,{...defaultparams,...params}).then(({data={}}) => {
             dispatch({
                 type: GETVERLI,
                 versionList:data,
