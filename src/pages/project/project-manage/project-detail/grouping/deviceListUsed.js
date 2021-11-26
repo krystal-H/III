@@ -1,82 +1,16 @@
 import React,{ useState, useEffect, useRef,memo, useImperativeHandle, forwardRef } from 'react';
-import {Modal, Table,Input } from 'antd';
+import {Table,Input } from 'antd';
 import { DateTool } from '../../../../../util/util';
 import { post, Paths} from '../../../../../api';
-import {Notification} from '../../../../../components/Notification';
 
 import './deviceGroup.scss';
-
-//  class GroupDetailt  {
-//     constructor(props){
-//         super(props);
-//         this.state = {
-//             listLoading:false,
-//             list:[],
-//             pager:{},
-//             selectedRowKeys:[],
-//             addListParams:{
-//                 pageIndex: 1,
-//                 pageRows: 8,
-//                 id:props.id,
-//                 productId:-1,
-//                 deviceUniqueId:undefined,
-//             }
-            
-//         };
-//         this.columns = [
-//             { title: '设备id', dataIndex: 'deviceUniqueId', key: 'deviceUniqueId'},
-//             { title: '所属产品', dataIndex: 'productName',  key: 'productName'},
-//             { title: '状态', dataIndex: 'status',  key: 'status',
-//                 render: txt => <span>{ {'0':'有效','1':'未激活','2':'在线','3':'离线','4':'禁用'}[txt] }</span>},
-//             { title: '最后上线时间', dataIndex: 'lastOnlineTime', key: 'lastOnlineTime', 
-//                 render: text => <span>{text && DateTool.utcToDev(text) || '--'}</span>
-//             }
-//         ];
-//     }
-//     //获取列表
-//     getGroupAddDevList = ()=>{
-//         this.setState({listLoading:true})
-//         let{addListParams}=this.state;
-//         let params = {...addListParams}
-//         if(params.productId == -1){delete params.productId}
-//         post(Paths.getGroupSlctDev,params).then((res) => {
-//             let {list,pager} = res.data || {};
-//             this.setState({list,pager});
-//         }).finally(()=>{
-//             this.setState({listLoading:false})
-//         });
-//     }
-//     //更新请求参数并获取列表
-//     setQuestParams=(key,val,isnot=false)=>{ //isnot 更新完state后是否需要请求列表
-//         let prestate = {...this.state.addListParams};
-//         prestate[key] = val || undefined;
-//         if(key!=="pageIndex"){
-//             prestate["pageIndex"] = 1
-//         }
-//         this.setState({addListParams:prestate},!isnot && this.getGroupAddDevList || undefined);
-
-//     }
-//     //确认添加
-//     addDeviceOk=()=>{
-//         let {selectedRowKeys} = this.state;
-//         let addlist = selectedRowKeys;
-//         if(addlist.length>0){
-//             post(Paths.addGroupDevice,{id:this.props.id,deviceIds:addlist.join(',')}).then((res) => {
-//                 this.setState({selectedRowKeys:[]});
-//                 this.props.openCloseAdd(true); 
-//             });
-//         }
-//     }
-// }
-
-
 
 const columns = [
     { title: '设备id', dataIndex: 'deviceId'},
     { title: '所属产品', dataIndex: 'productName' },
-    { title: '状态', dataIndex: 'onlineStatus',
+    { title: '状态', dataIndex: 'onlineStatus', width: '65px',
         render: txt => <span>{ {'1':'在线','2':'离线'}[txt] }</span>},
-    { title: '绑定时间', dataIndex: 'bindTime',
+    { title: '绑定时间', dataIndex: 'bindTime', width: '180px',
         render: text => <span>{text && DateTool.utcToDev(text) || '--'}</span>
     }
 ];
@@ -94,6 +28,7 @@ const DevUsed = ({
     }, [])
     //获取设备列表
     const getDevList = (pageIndex=1) => {
+        console.log(999,pageIndex)
         setListLoading(true)
         post(Paths.getGroupSlctDev,{
             userId,
@@ -129,9 +64,10 @@ const DevUsed = ({
                         }}
                         loading={listLoading}
                         pagination={{
-                            defaultCurrent:pager.pageIndex, 
-                            total:pager.totalRows, 
-                            onChange:{getDevList},
+                            defaultCurrent:1, 
+                            total:pager.pageRows, 
+                            pageSize:8,
+                            onChange: getDevList ,
                             current: pager.pageIndex,
                             showSizeChanger:false,
                             hideOnSinglePage: true,
