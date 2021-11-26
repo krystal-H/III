@@ -4,7 +4,7 @@ import { Paths, post } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
 import './freeApply.scss'
 
-function FreeApplyModal({ freeApplyVisible, handleFreeApply, type, moduleName, firmwareName }) {
+function FreeApplyModal({ freeApplyVisible, handleFreeApply, handleCancel, type, moduleName, firmwareName }) {
   const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
   const [form] = Form.useForm()
   const [firmwareData, setFirmwareData] = useState({})
@@ -44,7 +44,7 @@ function FreeApplyModal({ freeApplyVisible, handleFreeApply, type, moduleName, f
 
   useEffect(() => {
     // 获取固件信息
-    post(Paths.showFirmware, { productId: productItemData.productId }, { loading: true })
+    post(Paths.showFirmware, { productId: productItemData.productId })
       .then(res => {
         setFirmwareData(res.data)
       })
@@ -55,7 +55,7 @@ function FreeApplyModal({ freeApplyVisible, handleFreeApply, type, moduleName, f
       title="免费申请"
       visible={freeApplyVisible}
       onOk={onOk}
-      onCancel={handleFreeApply}
+      onCancel={handleCancel}
       maskClosable={false}
       destroyOnClose={true}
       width={857}
