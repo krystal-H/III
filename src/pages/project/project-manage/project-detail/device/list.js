@@ -7,7 +7,6 @@ import { Notification } from '../../../../../components/Notification';
 import { cloneDeep } from 'lodash'
 function InfoModal({ baseInfo, projectId }, ref) {
     const [form] = Form.useForm();
-    const [typelist, setTypelist] = useState([])
     const [deletevisible, setDeletevisible] = useState(false)
     const [delType, setDelType] = useState('singer')
     const [selectedKey, setSelectedKey] = useState([])
@@ -67,15 +66,6 @@ function InfoModal({ baseInfo, projectId }, ref) {
             getList()
         }
     }, [pager.pageIndex, projectId, baseInfo.accountId])
-    useEffect(() => {
-        getTypeList()
-    }, [])
-    //
-    const getTypeList = () => {
-        post(Paths.getThirdCategory).then((res) => {
-            setTypelist(res.data)
-        });
-    }
     const deletelOKHandle = () => {
         if (delType == 'singer') {
             let params = {
@@ -191,18 +181,6 @@ function InfoModal({ baseInfo, projectId }, ref) {
                     <Form form={form} layout='inline' >
                         <Form.Item name="batchName" label='批次名称'>
                             <Input style={{ width: '190px' }} placeholder="请输入批次名称" />
-                        </Form.Item>
-                        <Form.Item name="productId" label='产品类型'>
-                            <Select
-                                style={{ width: '200px' }}
-                                allowClear
-                            >
-                                {
-                                    typelist.map(item => {
-                                        return (<Select.Option value={item.deviceTypeId} key={item.deviceTypeId}>{item.deviceTypeName}</Select.Option>)
-                                    })
-                                }
-                            </Select>
                         </Form.Item>
                         <Form.Item name="groupName" label='所属分组'>
                             <Input style={{ width: '190px' }} placeholder="请输入分组名称" />

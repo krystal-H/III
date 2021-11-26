@@ -58,10 +58,10 @@ export default function DeviceInfo({ baseInfo, projectId }) {
                 <div className='item'>
                     <div className='label'>初始密码：</div>
                     <div className='name'>
-                        <span style={{marginRight:'5px'}}>
-                        {
-                            showPassWord ? baseInfo.accountInitPassword : '*********'
-                        }
+                        <span style={{ marginRight: '5px' }}>
+                            {
+                                showPassWord ? baseInfo.accountInitPassword : '*********'
+                            }
                         </span>
                         {
                             showPassWord ? <EyeOutlined style={{ color: '#2F78FF' }} onClick={() => setShowPassWord(!showPassWord)} /> :
@@ -138,7 +138,20 @@ export default function DeviceInfo({ baseInfo, projectId }) {
                     ]}>
                         <Input />
                     </Form.Item>
-                    <Form.Item label="输入新密码" name='password' rules={[{ required: true, message: '请输入新密码' }]}>
+                    <Form.Item label="输入新密码" name='password' rules={[{
+                        required: true, validator: (_, value) => {
+                            if (value) {
+                                if (value.length == 6) {
+                                    return Promise.resolve()
+                                } else {
+                                    return Promise.reject(`请输入6位数新密码`)
+                                }
+                            } else {
+                                return Promise.reject(`请输入6位数新密码`)
+                            }
+
+                        }
+                    }]}>
                         <Input />
                     </Form.Item>
                     <Form.Item label="确定新密码" name='conFirmPs' rules={[

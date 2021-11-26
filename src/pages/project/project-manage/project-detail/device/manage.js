@@ -4,7 +4,7 @@ import { post, Paths } from '../../../../../api';
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal'
 import { cloneDeep } from 'lodash'
 import { DateTool } from '../../../../../util/util'
- function InfoModal({ baseInfo, projectId },ref) {
+function InfoModal({ baseInfo, projectId }, ref) {
     const [form] = Form.useForm();
     const [deletevisible, setDeletevisible] = useState(false)
     const [actionData, setActionData] = useState({})
@@ -51,7 +51,7 @@ import { DateTool } from '../../../../../util/util'
             })
         }
     }
-   
+
     useEffect(() => {
         if (projectId) {
             getList()
@@ -75,7 +75,7 @@ import { DateTool } from '../../../../../util/util'
             })
         });
     }
-    
+
     //详情
     const openDia = (data) => {
         setActionData(data)
@@ -115,12 +115,7 @@ import { DateTool } from '../../../../../util/util'
 
                 </div>
                 <div className='content'>
-                    {/* <div className='action'>
-                        <span>{`已选择${selectedKey.length}项`}</span>
-                        <Divider type="vertical" style={{ borderColor: '#333' }} />
-                        <a onClick={() => { openDel('many') }}>删除</a>
-                    </div> */}
-                    <Table dataSource={dataSource} columns={columns} rowKey="batchId" 
+                    <Table dataSource={dataSource} columns={columns} rowKey="batchId"
                         pagination={{
                             defaultCurrent: 1,
                             current: pager.pageIndex,
@@ -155,11 +150,26 @@ import { DateTool } from '../../../../../util/util'
 }
 function DetailInfo({ isModalVisible, colseMoadl, actionData }) {
     const [dataSource, setDataSource] = useState([])
+    const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
+    // 翻页
+    const pagerChange = (pageIndex, pageRows) => {
+        setPager(pre => {
+            return Object.assign(cloneDeep(pre), { pageIndex: pageRows === pager.pageRows ? pageIndex : 1, pageRows })
+        })
+    }
     useEffect(() => {
-        post(Paths.projectBatchInfo, { batchId: actionData.batchId }).then((res) => {
+        let params = {
+            ...pager, batchId: actionData.batchId
+        }
+        post(Paths.projectBatchInfo, params).then((res) => {
             setDataSource(res.data.list)
+            setPager(pre => {
+                let obj = cloneDeep(pre)
+                obj.totalRows = res.data.pager.totalRows
+                return obj
+            })
         });
-    }, [])
+    }, [pager.pageIndex, pager.pageRows])
     const columns = [
         {
             title: '批次名称',
@@ -187,7 +197,17 @@ function DetailInfo({ isModalVisible, colseMoadl, actionData }) {
     return <div>
         <Modal title="查看详情" footer={null} visible={isModalVisible} onCancel={colseMoadl} width='904px' wrapClassName='add-protocols-wrap'>
             <div>
-                <Table dataSource={dataSource} columns={columns} scroll={{ y: 440 }} rowKey="detailId" pagination={false} />
+                <Table dataSource={dataSource} columns={columns}  rowKey="detailId"
+                    pagination={{
+                        defaultCurrent: 1,
+                        current: pager.pageIndex,
+                        pageSize: pager.pageRows,
+                        total: pager.totalRows,
+                        showSizeChanger: false,
+                        showQuickJumper: pager.totalPages > 5,
+                        onChange: pagerChange,
+                        showTotal: total => <span>共 <a>{total}</a> 条</span>
+                    }} />
             </div>
         </Modal>
     </div>
