@@ -75,7 +75,7 @@ function FreeApplyModal({ freeApplyVisible, handleFreeApply, handleCancel, type,
                 <Form.Item label="固件名称/固件Key" className="txt-color">{firmwareData.burnFileName || '-'}</Form.Item>
                 <Form.Item label="固件版本" className="txt-color">{firmwareData.burnFileVersion || '-'}</Form.Item>
                 {
-                  JSON.parse(sessionStorage.getItem('productItem')).schemeType == 1 && 
+                  JSON.parse(sessionStorage.getItem('productItem')).schemeType == 1 &&
                   firmwareData.firmwareModuleList && firmwareData.firmwareModuleList.map(item => (
                     item.firmwareFuncList && item.firmwareFuncList.map((ele, index) => (
                       <>
@@ -150,6 +150,9 @@ function FreeApplyModal({ freeApplyVisible, handleFreeApply, handleCancel, type,
             ]}>
             <Input placeholder="请输入申请数量" />
           </Form.Item>
+          {
+            productItemData.schemeType == 1 && <div className="tip-msg">免开发方案，请务必详细填写，以方便邮寄调试模组等物料。</div>
+          }
         </Form>
       </div>
     </Modal >

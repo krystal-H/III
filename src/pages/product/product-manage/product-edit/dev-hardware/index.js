@@ -328,6 +328,7 @@ class Hardware extends Component {
                         modifyFirmwareVisible={modifyFirmwareVisible}
                         firmwareId={firmwareId}
                         productId={this.props.productId}
+                        moduleName={allInfo.moduleName}
                         handleOk={() => {
                             this.setState({ modifyFirmwareVisible: false })
                             this.getMoudleInfo(currentModuleId)
