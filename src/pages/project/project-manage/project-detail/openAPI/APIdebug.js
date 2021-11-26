@@ -105,6 +105,7 @@ function APIdebug({ listItem = {}, projectId }) {
           rowKey="configId"
           dataSource={dataSource}
           pagination={false}
+          scroll={{y:650}}
         />
       </div>
       {/* center-block */}
