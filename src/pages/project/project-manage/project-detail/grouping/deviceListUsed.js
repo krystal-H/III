@@ -6,7 +6,7 @@ import { post, Paths} from '../../../../../api';
 import './deviceGroup.scss';
 
 const columns = [
-    { title: '设备id', dataIndex: 'deviceId'},
+    { title: '设备ID', dataIndex: 'deviceUniqueId'},
     { title: '所属产品', dataIndex: 'productName' },
     { title: '状态', dataIndex: 'onlineStatus', width: '65px',
         render: txt => <span>{ {'1':'在线','2':'离线'}[txt] }</span>},
@@ -32,7 +32,7 @@ const DevUsed = ({
         setListLoading(true)
         post(Paths.getGroupSlctDev,{
             userId,
-            deviceIdParams:searchValRef.current,
+            deviceUniqueIdParams:searchValRef.current,
             pageIndex,
             pageRows:8
         }).then((res) => {
@@ -45,7 +45,6 @@ const DevUsed = ({
     }
 
     useImperativeHandle(_ref, () => {
-
         return {selectedRowKeys}
     }, [selectedRowKeys]);
 

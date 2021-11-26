@@ -19,7 +19,7 @@ export default ({
         groupId:viewDetailId,
         userId,
         productId:undefined,
-        deviceIdParams:undefined,
+        deviceUniqueIdParams:undefined,
         pageIndex:1,
         pageRows:8
     });
@@ -32,7 +32,7 @@ export default ({
     const selectedLen = selectedRowKeys.length;
 
     const columns = [
-        { title: '设备id', dataIndex: 'deviceId'},
+        { title: '设备ID', dataIndex: 'deviceUniqueId'},
         { title: '所属产品', dataIndex: 'productName'},
         { title: '绑定来源', dataIndex: 'bindSource' },
         { title: '绑定时间', dataIndex: 'bindTime', width: '180px', render: text => <span>{text && DateTool.utcToDev(text) || '--'}</span>},
