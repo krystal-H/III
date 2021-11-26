@@ -79,7 +79,7 @@ function CustomerService({
             
         };
         ws.onclose = (e) =>{//检测到断开连接
-            console.log("---断开连接----")
+            console.log("---断开连接----",e)
             clearInterval(wsTimer);
             ws = null;
             if ( connectRef.current && e.code == '1006') {//如果异常断开，尝试重连
