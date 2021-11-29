@@ -1,29 +1,29 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Modal, Tooltip, Form } from 'antd';
+import { Modal, Tooltip, Form, Input, InputNumber } from 'antd';
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
 import { UploadFileHooks } from '../../../../../components/upload-file';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../../../api';
+import TableCom from './downTable';
 import './index.scss'
-export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel ,authWay}) {
-  // let productItem = {}
-
-  // if (sessionStorage.getItem('productItem')) {
-
-  //   productItem = JSON.parse(sessionStorage.getItem('productItem'))
-  // }
+export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, authWay }) {
   const [form] = Form.useForm();
+  const [isShowDn, setIsShowDn] = useState(false)
   const $el = useRef(null)
+  let productId = JSON.parse(sessionStorage.getItem('productItem')).productId
   //提交数据
   const subData = () => {
-    let productId = JSON.parse(sessionStorage.getItem('productItem')).productId
+    if (authWay == 2) {
+      cancelModel()
+      return
+    }
     form.validateFields().then(value => {
       // 验证通过后进入
       let params = {
         productId,
         data: value.upload[0].url
       }
-      post(Paths.proReledExport, params,{loading:true}).then((res) => {
+      post(Paths.proReledExport, params).then((res) => {
         colseMoadl()
       });
     }).catch(err => {
@@ -43,31 +43,81 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel ,
   const downfile = () => {
     window.open('http://skintest.hetyj.com/31438/6b0b20891e06ac31d0eed37a5083cca9.xlsx')
   }
+  //打开密钥下载
+  const openDown = () => {
+    let params = {
+      num:form.getFieldValue('number'),
+      productId
+    }
+    post(Paths.replayRegistFile, params, { loading: true }).then((res) => {
+      setIsShowDn(true)
+    });
+  }
+  const handleCancel = () => {
+    setIsShowDn(false)
+  }
   return (
-    <Modal title="注册设备" visible={isModalVisible} onOk={subData} onCancel={cancelModel} width='555px' wrapClassName='add-protocols-wrap'>
-      <div className='device-regist'>
-        <Form form={form} labelAlign='right'>
-          <Form.Item label="验证方式：">
-            {$dom}
-          </Form.Item>
-          <Form.Item
-            label="导入设备物理地址"
-          >
-            <Form.Item
-              name="upload"
-              rules={[{ required: true, message: '请上传文件' }]}
-            >
-              <UploadFileHooks
-                ref={$el}
-                maxCount={1}
-                format='.xls,.xlsx'
-                isNotImg={true}
-                maxSize={10} />
+    <div>
+      <Modal title="注册设备" visible={isModalVisible}  onOk={subData} onCancel={cancelModel} width='600px' wrapClassName='add-protocols-wrap'>
+        <div className='device-regist'>
+          <Form form={form} labelAlign='right'>
+            <Form.Item label="验证方式：">
+              {$dom}
             </Form.Item>
-            <a className='down-model' onClick={downfile}>下载模板</a>
-          </Form.Item>
-        </Form>
-      </div>
-    </Modal>
+            {
+              authWay !=2 && <Form.Item
+                label="导入设备物理地址"
+              >
+                <Form.Item
+                  name="upload"
+                  rules={[{ required: true, message: '请上传文件' }]}
+                >
+                  <UploadFileHooks
+                    ref={$el}
+                    maxCount={1}
+                    format='.xls,.xlsx'
+                    isNotImg={true}
+                    maxSize={10} />
+                </Form.Item>
+                <a className='down-model' onClick={downfile}>下载模板</a>
+              </Form.Item>
+            }
+            {
+              authWay == 2 && <>
+                <Form.Item
+                  label="配置密钥下载数量"
+                  name='number'
+                  extra="最多支持500个，请在【密钥下载】功能中导出配置数据。"
+                  rules={[
+                    {
+                      validator: (_, value) => {
+                        if (value) {
+                          if (value > 0 && value <= 500 && parseInt(value) == value) {
+                            return Promise.resolve()
+                          } else {
+                            return Promise.reject(`范围在0~500之间的整数`)
+                          }
+                        } else {
+                          return Promise.resolve()
+                        }
+
+                      }
+                    }
+                  ]}
+                >
+                  <InputNumber style={{ width: '130px', textAlign: 'center' }} min={1}
+                    max={500} />
+
+                </Form.Item>
+                <a className='regist-product-btn' onClick={openDown}>密钥下载</a>
+              </>
+            }
+          </Form>
+        </div>
+      </Modal>
+      {
+        isShowDn && <TableCom isShowDn={isShowDn} handleCancel={handleCancel} productId={productId}/>
+      }
+    </div>
   )
 }

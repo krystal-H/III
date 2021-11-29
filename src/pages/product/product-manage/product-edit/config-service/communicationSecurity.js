@@ -70,13 +70,13 @@ function CommunicateSecurity({ securityVisible, productId, cancelHandle, isGateW
                   一型一密pro
                 </Tooltip>
               </Radio>
-              {/* <Radio value="2">
+              <Radio value="2">
                 <Tooltip
                   title='设备通信时，需校验烧录的设备密钥和设备ID，安全性最高。'
                   placement="bottom">
                   一机一密
                 </Tooltip>
-              </Radio> */}
+              </Radio>
             </Radio.Group>
           </Form.Item>
           {/* {
