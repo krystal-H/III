@@ -55,12 +55,17 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
   //打开密钥下载
   const openDown = () => {
     let params = {
-      num:form.getFieldValue('number'),
+      num: form.getFieldValue('number'),
       productId: form.getFieldValue('productId')
     }
-    post(Paths.replayRegistFile, params, { loading: true }).then((res) => {
+    if (params.num) {
+      post(Paths.replayRegistFile, params, { loading: true }).then((res) => {
+        setIsShowDn(true)
+      });
+    } else {
       setIsShowDn(true)
-    });
+    }
+
   }
   const handleCancel = () => {
     setIsShowDn(false)

@@ -46,26 +46,31 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
   //打开密钥下载
   const openDown = () => {
     let params = {
-      num:form.getFieldValue('number'),
+      num: form.getFieldValue('number'),
       productId
     }
-    post(Paths.replayRegistFile, params, { loading: true }).then((res) => {
+    if (params.num) {
+      post(Paths.replayRegistFile, params, { loading: true }).then((res) => {
+        setIsShowDn(true)
+      });
+    } else {
       setIsShowDn(true)
-    });
+    }
+
   }
   const handleCancel = () => {
     setIsShowDn(false)
   }
   return (
     <div>
-      <Modal title="注册设备" visible={isModalVisible}  onOk={subData} onCancel={cancelModel} width='600px' wrapClassName='add-protocols-wrap'>
+      <Modal title="注册设备" visible={isModalVisible} onOk={subData} onCancel={cancelModel} width='600px' wrapClassName='add-protocols-wrap'>
         <div className='device-regist'>
           <Form form={form} labelAlign='right'>
             <Form.Item label="验证方式：">
               {$dom}
             </Form.Item>
             {
-              authWay !=2 && <Form.Item
+              authWay != 2 && <Form.Item
                 label="导入设备物理地址"
               >
                 <Form.Item
@@ -116,7 +121,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
         </div>
       </Modal>
       {
-        isShowDn && <TableCom isShowDn={isShowDn} handleCancel={handleCancel} productId={productId}/>
+        isShowDn && <TableCom isShowDn={isShowDn} handleCancel={handleCancel} productId={productId} />
       }
     </div>
   )
