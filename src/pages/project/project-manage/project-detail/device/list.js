@@ -7,7 +7,6 @@ import { Notification } from '../../../../../components/Notification';
 import { cloneDeep } from 'lodash'
 function InfoModal({ baseInfo, projectId }, ref) {
     const [form] = Form.useForm();
-    const [typelist, setTypelist] = useState([])
     const [deletevisible, setDeletevisible] = useState(false)
     const [delType, setDelType] = useState('singer')
     const [selectedKey, setSelectedKey] = useState([])
@@ -55,7 +54,7 @@ function InfoModal({ baseInfo, projectId }, ref) {
             key: '',
             render(text, record) {
                 return <span>
-                    {record.bindSource && record.bindSource.indexOf('导入') > -1 &&
+                    {record.bindType == 1 &&
                         <><a onClick={() => { openDel('singer', record) }}>移除绑定</a><Divider type="vertical" /></>}
 
                     <a onClick={() => { openEdit(record) }}>编辑组</a></span>
@@ -67,15 +66,6 @@ function InfoModal({ baseInfo, projectId }, ref) {
             getList()
         }
     }, [pager.pageIndex, projectId, baseInfo.accountId])
-    useEffect(() => {
-        getTypeList()
-    }, [])
-    //
-    const getTypeList = () => {
-        post(Paths.getThirdCategory).then((res) => {
-            setTypelist(res.data)
-        });
-    }
     const deletelOKHandle = () => {
         if (delType == 'singer') {
             let params = {
@@ -183,7 +173,7 @@ function InfoModal({ baseInfo, projectId }, ref) {
     }
     useImperativeHandle(ref, () => ({
         reFresh: getList
-    }),[baseInfo.accountId]);
+    }), [baseInfo.accountId]);
     return (
         <div >
             <div className='device-info-wrap'>
@@ -191,18 +181,6 @@ function InfoModal({ baseInfo, projectId }, ref) {
                     <Form form={form} layout='inline' >
                         <Form.Item name="batchName" label='批次名称'>
                             <Input style={{ width: '190px' }} placeholder="请输入批次名称" />
-                        </Form.Item>
-                        <Form.Item name="productId" label='产品类型'>
-                            <Select
-                                style={{ width: '200px' }}
-                                allowClear
-                            >
-                                {
-                                    typelist.map(item => {
-                                        return (<Select.Option value={item.deviceTypeId} key={item.deviceTypeId}>{item.deviceTypeName}</Select.Option>)
-                                    })
-                                }
-                            </Select>
                         </Form.Item>
                         <Form.Item name="groupName" label='所属分组'>
                             <Input style={{ width: '190px' }} placeholder="请输入分组名称" />
@@ -291,7 +269,7 @@ function EditGroup({ isModalVisible, cancelModel, updateInfo, actionData, projec
     return <div>
         <Modal title="编辑组" visible={isModalVisible} onOk={subData} onCancel={cancelModel} width='550px' wrapClassName='add-protocols-wrap'>
             <div style={{ padding: '0 80px' }} className='project-import-file-wrap'>
-                <Form form={form} labelAlign='right' initialValues={{groupId:actionData.groupId}} labelCol={{
+                <Form form={form} labelAlign='right' initialValues={{ groupId: actionData.groupId }} labelCol={{
                     span: 6,
                 }}
                     wrapperCol={{

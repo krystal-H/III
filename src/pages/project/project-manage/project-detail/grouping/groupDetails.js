@@ -19,9 +19,9 @@ export default ({
         groupId:viewDetailId,
         userId,
         productId:undefined,
-        deviceIdParams:undefined,
+        deviceUniqueIdParams:undefined,
         pageIndex:1,
-        pageRows:10
+        pageRows:8
     });
     const devicedUsedRef = useRef()
     const [productList, setProductList] = useState([])
@@ -32,14 +32,14 @@ export default ({
     const selectedLen = selectedRowKeys.length;
 
     const columns = [
-        { title: '设备id', dataIndex: 'deviceId'},
+        { title: '设备ID', dataIndex: 'deviceUniqueId'},
         { title: '所属产品', dataIndex: 'productName'},
         { title: '绑定来源', dataIndex: 'bindSource' },
-        { title: '绑定时间', dataIndex: 'bindTime', render: text => <span>{text && DateTool.utcToDev(text) || '--'}</span>},
-        { title: '状态', dataIndex: 'onlineStatus', 
-            render: txt => <span>{{ '0': '有效', '1': '未激活', '2': '在线', '3': '离线', '4': '禁用' }[txt]}</span>
+        { title: '绑定时间', dataIndex: 'bindTime', width: '180px', render: text => <span>{text && DateTool.utcToDev(text) || '--'}</span>},
+        { title: '状态', dataIndex: 'onlineStatus', width: '65px', 
+            render: txt => <span>{{'1':'在线','2':'离线'}[txt]}</span>
         },
-        { title: '操作', key: 'action', width: '200px',
+        { title: '操作', key: 'action', width: '126px',
             render: (text, { deviceId }) => <a onClick={ ()=>{setDelids([deviceId])}} >从分组中删除</a>
         },
     ];
@@ -61,7 +61,7 @@ export default ({
         let params = { ...paramsRef.current }
         if (params.productId == -1) { delete params.productId }
         post(Paths.getGroupDeviceList, params, {loading: true}).then((res) => {
-            let { list, pager } = res.data || {};
+            let { list=[], pager={} } = res.data || {};
             setDataList({ list, pager });
         });
     }
@@ -128,17 +128,18 @@ export default ({
                         <Table
                             rowKey="deviceId"
                             columns={columns}
-                            dataSource={dataList.list}p
+                            dataSource={dataList.list}
                             rowSelection={{
                                 selectedRowKeys,
                                 onChange: setSelectedRowKeys,
                             }}
                             pagination={{
-                                defaultCurrent: dataList.pager.pageIndex,
-                                total: dataList.pager.totalRows,
+                                defaultCurrent: 1,
+                                total: dataList.pager.totalRows || 0,
                                 hideOnSinglePage: true,
-                                onChange: val => { this.setParams('pageIndex', val); getGroupDevList() },
-                                current: dataList.pager.pageIndex
+                                pageSize: dataList.pager.pageRows || 0,
+                                onChange: val => { setParams('pageIndex', val); getGroupDevList() },
+                                current: dataList.pager.pageIndex || 1
                             }}
                         />
                     </div>

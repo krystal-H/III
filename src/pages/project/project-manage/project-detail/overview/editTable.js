@@ -46,10 +46,8 @@ const EditableCell = ({
 export default function EditableTable({ projectId }) {
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
-    const [operate, setOperate] = useState(null)
     const [delData, setDelData] = useState({})
     const [editingKey, setEditingKey] = useState('');
-    const [delLabelId, setDelLabelId] = useState(null)
     const isEditing = (record) => record.whiteListId === editingKey;
     const [cloudUpdateVisible, setCloudUpdateVisible] = useState(false) // 删除
     // console.log(pathname,'===')
@@ -233,11 +231,11 @@ export default function EditableTable({ projectId }) {
                     visible={cloudUpdateVisible}
                     modalOKHandle={updateOkHandle}
                     modalCancelHandle={close}
-                    targetName={delData.funcName}
+                    targetName={delData.value}
                     title='删除'
                     descGray={true}
                     needWarnIcon={true}
-                    descText='确定删除此白名单'
+                    descText='确定删除此IP'
                 ></ActionConfirmModal>
             }
         </div>

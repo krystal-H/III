@@ -7,11 +7,12 @@ import { cloneDeep } from 'lodash'
 
 const { Option } = Select;
 
-export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCancelFirmware, firmwareId, productId, handleOk }) {
+export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCancelFirmware, firmwareId, productId, handleOk, moduleName }) {
   const [form] = Form.useForm()
 
   const [firmwareData, setFirmwareData] = useState({})
   const [selectVal, setSelectVal] = useState([])
+  const [productItemData] = useState(JSON.parse(sessionStorage.getItem('productItem')) || {})
 
   const onFinish = (values) => {
     // console.log('接受的数据：', values)
@@ -22,7 +23,14 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
       identifier: item.split('#')[1],
       value: valArr[index]
     }))
-    const params = { productId, id: firmwareId, firmwareConfigReqList }
+    const params = {
+      productId,
+      id: firmwareId,
+      firmwareConfigReqList,
+      moduleName,
+      schemeId: productItemData.schemeId,
+      productName: productItemData.productName
+    }
     console.log('提交的数据', params)
     post(Paths.saveFirmwareSetting, { ...params })
       .then(res => {

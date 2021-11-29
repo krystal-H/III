@@ -1,20 +1,36 @@
+// 更换模组和修改固件使用同一个
+
 import React, { useState, useEffect } from 'react'
 import { Modal, Input, Table } from 'antd'
 import { Paths, post } from '../../../../../api'
+import { Notification } from '../../../../../components/Notification'
 
 import './replaceModule.scss'
 const { Search } = Input
 
-function ReplaceModule({ title, desc = "", opeType, replaceModalVisible, handleOk, handleCancel, schemeId, moduleId }) {
-  const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
-  const [selectionType] = useState('radio')
+function ReplaceModule({
+  title,
+  desc = "",
+  opeType,
+  replaceModalVisible,
+  handleOk,
+  handleCancel,
+  schemeId,
+  moduleId,
+  productId,
+  firmwareId
+}) {
   const [searchVal, setSearchVal] = useState('') // 查询的字段
+  const [dataSource, setdataSource] = useState([])
+  const [selectedRowKeys, setSelectedRowKeys] = useState([opeType === 'module' ? moduleId : firmwareId])
+  const [productItemData] = useState(JSON.parse(sessionStorage.getItem('productItem')) || {})
+
   const moduleColumns = [
     { title: '模组', dataIndex: 'moduleName' },
     { title: '芯片', dataIndex: 'originalModuleTypeName' },
     {
       title: '尺寸', key: '',
-      render: (text, record, index) => (
+      render: (text, record) => (
         <div>
           <span>{record.sizeWidth}x{record.sizeHeight}x{record.sizeThickness}</span>
         </div>
@@ -24,16 +40,16 @@ function ReplaceModule({ title, desc = "", opeType, replaceModalVisible, handleO
     { title: '调试价格', dataIndex: 'price' },
     {
       title: '操作', dataIndex: '',
-      render: (text, record, index) => <a onClick={() => downInstructions(record.readmePdf)}>说明书</a>
+      render: (text, record) => <a onClick={() => downInstructions(record.readmePdf)}>说明书</a>
     }
   ]
+
+  // 更换固件
   const firmwareColumns = [
-    { title: '方案', dataIndex: 'name' },
+    { title: '固件名称', dataIndex: 'burnFileName' },
     { title: '版本', dataIndex: 'burnFileVersion' },
-    { title: '适用说明', dataIndex: '' }
   ]
-  const [dataSource, setdataSource] = useState([])
-  const [selectedRowKeys, setSelectedRowKeys] = useState([moduleId])
+
 
   // 下载说明书
   const downInstructions = (readmePdf) => {
@@ -53,15 +69,19 @@ function ReplaceModule({ title, desc = "", opeType, replaceModalVisible, handleO
       moduleName: searchVal,
       moduleType: Number(productItemData.bindType) || -1,
       networkType: Number(productItemData.netTypeId) || -1
-    }, { loading: true })
-      .then(res => {
-        setdataSource(res.data)
-      })
+    }, { loading: true }).then(res => {
+      setdataSource(res.data)
+    })
   }
 
   // 获取固件列表
-  const getFirmwareList = (firmwareName) => {
-    console.log('=======等后端补充接口！！！')
+  const getFirmwareList = () => {
+    post(Paths.getDevFirmwareList, {
+      moduleId,
+      burnFileName: searchVal
+    }).then(res => {
+      setdataSource(res.data)
+    })
   }
 
   // 判断执行  模组/固件方法
@@ -74,11 +94,25 @@ function ReplaceModule({ title, desc = "", opeType, replaceModalVisible, handleO
     judgeFunc()
   }, [searchVal]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // 确定
+  const judgeHandleOk = () => {
+    if (opeType === 'module') {
+      handleOk(selectedRowKeys)
+    }
+    if (opeType === 'firmware') {
+      post(Paths.saveChooseFirmware, { productId, firmwareId: Number(selectedRowKeys.join('')) })
+        .then(res => {
+          Notification({ description: '操作成功！', type: 'success' })
+          handleOk(selectedRowKeys)
+        })
+    }
+  }
+
   return (
     <Modal
       title={title}
       visible={replaceModalVisible}
-      onOk={() => handleOk(selectedRowKeys)}
+      onOk={() => judgeHandleOk()}
       onCancel={() => handleCancel(opeType)}
       maskClosable={false}
       width={857}
@@ -96,11 +130,11 @@ function ReplaceModule({ title, desc = "", opeType, replaceModalVisible, handleO
       {/* table */}
       <Table
         rowSelection={{
-          type: selectionType,
+          type: 'radio',
           selectedRowKeys,
           ...rowSelection,
         }}
-        rowKey="moduleId"
+        rowKey={opeType === 'module' ? "moduleId" : "id"}
         columns={opeType === 'module' ? moduleColumns : firmwareColumns}
         dataSource={dataSource}
         pagination={false} />

@@ -73,16 +73,23 @@ function CustomerService({
             wsTimer = setInterval(()=>{ ws.send(sendMsg()) }, 10000); //告诉服务器“请保持联系”
         };
         ws.onmessage =  ({data="{}"})=> {//接收到消息
+            console.log(777,data)
             let onemsg = JSON.parse(data)
             setContent( ({data}) => ({data:[ ...data, onemsg ],isscroll:false}))
             
         };
         ws.onclose = (e) =>{//检测到断开连接
-            console.log("---断开连接----")
+            console.log("---断开连接----",e)
             clearInterval(wsTimer);
             ws = null;
             if ( connectRef.current && e.code == '1006') {//如果异常断开，尝试重连
                 setTimeout(newWebSocket,5000);
+            }else if ( e.code == '1007') {//多点登录
+                Notification({
+                    type: 'warn',
+                    description: '已在其他地方上线，被迫下线中...'
+                })
+                switchOpen()
             }
             connectRef.current = false;
             
@@ -159,9 +166,9 @@ function CustomerService({
                 }
             </div>
             <div className='inputbox'>
-                <span className='imgbtn'></span>
+                {/* <span className='imgbtn'></span> */}
                 <span className='sendbtn' onClick={sendHandle}>发送</span>
-                <Input.TextArea className='textarea' placeholder="请输入您的问题..." bordered={false} maxLength={200}
+                <Input.TextArea className='textarea' showCount placeholder="请输入您的问题..." bordered={false} maxLength={200}
                     value={inputValue}
                     onChange={changeInput}
                     onPressEnter={sendHandle}

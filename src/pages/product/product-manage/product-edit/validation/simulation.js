@@ -8,12 +8,13 @@ import QRCode from 'qrcode.react';
 import Base64 from 'crypto-js/enc-base64'
 import Utf8 from 'crypto-js/enc-utf8'
 import CryptoJS from 'crypto-js'
+let client = null
 export default ({ productId }) => {
     const product = JSON.parse(sessionStorage.getItem('productItem'));
     const [form] = Form.useForm();
     const [mockId, setMockId] = useState("");
     const [connectData, setConnectData] = useState({});//连接需要的参数-没啥用
-    const [client, setClient] = useState(null);
+    // const [client, setClient] = useState(null);
     const [connectStatus, setConnectStatus] = useState(null);//连接状态
     const [optionData, setOptionData] = useState([])//物模型
     const [qrcodeUrl, setQrcodeUrl] = useState(null);//二维码
@@ -33,6 +34,7 @@ export default ({ productId }) => {
         }
         getOption()
         return () => {
+            console.log(client, '关闭')
             client && client.end()
         }
     }, [])
@@ -47,32 +49,31 @@ export default ({ productId }) => {
             setOptionData(data)
         });
     }
-    useEffect(() => {
-        if (client) {
-            console.log('重复连接了')
-            client.on('connect', () => {
-                console.log('连接成功了')
-                setConnectStatus('Connected');
-                let topic = `/device/${product.code}/${mockId}/downward`
-                client.subscribe(topic);
-            });
+    const subMessAge=()=>{
+        if(!client || !product) return;
+        client.on('connect', () => {
+            console.log('连接成功了')
+            setConnectStatus('Connected');
+            let topic = `/device/${product.code}/${mockId}/downward`
+            client.subscribe(topic);
+        });
 
-            client.on('error', (err) => {
-                console.error('Connection error: ', err);
-                client.end();
-            });
-            client.on('reconnect', () => {
-                setConnectStatus('Reconnecting');
-            });
-            client.on('message', (topic, message) => {
-                let str = String.fromCharCode.apply(null, message);
-                let res = JSON.parse(str);
-                let encodeKey = CryptoJS.enc.Base64.parse(res.data)
-                let data = CryptoJS.enc.Utf8.stringify(encodeKey)
-                setPayload(JSON.parse(data));
-            });
-        }
-    }, [client]);
+        client.on('error', (err) => {
+            console.error('Connection error: ', err);
+            client.end();
+        });
+        client.on('reconnect', () => {
+            console.log('在重复连接了', client)
+            // setConnectStatus('Reconnecting');
+        });
+        client.on('message', (topic, message) => {
+            let str = String.fromCharCode.apply(null, message);
+            let res = JSON.parse(str);
+            let encodeKey = CryptoJS.enc.Base64.parse(res.data)
+            let data = CryptoJS.enc.Utf8.stringify(encodeKey)
+            setPayload(JSON.parse(data));
+        });
+    }
     //连接mqtt
     const initData = (data) => {
         const options = {
@@ -85,10 +86,11 @@ export default ({ productId }) => {
             // 心跳时间
             keepalive: data.mqttKeepalive,
         }
-        let url=data.mqttUrl+'/mqtt'
-        url=url.replace('tcp','wss')
-        url=url.replace('1883','8083')
-        setClient(mqtt.connect(url, options))
+        let url = data.mqttUrl + '/mqtt'
+        url = url.replace('tcp', 'wss')
+        url = url.replace('1883', '8083')
+        client = mqtt.connect(url, options)
+        subMessAge()
     }
     //物模型渲染
     const getDom = (data, origin) => {
@@ -176,7 +178,7 @@ export default ({ productId }) => {
         <div>
             <DescWrapper style={{ marginBottom: 8, width: '100%' }} desc={['WiFi蓝牙设备需先登录数联智能App，并搜索绑定需要调试的设备，蜂窝设备不需要。']}></DescWrapper>
             <div className="sim-devid">
-                <div >虚拟设备ID：{mockId}</div>
+                <div onClick={test}>虚拟设备ID：{mockId}</div>
             </div>
             <div className="modtit">模拟设备</div>
             <div className='debug-data-box'>

@@ -40,11 +40,18 @@ function APIdebug({ listItem = {}, projectId }) {
 
   // 发起调试
   const onFinish = (values) => {
+    let paramObj = {}
+    for (let key in values) {
+      if (values[key]) {
+        paramObj[key] = values[key]
+      }
+    }
     if (!rowId) return Notification({ description: '请选择需要调用的接口！', type: 'warn' })
     const params = {
       configId: rowId,
-      reqParams: JSON.stringify({ ...values })
+      reqParams: JSON.stringify({ ...paramObj })
     }
+    console.log('params', params)
     post(Paths.debugAPI, params, { loading: true })
       .then(res => {
         if (res) setResultShow(JSON.stringify(JSON.parse(res), undefined, 4))
@@ -98,6 +105,7 @@ function APIdebug({ listItem = {}, projectId }) {
           rowKey="configId"
           dataSource={dataSource}
           pagination={false}
+          scroll={{y:650}}
         />
       </div>
       {/* center-block */}

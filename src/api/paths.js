@@ -81,6 +81,9 @@ let Paths = {
     saveFirmwareSetting: '/firmware/config/setting', // 保存固件信息
     freeApplyModule: '/module/apply/create', // 免费申请模组
     showFirmware: '/product/dev/show/firmware/config', // 免费申请固件信息
+    getDevFirmwareList: '/firmware/list/moduleId', // 获取模组固件列表
+    saveChooseFirmware: '/product/scheme/update', // 保存更换的固件
+
 
     // 5.xAPP-应用管理
     getAppInfoList: '/appInfoManage/getAppInfoList', // app应用列表
@@ -462,6 +465,7 @@ let Paths = {
 
     //OTA升级
     otaDevVersionList:'/firmware/productFirmware/getList',
+    otaProDevVersionList:'/firmware/productFirmware/getProductFirmwareList',
     otaGetExtVersion:'/device/version/5/getExtVersion',
     otaDeleteVer:'/device/version/5/delete',
 
