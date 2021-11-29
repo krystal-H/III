@@ -344,6 +344,10 @@ export const unitCollection = [{
 //功能定义-倍数
 export const multipleCollection = [
     {
+        value: 1,
+        label: 1
+    },
+    {
         value: 10,
         label: 10
     },
