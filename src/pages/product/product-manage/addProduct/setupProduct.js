@@ -76,7 +76,7 @@ class SetupProduct extends Component {
 
   // 获取通信协议
   getCommunicationProtocol = () => {
-    post(Paths.getCommunicationProtocol, {}, { loading: true }).then(res => {
+    post(Paths.getCommunicationProtocol, {}).then(res => {
       this.setState({
         protocolList: res.data
       })
