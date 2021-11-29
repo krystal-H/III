@@ -532,6 +532,9 @@ let Paths = {
     proReledInfo:'/product/detail',//设备基本详情
     getProductPlus:'/productManage/getProductExtendList',//产品下拉带验证方式
     exportRegistFile:'/deviceRegister/export',//导出设备注册文件
+    replayRegistFile:'/deviceRegister/registerDevice',//设备注册-一机一密-申请下载数量
+    downRegistFlie:'/deviceRegister/exportDeviceApply',//设备注册-一机一密-下载
+    registerTable:'/deviceRegister/deviceApplyList',//设备注册-一机一密-文件列表
     
 
     //确定面板接口

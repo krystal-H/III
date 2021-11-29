@@ -5,9 +5,8 @@ import DescWrapper from '../../../../../components/desc-wrapper/DescWrapper';
 import ObjectView from "../../../../../components/ObjectView";
 import mqtt from 'mqtt'
 import QRCode from 'qrcode.react';
-import Base64 from 'crypto-js/enc-base64'
-import Utf8 from 'crypto-js/enc-utf8'
 import CryptoJS from 'crypto-js'
+let msgId = 1
 let client = null
 export default ({ productId }) => {
     const product = JSON.parse(sessionStorage.getItem('productItem'));
@@ -49,31 +48,46 @@ export default ({ productId }) => {
             setOptionData(data)
         });
     }
-    const subMessAge=()=>{
-        if(!client || !product) return;
+    // useEffect(() => {
+    //     if (connectStatus == 'Connected') {
+    //         let topic = `/device/${product.code}/${originData.id}/downward`
+    //         client.subscribe(topic);
+    //         console.log('订阅的主题', topic)
+    //     }
+    // }, [connectStatus])
+    const subMessAge = (originData) => {
+        if (!client || !product) return;
         client.on('connect', () => {
             console.log('连接成功了')
             setConnectStatus('Connected');
-            let topic = `/device/${product.code}/${mockId}/downward`
+            let topic = `/device/${product.code}/${originData.id}/downward`
             client.subscribe(topic);
+            console.log('订阅的主题', topic)
         });
 
         client.on('error', (err) => {
-            console.error('Connection error: ', err);
+            console.error('连接错误: ', err);
             client.end();
         });
         client.on('reconnect', () => {
             console.log('在重复连接了', client)
-            // setConnectStatus('Reconnecting');
+            setConnectStatus('Reconnecting');
         });
         client.on('message', (topic, message) => {
             let str = String.fromCharCode.apply(null, message);
             let res = JSON.parse(str);
-            let encodeKey = CryptoJS.enc.Base64.parse(res.data)
-            let data = CryptoJS.enc.Utf8.stringify(encodeKey)
-            setPayload(JSON.parse(data));
+            let key=CryptoJS.enc.Hex.parse(originData.deviceSecret),
+            iv=CryptoJS.enc.Hex.parse('00000000000000000000000000000000')
+            let decrypted=CryptoJS.AES.decrypt(res.data,key,{
+                iv : iv,
+                mode : CryptoJS.mode.CBC,
+                padding : CryptoJS.pad.Pkcs7
+            });
+            decrypted=decrypted.toString(CryptoJS.enc.Utf8);
+            setPayload(JSON.parse(decrypted).params);
         });
     }
+
     //连接mqtt
     const initData = (data) => {
         const options = {
@@ -88,9 +102,10 @@ export default ({ productId }) => {
         }
         let url = data.mqttUrl + '/mqtt'
         url = url.replace('tcp', 'wss')
-        url = url.replace('1883', '8083')
+        url = url.replace('1883', '8084')
+        window.open(url.replace('wss', 'https'))
         client = mqtt.connect(url, options)
-        subMessAge()
+        subMessAge(data)
     }
     //物模型渲染
     const getDom = (data, origin) => {
@@ -125,6 +140,35 @@ export default ({ productId }) => {
 
         return ''
     }
+    //转16字节数组
+    const translate = (str) => {
+        var pos = 0;
+        var len = str.length;
+
+        if (len % 2 != 0) {
+            return null;
+        }
+        len /= 2;
+        var hexA = new Array();
+        for (var i = 0; i < len; i++) {
+            var s = str.substr(pos, 2);
+            var v = parseInt(s, 16);
+            if (v > 127) {
+                v = v - 256
+            }
+            hexA.push(v);
+            pos += 2;
+        }
+        return hexA;
+    }
+    //加密
+    const dealData = (word) => {
+        let key1 = CryptoJS.enc.Hex.parse(connectData.deviceSecret)
+        let iv1 = CryptoJS.enc.Hex.parse('00000000000000000000000000000000')
+        let srcs = CryptoJS.enc.Utf8.parse(word);
+        let encrypted = CryptoJS.AES.encrypt(srcs, key1, { iv: iv1, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
+        return encrypted.toString()
+    }
     //上报
     const startSub = () => {
         let arr = []
@@ -137,18 +181,18 @@ export default ({ productId }) => {
             }
         }
         let timestamp = new Date().getTime()
-        arr = Base64.stringify(Utf8.parse(JSON.stringify({ params: arr })))
+        let item = dealData(JSON.stringify({ params: arr }))
         let params = {
             cmd: 2006,
             ver: "1.0",
             dir: "03",
             timestamp,
-            msgId: timestamp,
-            data: {
-                params: arr
-            }
+            msgId: msgId++,
+            data: item
         }
         let topic = `/device/${product.code}/${mockId}/upward`
+
+        // return
         client.publish(topic, JSON.stringify(params))
     }
     const test = () => {
@@ -162,23 +206,24 @@ export default ({ productId }) => {
             }
         }
         let timestamp = new Date().getTime()
-        arr = Base64.stringify(Utf8.parse(JSON.stringify({ params: arr })))
+        let item = dealData(JSON.stringify({ params: arr }))
         let params = {
             cmd: 2006,
             ver: "1.0",
             dir: "03",
             timestamp,
-            msgId: timestamp,
-            data: arr
+            msgId: msgId++,
+            data: item
         }
         let topic = `/device/${product.code}/${mockId}/downward`
+        console.log(params, topic)
         client.publish(topic, JSON.stringify(params))
     }
     return (
         <div>
             <DescWrapper style={{ marginBottom: 8, width: '100%' }} desc={['WiFi蓝牙设备需先登录数联智能App，并搜索绑定需要调试的设备，蜂窝设备不需要。']}></DescWrapper>
             <div className="sim-devid">
-                <div onClick={test}>虚拟设备ID：{mockId}</div>
+                <div>虚拟设备ID：{mockId}</div>
             </div>
             <div className="modtit">模拟设备</div>
             <div className='debug-data-box'>
