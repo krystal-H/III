@@ -5,6 +5,7 @@ import stepImg from '../../../assets/images/product-regist.png';
 import AddSubScribe from './addModal'
 import EditSubScribe from './editModal'
 import { post, Paths, get } from '../../../api';
+import { DateTool } from '../../../util/util';
 import { Notification } from '../../../components/Notification'
 import ActionModal from './actionOp'
 import SubInfo from './detail'
@@ -200,7 +201,10 @@ export default function DeviceRegist() {
             title: '订阅更新时间',
             dataIndex: 'updateTime',
             key: 'updateTime',
-            render: text => <span>{text && moment(text).add(8, 'h').format('YYYY-MM-DD HH:mm:ss') || '--'}</span>
+            // render: text => <span>{text && moment(text).add(8, 'h').format('YYYY-MM-DD HH:mm:ss') || '--'}</span>
+            render: (text) => (
+                <span>{text ? DateTool.utcToDev(text) : '--'}</span>
+            )
         }, {
             title: '状态',
             dataIndex: 'pushState',
