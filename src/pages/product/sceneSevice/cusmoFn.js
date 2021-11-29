@@ -77,6 +77,8 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
     if (!params.id || !params.id.trim()) {
       delete params.id
     }
+    clearData()
+    clearData2()
     post(Paths.scenceList, params, { loading }).then((res) => {
       let arr1 = delaData(res.data.conditionFunc, true)
       let arr2 = delaData(res.data.controlFunc, false)
