@@ -13,15 +13,17 @@ import RegistModel from './regist'
 import { cloneDeep } from "lodash";
 const { Option } = Select;
 const { Step } = Steps;
+const {Search} = Input
 export default function DeviceRegist() {
     const [form] = Form.useForm();
     const [dataSource, setDataSource] = useState([])
     const [optionArr, setOptionArr] = useState([]) //产品列表
     const [newoptionArr, setNewoptionArr] = useState([]) //新产品列表
     const [selectType, setSelectType] = useState('') //产品种类
+    const [searchId, setSearchId] = useState('')
     const [countData, setCountData] = useState([
-        { label: '设备总数量', count: '--' }, 
-        { label: '已入网设备', count: '--' }, 
+        { label: '设备总数量', count: '--' },
+        { label: '已入网设备', count: '--' },
         { label: '未入网设备', count: '--' }])
 
     useEffect(() => {
@@ -67,7 +69,7 @@ export default function DeviceRegist() {
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
     useEffect(() => {
         getList()
-    }, [pager.pageIndex, pager.pageRows, selectType])
+    }, [pager.pageIndex, pager.pageRows, selectType, searchId])
     //获取列表
     const getList = (loading = true) => {
         let params = { ...pager }
@@ -237,18 +239,11 @@ export default function DeviceRegist() {
                                     }
                                 </Select>
                             </Form.Item>
-                            <Form.Item
-                                label="请输入设备ID"
-                            >
-                                <Form.Item
-                                    name='id'
-                                    noStyle
-                                >
-                                    <Input style={{ width: '350px' }} placeholder="请输入设备ID" />
-                                </Form.Item>
-                                <Button type="primary" onClick={onSearch}>
-                                    查询
-                                </Button>
+                            <Form.Item label="设备ID" name='id'>
+                                <Search placeholder="请输入设备ID" allowClear onSearch={value => {
+                                    setSearchId(value)
+                                    onSearch()
+                                }} />
                             </Form.Item>
                         </Form>
                     </div>

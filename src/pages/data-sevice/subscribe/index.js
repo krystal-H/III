@@ -24,6 +24,10 @@ export default function DeviceRegist() {
     const [tableAcVisible, setTableAcVisible] = useState(false)
     const [operate, setOperate] = useState(null)
     const [selectRow, setSelectRow] = useState({})
+
+    const [editModelVis, setEditModelVis] = useState(false)
+    const [editData, setEditData] = useState({ devicePushDataConfList: [] })
+    const [searchSubVal, setSearchSubVal] = useState('')
     const operateHandle = (type, data) => {
         setTableAcVisible(true)
         setSelectRow(data)
@@ -74,7 +78,7 @@ export default function DeviceRegist() {
     useEffect(() => { getType() }, [])
     useEffect(() => {
         getList()
-    }, [pager.pageRows, pager.pageIndex, productCount])
+    }, [pager.pageRows, pager.pageIndex, productCount, searchSubVal])
     const productChange = (val) => {
         setPager(pre => {
             let obj = JSON.parse(JSON.stringify(pre))
@@ -151,8 +155,6 @@ export default function DeviceRegist() {
         setModelVis(false)
     }
     //编辑订阅
-    const [editModelVis, setEditModelVis] = useState(false)
-    const [editData, setEditData] = useState({ devicePushDataConfList: [] })
     const openEdit = (data, loading = true) => {
         let url = Paths.subscribeDetail + '?urlConfId=' + data.urlConfId
         post(url, {}, { loading }).then((res) => {
@@ -264,7 +266,7 @@ export default function DeviceRegist() {
                                     <Option value='1'>MQTT主题订阅</Option>
                                 </Select>
                             </Form.Item>
-                            <Form.Item
+                            {/* <Form.Item
                                 label="订阅名称"
                             >
                                 <Form.Item
@@ -276,7 +278,15 @@ export default function DeviceRegist() {
                                 <Button type="primary" onClick={onSearch}>
                                     查询
                                 </Button>
+                            </Form.Item> */}
+
+                            <Form.Item label="订阅名称" name='subscription'>
+                                <Search placeholder="请输入订阅名称" allowClear onSearch={value => {
+                                    setSearchSubVal(value)
+                                    onSearch()
+                                }} />
                             </Form.Item>
+
                         </Form>
 
                     </div>

@@ -118,7 +118,6 @@ function ProjectList() {
         <div className="page-header-left">
           <Search placeholder="项目名称"
             allowClear
-            enterButton="查询"
             onSearch={value => searchProject(value)}
             style={{ width: 465, margin: '0 22px' }} />
         </div>

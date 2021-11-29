@@ -125,7 +125,6 @@ const WarningList = props => {
                 </Form.Item>
                 <Form.Item label="告警规则名称">
                     <Input.Search placeholder="请输入规则名词查找" style={{ width: 380 }}
-                        enterButton
                         allowClear
                         maxLength={20}
                         onSearch={searchRule}
@@ -253,7 +252,6 @@ const WarningConfigList = props => {
         <div className='searchrulebox'>
             <div className='comm-searchBox'>
                 <Input.Search placeholder="请输入规则名词查找"
-                    enterButton
                     allowClear
                     maxLength={20}
                     onSearch={searchRule}
