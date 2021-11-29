@@ -97,7 +97,7 @@ class SwitchTab extends Component {
   getPanel() {
     post(Paths.getPanel, {
       deviceTypeId: this.props.deviceTypeId
-    }, { loading: true }).then(res => {
+    }).then(res => {
       this.setState({
         panelPic: res.data && res.data[0] && res.data[0].page1
       })
