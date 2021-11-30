@@ -35,10 +35,15 @@ function ProtocolFn2({ nextStep, productId }, ref) {
     const [cusData, setCusData] = useState([]);
     const [standardData, setStandardData] = useState([]);
     const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
+    //新增标准功能====
+    const [isModalVisible, setIsModalVisible] = useState(false);
     //获取列表
     const getList = (loading = true) => {
         post(Paths.standardFnList, { productId }, { loading }).then((res) => {
             setStandardData(delaData(res.data.standard))
+            if(!res.data.standard.length){
+                setIsModalVisible(true)
+            }
             let data2 = delaData(res.data.custom)
             setCusData(data2)
         });
@@ -69,8 +74,7 @@ function ProtocolFn2({ nextStep, productId }, ref) {
 
         getList()
     }
-    //新增标准功能====
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    
     const closeAdd = () => {
         setIsModalVisible(false)
         Notification({
