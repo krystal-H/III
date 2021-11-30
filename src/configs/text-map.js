@@ -86,6 +86,15 @@ export const netStatus = [
     }]
 //功能定义-单位
 export const unitCollection = [{
+    "Symbol": "无",
+    "Name": "无"
+}, {
+    "Symbol": "μg/m³",
+    "Name": "不知道2"
+}, {
+    "Symbol": "mg/m³",
+    "Name": "不知道3"
+}, {
     "Symbol": "cal",
     "Name": "卡路里"
 },
@@ -343,6 +352,10 @@ export const unitCollection = [{
 }]
 //功能定义-倍数
 export const multipleCollection = [
+    {
+        value: 1,
+        label: 1
+    },
     {
         value: 10,
         label: 10
