@@ -146,10 +146,10 @@ function ProtocolFn2({ nextStep, productId }, ref) {
 
         </div>
         <div >
-            <TableCom dataSource={cusData} reFreshData={getList} type={'2'} standardData={standardData}/>
+            <TableCom dataSource={cusData} reFreshData={getList} type={'2'} standardData={standardData.concat(cusData)}/>
         </div>
         {/* 新增自定义 */}
-        {rightVisible && <NewCusmFn standardData={standardData} rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
+        {rightVisible && <NewCusmFn standardData={standardData.concat(cusData)} rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
         {/* 新增标准 */}
         {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>}
     </div>

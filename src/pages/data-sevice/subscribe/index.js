@@ -5,7 +5,6 @@ import stepImg from '../../../assets/images/product-regist.png';
 import AddSubScribe from './addModal'
 import EditSubScribe from './editModal'
 import { post, Paths, get } from '../../../api';
-import { DateTool } from '../../../util/util';
 import { Notification } from '../../../components/Notification'
 import ActionModal from './actionOp'
 import SubInfo from './detail'
@@ -25,10 +24,6 @@ export default function DeviceRegist() {
     const [tableAcVisible, setTableAcVisible] = useState(false)
     const [operate, setOperate] = useState(null)
     const [selectRow, setSelectRow] = useState({})
-
-    const [editModelVis, setEditModelVis] = useState(false)
-    const [editData, setEditData] = useState({ devicePushDataConfList: [] })
-    const [searchSubVal, setSearchSubVal] = useState('')
     const operateHandle = (type, data) => {
         setTableAcVisible(true)
         setSelectRow(data)
@@ -79,7 +74,7 @@ export default function DeviceRegist() {
     useEffect(() => { getType() }, [])
     useEffect(() => {
         getList()
-    }, [pager.pageRows, pager.pageIndex, productCount, searchSubVal])
+    }, [pager.pageRows, pager.pageIndex, productCount])
     const productChange = (val) => {
         setPager(pre => {
             let obj = JSON.parse(JSON.stringify(pre))
@@ -156,6 +151,8 @@ export default function DeviceRegist() {
         setModelVis(false)
     }
     //编辑订阅
+    const [editModelVis, setEditModelVis] = useState(false)
+    const [editData, setEditData] = useState({ devicePushDataConfList: [] })
     const openEdit = (data, loading = true) => {
         let url = Paths.subscribeDetail + '?urlConfId=' + data.urlConfId
         post(url, {}, { loading }).then((res) => {
@@ -203,10 +200,7 @@ export default function DeviceRegist() {
             title: '订阅更新时间',
             dataIndex: 'updateTime',
             key: 'updateTime',
-            // render: text => <span>{text && moment(text).add(8, 'h').format('YYYY-MM-DD HH:mm:ss') || '--'}</span>
-            render: (text) => (
-                <span>{text ? DateTool.utcToDev(text) : '--'}</span>
-            )
+            render: text => <span>{text && moment(text).add(8, 'h').format('YYYY-MM-DD HH:mm:ss') || '--'}</span>
         }, {
             title: '状态',
             dataIndex: 'pushState',
@@ -270,27 +264,12 @@ export default function DeviceRegist() {
                                     <Option value='1'>MQTT主题订阅</Option>
                                 </Select>
                             </Form.Item>
-                            {/* <Form.Item
+                            <Form.Item
                                 label="订阅名称"
+                                name='subscription'
                             >
-                                <Form.Item
-                                    name='subscription'
-                                    noStyle
-                                >
-                                    <Input style={{ width: '228px' }} />
-                                </Form.Item>
-                                <Button type="primary" onClick={onSearch}>
-                                    查询
-                                </Button>
-                            </Form.Item> */}
-
-                            <Form.Item label="订阅名称" name='subscription'>
-                                <Search placeholder="请输入订阅名称" allowClear onSearch={value => {
-                                    setSearchSubVal(value)
-                                    onSearch()
-                                }} />
+                                <Search onSearch={onSearch} style={{ width: '465px' }} />
                             </Form.Item>
-
                         </Form>
 
                     </div>

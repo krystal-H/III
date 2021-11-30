@@ -7,13 +7,12 @@ import { post, Paths, get } from '../../../api';
 // import { netStatus } from '../../../configs/text-map'
 import { DateTool, getUrlParam } from '../../../util/util';
 import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
-import { Notification } from '../../../components/Notification'
 import './index.scss'
 import AddModal from './cusmoFn';
 const { Option } = Select;
 const { Step } = Steps;
+import { Notification } from '../../../components/Notification'
 const {Search} = Input
-
 const netStatus = [{
     value: '条件', key: true
 }, {
@@ -47,7 +46,6 @@ export default function DeviceRegist() {
     //删除弹窗
     const [isDelVisible, setIsDelVisible] = useState(false)
     const [actionData, setActionData] = useState({})
-    const [funcName, setFuncName] = useState('')
     //打开删除弹窗
     const openDel = (data) => {
         setActionData(data)
@@ -116,7 +114,7 @@ export default function DeviceRegist() {
                 }
             })
         }
-    }, [selectType, funcName])
+    }, [selectType])
     //获取列表
     const getList = (loading = true) => {
         let params = {
@@ -137,9 +135,11 @@ export default function DeviceRegist() {
             onSearch(cloneDeep(arr))
         });
     }
+    //搜索
     const onSearch = (data) => {
         let val = form.getFieldsValue()
-        let arr = data ? cloneDeep(data) : cloneDeep(originData)
+        //是否通过搜索进行筛选
+        let arr = Array.isArray(data) ? cloneDeep(data) : cloneDeep(originData)
         if (typeof val.typeS == 'boolean') {
             arr = arr.filter(item => {
                 if (val.typeS == item.typeS) {
@@ -278,12 +278,11 @@ export default function DeviceRegist() {
                                     }
                                 </Select>
                             </Form.Item>
-                            <Form.Item label="功能名称" name='funcName'>
-                                <Search placeholder="请输入功能名称" allowClear 
-                                onSearch={value => {
-                                    setFuncName(value)
-                                    onSearch()
-                                }} />
+                            <Form.Item
+                                label="功能名称"
+                                name='funcName'
+                            >
+                                <Search onSearch={onSearch} style={{ width: '465px' }} placeholder="功能名称"/>
                             </Form.Item>
                         </Form>
                     </div>
