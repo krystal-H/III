@@ -118,7 +118,7 @@ export default ({
 
                     <SearchProduct productList={productList}
                         changedfunc={val => { setParams('productId', val) }}
-                        searchedFunc={val => { setParams('deviceIdParams',val); getGroupDevList() }}
+                        searchedFunc={val => { setParams('deviceUniqueIdParams',val); getGroupDevList() }}
                     >
                         <Button className='but-add' type="primary" onClick={()=>setAddVisiable(true)}>新增设备到分组</Button>
                     </SearchProduct>
@@ -164,8 +164,8 @@ export default ({
                     modalOKHandle={delOk}
                     modalCancelHandle={()=>setDelids([])}
                     title='从分组中删除'
-                    descText='即将删除设备'
-                    targetName={`${delids[0]}${delids[1]?"，...":""}`}
+                    descText='确定要删除选中的设备？'
+                    // targetName={`${delids[0]}${delids[1]?"，...":""}`}
                 />
 
 

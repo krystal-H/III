@@ -49,7 +49,7 @@ export default function ActionConfirmModal({
                 <div className="tops-content flex1">
                     {
                         descText && 
-                        <p className={descClassName}><span>{`${descText}: `}</span> <span className="mark">{targetName}</span></p>
+                        <p className={descClassName}><span>{`${descText}  `}</span> <span className="mark">{targetName}</span></p>
                     }
                     {
                         tipText && 
