@@ -195,7 +195,7 @@ export default function DeviceRegist() {
         if (selectType) {
             params.productId = selectType
         }
-        post(Paths.exportRegistFile, params).then((res) => {
+        post(Paths.exportRegistFile, params,{loading:true}).then((res) => {
             window.open(res.data)
         });
     }

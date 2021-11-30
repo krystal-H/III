@@ -252,7 +252,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
                 label="数据类型"
                 name='type'
             >
-                <Select onChange={onTypeChange}>
+                <Select onChange={onTypeChange} disabled>
                     {
                         dataOptions.map(item => (
                             <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
@@ -392,7 +392,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
                 label="数据传输类型"
                 name="accessMode"
             >
-                <Radio.Group >
+                <Radio.Group disabled>
                     <Radio value="rw">可下发可上报</Radio>
                     <Radio value="w">可下发</Radio>
                     <Radio value="r">可上报</Radio>
