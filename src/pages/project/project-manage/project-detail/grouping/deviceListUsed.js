@@ -78,7 +78,7 @@ const DevUsed = ({
                         pagination={{
                             defaultCurrent:1, 
                             total:list.length, 
-                            pageSize:3,
+                            pageSize:8,
                             onChange: getDevList ,
                             current: pageIndex,
                             showSizeChanger:false,
