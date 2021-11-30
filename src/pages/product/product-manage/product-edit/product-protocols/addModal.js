@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Modal, Button, Tabs, Table, Input, Select,Form } from 'antd';
-import { useHistory } from "react-router-dom"
+import { SearchOutlined } from '@ant-design/icons';
 import { post, Paths, get } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
 import './addModal.scss';
 import TableShow from './tableSelect'
-
+const {Search} = Input
 //处理数据
 function delaData(data) {
   let newData = []
@@ -24,7 +24,7 @@ function delaData(data) {
 export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
   const productItem = JSON.parse(sessionStorage.getItem('productItem'))
   const [form] = Form.useForm();
-  const { TabPane } = Tabs, { Search } = Input, { Option } = Select;
+  const { TabPane } = Tabs,  { Option } = Select;
   const [currentTab, setCurrentTab] = useState('1')
   const callback = (key) => {
     setCurrentTab(key);
@@ -133,16 +133,9 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
                 </Form.Item>
                 <Form.Item
                   label=""
+                  name='name'
                 >
-                  <Form.Item
-                    name='name'
-                    noStyle
-                  >
-                    <Input style={{ width: '465px' }} placeholder="输入功能点名称" />
-                  </Form.Item>
-                  <Button type="primary" onClick={onSearch}>
-                    查询
-                  </Button>
+                  <Search onSearch={onSearch} style={{ width: '465px' }} placeholder="输入功能点名称"/>
                 </Form.Item>
               </Form>
             </div>

@@ -29,21 +29,31 @@ const DevUsed = ({
         getDevList()
     }, [])
     //获取设备列表
-    const getDevList = (pageIndex=1) => {
-        console.log(999,pageIndex)
-        setListLoading(true)
-        post(Paths.getGroupSlctDev,{
-            userId,
-            deviceUniqueIdParams:searchValRef.current,
-            pageIndex,
-            pageRows:9999
-        }).then((res) => {
-            let {list,pager} = res.data || {};
-            setDataList({list,pager});
+    const getDevList = (pageIndex) => {
+
+
+
+        if(pageIndex){
+
             setPageIndex(pageIndex)
-        }).finally(()=>{
-            setListLoading(false)
-        });
+
+        }else{
+            pageIndex = 1;
+            setListLoading(true)
+            post(Paths.getGroupSlctDev,{
+                userId,
+                deviceUniqueIdParams:searchValRef.current,
+                pageIndex,
+                pageRows:9999
+            }).then((res) => {
+                let {list,pager} = res.data || {};
+                setDataList({list,pager});
+                setPageIndex(pageIndex)
+            }).finally(()=>{
+                setListLoading(false)
+            });
+
+        }
         
     }
 

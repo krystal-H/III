@@ -231,16 +231,7 @@ export default function TableCom({ dataSource, reFreshData, type, standardData =
                 showTotal: () => <span>共 <a>{IdArr.length}</a> 条</span>
             }}
         />
-        {/* 新增自定义 */}
-        {/* {1 && <NewCusmFn rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>} */}
         {/* 编辑操作 */}
-        {/* {rightEditVisible && <EditcusFn
-            rightVisible={rightEditVisible}
-            onCloseRight={onCloseRight}
-            onRefreshList={onRefreshList}
-            standardData={standardData}
-            actionData={actionData}
-            modelType={type}></EditcusFn>} */}
 
         {rightEditVisible && <EditcusFn
             rightVisible={rightEditVisible}
