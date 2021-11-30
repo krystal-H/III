@@ -23,6 +23,8 @@ const DevUsed = ({
     const [dataList, setDataList] = useState({list:[],pager:{}})
     const { list,pager } = dataList;
 
+    const [pageIndex, setPageIndex] = useState(1)
+
     useEffect(() => {
         getDevList()
     }, [])
@@ -34,10 +36,11 @@ const DevUsed = ({
             userId,
             deviceUniqueIdParams:searchValRef.current,
             pageIndex,
-            pageRows:8
+            pageRows:9999
         }).then((res) => {
             let {list,pager} = res.data || {};
             setDataList({list,pager});
+            setPageIndex(pageIndex)
         }).finally(()=>{
             setListLoading(false)
         });
@@ -64,10 +67,10 @@ const DevUsed = ({
                         loading={listLoading}
                         pagination={{
                             defaultCurrent:1, 
-                            total:pager.pageRows, 
+                            total:list.length, 
                             pageSize:8,
                             onChange: getDevList ,
-                            current: pager.pageIndex,
+                            current: pageIndex,
                             showSizeChanger:false,
                             hideOnSinglePage: true,
                         }} 
