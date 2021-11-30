@@ -50,6 +50,14 @@ function CustomerService({
             // pageRef.current = 1;
             getHistoryChat()
         }
+
+        if(showMod && !ws){//开启连接
+            newWebSocket();
+        }else if(!showMod){//关闭连接
+            closeWebsocket()
+
+        }
+
     }, [showMod])
 
     //聊天内容变化处理滚动条：非滚动加载的内容 滚动到最底端；滚动加载完成向下滚动240px的内容
@@ -134,12 +142,7 @@ function CustomerService({
     const switchOpen=()=>{
         let newShow = !showMod;
         store.dispatch(showCustomerService(newShow));
-        if(newShow && !ws){//开启连接
-            newWebSocket();
-        }else if(!newShow){//关闭连接
-            closeWebsocket()
-
-        }
+        
     }
     const sendHandle = ()=>{
         if(inputValue && /[\S]/.test(inputValue)){
