@@ -63,6 +63,14 @@
         color: #bdbebf;
         top: -8px;
       }
+      .img{
+        margin-top: 10px;
+        display: inline-block;
+        max-width:85%;
+        border: 1px solid #e1e0e4;
+        border-radius: 4px;
+        cursor: zoom-in;
+      }
     }
     .left{
       .bubble{
@@ -97,21 +105,26 @@
   .inputbox{
     position: relative;
     border-top: 2px solid #F3F3F3;
-    padding: 20px 70px 10px 16px;
+    padding: 30px 70px 10px 2px;
     height: 120px;
-    .imgbtn, .sendbtn{
+    
+    .sendbtn, .upimgbtn{
       cursor: pointer;
       position: absolute;
     }
-    .imgbtn{
-      top: 8px;
-      left: 16px;
+    .file{
+      display: none;
+    }
+    .upimgbtn{
+      display: inline-block;
       width: 20px;
       height: 20px;
+      top: 8px;
+      left: 16px;
       background: url(../../assets/images/upimg.jpg);
       background-size: 100%;
-    
     }
+    
     .sendbtn{
       width: 60px;
       line-height: 26px;
@@ -155,5 +168,25 @@
   cursor: pointer;
   // opacity: 0.05;
 
+}
+
+
+.showbigimg-maskbox{
+  position: fixed;
+  z-index: 20;
+  background-color: rgba(0, 0, 0, 0.45);
+  left: 0;right:0;
+  top: 0;bottom: 0;
+  height: 100%;
+  cursor: zoom-out;
+  img{
+    max-width: 90%;
+    cursor: initial;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    cursor: zoom-out;
+  }
 }
 
