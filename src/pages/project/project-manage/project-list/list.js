@@ -23,7 +23,7 @@ function ProjectList() {
       title: '项目名称',
       dataIndex: 'projectName',
       key: 'projectName',
-      width: 450
+      width: 350
     },
     {
       title: '项目ID',
