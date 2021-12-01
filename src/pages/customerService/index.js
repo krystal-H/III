@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { connect } from 'react-redux';
-import { Input } from 'antd';
+import { Input, Upload  } from 'antd';
 import './index.scss';
 import store from '../../store';
 import {showCustomerService} from './store/reducer'
 import { Notification } from '../../components/Notification'
 import {DateTool} from '../../util/util'
 import {post, Paths} from '../../api';
+import {UpFileToCloud} from '../../components/UpFileToCloud';
+import {CheckUpFile} from '../../components/CheckUpFile';
 
 let hostname = location.hostname ;
 if( hostname =='localhost' ){
@@ -43,6 +45,7 @@ function CustomerService({
     const [inputValue, setInputValue] = useState("")
     const [content, setContent] = useState({data:[],isscroll:false})//isscroll 区分是否滚动的方式加载出数据，决定回显数据后滚动条位置
     const {data,isscroll} = content;
+    const [bigImg, setBigImg] = useState("")
 
     useEffect(() => {
         if(showMod && pageRef.current==1){
@@ -82,7 +85,6 @@ function CustomerService({
         };
         ws.onmessage =  ({data="{}"})=> {//接收到消息
             let onemsg = JSON.parse(data)
-
             if(onemsg.code=="3002"){
                 Notification({
                     type: 'warn',
@@ -166,23 +168,53 @@ function CustomerService({
             getHistoryChat()
         }
     }
+
+    const imgChang = e=>{
+        e = e || window.event;
+        let target = e.target,
+            file = target.files[0];
+        if(!file) return false;
+        if(!CheckUpFile(target)) return false;
+        UpFileToCloud(file,(src)=>{
+            console.log(1111,src)
+            if(ws){
+                ws.send(sendMsg(`_img_${src}`))
+            }else{
+                Notification({
+                    // type: 'warn',
+                    description: '连线中......'
+                })
+            }
+        })
+        
+    }
     
     return <>
         <div className="customer-service comm-shadowbox" style={{display:showMod?'flex':'none'}}>
             <div className='tit'>客服<span className="close" onClick={switchOpen}> </span></div>
             <div className='content'  ref={containerRef} onScrollCapture={scrolHandle} >
                 {
-                    data.map(({message,senderName,time},index)=>{
+                    data.map(({message='',senderName,time},index)=>{
+                        let isimg = '';
+                        if(message.indexOf('_img_')==0){
+                            isimg = message.slice(5)
+                        }
                         return <div className={`onechat ${senderName=='客服'?'left':'right'}`}  key={index+'_'+time} >
-                                    <span className='bubble'>{message}</span>
-                                    <span className='time'>{DateTool.formatDate(time,'MM-dd hh:mm:ss',8)}</span>
-                                </div>
+                            { isimg ? <img className='img' src={isimg} onClick={ ()=>setBigImg(isimg)} /> :  
+                                    <span className='bubble'>{message}</span> 
+                            }
+                            <span className='time'>{DateTool.formatDate(time,'MM-dd hh:mm:ss',8)}</span>
+                        </div>
 
                     })
                 }
             </div>
             <div className='inputbox'>
-                {/* <span className='imgbtn'></span> */}
+                <label className='upimgbtn' htmlFor='up'></label>
+                <input className='file' id='up' type='file'
+                  data-format='gif,jpeg,jpg,png' data-maxsize={1024} onChange={imgChang}
+                  accept='.gif,.jpeg,.jpg,.png'
+                />
                 <span className='sendbtn' onClick={sendHandle}>发送</span>
                 <Input.TextArea className='textarea' showCount placeholder="请输入您的问题..." bordered={false} maxLength={200}
                     value={inputValue}
@@ -192,6 +224,12 @@ function CustomerService({
             </div>
         </div>
         <div className='customer-service-switch-show' onClick={switchOpen}> </div>
+        {
+            bigImg && <div onClick={()=>setBigImg("")} className="showbigimg-maskbox" title="点击关闭" > <img src={bigImg}/></div>
+        }
+
+
+        
     </>
 }
 
