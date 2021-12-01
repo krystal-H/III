@@ -1,11 +1,14 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import { Carousel, Button,Modal } from 'antd';
+import { Carousel, Button, Modal } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
     RightOutlined,
 } from '@ant-design/icons';
 import { post, Paths, get } from '../../../api';
+import { DateTool } from '../../../util/util';
+import store from '../../../store';
+import { showCustomerService } from '../../customerService/store/reducer'
 import moment from 'moment';
 import AddProductModal from '../../product/product-manage/addProduct/addProduct'
 import { Notification } from './../../../components/Notification';
@@ -36,6 +39,12 @@ import help2 from './../../../assets/images/overImage/help2.png';
 import help3 from './../../../assets/images/overImage/help3.png';
 import banner from './../../../assets/images/overImage/banner.png';
 import noData from './../../../assets/images/overImage/noData.png';
+
+function utcToDev(utcString) {
+    let t = moment(utcString);
+    t.add(t.utcOffset() / 60, 'h');
+    return t.format('YYYY-MM-DD');
+}
 
 export default function OverviewWrap() {
     useEffect(() => {
@@ -280,7 +289,7 @@ export default function OverviewWrap() {
         }
     }
     //未开发
-    const [showTip,setShowTip]=useState(false)
+    const [showTip, setShowTip] = useState(false)
     return (
         <div className='over-view'>
             {
@@ -341,7 +350,7 @@ export default function OverviewWrap() {
                                             <div className='over-view-productmn-content-content'>
                                                 <div>{item.productName}</div>
                                                 <div>{productStatuFilter(item.status)}</div>
-                                                <div>更新时间{moment(item.modifyTime).format('YYYY-MM-DD')}</div>
+                                                <div>更新时间：{item.modifyTime ? utcToDev(item.modifyTime) : '--'}</div>
                                             </div>
                                         </div>)
                                     })) : <div className='over-no-data'><img src={noData} /> <div>暂无产品</div></div>
@@ -431,7 +440,7 @@ export default function OverviewWrap() {
                                 </div>
                                 <div>
                                     <div>最近告警时间</div>
-                                    <div>{devThreeList.lastWarnTime}</div>
+                                    <div>{devThreeList.lastWarnTime || '--'}</div>
                                 </div>
                             </div>
                         </div>
@@ -457,7 +466,8 @@ export default function OverviewWrap() {
                                             <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.appIconLow} /></div>
                                             <div className='over-view-productmn-content-content'>
                                                 <div>{item.appName}</div>
-                                                <div className='over-view-productmn-content-content-time'>更新时间{moment(item.updateTime).format('YYYY-MM-DD')}</div>
+                                                <div className='over-view-productmn-content-content-time'>
+                                                    更新时间：{item.updateTime ? utcToDev(item.updateTime) : '--'}</div>
                                             </div>
                                         </div>)
                                     })) : <div className='over-no-data'><img src={noData} /> <div>暂无App</div></div>
@@ -571,7 +581,7 @@ export default function OverviewWrap() {
                             <div>帮助</div>
                         </div>
                         <div className='over-view-help hover-commons-unite'>
-                            <div onClick={()=>{setShowTip(true)}}>
+                            <div onClick={() => { store.dispatch(showCustomerService(true)); }}>
                                 <img src={help1} alt='' />
                                 <div>客服</div>
                             </div>

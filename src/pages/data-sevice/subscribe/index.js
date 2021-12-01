@@ -266,16 +266,9 @@ export default function DeviceRegist() {
                             </Form.Item>
                             <Form.Item
                                 label="订阅名称"
+                                name='subscription'
                             >
-                                <Form.Item
-                                    name='subscription'
-                                    noStyle
-                                >
-                                    <Input style={{ width: '228px' }} />
-                                </Form.Item>
-                                <Button type="primary" onClick={onSearch}>
-                                    查询
-                                </Button>
+                                <Search onSearch={onSearch} style={{ width: '465px' }} />
                             </Form.Item>
                         </Form>
 

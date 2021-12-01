@@ -4,7 +4,7 @@ import { Paths, post } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
 import './freeApply.scss'
 
-function FreeApplyModal({ freeApplyVisible, handleFreeApply, type, moduleName, firmwareName }) {
+function FreeApplyModal({ freeApplyVisible, handleFreeApply, handleCancel, type, moduleName, firmwareName }) {
   const productItemData = JSON.parse(sessionStorage.getItem('productItem')) || {}
   const [form] = Form.useForm()
   const [firmwareData, setFirmwareData] = useState({})
@@ -44,7 +44,7 @@ function FreeApplyModal({ freeApplyVisible, handleFreeApply, type, moduleName, f
 
   useEffect(() => {
     // 获取固件信息
-    post(Paths.showFirmware, { productId: productItemData.productId }, { loading: true })
+    post(Paths.showFirmware, { productId: productItemData.productId })
       .then(res => {
         setFirmwareData(res.data)
       })
@@ -55,7 +55,7 @@ function FreeApplyModal({ freeApplyVisible, handleFreeApply, type, moduleName, f
       title="免费申请"
       visible={freeApplyVisible}
       onOk={onOk}
-      onCancel={handleFreeApply}
+      onCancel={handleCancel}
       maskClosable={false}
       destroyOnClose={true}
       width={857}
@@ -75,7 +75,7 @@ function FreeApplyModal({ freeApplyVisible, handleFreeApply, type, moduleName, f
                 <Form.Item label="固件名称/固件Key" className="txt-color">{firmwareData.burnFileName || '-'}</Form.Item>
                 <Form.Item label="固件版本" className="txt-color">{firmwareData.burnFileVersion || '-'}</Form.Item>
                 {
-                  JSON.parse(sessionStorage.getItem('productItem')).schemeType == 1 && 
+                  JSON.parse(sessionStorage.getItem('productItem')).schemeType == 1 &&
                   firmwareData.firmwareModuleList && firmwareData.firmwareModuleList.map(item => (
                     item.firmwareFuncList && item.firmwareFuncList.map((ele, index) => (
                       <>
@@ -150,6 +150,9 @@ function FreeApplyModal({ freeApplyVisible, handleFreeApply, type, moduleName, f
             ]}>
             <Input placeholder="请输入申请数量" />
           </Form.Item>
+          {
+            productItemData.schemeType == 1 && <div className="tip-msg">免开发方案，请务必详细填写，以方便邮寄调试模组等物料。</div>
+          }
         </Form>
       </div>
     </Modal >

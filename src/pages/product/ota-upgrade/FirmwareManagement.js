@@ -257,7 +257,6 @@ export default class FirmwareManagement extends Component {
                             <span>固件包名称：</span>
                             <Search placeholder="输入升级包名称查找"
                                 className='serachinpt'
-                                enterButton
                                 maxLength={20}
                                 onChange={e => { this.changeState('deviceVersionName', e.target.value) }}
                                 onSearch={() => { this.pagerIndex(1) }}

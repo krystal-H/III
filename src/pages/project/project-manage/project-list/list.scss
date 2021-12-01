@@ -1,0 +1,25 @@
+@charset 'utf-8';
+
+#project-mgt {
+  height: 100%;
+  min-height: 520px;
+
+  .page-header {
+    height: 78px;
+    margin: 16px 0;
+    @include flex();
+    background: $GrayBgColor;
+    border-radius: 2px;
+
+    &-left {
+      @include flex(flex-start, center);
+    }
+
+    &-right {
+      padding-right: 22px;
+    }
+  }
+  .pd22 {
+    padding: 22px;
+  }
+}

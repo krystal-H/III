@@ -221,6 +221,7 @@ function Validation({ productId,developerInfo,refInstance }) {
         <div className='validation-top'>在真实设备调试的配置调试信息步骤，添加设备物理地址后，既默认此设备在clife平台注册，不受通信安全校验机制（如一机一密）的影响</div>
         <div className='validation-tab'>
             <Tabs defaultActiveKey="1" onChange={changeTab}>
+
                 <TabPane tab="真实设备调试" key="1">
                     <div className='tab-one-title'>
                         <div className='tab-one-title-left'>
@@ -243,14 +244,14 @@ function Validation({ productId,developerInfo,refInstance }) {
                             </div>
                             <div className="tablebox">
                                 <Table columns={columns} rowKey="index"
-                                dataSource={dataList}
-                                pagination={false}
-                                        onRow={r=> {
-                                            return {
-                                                onClick: e => { setAnalysisData(r.map || {}) },
-                                            };
-                                        }}
-                                        scroll={{ y: 305 }}
+                                    dataSource={dataList}
+                                    pagination={false}
+                                    onRow={r=> {
+                                        return {
+                                            onClick: e => { setAnalysisData(r.map || {}) },
+                                        };
+                                    }}
+                                    scroll={{ y: 305 }}
                                 />
                             </div>
                         </div>
@@ -265,10 +266,10 @@ function Validation({ productId,developerInfo,refInstance }) {
                         </div>
                     </div>
                 </TabPane>
-                {/* <TabPane tab="虚拟设备调试" key="2">
+                <TabPane tab="虚拟设备调试" key="2">
                     <Simulat productId={productId} serverIp={serverIp}/>
                     
-                </TabPane> */}
+                </TabPane>
             </Tabs>
         </div>
         <History historyVisiable={historyVisiable} openHistory={openHistory} />
@@ -285,21 +286,3 @@ function Validation({ productId,developerInfo,refInstance }) {
 let Component = connect(mapStateToProps, null)(Validation)
 
 export default forwardRef( (props,ref) => <Component  {...props}  refInstance={ref} />   )
-
-
-
-// stage('上传制品库') {
-//     steps {
-//        dir(env.BUILD_DIR) {
-//           codingArtifactsGeneric(files: '**/**', zip: '${GENERIC_NAME}.zip', version: '${GIT_BUILD_REF}', repoName: '${REPO_NAME}', withBuildProps: true)
-//       }
-//     }
-//   }
-
-
-  
-//   stage('上传制品库') {
-//     steps {
-//       codingArtifactsGeneric(workspace: '${WORKSPACE}/${BUILD_DIR}', files: '**/**', zip: '${GENERIC_NAME}.zip', version: '${GIT_BUILD_REF}', repoName: '${REPO_NAME}', withBuildProps: true)
-//     }
-//   }

@@ -123,7 +123,6 @@ export default class Application extends PureComponent {
                     <div className="application-search">
                         <div className="application-header-input-wrapper comm-searchBox">
                             <Search placeholder="请输入应用名称查找"
-                                enterButton
                                 allowClear
                                 maxLength={100}
                                 onSearch={value => this.searchApplication(value)} />

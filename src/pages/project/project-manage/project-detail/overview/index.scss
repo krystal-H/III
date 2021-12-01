@@ -1,0 +1,45 @@
+@charset 'utf-8';
+
+#project-detail-info {
+  .wrap-item {
+    .item-title {
+      overflow: hidden;
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: bold;
+      font-size: 14px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .item-content {
+      display: flex;
+
+      .item {
+        width: 400px;
+        margin-top: 16px;
+        width: 400;
+        display: flex;
+        align-items: center;
+        color: rgba(0, 0, 0, 0.85);
+        font-weight: normal;
+        font-size: 14px;
+
+        .label {}
+
+        .name {
+          .copy {
+            text-decoration-line: underline;
+            cursor: pointer;
+            margin-left: 15px;
+          }
+        }
+      }
+    }
+  }
+
+  .edit-table-btn {
+    width: 100%;
+    margin-top: 14px;
+    border-style: dashed;
+  }
+}

@@ -163,7 +163,8 @@ class AccountFlowTemplate extends Component {
         this.countDown()
 
         post(Paths.resetAuth,{
-            type:cType
+            type:cType,
+            email:this.state.email,
         }).then( data => {
             this.changeType({
                 type:1

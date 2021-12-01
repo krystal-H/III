@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Tooltip, Empty,Modal } from 'antd'
+import { Table, Tooltip, Empty, Modal } from 'antd'
 import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { Paths, post, get } from '../../../../../api'
 import ReplaceModule from './replaceModule'
@@ -12,6 +12,18 @@ import "./index.scss"
 class Hardware extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            replaceModalVisible: false,  // 更换模组
+            freeApplyVisible: false, // 免费申请
+            modifyFirmwareVisible: false, // 修改固件
+            replaceFirmwareVisible: false, // 更换固件
+            dataSource: [], // 固件列表
+            allInfo: {}, // 返回信息
+            currentModuleId: '', // 模组id
+            firmwareId: '', // 修改固件id
+            productItemData: JSON.parse(sessionStorage.getItem('productItem')) || {},
+            officeVis: false
+        }
         this.columns = [
             {
                 title: '固件名称/固件Key',
@@ -37,30 +49,16 @@ class Hardware extends Component {
                 title: '操作',
                 render: (text, record, index) => {
                     if (this.state.productItemData.schemeType === 1) {
-                        return <div className="table-operation" onClick={(e) => this.modifyFirmware(record.id, e)}> 修改固件 </div>
+                        return <div className="table-operation" onClick={(e) => this.modifyFirmware(record.id, e)}>修改固件</div>
                     } else if (this.state.productItemData.schemeType === 2) {
-                        return <div className="table-operation" onClick={(e) => this.goReplaceFirmware(record.value2, e)}>更换固件</div>
+                        return <div className="table-operation" onClick={(e) => this.goReplaceFirmware(record.id, e)}>更换固件</div>
                     }
                 }
             }
         ]
-        this.state = {
-            replaceModalVisible: false,  // 更换模组
-            freeApplyVisible: false, // 免费申请
-            modifyFirmwareVisible: false, // 修改固件
-            replaceFirmwareVisible: false, // 更换固件
-            dataSource: [], // 固件列表
-            allInfo: {}, // 返回信息
-            currentModuleId: '', // 模组id
-            firmwareId: '', // 修改固件id
-            productItemData: JSON.parse(sessionStorage.getItem('productItem')) || {},
-            officeVis: false
-        }
     }
 
     componentDidMount() {
-        // console.log('this.props.onRef---',this.props.onRef)
-        // this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
         if (this.state.productItemData.moduleId != -1) {
             this.getMoudleInfo(this.state.productItemData.moduleId)
         }
@@ -85,7 +83,6 @@ class Hardware extends Component {
     }
 
     onFinish = (values) => {
-        console.log('验证是否通过:', values);
         this.props.nextStep()
     }
 
@@ -97,9 +94,11 @@ class Hardware extends Component {
         })
     }
 
-    // 更换固件
-    goReplaceFirmware = () => {
-        this.setState({ replaceFirmwareVisible: true })
+    // 更换固件id
+    goReplaceFirmware = (id) => {
+        this.setState({ firmwareId: id }, () => {
+            this.setState({ replaceFirmwareVisible: true })
+        })
     }
 
     // 弹窗确定
@@ -107,8 +106,14 @@ class Hardware extends Component {
         console.log('确定选中的id', id)
         if (type === 'module') {
             this.getMoudleInfo(id.join(''))
+            this.setState({ replaceModalVisible: false })
+        } else if (type === 'firmware') {
+            if (this.state.productItemData.moduleId != -1) {
+                this.getMoudleInfo(this.state.productItemData.moduleId)
+            }
+            this.setState({ replaceFirmwareVisible: false })
         }
-        this.setState({ replaceModalVisible: false })
+
     }
 
     // 弹窗取消
@@ -210,7 +215,8 @@ class Hardware extends Component {
                         <div className="module-tip mar-t-b">已生成固件</div>
                         {
                             this.state.productItemData.schemeType != 3 && allInfo.firmwareDefList &&
-                            <Table rowKey="id"
+                            <Table
+                                rowKey="id"
                                 columns={this.columns}
                                 dataSource={dataSource}
                                 pagination={false}
@@ -247,7 +253,7 @@ class Hardware extends Component {
                                         <div className="blue">
                                             <span onClick={() => this.downloadData()}>下载MCU开发资料包</span>
                                             <Tooltip
-                                                title={'包含MCU SDK、串口协议、模组调试助手等。SDK根据您产品的基本信息和功能定义生成对应的模组代码。若您的产品信息和功能定义发生变化，请重新生成。重新生成。'}
+                                                title={'包含MCU SDK、串口协议、模组调试助手等。SDK根据您产品的基本信息和功能定义生成对应的模组代码。若您的产品信息和功能定义发生变化，请重新生成。'}
                                                 placement="top">
                                                 <QuestionCircleOutlined className="tooltip-icon" />
                                             </Tooltip>
@@ -309,6 +315,7 @@ class Hardware extends Component {
                         firmwareName={allInfo.burnFileName || ''}
                         moduleName={allInfo.moduleName || ''}
                         freeApplyVisible={freeApplyVisible}
+                        handleCancel={() => this.setState({ freeApplyVisible: false })}
                         handleFreeApply={() => {
                             this.setState({ freeApplyVisible: false })
                             this.getMoudleInfo(currentModuleId)
@@ -321,6 +328,7 @@ class Hardware extends Component {
                         modifyFirmwareVisible={modifyFirmwareVisible}
                         firmwareId={firmwareId}
                         productId={this.props.productId}
+                        moduleName={allInfo.moduleName}
                         handleOk={() => {
                             this.setState({ modifyFirmwareVisible: false })
                             this.getMoudleInfo(currentModuleId)
@@ -330,18 +338,26 @@ class Hardware extends Component {
                         }} />
                 }
                 {/* 更换固件 */}
-                {replaceFirmwareVisible &&
+                {
+                    replaceFirmwareVisible &&
                     <ReplaceModule
                         title="更换固件"
                         opeType="firmware"
                         desc="clife为您提供经检测认证的通用固件，会直接在您采购的模组内烧录完成，并自动分配设备编码。通讯模组通用固件包含连接clife和数据透传功能。产品功能固件需要您自行研发。"
                         replaceModalVisible={replaceFirmwareVisible}
-                        handleOk={this.handleModalOk}
+                        firmwareId={firmwareId}
+                        productId={this.props.productId}
+                        handleOk={(id) => this.handleModalOk(id, 'firmware')}
                         handleCancel={this.handleModalCancel}
-                        selectedId={currentModuleId} />
+                        moduleId={currentModuleId} />
                 }
                 {
-                    officeVis && <Modal title="安装“数联智能”App" width='470px' visible={officeVis} footer={null} onCancel={() => this.setState({ officeVis: false })}>
+                    officeVis &&
+                    <Modal title="安装“数联智能”App"
+                        width='470px'
+                        visible={officeVis}
+                        footer={null}
+                        onCancel={() => this.setState({ officeVis: false })}>
                         <div className='down-office-modal' >
                             <img src={demoAppOfficial} alt="pic" />
                             <div>手机扫描二维码下载</div>

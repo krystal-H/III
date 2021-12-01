@@ -6,12 +6,13 @@ import { cloneDeep } from 'lodash';
 import { post, Paths, get } from '../../../api';
 // import { netStatus } from '../../../configs/text-map'
 import { DateTool, getUrlParam } from '../../../util/util';
-import { Notification } from '../../../components/Notification';
 import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
 import './index.scss'
 import AddModal from './cusmoFn';
 const { Option } = Select;
 const { Step } = Steps;
+import { Notification } from '../../../components/Notification'
+const {Search} = Input
 const netStatus = [{
     value: '条件', key: true
 }, {
@@ -89,8 +90,10 @@ export default function DeviceRegist() {
                     }
                 })
             } else {
-                setSelectType(productList[0].productId)
-                setProductName(productList[0].productName)
+                if (productList.length) {
+                    setSelectType(productList[0].productId)
+                    setProductName(productList[0].productName)
+                }
             }
             setOptionArr(productList)
         });
@@ -132,9 +135,11 @@ export default function DeviceRegist() {
             onSearch(cloneDeep(arr))
         });
     }
+    //搜索
     const onSearch = (data) => {
         let val = form.getFieldsValue()
-        let arr = data ? cloneDeep(data) : cloneDeep(originData)
+        //是否通过搜索进行筛选
+        let arr = Array.isArray(data) ? cloneDeep(data) : cloneDeep(originData)
         if (typeof val.typeS == 'boolean') {
             arr = arr.filter(item => {
                 if (val.typeS == item.typeS) {
@@ -154,6 +159,13 @@ export default function DeviceRegist() {
     //自定义
     const [modelVis, setModelVis] = useState(false)
     const openRegist = () => {
+        if(!optionArr.length){
+            Notification({
+                type: 'warn',
+                description: '暂无已发布的产品',
+            });
+            return
+        }
         setModelVis(true)
     }
     const cancelModel = () => {
@@ -268,20 +280,13 @@ export default function DeviceRegist() {
                             </Form.Item>
                             <Form.Item
                                 label="功能名称"
+                                name='funcName'
                             >
-                                <Form.Item
-                                    name='funcName'
-                                    noStyle
-                                >
-                                    <Input style={{ width: '465px' }} placeholder="功能名称" />
-                                </Form.Item>
-                                <Button type="primary" onClick={() => { onSearch() }}>
-                                    查询
-                                </Button>
+                                <Search onSearch={onSearch} style={{ width: '465px' }} placeholder="功能名称"/>
                             </Form.Item>
                         </Form>
                     </div>
-                    <Button type="primary" onClick={openRegist}>自定义</Button>
+                    <Button type='primary'  disabled={optionArr.length ? false : true}  onClick={openRegist}>自定义</Button>
                 </div>
                 <Table rowKey='unikey' dataSource={dataSource} columns={columns} />
             </div>

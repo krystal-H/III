@@ -35,10 +35,15 @@ function ProtocolFn2({ nextStep, productId }, ref) {
     const [cusData, setCusData] = useState([]);
     const [standardData, setStandardData] = useState([]);
     const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
+    //新增标准功能====
+    const [isModalVisible, setIsModalVisible] = useState(false);
     //获取列表
     const getList = (loading = true) => {
         post(Paths.standardFnList, { productId }, { loading }).then((res) => {
             setStandardData(delaData(res.data.standard))
+            if(!res.data.standard.length){
+                setIsModalVisible(true)
+            }
             let data2 = delaData(res.data.custom)
             setCusData(data2)
         });
@@ -69,8 +74,7 @@ function ProtocolFn2({ nextStep, productId }, ref) {
 
         getList()
     }
-    //新增标准功能====
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    
     const closeAdd = () => {
         setIsModalVisible(false)
         Notification({
@@ -146,10 +150,10 @@ function ProtocolFn2({ nextStep, productId }, ref) {
 
         </div>
         <div >
-            <TableCom dataSource={cusData} reFreshData={getList} type={'2'} standardData={standardData}/>
+            <TableCom dataSource={cusData} reFreshData={getList} type={'2'} standardData={standardData.concat(cusData)}/>
         </div>
         {/* 新增自定义 */}
-        {rightVisible && <NewCusmFn standardData={standardData} rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
+        {rightVisible && <NewCusmFn standardData={standardData.concat(cusData)} rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
         {/* 新增标准 */}
         {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>}
     </div>

@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Icon as LegacyIcon } from '@ant-design/compatible';
+// import { Icon as LegacyIcon } from '@ant-design/compatible';
 import { Tooltip } from 'antd';
 import propsType from 'prop-types';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 /**
  * 为label添加问号Icon和提示
@@ -10,7 +11,7 @@ const LabelTip = ({label, tip, tipPlacement = "top", icon, colon = false,}) => {
     return (
         <span>
             <span>{label}</span>&nbsp;
-            <Tooltip title={tip} placement={tipPlacement}><LegacyIcon type={icon || "question-circle-o"} /></Tooltip>
+            <Tooltip title={tip} placement={tipPlacement}><QuestionCircleOutlined type={ "question-circle-o"} /></Tooltip>
             &nbsp;
             <span>
                 {

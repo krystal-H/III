@@ -3,6 +3,7 @@ import { Form, Input, Button, Space, Select, Radio, Tabs, Drawer } from 'antd';
 import { UploadFileHooks } from '../../../../components/upload-file';
 import { post, Paths, get } from '../../../../api';
 import LabelVisible from '../../../../components/form-com/LabelVisible';
+import { DateTool } from '../../../../util/util';
 import './titleSet.scss'
 export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
     let productItem = {}
@@ -110,13 +111,6 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                         ]}
                     >
                         <span>{productItem.brandName}</span>
-                        {/* <Select  >
-                            {
-                                optionArr.map(item => {
-                                    return (<Select.Option value={item.brandId} key={item.brandId}>{item.fullName}</Select.Option>)
-                                })
-                            }
-                        </Select> */}
 
                     </Form.Item>
                     <Form.Item
@@ -146,6 +140,11 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     <Form.Item
                         label="产品图片"
                         name='productIcon'
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
                     >
                         <UploadFileHooks
                             ref={oneRef}
@@ -159,7 +158,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     </Form.Item>
                     <Form.Item
                         label="更新时间"
-                    ><span>{productItem.modifyTime}</span>
+                    ><span>{productItem.modifyTime && DateTool.utcToDev(productItem.modifyTime)}</span>
                     </Form.Item>
                 </Form>
             </div>

@@ -19,7 +19,7 @@ export function UpFileToCloud (file,backfunc,index,timeout=1000*30) {
     }
     parameterobj.file = file;
 
-    post(Paths.upFileUrl,parameterobj,{needFormData:true,loading:true},{timeout}).then((model) => {
+    post(Paths.upFileUrl,parameterobj,{needFormData:true},{timeout}).then((model) => {
         if(model.code==0){
            let src = model.data.url;
            backfunc(src,index);

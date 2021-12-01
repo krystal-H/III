@@ -30,6 +30,7 @@ let Paths = {
     cancelAccount : '/common/cancelAccount',
     withdraw : '/common/withdraw',
     getGroupMenuList: '/common/getMenus',//获取账号权限菜单
+    customerServiceHistory: '/support/getHistory',//客服历史信息
 
     /* 产品信息 */
     getProductList: '/product/listAllProductAndAccreditInfo',
@@ -80,6 +81,9 @@ let Paths = {
     saveFirmwareSetting: '/firmware/config/setting', // 保存固件信息
     freeApplyModule: '/module/apply/create', // 免费申请模组
     showFirmware: '/product/dev/show/firmware/config', // 免费申请固件信息
+    getDevFirmwareList: '/firmware/list/moduleId', // 获取模组固件列表
+    saveChooseFirmware: '/product/scheme/update', // 保存更换的固件
+
 
     // 5.xAPP-应用管理
     getAppInfoList: '/appInfoManage/getAppInfoList', // app应用列表
@@ -401,19 +405,14 @@ let Paths = {
     retryByTaskIdForDevice:'/remote/config/device/task/retry',
     getReceiveMsgForDevice:'/remote/config/device/task/getReceiveMsg',
 
-    //设备分组
-    getGroupList:'/deviceGroup/getDeviceGroupList',
-    getGroupListAuth:'/group/getGroupList',
-    updateGroup:'/deviceGroup/addOrUpdate',
-    deleteGroup:'/deviceGroup/deleteGroup',
-    getGroupDetail:'/deviceGroup/getDeviceGroupInfo',
-    getGroupDeviceList:'/deviceGroup/getGroupDeviceList',
-    addGroupDevice:'/deviceGroup/groupRelaDevice',
-    getGroupSlctDev:'/deviceGroup/getRelaDeviceList',
-    delGroupDevice:'/deviceGroup/groupDeleteRelaDevice',
-    getCreateProduct:'/prod/getCreateProduct',
-
-    groupUpDevice:'/deviceGroup/importDevices',  
+    //项目-设备分组
+    getGroupList:'/projectGroup/getProjectGroupList',
+    updateGroup:'/projectGroup/saveProjectGroup',
+    deleteGroup:'/projectGroup/deleteProjectGroup',
+    getGroupDeviceList:'/projectGroup/getGroupDeviceList',
+    getGroupSlctDev:'/projectDevice/getDeviceBindList',
+    delGroupDevice:'/projectGroup/deleteGroupDevice',
+    addGroupDevice:'/projectGroup/addGroupDevice',
     
     // 项目管理
     getProjectList:'/project/getList',    
@@ -466,6 +465,7 @@ let Paths = {
 
     //OTA升级
     otaDevVersionList:'/firmware/productFirmware/getList',
+    otaProDevVersionList:'/firmware/productFirmware/getProductFirmwareList',
     otaGetExtVersion:'/device/version/5/getExtVersion',
     otaDeleteVer:'/device/version/5/delete',
 
@@ -532,6 +532,9 @@ let Paths = {
     proReledInfo:'/product/detail',//设备基本详情
     getProductPlus:'/productManage/getProductExtendList',//产品下拉带验证方式
     exportRegistFile:'/deviceRegister/export',//导出设备注册文件
+    replayRegistFile:'/deviceRegister/registerDevice',//设备注册-一机一密-申请下载数量
+    downRegistFlie:'/deviceRegister/exportDeviceApply',//设备注册-一机一密-下载
+    registerTable:'/deviceRegister/deviceApplyList',//设备注册-一机一密-文件列表
     
 
     //确定面板接口
@@ -560,6 +563,34 @@ let Paths = {
     saveDeviceRemoset:'/remoteConfig/device/save',//保存单个设备的远程配置任务
     addDeviceRemoset:'/remoteConfig/product/submit',//提交单个产品的远程配置任务
     excelDevTask:'/remoteConfig/device/submit',//执行设备下的任务
+
+    //项目列表
+    projectList:'/projectInfo/listByPage',
+
+    // 项目新增/编辑
+    saveProjectInfo: '/projectInfo/saveProjectInfo',
+
+    // 项目详情-api列表
+    getProjectApiList: '/projectDetail/getProjectApiList',
+    // 项目详情-api调试
+    debugAPI: '/projectDetail/debugApiInterface',
+
+    //项目详情-概述
+    projectInfoOverview:'/projectDetail/getProjectAuth',// 项目详情-概述
+    projectWhiteList:'/projectDetail/getProjectWhiteList',//项目详情-白名单-列表
+    projectWhiteDel:'/projectDetail/delProjectWhite',//项目详情-白名单-删除
+    projectWhiteSave:'/projectDetail/saveProjectWhite',//项目详情-白名单-新增/保存
+    projectSavePS:'/projectDetail/setPassword',//设置密码
+    //项目详情-设备
+    projectInfoBatchList:'/projectDevice/getProjectBatch',//项目详情-设备-查询项目批次列表
+    projectInfoDevlist:'/projectDevice/getProjectDeviceList',// 项目详情-设备-查询项目设备列表
+    projectImportFile:'/projectDevice/importDevice',//项目详情-设备-导入设备
+    projectSaveFile:'/projectDevice/saveDevice',//项目详情-设备-导入设备-保存
+    projectBatchInfo:'/projectDevice/getProjectBatchDetail',//项目详情-设备-批次-明细
+    projectDelDev:'/projectDevice/deleteDeviceList',//项目详情-设备-删除设备列表
+    projectRemoveDev:'/projectDevice/unbind',//项目详情-设备-移除绑定
+    projectupdateGroup:'/projectGroup/updateGroupDevice',//项目详情-设备-修改设备分组
+    projectGroupList:"/projectGroup/getGroupList",//详情-设备-获取分组列表下拉
 };
 
 // 拼接 urlPrefix
