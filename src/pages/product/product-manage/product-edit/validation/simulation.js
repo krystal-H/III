@@ -31,7 +31,7 @@ export default ({ productId }) => {
     //开始调试
     const starLink = () => {
         client && client.end()
-        post(Paths.getMockDeviceId, { productId, account: formBar.getFieldValue('account') }, { needFormData: true }).then(data => {
+        post(Paths.getMockDeviceId, { productId, account: formBar.getFieldValue('account') }, { needFormData: true },{loading:true}).then(data => {
             let dataSource = data.data.data
             // dataSource.mqttUrl = 'tcp://10.6.14.1:1883'
             setMockId(dataSource.id)
