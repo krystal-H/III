@@ -206,7 +206,7 @@ class SetupProduct extends Component {
         <Form.Item
           label="配网方式"
           name="netTypeId"
-          rules={[{ required: true, message: '请选择配网方式！' }]}>
+          rules={[{ required: true, message: '请选择配网方式' }]}>
           <Select>
             {
               networkList && networkList.map(item => (
