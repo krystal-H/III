@@ -138,7 +138,9 @@ export default ({ productId }) => {
         let url = data.mqttUrl + '/mqtt'
         url = url.replace('tcp', 'wss')
         url = url.replace('1883', '8084')
-        window.open(url.replace('wss', 'https'))
+        if(window.location.hostname !== 'open.clife.cn'){
+            window.open(url.replace('wss', 'https'))
+        }
         client = mqtt.connect(url, options)
         subMessAge(data)
     }
