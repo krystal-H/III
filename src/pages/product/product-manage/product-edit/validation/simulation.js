@@ -297,6 +297,7 @@ export default ({ productId }) => {
     //重置
     const resetAll = () => {
         formBar.resetFields();
+        setConnectStatus(null)
         client && client.end()
         setPayload([])
     }
@@ -305,6 +306,7 @@ export default ({ productId }) => {
             <DescWrapper style={{ marginBottom: 8, width: '100%' }} desc={['WiFi蓝牙设备需先登录数联智能App，并搜索绑定需要调试的设备，蜂窝设备不需要。']}></DescWrapper>
             <div className="sim-devid">
                 <div style={{ marginRight: '20px' }} >虚拟设备ID：{mockId || '--'}</div>
+                <div style={{ marginRight: '20px' }}>连接状态：{connectStatus === 'Connected' ? '连接成功' : '断线'}</div>
                 <Form
                     form={formBar}
                     layout='inline'
