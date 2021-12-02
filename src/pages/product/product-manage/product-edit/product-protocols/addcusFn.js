@@ -801,7 +801,7 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                             }
                         }
                     ]}>
-                    <Input type='number' />
+                    <Input type='number' placeholder='可为空'/>
                 </Form.Item>
                 <Form.Item
                     label='数值间隔'
@@ -825,7 +825,7 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                     label="默认值"
                     name='default'
                 >
-                    <Select allowClear>
+                    <Select allowClear placeholder='可为空'>
                         {
                             Object.keys(sentData.dataType.specs).map(item => (
                                 <Select.Option key={item} value={item}>{sentData.dataType.specs[item]}</Select.Option>
@@ -859,7 +859,7 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                         label="默认值"
                         name='default'
                     >
-                        <Select allowClear>
+                        <Select allowClear placeholder='可为空'>
                             {
                                 Object.keys(sentData.dataType.specs).map(item => (
                                     <Select.Option key={item} value={item}>{sentData.dataType.specs[item]}</Select.Option>
@@ -876,7 +876,7 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                     label="默认值"
                     name='default'
                 >
-                    <Input />
+                    <Input placeholder='可为空'/>
                 </Form.Item></>
         }
         return ''
