@@ -62,7 +62,7 @@ export default ({productList,changedfunc,searchedFunc,children})=> {
                     })}
                 </Select>
                 <Input.Search 
-                    enterButton maxLength={30} 
+                    maxLength={30} 
                     placeholder="请输入设备ID查询" 
                     onSearch={searchedFunc} 
                     style={{width: 250}}
