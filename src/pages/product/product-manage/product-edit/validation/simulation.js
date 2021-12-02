@@ -18,6 +18,7 @@ export default ({ productId }) => {
     // const [client, setClient] = useState(null);
     const [connectStatus, setConnectStatus] = useState(null);//连接状态
     const [optionData, setOptionData] = useState([])//物模型
+    const [originSource, setOriginSource] = useState({})//物模型
     const [qrcodeUrl, setQrcodeUrl] = useState(null);//二维码
     const [payload, setPayload] = useState([])
     useEffect(() => {
@@ -31,7 +32,7 @@ export default ({ productId }) => {
     const starLink = () => {
         post(Paths.getMockDeviceId, { productId, account: formBar.getFieldValue('account') }, { needFormData: true }).then(data => {
             let dataSource = data.data.data
-            // dataSource.mqttUrl = 'tcp://10.6.14.1:1883'
+            dataSource.mqttUrl = 'tcp://10.6.14.1:1883'
             setMockId(dataSource.id)
             setConnectData(dataSource)
             let obj = {
@@ -50,7 +51,17 @@ export default ({ productId }) => {
                     return item
                 }
             })
+            let data2 = res.data.standard.concat(res.data.custom).filter(item => {
+                if (item.funcType === "properties") {
+                    return item
+                }
+            })
+            let obj = {}
+            data2.forEach(item => {
+                obj['dp' + item.dataPointId] = item
+            })
             setOptionData(data)
+            setOriginSource(obj)
         });
     }
     //客户端
@@ -88,7 +99,7 @@ export default ({ productId }) => {
             setPayload(pre => {
                 let dataArr = cloneDeep(pre)
                 let item = JSON.parse(decrypted)
-                console.log(item,'收到的数据')
+                console.log(item, '收到的数据')
                 dataArr.push({ 下发: item })
                 return dataArr
             })
@@ -101,7 +112,7 @@ export default ({ productId }) => {
             devMac: source.physicalAddr,
             profileVer: '0'
         }
-        params222 = JSON.stringify( params222)
+        params222 = JSON.stringify(params222)
         console.log(JSON.stringify(params222))
         let timestamp = new Date().getTime()
         let key1 = CryptoJS.enc.Hex.parse(source.deviceSecret)
@@ -138,7 +149,7 @@ export default ({ productId }) => {
         let url = data.mqttUrl + '/mqtt'
         url = url.replace('tcp', 'wss')
         url = url.replace('1883', '8084')
-        if(window.location.hostname !== 'open.clife.cn'){
+        if (window.location.hostname !== 'open.clife.cn') {
             window.open(url.replace('wss', 'https'))
         }
         client = mqtt.connect(url, options)
@@ -185,6 +196,46 @@ export default ({ productId }) => {
         let encrypted = CryptoJS.AES.encrypt(srcs, key1, { iv: iv1, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
         return encrypted.toString()
     }
+    //回显数据
+    const recoverData = () => {
+        let payloads = cloneDeep(payload)
+        payloads = payloads.filter(item => {
+            let key = Object.keys(item)[0]
+            if (Object.keys(item[key]).length === 1) {
+                return item
+            }
+        })
+        let finialyArr = []
+        function getOrigin(arrs) {
+            let showArr = []
+            arrs.forEach(item => {
+                for (let key in item) {
+                    let itemOri = originSource['dp' + key]
+                    let itemObj = {}
+                    if (itemOri.funcParamList[0].dataTypCN === "布尔" || itemOri.funcParamList[0].dataTypCN === "枚举") {
+                        itemObj[itemOri.funcName] = itemOri.funcParamList[0].propertyMap[item[key]]
+                    } else {
+                        itemObj[itemOri.funcName] = item[key]
+                    }
+                    showArr.push(itemObj)
+                }
+            })
+            return showArr
+        }
+        payloads.forEach(item => {
+            let obj = {}
+            for (let key in item) {
+                if (key === '下发') {
+                    obj['下发'] = getOrigin(item[key].params)
+                } else if (key === '上报') {
+                    obj['上报'] = getOrigin(item[key].params)
+                }
+                finialyArr.push(obj)
+            }
+        })
+        return finialyArr
+
+    }
     //上报
     const startSub = () => {
         if (connectStatus != 'Connected') {
@@ -201,7 +252,7 @@ export default ({ productId }) => {
             }
         }
         let timestamp = new Date().getTime()
-        let item = dealData(JSON.stringify( arr ))
+        let item = dealData(JSON.stringify({ params: arr }))
         let params = {
             cmd: 2006,
             ver: "1.0",
@@ -212,10 +263,9 @@ export default ({ productId }) => {
         }
         let topic = `/device/${product.code}/${mockId}/upward`
         client.publish(topic, JSON.stringify(params))
-        console.log(item,'item')
         setPayload(pre => {
             let dataArr = cloneDeep(pre)
-            dataArr.push({ 上报: arr })
+            dataArr.push({ 上报: { params: arr } })
             return dataArr
         })
     }
@@ -254,12 +304,12 @@ export default ({ productId }) => {
         <div>
             <DescWrapper style={{ marginBottom: 8, width: '100%' }} desc={['WiFi蓝牙设备需先登录数联智能App，并搜索绑定需要调试的设备，蜂窝设备不需要。']}></DescWrapper>
             <div className="sim-devid">
-                <div style={{ marginRight: '20px' }}>虚拟设备ID：{mockId || '--'}</div>
+                <div style={{ marginRight: '20px' }} >虚拟设备ID：{mockId || '--'}</div>
                 <Form
                     form={formBar}
                     layout='inline'
                 >
-                    <Form.Item label="配置调试信息" tooltip="55" name='account'>
+                    <Form.Item label="配置调试信息" tooltip="数联智能App登录账号" name='account'>
                         <Input placeholder='请输入数联智能App登录账号' style={{ width: '250px' }} />
                     </Form.Item>
                     <Form.Item >
@@ -274,10 +324,10 @@ export default ({ productId }) => {
                 <div className='databox'>
                     <div className='top'>
                         <Form form={form} labelAlign='right' labelCol={{
-                            span: 6,
+                            span: 8,
                         }}
                             wrapperCol={{
-                                span: 18,
+                                span: 16,
                             }}>
                             {
                                 optionData.map(item => {
@@ -309,7 +359,7 @@ export default ({ productId }) => {
             <div className="modtit">通信日志</div>
             <div className="logbox">
                 {
-                    payload && <ObjectView data={payload} /> || "无数据"
+                    payload && <ObjectView data={recoverData(payload)} />
                 }
             </div>
 
