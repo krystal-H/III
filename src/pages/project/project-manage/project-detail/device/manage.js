@@ -4,6 +4,7 @@ import { post, Paths } from '../../../../../api';
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal'
 import { cloneDeep } from 'lodash'
 import { DateTool } from '../../../../../util/util'
+const { Search } = Input
 function InfoModal({ baseInfo, projectId }, ref) {
     const [form] = Form.useForm();
     const [deletevisible, setDeletevisible] = useState(false)
@@ -100,16 +101,9 @@ function InfoModal({ baseInfo, projectId }, ref) {
                     <Form form={form} layout='inline' >
                         <Form.Item
                             label='批次名称'
+                            name='batchName'
                         >
-                            <Form.Item
-                                name='batchName'
-                                noStyle
-                            >
-                                <Input style={{ width: '190px' }} placeholder="请输入批次名称" />
-                            </Form.Item>
-                            <Button type="primary" onClick={onSearch}>
-                                查询
-                            </Button>
+                            <Search onSearch={onSearch} style={{ width: '265px' }} placeholder="请输入批次名称" />
                         </Form.Item>
                     </Form>
 

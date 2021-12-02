@@ -45,7 +45,7 @@ export default function DeviceInfo({ baseInfo, projectId }) {
     return (<div id='project-detail-info'>
         <div className='wrap-item'>
             <div className='item-title'>
-                <span>设备信息</span>
+                <span>项目账号</span>
             </div>
             <div className='item-content'>
                 <div className='item'>
