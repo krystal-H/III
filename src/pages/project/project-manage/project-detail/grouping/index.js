@@ -106,7 +106,6 @@ export default class DeviceGroup extends Component {
                 <div className='searchbox'>
                     <div className='comm-searchBox'>
                         <Input.Search placeholder="请输入分组名查找"
-                            enterButton
                             maxLength={20}
                             onSearch={value => this.searchGroup(value)} 
                         />

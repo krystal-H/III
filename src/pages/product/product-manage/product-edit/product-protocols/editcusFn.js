@@ -36,13 +36,13 @@ export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList,
     //服务事件功能名称下拉
     const standardDatas = useMemo(() => {
         let arr = standardData.filter(item => {
-            if (item.funcType == 'properties') {
+            if (item.funcType === 'properties') {
                 return item
             }
         })
         return arr
     }, [])
-    const originData = JSON.parse(JSON.stringify(actionData))
+    const originData = cloneDeep(actionData)
     const { TabPane } = Tabs;
     useEffect(() => {
     }, [])
@@ -73,7 +73,7 @@ export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList,
         data.content.standard = modelType == 1 ? true : false
         data.content = JSON.stringify(data.content)
 
-        post(Paths.PhysicalModelAction, data).then((res) => {
+        post(Paths.PhysicalModelAction, data, { loading: true }).then((res) => {
             onRefreshList()
         });
     }
@@ -125,7 +125,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
         try {
             let value = await form.validateFields()
             // 验证通过后进入
-            value = JSON.parse(JSON.stringify(value))
+            value = cloneDeep(value)
             let origin = {}
             origin.content = {}
             if (value.type === 'bool') {
@@ -194,7 +194,6 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
     }, [])
     //数据类型改变
     const onTypeChange = (value) => {
-        console.log(value)
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
@@ -252,7 +251,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
                 label="数据类型"
                 name='type'
             >
-                <Select onChange={onTypeChange} disabled>
+                <Select onChange={onTypeChange}  disabled={modelType === '1' ? true : false}>
                     {
                         dataOptions.map(item => (
                             <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
@@ -392,7 +391,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
                 label="数据传输类型"
                 name="accessMode"
             >
-                <Radio.Group disabled>
+                <Radio.Group disabled={modelType === '1' ? true : false}>
                     <Radio value="rw">可下发可上报</Radio>
                     <Radio value="w">可下发</Radio>
                     <Radio value="r">可上报</Radio>
@@ -409,62 +408,94 @@ function EventTemp({ actionData, sentReq, modelType }, ref) {
         let obj = {
             output: []
         }
+
         actionData.funcParamList.forEach(item => {
+            console.log(item, '累了呀')
             unikey++
             let newItem = {
                 name: item.name,
                 identifier: item.identifier,
                 type: item.dataTypeEN,
                 dataPointId: item.dataPointId,
-                unikey
+                unikey,
+                default: item.defaultValue
             }
             obj.output.push(newItem)
         })
         return obj
     }, [])
-    
     const [newParamsList, setNewParamsList] = useState(originOutput.output)
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
     }), [newParamsList]);
-    const [isCheck, setIsCheck] = useState(0)
     //验证回调
     function sentAddData(data2, params) {
         let data = cloneDeep(data2)
-        data.unikey = params.unikey
         setNewParamsList(pre => {
             let obj = cloneDeep(pre)
             obj.splice(params.index, 1, data)
             return obj
         })
     }
-    
     //==================
-
     const addParams = () => {
         unikey++
         setNewParamsList(pre => {
-            let obj = JSON.parse(JSON.stringify(pre))
-            obj.push({unikey})
+            let obj = cloneDeep(pre)
+            obj.push({ unikey })
             return obj
         })
     }
     const delItemObj = (index, type) => {
         setNewParamsList(pre => {
             let arr = cloneDeep(pre)
-            arr.splice(index,1)
+            arr.splice(index, 1)
             return arr
         })
     }
     //触发验证及提交
     const onFinish = () => {
-        let outputData = getParams(newParamsList)
         form.validateFields().then(val => {
             let value = cloneDeep(val)
             let origin = {}
-            value.outputData = outputData
-            origin.content = value
-            sentReq(origin)
+            let arrFn = []
+            let arrData = []
+            if (newParamsList.length == 0) {
+                Notification({
+                    description: `至少添加一个参数`,
+                    type: 'warn'
+                });
+                return
+            }
+            let isContinue = newParamsList.every(item => {
+                if (item.fn) {
+                    return true
+                }
+            })
+            if (!isContinue) {
+                Notification({
+                    description: `新增参数未选择参数名`,
+                    type: 'warn'
+                });
+                return
+            }
+            cloneDeep(newParamsList).forEach(item => {
+                arrFn.push(item.fn())
+                arrData.push(item.data)
+            })
+            Promise.all(arrFn).then((formData) => {
+                formData.forEach((item, index) => {
+                    arrData[index].dataType.default = item.default
+                })
+                value.outputData = getParams(arrData)
+                origin.content = value
+                sentReq(origin)
+            }).catch(res => {
+                Notification({
+                    description: `添加参数有误`,
+                    type: 'warn'
+                });
+            })
         })
     }
     return (
@@ -527,8 +558,8 @@ function EventTemp({ actionData, sentReq, modelType }, ref) {
 
             {
                 newParamsList.map((item, key) => {
-                    return <AddParams sentAddData={sentAddData} refIndex={key}  type={true}  data={item} 
-                    delItemObj={delItemObj} unikey={item.unikey} key={item.unikey}/>
+                    return <AddParams sentAddData={sentAddData} refIndex={key} type={true} data={item}
+                        delItemObj={delItemObj} unikey={item.unikey} key={item.unikey} />
                 })
             }
         </>
@@ -550,7 +581,8 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
                 identifier: item.identifier,
                 type: item.dataTypeEN,
                 dataPointId: item.dataPointId,
-                unikey
+                unikey,
+                default: item.defaultValue
             }
             if (item.type === '输出') {
                 obj.output.push(newItem)
@@ -562,20 +594,19 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
     }, [])
     const [inputList, setInputList] = useState(originOutput.input)
     const [outputList, setOutputList] = useState(originOutput.output)
-    const [isCheck, setIsCheck] = useState(0)
     //添加输入框
     const addinput = (isIn) => {
         unikey++
         if (isIn) {
             setInputList(pre => {
                 let obj = cloneDeep(pre)
-                obj.push({unikey})
+                obj.push({ unikey })
                 return obj
             })
         } else {
             setOutputList(pre => {
                 let obj = cloneDeep(pre)
-                obj.push({unikey})
+                obj.push({ unikey })
                 return obj
             })
         }
@@ -583,7 +614,7 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
     //接收参数
     const sentAddData = (data2, params) => {
         let data = cloneDeep(data2)
-        data.unikey=params.unikey
+        data.unikey = params.unikey
         if (params.type) {
             setInputList(pre => {
                 let obj = cloneDeep(pre)
@@ -599,28 +630,72 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
         }
     }
     const onFinish = () => {
-        let inputData = getParams(inputList)
-        let outputData = getParams(outputList)
+        // let inputData = getParams(inputList)
+        // let outputData = getParams(outputList)
+        // form.validateFields().then(val => {
+        //     let value = cloneDeep(val)
+        //     let origin = {}
+        //     value.outputData = outputData
+        //     value.inputData = inputData
+        //     origin.content = value
+        //     sentReq(origin)
+        // })
         form.validateFields().then(val => {
             let value = cloneDeep(val)
             let origin = {}
-            value.outputData = outputData
-            value.inputData = inputData
-            origin.content = value
-            sentReq(origin)
+            let arrFn = []
+            let arrData = []
+            let allList = inputList.concat(outputList)
+            if (allList.length == 0) {
+                Notification({
+                    description: `至少添加一个参数`,
+                    type: 'warn'
+                });
+                return
+            }
+            let isContinue = allList.every(item => {
+                if (item.fn) {
+                    return true
+                }
+            })
+            if (!isContinue) {
+                Notification({
+                    description: `新增参数未选择参数名`,
+                    type: 'warn'
+                });
+                return
+            }
+            cloneDeep(allList).forEach(item => {
+                arrFn.push(item.fn())
+                arrData.push(item.data)
+            })
+            Promise.all(arrFn).then(res => {
+                res.forEach((item, index) => {
+                    arrData[index].dataType.default = item.default
+                })
+                value.inputData = getParams(arrData.splice(0, inputList.length))
+                value.outputData = getParams(arrData)
+                origin.content = value
+                sentReq(origin)
+            }).catch(res => {
+                Notification({
+                    description: `添加参数有误`,
+                    type: 'warn'
+                });
+            })
         })
     }
     const delItemObj = (index, type) => {
         if (type) {
             setInputList(pre => {
                 let arr = cloneDeep(pre)
-                arr.splice(index,1)
+                arr.splice(index, 1)
                 return arr
             })
         } else {
             setOutputList(pre => {
                 let arr = cloneDeep(pre)
-                arr.splice(index,1)
+                arr.splice(index, 1)
                 return arr
             })
         }
@@ -690,8 +765,8 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
             </Form>
             {
                 inputList.map((item, key) => {
-                    return <AddParams sentAddData={sentAddData} refIndex={key} isCheck={isCheck} type={true}  data={item} 
-                    delItemObj={delItemObj} unikey={item.unikey} key={item.unikey}/>
+                    return <AddParams sentAddData={sentAddData} refIndex={key} type={true} data={item}
+                        delItemObj={delItemObj} unikey={item.unikey} key={item.unikey} />
                 })
             }
             <Form
@@ -717,8 +792,8 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
             </Form>
             {
                 outputList.map((item, key) => {
-                    return <AddParams sentAddData={sentAddData} refIndex={key}  type={false}  data={item} 
-                    delItemObj={delItemObj} unikey={item.unikey} key={item.unikey}/>
+                    return <AddParams sentAddData={sentAddData} refIndex={key} type={false} data={item}
+                        delItemObj={delItemObj} unikey={item.unikey} key={item.unikey} />
                 })
             }
         </>
@@ -726,23 +801,37 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
 }
 ServeTemp = forwardRef(ServeTemp)
 //添加参数
-function AddParams({ sentAddData, type, data, refIndex,delItemObj, unikey  }, ref) {
+function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, ref) {
     const standardDatas = useContext(Context);
     const [form] = Form.useForm();
     const [sentData, setSentData] = useState({})
     const [selectId, setSelectId] = useState(data.dataPointId)
     useEffect(() => {
         if (data.dataPointId) {
+            console.log(data, '哈哈哈哈')
             form.setFieldsValue({
                 name: data.dataPointId,
             });
-            setFormVal(data.dataPointId)
+            let initDefault = {
+                isSet: true,
+                value: data.default
+            }
+            setFormVal(data.dataPointId, initDefault)
         }
     }, [])
     //选择功能点名称
-    const setFormVal = (dataPointId) => {
+    const setFormVal = (dataPointId, defaultData) => {
+        if (defaultData && defaultData.isSet) {
+            form.setFieldsValue({
+                default: defaultData.value
+            });
+        } else {
+            form.setFieldsValue({
+                default: ''
+            });
+        }
         standardDatas.forEach(item => {
-            if (item.dataPointId == dataPointId) {
+            if (item.dataPointId === dataPointId) {
                 let dataType = {
                     ...item.funcParamList[0],
                     specs: item.funcParamList[0].propertyMap
@@ -759,7 +848,8 @@ function AddParams({ sentAddData, type, data, refIndex,delItemObj, unikey  }, re
                     unikey
                 }
                 setSentData(obj)
-                sentAddData(obj, parmas)
+                // sentAddData(obj, parmas)
+                sentAddData({ fn: form.validateFields, unikey, data: obj }, parmas)
             }
         })
         setSelectId(dataPointId)
@@ -777,14 +867,13 @@ function AddParams({ sentAddData, type, data, refIndex,delItemObj, unikey  }, re
     }
     //展示数据类型
     const getTypeDom = () => {
-        if (sentData.dataType.dataTypCN == '数值') {
+        if (sentData.dataType.dataTypCN === '数值') {
             return <Form.Item
                 noStyle
             >
                 <Form.Item label="数值范围">
                     <div className='number-input-wrap'>
                         <Form.Item
-                            name={['specs', 'min']}
                             noStyle
                         >
                             <span>{sentData.dataType.specs.min}&nbsp;  至&nbsp;  {sentData.dataType.specs.max}</span>
@@ -792,32 +881,64 @@ function AddParams({ sentAddData, type, data, refIndex,delItemObj, unikey  }, re
                     </div>
                 </Form.Item>
                 <Form.Item
+                    label="默认值"
+                    name='default'
+                    rules={[
+                        {
+                            validator: (_, value) => {
+                                if (value) {
+                                    if (value >= sentData.dataType.specs.min && value <= sentData.dataType.specs.max) {
+                                        return Promise.resolve()
+                                    } else {
+                                        return Promise.reject(`默认值需在${sentData.dataType.specs.min}和${sentData.dataType.specs.max}之间`)
+                                    }
+                                } else {
+                                    return Promise.resolve()
+                                }
+
+                            }
+                        }
+                    ]}>
+                    <Input type='number' />
+                </Form.Item>
+                <Form.Item
                     label='数值间隔'
                     name={['specs', 'interval']}
                 ><span>{sentData.dataType.specs.interval}</span></Form.Item>
-                <Form.Item name={['specs', 'multiple']} label="倍数" >
+                <Form.Item label="倍数" >
                     <span>{sentData.dataType.specs.multiple}</span>
                 </Form.Item>
-                <Form.Item name={['specs', 'unit']} label="单位" >
+                <Form.Item label="单位" >
                     <span>{sentData.dataType.specs.unit}</span>
                 </Form.Item>
             </Form.Item>
         }
-        if (sentData.dataType.dataTypCN == '布尔') {
+        if (sentData.dataType.dataTypCN === '布尔') {
             return (<>
                 <Form.Item
                     label="布尔值"
                 >
                     <span>{'0：' + sentData.dataType.specs['0'] + ' - ' + '1：' + sentData.dataType.specs['1']}</span>
                 </Form.Item>
+                <Form.Item
+                    label="默认值"
+                    name='default'
+                >
+                    <Select allowClear>
+                        {
+                            Object.keys(sentData.dataType.specs).map(item => (
+                                <Select.Option key={item} value={item}>{sentData.dataType.specs[item]}</Select.Option>
+                            ))
+                        }
+                    </Select>
+                </Form.Item>
             </>)
         }
-        if (sentData.dataType.dataTypCN == '枚举') {
+        if (sentData.dataType.dataTypCN === '枚举') {
             return (
                 <>
                     <Form.Item
                         label="枚举型:"
-                        name="enumus_text"
                         className='enums-lise-nobottom'
                     ><span style={{ marginRight: '5px' }}>参数值</span>-<span style={{ marginLeft: '5px' }}>参数描述</span>
                     </Form.Item>
@@ -833,8 +954,29 @@ function AddParams({ sentAddData, type, data, refIndex,delItemObj, unikey  }, re
                             })
                         }
                     </div>
+                    <Form.Item
+                        label="默认值"
+                        name='default'
+                    >
+                        <Select allowClear>
+                            {
+                                Object.keys(sentData.dataType.specs).map(item => (
+                                    <Select.Option key={item} value={item}>{sentData.dataType.specs[item]}</Select.Option>
+                                ))
+                            }
+                        </Select>
+                    </Form.Item>
                 </>
             )
+        }
+        if (sentData.dataType.dataTypCN === '字符串') {
+            return <>
+                <Form.Item
+                    label="默认值"
+                    name='default'
+                >
+                    <Input />
+                </Form.Item></>
         }
         return ''
     }
@@ -872,7 +1014,6 @@ function AddParams({ sentAddData, type, data, refIndex,delItemObj, unikey  }, re
                     sentData.identifier && (<div>
                         <Form.Item
                             label="标识符"
-                            name='identifier'
                         ><span>{sentData.identifier}</span>
                         </Form.Item>
                         <Form.Item
@@ -884,7 +1025,6 @@ function AddParams({ sentAddData, type, data, refIndex,delItemObj, unikey  }, re
                         {getTypeDom()}
                         <Form.Item
                             label="数据传输类型"
-                            name="accessMode"
                         >
 
                             {
@@ -901,7 +1041,7 @@ function getParams(newParamsList) {
     let arr = []
     let arrid = []
     newParamsList.forEach(item => {
-        if (item.identifier && arrid.indexOf(item.identifier) == -1) {
+        if (item.identifier && arrid.indexOf(item.identifier) === -1) {
             arrid.push(item.identifier)
             let obj = {}
             obj.name = item.name
@@ -910,7 +1050,8 @@ function getParams(newParamsList) {
             obj.accessMode = item.dataType.accessMode
             obj.dataType = {
                 type: item.dataType.dataTypeEN,
-                specs: item.dataType.specs
+                specs: item.dataType.specs,
+                default: item.dataType.default
             }
             arr.push(obj)
         }

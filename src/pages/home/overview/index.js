@@ -105,12 +105,6 @@ export default function OverviewWrap() {
             setDevOneList(res.data)
         });
     }
-    // const [devTwoList, setDevTwoList] = useState({ burn: 0, total: 0, active: 0, unactive: 0 })
-    // const getDevTwoList = () => {
-    //     post(Paths.devSecreCount).then((res) => {
-    //         setDevTwoList(res.data)
-    //     });
-    // }
     const [devThreeList, setDevThreeList] = useState({ processed: '--', lastWarnTime: "--", pending: '--', send: '--' })
     const getDevThreeList = () => {
         post(Paths.devWarnCount).then((res) => {
@@ -222,7 +216,7 @@ export default function OverviewWrap() {
         let isShow = false
         function isGo(menuS) {
             menuS.forEach(item => {
-                if (item.menuname == '产品管理') {
+                if (item.menuname === '产品管理') {
                     isShow = true
                 }
                 if (item.childmenus) {
@@ -456,13 +450,13 @@ export default function OverviewWrap() {
                         <div className='over-view-productmn-top'>
                             <div className='over-view-productmn-header'>
                                 <div>APP开发</div>
-                                {isShowBtn('APP') && <a onClick={goApp}>进入</a>}
+                                {isShowBtn('应用') && <a onClick={() => { goPage(`/open/app/list`) }}>进入</a>}
                             </div>
                             <div className='over-view-productmn-content' style={{ height: '80px' }}>
                                 {
                                     appList.length ? (appList.map((item, index) => {
                                         return (<div className='over-view-productmn-content-item over-view-productmn-content-two'
-                                            key={index} onClick={() => { goAuPage('APP', `/open/app/details/${item.appId}`) }}>
+                                            key={index} onClick={() => { goAuPage('app管理', `/open/app/details/${item.appId}`) }}>
                                             <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.appIconLow} /></div>
                                             <div className='over-view-productmn-content-content'>
                                                 <div>{item.appName}</div>
