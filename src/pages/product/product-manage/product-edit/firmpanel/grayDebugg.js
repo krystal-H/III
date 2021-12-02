@@ -80,7 +80,7 @@ export default function AddFuncModal({ isGrayModalVisible, closeDebugg, CancelDe
             });
             return
         }
-        post(Paths.greyModel, params).then((res) => {
+        post(Paths.greyModel, params,{loading:true}).then((res) => {
             closeDebugg()
         });
     }
