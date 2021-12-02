@@ -182,7 +182,7 @@ export default function ChangeModal({ isChangeModalVisible, closeChange, CancelC
             page1: actionData.page1,
             panelType: 1
         }
-        post(Paths.cusSavePanel, params).then((res) => {
+        post(Paths.cusSavePanel, params,{loading:true}).then((res) => {
             getList()
             Notification({
                 type: 'success',
