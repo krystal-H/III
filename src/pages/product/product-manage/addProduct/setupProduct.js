@@ -144,7 +144,8 @@ class SetupProduct extends Component {
           brandName: saveProductForm.brandName || ''
         }}
         onFinish={this.onFinish}
-        onFinishFailed={this.onFinishFailed}>
+        onFinishFailed={this.onFinishFailed}
+        autoComplete="off">
         <Form.Item
           label="产品名称"
           name="productName"
@@ -184,11 +185,6 @@ class SetupProduct extends Component {
             // { pattern: new RegExp(/^[\u4E00-\u9FA5A-Za-z0-9]+$/, "g"), message: '请输入产品型号，支持中英文、数字' }
             { required: false, message: '请输入产品型号' },
             { pattern: new RegExp(/^(?!\s)(?!.*\s$)/), message: '请输入产品型号，首尾不能输入空格' }
-            // {
-            //   getValueFromEvent: event => {
-            //     return event.target.value.replace(/(^\s*)|(\s*$)/g, '');
-            //   }
-            // }
           ]}>
           <Input maxLength={50} placeholder="请输入产品型号，支持中英文、数字" />
         </Form.Item>
