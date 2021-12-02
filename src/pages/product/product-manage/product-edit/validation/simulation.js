@@ -32,7 +32,7 @@ export default ({ productId }) => {
     const starLink = () => {
         post(Paths.getMockDeviceId, { productId, account: formBar.getFieldValue('account') }, { needFormData: true }).then(data => {
             let dataSource = data.data.data
-            dataSource.mqttUrl = 'tcp://10.6.14.1:1883'
+            // dataSource.mqttUrl = 'tcp://10.6.14.1:1883'
             setMockId(dataSource.id)
             setConnectData(dataSource)
             let obj = {
