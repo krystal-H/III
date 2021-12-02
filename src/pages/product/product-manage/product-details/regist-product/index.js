@@ -12,6 +12,7 @@ import './index.scss'
 import RegistModel from './modelFn'
 const { Option } = Select;
 const { Step } = Steps;
+const {Search} = Input
 export default function DeviceRegist() {
     let productItem = {}
     if (sessionStorage.getItem('productItem')) {
@@ -200,16 +201,9 @@ export default function DeviceRegist() {
                             </Form.Item>
                             <Form.Item
                                 label="请输入设备ID"
+                                name='id'
                             >
-                                <Form.Item
-                                    name='id'
-                                    noStyle
-                                >
-                                    <Input style={{ width: '200px' }} placeholder="请输入设备ID" />
-                                </Form.Item>
-                                <Button type="primary" onClick={onSearch}>
-                                    查询
-                                </Button>
+                                <Search placeholder="请输入设备ID"  onSearch={onSearch} style={{ width: '220px' }}/>
                             </Form.Item>
                         </Form>
                     </div>
