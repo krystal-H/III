@@ -217,9 +217,6 @@ function Validation({ productId, developerInfo, refInstance }) {
         setTabShow(tab)
         //如果有ws，关掉
         closeWebsocket()
-        if (tab == "2") {
-            getAccessToken();
-        }
     }
     const sentInfo = record => {
         setDebugInfo([record.account, record.physicalAddrs[0]])
@@ -278,8 +275,7 @@ function Validation({ productId, developerInfo, refInstance }) {
                     </div>
                 </TabPane>
                 <TabPane tab="虚拟设备调试" key="2">
-                    <Simulat productId={productId} serverIp={serverIp} />
-
+                    <Simulat productId={productId}  tabShow={tabShow}/>
                 </TabPane>
             </Tabs>
         </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Input, Form, Select, Radio, Divider } from 'antd';
 import { post, Paths } from '../../../../../api';
 import DescWrapper from '../../../../../components/desc-wrapper/DescWrapper';
@@ -9,7 +9,7 @@ import CryptoJS from 'crypto-js'
 import { cloneDeep } from 'lodash'
 let msgId = 1
 let client = null
-export default ({ productId }) => {
+export default ({ productId, tabShow }) => {
     const product = JSON.parse(sessionStorage.getItem('productItem'));
     const [form] = Form.useForm();
     const [formBar] = Form.useForm();
@@ -28,12 +28,18 @@ export default ({ productId }) => {
             client && client.end()
         }
     }, [])
+    useEffect(() => {
+        // console.log(tabShow, '我看到了',client)
+        // if (tabShow == 1) {
+        //     resetAll()
+        // }
+    }, [tabShow])
     //开始调试
     const starLink = () => {
         client && client.end()
         post(Paths.getMockDeviceId, { productId, account: formBar.getFieldValue('account') }, { needFormData: true }, { loading: true }).then(data => {
             let dataSource = data.data.data
-            dataSource.mqttUrl = 'tcp://10.6.14.1:1883'
+            // dataSource.mqttUrl = 'tcp://10.6.14.1:1883'
             setMockId(dataSource.id)
             setConnectData(dataSource)
             let obj = {
@@ -375,9 +381,6 @@ export default ({ productId }) => {
                     payload && <ObjectView data={recoverData(payload)} />
                 }
             </div>
-
-
         </div>)
-
 }
 
