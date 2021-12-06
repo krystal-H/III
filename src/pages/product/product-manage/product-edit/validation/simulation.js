@@ -187,7 +187,23 @@ export default ({ productId, tabShow }) => {
             )
         } else if (data.dataTypCN === "数值") {
             return (
-                <Form.Item name={origin.dataPointId} label={origin.funcName}>
+                <Form.Item name={origin.dataPointId} label={origin.funcName} rules={[
+                    {
+                        validator: (_, value) => {
+                            if (value) {
+                                console.log(data)
+                                if (value >= data.propertyMap.min && value <= data.propertyMap.max) {
+                                    return Promise.resolve()
+                                } else {
+                                    return Promise.reject(`数值需在${data.propertyMap.min}和${data.propertyMap.max}之间`)
+                                }
+                            } else {
+                                return Promise.resolve()
+                            }
+
+                        }
+                    }
+                ]}>
                     <Input type='number' style={{ width: '200px' }} />
                 </Form.Item>
             )
