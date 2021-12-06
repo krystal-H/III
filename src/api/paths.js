@@ -150,8 +150,7 @@ let Paths = {
 
     /* 云端定时功能5x */
     getTimeServiceList: '/timeServer/getList', // 获取列表
-    // getPhysicalModel: '/productManage/physicalModel/get', // 获取物模型  关联协议
-    getPhysicalModel: '/product/dev/show/func', // 获取功能定义物模型列表
+    getPhysicalModel: '/productManage/physicalModel/get', // 获取物模型  关联协议
     saveTimeService: '/timeServer/save', // 保存定时信息
     updateTimeServiceStatus: '/timeServer/updateStatus', // 修改云端定时状态
 

@@ -24,7 +24,7 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
         const item = selectedProtocols[index]
         for (let index = 0; index < initialProtoclList.length; index++) {
           const ele = initialProtoclList[index]
-          if (item === ele.funcIdentifier) {
+          if (item === ele.identifier) {
             if (!ele.sendData && ele.sendData !== 0) return Notification({ description: '请为配置协议添加参数' })
           }
         }
@@ -33,7 +33,7 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
       
       sessionStorage.setItem('addConfigData', JSON.stringify(initialProtoclList.filter(item => {
         let data = item.sendData ?? undefined
-        if (typeof data != 'undefined' && selectedProtocols.indexOf(item.funcIdentifier) > -1) {
+        if (typeof data != 'undefined' && selectedProtocols.indexOf(item.identifier) > -1) {
           // console.log('打印一下', Number(item.sendData) != NaN, item.sendData)
           // 数值时要穿字符串  避免设备调不通
           item.sendData = isNaN(Number(item.sendData)) ? item.sendData  : Number(item.sendData)
@@ -55,21 +55,17 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
   // 获取关联协议列表
   const getRelationProtocol = () => {
     post(Paths.getPhysicalModel, { productId }, { loading: true }).then(res => {
-      console.log('res', res)
-      // res.data.properties && res.data.properties.forEach(item => { item.sendData = '' })
-      let resArr = res.data.custom.concat(res.data.standard)
-      resArr.forEach(item => { item.sendData = '' })
+      res.data.properties && res.data.properties.forEach(item => { item.sendData = '' })
 
       if (Object.keys(editData).length > 0) {
         const resList = JSON.parse(editData.remoteProtocol.protocolJson)
-        console.log('resList', resList)
-        resArr.forEach(item => {
+        res.data.properties.forEach(item => {
           resList.forEach(s => {
-            if (s.funcIdentifier === item.funcIdentifier) {
+            if (s.identifier === item.identifier) {
               item.sendData = s.sendData
               setSelectedProtocols((pre) => {
                 const list = cloneDeep(pre)
-                list.push(s.funcIdentifier)
+                list.push(s.identifier)
                 return list
               })
             }
@@ -77,8 +73,7 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
         })
       }
 
-      // setInitialProtoclList(res.data.properties)
-      setInitialProtoclList(res.data.custom.concat(res.data.standard))
+      setInitialProtoclList(res.data.properties)
     })
   }
 
@@ -115,38 +110,38 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
   const configColumns = [
     {
       title: '数据名称',
-      dataIndex: 'funcName',
-      key: 'funcName',
+      dataIndex: 'name',
+      key: 'name',
       width: 190
     },
     {
       title: '数据标识',
-      dataIndex: 'funcIdentifier',
-      key: 'funcIdentifier',
+      dataIndex: 'identifier',
+      key: 'identifier',
       width: 200
     },
     {
       title: '数据类型',
-      dataIndex: 'dataTypCN',
-      key: 'dataTypCN',
+      dataIndex: 'dataType',
+      key: 'dataType',
       render: (text, record) => {
-        return (<span>{record.funcParamList[0].dataTypCN}</span>)
+        return (<span>{record.dataType.type}</span>)
       }
     },
     {
       title: '数据属性',
       render: (text, record) => {
-        switch (record.funcParamList[0].dataTypeEN) {
+        switch (record.dataType.type) {
           case 'int':
           case 'double':
           case 'float':
-            return <span>{record.funcParamList[0].propertyMap.min} ~ {record.funcParamList[0].propertyMap.max}</span>
+            return <span>{record.dataType.specs.min} ~ {record.dataType.specs.max}</span>
           case 'text':
             return '-'
           case 'enum':
           case 'bool':
             return (
-              <span>{Object.values(record.funcParamList[0].propertyMap).join(' | ')}</span>
+              <span>{Object.values(record.dataType.specs).join(' | ')}</span>
             )
           case 'date':
             return '-'
@@ -160,15 +155,15 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
       dataIndex: 'sendData',
       key: 'sendData',
       render: (text, record, index) => {
-        let { propertyMap, dataTypeEN } = record.funcParamList[0],
+        let { specs, type } = record.dataType,
           _dom = null
-        switch (dataTypeEN) {
+        switch (type) {
           case 'int':
           case 'double':
           case 'float':
             _dom = (<InputNumber value={record.sendData}
-              min={propertyMap.min}
-              max={propertyMap.max}
+              min={specs.min}
+              max={specs.max}
               onChange={value => changeSendData(value, index)}
               placeholder="请输入参数"></InputNumber>)
             break
@@ -188,9 +183,9 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
                 onChange={value => changeSendData(value, index)}>
                 <Option key={-1} value="">请选择参数</Option>
                 {
-                  Object.keys(propertyMap) && Object.keys(propertyMap).map((item, index) => {
-                    // console.log(item, '---', propertyMap[item])
-                    return <Option key={index + item} value={Number(item)}>{propertyMap[item]}</Option>
+                  Object.keys(specs) && Object.keys(specs).map((item, index) => {
+                    // console.log(item, '---', specs[item])
+                    return <Option key={index + item} value={Number(item)}>{specs[item]}</Option>
                   })
                 }
               </Select>
@@ -224,7 +219,7 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
       className="config-data-table"
       rowSelection={protocolSelection}
       dataSource={initialProtoclList}
-      rowKey="funcIdentifier"
+      rowKey="identifier"
       scroll={{ y: 300 }}
       pagination={false}
     />
