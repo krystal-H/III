@@ -21,17 +21,17 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
         if (type === 'add') {
             timeServerDetails = selectedProtocolList.map(item => {
                 return {
-                    property: item.identifier,
-                    propertyName: item.name,
-                    functionDataType: item.dataType.type
+                    property: item.funcIdentifier,
+                    propertyName: item.funcName,
+                    functionDataType: item.funcParamList[0].dataTypeEN
                 }
             })
         } else {
             timeServerDetails= selectedProtocolList.map(item => {
                 return {
-                    property: item.property || item.identifier,
-                    propertyName: item.propertyName || item.name,
-                    functionDataType: item.functionDataType || item.dataType.type
+                    property: item.property || item.funcIdentifier,
+                    propertyName: item.propertyName || item.funcName,
+                    functionDataType: item.functionDataType || item.funcParamList[0].dataTypeEN
                 }
             })
             values.serviceId = editData.serviceId
@@ -68,7 +68,8 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
     const getRelationProtocol = (productId) => {
         post(Paths.getPhysicalModel, { productId }).then(res => {
             console.log(res)
-            setInitialList(res.data.properties)
+            // setInitialList(res.data.properties)
+            setInitialList(res.data.custom.concat(res.data.standard))
             setProtocolItemIndex('')
         })
     }
@@ -91,7 +92,7 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
         setSelectedProtocolList((prev) => {
             const preArr = cloneDeep(prev)
             // 选出原始list下已经被选的，加入被选list,为了展示
-            const newAdd = initialList.filter(item => item.identifier === protocolItemIndex)
+            const newAdd = initialList.filter(item => item.funcIdentifier === protocolItemIndex)
             // console.log([...preArr, ...newAdd], '*************')
             return [...preArr, ...newAdd]
         })
@@ -116,16 +117,16 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
     const getOptions = () => {
         const protocolNames = dealProtocols() // 剩余未选择的list返回
         return protocolNames.map((item, index) => {
-            return <Option key={item.identifier} value={item.identifier}>{item.name}</Option>
+            return <Option key={item.funcIdentifier} value={item.funcIdentifier}>{item.funcName}</Option>
         })
     }
 
     // 处理协议差集数据
     const dealProtocols = () => {// 原始的  差集   已选中的  return  剩余的
-        const _initId = cloneDeep(initialList).map(item => item.identifier)
+        const _initId = cloneDeep(initialList).map(item => item.funcIdentifier)
         let _selectId = []
         if (type === 'add') {
-            _selectId = cloneDeep(selectedProtocolList).map(item => item.identifier)  
+            _selectId = cloneDeep(selectedProtocolList).map(item => item.funcIdentifier)  
         } 
         if (type === 'edit') {
             _selectId = cloneDeep(selectedProtocolList).map(item => item.property)
@@ -134,7 +135,7 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
         let newTempArr = []
         cloneDeep(initialList).forEach(ele => {
             renainListId.forEach(item => {
-                ele.identifier == item && newTempArr.push(ele)
+                ele.funcIdentifier == item && newTempArr.push(ele)
             })
         })
         return newTempArr
@@ -192,8 +193,8 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
                                     selectedProtocolList.map((item, index) => {
                                         return (
                                             <div className="protocol-bar" key={index}>
-                                                <p className="protocol-bar-title">{item.name || item.propertyName}</p>
-                                                <div><span>{item.identifier || item.property}</span></div>
+                                                <p className="protocol-bar-title">{item.funcName || item.propertyName}</p>
+                                                <div><span>{item.funcIdentifier || item.property}</span></div>
                                                 <span
                                                     className="protocol-bar-del"
                                                     onClick={() => deleteProtocol(index)}>

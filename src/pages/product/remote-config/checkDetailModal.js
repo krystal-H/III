@@ -22,38 +22,38 @@ function CheckDetailModal({ visible, detailData, onCancel, allProductList }) {
   const configColumns = [
     {
       title: '数据名称',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'funcName',
+      key: 'funcName',
       width: 190
     },
     {
       title: '数据标识',
-      dataIndex: 'identifier',
-      key: 'identifier',
+      dataIndex: 'funcIdentifier',
+      key: 'funcIdentifier',
       width: 200
     },
     {
       title: '数据类型',
-      dataIndex: 'dataType',
-      key: 'dataType',
+      dataIndex: 'dataTypCN',
+      key: 'dataTypCN',
       render: (text, record) => {
-        return (<span>{record.dataType.type}</span>)
+        return (<span>{record.funcParamList[0].dataTypCN}</span>)
       }
     },
     {
       title: '数据属性',
       render: (text, record) => {
-        switch (record.dataType.type) {
+        switch (record.funcParamList[0].dataTypeEN) {
           case 'int':
           case 'double':
           case 'float':
-            return <span>{record.dataType.specs.min} ~ {record.dataType.specs.max}</span>
+            return <span>{record.funcParamList[0].propertyMap.min} ~ {record.funcParamList[0].propertyMap.max}</span>
           case 'text':
             return '-'
           case 'enum':
           case 'bool':
             return (
-              <span>{Object.values(record.dataType.specs).join(' | ')}</span>
+              <span>{Object.values(record.funcParamList[0].propertyMap).join(' | ')}</span>
             )
           case 'date':
             return '-'
@@ -94,18 +94,20 @@ function CheckDetailModal({ visible, detailData, onCancel, allProductList }) {
     post(Paths.getPhysicalModel, {
       productId: detailData.productId
     }, { loading: true }).then(res => {
-      res.data.properties && res.data.properties.forEach(item => { item.sendData = '' })
+      let resArr = res.data.custom.concat(res.data.standard)
+      resArr.forEach(item => { item.sendData = '' })
+
       if (Object.keys(detailData).length > 0) {
         const resList = JSON.parse(detailData.remoteProtocol.protocolJson)
-        res.data.properties.forEach(item => {
+        resArr.forEach(item => {
           resList.forEach(s => {
-            if (s.identifier === item.identifier) {
+            if (s.funcIdentifier === item.funcIdentifier) {
               item.sendData = s.sendData
             }
           })
         })
       }
-      setInitialProtoclList(res.data.properties)
+      setInitialProtoclList(resArr)
     })
   }
 
