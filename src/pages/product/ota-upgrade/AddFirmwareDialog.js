@@ -1,13 +1,13 @@
-import React, { forwardRef,useState } from 'react';
+import React, { forwardRef,useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Input, Select, Radio, Button, Upload ,Form, Modal} from 'antd';
+import { Input, Select, Radio, Button, Upload ,Form, Modal,Tabs } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { get,post,Paths } from '../../../api';
 import {Notification} from '../../../components/Notification';
 import { getUploadUrl } from '../../../util/util';
 import LabelTip from '../../../components/form-com/LabelTip';
 import { SCHMETYPE,formrules, VERTYPE } from './store/constData'
-import {getVersionList,firmwareFromProduct} from './store/actionCreators'
+import {getVersionList,firmwareLastVersion} from './store/actionCreators'
 const { Option } = Select;
 const { Item } = Form;
 
@@ -33,7 +33,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getVersionLi: param => dispatch(getVersionList(param)),
-        firmwareFromProduct: id => dispatch(firmwareFromProduct(id))
+        firmwareLastVersion: id => dispatch(firmwareLastVersion(id))
     }
 }
 
@@ -42,7 +42,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
 
     changeState,
 
-    firmwareFromProduct,mcusocproLi,firmwareFrPro,getVersionLi
+    firmwareLastVersion,mcusocproLi,firmwareFrPro,getVersionLi
 })=>{
 
 
@@ -51,17 +51,42 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     const [firmwareList, setFirmwareList] = useState([]);
 
     const [formInstance] = Form.useForm();
-    const changedPro= productId =>{
-        firmwareFromProduct(productId)
-        post(Paths.getFirmwareList,{productId}).then((res) => {
-            setFirmwareList(res.data || [])
-        }); 
 
-        
+    const { schemeType, productFirmwareVersion='--',deviceVersionId } = firmwareFrPro;//schemeType: 2 MCU, 3 SoC
+
+    useEffect(() => {
+        console.log(22222,firmwareFrPro)
+        if( schemeType ){
+            setFirmwareList([
+                {firmwareTypeName:'aaa',firmwareTypeNo:1},
+                {firmwareTypeName:'bbb',firmwareTypeNo:2},
+                {firmwareTypeName:'ccc',firmwareTypeNo:3},
+                {firmwareTypeName:'eee',firmwareTypeNo:4},
+            ])
+
+            post(Paths.getFirmwareList,{productId,schemeType}).then((res) => {
+                console.log(333,res)
+               
+                
+            }); 
+        }
+    }, [firmwareFrPro])
+
+    useEffect(() => {
+        if( firmwareList.length ){
+            
+        }
+    }, [firmwareList.length])
+
+
+
+    const changedPro= productId =>{
+        productId = 12150;
+        firmwareLastVersion(productId)   
     }
+
     const onFinish=(values)=>{
-        const { filePath1, filePath2, ...otherPar } = values,
-              { schemeType, deviceVersionId } = firmwareFrPro;
+        const { filePath1, filePath2, ...otherPar } = values;
         const deviceVersionType = 5;
         let filePath=undefined;
 
@@ -87,7 +112,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
         return e && e.fileList;
     };
 
-    const { schemeType, moduleName } = firmwareFrPro;
+    
 
     return (
         <Modal
@@ -111,18 +136,20 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                         }
                     </Select>
                 </Item>
-                { schemeType && <Item label="开发方案"> { SCHMETYPE[schemeType-2] && SCHMETYPE[schemeType-2].nam || "出错了！" }</Item> }
-                { schemeType==2 && <Item label="模组固件名称"> { moduleName }</Item> }
-                <Item name="productFirmwareVersion"
-                    label={<LabelTip label="产品版本号" tip="产品整体的版本编号，概括产品下系统、模组、MCU固件各部分。"/>}
-                    rules={[{ required: true, message: '请输入产品版本号' },{
-                        pattern: formrules.strextVer,
-                        message: '仅支持字母、数字、下划线、短横线、点号，不超过30个字符',
-                    }]}
-                    hasFeedback
-                >
-                    <Input maxLength={30} placeholder='仅支持字母、数字、下划线、短横线、点号' />
+                <Item label="开发方案"> { schemeType && SCHMETYPE[schemeType-2] && SCHMETYPE[schemeType-2].nam || '--' }</Item>
+                {
+                    schemeType==2&&<>
+                        <Item label="当前模组固件版本"> {   }</Item>
+                        <Item label="最新模组固件版本"> {   }</Item>
+                    </>
+                }
+                <Item label={<LabelTip label="产品版本号" tip="产品版本自动生成，自增长，产品的整体内部版本号"/>}>
+                    {productFirmwareVersion}
                 </Item>
+                <Item label="产品版本名称" name='deviceVersionName' rules={[{ required: true, message: '请输入产品版本名称' }]}>
+                    <Input maxLength={30} placeholder='最多30个字符' />
+                </Item>
+
                 {
                     schemeType==2 &&
                     <Item label="MCU升级" name='mcuUpgrade' initialValue={1}>
@@ -131,27 +158,39 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                         </Radio.Group>
                     </Item>
                 }
-                { (schemeType==3||mcuIsUp==0) && <>
-
-                    <Item  name='deviceVersionName' label={<LabelTip label="固件包名称" tip="固件包的具体业务名称，如具体产品的WiFi模组固件升级包。"/>} rules={[{ required: true, message: '请输入升级包名称' }]} hasFeedback>
-                        <Input maxLength={30} placeholder='请输入升级包名称' />
-                    </Item>
-                    <Item label={<LabelTip label="固件模块" tip="硬件固件的细分模块，比如MCU的驱动板固件模组或者主板固件模块。"/>} name='firmwareVersionType' rules={[{ required: true, message: '请选择固件模块' }]}>
-                        <Select placeholder="选择固件模块" onChange={()=>{}} >
+                { "(schemeType==3||mcuIsUp==0)" && <>
+                    <Item label={schemeType==3&&"模块"||"模块/插件"}  >
+                        <Select placeholder="选择固件模块" onChange={()=>{}} mode="multiple">
                             {
-                                firmwareList.map(({firmwareTypeName,firmwareTypeNo,deviceVersionType}) => {
-                                    return <Option key={firmwareTypeNo} value={firmwareTypeNo}>{firmwareTypeName}</Option>
+                                firmwareList.map(({firmwareTypeName,firmwareTypeNo},i) => {
+                                    return <Option key={firmwareTypeNo} disabled={i==0} value={firmwareTypeNo}>{firmwareTypeName}</Option>
                                 })
                             }
                         </Select>
                     </Item>
 
-                    <Item label={<LabelTip label="固件系列标识" tip="区分不同固件包，只有相同的固件才能升级"/>} hasFeedback name='totalVersion'
+
+                    {/* <Tabs activeKey={'0'}>
+                        <TabPane tab="告警信息" key={'0'}>
+                            <BaseInfoForm ref={ref0} setStepCur={setStepCur} formdata={baseFormData}/>
+                        </TabPane>
+                        <TabPane tab="规则配置"  key={'1'}>
+                            <RuleForm ref={ref1} setStepCur={setStepCur} formdata={ruleFormData}/>
+                        </TabPane>
+                        <TabPane tab="通知方式"  key={'2'}>
+                            <PublictypeForm ref={ref2} setStepCur={setStepCur} commitAll={commitAll} formdata={pubFormData}/>
+                        </TabPane>
+                    </Tabs> */}
+
+
+
+
+                    <Item label={<LabelTip label="固件系列标识" tip="区分不同固件包，只有相同的固件才能升级"/>} name='totalVersion'
                         rules={[{ required: true, message: '请输入固件系列标识' },{pattern: formrules.strextVer,message: '仅支持字母、数字、下划线、短横线、点号，不超过30个字符'}]}
                     >
                         <Input maxLength={30} placeholder='仅支持字母、数字、下划线、短横线、点号' />
                     </Item>
-                    <Item label={<LabelTip label="内部版本号" tip="同一系列标识的固件通过对比内部版本号决定是否升级"/>} hasFeedback name='mainVersion'
+                    <Item label={<LabelTip label="内部版本号" tip="同一系列标识的固件通过对比内部版本号决定是否升级"/>} name='mainVersion'
                         rules={[{ required: true, message: '请输入内部版本号' },{ pattern: formrules.mainVer,message: '须为不小于0的整数'},{ validator:checkMainVersion}]}
                     >
                         <Input maxLength={10} placeholder='内部版本须为不小于0的整数' />
@@ -163,7 +202,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     </Item>
                     {
                         uploadType=="1" ? 
-                        <Item  className='filepathinpt' hasFeedback name="filePath1"
+                        <Item  className='filepathinpt' name="filePath1"
                             rules={[{ required: true, message: '请输入URL' },{pattern: formrules.url, message: '请输入正确的URL'}]}
                         ><Input maxLength={100} placeholder='请输入URL' />
                         </Item>  

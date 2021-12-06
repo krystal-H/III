@@ -465,7 +465,7 @@ let Paths = {
     otaProDevVersionList:'/firmware/productFirmware/getProductFirmwareList',
     otaGetExtVersion:'/device/version/5/getExtVersion',
     otaDeleteVer:'/device/version/5/delete',
-    firmwareFromProduct:'/product/firmware/package',
+    firmwareLastVersion:'/firmware/productFirmware/getLastProductVersion',
     otaAddVersion:'/firmware/device/version/add',
     otaGetVersionDetail:'/firmware/device/version/get',
     otaGetBatch:'/firmware/device/upgrade/publish/getBatch',

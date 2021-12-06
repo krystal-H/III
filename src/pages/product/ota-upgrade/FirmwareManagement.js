@@ -37,7 +37,6 @@ export default class FirmwareManagement extends Component {
     constructor(props) {
         console.log(props)
         super(props);
-        this.refValidationFirmware = () => { }
         this.state = {
             versionList: [],
             pager: {
@@ -274,7 +273,7 @@ export default class FirmwareManagement extends Component {
                             onChange: this.pagerIndex
                         }}
                     />
-                    {addFirmwareVisiable && <AddFirmwareDialog changeState={this.changeState} />}
+                    { !'addFirmwareVisiable' && <AddFirmwareDialog changeState={this.changeState} />}
 
 
                     {releaseFirmwareDialog &&
@@ -291,24 +290,15 @@ export default class FirmwareManagement extends Component {
                     }
                     {
                         validationFirmwareDialog && 
-                        <Modal
+                        <ValidationFirmwareDialog
+                            deviceVersionId={productFirmwareId}
+                            validationDetail={{ ...validationDetail }}
+                            setValidationDetail={this.setValidationDetail}
+                            pagerIndex={this.pagerIndex}
+                            pageIndex={pageIndex}
+                            close={this.closeValiFirm}
                             title={validationModTit}
-                            visible={true}
-                            onOk={() => { this.refValidationFirmware() }}
-                            onCancel={this.closeValiFirm}
-                            width={650}
-                            maskClosable={false}
-                        >
-                            <ValidationFirmwareDialog
-                                deviceVersionId={productFirmwareId}
-                                validationDetail={{ ...validationDetail }}
-                                setValidationDetail={this.setValidationDetail}
-                                pagerIndex={this.pagerIndex}
-                                pageIndex={pageIndex}
-                                onRef={ref => { this.refValidationFirmware = ref }}
-                                close={this.closeValiFirm}
-                            />
-                        </Modal>
+                        />
                     }
                     <ViewFirmList productFirmwareId={viewFirmid} schemeType={viewFirmtype} openClose={this.openCloseViewFirmList} />
                     
