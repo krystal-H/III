@@ -391,7 +391,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
                 label="数据传输类型"
                 name="accessMode"
             >
-                <Radio.Group disabled={modelType === '1' ? true : false}>
+                <Radio.Group>
                     <Radio value="rw">可下发可上报</Radio>
                     <Radio value="w">可下发</Radio>
                     <Radio value="r">可上报</Radio>
