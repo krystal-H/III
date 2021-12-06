@@ -266,6 +266,7 @@ export default ({ productId, tabShow }) => {
             return
         }
         let arr = []
+        let typeArr = ["数值", "枚举", "布尔"]
         let data = form.getFieldsValue()
         for (let key in data) {
             if (data[key]) {
@@ -274,7 +275,7 @@ export default ({ productId, tabShow }) => {
             if (data[key]) {
                 let obj = {}
                 let itemOri = originSource['dp' + key]
-                if (itemOri.funcParamList[0].dataTypCN === "数值") {
+                if (typeArr.indexOf(itemOri.funcParamList[0].dataTypCN) > -1) {
                     obj[key.toString()] = Number(data[key])
                 } else {
                     obj[key.toString()] = data[key]
