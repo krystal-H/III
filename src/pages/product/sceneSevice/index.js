@@ -283,7 +283,7 @@ export default function DeviceRegist() {
                                 label="功能名称"
                                 name='funcName'
                             >
-                                <Search onSearch={onSearch} style={{ width: '465px' }} placeholder="功能名称"/>
+                                <Search onSearch={onSearch} style={{ width: '260px' }} placeholder="功能名称"/>
                             </Form.Item>
                         </Form>
                     </div>

@@ -77,7 +77,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel }
             devicePushDataConfList: subObj.two,
             ...val
         }
-        post(Paths.addsubscribe, params).then((res) => {
+        post(Paths.addsubscribe, params,{loading:true}).then((res) => {
             colseMoadl()
         });
     }

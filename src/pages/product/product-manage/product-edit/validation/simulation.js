@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Input, Form, Select, Radio, Divider } from 'antd';
 import { post, Paths } from '../../../../../api';
 import DescWrapper from '../../../../../components/desc-wrapper/DescWrapper';
@@ -9,7 +9,7 @@ import CryptoJS from 'crypto-js'
 import { cloneDeep } from 'lodash'
 let msgId = 1
 let client = null
-export default ({ productId }) => {
+export default ({ productId, tabShow }) => {
     const product = JSON.parse(sessionStorage.getItem('productItem'));
     const [form] = Form.useForm();
     const [formBar] = Form.useForm();
@@ -28,10 +28,16 @@ export default ({ productId }) => {
             client && client.end()
         }
     }, [])
+    useEffect(() => {
+        // console.log(tabShow, '我看到了',client)
+        // if (tabShow == 1) {
+        //     resetAll()
+        // }
+    }, [tabShow])
     //开始调试
     const starLink = () => {
         client && client.end()
-        post(Paths.getMockDeviceId, { productId, account: formBar.getFieldValue('account') }, { needFormData: true },{loading:true}).then(data => {
+        post(Paths.getMockDeviceId, { productId, account: formBar.getFieldValue('account') }, { needFormData: true }, { loading: true }).then(data => {
             let dataSource = data.data.data
             // dataSource.mqttUrl = 'tcp://10.6.14.1:1883'
             setMockId(dataSource.id)
@@ -181,7 +187,23 @@ export default ({ productId }) => {
             )
         } else if (data.dataTypCN === "数值") {
             return (
-                <Form.Item name={origin.dataPointId} label={origin.funcName}>
+                <Form.Item name={origin.dataPointId} label={origin.funcName} rules={[
+                    {
+                        validator: (_, value) => {
+                            if (value) {
+                                console.log(data)
+                                if (value >= data.propertyMap.min && value <= data.propertyMap.max) {
+                                    return Promise.resolve()
+                                } else {
+                                    return Promise.reject(`数值需在${data.propertyMap.min}和${data.propertyMap.max}之间`)
+                                }
+                            } else {
+                                return Promise.resolve()
+                            }
+
+                        }
+                    }
+                ]}>
                     <Input type='number' style={{ width: '200px' }} />
                 </Form.Item>
             )
@@ -240,15 +262,23 @@ export default ({ productId }) => {
     //上报
     const startSub = () => {
         if (connectStatus != 'Connected') {
-            alert('没连上')
+            alert('断线状态')
             return
         }
         let arr = []
         let data = form.getFieldsValue()
         for (let key in data) {
-            if (typeof data[key] != 'undefined') {
+            if (data[key]) {
+                data[key] = data[key].trim()
+            }
+            if (data[key]) {
                 let obj = {}
-                obj[key.toString()] = data[key]
+                let itemOri = originSource['dp' + key]
+                if (itemOri.funcParamList[0].dataTypCN === "数值") {
+                    obj[key.toString()] = Number(data[key])
+                } else {
+                    obj[key.toString()] = data[key]
+                }
                 arr.push(obj)
             }
         }
@@ -324,7 +354,7 @@ export default ({ productId }) => {
                 </Form>
 
             </div>
-            <div className="modtit" >模拟设备</div>
+            <div className="modtit">模拟设备</div>
             <div className='debug-data-box'>
                 <div className='databox'>
                     <div className='top'>
@@ -367,9 +397,6 @@ export default ({ productId }) => {
                     payload && <ObjectView data={recoverData(payload)} />
                 }
             </div>
-
-
         </div>)
-
 }
 

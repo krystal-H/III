@@ -239,7 +239,7 @@ export default function DeviceRegist() {
                                 </Select>
                             </Form.Item>
                             <Form.Item label="设备ID" name='id'>
-                                <Search placeholder="请输入设备ID"  onSearch={onSearch} />
+                                <Search placeholder="请输入设备ID"  onSearch={onSearch}  style={{ width: '260px' }}/>
                             </Form.Item>
                         </Form>
                     </div>

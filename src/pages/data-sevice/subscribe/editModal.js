@@ -79,7 +79,7 @@ export default function AddFuncModal({ editModelVis, colseMoadl, cancelModel, id
             ...val,
             urlConfId: id
         }
-        post(Paths.addsubscribe, params).then((res) => {
+        post(Paths.addsubscribe, params,{loading:true}).then((res) => {
             colseMoadl()
         });
     }
