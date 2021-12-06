@@ -273,7 +273,7 @@ export default class FirmwareManagement extends Component {
                             onChange: this.pagerIndex
                         }}
                     />
-                    { !'addFirmwareVisiable' && <AddFirmwareDialog changeState={this.changeState} />}
+                    { 'addFirmwareVisiable' && <AddFirmwareDialog changeState={this.changeState} />}
 
 
                     {releaseFirmwareDialog &&
