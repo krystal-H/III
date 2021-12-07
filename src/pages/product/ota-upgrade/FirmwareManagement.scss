@@ -51,11 +51,22 @@
     }
     .filepathinpt{
         position: relative;
-        left: 176px;
+        left: 150px;
     }
     // .tabs{
     //     // padding-left: 24px;
     // }
+    .ant-upload-list{
+        display: none;
+    }
+    .noborderinpt{
+        border: none;
+        color: rgba(0, 0, 0, 0.85);
+        padding: 0;
+        background-color: #fff;
+        cursor:text
+
+    }
 }
 
 
