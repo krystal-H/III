@@ -1,207 +1,132 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
-import { Form, Input, Table, Modal, Select, InputNumber, DatePicker } from 'antd'
+import React, { useState, useEffect, useRef } from 'react'
+import { Form, Input, Modal } from 'antd'
 import { Notification } from '../../../../components/Notification'
-import { cloneDeep } from 'lodash'
-import { Paths, get, post } from '../../../../api'
-import { useHistory } from 'react-router-dom';
+import { Paths, post } from '../../../../api'
+import TableCom from './selectTable'
 import './index.scss'
-import moment from 'moment'
 const { TextArea } = Input;
-const { Option } = Select
+//处理数据
+function delaData(data, editData) {
+  let newData = []
+  data.forEach(item => {
+    if (!item.funcParamList || !item.funcParamList.length) return
+    item.funcParamList.forEach(item2 => {
+      let newItem = JSON.parse(JSON.stringify(item))
+      newData.push({ ...newItem, ...item2 })
+    })
+  })
+  newData.forEach((item, index) => {
+    item.key = index
+    item.sendData = ''
+    item.isCheck = false
+    if (editData) {
+      editData.forEach(editItem => {
+        if (editItem.funcIdentifier === item.funcIdentifier) {
+          item.isCheck = true
+          if (item.funcType === "properties") {
+            item.sendData = editItem.sendData
+          } else {
+            if (item.identifier === editItem.identifier) {
+              item.sendData = editItem.sendData
+            }
+          }
+        }
 
-
-export default function AddModel({ addVisible, addOk, CancelAdd ,deviceId}) {
-  // let history = useHistory();
-  // const deviceId=history.location.pathname.split('/').slice(-1)[0]
-  const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
-  const [selectedProtocols, setSelectedProtocols] = useState([]) // rowSelection
-  const [sendDataCheck, setSendDataCheck] = useState([])
-  const [form] = Form.useForm();
-  //获取产品id
-  useEffect(() => {
-    getProductDetail()
-  }, [])
-  const [productId, setProductId] = useState('')
-  const getProductDetail = (loading = true) => {
-    post(Paths.getDeviceInfo, { deviceId }).then((res) => {
-      if (res.data.productId) {
-        getTableData(res.data.productId)
-        setProductId(res.data.productId)
-      }
-
-    });
-  }
-  const getTableData = (id) => {
-    post(Paths.getPhysicalModel, { productId: id }).then((res) => {
-      let data=res.data ? res.data.properties : []
-      data.forEach((item,index)=>{
-        item.unikey=index
       })
+    }
+  })
+  return newData
+}
+
+export default function AddModel({ addVisible, addOk, CancelAdd, deviceId, baseInfo, actionType, actionData }) {
+  const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
+  const [detailObj, setDetailObj] = useState({})
+  const [form] = Form.useForm();
+  const ref = useRef(null)
+  useEffect(() => {
+    if (actionType !== 'add') {
+      getDetail()
+    } else {
+      getTableData()
+    }
+  }, [])
+  //编辑详情
+
+  const getDetail = () => {
+    let productId = baseInfo.productId
+    let arr = [post(Paths.standardFnList, { productId}), post(Paths.singelDeviceRemoset, { taskId: actionData.taskId })]
+    Promise.all(arr).then(res => {
+      form.setFieldsValue({
+        taskName: res[1].data.taskName,
+        taskExplain: res[1].data.taskExplain
+      })
+      setDetailObj(res[1].data)
+      let data = res[0].data.standard.concat(res[0].data.custom)
+      data = data.filter(item => {
+        if (item.funcTypeCN === '服务') {
+          return item
+        }
+        if (item.funcTypeCN === '属性' && item.funcParamList[0].accessMode !== 'r') {
+          return item
+        }
+      })
+      data = delaData(data, JSON.parse(res[1].data.remoteProtocol.protocolJson))
+      if (actionType === 'detail') {
+        data = data.filter(item => {
+          if (item.isCheck) {
+            return item
+          }
+        })
+      }
+      setInitialProtoclList(data)
+    })
+  }
+  //新增
+  const getTableData = () => {
+    let productId = baseInfo.productId
+    post(Paths.standardFnList, { productId }).then((res) => {
+      let data = res.data.standard.concat(res.data.custom)
+      data = data.filter(item => {
+        if (item.funcTypeCN === '服务') {
+          return item
+        }
+        if (item.funcTypeCN === '属性' && item.funcParamList[0].accessMode !== 'r') {
+          return item
+        }
+      })
+      data = delaData(data)
       setInitialProtoclList(data)
     });
   }
-  const protocolSelectChange = selectedRowKeys => {
-    setSelectedProtocols(selectedRowKeys)
-  }
-  const protocolSelection = {
-    selectedRowKeys: selectedProtocols,
-    onChange: protocolSelectChange,
-  }
-  // 输入参数
-  const changeSendData = (value, index) => {
-    const copyList = cloneDeep(initialProtoclList)
-    copyList[index].sendData = value
-    setInitialProtoclList(copyList)
-  }
-  // 日期插件选择
-  const onChangeDate = (date, dateString, index) => {
-    changeSendData(dateString, index)
-  }
-  const columns = [
-    {
-      title: '数据名称',
-      dataIndex: 'name',
-      key: 'name',
-      width: 190
-    },
-    {
-      title: '数据标识',
-      dataIndex: 'identifier',
-      key: 'identifier',
-      width: 200
-    },
-    {
-      title: '数据类型',
-      dataIndex: 'dataType',
-      key: 'dataType',
-      render: (text, record) => {
-        return (<span>{record.dataType.type}</span>)
-      }
-    },
-    {
-      title: '数据属性',
-      render: (text, record) => {
-        switch (record.dataType.type) {
-          case 'int':
-            return <span>{record.dataType.specs.min} ~ {record.dataType.specs.max}</span>
-          case 'double':
-            return <span>{record.dataType.specs.min} ~ {record.dataType.specs.max}</span>
-          case 'float':
-            return <span>{record.dataType.specs.min} ~ {record.dataType.specs.max}</span>
-          case 'text':
-            return '-'
-          case 'enum':
-            return (
-              <span>{Object.values(record.dataType.specs).join(' | ')}</span>
-            )
-          case 'date':
-            return '-'
-          case 'bool':
-            return (
-              <span>{Object.values(record.dataType.specs).join(' | ')}</span>
-            )
-          default:
-            break;
-        }
-      }
-    },
-    {
-      title: '下发数据',
-      dataIndex: 'sendData',
-      key: 'sendData',
-      render: (text, record, index) => {
-        let { specs, type } = record.dataType,
-          _dom = null
-        switch (type) {
-          case 'int':
-          case 'double':
-          case 'float':
-            _dom = (<InputNumber value={record.sendData}
-              min={specs.min}
-              max={specs.max}
-              onChange={value => changeSendData(value, index)}
-              placeholder="请输入参数"></InputNumber>)
-            break
-          case 'text':
-            _dom = (
-              <Input value={record.sendData}
-                maxLength={30}
-                onChange={e => changeSendData(e.target.value.trim(), index)}
-                placeholder="请输入参数"></Input>
-            )
-            break
-          case 'enum':
-          case 'bool':
-            _dom = (
-              <Select
-                value={record.sendData}
-                onChange={value => changeSendData(value, index)}>
-                {
-                  Object.keys(specs) && Object.keys(specs).map((item, index) => (
-                    <Option key={index + item} value={Number(item)}>{specs[item]}</Option>
-                  ))
-                }
-              </Select>
-            )
-            break
-          case 'date':
-            _dom = (
-              <DatePicker style={{ width: 182 }}
-                defaultValue={moment(record.sendData, "YYYY-MM-DD HH:mm:ss") || ''}
-                onChange={(date, dateString) => {
-                  onChangeDate(date, dateString, index)
-                }}
-                format="YYYY-MM-DD HH:mm:ss"
-                showTime
-                showNow />
-            )
-            break
-          default:
-            break;
-        }
-        return (
-          <span className={`config-send-data ${sendDataCheck.includes(index) ? 'warn' : ''}`}>
-            {_dom}
-          </span>
-        )
-      },
-    }
-  ]
   //提交
   const subData = () => {
+    if (actionType === 'detail') {
+      CancelAdd()
+      return
+    }
+    ref.current.subOrder()
+  }
+  const finishSub = (data) => {
     form.validateFields().then(formvalue => {
-      if (selectedProtocols.length === 0) {
-        return Notification({ description: '请至少选择一条配置协议' })
-      } else {
-        let arr=[]
-        for (let index = 0; index < selectedProtocols.length; index++) {
-          
-          let data=initialProtoclList[selectedProtocols[index]].sendData ?? undefined 
-          if(typeof data == 'undefined'){
-            Notification({ description: '请为配置协议添加参数' })
-            return
-          }else{
-            arr.push(initialProtoclList[selectedProtocols[index]])
-          }
-        }
-        let params = {
-          taskName: formvalue.taskName,
-          deviceId,
-          taskExplain: formvalue.taskExplain,
-          protocolJson: JSON.stringify(arr)
-        }
-        post(Paths.saveDeviceRemoset, params).then((res) => {
-          Notification({ type: 'success', description: '添加成功' })
-          addOk()
-        });
+      let params = {
+        taskName: formvalue.taskName,
+        deviceId,
+        taskExplain: formvalue.taskExplain,
+        protocolJson: JSON.stringify(data)
       }
+      if (actionType === 'edit') {
+        params.taskId = actionData.taskId
+      }
+      post(Paths.saveDeviceRemoset, params, { loading: true }).then((res) => {
+        Notification({ type: 'success', description: '操作成功' })
+        addOk()
+      });
     })
   }
   return (
     <div >
-      <Modal title="远程配置任务" visible={addVisible} onOk={subData} onCancel={CancelAdd} width='1100px' wrapClassName='device-remote-config-modal'>
+      <Modal title="远程配置任务" visible={addVisible} onOk={subData} onCancel={CancelAdd} width='1300px' wrapClassName='device-remote-config-modal'>
         <div>
-
           <Form
             form={form}
           >
@@ -211,20 +136,18 @@ export default function AddModel({ addVisible, addOk, CancelAdd ,deviceId}) {
               rules={[{ required: true }]}
 
             >
-              <Input style={{ width: '300px' }} maxLength={20} />
+              {actionType === 'detail' ? <span>{detailObj.taskName}</span> : <Input style={{ width: '300px' }} maxLength={20} />}
             </Form.Item>
             <Form.Item
               label="任务说明"
               name="taskExplain"
               rules={[{ required: true }]}
             >
-              <TextArea rows={4} maxLength={100} showCount/>
+              {actionType === 'detail' ? <span>{detailObj.taskExplain}</span> : <TextArea rows={4} maxLength={100} showCount />}
             </Form.Item>
           </Form>
-          <div style={{ marginBottom: '10px' }}>请添加配置信息</div>
-          <Table className="config-data-table" dataSource={initialProtoclList} scroll={{ y: 300 }}
-            locale={{ emptyText: '暂无协议，请先去配置' }}
-            columns={columns} rowKey='unikey' rowSelection={protocolSelection} pagination={false} />
+          <div style={{ marginBottom: '10px' }}>{actionType === 'detail' ? '配置数据' : '请添加配置信息'} </div>
+          <TableCom dataSource={initialProtoclList} ref={ref} finishSub={finishSub} actionType={actionType} />
         </div>
       </Modal>
     </div>
