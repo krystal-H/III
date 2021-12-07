@@ -1,19 +1,18 @@
-import React, { forwardRef,useState } from 'react';
+import React, { forwardRef, useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-import { Input, Select, Radio, Button, Upload ,Form, Modal} from 'antd';
+import { Input, Select, Radio, Button, Upload ,Form, Modal,Tabs } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { get,post,Paths } from '../../../api';
 import {Notification} from '../../../components/Notification';
-import { getUploadUrl } from '../../../util/util';
 import LabelTip from '../../../components/form-com/LabelTip';
 import { SCHMETYPE,formrules, VERTYPE } from './store/constData'
-import {getVersionList,firmwareFromProduct} from './store/actionCreators'
+import {getVersionList,firmwareLastVersion} from './store/actionCreators'
 const { Option } = Select;
 const { Item } = Form;
 
 const formItemLayout = {
-    labelCol: { xs: { span: 24 }, sm: { span: 7 }, },
-    wrapperCol: { xs: { span: 24 }, sm: { span: 15 }, },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 16 }
 };
 
 const checkMainVersion = (rule, value, callback)=> {
@@ -33,61 +32,107 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getVersionLi: param => dispatch(getVersionList(param)),
-        firmwareFromProduct: id => dispatch(firmwareFromProduct(id))
+        firmwareLastVersion: id => dispatch(firmwareLastVersion(id))
     }
 }
 
 const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
-    refInstance,
-
     changeState,
-
-    firmwareFromProduct,mcusocproLi,firmwareFrPro,getVersionLi
+    firmwareLastVersion,mcusocproLi,firmwareFrPro,getVersionLi
 })=>{
 
 
     const [mcuIsUp, setMcuIsUp] = useState(1);
-    const [uploadType, setUploadType] = useState("0");
+    
     const [firmwareList, setFirmwareList] = useState([]);
+    const [selectedFirmwareLi, setSelectedFirmwareLi] = useState([]);
+    const [curFirmwareTypeNo, setCurFirmwareTypeNo] = useState();
 
     const [formInstance] = Form.useForm();
+
+    const { schemeType, productFirmwareVersion, productId, summaryVersions=[] } = firmwareFrPro;//schemeType: 2 MCU, 3 SoC
+
+    useEffect(() => {
+        console.log(22222,firmwareFrPro)
+        if( schemeType ){
+            post(Paths.getFirmwareList,{productId,schemeType}).then(({data = []}) => {
+                // data = [
+                //     {firmwareTypeName:'ccc',firmwareTypeNo:5},
+                //     {firmwareTypeName:'eee',firmwareTypeNo:24},
+                //     {firmwareTypeName:'aaa',firmwareTypeNo:1},
+                //     {firmwareTypeName:'bbb',firmwareTypeNo:2},  
+                // ]
+                if(schemeType==2){
+                    formInstance.setFieldsValue({ mcuUpgrade:1 })
+                    setMcuIsUp(1)
+                }
+                setFirmwareList(data)
+                if(data.length>0){
+                    const firstNo = data[0].firmwareTypeNo
+                    setSelectedFirmwareLi([firstNo])
+                    setCurFirmwareTypeNo(firstNo)
+                }
+                
+            }); 
+        }
+    }, [firmwareFrPro])
+
     const changedPro= productId =>{
-        firmwareFromProduct(productId)
-        post(Paths.getFirmwareList,{productId}).then((res) => {
-            setFirmwareList(res.data || [])
-        }); 
-
-        
+        productId = 12150;
+        firmwareLastVersion(productId)   
     }
+
     const onFinish=(values)=>{
-        const { filePath1, filePath2, ...otherPar } = values,
-              { schemeType, deviceVersionId } = firmwareFrPro;
-        const deviceVersionType = 5;
-        let filePath=undefined;
-
-        if( schemeType ==3 || mcuIsUp==0){
-            // console.log(222,filePath1, getUploadUrl(filePath2) )
-            filePath = uploadType=="1" && filePath1 || getUploadUrl(filePath2);
-
+        console.log(111,values)
+        const { productId, productFirmwareName } = values;
+        let params = {
+            productId, 
+            productFirmwareName, 
+            productFirmwareVersion:productFirmwareVersion+1,
+            deviceVersionIds:summaryVersions[0].deviceVersionId,
         }
 
-        // const filePath = schemeType==3 && (uploadType=="1" && filePath1 || getUploadUrl(filePath2)) || undefined;
+        if(schemeType==3||mcuIsUp==0){
+            let deviceVersions = selectedFirmwareLi.map(firmwareTypeNo=>{
+                let o = firmwareList.find(a=>a.firmwareTypeNo==firmwareTypeNo) || {}
+                const { firmwareTypeName, deviceVersionType } = o;
+                const mainVersion = values[`mainVersion_${firmwareTypeNo}`],
+                    extVersion = mainVersion,
+                    totalVersion = values[`totalVersion_${firmwareTypeNo}`],
+                    filePath = values[`filePath_${firmwareTypeNo}`];
+                return {
+                    deviceVersionName:firmwareTypeName,
+                    deviceVersionType,
+                    firmwareVersionType:firmwareTypeNo,
+                    mainVersion, extVersion, totalVersion, filePath,
+                    productId
+                }
+            })
+            params = {...params,deviceVersions}
+        }
 
-        post(Paths.otaAddVersion,{...otherPar,deviceVersionId,deviceVersionType,filePath}).then((res) => {
+        post(Paths.otaAddVersion,params).then((res) => {
             Notification({type:'success',description:'新增成功！'});
             getVersionLi();
             changeState('addFirmwareVisiable',false); 
         }); 
     }
 
-    const normFile = (e) => {
-        if (Array.isArray(e)) {
-          return e;
-        }
-        return e && e.fileList;
-    };
 
-    const { schemeType, moduleName } = firmwareFrPro;
+    const uploadChange = ({file})=>{
+        if(file.response){
+            const url = file.response.data && file.response.data.url || '';
+            formInstance.setFieldsValue({ 
+                [`${curFirmwareTypeNo}_filePath`]:url
+            })
+        }
+    }
+
+    const cngTab = cur=>{
+        setCurFirmwareTypeNo(cur)
+    }
+
+    
 
     return (
         <Modal
@@ -111,18 +156,20 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                         }
                     </Select>
                 </Item>
-                { schemeType && <Item label="开发方案"> { SCHMETYPE[schemeType-1] && SCHMETYPE[schemeType-1].nam || "出错了！" }</Item> }
-                { schemeType==2 && <Item label="模组固件名称"> { moduleName }</Item> }
-                <Item name="productFirmwareVersion"
-                    label={<LabelTip label="产品版本号" tip="产品整体的版本编号，概括产品下系统、模组、MCU固件各部分。"/>}
-                    rules={[{ required: true, message: '请输入产品版本号' },{
-                        pattern: formrules.strextVer,
-                        message: '仅支持字母、数字、下划线、短横线、点号，不超过30个字符',
-                    }]}
-                    hasFeedback
-                >
-                    <Input maxLength={30} placeholder='仅支持字母、数字、下划线、短横线、点号' />
+                <Item label="开发方案"> { schemeType && SCHMETYPE[schemeType-2] && SCHMETYPE[schemeType-2].nam || '--' }</Item>
+                {
+                    schemeType==2&&<>
+                        <Item label="当前模组固件版本"> { summaryVersions[0] && summaryVersions[0].curMainVersion  }</Item>
+                        <Item label="最新模组固件版本"> { summaryVersions[0] && summaryVersions[0].mainVersion  }</Item>
+                    </>
+                }
+                <Item label={<LabelTip label="产品版本号" tip="产品版本自动生成，自增长，产品的整体内部版本号"/>}>
+                    {productFirmwareVersion && productFirmwareVersion+1 || "--"}
                 </Item>
+                <Item label="产品版本名称" name='productFirmwareName' rules={[{ required: true, message: '请输入产品版本名称' }]}>
+                    <Input maxLength={30} placeholder='最多30个字符' />
+                </Item>
+
                 {
                     schemeType==2 &&
                     <Item label="MCU升级" name='mcuUpgrade' initialValue={1}>
@@ -132,57 +179,49 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     </Item>
                 }
                 { (schemeType==3||mcuIsUp==0) && <>
-
-                    <Item  name='deviceVersionName' label={<LabelTip label="固件包名称" tip="固件包的具体业务名称，如具体产品的WiFi模组固件升级包。"/>} rules={[{ required: true, message: '请输入升级包名称' }]} hasFeedback>
-                        <Input maxLength={30} placeholder='请输入升级包名称' />
-                    </Item>
-                    <Item label={<LabelTip label="固件模块" tip="硬件固件的细分模块，比如MCU的驱动板固件模组或者主板固件模块。"/>} name='firmwareVersionType' rules={[{ required: true, message: '请选择固件模块' }]}>
-                        <Select placeholder="选择固件模块" onChange={()=>{}} >
+                    <Item label={schemeType==3&&"模块"||"模块/插件"}>
+                        <Select placeholder="选择固件模块" onChange={v=>{setSelectedFirmwareLi(v)}} mode="multiple" value={selectedFirmwareLi}>
                             {
-                                firmwareList.map(({firmwareTypeName,firmwareTypeNo,deviceVersionType}) => {
-                                    return <Option key={firmwareTypeNo} value={firmwareTypeNo}>{firmwareTypeName}</Option>
+                                firmwareList.map(({firmwareTypeName,firmwareTypeNo},i) => {
+                                    return <Option key={firmwareTypeNo} disabled={i==0} value={firmwareTypeNo}>{firmwareTypeName}</Option>
                                 })
                             }
                         </Select>
                     </Item>
 
-                    <Item label={<LabelTip label="固件系列标识" tip="区分不同固件包，只有相同的固件才能升级"/>} hasFeedback name='totalVersion'
-                        rules={[{ required: true, message: '请输入固件系列标识' },{pattern: formrules.strextVer,message: '仅支持字母、数字、下划线、短横线、点号，不超过30个字符'}]}
-                    >
-                        <Input maxLength={30} placeholder='仅支持字母、数字、下划线、短横线、点号' />
-                    </Item>
-                    <Item label={<LabelTip label="内部版本号" tip="同一系列标识的固件通过对比内部版本号决定是否升级"/>} hasFeedback name='mainVersion'
-                        rules={[{ required: true, message: '请输入内部版本号' },{ pattern: formrules.mainVer,message: '须为不小于0的整数'},{ validator:checkMainVersion}]}
-                    >
-                        <Input maxLength={10} placeholder='内部版本须为不小于0的整数' />
-                    </Item>
-                    <Item label="固件程序" name="notneed" required initialValue="0">
-                        <Radio.Group onChange={e=>{setUploadType(e.target.value)}}>
-                            <Radio.Button value="0">本地上传</Radio.Button><Radio.Button value="1">填写URL</Radio.Button>
-                        </Radio.Group>
-                    </Item>
+                    <Tabs className='tabs'type="card" onChange={cngTab}>
+                        {
+                            selectedFirmwareLi.map( firmwareTypeNo =>{
+                                const data = summaryVersions.find(a=>a.firmwareVersionType == firmwareTypeNo) || {}
+                                const { firmwareVersionTypeName, totalVersion=0, curMainVersion=0 } = data;
+                                return <Tabs.TabPane tab={firmwareVersionTypeName || firmwareList.find((a)=>a.firmwareTypeNo==firmwareTypeNo).firmwareTypeName || '未知模块名'} key={firmwareTypeNo} >
+                                    <Item label={schemeType==3&&"模块编号"||"模块/插件编号"}>{firmwareTypeNo}</Item>
+                                    <Item label='硬件版本号' name={`totalVersion_${firmwareTypeNo}`} initialValue={totalVersion}>
+                                        <Input className='noborderinpt' disabled/>
+                                    </Item>
+                                    <Item label='当前软件版本号'>{curMainVersion}</Item>
+                                    <Item label="待上传软件版本号" name={`mainVersion_${firmwareTypeNo}`} rules={[{ required: true, message: '请输入产品版本名称' }]}>
+                                        <Input maxLength={10} placeholder='最多30个字符' />
+                                    </Item>
+                                    <Item label="固件程序" name={`filePath_${firmwareTypeNo}`}
+                                            rules={[{ required: true, message: '请输入URL' },{pattern: formrules.url, message: '请输入正确的URL'}]}
+                                        ><Input maxLength={100} placeholder='请输入URL或者上传一个附件自动填充' />
+                                        
+                                    </Item>
+                                </Tabs.TabPane>
+                            })
+                        }    
+                    </Tabs>
                     {
-                        uploadType=="1" ? 
-                        <Item  className='filepathinpt' hasFeedback name="filePath1"
-                            rules={[{ required: true, message: '请输入URL' },{pattern: formrules.url, message: '请输入正确的URL'}]}
-                        ><Input maxLength={100} placeholder='请输入URL' />
-                        </Item>  
-                        :
-                        <Item name="filePath2" className='filepathinpt'
-                            valuePropName="fileList" getValueFromEvent={normFile}
-                            rules={[{ required: true, message: '请上传文件' }]}
-                        ><Upload
-                                accept='.bin,.hex,.zip,.cyacd,.apk,.dpkg'
-                                maxCount={1}
-                                action={Paths.upFileUrl}
-                                data={{
-                                    appId: 31438,
-                                    domainType: 4,
-                                }}>
-                                    <Button type="primary" ><UploadOutlined />上传附件</Button>
-                                    <div>支持.bin,.hex,.zip,.cyacd,.apk,.dpkg格式，不超过200MB。</div>
-                            </Upload>
-                        </Item>
+                        selectedFirmwareLi.length>0 && 
+                        <Upload className='filepathinpt' onChange={uploadChange}
+                            accept='.bin,.hex,.zip,.cyacd,.apk,.dpkg'
+                            maxCount={1}
+                            action={Paths.upFileUrl}
+                            data={{ appId: 31438, domainType: 4, }}>
+                                <Button type="primary" ><UploadOutlined />上传附件</Button>
+                                <div>支持.bin,.hex,.zip,.cyacd,.apk,.dpkg格式，不超过200MB。</div>
+                        </Upload>
                     }
                 </>
                 }
@@ -192,4 +231,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     )
 })
 
-export default forwardRef( (props,_ref) => <AddMod  {...props}  refInstance={_ref} />   )
+export default AddMod
+
+
+

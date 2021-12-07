@@ -8,12 +8,12 @@ function ConfigFirmwareDetail({ firmwareDetailData = [], firmwareDetailVisible, 
 
   const columns = [
     {
-      title: '配置的固件模块标识',
-      dataIndex: 'firmwareTypeMark',
-      key: 'firmwareTypeMark'
+      title: '编号',
+      dataIndex: 'firmwareTypeNo',
+      key: 'firmwareTypeNo'
     },
     {
-      title: '配置的固件模块名称',
+      title: '名称',
       dataIndex: 'firmwareTypeName',
       key: 'firmwareTypeName'
     },

@@ -469,8 +469,7 @@ let Paths = {
     otaProDevVersionList:'/firmware/productFirmware/getProductFirmwareList',
     otaGetExtVersion:'/device/version/5/getExtVersion',
     otaDeleteVer:'/device/version/5/delete',
-
-    firmwareFromProduct:'/product/firmware/package',
+    firmwareLastVersion:'/firmware/productFirmware/getLastProductVersion',
     otaAddVersion:'/firmware/device/version/add',
     otaGetVersionDetail:'/firmware/device/version/get',
     otaGetBatch:'/firmware/device/upgrade/publish/getBatch',
@@ -482,6 +481,7 @@ let Paths = {
     otaValidate:'/firmware/device/version/validate',
     otaRelease:'/firmware/device/upgrade/publish',
     getMcuSocProLi:'/productManage/getFilterSchemaSelList',
+    firmwareLastProductVersion:'/firmware/productFirmware/getLastProductVersion',
     
     //总览页
     homeBanner:'/cover/getBannerList',//banner图

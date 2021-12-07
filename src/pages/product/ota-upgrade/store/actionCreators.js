@@ -10,23 +10,19 @@ import {
 
 export const getMcuSocProLi = param => {
     return (dispatch) => {
-        post(Paths.getMcuSocProLi,{},{ loading:true }).then(({data={}}) => {
-            const d = Object.keys(data).map(id=>{
-                return { productId:id, productName:data[id] }
-            });
-
+        post(Paths.getMcuSocProLi,{},{ loading:true }).then(({data=[]}) => {
             dispatch({
                 type: GETPROLIST,
-                mcusocproLi:d,
+                mcusocproLi:data,
             });
         });
     }
 }
 
 
-export const firmwareFromProduct = (productId) => {
+export const firmwareLastVersion = (productId) => {
     return (dispatch) => {
-        post(Paths.firmwareFromProduct,{productId},{loading:true}).then(({data={}}) => {
+        post(Paths.firmwareLastVersion,{productId},{loading:true}).then(({data={}}) => {
             dispatch({
                 type: FIRMWAREFROMPRO,
                 firmwareFrPro:data,
@@ -42,7 +38,7 @@ export const firmwareFromProduct = (productId) => {
 export const getVersionList = (params={}) => {
     const defaultparams  = {pageIndex:1,pageRows:10}
     return (dispatch) => {
-        post(Paths.otaDevVersionList,{...defaultparams,...params}).then(({data={}}) => {
+        post(Paths.otaProDevVersionList,{...defaultparams,...params}).then(({data={}}) => {
             dispatch({
                 type: GETVERLI,
                 versionList:data,

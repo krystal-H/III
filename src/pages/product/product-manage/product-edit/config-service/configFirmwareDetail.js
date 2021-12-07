@@ -10,12 +10,12 @@ function ConfigFirmwareDetail({ productId, firmwareDetailData = [], firmwareDeta
 
   const columns = [
     {
-      title: '配置的固件模块标识',
-      dataIndex: 'firmwareTypeMark',
-      key: 'firmwareTypeMark'
+      title: '编号',
+      dataIndex: 'firmwareTypeNo',
+      key: 'firmwareTypeNo'
     },
     {
-      title: '配置的固件模块名称',
+      title: '名称',
       dataIndex: 'firmwareTypeName',
       key: 'firmwareTypeName'
     },
@@ -31,13 +31,22 @@ function ConfigFirmwareDetail({ productId, firmwareDetailData = [], firmwareDeta
     {
       title: '操作',
       render: (text, record, index) => (
-        <div className="edit-ope" >
+        <div className="edit-ope">
           {
             record.isCustom === 0 &&
             <>
-              <span onClick={() => showEditFirmware(record)}>编辑</span>
-              <Divider type="vertical" />
-              <span onClick={() => deleteFirmwareItem(record)}>删除</span>
+              { // soc方案模组插件且编号是0 证明是第一个 不能删除
+                record.deviceVersionType == 1 && record.firmwareTypeNo == 0 &&
+                <span onClick={() => showEditFirmware(record)}>编辑</span>
+              }
+              { // soc方案模组插件非0即非第一个  或者  是mcu模块  可以编辑和删除
+                ((record.deviceVersionType === 1 && record.firmwareTypeNo !== 0) || (record.deviceVersionType !== 1)) &&
+                <>
+                  <span onClick={() => showEditFirmware(record)}>编辑</span>
+                  <Divider type="vertical" />
+                  <span onClick={() => deleteFirmwareItem(record)}>删除</span>
+                </>
+              }
             </>
           }
         </div>
@@ -63,7 +72,7 @@ function ConfigFirmwareDetail({ productId, firmwareDetailData = [], firmwareDeta
       maskClosable={false}
       wrapClassName="replace-module-modal">
       <div className="configfirmware-detail-modal">
-        <Button type="primary" className="mar22" onClick={() => showAddFirmware('add')}>新增产品固件模块</Button>
+        {/* <Button type="primary" className="mar22" onClick={() => showAddFirmware('add')}>新增产品固件模块</Button> */}
         <Table rowKey="firmwareTypeNo" columns={columns} dataSource={firmwareDetailData} pagination={false} size="small" />
       </div>
     </Modal>

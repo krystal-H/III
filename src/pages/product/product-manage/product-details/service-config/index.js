@@ -131,12 +131,13 @@ function ServiceConfig({ productId, nextStep }, ref) {
     })
   }
 
-  // 免开发方案不显示 配置产品固件模块
+  // 免开发方案不显示 配置产品固件模块 、固件升级
   const noFreeScheme = () => {
     if (productItemData.schemeType) {
       if (productItemData.schemeType == 1) {
         const tempList = cloneDeep(optionalList)
-        tempList.splice(0, 1)
+        // tempList.splice(0, 1)
+        tempList.splice(0, 2)
         setOptionalList(tempList)
       } else {
         getFirmwareList()
@@ -210,7 +211,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
                         <div className="config-card-right-btn">配置</div>
                       </Link>
                       :
-                      (item.type === 'addFirmware' || item.isConfiged) ? 
+                      (item.type === 'addFirmware' || item.isConfiged) ?
                         <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
                         :
                         ''
