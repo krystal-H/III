@@ -35,7 +35,7 @@ export default function DeviceInfo({ match }) {
                     <label className='device-label'>设备ID：</label><span className='device-text'>{baseInfo.deviceUniqueId}</span>
                     <span className='device-status'>{baseInfo.onlineStatus == 1 ? '在线' : '离线'}</span>
                 </div>
-                <div className='device-top-item'><label className='device-label'>物理地址ID：</label><span className='device-text'></span>{baseInfo.deviceMac}</div>
+                <div className='device-top-item'><label className='device-label'>物理地址：</label><span className='device-text'></span>{baseInfo.deviceMac}</div>
                 <div className='device-top-item'><label className='device-label'>产品名称：</label><span className='device-text'>{baseInfo.productName}</span></div>
                 <div className='device-top-item'><label className='device-label'>所属分类：</label><span className='device-text'>{baseInfo.productType}</span></div>
             </div>
