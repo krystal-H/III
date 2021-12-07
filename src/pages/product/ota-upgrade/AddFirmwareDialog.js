@@ -78,7 +78,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     }, [firmwareFrPro])
 
     const changedPro= productId =>{
-        productId = 12150;
+        // productId = 12150;
         firmwareLastVersion(productId)   
     }
 
