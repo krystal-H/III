@@ -73,7 +73,7 @@ export default class FirmwareManagement extends Component {
             { title: '固件名称', dataIndex: 'deviceVersionName' },
 
             {
-                title: '运行状态', dataIndex: 'updateStatus',
+                title: '运行状态', dataIndex: 'status',
                 render: u => {
                     const { nam, color } = STATUSTAG[u]
                     return <Tag color={color} >{nam}</Tag>
@@ -85,26 +85,25 @@ export default class FirmwareManagement extends Component {
             },
             {
                 title: '操作', dataIndex: 'action',
-                render: (a, recard) => {//runStatus 0：待验证 1：验证中 2：已发布,3 验证完成,4
+                render: (a, recard) => {//runStatus 0：待验证 1：验证中 2：已发布,3 验证完成
                     const {
-                        runStatus = 0, deviceVersionId,
+                        status = 0, productFirmwareId,
                         macSet = '', validateType = 0,
                         productId, totalVersion,
                         schemeType, firmwareVersionType,
                     } = recard
                     return <Space>
                         {
-                            runStatus == 0 ? <a onClick={() => { this.openValidation(deviceVersionId) }}>验证</a> :
-                            runStatus == 1 ?
+                            status == 0 ? <a onClick={() => { this.openValidation(productFirmwareId) }}>验证</a> :
+                            status == 1 ?
                                     <>
-                                        <a onClick={() => { this.openValidation(deviceVersionId, { macSet, validateType: validateType || 0 }) }}>修改验证</a>
-                                        <a onClick={() => { this.getValidateInfo(deviceVersionId) }}>查看验证</a>
-                                    </> : <>
-                                        {runStatus != 4 && <a onClick={() => { this.openRelease(deviceVersionId) }}>发布</a>}
-                                        {runStatus != 3 && <Link to={`/open/product/otaUpdate/details/${deviceVersionId}`}>查看批次</Link>}
-                                    </>
+                                        <a onClick={() => { this.openValidation(productFirmwareId, { macSet, validateType: validateType || 0 }) }}>修改验证</a>
+                                        <a onClick={() => { this.getValidateInfo(productFirmwareId) }}>查看验证</a>
+                                    </> : 
+                            status ==3 ?  <a onClick={() => { this.openRelease(productFirmwareId) }}>发布</a> :
+                            status ==2 ?  <Link to={`/open/product/otaUpdate/details/${productFirmwareId}`}>查看批次</Link> : null
                         }
-                        {/* <a onClick={()=>{this.deleteConfirm(deviceVersionId)}}>删除</a> */}
+                        {/* <a onClick={()=>{this.deleteConfirm(productFirmwareId)}}>删除</a> */}
                     </Space>
                 },
             },
@@ -195,7 +194,10 @@ export default class FirmwareManagement extends Component {
     pagerIndex = (pageIndex = 1) => {
         // console.log(getUrlParam('productId'), 'product')
         let { productId, schemeType, deviceVersionName } = this.state
-        let params = { pageIndex, productId }
+        
+        let params = { pageIndex }
+        productId != -1 && (params.productId = productId) 
+
         schemeType != -1 && (params.schemeType = schemeType)
         deviceVersionName && (params.deviceVersionName = deviceVersionName)
 
@@ -268,7 +270,7 @@ export default class FirmwareManagement extends Component {
 
 
                     <Table
-                        rowKey={({ deviceVersionId }) => deviceVersionId + "_"}
+                        rowKey={({ deviceVersionId,createTime }) => deviceVersionId + "_" + createTime}
                         columns={this.columns}
                         dataSource={list}
                         pagination={{
