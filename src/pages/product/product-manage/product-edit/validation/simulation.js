@@ -358,7 +358,7 @@ export default ({ productId, tabShow }) => {
             <div className="modtit">模拟设备</div>
             <div className='debug-data-box'>
                 <div className='databox'>
-                    <div className='top'>
+                    <div className='top scroll-y'>
                         <Form form={form} labelAlign='right' labelCol={{
                             span: 8,
                         }}
