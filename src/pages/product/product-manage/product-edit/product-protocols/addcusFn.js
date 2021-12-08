@@ -342,7 +342,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                                 name={['specs', 'interval']}
                                 rules={[{ required: true }]}
                             ><Input /></Form.Item>
-                            <Form.Item name={['specs', 'multiple']} label="倍数" >
+                            <Form.Item name={['specs', 'multiple']} label="倍数"  rules={[{ required: true }]}>
                                 <Select  >
                                     {
                                         multipleCollection.map(item => {
@@ -351,7 +351,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                                     }
                                 </Select>
                             </Form.Item>
-                            <Form.Item name={['specs', 'unit']} label="单位" >
+                            <Form.Item name={['specs', 'unit']} label="单位"  rules={[{ required: true }]}>
                                 <Select>
                                     {
                                         unitCollection.map(item => {
@@ -431,7 +431,7 @@ function EventTemp({ currentTab, sentReq }, ref) {
             let origin = {}
             let arrFn = []
             let arrData = []
-            if (newParamsList.length == 0) {
+            if (newParamsList.length === 0) {
                 Notification({
                     description: `至少添加一个参数`,
                     type: 'warn'
