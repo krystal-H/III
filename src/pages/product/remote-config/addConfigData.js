@@ -3,7 +3,7 @@ import { Paths, post } from '../../../api'
 import TableCom from '../../device/deviceDetail/onlineSet/selectTable'
 
 //处理数据
-function delaData(data, editData) {
+function delaData(data, editData={}) {
   let newData = []
   data.forEach(item => {
     if (!item.funcParamList || !item.funcParamList.length) return

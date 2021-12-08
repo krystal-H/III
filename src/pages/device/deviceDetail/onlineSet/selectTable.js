@@ -95,7 +95,7 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
         },
         {
             title: '功能类型', dataIndex: 'funcTypeCN',
-            width: '90px',
+            width: '4%',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     dataSource,
@@ -107,7 +107,7 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
             },
         },
         {
-            title: '功能点名称', dataIndex: 'funcName', width: '140px',
+            title: '功能点名称', dataIndex: 'funcName', width: '10%',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     dataSource,
@@ -120,7 +120,7 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
         },
         {
             title: '标识符', dataIndex: 'funcIdentifier',
-            width: '140px',
+            width: '10%',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     dataSource,
@@ -131,8 +131,8 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
                 );
             },
         },
-        { title: '参数名称', dataIndex: 'name', width: '140px' },
-        { title: '参数标识', dataIndex: 'identifier', width: '140px' },
+        { title: '参数名称', dataIndex: 'name', width: '12%' },
+        { title: '参数标识', dataIndex: 'identifier', width: '10%' },
         // {
         //     title: '数据传输类型', dataIndex: 'accessMode',
         //     render: (text, record) => {
@@ -149,7 +149,7 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
         //     }
         // },
         {
-            title: '数据类型', width: '100px', dataIndex: 'dataType', render: (text, record) => (
+            title: '数据类型', width: '8%', dataIndex: 'dataType', render: (text, record) => (
                 <span>{record.dataTypCN}</span>
             )
         },
@@ -158,7 +158,7 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
             title: '下发数据',
             dataIndex: 'sendData',
             key: 'sendData',
-            // fixed: 'right',
+            fixed: 'right',
             render: (text, record, index) => {
                 let type = record.dataTypeEN, specs = record.propertyMap, _dom = null
                 if (actionType === 'detail') {
