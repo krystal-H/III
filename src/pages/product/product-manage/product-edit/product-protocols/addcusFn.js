@@ -43,8 +43,9 @@ export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList,
     }, [])
     //服务事件功能名称下拉
     const standardDatas = useMemo(() => {
-        let arr = standardData.filter(item => {
-            if (item.funcType == 'properties') {
+        let source = standardData.standard.concat(standardData.custom)
+        let arr = source.filter(item => {
+            if (item.funcType === 'properties') {
                 return item
             }
         })
@@ -593,7 +594,7 @@ function ServeTemp({ sentReq }, ref) {
             let arrFn = []
             let arrData = []
             let allList = inputList.concat(outputList)
-            if (allList.length == 0) {
+            if (allList.length === 0) {
                 Notification({
                     description: `至少添加一个参数`,
                     type: 'warn'
@@ -801,7 +802,7 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                             }
                         }
                     ]}>
-                    <Input type='number' placeholder='可为空'/>
+                    <Input type='number' placeholder='可为空' />
                 </Form.Item>
                 <Form.Item
                     label='数值间隔'
@@ -876,7 +877,7 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                     label="默认值"
                     name='default'
                 >
-                    <Input placeholder='可为空'/>
+                    <Input placeholder='可为空' />
                 </Form.Item></>
         }
         return ''

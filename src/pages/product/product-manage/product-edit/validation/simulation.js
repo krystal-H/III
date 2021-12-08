@@ -261,7 +261,7 @@ export default ({ productId, tabShow }) => {
     }
     //上报
     const startSub = () => {
-        if (connectStatus != 'Connected') {
+        if (connectStatus !== 'Connected') {
             alert('断线状态')
             return
         }

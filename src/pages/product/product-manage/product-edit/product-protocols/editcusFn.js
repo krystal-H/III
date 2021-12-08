@@ -32,10 +32,16 @@ const eventTabOptions = [
     { label: '告警', value: 'alarm' },
     { label: '信息', value: 'info' }]
 
-export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList, modelType, actionData, standardData = [] }) {
+export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList, modelType, actionData, standardData }) {
     //服务事件功能名称下拉
     const standardDatas = useMemo(() => {
-        let arr = standardData.filter(item => {
+        let source = []
+        if (modelType === '1') {
+            source = standardData.standard
+        } else {
+            source = standardData.standard.concat(standardData.custom)
+        }
+        let arr = source.filter(item => {
             if (item.funcType === 'properties') {
                 return item
             }
@@ -251,7 +257,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
                 label="数据类型"
                 name='type'
             >
-                <Select onChange={onTypeChange}  disabled={modelType === '1' ? true : false}>
+                <Select onChange={onTypeChange} disabled={modelType === '1' ? true : false}>
                     {
                         dataOptions.map(item => (
                             <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
@@ -646,7 +652,7 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
             let arrFn = []
             let arrData = []
             let allList = inputList.concat(outputList)
-            if (allList.length == 0) {
+            if (allList.length === 0) {
                 Notification({
                     description: `至少添加一个参数`,
                     type: 'warn'
@@ -808,7 +814,6 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
     const [selectId, setSelectId] = useState(data.dataPointId)
     useEffect(() => {
         if (data.dataPointId) {
-            console.log(data, '哈哈哈哈')
             form.setFieldsValue({
                 name: data.dataPointId,
             });
@@ -856,11 +861,11 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
     }
     //展示下发
     const getDom = () => {
-        if (sentData.dataType.accessMode == 'rw') {
+        if (sentData.dataType.accessMode === 'rw') {
             return <span>可下发可上报</span>
-        } else if (sentData.dataType.accessMode == 'w') {
+        } else if (sentData.dataType.accessMode === 'w') {
             return <span>可下发</span>
-        } else if (sentData.dataType.accessMode == 'r') {
+        } else if (sentData.dataType.accessMode === 'r') {
             return <span>可上报</span>
         }
         return ''
@@ -899,7 +904,7 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                             }
                         }
                     ]}>
-                    <Input type='number' placeholder='可为空'/>
+                    <Input type='number' placeholder='可为空' />
                 </Form.Item>
                 <Form.Item
                     label='数值间隔'
@@ -975,7 +980,7 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                     label="默认值"
                     name='default'
                 >
-                    <Input  placeholder='可为空'/>
+                    <Input placeholder='可为空' />
                 </Form.Item></>
         }
         return ''

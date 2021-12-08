@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle, useLayoutEffect } from 'react'
+import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react'
 import { Table, Input, Checkbox, Select, InputNumber } from 'antd';
 import { getRowSpanCount } from '../../../../configs/tableCombine'
 import { Notification } from '../../../../components/Notification'
@@ -21,12 +21,6 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
         })
         setSelectData(arrId)
     }, [dataSource.length])
-    useLayoutEffect(() => {
-        if (actionType === 'detail') {
-            // alert(1)
-            // columns.shift()
-        }
-    }, [])
     //勾选
     const onselectChange = (e, data, index) => {
         let isTrue = e.target.checked
