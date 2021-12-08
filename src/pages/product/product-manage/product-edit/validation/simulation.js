@@ -3,6 +3,7 @@ import { Button, Input, Form, Select, Radio, Divider } from 'antd';
 import { post, Paths } from '../../../../../api';
 import DescWrapper from '../../../../../components/desc-wrapper/DescWrapper';
 import ObjectView from "../../../../../components/ObjectView";
+import { Notification } from '../../../../../components/Notification';
 import mqtt from 'mqtt'
 import QRCode from 'qrcode.react';
 import CryptoJS from 'crypto-js'
@@ -36,6 +37,14 @@ export default ({ productId, tabShow }) => {
     }, [tabShow])
     //开始调试
     const starLink = () => {
+        let count = formBar.getFieldValue('account')
+        if (!count || !count.match(/^(((\d{3,4}-)?\d{7,8})|(1\d{10}))$/)) {
+            Notification({
+                description: '输入正确的手机号',
+                type: 'warn'
+            });
+            return
+        }
         client && client.end()
         post(Paths.getMockDeviceId, { productId, account: formBar.getFieldValue('account') }, { needFormData: true }, { loading: true }).then(data => {
             let dataSource = data.data.data
@@ -158,6 +167,8 @@ export default ({ productId, tabShow }) => {
         url = url.replace('1883', '8084')
         if (window.location.hostname !== 'open.clife.cn') {
             window.open(url.replace('wss', 'https'))
+        } else {
+            url = 'wss://mqtt.clife.cn:8084/mqtt'
         }
         client = mqtt.connect(url, options)
         subMessAge(data)
