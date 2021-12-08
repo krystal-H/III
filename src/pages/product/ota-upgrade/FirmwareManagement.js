@@ -295,26 +295,15 @@ export default class FirmwareManagement extends Component {
                             <ReleaseFirmware deviceVersionId={deviceVersionId} close={() => { this.switchDialog('releaseFirmwareDialog') }} />
                         </Modal>
                     }
-                    {
-                        validationFirmwareDialog && 
-                        <Modal
-                        title={validationModTit}
-                        visible={validationFirmwareDialog}
-                        onOk={() => { this.refValidationFirmware() }}
-                        onCancel={this.closeValiFirm}
-                        width={650}
-                        maskClosable={false}
-                    >
+                    {   validationFirmwareDialog && 
                         <ValidationFirmwareDialog
                             deviceVersionId={deviceVersionId}
                             validationDetail={{ ...validationDetail }}
-                            setValidationDetail={this.setValidationDetail}
                             pagerIndex={this.pagerIndex}
                             pageIndex={pageIndex}
-                            onRef={ref => { this.refValidationFirmware = ref }}
                             close={this.closeValiFirm}
+                            title={validationModTit}
                         />
-                    </Modal>
                     }
                     
                     <Modal title='验证信息' visible={!!validateInfo.length} onCancel={this.closeValidateInfo} width={800} footer={null} maskClosable={false}>

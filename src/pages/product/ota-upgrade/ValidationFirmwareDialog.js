@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
-import { Button, Radio, Alert, Input, Upload ,Modal} from 'antd';
+import { Button, Radio, Alert, Input, Upload ,Modal, Form} from 'antd';
 import { post,Paths } from '../../../api';
 import {Notification} from '../../../components/Notification'
 const { TextArea } = Input;
@@ -16,22 +14,27 @@ const desc = [
 ]
 export class ValidationFirmwareDialog  extends Component{
     constructor(props){
-        super(props);
+        super();
+        const { validationDetail:{macSet,validateType} } = props
+        // console.log(777,validateType)
         this.state = {
             status:0,
             error:false,
+            macSet,
+            validateType
         }
     }
     changeValidateType = ()=>{
 
     }
     handleSubmit =() =>{
-        const {deviceVersionId,validationDetail:{macSet,validateType},pagerIndex,pageIndex,close} = this.props
+        const { deviceVersionId, pagerIndex, pageIndex, close } = this.props
+        const { macSet, validateType, status  } = this.state
         if(!macSet){
             this.setState({error:true})
             return
         }
-        const {status} =this.setValidationDetail
+        
         post(Paths.otaValidate,{deviceVersionId,macSet,validateType,status},{loading:true}).then((model) => {
             pagerIndex(pageIndex) 
             close()
@@ -54,7 +57,7 @@ export class ValidationFirmwareDialog  extends Component{
         post(Paths.otaImportMac,{multipartFile:file,deviceVersionId},{needFormData:true}).then(({data={}}) => {
             const {successes,totalCount,successCount,failCount} = data
             let macSet = successes.join(','),failsStr='';
-            this.props.setValidationDetail('macSet',macSet)
+            this.setState({macSet})
             Notification({
                 message:'Mac导入结果',
                 description:`共导入${totalCount}条，成功了${successCount}条，失败了${failCount}条${failsStr}`
@@ -63,18 +66,14 @@ export class ValidationFirmwareDialog  extends Component{
         });
         return false;
     };
-    changeStatus = status=>{
-        this.setState({status})
-    }
     changeValue = (key,e)=>{
         const val = e.target.value
-        const {setValidationDetail} = this.props
-        setValidationDetail(key,val)
+        this.setState({[key]:val})
 
     }
     render() {
-        const { validationDetail:{macSet,validateType}, title, close } = this.props
-        const { error } = this.state
+        const { title, close } = this.props
+        const { error, macSet, validateType, status } = this.state
         return (
 
             <Modal
@@ -87,8 +86,8 @@ export class ValidationFirmwareDialog  extends Component{
             >
                 <div className="ota_validationdialog" >
                     <Form {...formItemLayout} >
-                        <Form.Item label='验证模式' name="validateType">
-                            <Radio.Group value={validateType} onChange={e=>{this.changeValue('validateType',e)}} >
+                        <Form.Item label='验证模式'>
+                            <Radio.Group value={+validateType} onChange={e=>{this.changeValue('validateType',e)}} >
                                 <Radio.Button value={0}>系统验证</Radio.Button>
                                 <Radio.Button value={1}>手动验证</Radio.Button>
                             </Radio.Group>
@@ -108,8 +107,8 @@ export class ValidationFirmwareDialog  extends Component{
                             <Button className='downbtn' type="link" onClick={this.downloadMac}>下载模板</Button>
                         </div>
                         {validateType==1&&
-                        <Form.Item label='线下验证状态' name="status">
-                            <Radio.Group defaultValue={0}  onChange={(e)=>{this.changeStatus(e.target.value)}}>
+                        <Form.Item label='线下验证状态'>
+                            <Radio.Group value={status}  onChange={(e)=>{this.changeValue('status',e)}}>
                                 <Radio.Button value={0}>验证中</Radio.Button>
                                 <Radio.Button value={1}>验证完成</Radio.Button>
                             </Radio.Group>

@@ -11,13 +11,12 @@ export default class FirmwareDetails extends PureComponent {
         this.id = props.match.params.id
         this.verid = props.match.params.verid
         this.state = {
-            deviceId:undefined,
             list:[],
             pager:{},
             details:{},
         }
         this.columns = [
-            { title: '设备ID', dataIndex: 'deviceId'},
+            { title: '设备ID', dataIndex: 'deviceUniqueId'},
             { title: '设备MAC', dataIndex: 'mac'},
             { title: '状态', dataIndex: 'upgradeStatus', render:u => (u && UPDATESTATUS[u].nam ) },
             { title: '日志', dataIndex: 'remark'},
@@ -28,30 +27,10 @@ export default class FirmwareDetails extends PureComponent {
         this.getList()
         this.getDetail()
     }
-    cancel=(deviceId)=>{
-        const deviceVersionId = this.verid
-        const batchId = this.id
-        Modal.confirm({
-            title: '取消升级',
-            content: `即将取消升级 deviceId 为 ${deviceId} 的设备。`,
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            onOk:()=>{
-                get(Paths.otaCancelDevicePub,{deviceVersionId,batchId,deviceId}).then(() => {
-                    let {totalRows,pageIndex} = this.state.pager;
-                    pageIndex = (totalRows % ((pageIndex-1)*10))>1?pageIndex:pageIndex-1;
-                    this.getList(pageIndex)
-                });
-            }
-          });
-        
-    }
     getList = (pageIndex=1)=>{
         const deviceVersionId = this.verid
         const batchId = this.id
-        const {deviceId} = this.state
-        get(Paths.otaGetBatchDevice,{deviceVersionId,batchId,deviceId,pageIndex,pageRows:10}).then(({data}) => {
+        get(Paths.otaGetBatchDevice,{deviceVersionId,batchId,pageIndex,pageRows:10}).then(({data}) => {
             const {list=[] ,pager={}} = data
             this.setState({
                 list:list.map((li,i)=>({...li,index:i})),
@@ -64,11 +43,6 @@ export default class FirmwareDetails extends PureComponent {
         const batchId = this.id
         get(Paths.otaGetBatchInfo,{deviceVersionId,batchId}).then(({data}) => {
             this.setState({details:{...data}}) 
-        });
-    }
-    search = deviceId => {
-        this.setState({deviceId},()=>{
-            this.getList();
         });
     }
     render() {
@@ -98,12 +72,6 @@ export default class FirmwareDetails extends PureComponent {
                     </header>
                 </PageTitle>
                 <div className='comm-shadowbox' style={{padding:"24px"}}>
-                    {/* <Input.Search placeholder="输入设备ID查询"
-                        className='search'
-                        enterButton
-                        maxLength={20}
-                        onSearch={value => this.search(value)} 
-                    /> */}
                     <Table 
                         rowKey="index"
                         columns={this.columns} 
