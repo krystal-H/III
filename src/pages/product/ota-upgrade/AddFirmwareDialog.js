@@ -156,7 +156,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                         }
                     </Select>
                 </Item>
-                <Item label="开发方案"> { schemeType && SCHMETYPE[schemeType-2] && SCHMETYPE[schemeType-2].nam || '--' }</Item>
+                <Item label="开发方案"> { schemeType && SCHMETYPE[schemeType-1] && SCHMETYPE[schemeType-1].nam || '--' }</Item>
                 {
                     schemeType==2&&<>
                         <Item label="当前模组固件版本"> { summaryVersions[0] && summaryVersions[0].curMainVersion  }</Item>
