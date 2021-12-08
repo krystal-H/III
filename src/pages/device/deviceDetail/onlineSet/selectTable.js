@@ -3,7 +3,9 @@ import { Table, Input, Checkbox, Select, InputNumber } from 'antd';
 import { getRowSpanCount } from '../../../../configs/tableCombine'
 import { Notification } from '../../../../components/Notification'
 import { cloneDeep } from 'lodash'
+import './selectTable.scss'
 const { Option } = Select
+
 //展示
 const filterFn = (data) => {
     let result = null
@@ -77,6 +79,7 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
             title: '勾选',
             width: '50px',
             dataIndex: 'isCheck',
+            fixed: 'left',
             render: (value, row, index) => {
                 let obj = getRowSpanCount(
                     dataSource,
@@ -150,11 +153,12 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
                 <span>{record.dataTypCN}</span>
             )
         },
-        { title: '数据属性',  dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record)}</span> },
+        { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record)}</span> },
         {
             title: '下发数据',
             dataIndex: 'sendData',
             key: 'sendData',
+            // fixed: 'right',
             render: (text, record, index) => {
                 let type = record.dataTypeEN, specs = record.propertyMap, _dom = null
                 if (actionType === 'detail') {
@@ -249,7 +253,7 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
             dataSource={initialProtoclList}
             locale={{ emptyText: '暂无协议，请先去配置' }}
             pagination={false}
-            scroll={{ y: 440 }}
+            scroll={{ y: 440, x: 1000 }}
         />
 
     </div>
