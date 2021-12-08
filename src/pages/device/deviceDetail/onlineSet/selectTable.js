@@ -4,7 +4,31 @@ import { getRowSpanCount } from '../../../../configs/tableCombine'
 import { Notification } from '../../../../components/Notification'
 import { cloneDeep } from 'lodash'
 const { Option } = Select
+//展示
+const filterFn = (data) => {
+    let result = null
+    let type = data.dataTypeEN
+    switch (type) {
+        case 'float':
+        case 'int':
+            result = `数值范围：${data.propertyMap.min}-${data.propertyMap.max},间距：${data.propertyMap.interval},倍数：${data.propertyMap.multiple},单位：${data.propertyMap.unit}`
+            break;
+        case 'bool':
+            result = `0：${data.propertyMap[0]},1：${data.propertyMap[1]}`
+            break;
+        case 'enum':
+            let value = ''
+            for (let key in data.propertyMap) {
+                value += key + '：' + data.propertyMap[key] + ', '
+            }
+            result = `枚举值：${value}`
+            break;
+        default:
+            return ''
+    }
 
+    return result
+}
 function TableCom({ dataSource, finishSub, actionType }, ref) {
     const [selectData, setSelectData] = useState([])
     const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
@@ -80,7 +104,7 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
             },
         },
         {
-            title: '功能点名称', dataIndex: 'funcName',
+            title: '功能点名称', dataIndex: 'funcName', width: '140px',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     dataSource,
@@ -93,7 +117,7 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
         },
         {
             title: '标识符', dataIndex: 'funcIdentifier',
-            width: '160px',
+            width: '140px',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     dataSource,
@@ -104,8 +128,8 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
                 );
             },
         },
-        { title: '参数名称', dataIndex: 'name' },
-        { title: '参数标识', dataIndex: 'identifier', width: '160px' },
+        { title: '参数名称', dataIndex: 'name', width: '140px' },
+        { title: '参数标识', dataIndex: 'identifier', width: '140px' },
         // {
         //     title: '数据传输类型', dataIndex: 'accessMode',
         //     render: (text, record) => {
@@ -126,6 +150,7 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
                 <span>{record.dataTypCN}</span>
             )
         },
+        { title: '数据属性',  dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record)}</span> },
         {
             title: '下发数据',
             dataIndex: 'sendData',

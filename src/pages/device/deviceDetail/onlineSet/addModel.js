@@ -125,7 +125,7 @@ export default function AddModel({ addVisible, addOk, CancelAdd, deviceId, baseI
   }
   return (
     <div >
-      <Modal maskClosable={false} title="远程配置任务" visible={addVisible} onOk={subData} onCancel={CancelAdd} width='1300px' wrapClassName='device-remote-config-modal'>
+      <Modal  maskClosable={false} title="远程配置任务" visible={addVisible} onOk={subData} onCancel={CancelAdd} width='1300px' wrapClassName='device-remote-config-modal'>
         <div>
           <Form
             form={form}
