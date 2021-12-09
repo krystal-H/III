@@ -23,7 +23,7 @@ function VoiceSetting(params) {
   const [dataSource, setDataSource] = useState([])
   const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
   const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
-  const [addVoiceVisible, setAddVoiceVisible] = useState(true)
+  const [addVoiceVisible, setAddVoiceVisible] = useState(false)
 
   const tableColumns = [
     {
@@ -138,6 +138,11 @@ function VoiceSetting(params) {
     setTitleVisible(false)
   }
 
+  // 提交数据
+  const submitData = () => {
+    if (!dataSource.length) return Notification({type: 'warn', description: '请先增加语音配置能力'})
+  }
+
   return (
     <div className="voice-setting-page">
       <PageTitle title={productItem.productName} titleTag={productItem.schemeName} btnTxt='编辑'
@@ -145,7 +150,7 @@ function VoiceSetting(params) {
         backHandle={() => { history.push('/open/product/proManage/list') }} backTitle='开发流程'>
         {titleCom}
       </PageTitle>
-      <div>
+      <div >
         <Tabs activeKey={currentTab} onChange={val => tabChange(val)}>
           {
             voiceTypeMap.map((item, index) => {
@@ -171,9 +176,13 @@ function VoiceSetting(params) {
               onChange: pagerChange,
               showTotal: total => <span>共 <a>{total}</a> 条</span>
             }} />
-          <Button type="primary" ghost className='edit-table-btn' onClick={() => setAddVoiceVisible(true)}>
-            <PlusOutlined />增加能力
+          <Button type="primary" ghost className='add-table-btn' onClick={() => setAddVoiceVisible(true)}>
+            <PlusOutlined/>增加能力
           </Button>
+        <div style={{padding: '10px'}}>请下载百度语言APP进行调试：http//：www.baidu.yuyin.com</div>
+        <div className="submit-btn">
+          <Button type="primary" onClick={() => submitData()}>提交</Button>
+        </div>
         </div>
       </div>
       {/* 编辑头部产品信息 */}
