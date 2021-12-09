@@ -123,7 +123,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
         if(file.response){
             const url = file.response.data && file.response.data.url || '';
             formInstance.setFieldsValue({ 
-                [`${curFirmwareTypeNo}_filePath`]:url
+                [`filePath_${curFirmwareTypeNo}`]:url
             })
         }
     }
@@ -200,10 +200,10 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                                         <Input className='noborderinpt' disabled/>
                                     </Item>
                                     <Item label='当前软件版本号'>{curMainVersion}</Item>
-                                    <Item label="待上传软件版本号" name={`mainVersion_${firmwareTypeNo}`} rules={[{ required: true, message: '请输入产品版本名称' }]}>
+                                    <Item label="待上传软件版本号" name={`mainVersion_${firmwareTypeNo}`} rules={[{ required: true, message: '待上传软件版本号' }]}>
                                         <Input maxLength={10} placeholder='最多30个字符' />
                                     </Item>
-                                    <Item label="固件程序" name={`filePath_${firmwareTypeNo}`}
+                                    <Item label='固件程序' name={`filePath_${firmwareTypeNo}`}
                                             rules={[{ required: true, message: '请输入URL' },{pattern: formrules.url, message: '请输入正确的URL'}]}
                                         ><Input maxLength={100} placeholder='请输入URL或者上传一个附件自动填充' />
                                         

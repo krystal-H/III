@@ -8,7 +8,7 @@ import { Input, Select, Radio, Steps, Button, Upload, DatePicker } from 'antd';
 import { get,post,Paths } from '../../../api';
 import {Notification} from '../../../components/Notification';
 import {UPDATETYPE,UPRANGE,RERTYTIME,RERTYCOUNT} from './store/constData'
-import {getDeviceGroupLi,getVersionList} from './store/actionCreators'
+import {getVersionList} from './store/actionCreators'
 const { Option } = Select;
 const { TextArea } = Input;
 const { Step } = Steps;
@@ -20,7 +20,6 @@ const formItemLayout = {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getGroupLi: () => dispatch(getDeviceGroupLi()),
         getVersionLi: param => dispatch(getVersionList(param)),
     }
 }
@@ -36,10 +35,6 @@ export const ReleaseFirmware = Form.create({
                 upgradeRange:2,
                 triggerTime:0,
             }
-        }
-        componentDidMount() {
-            this.props.getGroupLi()
-            
         }
         changeState=(k,v)=>{
             let val = v.target ? v.target.value : v

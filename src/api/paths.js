@@ -482,7 +482,6 @@ let Paths = {
     otaValidate:'/firmware/device/version/validate',
     otaRelease:'/firmware/device/upgrade/publish',
     getMcuSocProLi:'/productManage/getFilterSchemaSelList',
-    firmwareLastProductVersion:'/firmware/productFirmware/getLastProductVersion',
     
     //总览页
     homeBanner:'/cover/getBannerList',//banner图

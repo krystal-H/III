@@ -65,18 +65,6 @@ export const getExtVerLi = param => {
     }
 }
 
-export const getDeviceGroupLi = () => {
-    
-    return (dispatch) => {
-        post(Paths.getGroupList,{pageRows:9999}).then(({data={}}) => {
-            dispatch({
-                type: DEVGROUPLIST,
-                deviceGorupLi:data.list||[],
-            });
-        }); 
-    }
-}
-
 export const sendFirmwareDetails = detail => {
     return (dispatch) => {
         dispatch({
