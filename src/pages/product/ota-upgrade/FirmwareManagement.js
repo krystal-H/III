@@ -100,8 +100,11 @@ export default class FirmwareManagement extends Component {
                                         <a onClick={() => { this.openValidation(productFirmwareId, { macSet, validateType: validateType || 0 }) }}>修改验证</a>
                                         <a onClick={() => { this.getValidateInfo(productFirmwareId) }}>查看验证</a>
                                     </> : 
-                            status ==3 ?  <a onClick={() => { this.openRelease(productFirmwareId) }}>发布</a> :
-                            status ==2 ?  <Link to={`/open/product/otaUpdate/details/${productFirmwareId}`}>查看批次</Link> : null
+
+                                    <>
+                                        <a onClick={() => { this.openRelease(productFirmwareId) }}>发布</a>
+                                        { status ==2 && <Link to={`/open/product/otaUpdate/details/${productFirmwareId}`}>查看批次</Link> }
+                                    </>
                         }
                         {/* <a onClick={()=>{this.deleteConfirm(productFirmwareId)}}>删除</a> */}
                     </Space>

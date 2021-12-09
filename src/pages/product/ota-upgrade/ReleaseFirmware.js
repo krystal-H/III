@@ -88,6 +88,17 @@ export const ReleaseFirmware = Form.create({
                 }
             })
         }
+
+        changeUpgradeType = (e)=>{
+            const upgradeType = e.target.value;
+            const upgradeRange = 2;// upgradeType==4?2:0;
+            this.setState({
+                upgradeType,
+                upgradeRange
+            })
+            this.props.form.setFieldsValue({upgradeRange})
+
+        }
        
         render() {
             const {form:{getFieldDecorator}} =this.props
@@ -99,7 +110,7 @@ export const ReleaseFirmware = Form.create({
                             <div>
                                 <Form.Item label='升级方式' required help={desc} className='helpitem'>
                                     {getFieldDecorator('upgradeType', {initialValue:1})(
-                                        <Radio.Group onChange={(v)=>{this.changeState('upgradeType',v)}} >
+                                        <Radio.Group onChange={ this.changeUpgradeType } >
                                             {UPDATETYPE.map(({id,nam})=><Radio.Button key={id} value={id}>{nam}</Radio.Button>)}
                                         </Radio.Group>
                                     )}
@@ -114,16 +125,12 @@ export const ReleaseFirmware = Form.create({
                                     )}
                                 </Form.Item>
                                 <Form.Item label='升级范围' required help='若选择全部设备，则有且仅能发布一个批次，不能新增其他发布批次' className='helpitem'>
-                                    {getFieldDecorator('upgradeRange')(
-                                        <Radio.Group onChange={(v)=>{this.changeState('upgradeRange',v)}} >
+                                    {getFieldDecorator('upgradeRange',{initialValue:2})(
+                                        <Radio.Group  onChange={(v)=>{this.changeState('upgradeRange',v)}} >
                                             {
-                                                UPRANGE.map(({id,nam})=>{
-                                                    if( upgradeType==4&&id==0 || id==1 ){ //取消了设备分组
-                                                        return null
-                                                    }
-                                                    return <Radio.Button key={id} value={id}>{nam}</Radio.Button>
-                                                })
+                                                upgradeType != 4 && <Radio.Button value={0}>全部设备</Radio.Button>
                                             }
+                                            <Radio.Button value={2}>指定设备</Radio.Button>
                                         </Radio.Group>
                                     )}
                                 </Form.Item>
