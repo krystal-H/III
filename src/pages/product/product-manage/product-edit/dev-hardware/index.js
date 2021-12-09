@@ -7,6 +7,7 @@ import ReplaceModule from './replaceModule'
 import FreeApplyModal from './freeApply'
 import ModifyFirmwareModal from './modifyFirmware'
 import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.jpg';
+import ConfigCommunication from './configCommunication'
 import "./index.scss"
 
 class Hardware extends Component {
@@ -22,7 +23,10 @@ class Hardware extends Component {
             currentModuleId: '', // 模组id
             firmwareId: '', // 修改固件id
             productItemData: JSON.parse(sessionStorage.getItem('productItem')) || {},
-            officeVis: false
+            officeVis: false,
+            configCommunicationVisible: false, // 配置通信协议boolean
+            protocolList: [], // 通信协议
+            networkWayList: [], // 配网方式列表
         }
         this.columns = [
             {
@@ -59,6 +63,8 @@ class Hardware extends Component {
     }
 
     componentDidMount() {
+        this.getCommunicationProtocol()
+        this.getBindTypeNetworkType()
         if (this.state.productItemData.moduleId != -1) {
             this.getMoudleInfo(this.state.productItemData.moduleId)
         }
@@ -118,7 +124,6 @@ class Hardware extends Component {
 
     // 弹窗取消
     handleModalCancel = (type) => {
-        console.log('取消')
         if (type === 'module') {
             this.setState({ replaceModalVisible: false })
         } else if (type === 'firmware') {
@@ -159,13 +164,35 @@ class Hardware extends Component {
         })
     }
 
+
+    // 获取通信协议
+    getCommunicationProtocol = () => {
+        post(Paths.getCommunicationProtocol, {}).then(res => {
+            this.setState({
+                protocolList: res.data
+            })
+        })
+    }
+
+    // 获取配网方式
+    getBindTypeNetworkType = () => {
+        get(Paths.getBindTypeNetworkTypeMap, {}).then(res => {
+            this.setState({
+                networkWayList: res.data
+            })
+        })
+    }
+
     render() {
         const { replaceModalVisible, freeApplyVisible, modifyFirmwareVisible, replaceFirmwareVisible,
-            dataSource, allInfo, currentModuleId, firmwareId, productItemData, officeVis } = this.state
+            dataSource, allInfo, currentModuleId, firmwareId, productItemData, officeVis,
+            configCommunicationVisible, protocolList, networkWayList } = this.state
         return (
             <div className="hardware-page">
                 <div className="hardware-wrap">
-                    <div className="desc">{this.getSchemeType()}</div>
+                    <div className="desc">{this.getSchemeType()}
+                        <a onClick={() => this.setState({ configCommunicationVisible: true })}>更改通信协议</a>
+                    </div>
                     {/* 已选模组 */}
                     <div className="module-box">
                         <div className="module-header">
@@ -295,6 +322,18 @@ class Hardware extends Component {
                         </div>
                     </div>
                 </div>
+                {/* 通信协议配置——弹窗 */}
+                {
+                    configCommunicationVisible &&
+                    <ConfigCommunication
+                        visible={configCommunicationVisible}
+                        protocolList={protocolList}
+                        networkWayList={networkWayList}
+                        handleOk={() => this.setState({ configCommunicationVisible: false })}
+                        handleCancel={() => this.setState({ configCommunicationVisible: false })}
+                    />
+                }
+
                 {/* 更换模组 */}
                 {replaceModalVisible &&
                     <ReplaceModule
