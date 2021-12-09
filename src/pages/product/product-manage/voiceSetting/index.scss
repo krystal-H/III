@@ -5,6 +5,7 @@
     height: auto;
     position: relative;
     padding: 10px 30px;
+
     .tip-label {
       position: absolute;
       top: -7px;
@@ -12,9 +13,11 @@
       font-size: 12px;
     }
   }
+
   .auditing {
     // color: #f58542;
   }
+
   .published {
     // color: #2f78ff;
   }
