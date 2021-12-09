@@ -1,0 +1,21 @@
+@charset 'utf-8';
+
+.voice-setting-page {
+  .radio-btn {
+    height: auto;
+    position: relative;
+    padding: 10px 30px;
+    .tip-label {
+      position: absolute;
+      top: -7px;
+      right: 3px;
+      font-size: 12px;
+    }
+  }
+  .auditing {
+    // color: #f58542;
+  }
+  .published {
+    // color: #2f78ff;
+  }
+}
