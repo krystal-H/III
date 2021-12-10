@@ -50,7 +50,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
 
     const [formInstance] = Form.useForm();
 
-    const { schemeType, productFirmwareVersion, productId, summaryVersions=[] } = firmwareFrPro;//schemeType: 2 MCU, 3 SoC
+    const { schemeType, productFirmwareVersion=0 , productId, summaryVersions=[] } = firmwareFrPro;//schemeType: 2 MCU, 3 SoC
 
     useEffect(() => {
         console.log(22222,firmwareFrPro)
@@ -164,7 +164,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     </>
                 }
                 <Item label={<LabelTip label="产品版本号" tip="产品版本自动生成，自增长，产品的整体内部版本号"/>}>
-                    {productFirmwareVersion && productFirmwareVersion+1 || "--"}
+                    { productFirmwareVersion+1 }
                 </Item>
                 <Item label="产品版本名称" name='productFirmwareName' rules={[{ required: true, message: '请输入产品版本名称' }]}>
                     <Input maxLength={30} placeholder='最多30个字符' />
