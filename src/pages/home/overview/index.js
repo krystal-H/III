@@ -60,6 +60,7 @@ export default function OverviewWrap() {
     let history = useHistory();
     //轮播图
     const [bannerArr, setBannerArr] = useState([])
+    const [oldProIngVisiable, setOldProIngVisiable] = useState(false)
     const getBannerList = () => {
         post(Paths.homeBanner).then((res) => {
             setBannerArr(res.data.list)
@@ -165,9 +166,6 @@ export default function OverviewWrap() {
     const closeNewProduct = () => {
         setNewProductModal(false)
     }
-    const goApp = () => {
-        history.push(`/open/app/list`);
-    }
     const goPage = (url) => {
         history.push(url);
     }
@@ -226,20 +224,32 @@ export default function OverviewWrap() {
         }
         isGo(menulist)
         if (isShow) {
+            let { status, isOldProduct, productId, step = 1 } = record;
+            //未发布的老产品禁止操作 弹窗提示
+            if (isOldProduct && status !== 1) {
+                setOldProIngVisiable(true)
+                return
+            }
+
+            //否则 老产品跳到老的详情页面 detail；新产品根据状态跳到详情页details 或者 编辑页edit
             let pathroute = 'details';
-            if (record.status !== 1) {
+            if (status !== 1) {
                 pathroute = 'edit';
-            } else if (record.isOldProduct) {
+            } else if (isOldProduct) {
                 pathroute = 'detail';
             }
             // 保存当前产品，为后边继续开发取数据使用
             sessionStorage.setItem('productItem', JSON.stringify(record))
-            history.push(`/open/product/proManage/${pathroute}/${record.productId}`);
+            sessionStorage.setItem("stepnum", step - 1)
+            history.push(`/open/product/proManage/${pathroute}/${productId}`)
         } else {
             Notification({
                 description: '无权限！',
             });
         }
+    }
+    const closeOldpro = () => {
+        setOldProIngVisiable(false)
     }
     //消息类型
     const getMessageType = (text) => {
@@ -347,7 +357,7 @@ export default function OverviewWrap() {
                                                 <div>更新时间：{item.modifyTime ? utcToDev(item.modifyTime) : '--'}</div>
                                             </div>
                                         </div>)
-                                    })) : <div className='over-no-data'><img src={noData} /> <div>暂无产品</div></div>
+                                    })) : <div className='over-no-data'><img src={noData} alt='' /> <div>暂无产品</div></div>
 
                                 }
                             </div>
@@ -355,23 +365,23 @@ export default function OverviewWrap() {
 
                         <div className='over-view-productmn-footer hover-commons-unite'>
                             <div onClick={() => { goAuPage('设备注册', '/open/product/devRegist') }}>
-                                <img src={projectmn1} />
+                                <img src={projectmn1} alt=''/>
                                 <div  >设备注册</div>
                             </div>
                             <div onClick={() => { goAuPage('固件升级', '/open/product/otaUpdate/list') }}>
-                                <img src={projectmn2} />
+                                <img src={projectmn2} alt=''/>
                                 <div >固件升级</div>
                             </div>
                             <div onClick={() => { goAuPage('场景服务', '/open/product/ruleEngine') }}>
-                                <img src={projectmn3} />
+                                <img src={projectmn3} alt=''/>
                                 <div >场景服务</div>
                             </div>
                             <div onClick={() => { goAuPage('云端定时', '/open/product/cloudTimer') }}>
-                                <img src={projectmn4} />
+                                <img src={projectmn4} alt=''/>
                                 <div >云端定时</div>
                             </div>
                             <div onClick={() => { goAuPage('远程配置', '/open/product/remoteCofig') }}>
-                                <img src={projectmn5} />
+                                <img src={projectmn5} alt=''/>
                                 <div>远程配置</div>
                             </div>
                         </div>
@@ -457,14 +467,14 @@ export default function OverviewWrap() {
                                     appList.length ? (appList.map((item, index) => {
                                         return (<div className='over-view-productmn-content-item over-view-productmn-content-two'
                                             key={index} onClick={() => { goAuPage('app管理', `/open/app/details/${item.appId}`) }}>
-                                            <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.appIconLow} /></div>
+                                            <div className='over-view-productmn-content-img center-layout-wrap'><img src={item.appIconLow} alt='' /></div>
                                             <div className='over-view-productmn-content-content'>
                                                 <div>{item.appName}</div>
                                                 <div className='over-view-productmn-content-content-time'>
                                                     更新时间：{item.updateTime ? utcToDev(item.updateTime) : '--'}</div>
                                             </div>
                                         </div>)
-                                    })) : <div className='over-no-data'><img src={noData} /> <div>暂无App</div></div>
+                                    })) : <div className='over-no-data'><img src={noData} alt='' /> <div>暂无App</div></div>
 
                                 }
                             </div>
@@ -605,6 +615,11 @@ export default function OverviewWrap() {
                     <div className='down-office-modal'>
                         <div>此功能正在升级维护中，敬请期待~</div>
                     </div>
+                </Modal>
+            }
+            {
+                oldProIngVisiable && <Modal title="更新升级" visible={oldProIngVisiable} onOk={closeOldpro} onCancel={closeOldpro}>
+                    <p> clife平台全新升级，老版本的开发中或审核中状态的产品，需要在新平台重新创建</p>
                 </Modal>
             }
         </div>
