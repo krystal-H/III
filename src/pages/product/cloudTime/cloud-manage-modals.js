@@ -14,34 +14,33 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
     const [isShowAddItem, setIsShowAddItem] = useState(false)
     const [protocolItemIndex, setProtocolItemIndex] = useState('') // 当前选中的协议
     const [selectedProtocolList, setSelectedProtocolList] = useState([]) // 弹框中所有被选中的协议
-    
 
     const onFinish = (values) => {
         let timeServerDetails = []
         if (type === 'add') {
             timeServerDetails = selectedProtocolList.map(item => {
                 return {
-                    property: item.identifier,
-                    propertyName: item.name,
-                    functionDataType: item.dataType.type
+                    property: item.funcIdentifier,
+                    propertyName: item.funcName,
+                    functionDataType: item.funcParamList[0].dataTypeEN
                 }
             })
         } else {
-            timeServerDetails= selectedProtocolList.map(item => {
+            timeServerDetails = selectedProtocolList.map(item => {
                 return {
-                    property: item.property || item.identifier,
-                    propertyName: item.propertyName || item.name,
-                    functionDataType: item.functionDataType || item.dataType.type
+                    property: item.property || item.funcIdentifier,
+                    propertyName: item.propertyName || item.funcName,
+                    functionDataType: item.functionDataType || item.funcParamList[0].dataTypeEN
                 }
             })
             values.serviceId = editData.serviceId
         }
-        if (selectedProtocolList.length ===0) {
+        if (selectedProtocolList.length === 0) {
             return Notification({ description: '请选择需要关联的协议!', type: 'warn' })
         }
         values.timeServerDetails = timeServerDetails
         // console.log('提交的参数', { ...values})
-        post(Paths.saveTimeService, { ...values}, {loading:true}).then(res => {
+        post(Paths.saveTimeService, { ...values }, { loading: true }).then(res => {
             Notification({ description: '操作成功！', type: 'success' })
             handleOk()
         })
@@ -66,9 +65,10 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
 
     // 获取关联协议
     const getRelationProtocol = (productId) => {
-        post(Paths.getPhysicalModel, { productId }).then(res => {
+        post(Paths.standardFnList, { productId }).then(res => {
             console.log(res)
-            setInitialList(res.data.properties)
+            // setInitialList(res.data.properties)
+            setInitialList(res.data.custom.concat(res.data.standard).filter(item => item.funcType === "properties"))
             setProtocolItemIndex('')
         })
     }
@@ -91,7 +91,7 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
         setSelectedProtocolList((prev) => {
             const preArr = cloneDeep(prev)
             // 选出原始list下已经被选的，加入被选list,为了展示
-            const newAdd = initialList.filter(item => item.identifier === protocolItemIndex)
+            const newAdd = initialList.filter(item => item.funcIdentifier === protocolItemIndex)
             // console.log([...preArr, ...newAdd], '*************')
             return [...preArr, ...newAdd]
         })
@@ -116,25 +116,25 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
     const getOptions = () => {
         const protocolNames = dealProtocols() // 剩余未选择的list返回
         return protocolNames.map((item, index) => {
-            return <Option key={item.identifier} value={item.identifier}>{item.name}</Option>
+            return <Option key={item.funcIdentifier} value={item.funcIdentifier}>{item.funcName}</Option>
         })
     }
 
     // 处理协议差集数据
     const dealProtocols = () => {// 原始的  差集   已选中的  return  剩余的
-        const _initId = cloneDeep(initialList).map(item => item.identifier)
+        const _initId = cloneDeep(initialList).map(item => item.funcIdentifier)
         let _selectId = []
         if (type === 'add') {
-            _selectId = cloneDeep(selectedProtocolList).map(item => item.identifier)  
-        } 
+            _selectId = cloneDeep(selectedProtocolList).map(item => item.funcIdentifier)
+        }
         if (type === 'edit') {
-            _selectId = cloneDeep(selectedProtocolList).map(item => item.property)
+            _selectId = cloneDeep(selectedProtocolList).map(item => (item.property || item.funcIdentifier))
         }
         const renainListId = difference(_initId, _selectId)
         let newTempArr = []
         cloneDeep(initialList).forEach(ele => {
             renainListId.forEach(item => {
-                ele.identifier == item && newTempArr.push(ele)
+                ele.funcIdentifier == item && newTempArr.push(ele)
             })
         })
         return newTempArr
@@ -192,8 +192,8 @@ export function CloudAddForm({ visible, onCancel, type, editData, handleOk, allP
                                     selectedProtocolList.map((item, index) => {
                                         return (
                                             <div className="protocol-bar" key={index}>
-                                                <p className="protocol-bar-title">{item.name || item.propertyName}</p>
-                                                <div><span>{item.identifier || item.property}</span></div>
+                                                <p className="protocol-bar-title">{item.funcName || item.propertyName}</p>
+                                                <div><span>{item.funcIdentifier || item.property}</span></div>
                                                 <span
                                                     className="protocol-bar-del"
                                                     onClick={() => deleteProtocol(index)}>

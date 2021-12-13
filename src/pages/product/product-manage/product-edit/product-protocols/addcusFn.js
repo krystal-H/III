@@ -43,8 +43,9 @@ export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList,
     }, [])
     //服务事件功能名称下拉
     const standardDatas = useMemo(() => {
-        let arr = standardData.filter(item => {
-            if (item.funcType == 'properties') {
+        let source = standardData.standard.concat(standardData.custom)
+        let arr = source.filter(item => {
+            if (item.funcType === 'properties') {
                 return item
             }
         })
@@ -341,7 +342,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                                 name={['specs', 'interval']}
                                 rules={[{ required: true }]}
                             ><Input /></Form.Item>
-                            <Form.Item name={['specs', 'multiple']} label="倍数" >
+                            <Form.Item name={['specs', 'multiple']} label="倍数"  rules={[{ required: true }]}>
                                 <Select  >
                                     {
                                         multipleCollection.map(item => {
@@ -350,7 +351,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                                     }
                                 </Select>
                             </Form.Item>
-                            <Form.Item name={['specs', 'unit']} label="单位" >
+                            <Form.Item name={['specs', 'unit']} label="单位"  rules={[{ required: true }]}>
                                 <Select>
                                     {
                                         unitCollection.map(item => {
@@ -430,7 +431,7 @@ function EventTemp({ currentTab, sentReq }, ref) {
             let origin = {}
             let arrFn = []
             let arrData = []
-            if (newParamsList.length == 0) {
+            if (newParamsList.length === 0) {
                 Notification({
                     description: `至少添加一个参数`,
                     type: 'warn'
@@ -593,7 +594,7 @@ function ServeTemp({ sentReq }, ref) {
             let arrFn = []
             let arrData = []
             let allList = inputList.concat(outputList)
-            if (allList.length == 0) {
+            if (allList.length === 0) {
                 Notification({
                     description: `至少添加一个参数`,
                     type: 'warn'
@@ -801,7 +802,7 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                             }
                         }
                     ]}>
-                    <Input type='number' placeholder='可为空'/>
+                    <Input type='number' placeholder='可为空' />
                 </Form.Item>
                 <Form.Item
                     label='数值间隔'
@@ -876,7 +877,7 @@ function AddParams({ sentAddData, type, data, refIndex, delItemObj, unikey }, re
                     label="默认值"
                     name='default'
                 >
-                    <Input placeholder='可为空'/>
+                    <Input placeholder='可为空' />
                 </Form.Item></>
         }
         return ''

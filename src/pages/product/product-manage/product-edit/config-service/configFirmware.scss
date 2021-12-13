@@ -14,6 +14,7 @@
       @include text(12px, $_f42);
     }
   }
+
   .add-btn {
     cursor: pointer;
     @include wh(56px, 30px);
@@ -22,5 +23,15 @@
     @include text(12px, $themeColor);
     border-radius: 4px;
     border: 1px solid $themeColor;
+  }
+
+  .required-icon .ant-form-item-label::before {
+    display: inline-block;
+    margin-right: 4px;
+    color: #f5222d;
+    font-size: 14px;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: '*';
   }
 }
