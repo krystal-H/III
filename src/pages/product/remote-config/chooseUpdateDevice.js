@@ -70,7 +70,7 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
       return Notification({ description: '请选择要更新的设备数据！' })
     } else {
       const remoteConfigtaskDesc = JSON.parse(sessionStorage.getItem('remoteConfigtaskDesc'))
-      const addConfigData = JSON.parse(sessionStorage.getItem('addConfigData'))
+      const addConfigData = sessionStorage.getItem('addConfigData')
       const remoteProductDeviceList = cloneDeep(rightTempList)
       remoteProductDeviceList.forEach(item => {
         delete item.key
