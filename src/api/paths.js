@@ -83,6 +83,7 @@ let Paths = {
     showFirmware: '/product/dev/show/firmware/config', // 免费申请固件信息
     getDevFirmwareList: '/firmware/list/moduleId', // 获取模组固件列表
     saveChooseFirmware: '/product/scheme/update', // 保存更换的固件
+    saveCommunication: '/product/protocol/setting', // 保存通信协议
 
 
     // 5.xAPP-应用管理

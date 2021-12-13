@@ -8,6 +8,7 @@ import FreeApplyModal from './freeApply'
 import ModifyFirmwareModal from './modifyFirmware'
 import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.jpg';
 import ConfigCommunication from './configCommunication'
+import { Notification } from '../../../../../components/Notification'
 import "./index.scss"
 
 class Hardware extends Component {
@@ -24,7 +25,7 @@ class Hardware extends Component {
             firmwareId: '', // 修改固件id
             productItemData: JSON.parse(sessionStorage.getItem('productItem')) || {},
             officeVis: false,
-            configCommunicationVisible: false, // 配置通信协议boolean
+            configCommunicationVisible: JSON.parse(sessionStorage.getItem('productItem')) && JSON.parse(sessionStorage.getItem('productItem')).moduleId == -1, // 配置通信协议boolean
             protocolList: [], // 通信协议
             networkWayList: [], // 配网方式列表
         }
@@ -81,15 +82,20 @@ class Hardware extends Component {
                 this.setState({ dataSource: res.data.firmwareDefList })
                 this.setState({ currentModuleId: res.data.moduleId })
                 // 更新存的 模组id
-                let copyData = this.state.productItemData
+                let copyData = JSON.parse(sessionStorage.getItem('productItem')) || {}
                 copyData.moduleId = res.data.moduleId
+                this.setState({ productItemData: copyData })
                 sessionStorage.setItem('productItem', JSON.stringify(copyData))
             }
         })
     }
 
-    onFinish = (values) => {
-        this.props.nextStep()
+    onFinish = () => {
+        if (this.state.productItemData.moduleId == -1) {
+            return Notification({ type: 'warn', description: '请更改配置通信协议' })
+        } else {
+            this.props.nextStep()
+        }
     }
 
     // 修改固件
@@ -183,6 +189,20 @@ class Hardware extends Component {
         })
     }
 
+    // 配网协议修改
+    handleCommunicationOk = (res, params) => {
+        let copyData = JSON.parse(sessionStorage.getItem('productItem')) || {}
+        copyData.moduleId = res.moduleId
+        copyData.netTypeId = params.netTypeId
+        copyData.bindType = params.bindType
+        copyData.bindTypeVersion = params.bindTypeVersion
+        copyData.gatewayType = params.gatewayType || ''
+        // 前端自己保存数据，自己回显，只能更新存储里的内容了
+        sessionStorage.setItem('productItem', JSON.stringify(copyData))
+        this.getMoudleInfo(res.moduleId)
+        this.setState({ configCommunicationVisible: false })
+    }
+
     render() {
         const { replaceModalVisible, freeApplyVisible, modifyFirmwareVisible, replaceFirmwareVisible,
             dataSource, allInfo, currentModuleId, firmwareId, productItemData, officeVis,
@@ -200,11 +220,11 @@ class Hardware extends Component {
                             <div className="replace-btn" onClick={() => this.setState({ replaceModalVisible: true })}>更换模组</div>
                         </div>
                         {
-                            this.state.productItemData.moduleId == -1 &&
-                            <div className="flex-c border"><Empty /></div>
+                            productItemData.moduleId == -1 &&
+                            <div className="flex-c border" style={{ margin: '18px 0' }}><Empty /></div>
                         }
                         {
-                            this.state.productItemData.moduleId != -1 &&
+                            productItemData.moduleId != -1 &&
                             <div className="module-cont">
                                 <div className="flex-s">
                                     <div className="module-cont-left">
@@ -241,7 +261,7 @@ class Hardware extends Component {
                         {/* 有固件信息 */}
                         <div className="module-tip mar-t-b">已生成固件</div>
                         {
-                            this.state.productItemData.schemeType != 3 && allInfo.firmwareDefList &&
+                            productItemData.schemeType != 3 && allInfo.firmwareDefList &&
                             <Table
                                 rowKey="id"
                                 columns={this.columns}
@@ -251,7 +271,7 @@ class Hardware extends Component {
                         }
                         {/* 无固件信息 */}
                         {
-                            this.state.productItemData.schemeType == 3 &&
+                            productItemData.schemeType == 3 &&
                             <div className="no-match-firmware">
                                 <div className="no-match-firmware-img">
                                     <img src={require('../../../../../assets/images/no-source-tip.png')} alt="" />
@@ -329,7 +349,9 @@ class Hardware extends Component {
                         visible={configCommunicationVisible}
                         protocolList={protocolList}
                         networkWayList={networkWayList}
-                        handleOk={() => this.setState({ configCommunicationVisible: false })}
+                        productId={productItemData.productId}
+                        deviceTypeName={productItemData.deviceType}
+                        handleOk={(res, params) => this.handleCommunicationOk(res, params)}
                         handleCancel={() => this.setState({ configCommunicationVisible: false })}
                     />
                 }
@@ -343,6 +365,7 @@ class Hardware extends Component {
                         handleOk={(id) => this.handleModalOk(id, 'module')}
                         handleCancel={this.handleModalCancel}
                         schemeId={productItemData.schemeId}
+                        productId={productItemData.productId}
                         moduleId={currentModuleId} />
                 }
 
