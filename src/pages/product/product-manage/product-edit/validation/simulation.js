@@ -46,6 +46,10 @@ export default ({ productId, tabShow }) => {
             return
         }
         client && client.end()
+        startDebug()
+
+    }
+    const firstConnect = () => {
         post(Paths.getMockDeviceId, { productId, account: formBar.getFieldValue('account') }, { needFormData: true }, { loading: true }).then(data => {
             let dataSource = data.data.data
             // dataSource.mqttUrl = 'tcp://10.6.14.1:1883'
@@ -58,6 +62,19 @@ export default ({ productId, tabShow }) => {
             setQrcodeUrl(JSON.stringify(obj))
             initData(dataSource)
         })
+    }
+    //===
+    const startDebug = () => {
+        let account = formBar.getFieldValue('account')
+        //虽然ws有传账号 和 mac，然前端仍需调用之前老版本的接口保存 账号 和 mac
+        post(Paths.deviceDebugAccountInsert, {
+            productId: productId,
+            account,
+            remark: ""
+        }, { needVersion: 1.1, loading: true, needFormData: true }).then((model) => { 
+            firstConnect()
+        });
+
     }
     //获取物模型
     const getOption = () => {
@@ -312,7 +329,7 @@ export default ({ productId, tabShow }) => {
             return dataArr
         })
     }
-    //测试
+    //测试一下
     const test = () => {
         let arr = []
         let data = form.getFieldsValue()
