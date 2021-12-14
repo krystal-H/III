@@ -57,7 +57,11 @@
     //     // padding-left: 24px;
     // }
     .ant-upload-list{
-        display: none;
+        // display: none;
+        width: 60%;
+        .ant-upload-list-item-card-actions{
+            display: none;
+        }
     }
     .noborderinpt{
         border: none;

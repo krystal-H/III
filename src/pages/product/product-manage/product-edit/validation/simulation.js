@@ -10,7 +10,7 @@ import CryptoJS from 'crypto-js'
 import { cloneDeep } from 'lodash'
 let msgId = 1
 let client = null
-export default ({ productId, tabShow }) => {
+export default ({ productId, tabShow, accountList }) => {
     const product = JSON.parse(sessionStorage.getItem('productItem'));
     const [form] = Form.useForm();
     const [formBar] = Form.useForm();
@@ -47,7 +47,7 @@ export default ({ productId, tabShow }) => {
         }
         client && client.end()
         startDebug()
-
+        // firstConnect()
     }
     const firstConnect = () => {
         post(Paths.getMockDeviceId, { productId, account: formBar.getFieldValue('account') }, { needFormData: true }, { loading: true }).then(data => {
@@ -66,12 +66,21 @@ export default ({ productId, tabShow }) => {
     //===
     const startDebug = () => {
         let account = formBar.getFieldValue('account')
-        //虽然ws有传账号 和 mac，然前端仍需调用之前老版本的接口保存 账号 和 mac
+        let isHas = false
+        accountList.forEach(item => {
+            if (item.account === account) {
+                isHas = true
+            }
+        })
+        if (isHas) {
+            firstConnect()
+            return
+        }
         post(Paths.deviceDebugAccountInsert, {
             productId: productId,
             account,
             remark: ""
-        }, { needVersion: 1.1, loading: true, needFormData: true }).then((model) => { 
+        }, { needVersion: 1.1, loading: true, needFormData: true }).then((model) => {
             firstConnect()
         });
 
