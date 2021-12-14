@@ -20,9 +20,9 @@ const { Step } = Steps;
 const { Search, Group } = Input;
 const { Option } = Select;
 const mapStateToProps = state => {
-    const { versionList } = state.get('otaUpgrade')
+    const { versionList,mcusocproLi } = state.get('otaUpgrade')
     return {
-        versionList
+        versionList,mcusocproLi
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -48,7 +48,6 @@ export default class FirmwareManagement extends Component {
             //搜索字段
             productId: getUrlParam('productId') || "-1",
             schemeType: undefined,
-            deviceVersionName: undefined,
             addFirmwareVisiable: false,//增加弹窗
             validationFirmwareDialog: false,//验证弹窗
             deviceVersionId: '',//当前操作（验证、修改验证、发布）的固件id
@@ -70,7 +69,7 @@ export default class FirmwareManagement extends Component {
                 render: s => s > 0 && SCHMETYPE[s - 1].nam || "脏数据"
             },
             { title: '产品版本号', dataIndex: 'productFirmwareVersion' },
-            { title: '固件名称', dataIndex: 'deviceVersionName' },
+            { title: '固件名称', dataIndex: 'productFirmwareName' },
 
             {
                 title: '运行状态', dataIndex: 'status',
@@ -80,7 +79,7 @@ export default class FirmwareManagement extends Component {
                 }
             },
             {
-                title: '创建时间', dataIndex: 'uploadTime',
+                title: '创建时间', dataIndex: 'createTime',
                 render: t => <span>{t && DateTool.utcToDev(t) || "--"}</span>
             },
             {
@@ -196,13 +195,12 @@ export default class FirmwareManagement extends Component {
     //获取固件列表
     pagerIndex = (pageIndex = 1) => {
         // console.log(getUrlParam('productId'), 'product')
-        let { productId, schemeType, deviceVersionName } = this.state
+        let { productId, schemeType } = this.state
         
         let params = { pageIndex }
         productId != -1 && (params.productId = productId) 
 
         schemeType != -1 && (params.schemeType = schemeType)
-        deviceVersionName && (params.deviceVersionName = deviceVersionName)
 
         this.props.getVersionLi(params)
     }
@@ -225,18 +223,27 @@ export default class FirmwareManagement extends Component {
         });
         
     }
+    cngeSchemeType = val =>{
+        this.setState({schemeType:val},()=>{
+            this.pagerIndex(1)
+        })
+    }
     
     render() {
         const {
             addFirmwareVisiable, releaseFirmwareDialog, validationFirmwareDialog,
             deviceVersionId, validationDetail, validateInfo, validationModTit
         } = this.state;
-        const { versionList: { list, pager } } = this.props;
+        const { versionList: { list, pager },mcusocproLi } = this.props;
         const { pageIndex, totalRows } = pager;
 
         return (
             <div className="ota-firmware-up">
-                <PageTitle title="固件升级" selectOnchange={val => { this.changeProduct(val) }} defaultValue={getUrlParam('productId') || '-1'} />
+                <PageTitle title="固件升级" 
+                    selectOnchange={val => { this.changeProduct(val) }} 
+                    defaultValue={getUrlParam('productId') || '-1'}
+                    selectData={mcusocproLi}
+                />
                 <div className='comm-shadowbox comm-setp-ttip'>
                     <div className='step-title'>
                         <img src={upIconImg} alt="" />
@@ -253,20 +260,14 @@ export default class FirmwareManagement extends Component {
                     <div className='otasearchbox'>
                         <div className="searchgroupbox">
                             <span>方案类型：</span>
-                            <Select className='typeselect' defaultValue={-1} onChange={val => { this.changeState('schemeType', val) }}>
+                            <Select className='typeselect' defaultValue={-1} 
+                                onChange={this.cngeSchemeType}
+                            >
                                 <Option value={-1}>全部类型</Option>
                                 {
-                                    SCHMETYPE.map(({ id, nam }, i) => <Option key={i} value={id}>{nam}</Option>)
+                                    SCHMETYPE.map(({ id, nam }, i) => (id!=1 && <Option key={i} value={id}>{nam}</Option>))
                                 }
                             </Select>
-                            <span>固件包名称：</span>
-                            <Search placeholder="输入升级包名称查找"
-                                className='serachinpt'
-                                enterButton
-                                maxLength={20}
-                                onChange={e => { this.changeState('deviceVersionName', e.target.value) }}
-                                onSearch={() => { this.pagerIndex(1) }}
-                            />
                         </div>
                         <Button className='button' onClick={() => { this.switchDialog('addFirmwareVisiable') }} type="primary">添加固件</Button>
                     </div>

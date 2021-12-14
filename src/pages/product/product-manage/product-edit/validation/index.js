@@ -131,13 +131,14 @@ function Validation({ productId, developerInfo, refInstance }) {
             productId: +productId,
             account,
             remark: ""
-        }, { needVersion: 1.1, loading: true, needFormData: true }).then((model) => { });
-        post(Paths.addDebugMac, {
-            productId: +productId,
-            physicalAddr: devMac
-        }, { loading: true, needFormData: true }).then((model) => { });
-
-        getAccessToken();
+        }, { needVersion: 1.1, loading: true, needFormData: true }).then(a => {
+            post(Paths.addDebugMac, {
+                productId: +productId,
+                physicalAddr: devMac
+            }, { loading: true, needFormData: true }).then(b => {
+                getAccessToken();
+             });
+        });
     }
     //修改调试账号、设备
     const set_DebugInfo = (e, i) => {

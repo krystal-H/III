@@ -56,22 +56,18 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
         console.log(22222,firmwareFrPro)
         if( schemeType ){
             post(Paths.getFirmwareList,{productId,schemeType}).then(({data = []}) => {
-                // data = [
-                //     {firmwareTypeName:'ccc',firmwareTypeNo:5},
-                //     {firmwareTypeName:'eee',firmwareTypeNo:24},
-                //     {firmwareTypeName:'aaa',firmwareTypeNo:1},
-                //     {firmwareTypeName:'bbb',firmwareTypeNo:2},  
-                // ]
                 if(schemeType==2){
                     formInstance.setFieldsValue({ mcuUpgrade:1 })
                     setMcuIsUp(1)
                 }
                 setFirmwareList(data)
-                if(data.length>0){
-                    const firstNo = data[0].firmwareTypeNo
-                    setSelectedFirmwareLi([firstNo])
-                    setCurFirmwareTypeNo(firstNo)
-                }
+                setSelectedFirmwareLi([])
+                // setCurFirmwareTypeNo()
+                // if(data.length>0){
+                //     const firstNo = data[0].firmwareTypeNo
+                //     setSelectedFirmwareLi([firstNo])
+                //     setCurFirmwareTypeNo(firstNo)
+                // }
                 
             }); 
         }
@@ -183,7 +179,9 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                         <Select placeholder="选择固件模块" onChange={v=>{setSelectedFirmwareLi(v)}} mode="multiple" value={selectedFirmwareLi}>
                             {
                                 firmwareList.map(({firmwareTypeName,firmwareTypeNo},i) => {
-                                    return <Option key={firmwareTypeNo} disabled={i==0} value={firmwareTypeNo}>{firmwareTypeName}</Option>
+                                    return <Option key={firmwareTypeNo} 
+                                    // disabled={i==0} 
+                                    value={firmwareTypeNo}>{firmwareTypeName}</Option>
                                 })
                             }
                         </Select>
@@ -193,8 +191,14 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                         {
                             selectedFirmwareLi.map( firmwareTypeNo =>{
                                 const data = summaryVersions.find(a=>a.firmwareVersionType == firmwareTypeNo) || {}
-                                const { firmwareVersionTypeName, totalVersion=0, curMainVersion=0 } = data;
-                                return <Tabs.TabPane tab={firmwareVersionTypeName || firmwareList.find((a)=>a.firmwareTypeNo==firmwareTypeNo).firmwareTypeName || '未知模块名'} key={firmwareTypeNo} >
+                                let { firmwareVersionTypeName, totalVersion=0, curMainVersion=0 } = data;
+                                if(!firmwareVersionTypeName){
+                                    let lidata = firmwareList.find((a)=>a.firmwareTypeNo==firmwareTypeNo) || {firmwareTypeName:'未知模块名'}
+                                    firmwareVersionTypeName = lidata.firmwareTypeName
+                                }
+
+                                return <Tabs.TabPane tab={ firmwareVersionTypeName } key={firmwareTypeNo} >
+                                {/* return <Tabs.TabPane tab={data.firmwareVersionType+'_'+firmwareVersionTypeName + "_" + selectedFirmwareLi.length} key={firmwareTypeNo} > */}
                                     <Item label={schemeType==3&&"模块编号"||"模块/插件编号"}>{firmwareTypeNo}</Item>
                                     <Item label='硬件版本号' name={`totalVersion_${firmwareTypeNo}`} initialValue={totalVersion}>
                                         <Input className='noborderinpt' disabled/>
