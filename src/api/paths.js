@@ -60,6 +60,11 @@ let Paths = {
     getPhysicalModelId: '/physicalModel/func', // 获取功能点
     confirmScheme: 'product/create/confirm/scheme', // 创建方案下一步
 
+    // 5.x语音配置
+    getProductVoiceList: '/voice/getProductVoiceList', // 获取产品语音能力列表
+    getAllVoiceList: '/voice/getVoiceList', //获取语音能力
+    addOrRemoveVoice: '/voice/addVoiceApprove', // 添加、移除语音能力
+
     // 5.x继续开发-发布产品
     publishProduct: '/product/publish', // 继续开发-发布产品
 
