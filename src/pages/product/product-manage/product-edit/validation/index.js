@@ -74,12 +74,12 @@ function Validation({ productId, developerInfo, refInstance }) {
     const [analysisData, setAnalysisData] = useState(null);
 
     const [tabShow, setTabShow] = useState("1");
-
+    const [accountList, setAccountList] = useState([])
     useEffect(() => {
         get(Paths.queryServerConfig, { productId }, { loading: true }).then(({ data = {} }) => {
             setServerIp(data.ip)
         })
-
+        checkIsOld()
         return closeWebsocket //组件卸载时执行
     }, [productId])
 
@@ -96,7 +96,11 @@ function Validation({ productId, developerInfo, refInstance }) {
     }))
     // 展示发布产品弹窗
     const showRelease = () => { setReleaseVisible(true) }
-
+    const checkIsOld = () => {
+        get(Paths.deviceDebugAccountGetList, { productId }, { loading: true }).then((model) => {
+            setAccountList(model.data || []);
+        });
+    }
     const getAccessToken = () => {
         get(Paths.accessToken, {}, { loading: true }).then(({ data = "" }) => {
             addHisData()
@@ -276,7 +280,7 @@ function Validation({ productId, developerInfo, refInstance }) {
                     </div>
                 </TabPane>
                 <TabPane tab="虚拟设备调试" key="2">
-                    <Simulat productId={productId}  tabShow={tabShow}/>
+                    <Simulat productId={productId} tabShow={tabShow} accountList={accountList}/>
                 </TabPane>
             </Tabs>
         </div>
