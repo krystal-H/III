@@ -43,7 +43,7 @@ function VoiceSetting() {
       key: 'status',
       render: (text) => {
         const colorMap = ['', '#2f78ff', '#f58542']
-        return <span style={{ color: colorMap[text] }}>{text == 1 ? '已发布' : text == 2 ? '审核中' : ''}</span>
+        return <span style={{ color: colorMap[text] }}>{text === 1 ? '已发布' : text === 2 ? '审核中' : ''}</span>
       }
     },
     {
@@ -67,9 +67,12 @@ function VoiceSetting() {
       title: '操作',
       key: 'action',
       render: (text, record) => {
-        return (
-          <span><a onClick={() => deleteItem(record)}>移除</a></span>
-        )
+        if (record.status === 1) {
+          return <span><a onClick={() => deleteItem(record)}>移除</a></span>
+        }
+        if (record.status === 2) {
+          return '-'
+        }
       }
     }
   ]
@@ -163,9 +166,9 @@ function VoiceSetting() {
   }
 
   // 提交数据
-  const submitData = () => {
-    if (!dataSource.length) return Notification({ type: 'warn', description: '请先增加语音配置能力' })
-  }
+  // const submitData = () => {
+  //   if (!dataSource.length) return Notification({ type: 'warn', description: '请先增加语音配置能力' })
+  // }
 
   return (
     <div className="voice-setting-page">
@@ -212,7 +215,7 @@ function VoiceSetting() {
           <Button type="primary" ghost className='add-table-btn' onClick={() => setAddVoiceVisible(true)}>
             <PlusOutlined />增加能力
           </Button>
-          <div style={{ padding: '20px 10px' }}>请下载百度语言APP进行调试：http//：www.baidu.yuyin.com</div>
+          <div style={{ padding: '20px 10px' }}>请搜索下载小度APP进行语音测试。</div>
           {/* <div className="submit-btn">
             <Button type="primary" onClick={() => submitData()}>提交</Button>
           </div> */}

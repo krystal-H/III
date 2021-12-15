@@ -18,7 +18,8 @@ function AddVoice({ productId, voiceType, visible, handleCancel, handleOk }) {
     {
       title: '语音能力名称',
       dataIndex: 'abilityName',
-      key: 'abilityName'
+      key: 'abilityName',
+      width: 120
     },
     {
       title: '语言调用词',

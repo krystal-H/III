@@ -75,7 +75,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
       isConfiged: false,
       type: 'voiceSetting',
       routePath: '/open/product/proManage/voiceSetting',
-
+      url: require('../../../../../assets/images/commonDefault/voice-setting.png')
     }
   ])
 

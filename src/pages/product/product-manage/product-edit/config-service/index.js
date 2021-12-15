@@ -84,7 +84,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
       isConfiged: false,
       type: 'voiceSetting',
       routePath: '/open/product/proManage/voiceSetting',
-
+      url: require('../../../../../assets/images/commonDefault/voice-setting.png')
     }
   ])
   const [productConfig, setProductConfig] = useState('') // 配网信息信息
