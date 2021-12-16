@@ -140,7 +140,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
   // 固件模块
   const getFirmwareList = () => {
     post(Paths.getFirmwareList, { productId, schemeType: productItemData.schemeType }, { loading: true }).then(res => {
-      if (res.data && res.data.length > 0) {
+      if (res.data && res.data.length > 0) { // 有配置数据
         const customList = res.data.filter(item => item.isCustom === 0)
         console.log(customList.length, 'customList.length')
         setCustomCount(customList.length)
@@ -155,8 +155,12 @@ function ServiceSelect({ productId, nextStep }, ref) {
           list[0].isConfiged = true
           setOptionalList(list)
         }
-      } else {
+      } else { // 无配置数据
         setFirmwareDetailData([])
+        setCustomCount(0)
+        const list = cloneDeep(optionalList)
+        list[0].isConfiged = false
+        setOptionalList(list)
       }
     })
   }
@@ -351,7 +355,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
           firmwareDetailVisible={firmwareDetailVisible}
           firmwareDetailData={firmwareDetailData}
           getFirmwareList={getFirmwareList}
-          cancelHandle={() => { setFirmwareDetailVisible(false) }}
+          cancelHandle={() => { setFirmwareDetailVisible(false); getFirmwareList() }}
           showAddFirmware={(type) => {
             setFirmwareVisible(true)
             setShowType(type)
