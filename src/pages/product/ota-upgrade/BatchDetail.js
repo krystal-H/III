@@ -17,7 +17,7 @@ export default class FirmwareDetails extends PureComponent {
         }
         this.columns = [
             { title: '设备ID', dataIndex: 'deviceUniqueId'},
-            { title: '设备MAC', dataIndex: 'mac'},
+            { title: '设备MAC', dataIndex: 'macAddress'},
             { title: '状态', dataIndex: 'upgradeStatus', render:u => (u && UPDATESTATUS[u].nam ) },
             { title: '日志', dataIndex: 'remark'},
         ]; 

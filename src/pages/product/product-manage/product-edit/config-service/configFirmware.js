@@ -93,16 +93,16 @@ function ConfigFirmware({
   // 验证编号，主要用于默认显示的第一条  不在下边的fields中,不然就省事很多
   const validNum = (value, listType) => {
     let reg = new RegExp("^([1-9]|[1-9]\\d|100)$")
-
-    if (!value) return Promise.reject(new Error(`请输入${labelMap[selectModule]}编号`))
-    if (type === 'add' && value == '0' && typeNoList.indexOf(0) == -1) return Promise.resolve() // 模组插件第一个0
+    if (listType === 'list1') {// soc-模组插件
+      if (type === 'add' && !Number(value) && typeNoList.indexOf(0) == -1) return Promise.resolve() // 模组插件第一个0
+    }
+    if (!value || !Number(value)) return Promise.reject(new Error(`请输入${labelMap[selectModule]}编号，支持1-100的整数字`))
     if (!reg.test(value)) return Promise.reject(new Error('请输入1-100的整数字'))
 
     let tempArr = arrMap[listType]
     tempArr = type === 'add' ?
       tempArr.concat(typeNoList) :
-      type === 'edit' ?
-        tempArr.concat(editTypeNoList) : []
+      type === 'edit' ? tempArr.concat(editTypeNoList) : []
 
     let { list, firmwareTypeNo } = form.getFieldsValue()
     list && list.filter(item => item).forEach(item => {
@@ -152,11 +152,12 @@ function ConfigFirmware({
                 rules={[{ required: true, message: '请选择模块' }]}>
                 <Select placeholder="请选择模块"
                   onChange={val => chooseModule(val)}>
+                  {/* mcu方案只有mcu模块 */}
                   {schemeType == 2 && <Option value="2">MCU模块</Option>}
-                  {
-                    schemeType == 3 && <>
-                      <Option value="1">模组插件</Option>
-                      <Option value="2">MCU模块</Option></>
+                  {/* soc方案有模组插件、mcu模块 */}
+                  {schemeType == 3 && <>
+                    <Option value="1">模组插件</Option>
+                    <Option value="2">MCU模块</Option></>
                   }
                 </Select>
               </Form.Item>
@@ -178,7 +179,7 @@ function ConfigFirmware({
                 ]}>
                 <Input maxLength={30} placeholder={`请输入${labelMap[selectModule]}名称`} />
               </Form.Item>
-              { // soc方案 模组插件  第一个默认编号是0
+              { // 模组插件(肯定是soc方案)  第一个默认编号是0
                 selectModule === '1' &&
                 <Form.Item
                   className="required-icon"
@@ -196,7 +197,7 @@ function ConfigFirmware({
                 </Form.Item>
               }
               {// mcu模块 无默认
-                selectModule !== '1' &&
+                selectModule == '2' &&
                 <Form.Item
                   className="required-icon"
                   label={`${labelMap[selectModule]}编号`}
