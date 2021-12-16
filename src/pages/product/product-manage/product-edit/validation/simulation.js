@@ -182,7 +182,7 @@ export default ({ productId, tabShow, accountList }) => {
             clean: false, // true: 清除会话, false: 保留会话
             connectTimeout: 4000, // 超时时间
             // 认证信息
-            clientId: data.mqttClientId,	//客户端ID
+            clientId: data.mqttClientId + '' + new Date().getTime(),	//客户端ID
             username: data.mqttUser, //连接用户名
             password: data.mqttPassword,//连接密码，有的密码默认为public
             // 心跳时间
@@ -302,41 +302,44 @@ export default ({ productId, tabShow, accountList }) => {
             alert('断线状态')
             return
         }
-        let arr = []
-        let typeArr = ["数值", "枚举", "布尔"]
-        let data = form.getFieldsValue()
-        for (let key in data) {
-            if (data[key]) {
-                data[key] = data[key].trim()
-            }
-            if (data[key]) {
-                let obj = {}
-                let itemOri = originSource['dp' + key]
-                if (typeArr.indexOf(itemOri.funcParamList[0].dataTypCN) > -1) {
-                    obj[key.toString()] = Number(data[key])
-                } else {
-                    obj[key.toString()] = data[key]
+        form.validateFields().then(res => {
+            let arr = []
+            let typeArr = ["数值", "枚举", "布尔"]
+            let data = form.getFieldsValue()
+            for (let key in data) {
+                if (data[key]) {
+                    data[key] = data[key].trim()
                 }
-                arr.push(obj)
+                if (data[key]) {
+                    let obj = {}
+                    let itemOri = originSource['dp' + key]
+                    if (typeArr.indexOf(itemOri.funcParamList[0].dataTypCN) > -1) {
+                        obj[key.toString()] = Number(data[key])
+                    } else {
+                        obj[key.toString()] = data[key]
+                    }
+                    arr.push(obj)
+                }
             }
-        }
-        let timestamp = new Date().getTime()
-        let item = dealData(JSON.stringify({ params: arr }))
-        let params = {
-            cmd: 2006,
-            ver: "1.0",
-            dir: "03",
-            timestamp,
-            msgId: msgId++,
-            data: item
-        }
-        let topic = `/device/${product.code}/${mockId}/upward`
-        client.publish(topic, JSON.stringify(params))
-        setPayload(pre => {
-            let dataArr = cloneDeep(pre)
-            dataArr.push({ 上报: { params: arr } })
-            return dataArr
+            let timestamp = new Date().getTime()
+            let item = dealData(JSON.stringify({ params: arr }))
+            let params = {
+                cmd: 2006,
+                ver: "1.0",
+                dir: "03",
+                timestamp,
+                msgId: msgId++,
+                data: item
+            }
+            let topic = `/device/${product.code}/${mockId}/upward`
+            client.publish(topic, JSON.stringify(params))
+            setPayload(pre => {
+                let dataArr = cloneDeep(pre)
+                dataArr.push({ 上报: { params: arr } })
+                return dataArr
+            })
         })
+
     }
     //测试一下
     const test = () => {
