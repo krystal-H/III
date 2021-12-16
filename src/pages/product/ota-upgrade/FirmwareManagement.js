@@ -6,7 +6,7 @@ import { get, Paths } from '../../../api';
 import AddFirmwareDialog from './AddFirmwareDialog';
 import { ReleaseFirmware } from './ReleaseFirmware';
 import { ValidationFirmwareDialog } from './ValidationFirmwareDialog';
-
+import ViewFirmList from './viewFirmList';
 import { DateTool } from '../../../util/util';
 import { Notification } from '../../../components/Notification';
 import PageTitle from '../../../components/page-title/PageTitle'
@@ -59,6 +59,9 @@ export default class FirmwareManagement extends Component {
             ],//查看验证信息，同时根据validateInfo.lengt>0与否来判断查看验证弹窗是否可见
 
             releaseFirmwareDialog: false,//升级弹窗
+
+            viewFirmid:undefined,//查看固件的产品id，同时控制查看弹窗是否可见
+            viewFirmtype:undefined,
         }
 
         this.columns = [
@@ -92,6 +95,7 @@ export default class FirmwareManagement extends Component {
                         schemeType, firmwareVersionType,
                     } = recard
                     return <Space>
+                        <a onClick={() => { this.openCloseViewFirmList(productFirmwareId,schemeType) }}>查看固件</a>
                         {
                             status == 0 ? <a onClick={() => { this.openValidation(productFirmwareId) }}>验证</a> :
                             status == 1 ?
@@ -228,11 +232,14 @@ export default class FirmwareManagement extends Component {
             this.pagerIndex(1)
         })
     }
+    openCloseViewFirmList = (viewFirmid,viewFirmtype)=>{
+        this.setState({viewFirmid,viewFirmtype})
+    }
     
     render() {
         const {
             addFirmwareVisiable, releaseFirmwareDialog, validationFirmwareDialog,
-            deviceVersionId, validationDetail, validateInfo, validationModTit
+            deviceVersionId, validationDetail, validateInfo, validationModTit,viewFirmid,viewFirmtype
         } = this.state;
         const { versionList: { list, pager },mcusocproLi } = this.props;
         const { pageIndex, totalRows } = pager;
@@ -309,6 +316,7 @@ export default class FirmwareManagement extends Component {
                             title={validationModTit}
                         />
                     }
+                    <ViewFirmList productFirmwareId={viewFirmid} schemeType={viewFirmtype} openClose={this.openCloseViewFirmList} />
                     
                     <Modal title='验证信息' visible={!!validateInfo.length} onCancel={this.closeValidateInfo} width={800} footer={null} maskClosable={false}>
                         <Table rowKey="macAddress" columns={this.valInfoColumns} dataSource={validateInfo} pagination={false} />
