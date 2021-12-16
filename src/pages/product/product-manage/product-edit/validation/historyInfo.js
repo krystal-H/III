@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Modal, Table } from 'antd';
 import { DateTool } from '../../../../../util/util';
 import { get, post, Paths } from '../../../../../api';
-export default ({ historyVisiable, openHistory, debugInfo, sentInfo }) => {
+export default ({ historyVisiable, openHistory, debugInfo,productId, sentInfo }) => {
 
     const [dataSource, setDataSource] = useState([])
 
@@ -34,6 +34,7 @@ export default ({ historyVisiable, openHistory, debugInfo, sentInfo }) => {
         let params = {
             pageIndex: 1,
             pageRows: 10,
+            productId
         }
         get(Paths.getDebugHis, params).then(res => {
             let data=res.data.records || []
