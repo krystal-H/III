@@ -13,10 +13,10 @@ import ReleaseProduct from './releaseProduct';
 const { TabPane } = Tabs;
 
 const columns = [
-    { title: '序列号', dataIndex: 'index' },
+    { title: '序列号', dataIndex: 'index', width:'78px' },
     { title: 'topic数据内容', dataIndex: 'topic' },
-    { title: '物理地址', dataIndex: 'physicalAddr' },
-    { title: 'DID', dataIndex: 'did' }
+    { title: '物理地址', dataIndex: 'physicalAddr',width:'150px' },
+    { title: 'DID', dataIndex: 'did',width:'150px' }
 ];
 
 let ws = null, //保存websocket连接
@@ -63,6 +63,7 @@ const temp = [
 
 function Validation({ productId, developerInfo, refInstance }) {
     const mountRef = useRef(-1);
+    const lengthRef = useRef(0);
     const [releaseVisible, setReleaseVisible] = useState(false); // 发布产品
     const [dataList, setDataList] = useState([]);//原始数据
     const [debugInfo, setDebugInfo] = useState(["", ""]); //
@@ -130,6 +131,16 @@ function Validation({ productId, developerInfo, refInstance }) {
             return
         }
 
+        if (!account.match(/^(((\d{3,4}-)?\d{7,8})|(1\d{10}))$/)) {
+            Notification({
+                description: '请输入正确的手机号',
+                type: 'warn'
+            });
+            return
+        }
+
+
+
         //虽然ws有传账号 和 mac，然前端仍需调用之前老版本的接口保存 账号 和 mac
         post(Paths.deviceDebugAccountInsert, {
             productId: +productId,
@@ -168,11 +179,6 @@ function Validation({ productId, developerInfo, refInstance }) {
             let sendMsg = "[" + serverToken + "|" + developerInfo.userId + "|" +
                 deviceTypeId + "#" + deviceSubtypeId + "#" + productVersion +
                 "|" + debugInfo[0] + "|" + debugInfo[1] + "]";
-            if (tabShow == "2") {
-                sendMsg = ""//待定
-
-            }
-
             ws.send(sendMsg);
 
         };
@@ -202,9 +208,16 @@ function Validation({ productId, developerInfo, refInstance }) {
         const { topic, physicalAddr, did, map } = _d;
         setDataList(preLi => {
             let li = cloneDeep(preLi);
-            if (li.unshift({ topic, physicalAddr, did, map, index: mountRef.current }) == 901) {//页面最多显示900条数据
+
+            console.log('---li---',li)
+            console.log('---lengthRef.current---',lengthRef.current)
+
+
+            li.unshift({ topic, physicalAddr, did, map, index: ++lengthRef.current })
+            if(lengthRef.current>900){
                 li.pop();
             }
+            
             return li
         })
     }
@@ -212,6 +225,7 @@ function Validation({ productId, developerInfo, refInstance }) {
     const cleanDataLi = () => {
         setDataList([]);
         setAnalysisData(null);
+        lengthRef.current = 0;
     }
 
     const openHistory = open => {
