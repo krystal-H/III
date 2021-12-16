@@ -116,8 +116,10 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
 
 
     const uploadChange = ({file})=>{
+       
         if(file.response){
             const url = file.response.data && file.response.data.url || '';
+            console.log(111111,`filePath_${curFirmwareTypeNo}`,url)
             formInstance.setFieldsValue({ 
                 [`filePath_${curFirmwareTypeNo}`]:url
             })
@@ -126,6 +128,19 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
 
     const cngTab = cur=>{
         setCurFirmwareTypeNo(cur)
+    }
+
+    const deselectVal = d=>{
+        if(curFirmwareTypeNo==d){
+            setCurFirmwareTypeNo(selectedFirmwareLi[0])
+        }
+    }
+    const selectVal = s=>{
+        setCurFirmwareTypeNo(s)
+        formInstance.setFieldsValue({ 
+            [`filePath_${s}`]:'',
+            [`mainVersion_${s}`]:''
+        })
     }
 
     
@@ -141,9 +156,9 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
             width={650}
             maskClosable={false}
         >
-            <Form form={formInstance} {...formItemLayout} className="ota_add_firmware_dialog" onFinish={onFinish}>
+            <Form form={formInstance} {...formItemLayout} className="ota_add_firmware_dialog" onFinish={onFinish} id='area'>
                 <Item label="产品名称" name='productId' rules={[{ required: true, message: '请选择产品' }]}>
-                    <Select showSearch optionFilterProp="children" placeholder="请选择产品" onChange={changedPro}>
+                    <Select showSearch optionFilterProp="children" placeholder="请选择产品" onChange={changedPro} getPopupContainer={() => document.getElementById('area')}>
                         {
                             mcusocproLi.map(item => {
                                 const {productName,productId} = item;
@@ -176,7 +191,12 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 }
                 { (schemeType==3||mcuIsUp==0) && <>
                     <Item label={schemeType==3&&"模块"||"模块/插件"}>
-                        <Select placeholder="选择固件模块" onChange={v=>{setSelectedFirmwareLi(v)}} mode="multiple" value={selectedFirmwareLi}>
+                        <Select placeholder="选择固件模块" mode="multiple" value={selectedFirmwareLi}
+                            onChange={v=>{ console.log(77,v); setSelectedFirmwareLi(v)}} 
+                            onDeselect={ deselectVal }
+                            onSelect = { selectVal }
+                            getPopupContainer={() => document.getElementById('area')} 
+                        >
                             {
                                 firmwareList.map(({firmwareTypeName,firmwareTypeNo},i) => {
                                     return <Option key={firmwareTypeNo} 
@@ -187,7 +207,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                         </Select>
                     </Item>
 
-                    <Tabs className='tabs'type="card" onChange={cngTab}>
+                    <Tabs className='tabs'type="card" onChange={cngTab} activeKey={curFirmwareTypeNo+""}>
                         {
                             selectedFirmwareLi.map( firmwareTypeNo =>{
                                 const data = summaryVersions.find(a=>a.firmwareVersionType == firmwareTypeNo) || {}

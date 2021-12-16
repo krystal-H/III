@@ -111,7 +111,8 @@ function Validation({ productId, developerInfo, refInstance }) {
     const addHisData = () => {
         post(Paths.hisDebugMac, {
             account,
-            physicalAddrs: [devMac]
+            physicalAddrs: [devMac],
+            productId
         }).then((res) => { });
     }
     //启动真实设备调试
@@ -298,7 +299,8 @@ function Validation({ productId, developerInfo, refInstance }) {
                 </TabPane>
             </Tabs>
         </div>
-        {historyVisiable && <History historyVisiable={historyVisiable} debugInfo={debugInfo} openHistory={openHistory} sentInfo={sentInfo} />}
+        {historyVisiable && <History historyVisiable={historyVisiable}
+        productId={productId} debugInfo={debugInfo} openHistory={openHistory} sentInfo={sentInfo} />}
         {/* 确认发布产品弹窗 */}
         {
             releaseVisible &&
