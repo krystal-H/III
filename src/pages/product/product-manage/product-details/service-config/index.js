@@ -153,6 +153,11 @@ function ServiceConfig({ productId, nextStep }, ref) {
         getFirmwareList()
       }
     }
+    if (!productItemData.voiceable) { // 未关联语音 undefined/0，可选配置中不显示
+      const tempList = cloneDeep(optionalList)
+      tempList.pop()
+      setOptionalList(tempList)
+    }
   }
 
   useEffect(() => {

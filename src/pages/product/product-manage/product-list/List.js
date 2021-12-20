@@ -72,8 +72,9 @@ class List extends PureComponent {
         render: (text, record) => (
           <div className="operation">
             <span className="continue" onClick={() => this.clickProductInfo(record)}>{record.status === 1 ? '开发详情' : '继续开发'}</span>
+            {/* 1：有语音 0：无 */}
             {
-              (record.status === 0 || record.status === 1) &&
+              record.voiceable === 1 &&
               <span className="copy mar25" onClick={() => this.setVoice(record)}>语音</span>
             }
             {

@@ -5,7 +5,7 @@ import ConfigFirmware from './configFirmware'
 import JoinGateway from './joinGateway'
 import ConfigFirmwareDetail from './configFirmwareDetail'
 import { Link } from 'react-router-dom'
-import { Paths, post} from '../../../../../api'
+import { Paths, post } from '../../../../../api'
 import { cloneDeep } from 'lodash'
 import { useHistory } from 'react-router-dom';
 import './index.scss';
@@ -181,6 +181,11 @@ function ServiceSelect({ productId, nextStep }, ref) {
         getFirmwareList()
       }
     }
+    if (!productItemData.voiceable) { // 未关联语音 undefined/0，可选配置中不显示
+      const tempList = cloneDeep(optionalList)
+      tempList.pop()
+      setOptionalList(tempList)
+    }
   }
 
   useEffect(() => {
@@ -287,12 +292,12 @@ function ServiceSelect({ productId, nextStep }, ref) {
                         </Link>
                         :
                         item.type === 'voiceSetting' ? <div className="config-card-right-btn" onClick={() => goVoiceSetting()}>配置</div> :
-                        item.type === 'addFirmware' ?
-                          <>
-                            <div className="config-card-right-btn" onClick={() => { showModal(item.type); setShowType('add') }}>配置</div>
-                            <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
-                          </> :
-                          <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
+                          item.type === 'addFirmware' ?
+                            <>
+                              <div className="config-card-right-btn" onClick={() => { showModal(item.type); setShowType('add') }}>配置</div>
+                              <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
+                            </> :
+                            <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
                       : ''
                   }
                   {/* 配置的判断 */}
