@@ -54,8 +54,9 @@ function APIdebug({ listItem = {}, projectId }) {
     console.log('params', params)
     post(Paths.debugAPI, params, { loading: true })
       .then(res => {
-        if (res) setResultShow(JSON.stringify(JSON.parse(res), undefined, 4))
-      })
+        // console.log(res)
+        if (res) setResultShow(JSON.stringify(res, undefined, 4))
+      }, err => setResultShow(JSON.stringify(err, undefined, 4)))
   }
 
   const onFinishFailed = (errorInfo) => {
