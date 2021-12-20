@@ -85,7 +85,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
             productId, 
             productFirmwareName, 
             productFirmwareVersion:productFirmwareVersion+1,
-            deviceVersionIds:summaryVersions[0].deviceVersionId,
+            deviceVersionIds:summaryVersions[0] && summaryVersions[0].deviceVersionId || ""
         }
 
         if(schemeType==3||mcuIsUp==0){
