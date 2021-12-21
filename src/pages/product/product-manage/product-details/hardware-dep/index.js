@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Tooltip,Modal  } from 'antd'
+import { Table, Tooltip, Modal } from 'antd'
 import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { Paths, post } from '../../../../../api'
 import defaultImg from '../../../../../assets/images/commonDefault/hardware.png'
@@ -33,6 +33,8 @@ class Hardware extends Component {
       {
         title: '操作',
         render: (text, record, index) => (
+          // 免开发方案不显示固件升级
+          this.state.productItemData.schemeType != 1 &&
           <Link to={{ pathname: '/open/product/otaUpdate/list', search: `?productId=${props.productId}` }} target="_blank">
             <div className="table-operation">固件升级</div>
           </Link>
@@ -137,7 +139,7 @@ class Hardware extends Component {
                   <div className="module-title">{allInfo.moduleName || '-'}</div>
                   <div className="flex">
                     <div className="desc-item"><span className="desc-item-title">芯片：</span>{allInfo.originalModuleTypeName || '-'}</div>
-                    <div className="desc-item"><span className="desc-item-title">尺寸：</span>{allInfo.sizeWidth}x{allInfo.sizeHeight}x{allInfo.sizeThickness}</div>
+                    <div className="desc-item"><span className="desc-item-title">尺寸：</span>{allInfo.sizeThickness}x{allInfo.sizeWidth}x{allInfo.sizeHeight}</div>
                     <div className="desc-item"><span className="desc-item-title">适用：</span>{allInfo.applyScope || '-'}</div>
                   </div>
                   <div className="desc-item">

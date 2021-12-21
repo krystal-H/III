@@ -187,7 +187,7 @@ class Hardware extends Component {
                                         <div className="module-title">{allInfo.moduleName || '-'}</div>
                                         <div className="flex">
                                             <div className="desc-item"><span className="desc-item-title">芯片：</span>{allInfo.originalModuleTypeName || '-'}</div>
-                                            <div className="desc-item"><span className="desc-item-title">尺寸：</span>{allInfo.sizeWidth}x{allInfo.sizeHeight}x{allInfo.sizeThickness}</div>
+                                            <div className="desc-item"><span className="desc-item-title">尺寸：</span>{allInfo.sizeThickness}x{allInfo.sizeWidth}x{allInfo.sizeHeight}</div>
                                             <div className="desc-item"><span className="desc-item-title">适用：</span>{allInfo.applyScope || '-'}</div>
                                         </div>
                                         <div className="desc-item">
