@@ -5,6 +5,7 @@ import { Paths, post } from '../../../../../api'
 import defaultImg from '../../../../../assets/images/commonDefault/hardware.png'
 import "./index.scss"
 import { Link } from 'react-router-dom';
+import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.jpg';
 
 class Hardware extends Component {
   constructor(props) {
@@ -48,6 +49,7 @@ class Hardware extends Component {
       productItemData: JSON.parse(sessionStorage.getItem('productItem')) || {},
       showImg: '',
       imgUrl: '',
+      officeVis: false
     }
   }
 
@@ -118,7 +120,7 @@ class Hardware extends Component {
     this.setState({ showImg: false })
   }
   render() {
-    const { dataSource, allInfo, productItemData, showImg, imgUrl } = this.state
+    const { dataSource, allInfo, productItemData, showImg, imgUrl, officeVis } = this.state
     return (
       <div className="hardware-dev-page">
         <div className="hardware-wrap">
@@ -240,7 +242,7 @@ class Hardware extends Component {
               <div className="flex-c">
                 <img className="debug-icon" src={require('../../../../../assets/images/product/network.png')} alt="" />
                 <div>联网验证</div>
-                <div className="blue">下载“数联智能”App</div>
+                <div className="blue" onClick={() => this.setState({ officeVis: true })}>下载“数联智能”App</div>
               </div>
             </div>
           </div>
@@ -249,7 +251,21 @@ class Hardware extends Component {
         {
           showImg && <Modal title="图片展示" width='970px' visible={showImg} footer={null} onCancel={() => { this.callImg() }}>
             <div style={{ textAlign: 'center' }}>
-              <img src={imgUrl} style={{ maxWidth: '800px' }} />
+              <img src={imgUrl} style={{ maxWidth: '800px' }} alt="" />
+            </div>
+          </Modal>
+        }
+        {/* 下载数联app */}
+        {
+          officeVis &&
+          <Modal title="安装“数联智能”App"
+            width='470px'
+            visible={officeVis}
+            footer={null}
+            onCancel={() => this.setState({ officeVis: false })}>
+            <div className='down-office-modal' >
+              <img src={demoAppOfficial} alt="pic" />
+              <div>手机扫描二维码下载</div>
             </div>
           </Modal>
         }
