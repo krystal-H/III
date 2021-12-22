@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Modal, Input, Form, Row, Col, Select } from 'antd';
+import { Modal, Input, Form, Row, Col, Select, InputNumber } from 'antd';
 import './modifyFirmware.scss'
 import { Paths, post } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
@@ -118,7 +118,8 @@ export default function ModifyFirmwareModal({ modifyFirmwareVisible, handleCance
                             name={`${item2.funcModule}#${item2.identifier}`}
                             key={item2.identifier}
                             rules={[{ required: true, message: `请输入${item2.funcName}` }]}>
-                            <Input />
+                            {/* <Input /> */}
+                            <InputNumber className='input-number' min={item2.dataType.specs.min} max={item2.dataType.specs.max}/>
                           </Form.Item>
                         }
                         {
