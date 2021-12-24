@@ -32,7 +32,7 @@ function ReplaceModule({
       title: '尺寸', key: '',
       render: (text, record) => (
         <div>
-          <span>{record.sizeWidth}x{record.sizeHeight}x{record.sizeThickness}</span>
+          <span>{record.sizeThickness}x{record.sizeWidth}x{record.sizeHeight}</span>
         </div>
       )
     },

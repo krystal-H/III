@@ -6,7 +6,7 @@ import {
     RightOutlined,
 } from '@ant-design/icons';
 import { post, Paths, get } from '../../../api';
-import { DateTool } from '../../../util/util';
+// import { DateTool } from '../../../util/util';
 import store from '../../../store';
 import { showCustomerService } from '../../customerService/store/reducer'
 import moment from 'moment';
@@ -49,7 +49,7 @@ function utcToDev(utcString) {
 export default function OverviewWrap() {
     useEffect(() => {
         getBannerList()
-        getMessageList()
+        // getMessageList()
         getAppList()
         getDevOneList()
         getDevThreeList()
@@ -67,18 +67,18 @@ export default function OverviewWrap() {
         });
     }
     //消息列表 
-    const [messageList, setMessageList] = useState([])
-    const getMessageList = () => {
-        let params = { "pager": { "pageIndex": 1, "pageRows": 10 } }
-        post(Paths.getNoticeList, params).then((res) => {
-            if (res.data.list.length > 3) {
-                setMessageList(res.data.list.slice(0, 3))
-            } else {
-                setMessageList(res.data.list)
-            }
+    // const [messageList, setMessageList] = useState([])
+    // const getMessageList = () => {
+    //     let params = { "pager": { "pageIndex": 1, "pageRows": 10 } }
+    //     post(Paths.getNoticeList, params).then((res) => {
+    //         if (res.data.list.length > 3) {
+    //             setMessageList(res.data.list.slice(0, 3))
+    //         } else {
+    //             setMessageList(res.data.list)
+    //         }
 
-        });
-    }
+    //     });
+    // }
     const goMessageDetail = (id) => {
         history.push(`/messageCenter/detail/${id}`);
     }
@@ -195,6 +195,9 @@ export default function OverviewWrap() {
     }, [])
     const menulist = useSelector(state => {
         return state.getIn(['userCenter', 'menulist']).toJS()
+    })
+    const messageList = useSelector(state => {
+        return state.getIn(['message', 'titleMessage']).toJS().slice(0, 3)
     })
     const getProductListNew = () => {
         history.push(`/open/product/proManage/list`)
@@ -365,23 +368,23 @@ export default function OverviewWrap() {
 
                         <div className='over-view-productmn-footer hover-commons-unite'>
                             <div onClick={() => { goAuPage('设备注册', '/open/product/devRegist') }}>
-                                <img src={projectmn1} alt=''/>
+                                <img src={projectmn1} alt='' />
                                 <div  >设备注册</div>
                             </div>
                             <div onClick={() => { goAuPage('固件升级', '/open/product/otaUpdate/list') }}>
-                                <img src={projectmn2} alt=''/>
+                                <img src={projectmn2} alt='' />
                                 <div >固件升级</div>
                             </div>
                             <div onClick={() => { goAuPage('场景服务', '/open/product/ruleEngine') }}>
-                                <img src={projectmn3} alt=''/>
+                                <img src={projectmn3} alt='' />
                                 <div >场景服务</div>
                             </div>
                             <div onClick={() => { goAuPage('云端定时', '/open/product/cloudTimer') }}>
-                                <img src={projectmn4} alt=''/>
+                                <img src={projectmn4} alt='' />
                                 <div >云端定时</div>
                             </div>
                             <div onClick={() => { goAuPage('远程配置', '/open/product/remoteCofig') }}>
-                                <img src={projectmn5} alt=''/>
+                                <img src={projectmn5} alt='' />
                                 <div>远程配置</div>
                             </div>
                         </div>
