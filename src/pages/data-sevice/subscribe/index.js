@@ -17,13 +17,17 @@ export default function DeviceRegist() {
     const [form] = Form.useForm();
     const [productCount, SetproductCount] = useState(0)
     const [dataSource, setDataSource] = useState([])
+    const [actionType, setActionType] = useState('add')
     const [optionArr, setOptionArr] = useState([]) //产品列表
+    const [modelVis, setModelVis] = useState(false)
+    const [editData, setEditData] = useState({})
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
     // const [searchParams,setSearchParams]=useState({})
     // table操作-发布、删除、下线
     const [tableAcVisible, setTableAcVisible] = useState(false)
     const [operate, setOperate] = useState(null)
     const [selectRow, setSelectRow] = useState({})
+    const [rightVisible, setRightVisible] = useState(false)
     const operateHandle = (type, data) => {
         setTableAcVisible(true)
         setSelectRow(data)
@@ -57,7 +61,7 @@ export default function DeviceRegist() {
     }
     //==========
     //====详情
-    const [rightVisible, setRightVisible] = useState(false)
+
     const openInfo = (data) => {
         setSelectRow(data)
         setRightVisible(true)
@@ -84,7 +88,7 @@ export default function DeviceRegist() {
     }
     //搜索
     const onSearch = () => {
-        if (pager.pageIndex == 1) {
+        if (pager.pageIndex === 1) {
             getList()
         } else {
             setPager(pre => {
@@ -135,43 +139,32 @@ export default function DeviceRegist() {
     }
 
     //新增订阅
-    const [modelVis, setModelVis] = useState(false)
     const openRegist = () => {
+        setActionType('add')
         setModelVis(true)
     }
     const cancelModel = () => {
         setModelVis(false)
     }
+    //新增编辑成功
     const colseMoadl = () => {
         Notification({
             type: 'success',
-            description: '新增成功！'
+            description: actionType === 'edit' ? '编辑成功' : '新增成功！'
         })
         getList()
         setModelVis(false)
     }
     //编辑订阅
-    const [editModelVis, setEditModelVis] = useState(false)
-    const [editData, setEditData] = useState({ devicePushDataConfList: [] })
     const openEdit = (data, loading = true) => {
         let url = Paths.subscribeDetail + '?urlConfId=' + data.urlConfId
         post(url, {}, { loading }).then((res) => {
             setEditData(res.data)
             setSelectRow(data)
-            setEditModelVis(true)
+            setActionType('edit')
+            setModelVis(true)
         });
 
-    }
-    const cancelEditModel = () => {
-        setEditModelVis(false)
-    }
-    const colseEditMoadl = () => {
-        Notification({
-            type: 'success',
-            description: '编辑成功！'
-        })
-        getList()
-        setEditModelVis(false)
     }
 
     const columns = [
@@ -288,7 +281,8 @@ export default function DeviceRegist() {
             </div>
             {/* 新增 */}
             {
-                modelVis && <AddSubScribe isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl} ></AddSubScribe>
+                modelVis && <AddSubScribe isModalVisible={modelVis} cancelModel={cancelModel} colseMoadl={colseMoadl}
+                    editData={editData} actionType={actionType}></AddSubScribe>
             }
             {
                 tableAcVisible &&
@@ -302,10 +296,10 @@ export default function DeviceRegist() {
             {
                 rightVisible && <SubInfo rightVisible={rightVisible} onCloseRight={onCloseRight} id={selectRow.urlConfId} />
             }
-            {
+            {/* {
                 editModelVis && <EditSubScribe editModelVis={editModelVis} colseMoadl={colseEditMoadl} editData={editData}
                     cancelModel={cancelEditModel} id={selectRow.urlConfId} />
-            }
+            } */}
         </div>
     )
 }

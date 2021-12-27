@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef, useMemo, forwardRef, useImperativeHandle } from 'react';
-import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, Table, Checkbox } from 'antd';
+import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, Table, Checkbox,DatePicker } from 'antd';
 import './addModal.scss'
 import LabelTip from '../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../api';
 import { cloneDeep } from "lodash";
 const { Step } = Steps;
 const { TabPane } = Tabs;
+const { RangePicker } = DatePicker;
+const { TextArea } = Input;
 export default function AddFuncModal({ editModelVis, colseMoadl, cancelModel, id, editData }) {
     const [currentTab, setCurrentTab] = useState('0')
     const [subObj, setSubObj] = useState({
@@ -79,7 +81,7 @@ export default function AddFuncModal({ editModelVis, colseMoadl, cancelModel, id
             ...val,
             urlConfId: id
         }
-        post(Paths.addsubscribe, params,{loading:true}).then((res) => {
+        post(Paths.addsubscribe, params, { loading: true }).then((res) => {
             colseMoadl()
         });
     }
@@ -223,22 +225,16 @@ function StepContentOne({ continueStep, editData }, ref) {
                     ) : null
                 }
             </Form.Item>
-            {/* {
-                form.getFieldValue('all') == false && (<Form.Item name="address" label="">
-                    <div>
-                        <div>标签</div>
-                    </div>
-                </Form.Item>)
-            } */}
-
         </Form>
     </div>)
 }
 StepContentOne = forwardRef(StepContentOne)
 function StepContentTwo({ continueStep, oneData, editData }, ref) {
-    const [oneArr, setOneArr] = useState([])
-    const [twoArr, setTwoArr] = useState([])
-    const [threeArr, setThreeArr] = useState([])
+    const [oneArr, setOneArr] = useState([]) //勾选的数据
+    const [twoArr, setTwoArr] = useState([]) //勾选的数据
+    const [threeArr, setThreeArr] = useState([]) //勾选的数据
+    const [form] = Form.useForm();
+    const [laberArr, setLaberArr] = useState([])//设备事件列表
     const columns = [
         {
             title: '数据名称',
@@ -263,36 +259,42 @@ function StepContentTwo({ continueStep, oneData, editData }, ref) {
     useEffect(() => {
         getList()
         getSelectData()
+        //获取事件列表
+        post(Paths.getDeviceEvent).then((res) => {
+            let source = res.data.data
+            let data = Object.keys(source).map(item => {
+                return {
+                    label: source[item],
+                    value: item
+                }
+            })
+            setLaberArr(data)
+        });
     }, [])
+    //获取原先勾选的数据
     const getSelectData = () => {
-        let arr1 = [], arr2 = [], arr3 = [], tab = 'a'
+        let arr1 = [], arr2 = [], arr3 = []
         editData.devicePushDataConfList.forEach(item => {
             item.funcIdentifier = item.protocolProperty
-            if (item.dataType == 5) {
+            if (item.dataType === 5) {
                 arr1.push(item.protocolProperty)
-                tab = 'a'
             }
-            if (item.dataType == 6) {
+            if (item.dataType === 6) {
                 arr2.push(item.protocolProperty)
-                tab = 'b'
             }
-            if (item.dataType == 7) {
+            if (item.dataType === 7) {
                 arr3.push(item.protocolProperty)
-                tab = 'c'
             }
         })
         setOneArr(arr1)
         setTwoArr(arr2)
         setThreeArr(arr3)
-        // setCurrentTab(tab)
     }
     //======获取协议
     const getList = () => {
         post(Paths.standardFnList, { productId: oneData.productId }).then((res) => {
             let data = res.data.standard.concat(res.data.custom)
-            let obj = {
-
-            }
+            let obj = {}
             obj.one = data.filter(item => {
                 if (item.funcType === 'properties') {
                     return item
@@ -330,63 +332,61 @@ function StepContentTwo({ continueStep, oneData, editData }, ref) {
         },
         selectedRowKeys: threeArr
     };
+    //第二步提交
     const onFinish = () => {
-        let arr = []
-        option.one.forEach(item => {
-            if (oneArr.indexOf(item.funcIdentifier) > -1) {
-                let obj = {
-                    "dataType": 5,
-                    "dataTypeScope": oneArr.length == option.one.length ? 2 : 1,
-                    protocolProperty: item.funcIdentifier
+        function getArr(data1, data2, val) {
+            let arr = []
+            data1.forEach(item => {
+                if (data2.indexOf(item.funcIdentifier) > -1) {
+                    let obj = {
+                        "dataType": val,
+                        "dataTypeScope": data1.length === data2.length ? 2 : 1,
+                        protocolProperty: item.funcIdentifier
+                    }
+                    arr.push(obj)
                 }
-                arr.push(obj)
-            }
-        })
-        option.two.forEach(item => {
-            if (twoArr.indexOf(item.funcIdentifier) > -1) {
-                let obj = {
-                    "dataType": 6,
-                    "dataTypeScope": twoArr.length == option.one.length ? 2 : 1,
-                    protocolProperty: item.funcIdentifier
-                }
-                arr.push(obj)
-            }
-        })
-        option.three.forEach(item => {
-            if (threeArr.indexOf(item.funcIdentifier) > -1) {
-                let obj = {
-                    "dataType": 7,
-                    "dataTypeScope": threeArr.length == option.one.length ? 2 : 1,
-                    protocolProperty: item.funcIdentifier
-                }
-                arr.push(obj)
-            }
-        })
-        continueStep('2', arr)
+            })
+            return arr
+        }
+        let arr1 = getArr(option.one, oneArr, 5)
+        let arr2 = getArr(option.two, twoArr, 6)
+        let arr3 = getArr(option.three, threeArr, 7)
+        let arrS = arr1.concat(arr2, arr3)
+        // continueStep('2', arr)
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
     }), [oneArr, twoArr, threeArr]);
     return (<div className='step-two'>
-        <div className='product-title'>已选择产品：{oneData.productName}</div>
-        <div className='select-tip'>选择协议类型</div>
-        <Tabs defaultActiveKey="a" activeKey={currentTab} onChange={tabChange}>
-            <TabPane tab="属性" key="a">
-                <Table rowSelection={{
-                    ...rowSelection1,
-                }} dataSource={option.one} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
-            </TabPane>
-            <TabPane tab="事件" key="b">
-                <Table dataSource={option.two} rowSelection={{
-                    ...rowSelection2,
-                }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
-            </TabPane>
-            <TabPane tab="服务" key="c">
-                <Table dataSource={option.three} rowSelection={{
-                    ...rowSelection3,
-                }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
-            </TabPane>
-        </Tabs>
+        {/* <div className='product-title'>已选择产品：{oneData.productName}</div>
+        <div className='select-tip'>选择协议类型</div> */}
+        <Form form={form} labelAlign='right'>
+            <Form.Item name="eventId" label="选择设备事件" rules={[{ required: true, message: '请选择设备事件' }]}>
+                <Checkbox.Group options={laberArr} />
+            </Form.Item>
+            <Tabs defaultActiveKey="a" activeKey={currentTab} onChange={tabChange}>
+                <TabPane tab="属性" key="a">
+                    <Table rowSelection={{
+                        ...rowSelection1,
+                    }} dataSource={option.one} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
+                </TabPane>
+                <TabPane tab="事件" key="b">
+                    <Table dataSource={option.two} rowSelection={{
+                        ...rowSelection2,
+                    }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
+                </TabPane>
+                <TabPane tab="服务" key="c">
+                    <Table dataSource={option.three} rowSelection={{
+                        ...rowSelection3,
+                    }} columns={columns} rowKey='funcIdentifier' pagination={false} scroll={{ y: 300 }} />
+                </TabPane>
+            </Tabs>
+            <Form.Item name="timeRange" label="选择业务发生时间" rules={[{ required: true, message: '请选择业务发生时间' }]}>
+                <RangePicker
+                    format={'YYYY-MM-DD'}
+                />
+            </Form.Item>
+        </Form>
     </div>)
 }
 StepContentTwo = forwardRef(StepContentTwo)
@@ -426,7 +426,7 @@ function StepContentThree({ finishSub, editData }, ref) {
     const radioChange = (e) => {
         setShowWay(e.target.value);
     }
-    const downFile=()=>{
+    const downFile = () => {
         window.open("http://skintest.hetyj.com/10086/a9b97e2ef3c7465bb79b63374cbd4dd8.docx")
     }
     return (<div className='step-one'>
