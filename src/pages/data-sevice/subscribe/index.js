@@ -175,8 +175,8 @@ export default function DeviceRegist() {
         },
         {
             title: '订阅名称',
-            dataIndex: 'subscription',
-            key: 'subscription',
+            dataIndex: 'subscriptName',
+            key: 'subscriptName',
         },
         {
             title: '订阅方式',

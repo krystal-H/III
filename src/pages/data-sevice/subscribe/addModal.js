@@ -173,7 +173,7 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                 return item.productId === res.productId
             })
             console.log(productIndex)
-            let name=productIndex.productName
+            let name = productIndex.productName
             // arr.forEach(item => {
             //     if (item.productId === res.productId) {
             //         name = item.productName
@@ -359,7 +359,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
             setLaberArr(data)
         });
         if (actionType === 'edit') {
-            console.log(editData, 'editDataeditDataeditData')
+            // console.log(editData, 'editDataeditDataeditData')
             let eventIds = editData.eventIds.split(',').map(item => {
                 return Number(item)
             })

@@ -317,7 +317,7 @@ let Paths = {
     addsubscribe:'/datapush/create',//新增数据订阅
     getLabelByAddress:'/deviceLabel/getDeviceLabelByProductId',//通过地区获取label
     getProductByProject:'/projectDevice/getProductListByProjectId',
-
+    getDeviceEvent:'/datapush/getDeviceEventList',
     /**
      * 基础产品--应用 start
      * xiao-2019-10-17

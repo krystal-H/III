@@ -90,7 +90,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                             },
                         ]}
                     >
-                        <Input />
+                        <Input maxLength={30}/>
                     </Form.Item>
 
                     <Form.Item
