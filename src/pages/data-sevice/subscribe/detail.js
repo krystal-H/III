@@ -46,10 +46,10 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
                     <div className='subscrbe-t' style={{ marginTop: '22px' }}>订阅方式</div>
                     <div className='subscrbe-item'>
                         <div className='item-label'>订阅方式：</div>
-                        <div className='item-value'>{data.pushWay === 0 ? 'API数据PUSH形式' : 'MQTT主题订阅'}</div>
+                        <div className='item-value'>{data.pushWay === 1 ? 'API数据PUSH形式' : 'MQTT主题订阅'}</div>
                     </div>
                     {
-                        data.pushWay === 0 && <>
+                        data.pushWay === 1 && <>
                             <div className='subscrbe-item'>
                                 <div className='item-label'>数据订阅URL：</div>
                                 <div className='item-value'>{data.pushUrl}</div>

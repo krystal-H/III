@@ -432,7 +432,7 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
                 pushWay: editData.pushWay,
                 pushFrequency: editData.pushFrequency
             }
-            if (editData.pushWay === 0) {
+            if (editData.pushWay === 1) {
                 obj.pushUrl = editData.pushUrl
                 obj.sign = editData.sign
             }
@@ -440,15 +440,15 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
         }
     }, [])
     return (<div className='step-one'>
-        <Form form={form} labelAlign='right' initialValues={{ pushWay: 0 }}>
+        <Form form={form} labelAlign='right' initialValues={{ pushWay: 1 }}>
             <Form.Item name="pushWay" label="订阅方式" rules={[{ required: true, message: '请选择订阅方式' }]}>
                 <Radio.Group onChange={radioChange}>
-                    <Radio value={1}>MQTT主题订阅（推荐）</Radio>
-                    <Radio value={0}>API数据PUSH形式</Radio>
+                    <Radio value={2}>MQTT主题订阅（推荐）</Radio>
+                    <Radio value={1}>API数据PUSH形式</Radio>
                 </Radio.Group>
             </Form.Item>
             {
-                showWay === 0 ?
+                showWay === 1 ?
                     <>
                         <Form.Item name="isEncrypt" label="是否加密" rules={[{ required: true, message: '请选择是否加密' }]} initialValue={1}>
                             <Radio.Group onChange={encryChange}>

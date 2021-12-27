@@ -22,7 +22,7 @@ function dealData(data) {
     })
     return arr
 }
-export default function productInfo() {
+export default function ProductInfo() {
     let step = getUrlParam('step') || '1'
     const [businessInfo, setBusinessInfo] = useState({})
     const [imageInfo, setImageInfo] = useState({})
