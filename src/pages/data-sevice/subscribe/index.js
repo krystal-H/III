@@ -253,8 +253,8 @@ export default function DeviceRegist() {
                                     style={{ width: '200px' }}
                                 >
                                     <Option value='-1'>全部方式</Option>
-                                    <Option value='0'>API数据PUSH形式</Option>
-                                    <Option value='1'>MQTT主题订阅</Option>
+                                    <Option value={1}>API数据PUSH形式</Option>
+                                    <Option value={2}>MQTT主题订阅</Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item
