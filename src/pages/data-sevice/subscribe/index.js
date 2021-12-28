@@ -183,7 +183,7 @@ export default function DeviceRegist() {
             dataIndex: 'pushWay',
             key: 'pushWay',
             render: (text) => (
-                <span>{text ? 'MQTT主题订阅' : 'API数据PUSH形'}</span>
+                <span>{text == 2 ? 'MQTT主题订阅' : 'API数据PUSH形'}</span>
             )
         }, {
             title: '归属产品名称',

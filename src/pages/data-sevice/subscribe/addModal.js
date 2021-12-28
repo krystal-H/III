@@ -132,7 +132,7 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                     projectId: editData.projectId,
                     subscriptType: editData.subscriptType,
                 }
-                projectIdChange(editData.projectId)
+                projectIdChange2(editData.projectId)
                 form.setFieldsValue(obj)
             } else {
                 let arr = []
@@ -214,7 +214,22 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
     //获取产品
     const projectIdChange = (val) => {
         let params = {
-            userId: 1,
+            clientId: 'open',
+            projectId: val
+        }
+        setproductType1([])
+        form.setFieldsValue(
+            {
+                productId: '',
+            }
+        )
+        post(Paths.getProductByProject, params).then((res) => {
+            setproductType1(res.data)
+        });
+    }
+    //编辑初始化
+    const projectIdChange2 = (val) => {
+        let params = {
             clientId: 'open',
             projectId: val
         }
@@ -409,7 +424,7 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
         onFinish: onFinish
     }));
     //推送方式
-    const [showWay, setShowWay] = useState(0)
+    const [showWay, setShowWay] = useState(1)
     const radioChange = (e) => {
         setShowWay(e.target.value);
     }
