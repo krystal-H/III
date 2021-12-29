@@ -20,24 +20,42 @@
     .step-one {
       margin: 0 auto;
       width: 500px;
-      .ant-form-item-label{
-          width: 135px;
+
+      .ant-form-item-label {
+        width: 135px;
       }
     }
 
     .step-two {
-      .product-title {
-        font-size: 16px;
-        font-weight: 400;
-        color: #323232;
-        line-height: 22px;
+      margin: 0 auto;
+      width: 600px;
+      .ant-checkbox-group-item{
+        margin-bottom: 10px;
       }
-      .select-tip{
-        font-size: 14px;
-        margin: 30px 0 10px 0;
-        font-weight: 400;
-        color: #323232;
-        line-height: 20px;
+      .ant-form-item-label {
+        // width: 145px;
+      }
+
+      // .product-title {
+      //   font-size: 16px;
+      //   font-weight: 400;
+      //   color: #323232;
+      //   line-height: 22px;
+      // }
+      // .select-tip{
+      //   font-size: 14px;
+      //   margin: 30px 0 10px 0;
+      //   font-weight: 400;
+      //   color: #323232;
+      //   line-height: 20px;
+      // }
+    }
+    .sub-text-link{
+      position: relative;
+      top: -17px;
+      margin-bottom: 0px;
+      a{
+        text-decoration: underline;
       }
     }
   }

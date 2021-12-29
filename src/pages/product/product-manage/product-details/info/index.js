@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Carousel, Image, Modal } from 'antd';
-import LabelTip from '../../../../../components/form-com/LabelTip';
+// import LabelTip from '../../../../../components/form-com/LabelTip';
 import './index.scss'
-import EditableTable from './editTable';
+// import EditableTable from './editTable';
 import { post, Paths } from '../../../../../api';
 import baseImg from '../../../../../assets/images/commonDefault/prcduct_avtor.png';
 import guideImg from '../../../../../assets/images/commonDefault/bind_net_guide.png';
@@ -22,19 +22,25 @@ function dealData(data) {
     })
     return arr
 }
-export default function productInfo() {
+export default function ProductInfo() {
     let step = getUrlParam('step') || '1'
+    const [businessInfo, setBusinessInfo] = useState({})
+    const [imageInfo, setImageInfo] = useState({})
+    const [showImg, setShowImg] = useState(false)
+    const [imgUrl, setImgUrl] = useState('')
     useEffect(() => {
         if(step==1){
             getBusinessInfo()  
         }
     }, [step])
+    // useEffect(()=>{
+    //     getBusinessInfo() 
+    // },[])
     let productBaseInfo = {}
     if (sessionStorage.getItem('productItem')) {
         productBaseInfo = JSON.parse(sessionStorage.getItem('productItem'))
     }
-    const [businessInfo, setBusinessInfo] = useState({})
-    const [imageInfo, setImageInfo] = useState({})
+    
     const getBusinessInfo = () => {
         let productId = productBaseInfo.productId
         post(Paths.getBusinessInfo, { productId }).then((res) => {
@@ -67,8 +73,7 @@ export default function productInfo() {
             return ''
         }
     }
-    const [showImg, setShowImg] = useState(false)
-    const [imgUrl, setImgUrl] = useState('')
+    
     const openImg = (url) => {
         setImgUrl(url)
         setShowImg(true)
@@ -173,11 +178,11 @@ export default function productInfo() {
                     </div>
                     <div className='business-left-item'>
                         <div className='item-label'>产品尺寸：</div>
-                        <div className='item-text'>{businessInfo.size}</div>
+                        <div className='item-text'>{businessInfo.size || '--'}mm</div>
                     </div>
                     <div className='business-left-item'>
                         <div className='item-label'>产品重量：</div>
-                        <div className='item-text'>{businessInfo.weight}</div>
+                        <div className='item-text'>{businessInfo.weight || '--'}kg</div>
                     </div>
                 </div>
                 <div className='product-business-wrap-right'>
@@ -203,7 +208,7 @@ export default function productInfo() {
         {
             showImg && <Modal title="图片展示" width='970px' visible={showImg} footer={null} onCancel={() => { setShowImg(false) }}>
                 <div style={{ textAlign: 'center' }}>
-                    <img src={imgUrl} style={{ maxWidth: '800px' }} />
+                    <img src={imgUrl} style={{ maxWidth: '800px' }} alt=''/>
                 </div>
             </Modal>
         }
