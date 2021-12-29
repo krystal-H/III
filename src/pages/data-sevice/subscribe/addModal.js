@@ -124,6 +124,7 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
     useEffect(() => {
         getList()
         if (actionType === 'edit') {
+            setSubType(editData.subscriptType)
             if (editData.subscriptType === 1) {
                 let obj = {
                     subscriptName: editData.subscriptName,

@@ -103,8 +103,8 @@ export default function DeviceRegist() {
         if (form.getFieldValue('push_way') != -1) {
             obj.push_way = form.getFieldValue('push_way')
         }
-        if (form.getFieldValue('subscription')) {
-            obj.subscription = form.getFieldValue('subscription')
+        if (form.getFieldValue('subscriptName')) {
+            obj.subscriptName = form.getFieldValue('subscriptName')
         }
         let params = {
             devicePushUrlConf: obj,
@@ -259,7 +259,7 @@ export default function DeviceRegist() {
                             </Form.Item>
                             <Form.Item
                                 label="订阅名称"
-                                name='subscription'
+                                name='subscriptName'
                             >
                                 <Search onSearch={onSearch} style={{ width: '465px' }} />
                             </Form.Item>
