@@ -202,7 +202,10 @@ export default function DeviceRegist() {
         <div id='device-regist'>
             <PageTitle title='设备注册'>
                 <div className='top-select'>
-                    <Select style={{ width: 150 }} defaultValue={0} onChange={selectChange}>
+                    <Select style={{ width: 150 }} defaultValue={0} onChange={selectChange} 
+                    showSearch optionFilterProp="children" filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }> 
                         {
                             optionArr.map(item => {
                                 return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)

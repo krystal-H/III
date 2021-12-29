@@ -3,7 +3,6 @@ import { Select, Steps, Button, Input, Space, Table, Form } from 'antd';
 import PageTitle from '../../../components/page-title/PageTitle';
 import stepImg from '../../../assets/images/product-regist.png';
 import AddSubScribe from './addModal'
-import EditSubScribe from './editModal'
 import { post, Paths, get } from '../../../api';
 import { Notification } from '../../../components/Notification'
 import ActionModal from './actionOp'
@@ -184,6 +183,13 @@ export default function DeviceRegist() {
             key: 'pushWay',
             render: (text) => (
                 <span>{text == 2 ? 'MQTT主题订阅' : 'API数据PUSH形'}</span>
+            )
+        }, {
+            title: '项目名称',
+            dataIndex: 'projectName',
+            key: 'projectName',
+            render: (text) => (
+                <span>{ text || '--'}</span>
             )
         }, {
             title: '归属产品名称',

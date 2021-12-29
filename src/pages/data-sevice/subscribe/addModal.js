@@ -137,10 +137,11 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                 form.setFieldsValue(obj)
             } else {
                 let arr = []
-                if (editData.labelVoList) {
-                    editData.labelVoList.forEach(item => {
-                        arr.push(item.labelId)
-                    })
+                if (editData.deviceLabelIds) {
+                    // editData.labelVoList.forEach(item => {
+                    //     arr.push(item.labelId)
+                    // })
+                    arr=editData.deviceLabelIds.split(',')
                 }
                 form.setFieldsValue(
                     {
@@ -173,27 +174,26 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
             let productIndex = arr.find(item => {
                 return item.productId === res.productId
             })
-            console.log(productIndex)
             let name = productIndex.productName
-            // arr.forEach(item => {
-            //     if (item.productId === res.productId) {
-            //         name = item.productName
-            //     }
-            // })
-            //选择订阅产品
-            if (res.subscriptType === 2) {
-                let laberA = []
-                laberArr.forEach(item => {
-                    if (res.isAllLabel) {
-                        laberA.push(item)
-                    } else {
-                        if (res.labelVoList && res.labelVoList.indexOf(item.value) > -1) {
-                            laberA.push(item)
-                        }
-                    }
-
+            if(res.subscriptType === 1){
+                let projectIndex = projectArr.find(item => {
+                    return item.projectId  === res.projectId 
                 })
-                res.labelVoList = laberA
+                res.projectName =projectIndex.projectName
+            }
+            if (res.subscriptType === 2) {
+                // let laberA = []
+                // laberArr.forEach(item => {
+                //     if (res.isAllLabel) {
+                //         laberA.push(item)
+                //     } else {
+                //         if (res.labelVoList && res.labelVoList.indexOf(item.value) > -1) {
+                //             laberA.push(item)
+                //         }
+                //     }
+
+                // })
+                res.deviceLabelIds = res.labelVoList.join(',')
             }
             res.productName = name;
             continueStep('1', res)
