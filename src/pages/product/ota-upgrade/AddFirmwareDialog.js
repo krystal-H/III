@@ -190,7 +190,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     </Item>
                 }
                 { (schemeType==3||mcuIsUp==0) && <>
-                    <Item label={schemeType==3&&"模块"||"模块/插件"} name='noneed' rules={[{ required: true, message: `请选择${schemeType==3&&"模块"||"模块/插件"}` }]}>
+                    <Item label={schemeType==2&&"模块"||"模块/插件"} name='noneed' rules={[{ required: true, message: `请选择${schemeType==2&&"模块"||"模块/插件"}` }]}>
                         <Select placeholder="选择固件模块" mode="multiple" value={selectedFirmwareLi}
                             onChange={v=>{ console.log(77,v); setSelectedFirmwareLi(v)}} 
                             onDeselect={ deselectVal }
@@ -219,7 +219,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
 
                                 return <Tabs.TabPane tab={ firmwareVersionTypeName } key={firmwareTypeNo} >
                                 {/* return <Tabs.TabPane tab={data.firmwareVersionType+'_'+firmwareVersionTypeName + "_" + selectedFirmwareLi.length} key={firmwareTypeNo} > */}
-                                    <Item label={schemeType==3&&"模块编号"||"模块/插件编号"}>{firmwareTypeNo}</Item>
+                                    <Item label={schemeType==2&&"模块编号"||"模块/插件编号"}>{firmwareTypeNo}</Item>
                                     <Item label='硬件版本号' name={`totalVersion_${firmwareTypeNo}`} initialValue={totalVersion}>
                                         <Input className='noborderinpt' disabled/>
                                     </Item>
