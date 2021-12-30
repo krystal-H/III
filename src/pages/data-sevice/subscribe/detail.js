@@ -26,6 +26,12 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
                         <div className='item-label'>类型：</div>
                         <div className='item-value'>{data.subscriptType === 1 ? '项目' : '产品'}</div>
                     </div>
+                    {
+                        data.subscriptType === 1 && <div className='subscrbe-item'>
+                            <div className='item-label'>项目：</div>
+                            <div className='item-value'>{data.projectName}</div>
+                        </div>
+                    }
                     <div className='subscrbe-item'>
                         <div className='item-label'>归属产品：</div>
                         <div className='item-value'>{data.productName}</div>
