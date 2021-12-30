@@ -190,7 +190,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     </Item>
                 }
                 { (schemeType==3||mcuIsUp==0) && <>
-                    <Item label={schemeType==3&&"模块"||"模块/插件"}>
+                    <Item label={schemeType==3&&"模块"||"模块/插件"} name='noneed' rules={[{ required: true, message: `请选择${schemeType==3&&"模块"||"模块/插件"}` }]}>
                         <Select placeholder="选择固件模块" mode="multiple" value={selectedFirmwareLi}
                             onChange={v=>{ console.log(77,v); setSelectedFirmwareLi(v)}} 
                             onDeselect={ deselectVal }
