@@ -141,7 +141,7 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                     // editData.labelVoList.forEach(item => {
                     //     arr.push(item.labelId)
                     // })
-                    arr=editData.deviceLabelIds.split(',')
+                    arr = editData.deviceLabelIds.split(',')
                 }
                 form.setFieldsValue(
                     {
@@ -167,7 +167,7 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
         });
     }
     //下一步
-    const onFinish = () => {
+    const onFinish =  () => {
         form.validateFields().then(formData => {
             let res = cloneDeep(formData)
             let arr = formData.subscriptType === 1 ? productType1 : productType2
@@ -175,24 +175,35 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                 return item.productId === res.productId
             })
             let name = productIndex.productName
-            if(res.subscriptType === 1){
+            if (res.subscriptType === 1) {
                 let projectIndex = projectArr.find(item => {
-                    return item.projectId  === res.projectId 
+                    return item.projectId === res.projectId
                 })
-                res.projectName =projectIndex.projectName
+                res.projectName = projectIndex.projectName
+                if (res.deviceIds && res.deviceIds.trim()) {
+                    let cheackParams = {
+                        productId: res.productId,
+                        projectId: res.projectId,
+                        selectedDeviceIds: res.deviceIds.trim()
+                    }
+                    post(Paths.checkRelDevice, cheackParams).then(result => {
+                        if(result.data){
+                            res.productName = name;
+                            continueStep('1', res)
+                        }else{
+                            Notification({
+                                type: 'info',
+                                description: '输入的id不在这个项目和产品范围内',
+                            });
+                        }
+                    })
+                    return
+                }
+                res.productName = name;
+                continueStep('1', res)
+                return
             }
             if (res.subscriptType === 2) {
-                // let laberA = []
-                // laberArr.forEach(item => {
-                //     if (res.isAllLabel) {
-                //         laberA.push(item)
-                //     } else {
-                //         if (res.labelVoList && res.labelVoList.indexOf(item.value) > -1) {
-                //             laberA.push(item)
-                //         }
-                //     }
-
-                // })
                 res.deviceLabelIds = res.labelVoList.join(',')
             }
             res.productName = name;
@@ -201,6 +212,9 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
     }
     //获取标签
     const productIdChange = (val) => {
+        if (form.getFieldValue('subscriptType') === 1) {
+            return
+        }
         form.setFieldsValue({
             labelVoList: []
         });

@@ -318,6 +318,7 @@ let Paths = {
     getLabelByAddress:'/deviceLabel/getDeviceLabelByProductId',//通过地区获取label
     getProductByProject:'/projectDevice/getProductListByProjectId',
     getDeviceEvent:'/datapush/getDeviceEventList',
+    checkRelDevice:'/datapush/checkValidDevice',//检测是否为真实设备
     /**
      * 基础产品--应用 start
      * xiao-2019-10-17
