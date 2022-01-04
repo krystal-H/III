@@ -116,14 +116,20 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
 
 
     const uploadChange = ({file})=>{
-       
-        if(file.response){
+        if(file.response){ //上传成功返回 file.status=="done"
             const url = file.response.data && file.response.data.url || '';
             console.log(111111,`filePath_${curFirmwareTypeNo}`,url)
             formInstance.setFieldsValue({ 
                 [`filePath_${curFirmwareTypeNo}`]:url
             })
         }
+        if(file.status=="removed"){ //删除操作
+            formInstance.setFieldsValue({ 
+                [`filePath_${curFirmwareTypeNo}`]:""
+            })
+
+        }
+
     }
 
     const cngTab = cur=>{
@@ -241,6 +247,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                         <Upload className='filepathinpt' onChange={uploadChange}
                             accept='.bin,.hex,.zip,.cyacd,.apk,.dpkg'
                             maxCount={1}
+                            // fileList={[]}
                             action={Paths.upFileUrl}
                             data={{ appId: 31438, domainType: 4, }}>
                                 <Button type="primary" ><UploadOutlined />上传附件</Button>
