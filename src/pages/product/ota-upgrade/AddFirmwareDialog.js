@@ -116,14 +116,20 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
 
 
     const uploadChange = ({file})=>{
-       
-        if(file.response){
+        if(file.response){ //上传成功返回 file.status=="done"
             const url = file.response.data && file.response.data.url || '';
             console.log(111111,`filePath_${curFirmwareTypeNo}`,url)
             formInstance.setFieldsValue({ 
                 [`filePath_${curFirmwareTypeNo}`]:url
             })
         }
+        if(file.status=="removed"){ //删除操作
+            formInstance.setFieldsValue({ 
+                [`filePath_${curFirmwareTypeNo}`]:""
+            })
+
+        }
+
     }
 
     const cngTab = cur=>{
@@ -190,7 +196,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     </Item>
                 }
                 { (schemeType==3||mcuIsUp==0) && <>
-                    <Item label={schemeType==3&&"模块"||"模块/插件"} name='noneed' rules={[{ required: true, message: `请选择${schemeType==3&&"模块"||"模块/插件"}` }]}>
+                    <Item label={schemeType==2&&"模块"||"模块/插件"} name='noneed' rules={[{ required: true, message: `请选择${schemeType==2&&"模块"||"模块/插件"}` }]}>
                         <Select placeholder="选择固件模块" mode="multiple" value={selectedFirmwareLi}
                             onChange={v=>{ console.log(77,v); setSelectedFirmwareLi(v)}} 
                             onDeselect={ deselectVal }
@@ -219,7 +225,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
 
                                 return <Tabs.TabPane tab={ firmwareVersionTypeName } key={firmwareTypeNo} >
                                 {/* return <Tabs.TabPane tab={data.firmwareVersionType+'_'+firmwareVersionTypeName + "_" + selectedFirmwareLi.length} key={firmwareTypeNo} > */}
-                                    <Item label={schemeType==3&&"模块编号"||"模块/插件编号"}>{firmwareTypeNo}</Item>
+                                    <Item label={schemeType==2&&"模块编号"||"模块/插件编号"}>{firmwareTypeNo}</Item>
                                     <Item label='硬件版本号' name={`totalVersion_${firmwareTypeNo}`} initialValue={totalVersion}>
                                         <Input className='noborderinpt' disabled/>
                                     </Item>
@@ -241,6 +247,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                         <Upload className='filepathinpt' onChange={uploadChange}
                             accept='.bin,.hex,.zip,.cyacd,.apk,.dpkg'
                             maxCount={1}
+                            // fileList={[]}
                             action={Paths.upFileUrl}
                             data={{ appId: 31438, domainType: 4, }}>
                                 <Button type="primary" ><UploadOutlined />上传附件</Button>
