@@ -53,7 +53,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     const { schemeType, productFirmwareVersion=0 , productId, summaryVersions=[] } = firmwareFrPro;//schemeType: 2 MCU, 3 SoC
 
     useEffect(() => {
-        console.log(22222,firmwareFrPro)
+        // console.log(22222,firmwareFrPro)
         if( schemeType ){
             post(Paths.getFirmwareList,{productId,schemeType}).then(({data = []}) => {
                 if(schemeType==2){
@@ -117,7 +117,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     const uploadChange = ({file})=>{
         if(file.response){ //上传成功返回 file.status=="done"
             const url = file.response.data && file.response.data.url || '';
-            console.log(111111,`filePath_${curFirmwareTypeNo}`,url)
+            // console.log(111111,`filePath_${curFirmwareTypeNo}`,url)
             formInstance.setFieldsValue({ 
                 [`filePath_${curFirmwareTypeNo}`]:url
             })
@@ -197,7 +197,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 { (schemeType==3||mcuIsUp==0) && <>
                     <Item label={schemeType==2&&"模块"||"模块/插件"} name='noneed' rules={[{ required: true, message: `请选择${schemeType==2&&"模块"||"模块/插件"}` }]}>
                         <Select placeholder="选择固件模块" mode="multiple" value={selectedFirmwareLi}
-                            onChange={v=>{ console.log(77,v); setSelectedFirmwareLi(v)}} 
+                            onChange={v=>{ setSelectedFirmwareLi(v)}} 
                             onDeselect={ deselectVal }
                             onSelect = { selectVal }
                             getPopupContainer={() => document.getElementById('area')} 
@@ -226,7 +226,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                                 {/* return <Tabs.TabPane tab={data.firmwareVersionType+'_'+firmwareVersionTypeName + "_" + selectedFirmwareLi.length} key={firmwareTypeNo} > */}
                                     <Item label={schemeType==2&&"模块编号"||"模块/插件编号"}>{firmwareTypeNo}</Item>
                                     <Item label='硬件版本号' name={`totalVersion_${firmwareTypeNo}`} initialValue={totalVersion}>
-                                        <Input className='noborderinpt' disabled/>
+                                        <Input maxLength={100}  placeholder='硬件版本号'/>
                                     </Item>
                                     <Item label='当前软件版本号'>{curExtVersion}</Item>
                                     <Item label="待上传软件版本号" name={`extVersion_${firmwareTypeNo}`} rules={[{ required: true, message: '待上传软件版本号' }]}>
@@ -234,7 +234,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                                     </Item>
                                     <Item label='固件程序' name={`filePath_${firmwareTypeNo}`}
                                             rules={[{ required: true, message: '请输入URL' },{pattern: formrules.url, message: '请输入正确的URL'}]}
-                                        ><Input maxLength={100} placeholder='请输入URL或者上传一个附件自动填充' />
+                                        ><Input maxLength={150} placeholder='请输入URL或者上传一个附件自动填充' />
                                         
                                     </Item>
                                 </Tabs.TabPane>
