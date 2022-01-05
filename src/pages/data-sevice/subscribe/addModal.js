@@ -204,6 +204,7 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                 return
             }
             if (res.subscriptType === 2) {
+                res.labelVoList=res.labelVoList || []
                 res.deviceLabelIds = res.labelVoList.join(',')
             }
             res.productName = name;
