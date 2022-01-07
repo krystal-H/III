@@ -68,7 +68,7 @@ export default function AddFuncModal({ relPanVis,  CancelRel, actionObj,closeOkR
         if(!selectAppId){
             return
         }
-        post(Paths.modelRel, params).then((res) => {
+        post(Paths.modelRel, params,{loading:true}).then((res) => {
             closeOkRel()
         });
     }

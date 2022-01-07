@@ -24,7 +24,7 @@ export default function AddModal({ isAddModalVisible, closeAdd, CancelAdd ,actio
                 page1:value.page1[0].url,
                 panelType:3
             }
-            post(Paths.cusSavePanel, params).then((res) => {
+            post(Paths.cusSavePanel, params,{loading:true}).then((res) => {
                 Notification({
                     type: 'success',
                     description: '更新成功！',

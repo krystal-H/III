@@ -15,7 +15,14 @@ export default function DeviceInfo({ baseInfo, projectId }) {
     //
     const [showPassWord, setShowPassWord] = useState(false);
     const showModal = () => {
-        setIsModalVisible(true);
+        post(Paths.projectSavePS, {accountId: baseInfo.accountId}, { loading: true }).then(res => {
+            Notification({
+                type: 'success',
+                description: '重置成功！',
+            });
+            // setIsModalVisible(false);
+        })
+        // setIsModalVisible(true);
     };
 
     const handleOk = () => {
@@ -45,7 +52,7 @@ export default function DeviceInfo({ baseInfo, projectId }) {
     return (<div id='project-detail-info'>
         <div className='wrap-item'>
             <div className='item-title'>
-                <span>设备信息</span>
+                <span>项目账号</span>
             </div>
             <div className='item-content'>
                 <div className='item'>
@@ -79,7 +86,7 @@ export default function DeviceInfo({ baseInfo, projectId }) {
                     </div>
                 </div>
                 <div className='item'>
-                    <div className='label'><a onClick={showModal}>设置密码</a></div>
+                    <div className='label'><a onClick={showModal}>重置密码</a></div>
                 </div>
             </div>
         </div>
@@ -141,7 +148,7 @@ export default function DeviceInfo({ baseInfo, projectId }) {
                     <Form.Item label="输入新密码" name='password' rules={[{
                         required: true, validator: (_, value) => {
                             if (value) {
-                                if (value.length == 6) {
+                                if (value.length === 6) {
                                     return Promise.resolve()
                                 } else {
                                     return Promise.reject(`请输入6位数新密码`)

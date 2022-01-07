@@ -55,23 +55,20 @@ export default class FirmwareDetails extends PureComponent {
         });
     }
     render() {
-        const { pager:{pageIndex,totalRows,totalPages},list,details:{
-            firmwareVersionTypeName,productName,deviceVersionTypeName,
-            productFirmwareVersion,uploadTime,mainVersion,totalVersion
-        } } = this.state;
+        const { 
+            pager:{pageIndex,totalRows,totalPages},
+            list,
+            details:{productName, productFirmwareVersion, deviceVersionName, uploadTime} 
+        } = this.state;
 
         return (
             <section className="ota-firmwaredetail flex-column">
-                <PageTitle title={firmwareVersionTypeName} titleBack={true} >
+                <PageTitle title={productName} titleBack={true} >
                     <header className="page-content-header">
                         <Descriptions title="" className='descriptions' column={4}>
-                            <Descriptions.Item label="归属产品" >{productName}</Descriptions.Item>
-                            <Descriptions.Item label="固件类型">{deviceVersionTypeName}</Descriptions.Item>
+                            <Descriptions.Item label="产品版本号" >{productFirmwareVersion}</Descriptions.Item>
+                            <Descriptions.Item label="产品版本名称">{deviceVersionName}</Descriptions.Item>
                             <Descriptions.Item label="上传时间">{uploadTime && DateTool.utcToDev(uploadTime)}</Descriptions.Item>
-                            <Descriptions.Item label="内部版本号">{mainVersion}</Descriptions.Item>
-                            <Descriptions.Item label="产品版本号">{productFirmwareVersion}</Descriptions.Item>
-                            <Descriptions.Item label="固件模块">{firmwareVersionTypeName}</Descriptions.Item>
-                            <Descriptions.Item label="固件系列标识">{totalVersion}</Descriptions.Item>
                         </Descriptions> 
                     </header>
                 </PageTitle>

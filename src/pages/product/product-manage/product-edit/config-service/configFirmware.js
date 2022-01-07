@@ -1,37 +1,57 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
-import { Modal, Form, Input } from 'antd'
+import { Modal, Form, Input, Select } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
 import './configFirmware.scss'
 import { Paths, post } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
 
-function ConfigFirmware({ productId, firmwareVisible, cancelHandle, type, editData, confirmHandle, customCount }) {
+const { Option } = Select
+const labelMap = { '1': '插件', '2': "模块", }
+const initValmap = { '1': '模组插件', '2': 'MCU模块' }
+
+function ConfigFirmware({
+  productId,
+  firmwareVisible,
+  cancelHandle,
+  type,
+  editData,
+  confirmHandle,
+  customCount,
+  schemeType,
+  typeNoList
+}) {
   const [form] = Form.useForm()
+  const [selectModule, setSelectModule] = useState('')
+  const [editTypeNoList, setEditTypeNoList] = useState([])
+  const [canUpdate, setCanUpdate] = useState(false)
+  const [hasZero] = useState(type === 'add' && typeNoList.indexOf(0) !== -1) // 新增且配置过0了
+
+  console.log('已经使用的编号', typeNoList, type)
   const onFinish = (values) => {
     console.log('Received values of form: ', values, type, 'type');
     if (type === 'edit') {
       post(Paths.updateFirmwareModule, {
         id: editData.id,
         firmwareTypeName: values.firmwareTypeName,
-        firmwareTypeMark: values.firmwareTypeMark
+        firmwareTypeNo: Number(values.firmwareTypeNo)
       }).then(res => {
         Notification({ description: '操作成功！', type: 'success' })
         confirmHandle()
       })
     } else {
       let arr = [{
-        deviceVersionType: 5,
+        deviceVersionType: Number(selectModule),
         productId,
-        firmwareTypeMark: values.firmwareTypeMark,
-        firmwareTypeName: values.firmwareTypeName
+        firmwareTypeName: values.firmwareTypeName,
+        firmwareTypeNo: Number(values.firmwareTypeNo)
       }]
       if (values.list && values.list.length) {
         values.list.forEach(ele => {
           arr.push({
-            deviceVersionType: 5,
+            deviceVersionType: Number(selectModule),
             productId,
-            firmwareTypeMark: ele.firmwareTypeMark,
-            firmwareTypeName: ele.firmwareTypeName
+            firmwareTypeName: ele.firmwareTypeName,
+            firmwareTypeNo: Number(ele.firmwareTypeNo)
           })
         })
       }
@@ -39,7 +59,7 @@ function ConfigFirmware({ productId, firmwareVisible, cancelHandle, type, editDa
       post(Paths.addFirmwareModule, arr).then(res => {
         Notification({ description: '操作成功！', type: 'success' })
         confirmHandle()
-      })
+      }, (err) => Notification({ description: err.data, type: 'error' }))
     }
   }
 
@@ -49,12 +69,65 @@ function ConfigFirmware({ productId, firmwareVisible, cancelHandle, type, editDa
 
   useEffect(() => {
     if (type === 'edit') {
+      setSelectModule(editData.deviceVersionType.toString())
       form.setFieldsValue({
-        firmwareTypeMark: editData.firmwareTypeMark,
-        firmwareTypeName: editData.firmwareTypeName
+        firmwareTypeName: editData.firmwareTypeName,
+        firmwareTypeNo: editData.firmwareTypeNo
       })
+      setEditTypeNoList(typeNoList.filter(item => item !== editData.firmwareTypeNo))
+      if (editData.deviceVersionType == 1) {
+        if (editData.firmwareTypeNo == 0) { // 不可修改
+          setCanUpdate(true)
+        }
+      }
     }
   }, [])  // eslint-disable-line react-hooks/exhaustive-deps
+
+
+  let arrMap = {
+    list1: [],
+    list2: [],
+    list3: []
+  }
+
+  // 验证编号，主要用于默认显示的第一条  不在下边的fields中,不然就省事很多
+  const validNum = (value, listType) => {
+    let reg = new RegExp("^([1-9]|[1-9]\\d|100)$")
+    if (listType === 'list1') {// soc-模组插件
+      if (type === 'add' && !Number(value) && typeNoList.indexOf(0) == -1) return Promise.resolve() // 模组插件第一个0
+    }
+    if (!value || !Number(value)) return Promise.reject(new Error(`请输入${labelMap[selectModule]}编号，支持1-100的整数字`))
+    if (!reg.test(value)) return Promise.reject(new Error('请输入1-100的整数字'))
+
+    let tempArr = arrMap[listType]
+    tempArr = type === 'add' ?
+      tempArr.concat(typeNoList) :
+      type === 'edit' ? tempArr.concat(editTypeNoList) : []
+
+    let { list, firmwareTypeNo } = form.getFieldsValue()
+    list && list.filter(item => item).forEach(item => {
+      item.firmwareTypeNo && tempArr.push(Number(item.firmwareTypeNo))
+    })
+
+    firmwareTypeNo && tempArr.push(Number(firmwareTypeNo))
+    // if (tempArr.slice(0, tempArr.length - 1).indexOf(Number(value)) == -1) {
+    //   return Promise.resolve()
+    // }
+    const index = tempArr.findIndex(item => item == value)
+    tempArr.splice(index, 1)
+    console.log(tempArr, '-----tempArr')
+    if (tempArr.indexOf(Number(value)) == -1) return Promise.resolve()
+    return Promise.reject(new Error('此编号已被使用，请重新输入'));
+  }
+
+  // 选择模块
+  const chooseModule = (val) => {
+    setSelectModule(val)
+    form.resetFields()
+    form.setFieldsValue({ 'deviceVersionType': val })
+    form.setFieldsValue({ 'firmwareTypeName': `${initValmap[val]}1` })
+    form.setFieldsValue({ 'firmwareTypeNo': val === '1' && typeNoList.indexOf(0) == -1 ? '0' : '' })
+  }
 
   return (
     <Modal
@@ -70,27 +143,77 @@ function ConfigFirmware({ productId, firmwareVisible, cancelHandle, type, editDa
           form={form}
           name="config-firmware-form"
           onFinish={onFinish}
-          autoComplete="off">
-          <div className="form-item-block">
-            <Form.Item
-              label="配置固件模块标识"
-              name='firmwareTypeMark'
-              rules={[
-                { required: true, message: '请输入英文字符' },
-                { pattern: new RegExp(/^[a-zA-Z]+$/, "g"), message: '请输入英文字符' }
-              ]}>
-              <Input maxLength={50} placeholder="请输入英文字符" />
-            </Form.Item>
-            <Form.Item
-              label="配置固件模块名称"
-              name='firmwareTypeName'
-              rules={[
-                { required: true, message: '请输入中文名称' },
-                { pattern: new RegExp(/^[\u2E80-\u9FFF]+$/, "g"), message: '请输入中文产品名称' }
-              ]}>
-              <Input maxLength={50} placeholder="请输入中文名称" />
-            </Form.Item>
-          </div>
+          autoComplete="off"
+          labelCol={{ span: 4 }}>
+          {
+            type === 'add' &&
+            <div style={{ padding: '20px 20px 0px 20px' }}>
+              <Form.Item name="deviceVersionType" label="选择模块"
+                rules={[{ required: true, message: '请选择模块' }]}>
+                <Select placeholder="请选择模块"
+                  onChange={val => chooseModule(val)}>
+                  {/* mcu方案只有mcu模块 */}
+                  {schemeType == 2 && <Option value="2">MCU模块</Option>}
+                  {/* soc方案有模组插件、mcu模块 */}
+                  {schemeType == 3 && <>
+                    <Option value="1">模组插件</Option>
+                    <Option value="2">MCU模块</Option></>
+                  }
+                </Select>
+              </Form.Item>
+            </div>
+          }
+          {
+            selectModule &&
+            <div className="form-item-block">
+              <Form.Item
+                label={`${labelMap[selectModule]}名称`}
+                name="firmwareTypeName"
+                initialValue={`${initValmap[selectModule]}1`}
+                rules={[
+                  { required: true, message: `请输入${labelMap[selectModule]}名称` },
+                  {
+                    pattern: new RegExp(/^[\u4E00-\u9FA5A-Za-z0-9]+$/, "g"),
+                    message: '请输入中英文、数字且不超过30个字符'
+                  }
+                ]}>
+                <Input maxLength={30} placeholder={`请输入${labelMap[selectModule]}名称`} />
+              </Form.Item>
+              { // 模组插件(肯定是soc方案)  第一个默认编号是0
+                selectModule === '1' &&
+                <Form.Item
+                  className="required-icon"
+                  label={`${labelMap[selectModule]}编号`}
+                  name="firmwareTypeNo"
+                  rules={[
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        return validNum(value, 'list1')
+                      }
+                    })
+                  ]}>
+                  <Input placeholder="请输入1-100的整数字，编号需唯一"
+                    disabled={(type === 'add' && typeNoList.indexOf(0) == -1) || canUpdate} />
+                </Form.Item>
+              }
+              {// mcu模块 无默认
+                selectModule == '2' &&
+                <Form.Item
+                  className="required-icon"
+                  label={`${labelMap[selectModule]}编号`}
+                  name="firmwareTypeNo"
+                  rules={[
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        return validNum(value, 'list2')
+                      }
+                    })
+                  ]}>
+                  <Input placeholder="请输入1-100的整数字，编号需唯一" />
+                </Form.Item>
+              }
+            </div>
+          }
           {
             type === 'add' &&
             <Form.List name="list">
@@ -99,32 +222,56 @@ function ConfigFirmware({ productId, firmwareVisible, cancelHandle, type, editDa
                   {fields.map(({ key, name, fieldKey, ...restField }) => (
                     <div className="form-item-block" key={key}>
                       <Form.Item
-                        label="配置固件模块标识"
-                        {...restField}
-                        name={[name, 'firmwareTypeMark']}
-                        fieldKey={[fieldKey, 'firmwareTypeMark']}
-                        rules={[
-                          { required: true, message: '请输入英文字符' },
-                          { pattern: new RegExp(/^[a-zA-Z]+$/, "g"), message: '请输入英文字符' }
-                        ]}>
-                        <Input maxLength={50} placeholder="请输入英文字符" />
-                      </Form.Item>
-                      <Form.Item
-                        label="配置固件模块名称"
+                        label={`${labelMap[selectModule]}名称`}
                         {...restField}
                         name={[name, 'firmwareTypeName']}
                         fieldKey={[fieldKey, 'firmwareTypeName']}
                         rules={[
-                          { required: true, message: '请输入中文名称' },
-                          { pattern: new RegExp(/^[\u2E80-\u9FFF]+$/, "g"), message: '请输入中文产品名称' }
+                          { required: true, message: `请输入${labelMap[selectModule]}名称` },
+                          {
+                            pattern: new RegExp(/^[\u4E00-\u9FA5A-Za-z0-9]+$/, "g"),
+                            message: '请输入中英文、数字且不超过30个字符'
+                          }
                         ]}>
-                        <Input maxLength={50} placeholder="请输入中文名称" />
+                        <Input maxLength={30} placeholder={`请输入${labelMap[selectModule]}名称`} />
+                      </Form.Item>
+                      <Form.Item
+                        className="required-icon"
+                        label={`${labelMap[selectModule]}编号`}
+                        {...restField}
+                        name={[name, 'firmwareTypeNo']}
+                        fieldKey={[fieldKey, 'firmwareTypeNo']}
+                        rules={[
+                          ({ getFieldValue }) => ({
+                            validator(_, value) {
+                              return validNum(value, 'list3')
+                              // if (!value) return Promise.reject(new Error(`请输入${labelMap[selectModule]}编号`))
+                              // let reg = new RegExp("^([1-9]|[1-9]\\d|100)$")
+                              // if (!reg.test(value)) return Promise.reject(new Error('请输入1-100的整数字'))
+                              // let tempArr = []
+                              // tempArr = tempArr.concat(typeNoList)
+                              // let { list, firmwareTypeNo } = form.getFieldsValue()
+                              // firmwareTypeNo && tempArr.push(Number(firmwareTypeNo))
+                              // list && list.filter(item => item).forEach(item => {
+                              //   item.firmwareTypeNo && tempArr.push(Number(item.firmwareTypeNo))
+                              // })
+                              // console.log(tempArr, '-----tempArrlist')
+                              // const index = tempArr.findIndex(item => item == value)
+                              // tempArr.splice(index, 1)
+                              // if (tempArr.indexOf(Number(value)) == -1) {
+                              //   return Promise.resolve()
+                              // }
+                              // return Promise.reject(new Error('此编号已被使用，请重新输入'));
+                            },
+                          })
+                        ]}>
+                        <Input placeholder="请输入1-100的整数字，编号需唯一" />
                       </Form.Item>
                       <div className="delete-btn" onClick={() => remove(name)}><DeleteOutlined />&nbsp;&nbsp;删除</div>
                     </div>
                   ))}
                   {
-                    4 - fields.length - Number(customCount) > 0 &&
+                    4 - fields.length - Number(customCount) > 0 && selectModule &&
                     <div className="add-btn" onClick={() => add()}>新增</div>
                   }
                 </>

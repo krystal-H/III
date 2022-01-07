@@ -32,8 +32,8 @@ function ServiceSelect({ productId, nextStep }, ref) {
   ])
   const [optionalList, setOptionalList] = useState([
     {
-      title: '配置产品固件模块',
-      desc: '支持配置OTA升级模块，比如区分控制板、驱动板、显示板等不同模块',
+      title: '配置MCU模块&模组插件',
+      desc: '支持配置硬件MCU的子模块，以及配置通信模组的插件',
       isConfiged: false,
       type: 'addFirmware',
       url: require('../../../../../assets/images/commonDefault/service-hardware.png')
@@ -84,7 +84,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [networkVisible, setNetworkVisible] = useState(false)
   const [securityVisible, setSecurityVisible] = useState(false)
   const [firmwareVisible, setFirmwareVisible] = useState(false)
-  const [gatewayVisible, setGatewayVisible] = useState(false)
+  // const [gatewayVisible, setGatewayVisible] = useState(false)
   const [firmwareDetailVisible, setFirmwareDetailVisible] = useState(false)
   const [isGateWayDevice, setIsGateWayDevice] = useState('') // （0-普通设备，1-网关设备）
   const [firmwareDetailData, setFirmwareDetailData] = useState([])
@@ -93,6 +93,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
 
   const [customCount, setCustomCount] = useState(0)
   const [productItemData, setProductItemData] = useState(JSON.parse(sessionStorage.getItem('productItem')) || {})
+  const [typeNoList, setTypeNoList] = useState([])
 
   //验证函数
   const subNextConFirm = () => {
@@ -138,27 +139,38 @@ function ServiceSelect({ productId, nextStep }, ref) {
 
   // 固件模块
   const getFirmwareList = () => {
-    post(Paths.getFirmwareList, { productId }, { loading: true }).then(res => {
-      if (res.data && res.data.length > 0) {
+    post(Paths.getFirmwareList, { productId, schemeType: productItemData.schemeType }, { loading: true }).then(res => {
+      if (res.data && res.data.length > 0) { // 有配置数据
         const customList = res.data.filter(item => item.isCustom === 0)
         console.log(customList.length, 'customList.length')
         setCustomCount(customList.length)
         setFirmwareDetailData(res.data)
+        let tempArr = []
+        res.data.forEach(item => {
+          tempArr.push(item.firmwareTypeNo)
+        })
+        setTypeNoList(tempArr)
         if (customList.length > 0) {
           const list = cloneDeep(optionalList)
           list[0].isConfiged = true
           setOptionalList(list)
         }
+      } else { // 无配置数据
+        setFirmwareDetailData([])
+        setCustomCount(0)
+        const list = cloneDeep(optionalList)
+        list[0].isConfiged = false
+        setOptionalList(list)
       }
     })
   }
 
-  // 免开发方案不显示 配置产品固件模块
+  // 免开发方案不显示 配置产品固件模块 、固件升级
   const noFreeScheme = () => {
     if (productItemData.schemeType) {
       if (productItemData.schemeType == 1) {
         const tempList = cloneDeep(optionalList)
-        tempList.splice(0, 1)
+        tempList.splice(0, 2)
         setOptionalList(tempList)
       } else {
         getFirmwareList()
@@ -188,7 +200,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
         }
         break;
       case 'gateway':
-        setGatewayVisible(true)
+        // setGatewayVisible(true)
         break
       default:
         break;
@@ -324,6 +336,8 @@ function ServiceSelect({ productId, nextStep }, ref) {
       {
         firmwareVisible &&
         <ConfigFirmware
+          schemeType={productItemData.schemeType}
+          typeNoList={typeNoList}
           productId={productId}
           type={showType}
           editData={editData}
@@ -341,7 +355,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
           firmwareDetailVisible={firmwareDetailVisible}
           firmwareDetailData={firmwareDetailData}
           getFirmwareList={getFirmwareList}
-          cancelHandle={() => { setFirmwareDetailVisible(false) }}
+          cancelHandle={() => { setFirmwareDetailVisible(false); getFirmwareList() }}
           showAddFirmware={(type) => {
             setFirmwareVisible(true)
             setShowType(type)

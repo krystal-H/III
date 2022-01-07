@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Descriptions, Divider, Icon } from 'antd';
-import { post, Paths, get } from '../../../../api';
-import { strToAsterisk, DateTool } from '../../../../util/util';
+import { Descriptions, Divider} from 'antd';
+import { post, Paths } from '../../../../api';
+import {  DateTool } from '../../../../util/util';
 import LabelVisible from '../../../../components/form-com/LabelVisible';
 import './index.scss'
 export default function DeviceInfo({ devceId }) {
     const [data, setData] = useState({})
     useEffect(() => {
-        if(devceId){
+        if (devceId) {
             getDetail()
         }
     }, [devceId])
@@ -34,7 +34,7 @@ export default function DeviceInfo({ devceId }) {
             </Descriptions.Item>
             <Descriptions.Item label="物理地址">{data.deviceMac}</Descriptions.Item>
 
-            <Descriptions.Item label="入网时间">{data.connectTime}</Descriptions.Item>
+            <Descriptions.Item label="入网时间">{data.connectTime && DateTool.utcToDev(data.connectTime)}</Descriptions.Item>
             <Descriptions.Item label="模组固件版本">{data.moduleVersion}</Descriptions.Item>
             <Descriptions.Item label="MCU固件版本">{data.pcbVersion}</Descriptions.Item>
 

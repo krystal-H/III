@@ -1,47 +1,81 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
-import { Input, Table, Select, InputNumber, DatePicker } from 'antd'
-import { setFuncDataType } from '../../../util/util'
-import { Notification } from '../../../components/Notification'
-import { cloneDeep } from 'lodash'
-import { Paths, get, post } from '../../../api'
-import moment from 'moment'
+import React, { useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react'
+import { Paths, post } from '../../../api'
+import TableCom from '../../device/deviceDetail/onlineSet/selectTable'
 
-const { Option } = Select
-
-
-function AddConfigData({ nextStep, productId, editData }, ref) {
-  const [selectedProtocols, setSelectedProtocols] = useState([]) // rowSelection
-  const [sendDataCheck, setSendDataCheck] = useState([])
-  const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
-  const [protocolSendData, setProtocolSendData] = useState([])
-
-  // 下一步验证  需要后续修改
-  const validData = () => {
-    if (selectedProtocols.length === 0) {
-      return Notification({ description: '请至少选择一条配置协议' })
-    } else {
-      for (let index = 0; index < selectedProtocols.length; index++) {
-        const item = selectedProtocols[index]
-        for (let index = 0; index < initialProtoclList.length; index++) {
-          const ele = initialProtoclList[index]
-          if (item === ele.identifier) {
-            if (!ele.sendData && ele.sendData !== 0) return Notification({ description: '请为配置协议添加参数' })
+//处理数据
+function delaData(data, editData={}) {
+  let newData = []
+  data.forEach(item => {
+    if (!item.funcParamList || !item.funcParamList.length) return
+    item.funcParamList.forEach(item2 => {
+      let newItem = JSON.parse(JSON.stringify(item))
+      newData.push({ ...newItem, ...item2 })
+    })
+  })
+  newData.forEach((item, index) => {
+    item.key = index
+    item.sendData = ''
+    item.isCheck = false
+    if (Object.keys(editData).length > 0) {
+      const resList = JSON.parse(editData.remoteProtocol.protocolJson)
+      resList.forEach(editItem => {
+        if (editItem.funcIdentifier === item.funcIdentifier) {
+          item.isCheck = true
+          if (item.funcType === "properties") {
+            item.sendData = editItem.sendData
+          } else {
+            if (item.identifier === editItem.identifier) {
+              item.sendData = editItem.sendData
+            }
           }
         }
-      }
-      // console.log('提交的数据', initialProtoclList.filter(item => item.sendData), '*************')
-      
-      sessionStorage.setItem('addConfigData', JSON.stringify(initialProtoclList.filter(item => {
-        let data = item.sendData ?? undefined
-        if (typeof data != 'undefined' && selectedProtocols.indexOf(item.identifier) > -1) {
-          // console.log('打印一下', Number(item.sendData) != NaN, item.sendData)
-          // 数值时要穿字符串  避免设备调不通
-          item.sendData = isNaN(Number(item.sendData)) ? item.sendData  : Number(item.sendData)
+
+      })
+    }
+  })
+  return newData
+}
+
+function AddConfigData({ nextStep, productId, editData = {} }, ref) {
+  const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
+  const [actionType] = useState(Object.keys(editData).length > 0 ? 'edit' : 'add')
+  const tableRef = useRef(null)
+
+  useEffect(() => {
+    getTableData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  //新增
+  const getTableData = () => {
+    post(Paths.standardFnList, { productId }, { loading: true }).then((res) => {
+      let data = res.data.standard.concat(res.data.custom)
+      data = data.filter(item => {
+        if (item.funcTypeCN === '服务') {
           return item
         }
-      })))
-      nextStep()
-    }
+        if (item.funcTypeCN === '属性' && item.funcParamList[0].accessMode !== 'r') {
+          return item
+        }
+      })
+      if (actionType === 'edit') {
+        data = delaData(data, editData)
+      } else {
+        data = delaData(data)
+      }
+      setInitialProtoclList(data)
+    })
+  }
+
+  // 验证
+  const validData = () => {
+    tableRef.current.subOrder()
+  }
+
+  // 存数据  下一步
+  const finishSub = (data) => {
+    sessionStorage.setItem('addConfigData', JSON.stringify(data))
+    nextStep()
   }
 
   // 用于定义暴露给父组件的ref方法
@@ -50,180 +84,9 @@ function AddConfigData({ nextStep, productId, editData }, ref) {
       onFinish: validData
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedProtocols, initialProtoclList])
+  }, [initialProtoclList])
 
-  // 获取关联协议列表
-  const getRelationProtocol = () => {
-    post(Paths.getPhysicalModel, { productId }, { loading: true }).then(res => {
-      res.data.properties && res.data.properties.forEach(item => { item.sendData = '' })
-
-      if (Object.keys(editData).length > 0) {
-        const resList = JSON.parse(editData.remoteProtocol.protocolJson)
-        res.data.properties.forEach(item => {
-          resList.forEach(s => {
-            if (s.identifier === item.identifier) {
-              item.sendData = s.sendData
-              setSelectedProtocols((pre) => {
-                const list = cloneDeep(pre)
-                list.push(s.identifier)
-                return list
-              })
-            }
-          })
-        })
-      }
-
-      setInitialProtoclList(res.data.properties)
-    })
-  }
-
-  useEffect(() => {
-    getRelationProtocol()
-  }, [productId])  // eslint-disable-line react-hooks/exhaustive-deps
-
-
-  useEffect(() => {
-    console.log(selectedProtocols, 'selectedProtocol-----')
-  }, [selectedProtocols])
-
-  // 输入参数
-  const changeSendData = (value, index) => {
-    const copyList = cloneDeep(initialProtoclList)
-    copyList[index].sendData = value
-    setInitialProtoclList(copyList)
-  }
-
-  // 日期插件选择
-  const onChangeDate = (date, dateString, index) => {
-    changeSendData(dateString, index)
-  }
-
-  const protocolSelectChange = selectedRowKeys => {
-    setSelectedProtocols(selectedRowKeys)
-  }
-
-  const protocolSelection = {
-    selectedRowKeys: selectedProtocols,
-    onChange: protocolSelectChange,
-  }
-
-  const configColumns = [
-    {
-      title: '数据名称',
-      dataIndex: 'name',
-      key: 'name',
-      width: 190
-    },
-    {
-      title: '数据标识',
-      dataIndex: 'identifier',
-      key: 'identifier',
-      width: 200
-    },
-    {
-      title: '数据类型',
-      dataIndex: 'dataType',
-      key: 'dataType',
-      render: (text, record) => {
-        return (<span>{record.dataType.type}</span>)
-      }
-    },
-    {
-      title: '数据属性',
-      render: (text, record) => {
-        switch (record.dataType.type) {
-          case 'int':
-          case 'double':
-          case 'float':
-            return <span>{record.dataType.specs.min} ~ {record.dataType.specs.max}</span>
-          case 'text':
-            return '-'
-          case 'enum':
-          case 'bool':
-            return (
-              <span>{Object.values(record.dataType.specs).join(' | ')}</span>
-            )
-          case 'date':
-            return '-'
-          default:
-            break;
-        }
-      }
-    },
-    {
-      title: '下发数据',
-      dataIndex: 'sendData',
-      key: 'sendData',
-      render: (text, record, index) => {
-        let { specs, type } = record.dataType,
-          _dom = null
-        switch (type) {
-          case 'int':
-          case 'double':
-          case 'float':
-            _dom = (<InputNumber value={record.sendData}
-              min={specs.min}
-              max={specs.max}
-              onChange={value => changeSendData(value, index)}
-              placeholder="请输入参数"></InputNumber>)
-            break
-          case 'text':
-            _dom = (
-              <Input value={record.sendData}
-                maxLength={30}
-                onChange={e => changeSendData(e.target.value.trim(), index)}
-                placeholder="请输入参数"></Input>
-            )
-            break
-          case 'enum':
-          case 'bool':
-            _dom = (
-              <Select
-                value={record.sendData}
-                onChange={value => changeSendData(value, index)}>
-                <Option key={-1} value="">请选择参数</Option>
-                {
-                  Object.keys(specs) && Object.keys(specs).map((item, index) => {
-                    // console.log(item, '---', specs[item])
-                    return <Option key={index + item} value={Number(item)}>{specs[item]}</Option>
-                  })
-                }
-              </Select>
-            )
-            break
-          case 'date':
-            _dom = (
-              <DatePicker style={{ width: 182 }}
-                defaultValue={record.sendData ? moment(record.sendData, "YYYY-MM-DD HH:mm:ss") : ''}
-                onChange={(date, dateString) => {
-                  onChangeDate(date, dateString, index)
-                }}
-                format="YYYY-MM-DD HH:mm:ss"
-                showTime
-                showNow />
-            )
-            break
-          default:
-            break;
-        }
-        return (
-          <span className={`config-send-data ${sendDataCheck.includes(index) ? 'warn' : ''}`}>
-            {_dom}
-          </span>
-        )
-      },
-    }
-  ]
-  return (
-    <Table columns={configColumns}
-      className="config-data-table"
-      rowSelection={protocolSelection}
-      dataSource={initialProtoclList}
-      rowKey="identifier"
-      scroll={{ y: 300 }}
-      pagination={false}
-    />
-  )
+  return (<TableCom dataSource={initialProtoclList} ref={tableRef} finishSub={finishSub} actionType={actionType} />)
 }
 
 export default forwardRef(AddConfigData)

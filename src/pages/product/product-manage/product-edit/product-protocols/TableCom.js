@@ -1,17 +1,13 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef, useContext, useMemo } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
-import moment from 'moment';
 import { Table, Button, Space } from 'antd';
 import './index.scss';
 import EditcusFn from './editcusFn'
-// import TitleEdit from './titleEdit'
-import { post, Paths, get } from '../../../../../api';
+import { post, Paths } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
 import { getRowSpanCount } from '../../../../../configs/tableCombine'
-// import { getRowSpanCount } from './tableCombine'
 
-
-export default function TableCom({ dataSource, reFreshData, type, standardData = [] }) {
+export default function TableCom({ dataSource, reFreshData, type, standardData }) {
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     //页码改变
     const pagerChange = (pageIndex, pageRows) => {
@@ -68,7 +64,7 @@ export default function TableCom({ dataSource, reFreshData, type, standardData =
             case 'enum':
                 let value = ''
                 for (let key in data.propertyMap) {
-                    value += key+'：' + data.propertyMap[key] + ', '
+                    value += key + '：' + data.propertyMap[key] + ', '
                 }
                 result = `枚举值：${value}`
                 break;
@@ -198,7 +194,7 @@ export default function TableCom({ dataSource, reFreshData, type, standardData =
             content,
             funcType: actionData.funcType
         }
-        post(Paths.PhysicalModelAction, params).then((res) => {
+        post(Paths.PhysicalModelAction, params,{loading:true}).then((res) => {
             Notification({
                 type: 'success',
                 description: '删除成功！',
@@ -218,7 +214,7 @@ export default function TableCom({ dataSource, reFreshData, type, standardData =
             columns={columns}
             dataSource={dataSource}
             locale={{
-                emptyText: type == '1' ? '暂无标准功能' : '暂无自定义功能'
+                emptyText: type === '1' ? '暂无标准功能' : '暂无自定义功能'
             }}
             pagination={{
                 defaultCurrent: 1,

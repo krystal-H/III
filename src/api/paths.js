@@ -151,6 +151,7 @@ let Paths = {
     /* 云端定时功能5x */
     getTimeServiceList: '/timeServer/getList', // 获取列表
     getPhysicalModel: '/productManage/physicalModel/get', // 获取物模型  关联协议
+    // getPhysicalModel: '/product/dev/show/func', // 获取功能定义物模型列表
     saveTimeService: '/timeServer/save', // 保存定时信息
     updateTimeServiceStatus: '/timeServer/updateStatus', // 修改云端定时状态
 
@@ -181,7 +182,8 @@ let Paths = {
     addDebugMac:'/device/debug/mac/addDebugMac',
     delDebugMac:'/device/debug/mac/delDebugMac',
     getMockDeviceId:'/device/debug/mockDevice/active',//虚拟设备调试获得虚拟设备id
-
+    getDebugHis:'/device/debug/accountAndMac/list',//设备调试-历史列表
+    hisDebugMac:'/device/debug/accountAndMac/record',//设备调试-历史列表--调试/新增
     
 
 
@@ -314,7 +316,9 @@ let Paths = {
     subscribeDetail:'/datapush/getByUrlConfId',//订阅详情
     addsubscribe:'/datapush/create',//新增数据订阅
     getLabelByAddress:'/deviceLabel/getDeviceLabelByProductId',//通过地区获取label
-
+    getProductByProject:'/projectDevice/getProductListByProjectId',
+    getDeviceEvent:'/datapush/getDeviceEventList',
+    checkRelDevice:'/datapush/checkValidDevice',//检测是否为真实设备
     /**
      * 基础产品--应用 start
      * xiao-2019-10-17
@@ -468,8 +472,7 @@ let Paths = {
     otaProDevVersionList:'/firmware/productFirmware/getProductFirmwareList',
     otaGetExtVersion:'/device/version/5/getExtVersion',
     otaDeleteVer:'/device/version/5/delete',
-
-    firmwareFromProduct:'/product/firmware/package',
+    firmwareLastVersion:'/firmware/productFirmware/getLastProductVersion',
     otaAddVersion:'/firmware/device/version/add',
     otaGetVersionDetail:'/firmware/device/version/get',
     otaGetBatch:'/firmware/device/upgrade/publish/getBatch',

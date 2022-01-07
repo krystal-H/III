@@ -107,7 +107,7 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
   }
   return (
     <div >
-      <Modal title="新增标准功能" visible={isModalVisible} onOk={sentData} onCancel={CancelAdd} width='1200px' wrapClassName='add-protocols-wrap'>
+      <Modal title="新增标准功能" visible={isModalVisible} onOk={sentData} onCancel={CancelAdd} width='1300px' wrapClassName='add-protocols-wrap'>
 
         <Tabs activeKey={currentTab} onChange={callback}>
           <TabPane tab="本品类" key="1">

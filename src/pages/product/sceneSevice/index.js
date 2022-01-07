@@ -6,12 +6,13 @@ import { cloneDeep } from 'lodash';
 import { post, Paths, get } from '../../../api';
 // import { netStatus } from '../../../configs/text-map'
 import { DateTool, getUrlParam } from '../../../util/util';
+import { Notification } from '../../../components/Notification'
 import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
 import './index.scss'
 import AddModal from './cusmoFn';
 const { Option } = Select;
 const { Step } = Steps;
-import { Notification } from '../../../components/Notification'
+
 const {Search} = Input
 const netStatus = [{
     value: '条件', key: true
@@ -282,7 +283,7 @@ export default function DeviceRegist() {
                                 label="功能名称"
                                 name='funcName'
                             >
-                                <Search onSearch={onSearch} style={{ width: '465px' }} placeholder="功能名称"/>
+                                <Search onSearch={onSearch} style={{ width: '260px' }} placeholder="功能名称"/>
                             </Form.Item>
                         </Form>
                     </div>
