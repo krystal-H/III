@@ -116,7 +116,7 @@ class SetupProduct extends Component {
 
   // 选择通信协议
   changeProtocol = e => {
-    this.formRef.current.setFieldsValue({netTypeId: ''})
+    this.formRef.current.setFieldsValue({ netTypeId: '' })
     // 通过通信协议获取配网方式list
     const id = e.target.value.split('#')[0]
     this.state.networkWayList.forEach(item => {
@@ -144,17 +144,18 @@ class SetupProduct extends Component {
           brandName: saveProductForm.brandName || ''
         }}
         onFinish={this.onFinish}
-        onFinishFailed={this.onFinishFailed}>
+        onFinishFailed={this.onFinishFailed}
+        autoComplete="off">
         <Form.Item
           label="产品名称"
           name="productName"
           rules={[
             { required: true, message: '请输入产品名称' },
-            { max: 50, message: '最大输入长度为50' },
+            { pattern: new RegExp(/^(?!\s)(?!.*\s$)/), message: '首尾不能输入空格' }
           ]}>
-          <Input placeholder="请输入产品名称，不能超过50个字符" />
+          <Input placeholder="请输入产品名称，不能超过50个字符"  maxLength={50}/>
         </Form.Item>
-
+        <div></div>
         {/* <Form.Item
           label="产品品牌"
           name="brandId"
@@ -172,18 +173,20 @@ class SetupProduct extends Component {
           name="brandName"
           rules={[
             { required: true, message: '请输入产品品牌' },
-            { max: 50, message: '最大输入长度为50' },
+            { pattern: new RegExp(/^(?!\s)(?!.*\s$)/), message: '首尾不能输入空格' }
           ]}>
-          <Input placeholder="请输入产品品牌，不能超过50个字符" />
+          <Input placeholder="请输入产品品牌，不能超过50个字符" maxLength={50} />
         </Form.Item>
-        
+
         <Form.Item
           label="产品型号"
           name="productCode"
           rules={[
-            { pattern: new RegExp(/^[\u4E00-\u9FA5A-Za-z0-9]+$/, "g"), message: '请输入产品型号，支持中英文、数字' }
+            // { pattern: new RegExp(/^[\u4E00-\u9FA5A-Za-z0-9]+$/, "g"), message: '请输入产品型号，支持中英文、数字' }
+            { required: false, message: '请输入产品型号' },
+            { pattern: new RegExp(/^(?!\s)(?!.*\s$)/), message: '首尾不能输入空格' }
           ]}>
-          <Input maxLength={50} placeholder="请输入产品型号，支持中英文、数字" />
+          <Input maxLength={50} placeholder="请输入产品型号" />
         </Form.Item>
         <Form.Item name="bindType" label="通信协议"
           rules={[{ required: true, message: '请选择通信协议' }]}>
@@ -203,7 +206,7 @@ class SetupProduct extends Component {
         <Form.Item
           label="配网方式"
           name="netTypeId"
-          rules={[{ required: true, message: '请选择配网方式！' }]}>
+          rules={[{ required: true, message: '请选择配网方式' }]}>
           <Select>
             {
               networkList && networkList.map(item => (
@@ -225,7 +228,7 @@ class SetupProduct extends Component {
             </Radio.Group>
           </Form.Item>
         }
-        {
+        {/* {
           this.props.createProductCategory.controlClass == 1 &&
           <Form.Item name="portNumber" label="控制端口数"
             rules={[
@@ -233,7 +236,7 @@ class SetupProduct extends Component {
             ]}>
             <Input placeholder="请输入控制端口数，支持数字" />
           </Form.Item>
-        }
+        } */}
       </Form>
     )
   }

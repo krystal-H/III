@@ -1,15 +1,11 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef, useContext } from 'react'
-import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal';
-import moment from 'moment';
-import { Table, Button, Space, Upload } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import './index.scss';
-import EditcusFn from './editcusFn'
 import Addfunction from './addModal'
 import NewCusmFn from './addcusFn'
 // import TitleEdit from './titleEdit'
 import downpng from './../../../../../assets/images/product/download.png';
-import { post, Paths, get } from '../../../../../api';
+import { post, Paths } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import TableCom from './TableCom';
@@ -34,19 +30,34 @@ function ProtocolFn2({ nextStep, productId }, ref) {
     //展示
     const [cusData, setCusData] = useState([]);
     const [standardData, setStandardData] = useState([]);
+    const [allSource, setAllSource] = useState({ standard: [], custom: [] });
     const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
     //新增标准功能====
     const [isModalVisible, setIsModalVisible] = useState(false);
     //获取列表
-    const getList = (loading = true) => {
-        post(Paths.standardFnList, { productId }, { loading }).then((res) => {
-            setStandardData(delaData(res.data.standard))
-            if(!res.data.standard.length){
+    const getList = () => {
+        let params = {
+            deviceTypeId: productItem.deviceTypeId,
+            productId: productItem.productId,
+            eq: true,
+        }
+        let arr = [post(Paths.standardFnList, { productId }), post(Paths.PhysicalModelList, params, { loading: true })]
+        Promise.all(arr).then(res => {
+            let data1 = delaData(res[0].data.standard) //标准
+            let data2 = delaData(res[0].data.custom) //自定义
+            let data3 = delaData(res[1].data) //未添加的标准
+            setStandardData(data1)
+            setCusData(data2)
+            setAllSource({
+                standard: data1.concat(data3),
+                custom: data2
+            })
+            if (!data1.length) {
                 setIsModalVisible(true)
             }
-            let data2 = delaData(res.data.custom)
-            setCusData(data2)
-        });
+
+        })
+
     }
     useEffect(() => {
         getList()
@@ -74,7 +85,7 @@ function ProtocolFn2({ nextStep, productId }, ref) {
 
         getList()
     }
-    
+
     const closeAdd = () => {
         setIsModalVisible(false)
         Notification({
@@ -105,11 +116,11 @@ function ProtocolFn2({ nextStep, productId }, ref) {
     }));
     //====
     const wayText = () => {
-        if (productItem.schemeName == '独立MCU方案') {
+        if (productItem.schemeName === '独立MCU方案') {
             return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发'
-        } else if (productItem.schemeName == 'SoC方案') {
+        } else if (productItem.schemeName === 'SoC方案') {
             return 'SoC方案，不提供通用固件程序，需自行开发模组固件'
-        } else if (productItem.schemeName == '免开发方案') {
+        } else if (productItem.schemeName === '免开发方案') {
             return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化'
         }
         return productItem.schemeName
@@ -137,7 +148,7 @@ function ProtocolFn2({ nextStep, productId }, ref) {
             <Button type="primary" onClick={openAdd}>新建标准功能</Button >
         </div>
         <div className='Protocol-table'>
-            <TableCom dataSource={standardData} standardData={standardData} reFreshData={getList} type={'1'} />
+            <TableCom dataSource={standardData} standardData={allSource} reFreshData={getList} type={'1'} />
         </div>
         <div className='Protocol-download'>
             <div>自定义功能<LabelTip tip="支持在标准功能的基础上，自定义适合客户自己硬件特色的定制功能点。"></LabelTip></div>
@@ -150,10 +161,10 @@ function ProtocolFn2({ nextStep, productId }, ref) {
 
         </div>
         <div >
-            <TableCom dataSource={cusData} reFreshData={getList} type={'2'} standardData={standardData.concat(cusData)}/>
+            <TableCom dataSource={cusData} reFreshData={getList} type={'2'} standardData={allSource} />
         </div>
         {/* 新增自定义 */}
-        {rightVisible && <NewCusmFn standardData={standardData.concat(cusData)} rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
+        {rightVisible && <NewCusmFn standardData={allSource} rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
         {/* 新增标准 */}
         {isModalVisible && <Addfunction closeAdd={closeAdd} CancelAdd={CancelAdd} isModalVisible={isModalVisible}></Addfunction>}
     </div>

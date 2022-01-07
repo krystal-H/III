@@ -1,0 +1,21 @@
+.config-data-table {
+  .ant-table-body {
+    &::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      background:rgba(217,217,217,1);
+      border-radius:5px;
+    }
+
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      border-radius: 0;
+      background: rgba(0, 4, 40, 0.06);
+    }
+  }
+}

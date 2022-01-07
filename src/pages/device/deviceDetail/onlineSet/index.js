@@ -1,30 +1,24 @@
 import React, { useState, useEffect } from 'react'
-import { PlusOutlined } from '@ant-design/icons'
-import { Button, Table, Divider, Tooltip, Select, Steps, Input, Form, Row, Col } from 'antd'
-import { DateTool, setFuncDataType, addKeyToTableData, createArrayByLength } from '../../../../util/util'
+import { Button, Table, Divider, Tooltip, Select, Steps, Input} from 'antd'
+import { DateTool, addKeyToTableData } from '../../../../util/util'
 import stepImg from '../../../../assets/images/remote-config.png'
 import DescWrapper from '../../../../components/desc-wrapper/DescWrapper'
 import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal'
-import { cloneDeep } from 'lodash'
-import { Paths, post, get } from '../../../../api'
+import { Paths, post } from '../../../../api'
 import { Notification } from '../../../../components/Notification';
 import AddModel from './addModel'
-import EditModel from './editModel'
-import DetailModel from './detail'
 import './index.scss'
 
-const { Option } = Select
 const { Step } = Steps
-const { Search } = Input
 const statusTextForDevice = ['草稿', '待执行', '执行成功', '执行失败']
 
-function RemoteConfig({ devceId,baseInfo }) {
+function RemoteConfig({ devceId, baseInfo }) {
     const [addVisible, setAddVisible] = useState(false)
-    const [editVisible, setEditVisible] = useState(false)
     const [actionData, setActionData] = useState({})
     const [deleteParams, setDeleteParams] = useState({ deletevisible: false, deleteItem: null, deleteLoading: false })
     const [remoteConfigList, setRemoteConfigList] = useState([]) // table-datasorce
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
+    const [actionType, setActionType] = useState('add')
     const { deletevisible, deleteItem, deleteLoading } = deleteParams
     // 执行任务
     const executeRemoteConfig = (record) => {
@@ -51,7 +45,7 @@ function RemoteConfig({ devceId,baseInfo }) {
             dataIndex: 'taskExplain',
             key: 'taskExplain',
             render: (text, record) => {
-                return <div className='single-text' style={{width:400}}>{text}</div>
+                return <div className='single-text' style={{ width: 400 }}>{text}</div>
             }
         },
         {
@@ -94,23 +88,21 @@ function RemoteConfig({ devceId,baseInfo }) {
 
     // 新增
     const addOrEditRemoteConfig = () => {
+        setActionType('add')
         setAddVisible(true)
     }
     //详情
-    const [detailVis, setDetailVis] = useState(false)
     const showRomoteConfigDetail = (data) => {
         setActionData(data)
-        setDetailVis(true)
-    }
-    const detailCancel = () => {
-        setDetailVis(false)
+        setActionType('detail')
+        setAddVisible(true)
     }
 
     useEffect(() => {
-        if(devceId){
+        if (devceId) {
             getRemoteConfigList()
         }
-    }, [pager.pageRows, pager.pageIndex,devceId])
+    }, [pager.pageRows, pager.pageIndex, devceId])
 
     // 获取远程配置列表
     const getRemoteConfigList = (_pageIndex, status = '', taskName = '') => {
@@ -166,14 +158,8 @@ function RemoteConfig({ devceId,baseInfo }) {
     //编辑
     const openEdit = (data) => {
         setActionData(data)
-        setEditVisible(true)
-    }
-    const CancelEdit = () => {
-        setEditVisible(false)
-    }
-    const EditOk = () => {
-        getRemoteConfigList()
-        setEditVisible(false)
+        setActionType('edit')
+        setAddVisible(true)
     }
     //帮助文档
     const downFile = () => {
@@ -235,13 +221,8 @@ function RemoteConfig({ devceId,baseInfo }) {
                 </ActionConfirmModal>
             }
             {
-                addVisible && <AddModel addVisible={addVisible} addOk={addOk} CancelAdd={CancelAdd} deviceId={devceId}/>
-            }
-            {
-                detailVis && <DetailModel detailVis={detailVis} onCancel={detailCancel} actionData={actionData} deviceId={devceId}/>
-            }
-            {
-                editVisible && <EditModel addVisible={editVisible} actionData={actionData} addOk={EditOk} CancelAdd={CancelEdit} deviceId={devceId} baseInfo={baseInfo}/>
+                addVisible && <AddModel addVisible={addVisible} actionData={actionData}
+                    addOk={addOk} CancelAdd={CancelAdd} deviceId={devceId} baseInfo={baseInfo} actionType={actionType}/>
             }
         </div>
     )

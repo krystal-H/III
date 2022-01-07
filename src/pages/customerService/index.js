@@ -211,10 +211,12 @@ function CustomerService({
             </div>
             <div className='inputbox'>
                 <label className='upimgbtn' htmlFor='up'></label>
+                
                 <input className='file' id='up' type='file'
                   data-format='gif,jpeg,jpg,png' data-maxsize={1024} onChange={imgChang}
                   accept='.gif,.jpeg,.jpg,.png'
                 />
+
                 <span className='sendbtn' onClick={sendHandle}>发送</span>
                 <Input.TextArea className='textarea' showCount placeholder="请输入您的问题..." bordered={false} maxLength={200}
                     value={inputValue}

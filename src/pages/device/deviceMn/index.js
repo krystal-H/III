@@ -38,7 +38,7 @@ export default function DeviceList() {
     }
     //获取列表
     const getList = (loading = true) => {
-        let arr = ['online', 'innet', 'fault']
+        let arr = ['innet', 'fault']
         let obj = {}
         for (let key in form.getFieldsValue()) {
             if (arr.indexOf(key) > -1 && typeof form.getFieldsValue()[key] == 'string') {
@@ -64,11 +64,11 @@ export default function DeviceList() {
     }
     //获取统计
     const getDevOneList = (value) => {
-        let parmas={}
-        if(value){
-            parmas.productId=value
+        let parmas = {}
+        if (value) {
+            parmas.productId = value
         }
-        post(Paths.devMnCount,parmas).then((res) => {
+        post(Paths.devMnCount, parmas).then((res) => {
             setCountData([
                 { label: '当前异常数', count: res.data.exception },
                 { label: '累积设备总数', count: res.data.total },
@@ -234,7 +234,7 @@ export default function DeviceList() {
                                 name='field'
                                 noStyle
                             >
-                                <Input style={{ width: '228px' }} placeholder='请输入设备物理地址或者ID'/>
+                                <Input style={{ width: '228px' }} placeholder='请输入设备物理地址或者ID' />
                             </Form.Item>
                         </Input.Group>
                     </Form.Item>
@@ -261,7 +261,7 @@ export default function DeviceList() {
                             <Option value={0}>未入网</Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item name="online" label="在线状态" >
+                    {/* <Form.Item name="online" label="在线状态" >
                         <Select
                             style={{ width: '102px' }}
                         >
@@ -269,7 +269,7 @@ export default function DeviceList() {
                             <Option value={true}>在线</Option>
                             <Option value={false}>离线</Option>
                         </Select>
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item name="fault" label="故障状态" >
                         <Select
                             style={{ width: '102px' }}
@@ -297,16 +297,16 @@ export default function DeviceList() {
             </div>
             <div>
                 <Table rowKey='deviceId' dataSource={dataSource} columns={columns}
-                 pagination={{
-                    defaultCurrent: 1,
-                    current: pager.pageIndex,
-                    onChange: pagerChange,
-                    pageSize: pager.pageRows,
-                    total: pager.totalRows,
-                    showQuickJumper: true,
-                    pageSizeOptions: [10],
-                    showTotal: () => <span>共 <a>{pager.totalRows}</a> 条</span>
-                }} />
+                    pagination={{
+                        defaultCurrent: 1,
+                        current: pager.pageIndex,
+                        onChange: pagerChange,
+                        pageSize: pager.pageRows,
+                        total: pager.totalRows,
+                        showQuickJumper: true,
+                        pageSizeOptions: [10],
+                        showTotal: () => <span>共 <a>{pager.totalRows}</a> 条</span>
+                    }} />
             </div>
         </div>
     </div>)

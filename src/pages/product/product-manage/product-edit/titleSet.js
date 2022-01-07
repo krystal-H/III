@@ -90,7 +90,7 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                             },
                         ]}
                     >
-                        <Input />
+                        <Input maxLength={30}/>
                     </Form.Item>
 
                     <Form.Item
@@ -154,11 +154,11 @@ export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
                     </Form.Item>
                     <Form.Item
                         label="创建时间"
-                    ><span>{productItem.createTime}</span>
+                    ><span>{DateTool.utcToDev(productItem.createTime)}</span>
                     </Form.Item>
                     <Form.Item
                         label="更新时间"
-                    ><span>{productItem.modifyTime && DateTool.utcToDev(productItem.modifyTime)}</span>
+                    ><span>{productItem.modifyTime ?  DateTool.utcToDev(productItem.modifyTime) : '--'}</span>
                     </Form.Item>
                 </Form>
             </div>

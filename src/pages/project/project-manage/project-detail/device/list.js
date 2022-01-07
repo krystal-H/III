@@ -5,6 +5,7 @@ import { DateTool } from '../../../../../util/util'
 import ActionConfirmModal from '../../../../../components/action-confirm-modal/ActionConfirmModal'
 import { Notification } from '../../../../../components/Notification';
 import { cloneDeep } from 'lodash'
+const { Search } = Input
 function InfoModal({ baseInfo, projectId }, ref) {
     const [form] = Form.useForm();
     const [deletevisible, setDeletevisible] = useState(false)
@@ -187,16 +188,9 @@ function InfoModal({ baseInfo, projectId }, ref) {
                         </Form.Item>
                         <Form.Item
                             label='设备ID'
+                            name='deviceUniqueIdParams'
                         >
-                            <Form.Item
-                                name='deviceUniqueIdParams'
-                                noStyle
-                            >
-                                <Input style={{ width: '190px' }} placeholder="输入设备ID" />
-                            </Form.Item>
-                            <Button type="primary" onClick={onSearch}>
-                                查询
-                            </Button>
+                            <Search onSearch={onSearch} style={{ width: '265px' }} placeholder="输入设备ID" />
                         </Form.Item>
                     </Form>
 

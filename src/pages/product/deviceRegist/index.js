@@ -20,7 +20,6 @@ export default function DeviceRegist() {
     const [optionArr, setOptionArr] = useState([]) //产品列表
     const [newoptionArr, setNewoptionArr] = useState([]) //新产品列表
     const [selectType, setSelectType] = useState('') //产品种类
-    const [searchId, setSearchId] = useState('')
     const [countData, setCountData] = useState([
         { label: '设备总数量', count: '--' },
         { label: '已入网设备', count: '--' },
@@ -69,7 +68,7 @@ export default function DeviceRegist() {
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
     useEffect(() => {
         getList()
-    }, [pager.pageIndex, pager.pageRows, selectType, searchId])
+    }, [pager.pageIndex, pager.pageRows, selectType])
     //获取列表
     const getList = (loading = true) => {
         let params = { ...pager }
@@ -203,7 +202,10 @@ export default function DeviceRegist() {
         <div id='device-regist'>
             <PageTitle title='设备注册'>
                 <div className='top-select'>
-                    <Select style={{ width: 150 }} defaultValue={0} onChange={selectChange}>
+                    <Select style={{ width: 150 }} defaultValue={0} onChange={selectChange} 
+                    showSearch optionFilterProp="children" filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }> 
                         {
                             optionArr.map(item => {
                                 return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
@@ -240,10 +242,7 @@ export default function DeviceRegist() {
                                 </Select>
                             </Form.Item>
                             <Form.Item label="设备ID" name='id'>
-                                <Search placeholder="请输入设备ID" allowClear onSearch={value => {
-                                    setSearchId(value)
-                                    onSearch()
-                                }} />
+                                <Search placeholder="请输入设备ID"  onSearch={onSearch}  style={{ width: '260px' }}/>
                             </Form.Item>
                         </Form>
                     </div>

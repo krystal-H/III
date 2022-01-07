@@ -77,7 +77,7 @@ export default function TableCom({ dataSource, refreshCount }) {
             },
         },
         {
-            title: '功能类型', dataIndex: 'funcTypeCN',
+            title: '功能类型', dataIndex: 'funcTypeCN', width: '140px',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     dataSource,
@@ -89,7 +89,7 @@ export default function TableCom({ dataSource, refreshCount }) {
             },
         },
         {
-            title: '功能点名称', dataIndex: 'funcName',
+            title: '功能点名称', dataIndex: 'funcName', width: '140px',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     dataSource,
@@ -101,7 +101,7 @@ export default function TableCom({ dataSource, refreshCount }) {
             },
         },
         {
-            title: '标识符', dataIndex: 'funcIdentifier',
+            title: '标识符', dataIndex: 'funcIdentifier', width: '140px',
             render: (value, row, index) => {
                 return getRowSpanCount(
                     dataSource,
@@ -112,25 +112,25 @@ export default function TableCom({ dataSource, refreshCount }) {
                 );
             },
         },
-        { title: '参数名称', dataIndex: 'name' },
-        { title: '参数标识', dataIndex: 'identifier' },
+        { title: '参数名称', dataIndex: 'name', width: '140px' },
+        { title: '参数标识', dataIndex: 'identifier', width: '140px' },
         {
-            title: '数据传输类型', dataIndex: 'accessMode',
+            title: '数据传输类型', dataIndex: 'accessMode', width: '140px',
             render: (text, record) => {
-                if (text == 'rw') {
+                if (text === 'rw') {
                     return '可下发可上报'
                 }
-                if (text == 'w') {
+                if (text === 'w') {
                     return '可下发'
                 }
-                if (text == 'r') {
+                if (text === 'r') {
                     return '可上报'
                 }
                 return ''
             }
         },
         {
-            title: '数据类型', dataIndex: 'dataType', render: (text, record) => (
+            title: '数据类型', width: '100px', dataIndex: 'dataType', render: (text, record) => (
                 <span>{record.dataTypCN}</span>
             )
         },

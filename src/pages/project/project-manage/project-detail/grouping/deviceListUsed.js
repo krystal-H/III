@@ -62,7 +62,7 @@ const DevUsed = ({
     }, [selectedRowKeys]);
 
     return <div>
-                <Input.Search enterButton maxLength={30} placeholder="请输入设备ID查询" className="search-inpt"
+                <Input.Search  maxLength={30} placeholder="请输入设备ID查询" className="search-inpt"
                     onSearch={val=>{ searchValRef.current= val; getDevList()}}
                 />
                 <div className='list-content'>

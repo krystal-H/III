@@ -192,7 +192,7 @@ export default function AddModel({ addVisible, optionArr, addOk, CancelAdd }) {
     // obj.data = arr.concat(arr2)
     obj.controlFunc = arr2
     obj.conditionFunc = arr
-    post(Paths.saveScenceData, obj).then((res) => {
+    post(Paths.saveScenceData, obj,{loading:true}).then((res) => {
       addOk(selectType)
     });
   }

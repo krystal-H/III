@@ -37,7 +37,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
                 },
                 projectBatchDetailList: sentData
             }
-            post(Paths.projectSaveFile, params).then((res) => {
+            post(Paths.projectSaveFile, params,{loading:true}).then((res) => {
                 Notification({ description: '操作成功！', type: 'success' })
                 colseMoadl()
             });
