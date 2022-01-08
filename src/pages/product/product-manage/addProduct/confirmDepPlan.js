@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Tabs } from 'antd'
 import { connect } from 'react-redux'
-import {createProductSchemekeyAction} from '../store/ActionCreator'
+import { createProductSchemekeyAction } from '../store/ActionCreator'
 import { Paths, post } from '../../../../api'
 import SwitchTab from './switchTab'
 
@@ -17,7 +17,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    changeKey: params => dispatch(createProductSchemekeyAction(params)) 
+    changeKey: params => dispatch(createProductSchemekeyAction(params))
   }
 }
 
@@ -29,6 +29,7 @@ class SwitchFreeDep extends Component {
       btnList1: [], // 免开发
       btnList2: [], // MCU
       btnList3: [], // Soc
+      btnList4: [], // 云接入方案
       thirdCategoryId: props.thirdCategoryId
     }
     this.refSwitchTab = null
@@ -60,7 +61,7 @@ class SwitchFreeDep extends Component {
   }
 
   render() {
-    const { currentActiveKey, btnList1, btnList2, btnList3 } = this.state
+    const { currentActiveKey, btnList1, btnList2, btnList3, btnList4 } = this.state
     const { thirdCategoryId } = this.props
     return (
       <Tabs onChange={(activeKey) => this.handleChange(activeKey)} destroyInactiveTabPane>
@@ -95,6 +96,18 @@ class SwitchFreeDep extends Component {
             <SwitchTab
               tip="SoC方案，不提供通用固件程序，需自行开发模组固件。"
               btnList={btnList3}
+              deviceTypeId={thirdCategoryId}
+              onRef={ref => { this.refSwitchTab = ref }} />
+          </TabPane>
+        }
+
+        {/* 云接入方案 */}
+        {
+          btnList4.length > 0 &&
+          <TabPane tab="云接入方案" key="4">
+            <SwitchTab
+              tip="云接入方案，支持已上市的产品，云对云方式接入clife平台。"
+              btnList={btnList4}
               deviceTypeId={thirdCategoryId}
               onRef={ref => { this.refSwitchTab = ref }} />
           </TabPane>

@@ -48,18 +48,18 @@ class SetupProduct extends Component {
     this.props.onRef && this.props.onRef(this) // onRef绑定子组件到父组件
 
     this.getProductBrand()
-    this.getCommunicationProtocol()
-    this.getBindTypeNetworkType()
+    // this.getCommunicationProtocol()
+    // this.getBindTypeNetworkType()
   }
 
-  // 获取配网方式
-  getBindTypeNetworkType = () => {
-    get(Paths.getBindTypeNetworkTypeMap, {}).then(res => {
-      this.setState({
-        networkWayList: res.data
-      })
-    })
-  }
+  // // 获取配网方式
+  // getBindTypeNetworkType = () => {
+  //   get(Paths.getBindTypeNetworkTypeMap, {}).then(res => {
+  //     this.setState({
+  //       networkWayList: res.data
+  //     })
+  //   })
+  // }
 
   // 获取产品品牌
   getProductBrand = () => {
@@ -75,13 +75,13 @@ class SetupProduct extends Component {
   }
 
   // 获取通信协议
-  getCommunicationProtocol = () => {
-    post(Paths.getCommunicationProtocol, {}).then(res => {
-      this.setState({
-        protocolList: res.data
-      })
-    })
-  }
+  // getCommunicationProtocol = () => {
+  //   post(Paths.getCommunicationProtocol, {}).then(res => {
+  //     this.setState({
+  //       protocolList: res.data
+  //     })
+  //   })
+  // }
 
   // 保存后重置数据
   resetData = () => {
@@ -188,7 +188,7 @@ class SetupProduct extends Component {
           ]}>
           <Input maxLength={50} placeholder="请输入产品型号" />
         </Form.Item>
-        <Form.Item name="bindType" label="通信协议"
+        {/* <Form.Item name="bindType" label="通信协议"
           rules={[{ required: true, message: '请选择通信协议' }]}>
           <Radio.Group onChange={(e) => this.changeProtocol(e)}>
             {
@@ -227,7 +227,7 @@ class SetupProduct extends Component {
               }
             </Radio.Group>
           </Form.Item>
-        }
+        } */}
         {/* {
           this.props.createProductCategory.controlClass == 1 &&
           <Form.Item name="portNumber" label="控制端口数"

@@ -5,6 +5,7 @@ import CommunicateSecurity from './communicationSecurity'
 import { Link } from 'react-router-dom';
 import { Paths, post, get } from '../../../../../api'
 import { cloneDeep } from 'lodash'
+import { useHistory } from 'react-router-dom';
 import ConfigFirmwareDetail from './configFirmwareDetail.js'
 
 import './index.scss';
@@ -27,6 +28,7 @@ const requiredList = [
 ]
 
 function ServiceConfig({ productId, nextStep }, ref) {
+  let history = useHistory()
   const [optionalList, setOptionalList] = useState([
     {
       title: '配置产品固件模块',
@@ -66,6 +68,14 @@ function ServiceConfig({ productId, nextStep }, ref) {
       type: 'deviceWarning',
       routePath: '/open/device/devMsg',
       url: require('../../../../../assets/images/commonDefault/service-device.png')
+    },
+    {
+      title: '语音能力',
+      desc: '基于产品功能点，可选择配置主流平台语音控制方案',
+      isConfiged: false,
+      type: 'voiceSetting',
+      routePath: '/open/product/proManage/voiceSetting',
+      url: require('../../../../../assets/images/commonDefault/voice-setting.png')
     }
   ])
 
@@ -143,6 +153,11 @@ function ServiceConfig({ productId, nextStep }, ref) {
         getFirmwareList()
       }
     }
+    if (!productItemData.voiceable) { // 未关联语音 undefined/0，可选配置中不显示
+      const tempList = cloneDeep(optionalList)
+      tempList.pop()
+      setOptionalList(tempList)
+    }
   }
 
   useEffect(() => {
@@ -166,6 +181,10 @@ function ServiceConfig({ productId, nextStep }, ref) {
     } else {
       return ''
     }
+  }
+
+  const goVoiceSetting = () => {
+    history.push(`/open/product/proManage/voiceSetting/${productId}/?detail=1`)
   }
 
   return (
@@ -211,6 +230,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
                         <div className="config-card-right-btn">配置</div>
                       </Link>
                       :
+                      item.type === 'voiceSetting' ? <div className="config-card-right-btn" onClick={() => goVoiceSetting()}>配置</div> :
                       (item.type === 'addFirmware' || item.isConfiged) ?
                         <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
                         :
