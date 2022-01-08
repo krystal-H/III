@@ -67,8 +67,9 @@ function ReplaceModule({
     post(Paths.replaceModuleList, {
       schemeId,
       moduleName: searchVal,
-      moduleType: Number(productItemData.bindType) || -1,
-      networkType: Number(productItemData.netTypeId) || -1
+      productId
+      // moduleType: Number(productItemData.bindType) || -1,
+      // networkType: Number(productItemData.netTypeId) || -1
     }, { loading: true }).then(res => {
       setdataSource(res.data)
     })
@@ -115,7 +116,7 @@ function ReplaceModule({
       onOk={() => judgeHandleOk()}
       onCancel={() => handleCancel(opeType)}
       maskClosable={false}
-      width={857}
+      width={900}
       wrapClassName="replace-module-modal">
       {desc && <div className="replace-firmware-desc">{desc}</div>}
 

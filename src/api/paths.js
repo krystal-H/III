@@ -60,6 +60,11 @@ let Paths = {
     getPhysicalModelId: '/physicalModel/func', // 获取功能点
     confirmScheme: 'product/create/confirm/scheme', // 创建方案下一步
 
+    // 5.x语音配置
+    getProductVoiceList: '/voice/getProductVoiceList', // 获取产品语音能力列表
+    getAllVoiceList: '/voice/getVoiceList', //获取语音能力
+    addOrRemoveVoice: '/voice/addVoiceApprove', // 添加、移除语音能力
+
     // 5.x继续开发-发布产品
     publishProduct: '/product/publish', // 继续开发-发布产品
 
@@ -83,6 +88,7 @@ let Paths = {
     showFirmware: '/product/dev/show/firmware/config', // 免费申请固件信息
     getDevFirmwareList: '/firmware/list/moduleId', // 获取模组固件列表
     saveChooseFirmware: '/product/scheme/update', // 保存更换的固件
+    saveCommunication: '/product/protocol/setting', // 保存通信协议
 
 
     // 5.xAPP-应用管理

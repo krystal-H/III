@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Input, Select, Button, Table, Pagination, Modal } from 'antd';
+import { Input, Select, Button, Table, Modal } from 'antd';
 import { cloneDeep } from 'lodash';
-import { connect } from 'react-redux';
 import { productStatusText } from '../../../../../src/configs/text-map';
 import ProductIcon from '../../../../components/product-components/product-icon/ProductIcon';
 import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
@@ -70,16 +69,21 @@ class List extends PureComponent {
       {
         title: "操作", key: "",
         width: 250,
-        render: (text, record, index) => (
+        render: (text, record) => (
           <div className="operation">
-            <span className="continue" onClick={this.clickProductInfo.bind(this, record)}>{record.status === 1 ? '开发详情' : '继续开发'}</span>
+            <span className="continue" onClick={() => this.clickProductInfo(record)}>{record.status === 1 ? '开发详情' : '继续开发'}</span>
+            {/* 1：有语音 0：无 */}
+            {
+              record.voiceable === 1 &&
+              <span className="copy mar25" onClick={() => this.setVoice(record)}>语音</span>
+            }
             {
               record.isOldProduct === 0 &&
-              <span className="copy mar25" onClick={this.operateProduct.bind(this, record, 'copyModalVisible')}>复制</span>
+              <span className="copy mar25" onClick={() => this.operateProduct(record, 'copyModalVisible')}>复制</span>
             }
             {
               record.status === 0 &&
-              <span className="delete mar25" onClick={this.operateProduct.bind(this, record, 'deleteVisible')}>删除</span>
+              <span className="delete mar25" onClick={() => this.operateProduct(record, 'deleteVisible')}>删除</span>
             }
           </div>
         )
@@ -137,6 +141,15 @@ class List extends PureComponent {
     this.setState({
       listParams: newparams
     }, () => { this.getProductListNew() })
+  }
+
+  // 跳转语音配置
+  setVoice(record) {
+    sessionStorage.setItem('productItem', JSON.stringify(record))
+    this.props.history.push({
+      pathname: `/open/product/proManage/voiceSetting/${record.productId}`,
+      // state:{stepnum:step-1}
+    });
   }
 
   // 继续开发  ——> detail 
@@ -216,7 +229,7 @@ class List extends PureComponent {
     this.setState({ copyLoading: true }, () => {
       post(Paths.copyProductNew, { productId, productName: _value })
         .then(data => {
-          if (data.code === 0) { Notification({ type: 'success', description: '复制成功！' }); }
+          if (data.code === 0) Notification({ type: 'success', description: '复制成功！' })
           this.setState({ // 清空查询参数，重新请求列表
             listParams: cloneDeep(this.defaultListParams),
             copyModalVisible: false,
@@ -250,7 +263,9 @@ class List extends PureComponent {
   }
 
   render() {
-    const { listParams, selectedItem, deleteVisible, deleteLoading, deleteInputValue, copyModalVisible, copyLoading, copyInputValue, isClicked, dataSource, pager, oldProIngVisiable } = this.state
+    const { listParams, selectedItem, deleteVisible,
+      deleteLoading, deleteInputValue, copyModalVisible,
+      copyLoading, copyInputValue, isClicked, dataSource, pager, oldProIngVisiable } = this.state
     return (
       <section className="page-wrapper">
         <PageTitle title="我的智能产品" />
