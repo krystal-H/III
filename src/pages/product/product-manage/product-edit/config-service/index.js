@@ -176,19 +176,23 @@ function ServiceSelect({ productId, nextStep }, ref) {
 
   // 免开发方案不显示 配置产品固件模块 、固件升级
   const noFreeScheme = () => {
-    if (productItemData.schemeType) {
-      if (productItemData.schemeType == 1) {
-        const tempList = cloneDeep(optionalList)
-        tempList.splice(0, 2)
-        setOptionalList(tempList)
-      } else {
-        getFirmwareList()
-      }
-    }
     if (!productItemData.voiceable) { // 未关联语音 undefined/0，可选配置中不显示
       const tempList = cloneDeep(optionalList)
       tempList.pop()
       setOptionalList(tempList)
+    }
+
+    if (productItemData.schemeType) {
+      if (productItemData.schemeType == 1) {
+        setOptionalList((preList) => {// 必须用preList  因为语音设置判断
+          console.log('preList----', preList)
+          const tempList = cloneDeep(preList)
+          tempList.splice(0, 2)
+          return tempList
+        })
+      } else {
+        getFirmwareList()
+      }
     }
   }
 
