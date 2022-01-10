@@ -236,6 +236,8 @@ function ServiceSelect({ productId, nextStep }, ref) {
           return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。'
         case 3:
           return 'SoC方案，不提供通用固件程序，需自行开发模组固件。'
+        case 4:
+          return '云接入方案，支持已上市的产品，云对云方式接入clife平台。'
         default:
           break;
       }
