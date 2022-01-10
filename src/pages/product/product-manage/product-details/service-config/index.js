@@ -31,7 +31,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
   let history = useHistory()
   const [optionalList, setOptionalList] = useState([
     {
-      title: '配置产品固件模块',
+      title: '配置MCU模块&模组插件',
       desc: '支持配置OTA升级模块，比如区分控制板、驱动板、显示板等不同模块',
       isConfiged: false,
       type: 'addFirmware',
@@ -134,9 +134,12 @@ function ServiceConfig({ productId, nextStep }, ref) {
         // list[0].isConfiged = true
         // setOptionalList(list)
       } else {
-        const tempList = cloneDeep(optionalList)
-        tempList.splice(0, 1)
-        setOptionalList(tempList)
+        setOptionalList((pre) => {
+          const tempList = cloneDeep(pre)
+          tempList.splice(0, 1)
+          console.log(tempList, '---tem')
+          return tempList
+        })
       }
     })
   }
@@ -161,7 +164,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
         getFirmwareList()
       }
     }
-    
+
   }
 
   useEffect(() => {

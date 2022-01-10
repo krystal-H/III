@@ -160,16 +160,21 @@ function ServiceSelect({ productId, nextStep }, ref) {
         })
         setTypeNoList(tempArr)
         if (customList.length > 0) {
-          const list = cloneDeep(optionalList)
-          list[0].isConfiged = true
-          setOptionalList(list)
+          setOptionalList((pre) => {
+            const list = cloneDeep(pre)
+            list[0].isConfiged = true
+            return list
+          })
+
         }
       } else { // 无配置数据
         setFirmwareDetailData([])
         setCustomCount(0)
-        const list = cloneDeep(optionalList)
-        list[0].isConfiged = false
-        setOptionalList(list)
+        setOptionalList((pre) => {
+          const list = cloneDeep(pre)
+          list[0].isConfiged = false
+          return list
+        })
       }
     })
   }
