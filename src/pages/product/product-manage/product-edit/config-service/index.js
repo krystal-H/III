@@ -160,35 +160,44 @@ function ServiceSelect({ productId, nextStep }, ref) {
         })
         setTypeNoList(tempArr)
         if (customList.length > 0) {
-          const list = cloneDeep(optionalList)
-          list[0].isConfiged = true
-          setOptionalList(list)
+          setOptionalList((pre) => {
+            const list = cloneDeep(pre)
+            list[0].isConfiged = true
+            return list
+          })
+
         }
       } else { // 无配置数据
         setFirmwareDetailData([])
         setCustomCount(0)
-        const list = cloneDeep(optionalList)
-        list[0].isConfiged = false
-        setOptionalList(list)
+        setOptionalList((pre) => {
+          const list = cloneDeep(pre)
+          list[0].isConfiged = false
+          return list
+        })
       }
     })
   }
 
   // 免开发方案不显示 配置产品固件模块 、固件升级
   const noFreeScheme = () => {
-    if (productItemData.schemeType) {
-      if (productItemData.schemeType == 1) {
-        const tempList = cloneDeep(optionalList)
-        tempList.splice(0, 2)
-        setOptionalList(tempList)
-      } else {
-        getFirmwareList()
-      }
-    }
     if (!productItemData.voiceable) { // 未关联语音 undefined/0，可选配置中不显示
       const tempList = cloneDeep(optionalList)
       tempList.pop()
       setOptionalList(tempList)
+    }
+
+    if (productItemData.schemeType) {
+      if (productItemData.schemeType == 1) {
+        setOptionalList((preList) => {// 必须用preList  因为语音设置判断
+          console.log('preList----', preList)
+          const tempList = cloneDeep(preList)
+          tempList.splice(0, 2)
+          return tempList
+        })
+      } else {
+        getFirmwareList()
+      }
     }
   }
 
@@ -236,6 +245,8 @@ function ServiceSelect({ productId, nextStep }, ref) {
           return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。'
         case 3:
           return 'SoC方案，不提供通用固件程序，需自行开发模组固件。'
+        case 4:
+          return '云接入方案，支持已上市的产品，云对云方式接入clife平台。'
         default:
           break;
       }
