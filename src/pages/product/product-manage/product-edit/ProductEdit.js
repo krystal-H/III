@@ -27,23 +27,32 @@ const getProductIdFromPath = (match) => +match.params.id;
 function ProductEdit({ match, location }) {
     const origincurrent = +sessionStorage.getItem("stepnum") || 0;
 
-    const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
+    const [productItem, setProductItem] = useState({})
     const [showSecret, setShowSecret] = useState(false)
+    const [titleVisible, setTitleVisible] = useState(false)
     const [current, setcurrent] = useState(origincurrent);
     const [maxCurrent, setMaxCurrent] = useState(origincurrent);
 
 
     let history = useHistory();
-    
+
     let { path } = match,
         productIdInRoutePath = getProductIdFromPath(match);
-
+    useEffect(() => {
+        getInfo()
+    }, [])
+    const getInfo = () => {
+        post(Paths.getProductListNew, { productName: productIdInRoutePath }, { loading: true }).then(res => {
+            setProductItem(res.data.records[0])
+            sessionStorage.setItem('productItem', JSON.stringify(res.data.records[0]))
+        })
+    }
     const stepList = [
-        { title: '定义功能', content: 'protocols', mod:ProductProtocols },
-        { title: '确定面板', content: 'firmpanel', mod:ConfirmPanel },
-        { title: '开发硬件', content: 'projectSelect', mod:Hardware },
-        { title: '配置服务', content: 'configService', mod:ConfigService},
-        { title: '调试验证', content: 'validation', mod:Validation},
+        { title: '定义功能', content: 'protocols', mod: ProductProtocols },
+        { title: '确定面板', content: 'firmpanel', mod: ConfirmPanel },
+        { title: '开发硬件', content: 'projectSelect', mod: Hardware },
+        { title: '配置服务', content: 'configService', mod: ConfigService },
+        { title: '调试验证', content: 'validation', mod: Validation },
     ];
 
     let refAll = useRef();
@@ -59,28 +68,28 @@ function ProductEdit({ match, location }) {
         refAll.current.showRelease()
     }
     const nextStep = useCallback(() => {
-        let nxtc =  current + 1;
-        if(nxtc > maxCurrent){
+        let nxtc = current + 1;
+        if (nxtc > maxCurrent) {
             setMaxCurrent(nxtc)
             post(Paths.upProMaxStep, {
                 productId: productIdInRoutePath,
-                step:nxtc+1
+                step: nxtc + 1
             })
         }
         setcurrent(nxtc);
-        sessionStorage.setItem("stepnum",nxtc)
+        sessionStorage.setItem("stepnum", nxtc)
     });
     //上一步
     const prev = () => {
         setcurrent(current - 1);
-        sessionStorage.setItem("stepnum",current - 1)
+        sessionStorage.setItem("stepnum", current - 1)
     };
-   
+
     if (!productIdInRoutePath) {
 
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
-    
+
     const changeState = () => {
         setShowSecret(!showSecret)
     }
@@ -89,17 +98,19 @@ function ProductEdit({ match, location }) {
         return value
     }
     //标题修改
-    const [titleVisible, setTitleVisible] = useState(false)
+
     const openTitle = () => {
+
         setTitleVisible(true)
     }
     const onCloseTitle = () => {
         setTitleVisible(false)
     }
     const onOkClose = (data) => {
-        let obj = { ...JSON.parse(sessionStorage.productItem), ...data }
-        setProductItem(obj)
-        sessionStorage.setItem('productItem', JSON.stringify(obj))
+        // let obj = { ...JSON.parse(sessionStorage.productItem), ...data }
+        // setProductItem(obj)
+        // sessionStorage.setItem('productItem', JSON.stringify(obj))
+        getInfo()
         Notification({
             type: 'success',
             description: '更新成功！',
@@ -155,7 +166,7 @@ function ProductEdit({ match, location }) {
                             ))}
                         </Steps>
                     </div>
-                    <ModStep ref={ current==2 ? r=>{refAll=r} : refAll } nextStep={nextStep} productId={productIdInRoutePath} />
+                    <ModStep ref={current == 2 ? r => { refAll = r } : refAll} nextStep={nextStep} productId={productIdInRoutePath} />
                 </div>
                 <div className='product-main-footer'>
                     {current > 0 && (
@@ -177,7 +188,8 @@ function ProductEdit({ match, location }) {
                 </div>
             </div>
             {
-                titleVisible && <TitleSet titleVisible={titleVisible} onCloseTitle={onCloseTitle} onOkClose={onOkClose}></TitleSet>
+                titleVisible && <TitleSet titleVisible={titleVisible} onCloseTitle={onCloseTitle}
+                    onOkClose={onOkClose} productItem={productItem}></TitleSet>
             }
 
         </React.Fragment>

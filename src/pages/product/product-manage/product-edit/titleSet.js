@@ -5,16 +5,11 @@ import { post, Paths, get } from '../../../../api';
 import LabelVisible from '../../../../components/form-com/LabelVisible';
 import { DateTool } from '../../../../util/util';
 import './titleSet.scss'
-export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose }) {
-    let productItem = {}
-    if (sessionStorage.getItem('productItem')) {
-        productItem = JSON.parse(sessionStorage.getItem('productItem'))
-    }
+export default function TitleEdit({ titleVisible, onCloseTitle, onOkClose,productItem }) {
     const [form] = Form.useForm();
     const oneRef = useRef();
     const [optionArr, setOptionArr] = useState([])
     useEffect(() => {
-
         post(Paths.getProductBrand).then((res) => {
             setOptionArr(res.data)
         });
