@@ -12,6 +12,7 @@ import { showCustomerService } from '../../customerService/store/reducer'
 import moment from 'moment';
 import AddProductModal from '../../product/product-manage/addProduct/addProduct'
 import { Notification } from './../../../components/Notification';
+import LabelTip from './../../../components/form-com/LabelTip';
 import './index.scss';
 //==产品管理图片
 import projectmn1 from './../../../assets/images/overImage/project1.png';
@@ -331,7 +332,8 @@ export default function OverviewWrap() {
                             <div className='over-view-statistical-number'>{productCount.online}</div>
                         </div>
                         <div>
-                            <div className='over-view-statistical-label'>故障设备数</div>
+                            <div className='over-view-statistical-label'>异常设备数(昨日)
+                                <LabelTip tip='昨日一天之内上报过一次故障状态或持续上报过多次故障数值的设备，记为一次异常设备。' /></div>
                             <div className=' over-view-statistical-number_err'>{productCount.fault}</div>
                         </div>
                         <div className='Guide-the-figure-content'>
@@ -409,7 +411,7 @@ export default function OverviewWrap() {
                                     <div></div>
                                 </div>
                                 <div>
-                                    <div>当前异常数</div>
+                                    <div>当前异常数<LabelTip tip='一天之内上报过一次故障状态或持续上报过多次故障数值的设备，记为一次异常设备。'></LabelTip></div>
                                     <div>{devOneList.exception}</div>
                                 </div>
                                 <div>

@@ -142,7 +142,11 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                     //     arr.push(item.labelId)
                     // })
                     arr = editData.deviceLabelIds.split(',')
+                    arr=arr.map(item=>{
+                        return Number(item)
+                    })
                 }
+                productIdChange2(editData.productId)
                 form.setFieldsValue(
                     {
                         subscriptName: editData.subscriptName,
@@ -219,6 +223,16 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
         form.setFieldsValue({
             labelVoList: []
         });
+        post(Paths.getLabelByAddress, { productId: val }).then((res) => {
+            let arr = []
+            res.data.forEach(item => {
+                arr.push({ ...item, label: item.labelValue, value: item.labelId, id: item.labelId })
+            })
+            setLaberArr(arr)
+        });
+    }
+     //获取标签
+     const productIdChange2 = (val) => {
         post(Paths.getLabelByAddress, { productId: val }).then((res) => {
             let arr = []
             res.data.forEach(item => {
