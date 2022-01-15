@@ -79,6 +79,8 @@ let Paths = {
     delFirmwareModule: '/firmware/productFirmware/type/del', // 删除固件类型模块
     updateFirmwareModule: '/firmware/productFirmware/type/update', // 修改固件类型模块
 
+    isConfigZigbee: '/product/zigbee/config', //是否配置了zigbee
+
     // 5.x继续开发-开发硬件
     getMoudleInfo: '/product/dev/show/module',
     replaceModuleList: '/module/list/scheme', // 更换模组列表
