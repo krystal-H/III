@@ -6,7 +6,7 @@ import './index.scss';
 import { getRowSpanCount } from '../../../../../configs/tableCombine'
 
 
-export default function TableCom({ dataSource, reFreshData, type }) {
+export default function TableCom({ dataSource, reFreshData, type, bindTypeStr }) {
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     //页码改变
     const pagerChange = (pageIndex, pageRows) => {
@@ -119,12 +119,14 @@ export default function TableCom({ dataSource, reFreshData, type }) {
             )
         },
         { title: '数据属性', dataIndex: 'propertyMap', render: (text, record) => <span>{filterFn(record)}</span> },
+        { title: 'zigbee描述', dataIndex: 'desc', key:'desc', width: '120px',},
     ];
 
     return <div>
         <Table
             rowKey="key"
-            columns={columns}
+            // columns={columns}
+            columns={bindTypeStr.indexOf('Zigbee') !== -1 ? columns : columns.filter(item => item.dataIndex != 'desc')}
             dataSource={dataSource}
             pagination={{
                 defaultCurrent: 1,
