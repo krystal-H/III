@@ -213,7 +213,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
       })
       getTableData()
     } else { // 不是zigbee协议的不显示
-      setRequiredList(requireTempList.slice(0, -2))
+      setRequiredList(requireTempList.filter(item => item.type !== 'zigbee' && item.type !== 'zigbeePro'))
     }
   }
 
