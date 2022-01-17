@@ -32,8 +32,6 @@ const filterFn = (data) => {
 }
 
 function TableCom({ dataSource, finishSub, actionType }, ref) {
-    console.log('dataSource的值-----', dataSource)
-    const [selectData, setSelectData] = useState([])
     const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
 
     useEffect(() => {
@@ -43,9 +41,8 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
 
     // 输入参数
     const changeSendData = (e, index) => {
-        console.log(e, index, '-----------')
         const copyList = cloneDeep(initialProtoclList)
-        copyList[index].sendData = e.target.value
+        copyList[index].desc = e.target.value
         setInitialProtoclList(copyList)
     }
 
@@ -124,53 +121,39 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
         },
         {
             title: 'ZigBee描述',
-            dataIndex: 'sendData',
-            key: 'sendData',
+            dataIndex: 'desc',
+            key: 'desc',
             fixed: 'right',
             width: 182,
             render: (text, record, index) => {
                 return <Input allowClear maxLength={50}
-                    defaultValue={record.sendData}
+                    defaultValue={record.desc}
                     placeholder="请输入描述"
                     onChange={value => changeSendData(value, index)} ></Input>
             }
         }
     ]
+    // 提交验证
     const subOrder = () => {
-        let arrId = []
-        let data = initialProtoclList.filter(item => {
-            let isNull = true
-            if (!item.sendData && item.sendData !== 0) {
-                isNull = false
-            }
-            if (item !== 0)
-                if (selectData.indexOf(item.funcIdentifier) > -1 && isNull) {
-                    if (arrId.indexOf(item.funcIdentifier) === -1) {
-                        arrId.push(item.funcIdentifier)
-                    }
-                    return item
-                }
-        })
-        if (!arrId.length) {
-            Notification({ description: '请为配置协议添加参数' })
-            return
+        if (!initialProtoclList.every(item => item.desc)) {
+            return Notification({ description: '请为配置协议添加参数' })
         }
-        if (arrId.length !== selectData.length) {
-            Notification({ description: '部分勾选数据未配置' })
-            return
-        }
-        data = data.map(item => {
+
+        const data = initialProtoclList.map(item => {
             return {
-                identifier: item.funcType === "properties" ? item.funcIdentifier : item.identifier,
-                sendData: item.sendData,
-                funcIdentifier: item.funcIdentifier
+                funcType: item.funcType,
+                identifier: item.funcIdentifier,
+                desc: item.desc
             }
         })
+        
         finishSub(data)
     }
+
     useImperativeHandle(ref, () => ({
         subOrder: () => { subOrder() }
-    }), [selectData, initialProtoclList])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }), [initialProtoclList])
 
     return <div>
         <Table

@@ -3,19 +3,17 @@ import { Modal, Form, Input } from 'antd'
 import { Paths, post } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
 
-function ZigbeeConfig({ visible, productId, cancelHandle }) {
+function ZigbeeConfig({ visible, productId, cancelHandle, handleOk, zigbeeSign='' }) {
   const [form] = Form.useForm()
 
   const onFinish = (values) => {
     console.log({ ...values })
-    // post(Paths.saveProductSecurityConfig, {
-    //   productId,
-    //   authorityType: Number(radioVal),
-    //   isGateWayDevice: isGateWayDevice || ''
-    // }).then(res => {
-    //   Notification({ description: '操作成功！', type: 'success' })
-    //   isConfigedFunc()
-    // })
+    post(Paths.saveZigbeeProduct, {
+      productId,...values
+    }).then(res => {
+      Notification({ description: '操作成功！', type: 'success' })
+      handleOk()
+    })
   }
 
   const onOk = () => {
@@ -36,9 +34,12 @@ function ZigbeeConfig({ visible, productId, cancelHandle }) {
           form={form}
           onFinish={onFinish}
           labelCol={{ span: 5 }}
-          wrapperCol={{ span: 14 }}>
+          wrapperCol={{ span: 14 }}
+          initialValues={{
+            zigbeeSign
+          }}>
           <Form.Item
-            name="flag"
+            name="zigbeeSign"
             label="产品标示"
             rules={[{ required: true, message: '请输入自定义字符串' },]}
             style={{ marginTop: 22 }}>
