@@ -31,7 +31,7 @@ const filterFn = (data) => {
     return result
 }
 
-function TableCom({ dataSource, finishSub, actionType }, ref) {
+function TableCom({ dataSource, finishSub, actionType = '' }, ref) {
     const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
 
     useEffect(() => {
@@ -126,10 +126,12 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
             fixed: 'right',
             width: 182,
             render: (text, record, index) => {
-                return <Input allowClear maxLength={50}
-                    defaultValue={record.desc}
-                    placeholder="请输入描述"
-                    onChange={value => changeSendData(value, index)} ></Input>
+                return actionType === 'detail' ?
+                    <span>{record.desc}</span> :
+                    <Input allowClear maxLength={50}
+                        defaultValue={record.desc}
+                        placeholder="请输入描述"
+                        onChange={value => changeSendData(value, index)} ></Input>
             }
         }
     ]
@@ -146,13 +148,13 @@ function TableCom({ dataSource, finishSub, actionType }, ref) {
                 desc: item.desc
             }
         })
-        
+
         finishSub(data)
     }
 
     useImperativeHandle(ref, () => ({
         subOrder: () => { subOrder() }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }), [initialProtoclList])
 
     return <div>
