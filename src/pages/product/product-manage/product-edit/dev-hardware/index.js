@@ -199,6 +199,7 @@ class Hardware extends Component {
         copyData.bindType = params.bindType
         copyData.bindTypeVersion = params.bindTypeVersion
         copyData.gatewayType = params.gatewayType || ''
+        copyData.bindTypeStr = params.bindTypeStr
         // 前端自己保存数据，自己回显，只能更新存储里的内容了
         sessionStorage.setItem('productItem', JSON.stringify(copyData))
         this.getMoudleInfo(res.moduleId)

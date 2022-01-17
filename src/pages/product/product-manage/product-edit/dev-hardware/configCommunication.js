@@ -19,6 +19,7 @@ function ConfigCommunication({
   const [form] = Form.useForm()
   const [networkList, setNetworkList] = useState([]) // 动态配网列表'
   const [productItem] = useState(JSON.parse(sessionStorage.getItem('productItem')) || {})
+  const [bindTypeStr, setBindTypeStr] = useState('') // 更新的通信协议文字
 
   useEffect(() => {
     cloneDeep(networkWayList).forEach(item => {
@@ -37,6 +38,7 @@ function ConfigCommunication({
     cloneDeep(networkWayList).forEach(item => {
       if (id == item.txfs) {
         setNetworkList(item.pwfs)
+        setBindTypeStr(protocolList.filter(ele => ele.bindTypeId == id)[0].bindTypeName)
       }
     })
   }
@@ -49,7 +51,7 @@ function ConfigCommunication({
     post(Paths.saveCommunication, params, { loading: true }).then(res => {
       Notification({ description: '操作成功！', type: 'success' })
       // 前端自己保存数据，自己回显，只能更新存储里的内容了
-      handleOk(res.data, params)
+      handleOk(res.data, { bindTypeStr, ...params })
     })
   }
 
