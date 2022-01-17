@@ -47,6 +47,12 @@ function ProductEdit({ match, location }) {
             sessionStorage.setItem('productItem', JSON.stringify(res.data.records[0]))
         })
     }
+
+    useEffect(() => {
+        setProductItem(JSON.parse(sessionStorage.getItem('productItem')))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sessionStorage.getItem('productItem')])
+
     const stepList = [
         { title: '定义功能', content: 'protocols', mod: ProductProtocols },
         { title: '确定面板', content: 'firmpanel', mod: ConfirmPanel },
