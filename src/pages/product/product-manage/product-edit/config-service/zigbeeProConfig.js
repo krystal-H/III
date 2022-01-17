@@ -5,7 +5,6 @@ import { Notification } from '../../../../../components/Notification'
 import TableCom from './selectTable'
 
 function ZigbeeProConfig({ visible, productId, cancelHandle, handleOk, initialProtoclList }) {
-  const [form] = Form.useForm()
   const tableRef = useRef(null)
 
   const onOk = () => {
@@ -14,13 +13,12 @@ function ZigbeeProConfig({ visible, productId, cancelHandle, handleOk, initialPr
 
   // 保存数据，弹窗消失
   const finishSub = (data) => {
-    console.log('保存的数据----', data)
     let params = {
       productId,
       zigbeeConfigList: data
     }
     post(Paths.saveConfigZigbee, params, {loading: true}).then(res => {
-      console.log(res, '保存的户数啊大大')
+      Notification({ description: '操作成功！', type: 'success' })
       handleOk()
     })
   }
