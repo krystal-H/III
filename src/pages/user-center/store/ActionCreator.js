@@ -32,20 +32,20 @@ export const getDeveloperInfo= () => {
 //获取菜单
 export const getMenuList = () => {
   return (dispatch,getState) => {
-    // let data = getNavRoutes(menuList);
-    // console.log('---routesMenu--',data)
-    // let action = updateMuenList(data);
-    // dispatch(action);
+    let data = getNavRoutes(menuList);
+    console.log('---routesMenu--',data)
+    let action = updateMuenList(data);
+    dispatch(action);
     
-    post(Paths.getGroupMenuList).then( ({data:{roles=[]}}) => {
-      console.log(3,roles)
-      const menustr = roles[0].res[0].resource,
-            _menuList = JSON.parse(menustr),
-            _m = getNavRoutes(_menuList);
-      console.log('---routesMenu--',_m)
-      let action = updateMuenList(_m);
-      dispatch(action);
-    });
+    // post(Paths.getGroupMenuList).then( ({data:{roles=[]}}) => {
+    //   console.log(3,roles)
+    //   const menustr = roles[0].res[0].resource,
+    //         _menuList = JSON.parse(menustr),
+    //         _m = getNavRoutes(_menuList);
+    //   console.log('---routesMenu--',_m)
+    //   let action = updateMuenList(_m);
+    //   dispatch(action);
+    // });
   }
 }
 export const updateMuenList= (data) => {
