@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import { Tabs, Button, Row, Col, Table, Tooltip } from 'antd';
+import { Tabs, Button, Row, Col, Table, Tooltip,Form } from 'antd';
 import ActionConfirmModal from '../../../../components/action-confirm-modal/ActionConfirmModal';
 import { Notification } from '../../../../components/Notification';
 import ProductIcon from '../../../../components/product-components/product-icon/ProductIcon';
@@ -9,6 +9,9 @@ import PageTitle from '../../../../components/page-title/PageTitle';
 import { strToAsterisk, DateTool } from '../../../../util/util';
 import AddProductRelationModal from './AddProductRelationModal';
 import _ from 'lodash';
+
+
+import PushMsgConfig from './pushMsgConfig'
 import { get, Paths, post } from '../../../../api';
 import { REQUEST_SUCCESS } from '../../../../configs/request.config';
 import { AddAppVersionForm } from "./AddAppVersion";
@@ -17,7 +20,10 @@ import MyIcon from '../../../../components/my-icon/MyIcon';
 import { EditApplicationForm } from './form/editApplicationForm';
 import { withRouter } from 'react-router-dom';
 import { EyeOutlined, EyeInvisibleOutlined, QuestionCircleOutlined } from '@ant-design/icons'
-
+const formItemLayout = {
+    labelCol: { span: 2 },
+    wrapperCol: { span: 12 }
+};
 import './style.scss';
 
 const { TabPane } = Tabs;
@@ -655,6 +661,9 @@ class ApplicationDetail extends PureComponent {
                                 </div>
                             </TabPane>
                             : null}
+                        <TabPane tab="推送设置" key="3" >
+                            <PushMsgConfig appId={this.state.appId} currentTab={currentTab}/>
+                        </TabPane>
                     </Tabs>
                 </div>
                 {showDeleteDialog &&

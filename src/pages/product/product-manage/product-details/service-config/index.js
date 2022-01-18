@@ -62,11 +62,11 @@ function ServiceConfig({ productId, nextStep }, ref) {
       url: require('../../../../../assets/images/commonDefault/service-cloud.png')
     },
     {
-      title: '设备告警',
+      title: '消息推送',
       desc: '可定义配置设备预警消息推送，方便随时随地的设备监控',
       isConfiged: false,
       type: 'deviceWarning',
-      routePath: '/open/device/devMsg',
+      routePath: '/open/product/pushNotification',
       url: require('../../../../../assets/images/commonDefault/service-device.png')
     },
     {
