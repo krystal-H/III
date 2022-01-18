@@ -1,12 +1,13 @@
 import React, { memo, forwardRef, useState, useEffect, useImperativeHandle } from 'react';
 import { Input, Form, Select, Row, Col, Radio } from 'antd';
+import { cloneDeep } from "lodash";
 import { Paths, post, get } from '../../../../../api';
 import DoubleBtns from '../../../../../components/double-btns/DoubleBtns';
 const { Option } = Select;
 const { Item } = Form;
 const formlayout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+    labelCol: { span: 9 },
+    wrapperCol: { span: 15 },
 };
 const triggerType = [
     { id: 0, nam: '属性触发' },
@@ -16,76 +17,85 @@ const triggerType = [
     { id: 2, nam: '上下线触发' }
 ]
 const NUMCAL = [
-    { id: '1', nam: '==' },
-    { id: '2', nam: '>' },
-    { id: '3', nam: '<' },
-    { id: '4', nam: '>=' },
-    { id: '5', nam: '<=' },
-    { id: '6', nam: '!=' },
-    { id: '7', nam: 'in' },
-    { id: '8', nam: 'between' },
+    { id: '=', nam: '等于' },
+    { id: '>', nam: '大于' },
+    { id: '<', nam: '小于' },
+    { id: '!=', nam: '不等于' },
+    { id: '>=', nam: '大于等于' },
+    { id: '<=', nam: '小于等于' },
 ];
-const STRCAL = [
-    { id: '1', nam: '=' },
-    { id: '6', nam: '!=' },
-    { id: '7', nam: 'in' },
+const BOOLENUMCAL = [
+    { id: '=', nam: '是' },
+    { id: '!=', nam: '不是' },
 ]
+const intDtaaType = [ "int", "float", "double" ];
+const showDtaaType = [ ...intDtaaType, "bool", "enum" ]
+
+/* 获取属性列表和事件列表，过滤掉string/date 类型 */
+const getPropEventList = data=>{
+    let propList=[], eventList=[];
+    for(let i=0; i<data.length;  i++){
+        const { funcType, funcParamList, funcIdentifier, funcName,eventType } = data[i];
+        if(funcType=="properties"){
+            const { propertyMap, dataTypeEN } = funcParamList[0];
+            if(showDtaaType.includes(dataTypeEN)){
+                propList.push({ funcIdentifier, funcName, dataTypeEN, propertyMap })
+            }
+        }else if(funcType=="events"){
+            let props = funcParamList.filter(({dataTypeEN})=>showDtaaType.includes(dataTypeEN)).map(({dataTypeEN,identifier,name,propertyMap})=> {
+                if(showDtaaType.includes(dataTypeEN)){
+                    return {
+                        funcIdentifier:identifier,
+                        dataTypeEN,
+                        funcName:name,
+                        propertyMap
+                    }
+
+                }
+            })
+            if( props.length > 0){
+                eventList.push({ eventType, funcIdentifier, funcName, props})
+            }
+        } 
+    }
+    
+    return {
+        propList,eventList
+    }
+}
 
 function ruleForm({
     setStepCur,
-    formdata
+    formdata,
+    productList
 }, _ref) {
     const [form] = Form.useForm();
-    const [productList, setProductList] = useState([]);//产品列表
-    const [deviceList, setDeviceList] = useState([]);//设备列表
     const [propList, setPropList] = useState([]);//属性列表
     const [eventList, setEventList] = useState([]);//事件列表
-
     const [triggerMode, setTriggerMode] = useState(formdata.triggerMode); //记录触发方式
-    const [productId, setProductId] = useState(formdata.productId); //记录productId，因为 设备、属性等列表依赖productId，没选择产品时，禁用相关下拉框
-    const [ruletype, setRuletype] = useState(formdata.connType || "0"); //比较方式，组合条件才有的字段，"and" / "or", 非组合条件仅前端用值"0"
-
-    useEffect(() => {
-        if (productList.length == 0) {
-            getDownProduct()
-        }
-    }, [])
-    useEffect(() => {
-        if (productId) {
-            getDownDevice(productId)
-        }
-    }, [productId])
+    const selectTxt = ["属性","事件"][triggerMode];
+    const [selectLiData, setSelectLiData] = useState([]);
+    // const selectLiData = [propList,eventList][triggerMode]
+    const [propEvenSelectData, setPropEvenSelectData] = useState(null);
 
     useEffect(() => {
         if (formdata.productId) {
+            
             console.log("333-11-aa", formdata)
-            const { productId, deviceIds, triggerMode, props, connType = "0", eventName, eventIdentifier } = formdata;
-            let values = { productId, deviceIds, triggerMode };
+            const { productId, triggerMode, funcIdentifier, props } = formdata;
+            let values = { productId, triggerMode };
 
             if (triggerMode > 1) {
                 // form.setFieldsValue({...values});
             } else {
-                values.ruletype = connType;
-                for (let i = 0; i < props.length; i++) {
-                    let { propName, propIdentifier, propFieldType, judge, propVal } = props[i];
-                    let str = i > 0 && "_add" || "";
-                    values[`propName${str}`] = `${propIdentifier},${propFieldType},${propName}`;
-                    values[`judge${str}`] = judge;
-                    values[`propVal${str}`] = propVal;
-                }
-
                 if (triggerMode == 1) {//事件
-                    getEventList(productId);
-                    // let {eventName,eventIdentifier} = formdata;
-                    const eventval = eventIdentifier + "," + eventName;
-                    values.identifier = eventval;
-                    getProp(eventval);
-                    // form.setFieldsValue({...values});
+                    values.identifier = funcIdentifier;
                 } else if (triggerMode == 0) {//属性
-                    getProp();
-                    // form.setFieldsValue({...values});
+                    values.identifier = props[0].propIdentifier; 
                 }
+                productChanged(formdata.productId,values.identifier)
             }
+            
 
             console.log(999, values)
             form.setFieldsValue({ ...values });
@@ -93,185 +103,139 @@ function ruleForm({
             // form.resetFields()
         }
     }, [
-        formdata.productId,
-        // productList.length,
-        // deviceList.length,
-        // propList.length,
-        // eventList.length
+        formdata.productId
     ])
 
 
     useImperativeHandle(_ref, () => {
-
         return {
-
             formDataToData: formDataToState,
-
         }
-    }, [formDataToState]);
+    }, [formDataToState,propEvenSelectData]);
 
     //表单数据转换为接口所需数据
     const formDataToState = () => {
         const values = form.getFieldsValue();
-
-        console.log(111, values)
-        let { triggerName, productId, deviceIds, triggerMode } = values;
-        let resdata = { triggerName, productId, deviceIds, triggerMode };
-        if (triggerMode < 2) {//如果是属性或者事件
-            let { identifier, ruletype, propName, judge, propVal } = values;
-            if (identifier) {
-                let _event = identifier.split(",");
-                resdata.eventName = _event[1];
-                resdata.eventIdentifier = _event[0];
+        console.log(33333, values,propEvenSelectData)
+        let {  productId, triggerMode } = values;
+        let resdata = { productId, triggerMode };
+        if(triggerMode<2){
+            let originalprops, newprops=[];
+            console.log(999,propEvenSelectData,triggerMode==1)
+            if(triggerMode==1){
+                let {props,eventType,funcIdentifier} = propEvenSelectData
+                originalprops = props;
+                
+                resdata = {...resdata,eventType,eventIdentifier:funcIdentifier}
+            }else{
+                originalprops = [propEvenSelectData];
             }
-            let proparr = propName.split(",");
-            let props = [
-                { propName: proparr[2], propIdentifier: proparr[0], propFieldType: proparr[1], judge, propVal }
-            ];
-            if (ruletype !== "0") {//如果是组合条件
-                resdata.connType = ruletype;
-                let { propName_add, judge_add, propVal_add } = values;
-                let proparr_add = propName_add.split(",");
-                props.push({
-                    propName: proparr_add[2],
-                    propIdentifier: proparr_add[0],
-                    propFieldType: proparr_add[1],
-                    judge: judge_add,
-                    propVal: propVal_add
-                })
-
-            }
-            resdata.props = props;
+            console.log(777,originalprops)
+            newprops = originalprops.map(({dataTypeEN,funcIdentifier,funcName})=>{
+                return {
+                    propName:funcName,
+                    propIdentifier:funcIdentifier,
+                    propFieldType:dataTypeEN,
+                    judge:values["cal_"+funcIdentifier],
+                    propVal:values["val_"+funcIdentifier]
+                }
+            })
+            resdata = {...resdata,props:newprops}
         }
         return resdata;
-
     }
 
-
-    //获取产品列表
-    const getDownProduct = () => {
-        post(Paths.getProductPlus, {}, { loading: true }).then(res => {
-            let datali = res.data || [];
-            // const li = Object.keys(data).map(id=>{
-            //     return {id,name:data[id]}
-            // })
-            let arr = []
-            datali.forEach(item => {
-                arr.push({ id: item.productId, name: item.productName })
-            })
-            setProductList(arr)
-        });
-    }
     //产品改变
-    const productChanged = productId => {
-        setProductId(productId);
-        form.resetFields(["deviceIds"])
+    const productChanged = (productId,isformdata) => {
+        console.log("--isformdata--",isformdata)
+        post(Paths.standardFnList, { productId },{ loading: true }).then(({data={}}) => {
+            const { standard=[], custom=[] } = data
+            const list = [...standard,...custom]
+            const { propList, eventList } = getPropEventList(list)
+            setPropList(propList);
+            setEventList(eventList);
+            if (isformdata){
+                let sltLiData = [propList,eventList][triggerMode];
+                setSelectLiData(sltLiData)
+                let data = sltLiData.find(item=> item.funcIdentifier==isformdata);
+                setPropEvenSelectData(cloneDeep(data)) ;
+                let resetval = {}
+                formdata.props.forEach(({propIdentifier,judge,propVal}) =>{
+                    resetval["cal_"+propIdentifier] = judge;
+                    resetval["val_"+propIdentifier] = propVal;
 
+                });
+                form.setFieldsValue({ ...resetval });
 
-    }
-    //获取设备列表 by productId  1755 /// 11759
-    const getDownDevice = productId => {
-        post(Paths.getDeviceListByProId, { productId, pageIndex: 1, pageRows: 9999 }, { loading: true }).then((res) => {
-            setDeviceList(res.data.list)
+            }
         });
     }
 
     //选择触发方式框值改变
     const triggerModeChanged = (triggerMode) => {
-        let resetvalue = [];
-        if (triggerMode === 1) {
-            getEventList();
-            setPropList([]);
-            resetvalue.push("identifier")
-        }
-        if (triggerMode === 0) {
-            getProp();
-        }
-        form.resetFields([...resetvalue, "propName", "judge", "propVal", "propName_add", "judge_add", "propVal_add"])
-
         setTriggerMode(triggerMode);
+        setSelectLiData([propList,eventList][triggerMode])
+        form.resetFields(["identifier"])
+        setPropEvenSelectData(null)
     }
 
-    //获取事件列表  by productId
-    const getEventList = (id = productId) => {
-        post(Paths.getWarnEventLi, { productId: id }, { loading: true }).then((res) => {
-            let eventList = res && res.data || [];
-            setEventList(eventList)
-        });
-    }
-    //获取属性列表  by productId、triggerMod（0|1）、eventIdentifier（事件标识）
-    const getProp = (eventIdentifier) => {// eventIdentifier 传值则为事件否则为属性
-        let params = { productId }, _path = Paths.getWarnProperty;
-        if (eventIdentifier) {
-            _path = Paths.getWarnEventProperty;
-            params.eventIdentifier = eventIdentifier.split(",")[0];
-        }
-
-        post(_path, params, { loading: true }).then((res) => {
-            let propList = res && res.data || [];
-            setPropList(propList);
-        });
-    }
-    //关于 eventIdentifier： 保存接口事件需要 事件标识 identifier 和 事件名词 name 两个字段，前端融合在 identifier 一个字段里
-
-    //选择事件框值改变
-    const eventChanged = (eventIdentifier) => {
-        getProp(eventIdentifier);
+    //选择属性/事件框值改变
+    const eventPropChanged = funcIdentifier => {
+        let data = selectLiData.find(item=> item.funcIdentifier==funcIdentifier);
+        console.log("---",data)
+        setPropEvenSelectData(cloneDeep(data)) 
     }
 
-    const onFinish = (values) => {
+    const onFinish = () => {
         setStepCur(2)
     }
 
     // 条件规则dom
-    const getRuleDom = () => {
-        return <>
-            <Row gutter={14}>
-                <Col span={16}  >
-                    <Item label="触发条件类型" name='ruletype' labelCol={{ span: 5 }} required initialValue="0">
-                        <Radio.Group onChange={e => { setRuletype(e.target.value) }}>
-                            <Radio value={"0"}>单条</Radio>
-                            <Radio value={"and"}>and 组合</Radio>
-                            <Radio value={"or"}>or 组合</Radio>
-                        </Radio.Group>
+    const getRuleList = () => {
+        const list = propEvenSelectData &&  (triggerMode==1?propEvenSelectData.props:[propEvenSelectData]) || [];
+        
+        return list.map(({ funcIdentifier, dataTypeEN, funcName, propertyMap },i)=>{
+            const isnum = intDtaaType.includes(dataTypeEN);
+            const calway = isnum?NUMCAL:BOOLENUMCAL;
+            return <Row gutter={14} key={i}>
+                <Col span={7}><Item label="触发规则"
+                //  labelCol={{ span: 5 }}
+                 >{funcName}</Item></Col>
+                <Col span={7}>
+                    <Item {...formlayout} name={"cal_"+funcIdentifier} rules={[{ required: true, message: '请选择比较类型' }]}>
+                        <Select placeholder='请选择比较类型' onChange={()=>{}}>
+                            {calway.map(({ id, nam }) => {
+                                return <Option key={id} value={id}>{nam}</Option>
+                            })}
+                        </Select>
+                    </Item>
+                </Col>
+                <Col span={7}>
+                    <Item {...formlayout} name={"val_"+funcIdentifier} rules={[{ required: true, message: '请输入比较值' }]}>
+                    {
+                        isnum && <Input placeholder={"请输入比较值"} /> || 
+                        <Select placeholder='请选择比较类型' onChange={()=>{}}>
+                            { Object.keys(propertyMap).map( key => {
+                                return <Option key={key} value={key}>{propertyMap[key]}</Option>
+                            })}
+                        </Select>
+                    }
                     </Item>
                 </Col>
             </Row>
-            <SingleRule propEventList={propList} add="" />
-            {
-                ruletype !== "0" && <>
-                    <Row gutter={[14]}><Col span={4} ></Col><Col style={{ fontSize: "16px", fontWeight: 'bold', marginBottom: '14px' }} span={6} >{ruletype}</Col></Row>
-                    <SingleRule propEventList={propList} add="_add" />
-                </>}
-        </>
+            
+        })
     }
 
     return <div>
         <Form form={form} onFinish={onFinish}>
             <Row gutter={14}>
-                <Col span={10}  >
-                    <Item {...formlayout} label="触发对象" name='triggerName' initialValue="deviceTrigger" required>
-                        <Select ><Option value="deviceTrigger">设备触发</Option></Select>
-                    </Item>
-                </Col>
-                <Col span={7}  >
-                    <Item name='productId' rules={[{ required: true, message: '请选择产品' }]} >
-                        <Select showSearch optionFilterProp="children" onChange={productChanged} placeholder='请选择产品' >
+                <Col span={10}>
+                    <Item label="选择产品" name='productId' rules={[{ required: true, message: '请选择产品' }]} {...formlayout}>
+                        <Select showSearch optionFilterProp="children" onChange={(v)=>{productChanged(v,false)}} placeholder='请选择产品' >
                             {
-                                productList.map(item => {
-                                    const { id, name } = item;
-                                    return <Option key={id} value={id}>{name}</Option>
-                                })
-                            }
-                        </Select>
-                    </Item>
-                </Col>
-                <Col span={7}  >
-                    <Item name='deviceIds' rules={[{ required: true, message: '请选择设备' }]}>
-                        <Select allowClear mode="multiple" placeholder='请选择设备'>
-                            {
-                                deviceList.map(({ deviceId, deviceMac }) => {
-                                    return <Option key={deviceId} value={deviceId}>{deviceId}</Option>
+                                productList.map(({ productId, productName }) => {
+                                    return <Option key={productId} value={productId}>{productName}</Option>
                                 })
                             }
                         </Select>
@@ -279,9 +243,9 @@ function ruleForm({
                 </Col>
             </Row>
             <Row gutter={14}>
-                <Col span={10}  >
-                    <Item label="触发方式" {...formlayout} name='triggerMode' rules={[{ required: true, message: '请选择触发方式' }]}>
-                        <Select disabled={!productId} placeholder='请选择触发方式' onChange={triggerModeChanged}>
+                <Col span={10}>
+                    <Item label="触发方式" name='triggerMode' rules={[{ required: true, message: '请选择触发方式' }]} {...formlayout}>
+                        <Select placeholder='请选择触发方式' onChange={triggerModeChanged}>
                             {triggerType.map(item => {
                                 const { id, nam } = item;
                                 return <Option key={id} value={id}>{nam}</Option>
@@ -290,14 +254,13 @@ function ruleForm({
                     </Item>
                 </Col>
                 {
-                    triggerMode === 1 &&
-                    <Col span={7}  >
-                        <Item name='identifier' rules={[{ required: true, message: '请选择事件' }]}>
-                            <Select placeholder='请选择事件' onChange={eventChanged}>
+                    triggerMode<2 &&
+                    <Col span={7}>
+                        <Item name='identifier' rules={[{ required: true, message: `请选择${selectTxt}` }]}>
+                            <Select placeholder={`请选择${selectTxt}`} onChange={eventPropChanged}>
                                 {
-                                    eventList.map(item => {
-                                        const { identifier, name } = item;
-                                        return <Option key={identifier} value={identifier + "," + name}>{name}</Option>
+                                    selectLiData.map(({ funcIdentifier, funcName }) => {
+                                        return <Option key={funcIdentifier} value={funcIdentifier}>{funcName}</Option>
                                     })
                                 }
                             </Select>
@@ -305,7 +268,9 @@ function ruleForm({
                     </Col>
                 }
             </Row>
-            {(triggerMode == 0 || triggerMode == 1) && getRuleDom()}
+            {
+                triggerMode<2 && propEvenSelectData && selectLiData.length>0 && getRuleList() 
+            }
         </Form>
         <DoubleBtns preHandle={() => setStepCur(0)} nextHandle={form.submit} />
     </div>
@@ -314,57 +279,25 @@ function ruleForm({
 
 export default memo(forwardRef(ruleForm));
 
-const SingleRule = ({ propEventList = [], add }) => {
 
-    const [propType, setPropType] = useState('');
-    const [judgeDesc, setJudgeDesc] = useState('请输入比较值');
 
-    const propNameChanged = (val) => {
-        let type = val.split(",")[1];
-        setPropType(type);
-    }
-    const judgeChanged = (val) => {
-        let desc = "请输入比较直";
-        if (val == "in") {
-            desc = "多个值请以逗号隔开";
-        } else if (val == "between") {
-            desc = "逗号隔开起始值，例如“1,5” ";
-        }
-        setJudgeDesc(desc);
-    }
 
-    return (
-        <Row gutter={14}>
-            <Col span={10}  >
-                <Item label="触发规则" name={`propName${add}`} {...formlayout} rules={[{ required: true, message: '请选择属性' }]} >
-                    <Select showSearch optionFilterProp="children" onChange={propNameChanged} placeholder='请选择属性'>
-                        {
-                            propEventList.map(item => {
-                                const { srcCode, srcName, srcType } = item;
-                                return <Option key={srcCode} value={srcCode + ',' + srcType + ',' + srcName}>{`${srcName}( ${srcCode} )`}</Option>
-                            })
-                        }
-                    </Select>
-                </Item>
-            </Col>
-            <Col span={4}  >
-                <Item name={`judge${add}`} rules={[{ required: true, message: '请选择比较方式' }]}>
-                    <Select onChange={judgeChanged} placeholder='比较方式'>
-                        {
-                            ((propType == "char" || propType == "string") && STRCAL || NUMCAL).map(item => {
-                                const { id, nam } = item;
-                                return <Option key={id} value={nam}>{nam}</Option>
-                            })
-                        }
-                    </Select>
-                </Item>
-            </Col>
-            <Col span={10}>
-                <Item name={`propVal${add}`} rules={[{ required: true, message: '请输入比较值' }]}>
-                    <Input placeholder={judgeDesc} />
-                </Item>
-            </Col>
-        </Row>
+{/*
 
-    );
-};
+
+
+告警规则-属性：
+{ "triggerMode":0 , "props":[{"propName":"充电状态","propIdentifier":"ChargeState","propFieldType":"bool","judge":"=","propVal":"100"},{"propName":"故障类型","propIdentifier":"FaultType","propFieldType":"enum","judge":"=","propVal":"1"}],"warningWay":"1","warningTitle":"title","warningDetail":"detail"}
+告警规则-事件：
+{"triggerMode":1, "eventType":"info","eventIdentifier":"info","props":[{"propName":"充电状态","propIdentifier":"ChargeState","propFieldType":"bool","judge":"=","propVal":"100"},{"propName":"故障类型","propIdentifier":"FaultType","propFieldType":"enum","judge":"=","propVal":"1"}],"warningWay":"1","warningTitle":"title","warningDetail":"detail"}
+告警规则-其它：
+{"triggerMode":2, "warningWay":"1","warningTitle":"title","warningDetail":"detail"}
+
+triggerMode：
+    int MODE_PROPERTY = 0;
+    int MODE_EVENT = 1;
+    int MODE_ONLINE = 2;
+    int MODE_OFFLINE = 3;
+    int MODE_ONOFFLINE = 4;
+
+*/}

@@ -4,12 +4,13 @@ import BaseInfoForm from './configform/baseinfo';
 import RuleForm from './configform/rule';
 import PublictypeForm from './configform/publictype';
 import {Paths, post } from '../../../../api';
+import "../devwarn.scss"
 const {Step} = Steps;
 const {TabPane} = Tabs;
 export default ({
-    visible,
     closeEditMod,
-    editData
+    editData,
+    productList
 })=>{
     const { id,name } = editData;
 
@@ -20,15 +21,14 @@ export default ({
     const [stepcurrent, setStepcurrent] = useState(0);
 
     useEffect( () => {
-        
-        const { remark,content } = editData;
+        const { remark,content,productId } = editData;
         if(id!==undefined){
             const contobj = JSON.parse(content);
-            const {warningWay,warningTitle,warningDetails,waringFreq,emailAddress,...others} = contobj;
+            const {warningWay,warningTitle,warningDetails,...others} = contobj;
             console.log("--ruleFormData--",others)
             setBaseFormData({name,remark});
-            setRuleFormData(others);
-            setPubFormData({warningWay,warningTitle,warningDetails,waringFreq,emailAddress});
+            setRuleFormData(others,productId);
+            setPubFormData({warningWay,warningTitle,warningDetails});
         }
     },[editData.id])
 
@@ -38,12 +38,6 @@ export default ({
     const ref0 = useRef();
     const ref1 = useRef();
     const ref2= useRef();
-    // const afterCloseHandle = ()=>{
-    //     setStepcurrent(0);
-    //     setBaseFormData({});
-    //     setRuleFormData({});
-    //     setPubFormData({});
-    // }
 
     const commitAll=()=>{
         let baseFormData = ref0.current.getFieldsValue(),
@@ -51,7 +45,7 @@ export default ({
             piublicFormData = ref2.current.getFieldsValue();
         let otherobj = {...ruleFormData, ...piublicFormData };
         let content = JSON.stringify(otherobj);
-        let params = { ...baseFormData, id, content };
+        let params = { ...baseFormData, id, content,productId:ruleFormData.productId };
 
         post(Paths.saveWarningConfig, params, { loading: true }).then(res => {
             closeEditMod(true)
@@ -61,26 +55,25 @@ export default ({
 
     return <Modal
                 title={id!==undefined?"编辑规则":"新增规则"}
-                visible={visible}
+                visible={true}
                 width={1000}
                 footer={null}
                 maskClosable={false}
                 onCancel={()=>{closeEditMod(false)}}
                 className="page-devwarn-config-modal"
-                // afterClose={afterCloseHandle}
             >
                 <Steps current={stepcurrent} >
-                    <Step title='告警信息' /><Step title='规则配置' /><Step title='通知方式' />
+                    <Step title='基本信息' /><Step title='规则配置' /><Step title='通知方式' />
                 </Steps>
 
                 <div className='formbox'>
                   
                     <Tabs activeKey={stepcurrent+""}>
-                        <TabPane tab="告警信息" key={'0'}>
+                        <TabPane tab="基本信息" key={'0'}>
                             <BaseInfoForm ref={ref0} setStepCur={setStepCur} formdata={baseFormData}/>
                         </TabPane>
                         <TabPane tab="规则配置"  key={'1'}>
-                            <RuleForm ref={ref1} setStepCur={setStepCur} formdata={ruleFormData}/>
+                            <RuleForm ref={ref1} setStepCur={setStepCur} formdata={ruleFormData} productList={productList}/>
                         </TabPane>
                         <TabPane tab="通知方式"  key={'2'}>
                             <PublictypeForm ref={ref2} setStepCur={setStepCur} commitAll={commitAll} formdata={pubFormData}/>

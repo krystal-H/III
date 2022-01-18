@@ -1,9 +1,11 @@
 
 import React, { useState, useEffect } from "react";
-import { Steps,Select,Table,Button } from "antd";
+import { Steps,Select,Table,Button,Divider  } from "antd";
 import { DateTool } from "../../../util/util";
-import { post, Paths } from "../../../api";
+import { post, get, Paths } from "../../../api";
 import PageTitle from "../../../components/page-title/PageTitle";
+import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
+import ConfigModal from './detail';
 import { PUSHNOTTYPE } from "./constData";
 
 import stepIcon from '../../../assets/images/upota.png';
@@ -14,17 +16,30 @@ const initPager = {
     pageRows: 10,
     pageIndex: 1
 };
-
+const initialData = {
+    id: undefined,
+    status: undefined,
+    name: "",
+    remark: "",
+    content: "",
+}
 export default props => {
+    const [productList, setProductList] = useState([]);
     const [productId, setProductId] = useState("-1");
     const [status, setStatus] = useState("-1");
     const [warningList, setWarningList] = useState({
         pager: {},
         list: []
     });
+    const [editData, setEditData] = useState(initialData);// 当前要编辑的规则数据对象,initialData代表 新增
+    const [configVisible, setConfigVisible] = useState(false);// 新增/编辑 规则弹窗是否显示
+    const [operateId, setOperateId] = useState([]);//当前操作的告警配置 [id,name,删除还是停止]
     const { list, pager } = warningList;
     useEffect(() => {
         getList();
+        get(Paths.getProductType, {}, { loading: true }).then((res) => {
+            setProductList(res.data || [])
+        });
     }, []);
     const columns = [
         {title: "规则名称", dataIndex: "name", },
@@ -32,24 +47,29 @@ export default props => {
         { title: "产品名称", dataIndex: "productName",  ellipsis: true },
         { title: "最近编辑时间", dataIndex: "updateTime", render:t =>{ return t ? DateTool.utcToDev(t) : "--"; } },
         { title: "状态", dataIndex: "status", render: s => <span>{PUSHNOTTYPE[s]}</span> },
-        
-        // {
-        //     title: "操作", dataIndex: "id", key: "id", width: "70px",
-        //     render: (id, record) => {
-        //         let { state } = record;
-        //         return <a onClick={() => { warnDetail(id) }}  >{state == "1" && "处理" || "查看"}</a>
-
-        //     }
-        // }
+        {
+            title: "操作", dataIndex: "id", width: "180px",
+            render: (t, record) => {
+                const { id, name, status, remark, content } = record;
+                return <span>
+                    <a onClick={() => { openEditMod({ id, name, remark, status, content }) }} >编辑</a>
+                    <Divider type="vertical" />
+                    {
+                        status == 1 &&
+                        <a onClick={() => { setOperateId([id, name, "stop"]) }} >停止</a> ||
+                        <a onClick={() => { startRule(id) }} >启动</a>
+                    }
+                    <Divider type="vertical" />
+                    <a onClick={() => { setOperateId([id, name, "del"]) }} >删除</a>
+                </span>
+            }
+        }
     ];
-
-
     const changeProduct = productId=>{
         setProductId(productId)
         getList({productId})
         
     }
-
     const cngeStatus = status=>{
         setStatus(status)
         getList({status})
@@ -74,12 +94,38 @@ export default props => {
     const getIndexPage = pageIndex=>{
         getList({pageIndex})
     }
+    const openEditMod = (data) => {
+        setConfigVisible(true);
+        setEditData(data)
+    }
+    const closeEditMod = (updatelist=false) => {
+        setConfigVisible(false)
+        if(updatelist){
+            // setName("");
+            // getList({pageRows: 10, pageIndex: 1})
+            // window.location.reload()
+        }
+
+    }
+    const delOrStop = () => {
+        let questurl = operateId[2] == "del" && Paths.delWarningConfig || Paths.stopWarningConfig;
+        post(questurl, { id: operateId[0] }, { loading: true }).then(res => {
+            getIndexPage(pager.pageIndex || 1);
+            setOperateId([]);
+        });
+    }
+    const startRule = (id) => {
+        post(Paths.startWarningConfigLi, { id }, { loading: true }).then(res => {
+            getIndexPage(warningList.pager.pageIndex || 1);
+        });
+
+    }
     return (
         <section className="page-devwarnlist">
             <PageTitle title="消息推送" 
                 selectOnchange={val => { changeProduct(val) }} 
                 defaultValue='-1'
-                // selectData={mcusocproLi}
+                selectData={productList}
             />
             <div className='comm-shadowbox comm-setp-ttip'>
                 <div className='step-title'>
@@ -104,7 +150,7 @@ export default props => {
                             PUSHNOTTYPE.map((nam,i)=><Option key={i} value={i}>{nam}</Option>)
                         }
                     </Select>
-                    <Button className='button' onClick={() => { }} type="primary" style={{float:"right"}}>新增</Button>
+                    <Button className='button'onClick={() => { openEditMod(initialData) }} type="primary" style={{float:"right"}}>新增</Button>
                 </div>
                 <Table
                     style={{marginTop:"16px"}}
@@ -123,9 +169,16 @@ export default props => {
                 />
 
             </div>
-            {/* {addFirmwareVisiable && <AddFirmwareDialog changeState={this.changeState} />} */}
-            
-            
+            <ActionConfirmModal
+                visible={operateId.length > 0}
+                modalOKHandle={delOrStop}
+                modalCancelHandle={() => { setOperateId([]) }}
+                title={operateId[2] == "del" && "删除" || "停止"}
+                descText={`即将${operateId[2] == "del" && "删除" || "停止"}告警配置`}
+                needWarnIcon={true}
+                targetName={operateId[1]}
+            />
+            { configVisible && <ConfigModal closeEditMod={closeEditMod} editData={{ ...editData }} productList={productList}/> }
         </section>
     );
 };
