@@ -178,7 +178,7 @@ export default props => {
                 needWarnIcon={true}
                 targetName={operateId[1]}
             />
-            { "configVisible" && <ConfigModal closeEditMod={closeEditMod} editData={{ ...editData }} productList={productList}/> }
+            { configVisible && <ConfigModal closeEditMod={closeEditMod} editData={{ ...editData }} productList={productList}/> }
         </section>
     );
 };

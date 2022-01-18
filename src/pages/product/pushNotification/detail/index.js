@@ -18,7 +18,7 @@ export default ({
     const [ruleFormData, setRuleFormData] = useState({});
     const [pubFormData, setPubFormData] = useState({});
 
-    const [stepcurrent, setStepcurrent] = useState(1);
+    const [stepcurrent, setStepcurrent] = useState(0);
 
     useEffect( () => {
         const { remark,content,productId } = editData;
