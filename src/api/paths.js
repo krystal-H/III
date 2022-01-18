@@ -382,6 +382,11 @@ let Paths = {
     getWarnEventProperty:'/device/warning/event/get',
     getWarnEventLi:'/device/warning/event/list',
 
+    getAppInfoPushSet:'/appInfoManage/push/get',
+    setAppInfoPushSet:'/appInfoManage/push/set',
+
+    
+
     
     // 5.x远程配置
     getRomoteConfigListByProduct5x: '/remoteConfig/product/getList', // 主页列表

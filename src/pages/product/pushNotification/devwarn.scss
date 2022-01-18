@@ -14,6 +14,20 @@
     .formbox{
         margin-top: 40px;
     }
+
+    .rulelistname{
+        display: block;
+        // line-height: 31px;
+        padding: 4px 10px;
+        border: 1px  solid  #d9d9d9;
+
+    }
+    .hidelabel{
+        .ant-form-item-label{
+            // display: none;
+            opacity: 0;
+        }
+    }
     
     
     

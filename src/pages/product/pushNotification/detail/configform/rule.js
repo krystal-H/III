@@ -198,11 +198,24 @@ function ruleForm({
             const isnum = intDtaaType.includes(dataTypeEN);
             const calway = isnum?NUMCAL:BOOLENUMCAL;
             return <Row gutter={14} key={i}>
-                <Col span={7}><Item label="触发规则"
-                //  labelCol={{ span: 5 }}
-                 >{funcName}</Item></Col>
-                <Col span={7}>
-                    <Item {...formlayout} name={"cal_"+funcIdentifier} rules={[{ required: true, message: '请选择比较类型' }]}>
+                <Col span={10}>
+                    <Item label="触发规则" name="nouse" 
+                        initialValue={999} {...formlayout} 
+                        rules={[{ required: true}] }
+                        className={i!=0?"hidelabel":''}
+                    >
+                        
+                        
+                        <span className='rulelistname'> {funcName}</span>
+                    
+                    
+                    </Item>
+
+
+
+                 </Col>
+                <Col span={6}>
+                    <Item name={"cal_"+funcIdentifier} rules={[{ required: true, message: '请选择比较类型' }]}>
                         <Select placeholder='请选择比较类型' onChange={()=>{}}>
                             {calway.map(({ id, nam }) => {
                                 return <Option key={id} value={id}>{nam}</Option>
@@ -210,8 +223,8 @@ function ruleForm({
                         </Select>
                     </Item>
                 </Col>
-                <Col span={7}>
-                    <Item {...formlayout} name={"val_"+funcIdentifier} rules={[{ required: true, message: '请输入比较值' }]}>
+                <Col span={6}>
+                    <Item name={"val_"+funcIdentifier} rules={[{ required: true, message: '请输入比较值' }]}>
                     {
                         isnum && <Input placeholder={"请输入比较值"} /> || 
                         <Select placeholder='请选择比较类型' onChange={()=>{}}>
@@ -255,7 +268,7 @@ function ruleForm({
                 </Col>
                 {
                     triggerMode<2 &&
-                    <Col span={7}>
+                    <Col span={6}>
                         <Item name='identifier' rules={[{ required: true, message: `请选择${selectTxt}` }]}>
                             <Select placeholder={`请选择${selectTxt}`} onChange={eventPropChanged}>
                                 {

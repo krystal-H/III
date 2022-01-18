@@ -3,11 +3,11 @@ import React, { useState, useEffect } from "react";
 import { Steps,Select,Table,Button,Divider  } from "antd";
 import { DateTool } from "../../../util/util";
 import { post, get, Paths } from "../../../api";
+import { getUrlParam } from '../../../util/util';
 import PageTitle from "../../../components/page-title/PageTitle";
 import ActionConfirmModal from '../../../components/action-confirm-modal/ActionConfirmModal';
 import ConfigModal from './detail';
 import { PUSHNOTTYPE } from "./constData";
-
 import stepIcon from '../../../assets/images/upota.png';
 
 const { Step } = Steps;
@@ -25,7 +25,7 @@ const initialData = {
 }
 export default props => {
     const [productList, setProductList] = useState([]);
-    const [productId, setProductId] = useState("-1");
+    const [productId, setProductId] = useState(getUrlParam('productId') || '-1');
     const [status, setStatus] = useState("-1");
     const [warningList, setWarningList] = useState({
         pager: {},
@@ -103,7 +103,7 @@ export default props => {
         if(updatelist){
             // setName("");
             // getList({pageRows: 10, pageIndex: 1})
-            // window.location.reload()
+            window.location.reload()
         }
 
     }
@@ -124,7 +124,7 @@ export default props => {
         <section className="page-devwarnlist">
             <PageTitle title="消息推送" 
                 selectOnchange={val => { changeProduct(val) }} 
-                defaultValue='-1'
+                defaultValue={getUrlParam('productId') || '-1'}
                 selectData={productList}
             />
             <div className='comm-shadowbox comm-setp-ttip'>
@@ -178,7 +178,7 @@ export default props => {
                 needWarnIcon={true}
                 targetName={operateId[1]}
             />
-            { configVisible && <ConfigModal closeEditMod={closeEditMod} editData={{ ...editData }} productList={productList}/> }
+            { "configVisible" && <ConfigModal closeEditMod={closeEditMod} editData={{ ...editData }} productList={productList}/> }
         </section>
     );
 };
