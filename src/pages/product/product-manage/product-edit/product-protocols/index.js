@@ -148,7 +148,7 @@ function ProtocolFn2({ nextStep, productId }, ref) {
             <Button type="primary" onClick={openAdd}>新建标准功能</Button >
         </div>
         <div className='Protocol-table'>
-            <TableCom dataSource={standardData} standardData={allSource} reFreshData={getList} type={'1'} />
+            <TableCom dataSource={standardData} standardData={allSource} reFreshData={getList} type={'1'} bindTypeStr={productItem.bindTypeStr} />
         </div>
         <div className='Protocol-download'>
             <div>自定义功能<LabelTip tip="支持在标准功能的基础上，自定义适合客户自己硬件特色的定制功能点。"></LabelTip></div>
@@ -161,7 +161,7 @@ function ProtocolFn2({ nextStep, productId }, ref) {
 
         </div>
         <div >
-            <TableCom dataSource={cusData} reFreshData={getList} type={'2'} standardData={allSource} />
+            <TableCom dataSource={cusData} reFreshData={getList} type={'2'} standardData={allSource} bindTypeStr={productItem.bindTypeStr} />
         </div>
         {/* 新增自定义 */}
         {rightVisible && <NewCusmFn standardData={allSource} rightVisible={rightVisible} onCloseRight={onCloseRight} onRefreshList={onRefreshList}></NewCusmFn>}
