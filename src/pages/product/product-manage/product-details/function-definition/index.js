@@ -27,6 +27,7 @@ export default function ChangeModal() {
     //展示
     const [cusData, setCusData] = useState([]);
     const [standardData, setStandardData] = useState([]);
+    const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
     //导出物模型
     const exportFile = () => {
         let url = Paths.downPhysicalModel + '?productId=' + productId
@@ -50,13 +51,13 @@ export default function ChangeModal() {
         <div className='table-item'>
             <h3>标准功能<LabelTip tip="支持用户编辑修改功能点名称以及数值范围，但是不能修改功能点的数据标识、数据类型，数据传输类型。"></LabelTip></h3>
             <div>
-                <TableCom dataSource={standardData} type={'1'} />
+                <TableCom dataSource={standardData} type={'1'} bindTypeStr={productItem.bindTypeStr} />
             </div>
         </div>
         <div className='table-item'>
             <h3>自定义功能<LabelTip tip="支持在标准功能的基础上，自定义适合客户自己硬件特色的定制功能点。"></LabelTip></h3>
             <div>
-                <TableCom dataSource={cusData} type={'2'} />
+                <TableCom dataSource={cusData} type={'2'} bindTypeStr={productItem.bindTypeStr} />
             </div>
         </div>
     </div>)

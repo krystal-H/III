@@ -10,6 +10,42 @@ import { cloneDeep } from 'lodash'
 import { useHistory } from 'react-router-dom';
 import './index.scss';
 import { Notification } from '../../../../../components/Notification'
+import ZigbeeConfig from './zigbeeConfig'
+import ZigbeeProConfig from './zigbeeProConfig'
+
+//处理数据
+function delaData(data, editData = {}) {
+  let newData = []
+  data.forEach(item => {
+    if (!item.funcParamList || !item.funcParamList.length) return
+    item.funcParamList.forEach(item2 => {
+      let newItem = JSON.parse(JSON.stringify(item))
+      newData.push({ ...newItem, ...item2 })
+    })
+  })
+  newData.forEach((item, index) => {
+    item.key = index
+    item.sendData = ''
+    item.isCheck = false
+    if (Object.keys(editData).length > 0) {
+      const resList = JSON.parse(editData.remoteProtocol.protocolJson)
+      resList.forEach(editItem => {
+        if (editItem.funcIdentifier === item.funcIdentifier) {
+          item.isCheck = true
+          if (item.funcType === "properties") {
+            item.sendData = editItem.sendData
+          } else {
+            if (item.identifier === editItem.identifier) {
+              item.sendData = editItem.sendData
+            }
+          }
+        }
+
+      })
+    }
+  })
+  return newData
+}
 
 
 function ServiceSelect({ productId, nextStep }, ref) {
@@ -28,8 +64,21 @@ function ServiceSelect({ productId, nextStep }, ref) {
       isConfiged: false,
       type: 'security',
       url: require('../../../../../assets/images/commonDefault/service-security.png')
-
-    }
+    },
+    {
+      title: 'zigbee四元组配置',
+      desc: '配置zigbee四元组相关信息',
+      isConfiged: false,
+      type: 'zigbee',
+      url: require('../../../../../assets/images/commonDefault/service-network.png')
+    },
+    {
+      title: 'zigbee协议描述信息',
+      desc: '需要根据物模型协议功能点进行ZigBee相关的描述',
+      isConfiged: false,
+      type: 'zigbeePro',
+      url: require('../../../../../assets/images/commonDefault/service-network.png')
+    },
   ])
   const [optionalList, setOptionalList] = useState([
     {
@@ -104,6 +153,11 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [productItemData, setProductItemData] = useState(JSON.parse(sessionStorage.getItem('productItem')) || {})
   const [typeNoList, setTypeNoList] = useState([])
 
+  const [zigbeeVisible, setZigbeeVisible] = useState(false) // zigbee设置
+  const [zigbeeProVisible, setZigbeeProVisible] = useState(false) // zigbee描述信息弹窗
+  const [zigbeeSign, setZigbeeSign] = useState('') // 产品标识zigbee
+  const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
+
   //验证函数
   const subNextConFirm = () => {
     // console.log('requiredList----', requiredList.every(item => item.isConfiged === true), '***', requiredList)
@@ -123,19 +177,44 @@ function ServiceSelect({ productId, nextStep }, ref) {
   // 是否配置过  配网信息、通信安全机制
   const isConfigedFunc = () => {
     setSecurityVisible(false)
+    const list = cloneDeep(requiredList)
     post(Paths.getSecurityConfigStatus, { productId }, { loading: true }).then(res => {
-      const list = cloneDeep(requiredList)
       if (res.data.gatewayConfigflag) { // 配网信息配置过
-        list[0].isConfiged = true
-        setRequiredList(list)
+        list.filter(item => item.type === 'network')[0].isConfiged = true
         setProductConfig(res.data.productConfig)
       }
       if (res.data.securityConfigflag) { // 通信安全配置过
-        list[1].isConfiged = true
-        setRequiredList(list)
+        list.filter(item => item.type === 'security')[0].isConfiged = true
         setProductExtend(res.data.productExtend.authorityType)
       }
     })
+    judgeHasZigbee(list)
+  }
+
+  // 获取zigbee回显标识
+  const getZigbeeProduct = () => {
+    post(Paths.getZigbeeProduct, { productId }).then(res => {
+      setZigbeeSign(res.data.zigbeeSign)
+    })
+  }
+
+  // 是否配置过 zigbee四元组配置、zigbee四元组配置
+  const judgeHasZigbee = (requireTempList) => {
+    if (productItemData.bindTypeStr.indexOf('Zigbee') !== -1) { // 通信协议是zigbee类型的
+      post(Paths.isConfigZigbee, { productId }).then(res => {
+        if (res.data.isZigbeeSignConfig) {// 配置了产品标示
+          requireTempList.filter(item => item.type === 'zigbee')[0].isConfiged = true
+          getZigbeeProduct() // 获取zigbee回显标识
+        }
+        if (res.data.isZigbeeDescConfig) { // 配置了zigbee协议描述信息
+          requireTempList.filter(item => item.type === 'zigbeePro')[0].isConfiged = true
+        }
+        setRequiredList(requireTempList)
+      })
+      getTableData()
+    } else { // 不是zigbee协议的不显示
+      setRequiredList(requireTempList.filter(item => item.type !== 'zigbee' && item.type !== 'zigbeePro'))
+    }
   }
 
   // 判断是否为网关设备
@@ -201,6 +280,19 @@ function ServiceSelect({ productId, nextStep }, ref) {
     }
   }
 
+  const getTableData = () => {
+    post(Paths.standardFnList, { productId }, { loading: true }).then((res) => {
+      let data = res.data.standard.concat(res.data.custom)
+      data = data.filter(item => {
+        if (item.funcTypeCN === '属性') {
+          return item
+        }
+      })
+      data = delaData(data)
+      setInitialProtoclList(data)
+    })
+  }
+
   useEffect(() => {
     isConfigedFunc()
     judgeIsGateWay()
@@ -224,6 +316,12 @@ function ServiceSelect({ productId, nextStep }, ref) {
         break;
       case 'gateway':
         // setGatewayVisible(true)
+        break
+      case 'zigbee':
+        setZigbeeVisible(true)
+        break
+      case 'zigbeePro':
+        setZigbeeProVisible(true)
         break
       default:
         break;
@@ -395,6 +493,36 @@ function ServiceSelect({ productId, nextStep }, ref) {
             setShowType('edit')
             setEditData(val)
           }} />
+      }
+
+      {/* zigbee设置弹窗 */}
+      {
+        zigbeeVisible &&
+        <ZigbeeConfig
+          visible={zigbeeVisible}
+          productId={productId}
+          zigbeeSign={zigbeeSign}
+          handleOk={() => {
+            isConfigedFunc()
+            setZigbeeVisible(false)
+          }}
+          cancelHandle={() => setZigbeeVisible(false)}
+        />
+      }
+
+      {/* zigbee描述信息弹窗 */}
+      {
+        zigbeeProVisible &&
+        <ZigbeeProConfig
+          visible={zigbeeProVisible}
+          productId={productId}
+          initialProtoclList={initialProtoclList}
+          handleOk={() => {
+            isConfigedFunc()
+            setZigbeeProVisible(false)
+          }}
+          cancelHandle={() => setZigbeeProVisible(false)}
+        />
       }
 
       {/* 加入网关 - 产品说暂时不做，先隐藏*/}

@@ -1,0 +1,33 @@
+.config-data-table2 {
+  .ant-table-body {
+    @include self-scroll-bar();
+  }
+
+  .ant-table-tbody>tr>td .ant-input-number,
+  .ant-table-tbody>tr>td .ant-select,
+  .ant-table-tbody>tr>td input,
+  .ant-table-thead>tr>th,
+  .ant-input-number,
+  .ant-table-thead>tr>th,
+  .ant-select,
+  .ant-table-thead>tr>th,
+  input {
+    width: 182px;
+  }
+
+  .ant-table-thead>tr>th,
+  .ant-table-tbody>tr>td {
+    padding: 4px !important;
+
+    // .config-send-data {
+    //   &.warn {
+
+    //     .ant-select-selection,
+    //     .ant-input-number,
+    //     input {
+    //       border-color: red;
+    //     }
+    //   }
+    // }
+  }
+}
