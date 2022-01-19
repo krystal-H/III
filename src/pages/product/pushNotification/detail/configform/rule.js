@@ -35,7 +35,7 @@ const showDtaaType = [ ...intDtaaType, "bool", "enum" ]
 const getPropEventList = data=>{
     let propList=[], eventList=[];
     for(let i=0; i<data.length;  i++){
-        const { funcType, funcParamList, funcIdentifier, funcName,eventType } = data[i];
+        const { funcType, funcParamList, funcIdentifier, funcName, eventType } = data[i];
         if(funcType=="properties"){
             const { propertyMap, dataTypeEN } = funcParamList[0];
             if(showDtaaType.includes(dataTypeEN)){
@@ -80,24 +80,23 @@ function ruleForm({
 
     useEffect(() => {
         if (formdata.productId) {
-            
-            console.log("333-11-aa", formdata)
-            const { productId, triggerMode, funcIdentifier, props } = formdata;
+            const { productId, triggerMode, props,eventIdentifier } = formdata;
             let values = { productId, triggerMode };
 
             if (triggerMode > 1) {
                 // form.setFieldsValue({...values});
             } else {
                 if (triggerMode == 1) {//事件
-                    values.identifier = funcIdentifier;
+                    values.identifier = eventIdentifier;
                 } else if (triggerMode == 0) {//属性
                     values.identifier = props[0].propIdentifier; 
                 }
+
+                formdata.props
+
+                console.log("--values.identifier--",values.identifier)
                 productChanged(formdata.productId,values.identifier)
             }
-            
-
-            console.log(999, values)
             form.setFieldsValue({ ...values });
         } else {
             // form.resetFields()
@@ -147,10 +146,9 @@ function ruleForm({
 
     //产品改变
     const productChanged = (productId,isformdata) => {
-        console.log("--isformdata--",isformdata)
         post(Paths.standardFnList, { productId },{ loading: true }).then(({data={}}) => {
             const { standard=[], custom=[] } = data
-            const list = [...standard,...custom]
+            const list = [ ...standard, ...custom ]
             const { propList, eventList } = getPropEventList(list)
             setPropList(propList);
             setEventList(eventList);
@@ -158,8 +156,9 @@ function ruleForm({
                 let sltLiData = [propList,eventList][triggerMode];
                 setSelectLiData(sltLiData)
                 let data = sltLiData.find(item=> item.funcIdentifier==isformdata);
+                console.log("----setPropEvenSelectData---",data,formdata.props)
                 setPropEvenSelectData(cloneDeep(data)) ;
-                let resetval = {}
+                let resetval = {identifier:isformdata}
                 formdata.props.forEach(({propIdentifier,judge,propVal}) =>{
                     resetval["cal_"+propIdentifier] = judge;
                     resetval["val_"+propIdentifier] = propVal;

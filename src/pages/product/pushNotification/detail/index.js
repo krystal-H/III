@@ -24,11 +24,11 @@ export default ({
         const { remark,content,productId } = editData;
         if(id!==undefined){
             const contobj = JSON.parse(content);
-            const {warningWay,warningTitle,warningDetails,...others} = contobj;
+            const {warningWay,warningTitle,warningDetail,...others} = contobj;
             console.log("--ruleFormData--",others)
             setBaseFormData({name,remark});
             setRuleFormData(others,productId);
-            setPubFormData({warningWay,warningTitle,warningDetails});
+            setPubFormData({warningWay,warningTitle,warningDetail});
         }
     },[editData.id])
 

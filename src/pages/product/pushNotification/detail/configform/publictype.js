@@ -42,7 +42,7 @@ function pubForm({
                 <Item label="消息标题" name='warningTitle' rules={[{ required: true, message: '请输入消息标题'},{ max: 40, message: '最大输入长度为50' }]} >
                     <Input placeholder="请输入消息标题" />
                 </Item>
-                <Item label="消息内容" name='warningDetails' rules={[{ required: true, message: '请输入告警内容'},{ max: 250, message: '最大输入长度为250' }]}>
+                <Item label="消息内容" name='warningDetail' rules={[{ required: true, message: '请输入告警内容'},{ max: 250, message: '最大输入长度为250' }]}>
                     <TextArea 
                         rows='3'
                         // showCount={true} 
