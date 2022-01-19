@@ -15,15 +15,16 @@ function configForm({
 }){
     const [form] = Form.useForm();
     const [config, setConfig] = useState([]);
+    const [getNewInfo, setgetNewInfo] = useState();
     useEffect( () => {
-        console.log(0,currentTab)
+        // console.log(0,currentTab)
         if(appId){
             post(Paths.getAppInfoPushSet, {appId},{loading:true} ).then((res) => {
                 setConfig(res.data || [])
             });
         }
 
-    },[appId,currentTab])
+    },[appId,currentTab,getNewInfo])
 
     useEffect( () => {
         if(config.length>0){
@@ -33,12 +34,13 @@ function configForm({
     },[config.length])
 
     const onFinish=(values)=>{
+        console.log(99999,values)
         post(Paths.setAppInfoPushSet, {
             appId,
             ...values,
-            configId:config.length>0 && config[0].configId || undefined
+            // configId:config.length>0 && config[0].configId || undefined
         },{loading:true} ).then((res) => {
-            setConfig(res.data || [])
+            setgetNewInfo(true)
         });
 
     }
@@ -57,6 +59,10 @@ function configForm({
                 </Item>
                 <Item label="secret" name='secret' rules={[{ required: true, message: '请输入secret'},{ max: 300, message: '最大输入长度为300' }]}>
                     <Input placeholder="请输入secret" />
+                </Item>
+
+                <Item name='configId' style={{"display":'none'}}>
+                    <Input />
                 </Item>
                 
                 <Button htmlType="submit" style={{"marginLeft":'8.3%'}} type='primary'>保存</Button>

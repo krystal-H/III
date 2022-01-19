@@ -101,9 +101,7 @@ export default props => {
     const closeEditMod = (updatelist=false) => {
         setConfigVisible(false)
         if(updatelist){
-            // setName("");
-            // getList({pageRows: 10, pageIndex: 1})
-            window.location.reload()
+            getIndexPage(pager.pageIndex || 1);
         }
 
     }
@@ -116,7 +114,7 @@ export default props => {
     }
     const startRule = (id) => {
         post(Paths.startWarningConfigLi, { id }, { loading: true }).then(res => {
-            getIndexPage(warningList.pager.pageIndex || 1);
+            getIndexPage(pager.pageIndex || 1);
         });
 
     }
