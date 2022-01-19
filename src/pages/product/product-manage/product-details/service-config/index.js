@@ -68,14 +68,14 @@ function ServiceConfig({ productId, nextStep }, ref) {
       desc: '配置zigbee四元组相关信息',
       isConfiged: false,
       type: 'zigbee',
-      url: require('../../../../../assets/images/commonDefault/service-network.png')
+      url: require('../../../../../assets/images/commonDefault/zigbee-config.png')
     },
     {
       title: 'zigbee协议描述信息',
       desc: '需要根据物模型协议功能点进行ZigBee相关的描述',
       isConfiged: false,
       type: 'zigbeePro',
-      url: require('../../../../../assets/images/commonDefault/service-network.png')
+      url: require('../../../../../assets/images/commonDefault/zigbee-desc.png')
     },
   ])
 
