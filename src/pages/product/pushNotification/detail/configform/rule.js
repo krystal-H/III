@@ -12,9 +12,9 @@ const formlayout = {
 const triggerType = [
     { id: 0, nam: '属性触发' },
     { id: 1, nam: '事件触发' },
-    { id: 3, nam: '上线触发' },
-    { id: 4, nam: '下线触发' },
-    { id: 2, nam: '上下线触发' }
+    { id: 2, nam: '上线触发' },
+    { id: 3, nam: '下线触发' },
+    { id: 4, nam: '上下线触发' }
 ]
 const NUMCAL = [
     { id: '=', nam: '等于' },
@@ -92,7 +92,7 @@ function ruleForm({
                     values.identifier = props[0].propIdentifier; 
                 }
 
-                formdata.props
+                // formdata.props
 
                 console.log("--values.identifier--",values.identifier)
                 productChanged(formdata.productId,values.identifier)
