@@ -39,14 +39,15 @@ function pubForm({
                         <Radio value="1">极光推送</Radio>
                     </Radio.Group>
                 </Item>
-                <Item label="消息标题" name='warningTitle' rules={[{ required: true, message: '请输入消息标题'},{ max: 40, message: '最大输入长度为50' }]} >
-                    <Input placeholder="请输入消息标题" />
+                <Item label="消息标题" name='warningTitle' rules={[{ required: true, message: '请输入消息标题'},{ max: 50, message: '最大输入长度为50' }]} >
+                    <Input placeholder="请输入消息标题" maxLength={50} />
                 </Item>
-                <Item label="消息内容" name='warningDetail' rules={[{ required: true, message: '请输入告警内容'},{ max: 250, message: '最大输入长度为250' }]}>
+                <Item label="消息内容" name='warningDetail' rules={[{ required: true, message: '请输入告警内容'},{ max: 500, message: '最大输入长度为500' }]}>
                     <TextArea 
-                        rows='3'
-                        // showCount={true} 
+                        rows={4}
+                        showCount={true} 
                         placeholder="请输入消息内容" 
+                        maxLength={500}
                     />
                 </Item>
             </Form>

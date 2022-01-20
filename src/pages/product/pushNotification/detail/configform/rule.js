@@ -166,6 +166,9 @@ function ruleForm({
                 });
                 form.setFieldsValue({ ...resetval });
 
+            }else{
+                form.resetFields(["triggerMode"])
+                setTriggerMode(undefined);
             }
         });
     }
