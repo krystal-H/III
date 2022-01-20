@@ -34,7 +34,7 @@ function baseForm({
                 <Item label="规则名称" name='name' rules={[
                     { required: true, message: '请输入告警规则名称' },{ max: 30, message: '最大输入长度为30字符' },
                 ]}>
-                    <Input placeholder="请输入告警规则名称" />
+                    <Input placeholder="请输入告警规则名称" maxLength={30}/>
                 </Item>
 
                 <Item label="规则描述" name='remark' rules={[
