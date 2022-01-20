@@ -67,6 +67,11 @@ export const navRoutes = [
                 path: '/open/product/remoteCofig',
                 menuid: '1-5',
             },
+            {
+                menuname: '消息推送',
+                path: '/open/product/pushNotification',
+                menuid: '1-6',
+            },
         ]
     }, {
         menuname: '设备',
@@ -277,6 +282,11 @@ export const menuList = [
             },
             {
                 menuname: '远程配置',
+                childmenus: [],
+                items: [],
+            },
+            {
+                menuname: '消息推送',
                 childmenus: [],
                 items: [],
             },

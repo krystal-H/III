@@ -1,0 +1,41 @@
+
+.page-devwarn-config-modal{
+    
+    
+    .ant-modal-body{
+        padding: 24px 40px 0;
+
+    }
+
+    .ant-tabs  .ant-tabs-nav{
+        display: none;
+    }
+
+    .formbox{
+        margin-top: 40px;
+    }
+
+    .rulelistname{
+        display: block;
+        // line-height: 31px;
+        padding: 4px 10px;
+        border: 1px  solid  #d9d9d9;
+
+    }
+    .hidelabel{
+        .ant-form-item-label{
+            // display: none;
+            opacity: 0;
+        }
+    }
+    
+    
+    
+
+}
+
+
+
+
+
+

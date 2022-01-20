@@ -28,6 +28,7 @@
       }
       &-left {
         margin-right: 12px;
+        @include wh(64px, 64px);
       }
       &-right {
         height: 100%;

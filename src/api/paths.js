@@ -60,6 +60,11 @@ let Paths = {
     getPhysicalModelId: '/physicalModel/func', // 获取功能点
     confirmScheme: 'product/create/confirm/scheme', // 创建方案下一步
 
+    // 5.x语音配置
+    getProductVoiceList: '/voice/getProductVoiceList', // 获取产品语音能力列表
+    getAllVoiceList: '/voice/getVoiceList', //获取语音能力
+    addOrRemoveVoice: '/voice/addVoiceApprove', // 添加、移除语音能力
+
     // 5.x继续开发-发布产品
     publishProduct: '/product/publish', // 继续开发-发布产品
 
@@ -74,6 +79,11 @@ let Paths = {
     delFirmwareModule: '/firmware/productFirmware/type/del', // 删除固件类型模块
     updateFirmwareModule: '/firmware/productFirmware/type/update', // 修改固件类型模块
 
+    isConfigZigbee: '/product/zigbee/config', //是否配置了zigbee
+    saveZigbeeProduct: '/product/update/extend/info', // 保存产品与zigbee的关联标识
+    getZigbeeProduct: '/product/extend/info', // 产品标识zigbee回显
+    saveConfigZigbee: '/product/dev/config/zigbee', // 保存zigbee协议描述信息
+
     // 5.x继续开发-开发硬件
     getMoudleInfo: '/product/dev/show/module',
     replaceModuleList: '/module/list/scheme', // 更换模组列表
@@ -83,6 +93,7 @@ let Paths = {
     showFirmware: '/product/dev/show/firmware/config', // 免费申请固件信息
     getDevFirmwareList: '/firmware/list/moduleId', // 获取模组固件列表
     saveChooseFirmware: '/product/scheme/update', // 保存更换的固件
+    saveCommunication: '/product/protocol/setting', // 保存通信协议
 
 
     // 5.xAPP-应用管理
@@ -375,6 +386,11 @@ let Paths = {
     getWarnProperty:'/device/warning/property/get',
     getWarnEventProperty:'/device/warning/event/get',
     getWarnEventLi:'/device/warning/event/list',
+
+    getAppInfoPushSet:'/appInfoManage/push/get',
+    setAppInfoPushSet:'/appInfoManage/push/set',
+
+    
 
     
     // 5.x远程配置

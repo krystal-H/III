@@ -7,7 +7,7 @@ import { post, Paths } from '../../../../../api';
 import { Notification } from '../../../../../components/Notification';
 import { getRowSpanCount } from '../../../../../configs/tableCombine'
 
-export default function TableCom({ dataSource, reFreshData, type, standardData }) {
+export default function TableCom({ dataSource, reFreshData, type, standardData, bindTypeStr }) {
     const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 }) //分页
     //页码改变
     const pagerChange = (pageIndex, pageRows) => {
@@ -149,6 +149,7 @@ export default function TableCom({ dataSource, reFreshData, type, standardData }
             )
         },
         { title: '数据属性', dataIndex: 'propertyMap', width: '340px', render: (text, record) => <span>{filterFn(record)}</span> },
+        { title: 'zigbee描述', dataIndex: 'desc', key:'desc', width: '120px',},
         {
             title: '操作',
             render: (value, row, index) => {
@@ -211,7 +212,7 @@ export default function TableCom({ dataSource, reFreshData, type, standardData }
     return <div>
         <Table
             rowKey="key"
-            columns={columns}
+            columns={bindTypeStr.indexOf('Zigbee') !== -1 ? columns : columns.filter(item => item.dataIndex != 'desc')}
             dataSource={dataSource}
             locale={{
                 emptyText: type === '1' ? '暂无标准功能' : '暂无自定义功能'

@@ -226,15 +226,15 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                                 {/* return <Tabs.TabPane tab={data.firmwareVersionType+'_'+firmwareVersionTypeName + "_" + selectedFirmwareLi.length} key={firmwareTypeNo} > */}
                                     <Item label={schemeType==2&&"模块编号"||"模块/插件编号"}>{firmwareTypeNo}</Item>
                                     <Item label='硬件版本号' name={`totalVersion_${firmwareTypeNo}`} initialValue={totalVersion}>
-                                        <Input maxLength={100}  placeholder='硬件版本号'/>
+                                        <Input maxLength={30}  placeholder='硬件版本号'/>
                                     </Item>
                                     <Item label='当前软件版本号'>{curExtVersion}</Item>
                                     <Item label="待上传软件版本号" name={`extVersion_${firmwareTypeNo}`} rules={[{ required: true, message: '待上传软件版本号' }]}>
-                                        <Input maxLength={10} placeholder='最多30个字符' />
+                                        <Input maxLength={30} placeholder='最多30个字符' />
                                     </Item>
                                     <Item label='固件程序' name={`filePath_${firmwareTypeNo}`}
                                             rules={[{ required: true, message: '请输入URL' },{pattern: formrules.url, message: '请输入正确的URL'}]}
-                                        ><Input maxLength={150} placeholder='请输入URL或者上传一个附件自动填充' />
+                                        ><Input maxLength={200} placeholder='请输入URL或者上传一个附件自动填充' />
                                         
                                     </Item>
                                 </Tabs.TabPane>
