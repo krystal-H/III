@@ -132,13 +132,13 @@ function Validation({ productId, developerInfo, refInstance }) {
             return
         }
 
-        if (!account.match(/^(((\d{3,4}-)?\d{7,8})|(1\d{10}))$/)) {
-            Notification({
-                description: '请输入正确的手机号',
-                type: 'warn'
-            });
-            return
-        }
+        // if (!account.match(/^(((\d{3,4}-)?\d{7,8})|(1\d{10}))$/)) {
+        //     Notification({
+        //         description: '请输入正确的手机号',
+        //         type: 'warn'
+        //     });
+        //     return
+        // }
 
 
 
@@ -254,7 +254,7 @@ function Validation({ productId, developerInfo, refInstance }) {
                     <div className='tab-one-title'>
                         <div className='tab-one-title-left'>
                             <div className='btn-label'>配置调试信息<LabelTip tip="WiFi蓝牙设备需先登录数联智能App，并搜索绑定需要调试的设备，蜂窝设备不需要。"></LabelTip>：</div>
-                            <Input value={account} onChange={e => set_DebugInfo(e, 0)} placeholder='请输入数联智能App登录账号' />
+                            <Input value={account} maxLength={50} onChange={e => set_DebugInfo(e, 0)} placeholder='请输入数联智能App登录账号' />
                             <Input value={devMac} onChange={e => set_DebugInfo(e, 1)} placeholder='输入设备物理地址' />
                             <Button type='primary' onClick={startDebug}>确定调试</Button>
                             <Button onClick={() => { setDebugInfo(['', '']) }}>重置</Button>
