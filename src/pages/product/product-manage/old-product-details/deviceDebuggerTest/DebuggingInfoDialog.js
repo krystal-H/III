@@ -364,7 +364,7 @@ export default class DebuggingInfoDialog  extends Component {
                                         return item.editOrDelete?<tr key={'account'+index}>
                                                     <td colSpan='5'>
                                                         <div className='accountBox'>
-                                                            <Input placeholder="请输入C-Life账号" maxLength={11} value={item.account} onChange={this.accountInput.bind(this,index)}/>
+                                                            <Input placeholder="请输入C-Life账号" maxLength={100} value={item.account} onChange={this.accountInput.bind(this,index)}/>
                                                             <Input placeholder="请输入备注" maxLength={20} value={item.remark} onChange={this.remark.bind(this,index)}/>
                                                             <div className='saveTime'>{moment(item.createTime).utcOffset(-480).format('YYYY-MM-DD HH:mm:ss')}</div>
                                                             <span className='save' onClick={this.eidtAddAccoun.bind(this,index,item.account,item.debugAccountId,item.productId,item.remark)}>保存</span>
@@ -385,7 +385,7 @@ export default class DebuggingInfoDialog  extends Component {
                                                 </tr>:<tr key={'account'+index}>
                                                     <td colSpan='5'>
                                                         <div className='accountBox'>
-                                                            <Input placeholder="请输入C-Life账号" maxLength={11} onChange={this.addAccountInput} value={addAccountInput}/>
+                                                            <Input placeholder="请输入C-Life账号" maxLength={100} onChange={this.addAccountInput} value={addAccountInput}/>
                                                             <Input placeholder="请输入备注" maxLength={20} onChange={this.addRemark} value={addRemarkInput}/>
                                                             <div className='saveTime'>{moment(new Date()).format('YYYY-MM-DD HH:mm:ss')}</div>
                                                             <span className='save' onClick={this.addAccount}>保存</span>
