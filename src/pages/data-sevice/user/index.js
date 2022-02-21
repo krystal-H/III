@@ -94,9 +94,9 @@ export default function Device() {
     }
     const [selectType, setSelectType] = useState(0) //产品种类
     const getType = () => {
-        post(Paths.allProductPubList, {}).then(res => {
-            res.data.unshift({ productId: 0, productName: "全部产品" })
-            setOptionArr(res.data)
+        post(Paths.getAppInfoList, {"pageRows":9999,"pageIndex":1}).then(res => {
+            res.data.list.unshift({ appId: 0, appName: "全部App" })
+            setOptionArr(res.data.list)
         })
     }
     useEffect(() => {
@@ -133,7 +133,7 @@ export default function Device() {
             params.startDate = value[0].format('YYYY-MM-DD')
         }
         if (selectType) {
-            params.productId = selectType
+            params.appId = selectType
         }
         post(Paths.userDataAn, params, { loading }).then((res) => {
             if (Array.isArray(res.data)) {
@@ -181,7 +181,7 @@ export default function Device() {
             params.startDate = value[0].format('YYYY-MM-DD')
         }
         if (selectType) {
-            params.productId = selectType
+            params.appId = selectType
         }
         post(Paths.userDataDown, params).then((res) => {
             window.open(res.data.path)
@@ -310,7 +310,7 @@ export default function Device() {
                     <Select style={{ width: 150 }} value={selectType} onChange={selectChange} showSearch optionFilterProp="children">
                         {
                             optionArr.map(item => {
-                                return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
+                                return (<Option value={item.appId} key={item.appId}>{item.appName}</Option>)
                             })
                         }
                     </Select>
