@@ -265,7 +265,7 @@ export default function DeviceList() {
                             <Option value={0}>未入网</Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item name="gatewayType" label="状态" >
+                    <Form.Item name="gatewayType" label="类型" >
                         <Select
                             style={{ width: '102px' }}
                         >
