@@ -50,6 +50,17 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
                         <div className='item-value'>{data.businessTime}</div>
                     </div>
                     <div className='subscrbe-t' style={{ marginTop: '22px' }}>订阅方式</div>
+                    {
+                        data.pushWay === 2 && <>
+                            <div className='subscrbe-item'>
+                                <div className='item-label'>账号：</div>
+                                <div className='item-value'>{data.username}</div>
+                            </div>
+                            <div className='subscrbe-item'>
+                                <div className='item-label'>密码：</div>
+                                <div className='item-value'>{data.password}</div>
+                            </div></>
+                    }
                     <div className='subscrbe-item'>
                         <div className='item-label'>订阅方式：</div>
                         <div className='item-value'>{data.pushWay === 1 ? 'API数据PUSH形式' : 'MQTT主题订阅'}</div>
@@ -65,6 +76,7 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
                                 <div className='item-value'>{data.sign}</div>
                             </div></>
                     }
+
                     <div className='subscrbe-item'>
                         <div className='item-label'>推送频次：</div>
                         <div className='item-value'>{data.pushFrequency === 0 ? '每次触发推送' : '相同故障每小时推送1次'}</div>

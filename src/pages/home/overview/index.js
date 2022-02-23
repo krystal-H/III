@@ -53,7 +53,7 @@ export default function OverviewWrap() {
         // getMessageList()
         getAppList()
         getDevOneList()
-        getDevThreeList()
+        // getDevThreeList()
         getProductCount()
         getProductList()
 
@@ -427,7 +427,7 @@ export default function OverviewWrap() {
                                     <div>{devOneList.todayActive}</div>
                                 </div>
                             </div>
-                            <div className='over-view-device-content-item'>
+                            {/* <div className='over-view-device-content-item'>
                                 <div >
                                     <div className='over-view-device-content-item-label' onClick={() => { goAuPage('设备消息', '/open/device/devMsg') }} >
                                         设备消息
@@ -451,7 +451,7 @@ export default function OverviewWrap() {
                                     <div>最近告警时间</div>
                                     <div>{devThreeList.lastWarnTime || '--'}</div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         <div className='Guide-the-figure-content-top'>
                             <div className='tip' >
@@ -585,7 +585,7 @@ export default function OverviewWrap() {
                             </div>
                         </div>
                     </div>
-                    <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >
+                    {/* <div className='over-view-boxshadow over-view-unified-wrap comm-shadowbox' >
                         <div>
                             <div>帮助</div>
                         </div>
@@ -603,7 +603,7 @@ export default function OverviewWrap() {
                                 <div>帮助文档</div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             {
