@@ -2,9 +2,10 @@ import DevInfo from './info'
 import DevTag from './devTag'
 import DevShadow from './devShadow'
 import DevSet from './onlineSet'
+import DevGateway from './gateWay'
 import { getUrlParam } from '../../../util/util';
 import React, { useState, useEffect, useMemo } from 'react'
-import { post, Paths, get } from '../../../api';
+import { post, Paths } from '../../../api';
 import PageTitle from '../../../components/page-title/PageTitle';
 import { useHistory } from 'react-router-dom';
 import './index.scss'
@@ -23,7 +24,7 @@ export default function DeviceInfo({ match }) {
     }
     const [baseInfo, setBaseInfo] = useState({})
     useEffect(() => {
-        let parmas = { "infoType": "1", "field": devceId, "pageIndex": 1,"pageRows": 1 }
+        let parmas = { "infoType": "1", "field": devceId, "pageIndex": 1, "pageRows": 1 }
         post(Paths.getDeviceList, parmas).then((res) => {
             setBaseInfo(res.data.list[0])
         });
@@ -49,11 +50,16 @@ export default function DeviceInfo({ match }) {
                     <DevTag devceId={baseInfo.deviceId} />
                 </TabPane>
                 <TabPane key={'3'} tab={'设备影子'}>
-                    <DevShadow devceId={baseInfo.deviceId} baseInfo={baseInfo}/>
+                    <DevShadow devceId={baseInfo.deviceId} baseInfo={baseInfo} />
                 </TabPane>
                 <TabPane key={'4'} tab={'远程配置'}>
-                    <DevSet devceId={baseInfo.deviceId} baseInfo={baseInfo}/>
+                    <DevSet devceId={baseInfo.deviceId} baseInfo={baseInfo} />
                 </TabPane>
+                {
+                    baseInfo.productClass === 1 && <TabPane key={'5'} tab={'子设备列表'}>
+                        <DevGateway deviceId={baseInfo.deviceId} baseInfo={baseInfo} />
+                    </TabPane>
+                }
             </Tabs>
         </div>
     </div>)

@@ -123,6 +123,9 @@ export default function AddFuncModal({ isModalVisible, closeAdd, CancelAdd }) {
                   <Select
                     style={{ width: '200px' }}
                     placeholder="选择产品"
+                    showSearch optionFilterProp="children" filterOption={(input, option) =>
+                      option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
                   >
                     {
                       typelist.map(item => {
