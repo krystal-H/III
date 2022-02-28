@@ -9,6 +9,7 @@ import moment from 'moment';
 const { Step } = Steps;
 const { TabPane } = Tabs;
 const { TextArea } = Input;
+
 export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, editData, actionType }) {
     const [currentTab, setCurrentTab] = useState('0')
     const [subObj, setSubObj] = useState({
