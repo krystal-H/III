@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } f
 import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, TimePicker, Checkbox } from 'antd';
 import './addModal.scss'
 import LabelTip from '../../../components/form-com/LabelTip';
-import { post, Paths } from '../../../api';
+import { post, Paths, get } from '../../../api';
 import { cloneDeep } from "lodash";
 import { Notification } from '../../../components/Notification'
 import moment from 'moment';
@@ -142,7 +142,7 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                     //     arr.push(item.labelId)
                     // })
                     arr = editData.deviceLabelIds.split(',')
-                    arr=arr.map(item=>{
+                    arr = arr.map(item => {
                         return Number(item)
                     })
                 }
@@ -171,9 +171,10 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
         });
     }
     //下一步
-    const onFinish =  () => {
+    const onFinish = () => {
         form.validateFields().then(formData => {
             let res = cloneDeep(formData)
+            sessionStorage.setItem('pid', res.productId)
             let arr = formData.subscriptType === 1 ? productType1 : productType2
             let productIndex = arr.find(item => {
                 return item.productId === res.productId
@@ -191,10 +192,10 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                         selectedDeviceIds: res.deviceIds.trim()
                     }
                     post(Paths.checkRelDevice, cheackParams).then(result => {
-                        if(result.data){
+                        if (result.data) {
                             res.productName = name;
                             continueStep('1', res)
-                        }else{
+                        } else {
                             Notification({
                                 type: 'info',
                                 description: '输入的id不在这个项目和产品范围内',
@@ -208,7 +209,7 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                 return
             }
             if (res.subscriptType === 2) {
-                res.labelVoList=res.labelVoList || []
+                res.labelVoList = res.labelVoList || []
                 res.deviceLabelIds = res.labelVoList.join(',')
             }
             res.productName = name;
@@ -231,8 +232,8 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
             setLaberArr(arr)
         });
     }
-     //获取标签
-     const productIdChange2 = (val) => {
+    //获取标签
+    const productIdChange2 = (val) => {
         post(Paths.getLabelByAddress, { productId: val }).then((res) => {
             let arr = []
             res.data.forEach(item => {
@@ -383,6 +384,8 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
     </div>)
 }
 StepContentOne = forwardRef(StepContentOne)
+
+// 第二步
 function StepContentTwo({ continueStep, actionType, editData }, ref) {
     const [form] = Form.useForm();
     const [laberArr, setLaberArr] = useState([])//设备事件列表
@@ -392,7 +395,9 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
     };
     useEffect(() => {
         //获取事件列表
-        post(Paths.getDeviceEvent).then((res) => {
+        get(Paths.getsubscribeProduct,
+            { productId: sessionStorage.getItem('pid') ? Number(sessionStorage.getItem('pid')) : '' }
+        ).then((res) => {
             let source = res.data || []
             let data = source.map(item => {
                 return {
