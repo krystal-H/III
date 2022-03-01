@@ -420,11 +420,12 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
     }, [])
     const initEdit = () => {
         setTestSelectObj(pre => {
+            let ori=editData.productFuncList || {}
             let obj = {
-                9: editData.productFuncList.runningList || [],
-                11: editData.productFuncList.errorList || [],
-                12: editData.productFuncList.configList || [],
-                10: editData.productFuncList.controllList || [],
+                9: ori.runningList || [],
+                11: ori.errorList || [],
+                12: ori.configList || [],
+                10: ori.controllList || [],
             }
             return obj
         })
@@ -534,7 +535,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
                 return item
             }
         })
-        return currentData.list
+        return currentData ? currentData.list : []
     }
     //获取tab标题
     const getTitle = val => {

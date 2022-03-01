@@ -63,13 +63,15 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
                 return item
             }
         })
-        
+        if(!currentData) return []
+        let ori=data.productFuncList || {}
         let obj = {
-            9: data.productFuncList.runningList || [],
-            11: data.productFuncList.errorList || [],
-            12: data.productFuncList.configList || [],
-            10: data.productFuncList.controllList || [],
+            9: ori.runningList || [],
+            11: ori.errorList || [],
+            12: ori.configList || [],
+            10: ori.controllList || [],
         }
+
         let arr=currentData.list.filter(item=>{
             if(obj[val].indexOf(item.property)>-1){
                 return item
