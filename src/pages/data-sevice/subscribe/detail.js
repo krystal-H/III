@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Modal, Table } from 'antd';
+import { Modal, Table, Tabs } from 'antd';
 import { post, Paths, get } from '../../../api';
 import './detail.scss'
+const { TabPane } = Tabs;
 export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
     const [data, setData] = useState({ devicePushDataConfList: [] })
+    const [oldTable, setOldTable] = useState([])
+    const [oldEvent, setOldEvent] = useState([])//勾选的老设备事件
     useEffect(() => {
         getDetail()
     }, [])
@@ -11,7 +14,100 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
         let url = Paths.subscribeDetail + '?urlConfId=' + id
         post(url).then((res) => {
             setData(res.data)
+            let eventIds = res.data.eventIds.split(',').map(item => {
+                return Number(item)
+            })
+            eventChange(eventIds)
+            get(Paths.getsubscribeProduct, { productId: res.data.productId }).then((res) => {
+                setOldTable(res.data.productFuncList || [])
+            });
         });
+
+    }
+    const columns = [
+        {
+            title: '数据名称',
+            dataIndex: 'propertyName',
+        },
+        {
+            title: '数据标识',
+            dataIndex: 'property',
+        },
+        {
+            title: '数据属性',
+            dataIndex: 'propertyValueDesc',
+        },
+    ];
+    //获取table数据
+    const getOldData = (val) => {
+        let n = ''
+        switch (val) {
+            case 9:
+                n = '运行数据'
+                break;
+            case 10:
+                n = '控制数据'
+                break;
+            case 11:
+                n = '故障数据'
+                break;
+            case 12:
+                n = '配置数据'
+                break;
+            default:
+                return ''
+        }
+        if (!oldTable.length) return []
+        let currentData = oldTable.find(item => {
+            if (item.dataTypeName == n) {
+                return item
+            }
+        })
+        
+        let obj = {
+            9: data.productFuncList.runningList || [],
+            11: data.productFuncList.errorList || [],
+            12: data.productFuncList.configList || [],
+            10: data.productFuncList.controllList || [],
+        }
+        let arr=currentData.list.filter(item=>{
+            if(obj[val].indexOf(item.property)>-1){
+                return item
+            }
+        })
+        return arr
+    }
+    //获取tab标题
+    const getTitle = val => {
+        let n = ''
+        switch (val) {
+            case 9:
+                n = '运行数据'
+                break;
+            case 10:
+                n = '控制数据'
+                break;
+            case 11:
+                n = '故障数据'
+                break;
+            case 12:
+                n = '配置数据'
+                break;
+            default:
+                return ''
+        }
+        return n
+    }
+    //===事件勾选
+    const eventChange = (val) => {
+        let arr = [9, 10, 11, 12]
+        let arr2 = []
+        val.forEach(item => {
+            if (arr.includes(item)) {
+                arr2.push(item)
+            }
+        })
+        setOldEvent(arr2)
     }
     return (
         <Modal maskClosable={false} title="订阅详情" footer={false} visible={rightVisible} onOk={onCloseRight} onCancel={onCloseRight} width='900px'>
@@ -49,6 +145,20 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
                         <div className='item-label'>业务时间：</div>
                         <div className='item-value'>{data.businessTime}</div>
                     </div>
+                    {
+                        oldEvent.length ? <Tabs defaultActiveKey="1" >
+                            {
+                                oldEvent.map(item => {
+                                    return <TabPane key={item} tab={getTitle(item)}>
+                                        <Table
+                                            columns={columns} dataSource={getOldData(item)}
+                                            rowKey='property' pagination={false} scroll={{ y: 240 }} />
+                                    </TabPane>
+                                })
+                            }
+                        </Tabs> : null
+                    }
+
                     <div className='subscrbe-t' style={{ marginTop: '22px' }}>订阅方式</div>
                     {
                         data.pushWay === 2 && <>

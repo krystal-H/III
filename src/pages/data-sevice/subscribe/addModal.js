@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
-import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, TimePicker, Checkbox } from 'antd';
+import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, TimePicker, Checkbox, Table } from 'antd';
 import './addModal.scss'
 import LabelTip from '../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../api';
@@ -9,7 +9,6 @@ import moment from 'moment';
 const { Step } = Steps;
 const { TabPane } = Tabs;
 const { TextArea } = Input;
-
 export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, editData, actionType }) {
     const [currentTab, setCurrentTab] = useState('0')
     const [subObj, setSubObj] = useState({
@@ -82,7 +81,6 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
             ...subObj.two,
             ...val
         }
-        console.log('====55======', params)
         if (actionType === 'edit') {
             params.urlConfId = editData.urlConfId
         }
@@ -390,16 +388,21 @@ StepContentOne = forwardRef(StepContentOne)
 function StepContentTwo({ continueStep, actionType, editData }, ref) {
     const [form] = Form.useForm();
     const [laberArr, setLaberArr] = useState([])//设备事件列表
+    const [oldEvent, setOldEvent] = useState([])//勾选的老设备事件
+    const [oldTable, setOldTable] = useState([])
+    const [testSelectObj, setTestSelectObj] = useState({ 9: [], 11: [], 12: [], 10: [] })
     const formlayout = {
         labelCol: { span: 6 },
         wrapperCol: { span: 18 },
     };
     useEffect(() => {
         //获取事件列表
+        setTestSelectObj({ 9: [], 11: [], 12: [], 10: [] })
+        setLaberArr([])
         get(Paths.getsubscribeProduct,
             { productId: sessionStorage.getItem('pid') ? Number(sessionStorage.getItem('pid')) : '' }
         ).then((res) => {
-            let source = res.data || []
+            let source = res.data.eventList || []
             let data = source.map(item => {
                 return {
                     label: item.deviceEventName,
@@ -407,45 +410,185 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
                 }
             })
             setLaberArr(data)
-            setLaberArr(data)
+            setOldTable(res.data.productFuncList || [])
         });
+    }, [sessionStorage.getItem('pid')])
+    useEffect(() => {
         if (actionType === 'edit') {
-            // console.log(editData, 'editDataeditDataeditData')
-            let eventIds = editData.eventIds.split(',').map(item => {
-                return Number(item)
-            })
-            let timeRange = editData.businessTime.split('-').map(item => {
-                return moment(item, 'HH:mm')
-            })
-            let obj = {
-                timeRange,
-                eventIds: eventIds
-            }
-            form.setFieldsValue(obj)
+            initEdit()
         }
     }, [])
+    const initEdit = () => {
+        setTestSelectObj(pre => {
+            let obj = {
+                9: editData.productFuncList.runningList || [],
+                11: editData.productFuncList.errorList || [],
+                12: editData.productFuncList.configList || [],
+                10: editData.productFuncList.controllList || [],
+            }
+            return obj
+        })
+        let eventIds = editData.eventIds.split(',').map(item => {
+            return Number(item)
+        })
+        eventChange(eventIds)
+        let timeRange = editData.businessTime.split('-').map(item => {
+            return moment(item, 'HH:mm')
+        })
+        let obj = {
+            timeRange,
+            eventIds: eventIds
+        }
+        form.setFieldsValue(obj)
+    }
     //下一步
     const onFinish = () => {
         form.validateFields().then(val => {
+            let productFunc = ''
+            if (oldEvent.length) {
+                oldEvent.forEach(item => {
+                    let arr = testSelectObj[item] || []
+                    if (item == 9) {
+                        arr.forEach(item2 => {
+                            productFunc += '3-' + item2 + ','
+                        })
+                    }
+                    if (item == 10) {
+                        arr.forEach(item2 => {
+                            productFunc += '2-' + item2 + ','
+                        })
+                    }
+                    if (item == 11) {
+                        arr.forEach(item2 => {
+                            productFunc += '4-' + item2 + ','
+                        })
+                    }
+                    if (item == 12) {
+                        arr.forEach(item2 => {
+                            productFunc += '5-' + item2 + ','
+                        })
+                    }
+                })
+                if (productFunc) {
+                    productFunc = productFunc.slice(0, -1)
+                }
+            }
             let params = {
                 businessTime: val.timeRange[0].format('HH:mm') + '-' + val.timeRange[1].format('HH:mm'),
-                eventIds: val.eventIds.join(',')
+                eventIds: val.eventIds.join(','),
+                productFunc
             }
             continueStep('2', params)
         })
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }), []);
+    }), [testSelectObj]);
+    //===事件勾选
+    const eventChange = (val) => {
+        let arr = [9, 10, 11, 12]
+        let arr2 = []
+        val.forEach(item => {
+            if (arr.includes(item)) {
+                arr2.push(item)
+            }
+        })
+        setOldEvent(arr2)
+    }
+    const columns = [
+        {
+            title: '数据名称',
+            dataIndex: 'propertyName',
+        },
+        {
+            title: '数据标识',
+            dataIndex: 'property',
+        },
+        {
+            title: '数据属性',
+            dataIndex: 'propertyValueDesc',
+        },
+    ];
+    //获取table数据
+    const getOldData = (val) => {
+        let n = ''
+        switch (val) {
+            case 9:
+                n = '运行数据'
+                break;
+            case 10:
+                n = '控制数据'
+                break;
+            case 11:
+                n = '故障数据'
+                break;
+            case 12:
+                n = '配置数据'
+                break;
+            default:
+                return ''
+        }
+        if(!oldTable.length) return []
+        let currentData = oldTable.find(item => {
+            if (item.dataTypeName == n) {
+                return item
+            }
+        })
+        return currentData.list
+    }
+    //获取tab标题
+    const getTitle = val => {
+        let n = ''
+        switch (val) {
+            case 9:
+                n = '运行数据'
+                break;
+            case 10:
+                n = '控制数据'
+                break;
+            case 11:
+                n = '故障数据'
+                break;
+            case 12:
+                n = '配置数据'
+                break;
+            default:
+                return ''
+        }
+        return n
+    }
+    const getRowSelection = val => {
+        return {
+            selectedRowKeys: testSelectObj[val],
+            onChange: (selectedRowKeys, selectedRows) => {
+                setTestSelectObj(pre => {
+                    let obj = cloneDeep(pre)
+                    obj[val] = selectedRowKeys
+                    return obj
+                })
+            },
+        }
+    }
     return (<div className='step-two'>
         <Form form={form} labelAlign='right' {...formlayout}>
             <Form.Item name="eventIds" label="选择设备事件" rules={[{ required: true, message: '请选择设备事件' }]}>
-                <Checkbox.Group options={laberArr} />
+                <Checkbox.Group options={laberArr} onChange={eventChange} />
             </Form.Item>
             <Form.Item name="timeRange" label="选择业务发生时间" rules={[{ required: true, message: '请选择业务发生时间' }]}>
                 <TimePicker.RangePicker format='HH:mm' />
             </Form.Item>
         </Form>
+        <Tabs defaultActiveKey="1" >
+            {
+                oldEvent.map(item => {
+                    return <TabPane key={item} tab={getTitle(item)}>
+                        <Table rowSelection={getRowSelection(item)}
+                            columns={columns} dataSource={getOldData(item)}
+                            rowKey='property' pagination={false} scroll={{ y: 240 }} />
+                    </TabPane>
+                })
+            }
+        </Tabs>
     </div>)
 }
 StepContentTwo = forwardRef(StepContentTwo)

@@ -38,14 +38,14 @@ export default function DeviceList() {
     }
     //获取列表
     const getList = (loading = true) => {
-        let arr = ['innet', 'fault','gatewayType']
+        let arr = ['innet', 'fault', 'gatewayType']
         let obj = {}
         for (let key in form.getFieldsValue()) {
             if (arr.indexOf(key) > -1 && typeof form.getFieldsValue()[key] == 'string') {
             } else {
                 obj[key] = form.getFieldsValue()[key]
-                if(key === 'gatewayType'){
-                    obj[key] = form.getFieldsValue()[key]-1
+                if (key === 'gatewayType') {
+                    obj[key] = form.getFieldsValue()[key] - 1
                 }
             }
 
@@ -99,8 +99,8 @@ export default function DeviceList() {
         switch (type) {
             case 'productClass':
                 if (!isNaN(value)) {
-                    let arr=['网关设备','子设备','普通设备']
-                    result= arr[value-1]
+                    let arr = ['网关设备', '子设备', '普通设备']
+                    result = arr[value - 1]
                 }
                 break;
             case 'internetStatus':
@@ -148,6 +148,9 @@ export default function DeviceList() {
             title: '绑定网关',
             dataIndex: 'gateWay',
             key: 'gateWay',
+            render: (text) => (
+                <span >{text || '-'}</span>
+            )
         },
         // {
         //     title: '所属分组',
@@ -222,7 +225,7 @@ export default function DeviceList() {
         <CountNum data={countData} />
         <div className='comm-shadowbox device-main'>
             <div className='device-filter'>
-                <Form className='device-filter-form' form={form} layout='inline' initialValues={{ innet: '1', online: '1', fault: '1',gatewayType:'1' }}>
+                <Form className='device-filter-form' form={form} layout='inline' initialValues={{ innet: '1', online: '1', fault: '1', gatewayType: '1' }}>
                     <Form.Item label="设备ID/物理地址">
                         <Input.Group compact>
                             <Form.Item
