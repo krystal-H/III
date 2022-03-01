@@ -331,6 +331,7 @@ let Paths = {
     getProductByProject: '/projectDevice/getProductListByProjectId',
     getDeviceEvent: '/datapush/getDeviceEventList',
     checkRelDevice: '/datapush/checkValidDevice',//检测是否为真实设备
+    getsubscribeProduct: '/datapush/getSubscriptContentByProductId', // 根据产品id查询设备事件和功能定义
     /**
      * 基础产品--应用 start
      * xiao-2019-10-17
