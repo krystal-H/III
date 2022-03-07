@@ -136,7 +136,12 @@ class AccountFlowTemplate extends Component {
                 email: newEmail,
                 code
             }
-        } else {
+        } else if(cType==5){
+            path = Paths.destroyUser;
+            data = {
+                email
+            }
+        } else{
             path = Paths.resetAuth
             data = {
                 type : cType
@@ -161,8 +166,9 @@ class AccountFlowTemplate extends Component {
         let {cType} = this.props;
 
         this.countDown()
+        let _path = cType==5?Paths.destroyUser:Paths.resetAuth;
 
-        post(Paths.resetAuth,{
+        post(_path,{
             type:cType,
             email:this.state.email,
         }).then( data => {
@@ -174,9 +180,12 @@ class AccountFlowTemplate extends Component {
         })
     }
     withDraw = () => {
-        get(Paths.withdraw,{
+        // console.log(777,this.props.userId);
+        // return
+        post(Paths.withdraw,{
         },{
-            loading:true
+            loading:true,
+            userId:this.props.userId
         }).then( data => {
             this.goUserInfo()
         }).catch( error => {

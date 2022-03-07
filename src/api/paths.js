@@ -29,6 +29,8 @@ let Paths = {
     getRightsOneself: '/common/getSubInfo',
     cancelAccount: '/common/cancelAccount',
     withdraw: '/common/withdraw',
+    destroyUser: '/common/destroyUser',
+    
     getGroupMenuList: '/common/getMenus',//获取账号权限菜单
     customerServiceHistory: '/support/getHistory',//客服历史信息
 
