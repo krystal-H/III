@@ -144,18 +144,13 @@ export default function DeviceList() {
             dataIndex: 'productType',
             key: 'productType',
         },
-        {
-            title: '绑定网关',
-            dataIndex: 'gateWay',
-            key: 'gateWay',
-            render: (text) => (
-                <span >{text || '-'}</span>
-            )
-        },
         // {
-        //     title: '所属分组',
-        //     dataIndex: 'groupName',
-        //     key: 'groupName',
+        //     title: '绑定网关',
+        //     dataIndex: 'gateWay',
+        //     key: 'gateWay',
+        //     render: (text) => (
+        //         <span >{text || '-'}</span>
+        //     )
         // },
         {
             title: '类型',
@@ -268,7 +263,7 @@ export default function DeviceList() {
                             <Option value={0}>未入网</Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item name="gatewayType" label="类型" >
+                    {/* <Form.Item name="gatewayType" label="类型" >
                         <Select
                             style={{ width: '102px' }}
                         >
@@ -277,7 +272,7 @@ export default function DeviceList() {
                             <Option value={3}>子设备</Option>
                             <Option value={4}>普通设备</Option>
                         </Select>
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item name="fault" label="故障状态" >
                         <Select
                             style={{ width: '102px' }}
