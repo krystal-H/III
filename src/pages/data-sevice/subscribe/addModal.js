@@ -390,7 +390,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
     const [laberArr, setLaberArr] = useState([])//设备事件列表
     const [oldEvent, setOldEvent] = useState([])//勾选的老设备事件
     const [oldTable, setOldTable] = useState([])
-    const [testSelectObj, setTestSelectObj] = useState({ 9: [], 11: [], 12: [], 10: [] })
+    const [testSelectObj, setTestSelectObj] = useState({ 9: [], 11: [], 12: [], 10: [] }) //table勾选
     const formlayout = {
         labelCol: { span: 6 },
         wrapperCol: { span: 18 },
@@ -399,6 +399,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
         //获取事件列表
         setTestSelectObj({ 9: [], 11: [], 12: [], 10: [] })
         setLaberArr([])
+        form.setFieldsValue({eventIds:[]})
         get(Paths.getsubscribeProduct,
             { productId: sessionStorage.getItem('pid') ? Number(sessionStorage.getItem('pid')) : '' }
         ).then((res) => {
