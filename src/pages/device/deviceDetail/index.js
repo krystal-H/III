@@ -55,11 +55,11 @@ export default function DeviceInfo({ match }) {
                 <TabPane key={'4'} tab={'远程配置'}>
                     <DevSet devceId={baseInfo.deviceId} baseInfo={baseInfo} />
                 </TabPane>
-                {/* {
+                {
                     baseInfo.productClass === 1 && <TabPane key={'5'} tab={'子设备列表'}>
                         <DevGateway deviceId={baseInfo.deviceId} baseInfo={baseInfo} />
                     </TabPane>
-                } */}
+                }
             </Tabs>
         </div>
     </div>)

@@ -97,7 +97,7 @@ export default function AddFuncModal({ ModalVisible, closeOk, sentData ,baseInfo
     }
     return (
         <div >
-            <Modal title="查看" visible={ModalVisible} onOk={closeOk} onCancel={closeOk} width='764px' wrapClassName='add-protocols-wrap'>
+            <Modal title="查看" visible={ModalVisible} onOk={closeOk} onCancel={closeOk} width='764px' wrapClassName='add-protocols-wrap' footer={null}>
                 <div className='device-shadow-modal'>
                     <div className='device-shadow-modal-header'> 
                         <Select  style={{ width: 200 }} onChange={handleChange}>
