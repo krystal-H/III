@@ -20,9 +20,13 @@ class WrappedLoginForm extends Component {
 	}
 		
     onFinish = values => {
-          let _values = values;
+          let _values = {
+			  ...values,
+			  userName:values.userName.trim(),
+			  password: encryption(values.password.trim())
+			};
           // 对密码进行加密
-          _values.password = encryption(_values.password)
+        //   _values.password = encryption(_values.password.trim())
           post(Paths.loginCheck,_values,{
             loading:true,
           }).then(data => {
