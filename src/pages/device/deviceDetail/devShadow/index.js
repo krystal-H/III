@@ -44,17 +44,15 @@ export default function DeviceShadow({ baseInfo, devceId }) {
     }, [devceId])
     const getDetail = (loading = true) => {
         post(Paths.deviceShadow, { 'deviceUniqueId': baseInfo.deviceUniqueId }, { loading }).then((res) => {
-
-            // if (res.data.tslType == 'properties') {
-            //     setCurrentTab('a')
-            // } else if (res.data.tslType == 'events') {
-            //     setCurrentTab('b')
-            // } else if (res.data.tslType == 'services') {
-            //     setCurrentTab('c')
-            // }
-            console.log(res.data)
             setDataSource(res.data)
             let arr=['properties','events','services']
+            let data2 = res.data.find(item => {
+                return item.tslType == 'properties'
+            })
+            if(data2){
+                data2=delaData(data2.list)
+            }
+            setTableData(data2 || [])
             let obj={}
             for(let key of arr){
                 let data=res.data.find(item=>{
@@ -64,7 +62,6 @@ export default function DeviceShadow({ baseInfo, devceId }) {
                     obj[key]=data.jsonString || {}
                 }
             }
-            // let jsonData = res.data.jsonString || {}
             setJsonData(JSON.stringify(obj))
         });
     }
