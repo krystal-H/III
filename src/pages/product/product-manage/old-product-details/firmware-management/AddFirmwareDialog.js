@@ -39,8 +39,8 @@ export const AddFirmwareDialog = Form.create({
                     let data = {...values},
                         _this = this;
                     data.productId = this.props.productId;
-                    data.upgradeFile = this.addFirmwareInput.getFileListUrl().length>0 ? this.addFirmwareInput.getFileListUrl().join(',') : '';
-                    if(!data.upgradeFile){
+                    data.filePath = this.addFirmwareInput.getFileListUrl().length>0 ? this.addFirmwareInput.getFileListUrl().join(',') : '';
+                    if(!data.filePath){
                         Notification({
                             description:`请选择文件`,
                         });

@@ -1691,7 +1691,7 @@ export default class StartTest  extends Component{
                     '[' +
                     this.props.deviceAndWs.token.data +
                     '|' +
-                    this.props.developerInfo.userId +
+                    this.props.developerInfo.parentId || this.props.developerInfo.userId
                     '|' +
                     deviceTypeId +
                     '#' +

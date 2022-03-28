@@ -96,6 +96,7 @@ let Paths = {
     getDevFirmwareList: '/firmware/list/moduleId', // 获取模组固件列表
     saveChooseFirmware: '/product/scheme/update', // 保存更换的固件
     saveCommunication: '/product/protocol/setting', // 保存通信协议
+    downloadHardWareData: '/product/dev/show/module/resources', // 下载资料
 
 
     // 5.xAPP-应用管理
