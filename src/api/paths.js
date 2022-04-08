@@ -527,7 +527,8 @@ let Paths = {
     downPhysicalModel: '/physicalModel/download/product',//产品-功能定义-下载物模型
     PhysicalModelList: '/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
     exportFnFile: '/product/dev/custom/func/upload',//产品-功能定义-导入自定义功能
-
+    cardFunList:'/product/dev/show/card/func',//产品-服务配置-显示功能卡列表
+    setCardFun:'/product/dev/config/card/func',//设置功能卡
     upProMaxStep: '/product/update/step',//记录产品最新配置步骤
 
     // //设备-设备管理

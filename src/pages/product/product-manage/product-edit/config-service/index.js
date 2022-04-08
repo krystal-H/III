@@ -12,7 +12,7 @@ import './index.scss';
 import { Notification } from '../../../../../components/Notification'
 import ZigbeeConfig from './zigbeeConfig'
 import ZigbeeProConfig from './zigbeeProConfig'
-
+import QuickConfig from '../../product-details/service-config/shiftSet'
 //处理数据
 function delaData(data, editData = {}) {
   let newData = []
@@ -104,6 +104,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
     //   routePath: '/open/product/ruleEngine',
     //   url: require('../../../../../assets/images/commonDefault/service-scene.png')
     // },
+
     {
       title: '云端定时',
       desc: '云端设定开关时间及周循环，无需硬件嵌入式开发',
@@ -128,6 +129,14 @@ function ServiceSelect({ productId, nextStep }, ref) {
     //   url: require('../../../../../assets/images/commonDefault/service-gateway.png')
     // },
     {
+      title: 'APP快捷卡片功能配置',
+      desc: '配置在数联智能APP上快捷展示或控制设备的功能卡片',
+      isConfiged: false,
+      type: 'quickSetting',
+      routePath: '/open/product/proManage/voiceSetting',
+      url: require('../../../../../assets/images/commonDefault/voice-setting.png')
+    },
+    {
       title: '语音能力',
       desc: '基于产品功能点，可选择配置主流平台语音控制方案',
       isConfiged: false,
@@ -138,7 +147,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
   ])
   const [productConfig, setProductConfig] = useState('') // 配网信息信息
   const [productExtend, setProductExtend] = useState('') // 通信安全
-
+  const [quickVisible, setQuickVisible] = useState(false)
   const [networkVisible, setNetworkVisible] = useState(false)
   const [securityVisible, setSecurityVisible] = useState(false)
   const [firmwareVisible, setFirmwareVisible] = useState(false)
@@ -356,7 +365,13 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const goVoiceSetting = () => {
     history.push(`/open/product/proManage/voiceSetting/${productId}/?detail=1`)
   }
-
+//快捷配置
+const setQuick = () => {
+  setQuickVisible(true)
+}
+const quickCancel = () => {
+  setQuickVisible(false)
+}
   return (
     <div className="service-config-page">
       <div className="desc">{getSchemeType()}</div>
@@ -405,6 +420,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
                         </Link>
                         :
                         item.type === 'voiceSetting' ? <div className="config-card-right-btn" onClick={() => goVoiceSetting()}>配置</div> :
+                        item.type === 'quickSetting' ? <div className="config-card-right-btn" onClick={() => setQuick()}>配置</div> :
                           item.type === 'addFirmware' ?
                             <>
                               <div className="config-card-right-btn" onClick={() => { showModal(item.type); setShowType('add') }}>配置</div>
@@ -532,6 +548,10 @@ function ServiceSelect({ productId, nextStep }, ref) {
           gatewayVisible={gatewayVisible}
           cancelHandle={() => { setGatewayVisible(false) }} />
       } */}
+      {/* 快捷卡片 */}
+      {
+        quickVisible && <QuickConfig cancelHandle={quickCancel} visible={quickVisible} productId={productId} />
+      }
     </div >
   )
 }

@@ -75,8 +75,8 @@ export default function Device() {
     }
     const getType = () => {
         post(Paths.allProductPubList, {}).then(res => {
-            res.data.unshift({productId:0,productName:"全部产品"})
-            setOptionArr( res.data)
+            res.data.unshift({ productId: 0, productName: "全部产品" })
+            setOptionArr(res.data)
         })
     }
     const onOpenChange = open => {
@@ -88,7 +88,7 @@ export default function Device() {
         }
     };
 
-    
+
     //======
     const [currentTime, setCurrentTime] = useState('1') //当前选择时间
     const [countData, setCountData] = useState(originCount)
@@ -326,7 +326,7 @@ export default function Device() {
                     onOpenChange={onOpenChange}
                     format={'YYYY-MM-DD'}
                     allowClear={false}
-                    style={{'borderColor':value && value.length ? '#1890ff' : ''}}
+                    style={{ 'borderColor': value && value.length ? '#1890ff' : '' }}
                 />
 
             </div>
@@ -340,8 +340,8 @@ export default function Device() {
                     {
                         countData.map((item, index) => {
                             return (
-                                <div key={index} className='count-item' onClick={() => { filterData(index) }}
-                                    className={[currentTab === index ? 'current-tab' : '', index == 4 ? 'last-wrap' : ''].join(' ')}>
+                                <div key={index} onClick={() => { filterData(index) }}
+                                    className={['count-item', currentTab === index ? 'current-tab' : '', index == 4 ? 'last-wrap' : ''].join(' ')}>
                                     <div className='item-label'>{item.label}</div>
                                     <div className='item-number'>{item.count}</div>
                                 </div>
