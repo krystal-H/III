@@ -134,7 +134,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
       isConfiged: false,
       type: 'quickSetting',
       routePath: '/open/product/proManage/voiceSetting',
-      url: require('../../../../../assets/images/commonDefault/voice-setting.png')
+      url: require('../../../../../assets/images/commonDefault/app.png')
     },
     {
       title: '语音能力',

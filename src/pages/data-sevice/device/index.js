@@ -331,17 +331,17 @@ export default function Device() {
 
             </div>
             <div className='comm-shadowbox main-echart'>
-                <h3>设备趋势分析<LabelTip tip="【新增设备数】：平台导入或者录入的设备数。
-【入网设备数】：首次入网统计激活的设备数。
-【活跃设备数】：和clife平台有过一次数据上行或下行的设备数。
-【异常设备数】：一天之内上报过一次故障状态或持续上报过多次故障数值的设备，记为一次异常设备。
-【累计设备数】：产品历史以来总的平台入网设备总数"></LabelTip></h3>
+                <h3>设备趋势分析<LabelTip tip={<span>【新增设备数】：平台导入或者录入的设备数。<br />
+                    【入网设备数】：首次入网统计激活的设备数。<br />
+                    【活跃设备数】：和clife平台有过一次数据上行或下行的设备数。<br />
+                    【异常设备数】：一天之内上报过一次故障状态或持续上报过多次故障数值的设备，记为一次异常设备。<br />
+                    【累计设备数】：产品历史以来总的平台入网设备总数</span>}></LabelTip></h3>
                 <div className='echart-count-tab'>
                     {
                         countData.map((item, index) => {
                             return (
                                 <div key={index} onClick={() => { filterData(index) }}
-                                    className={['count-item', currentTab === index ? 'current-tab' : '', index == 4 ? 'last-wrap' : ''].join(' ')}>
+                                    className={['count-item', currentTab === index ? 'current-tab' : '', index === 4 ? 'last-wrap' : ''].join(' ')}>
                                     <div className='item-label'>{item.label}</div>
                                     <div className='item-number'>{item.count}</div>
                                 </div>
