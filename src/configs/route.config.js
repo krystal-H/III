@@ -128,7 +128,7 @@ export const navRoutes = [
 
             },
             {
-                menuname: '设备用户分析 ',
+                menuname: '设备用户分析',
                 path: '/open/serve/deviceUser',
                 menuid: '4-3',
             },
