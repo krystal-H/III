@@ -15,11 +15,11 @@ const options = [
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const originCount = [
-    { label: '新增用户数', count: '--' },
-    { label: '活跃用户数', count: '--' },
-    { label: '新增用户次日留存率(昨日)', count: '--' },
-    { label: '活跃用户次日留存率(昨日)', count: '--' },
-    { label: '累计用户数', count: '--' }]
+    { label: '新增设备用户数', count: '--' },
+    { label: '活跃设备用户数', count: '--' },
+    { label: '新增设备用户次日留存率(昨日)', count: '--' },
+    { label: '活跃设备用户次日留存率(昨日)', count: '--' },
+    { label: '累计设备用户数', count: '--' }]
 const columns = [
     {
         title: '日期',
@@ -27,27 +27,27 @@ const columns = [
         key: 'summaryDate',
     },
     {
-        title: '新增用户数',
+        title: '新增设备用户数',
         dataIndex: 'newNum',
         key: 'newNum',
     },
     {
-        title: '活跃用户数',
+        title: '活跃设备用户数',
         dataIndex: 'activeNum',
         key: 'activeNum',
     },
     {
-        title: '新增用户次日留存率(昨日)',
+        title: '新增设备用户次日留存率(昨日)',
         dataIndex: 'newRatio',
         key: 'newRatio',
     },
     {
-        title: '活跃用户次日留存率(昨日)',
+        title: '活跃设备用户次日留存率(昨日)',
         dataIndex: 'activeRatio',
         key: 'activeRatio',
     },
     {
-        title: '累计用户数',
+        title: '累计设备用户数',
         dataIndex: 'totalNum',
         key: 'totalNum',
     },
@@ -58,13 +58,6 @@ export default function Device() {
     const [hackValue, setHackValue] = useState();
     const [value, setValue] = useState(); //时间值
     const disabledDate = current => {
-        // if (!dates || dates.length === 0) {
-        //     return false;
-        // }
-        // const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
-        // const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
-        // const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
-        // return isBeyong || tooEarly || tooLate
         return current && current > dayjs().subtract(1, 'day') || current < dayjs().subtract(30, 'day')
     };
 
@@ -94,9 +87,9 @@ export default function Device() {
     }
     const [selectType, setSelectType] = useState(0) //产品种类
     const getType = () => {
-        post(Paths.getAppInfoList, { "pageRows": 9999, "pageIndex": 1 }).then(res => {
-            res.data.list.unshift({ appId: 0, appName: "全部App" })
-            setOptionArr(res.data.list)
+        post(Paths.allProductPubList, {}).then(res => {
+            res.data.unshift({ productId: 0, productName: "全部产品" })
+            setOptionArr(res.data)
         })
     }
     useEffect(() => {
@@ -135,7 +128,7 @@ export default function Device() {
         if (selectType) {
             params.appId = selectType
         }
-        post(Paths.userDataAn, params, { loading }).then((res) => {
+        post(Paths.deviceUserAn, params, { loading }).then((res) => {
             if (Array.isArray(res.data)) {
                 let arr = [], tableArr = []
                 while (dayjs(params.startDate).isBefore(params.endDate, 'day')) {
@@ -183,18 +176,18 @@ export default function Device() {
         if (selectType) {
             params.appId = selectType
         }
-        post(Paths.userDataDown, params).then((res) => {
+        post(Paths.deviceUserFile, params).then((res) => {
             window.open(res.data.path)
         });
     }
     //处理统计
     const dealCount = (origin) => {
         let count = [
-            { label: '新增用户数', count: origin.newNum || 0 },
-            { label: '活跃用户数', count: origin.activeNum || 0 },
-            { label: '新增用户次日留存率(昨日)', count: origin.newRatio || 0 },
-            { label: '活跃用户次日留存率(昨日)', count: origin.activeRatio || 0 },
-            { label: '累计用户数', count: origin.totalNum || 0 }]
+            { label: '新增设备用户数', count: origin.newNum || 0 },
+            { label: '活跃设备用户数', count: origin.activeNum || 0 },
+            { label: '新增设备用户次日留存率(昨日)', count: origin.newRatio || 0 },
+            { label: '活跃设备用户次日留存率(昨日)', count: origin.activeRatio || 0 },
+            { label: '累计设备用户数', count: origin.totalNum || 0 }]
         setCountData(count)
     }
     //
@@ -294,7 +287,7 @@ export default function Device() {
         option && myChart.setOption(option);
     }
     const filterData = (index) => {
-        if (index == 4) {
+        if (index === 4) {
             return
         }
         setCurrentTab(index)
@@ -305,12 +298,12 @@ export default function Device() {
     }
     return (
         <div id='device-analysis'>
-            <PageTitle title='用户分析' >
+            <PageTitle title='设备用户分析' >
                 <div className='top-select'>
                     <Select style={{ width: 150 }} value={selectType} onChange={selectChange} showSearch optionFilterProp="children">
                         {
-                            optionArr.map(item => {
-                                return (<Option value={item.appId} key={item.appId}>{item.appName}</Option>)
+                             optionArr.map(item => {
+                                return (<Option value={item.productId} key={item.productId}>{item.productName}</Option>)
                             })
                         }
                     </Select>
@@ -337,11 +330,12 @@ export default function Device() {
 
             </div>
             <div className='comm-shadowbox main-echart'>
-                <h3>用户趋势分析<LabelTip tip="【新增用户数】：新增在当前账号下关联应用的注册用户数。
-【活跃用户数】：在当前账号下关联应用上有登录动作的人数（单日去重）。
-【新增用户次日留存】：当日新增用户中，第二日有启动过应用或控制面板的数量占比。
-【活跃用户次日留存】：当日活跃用户中，第二日有启动过应用或控制面板的数量占比。
-【累计用户数】：产品历史以来总的平台账号下关联注册用户总数"></LabelTip></h3>
+                <h3>用户趋势分析<LabelTip tip={<span>
+                    【新增设备用户数】：新增绑定到设备的用户数（重复绑定，绑定过此账号下其他设备用户均不去重）。<br />
+                    【活跃设备用户数】：绑定了设备的用户，当日有过设备控制页面打开行为，记一次活跃。<br />
+                    【新增设备用户次日留存】：当日新增设备用户，次日有过设备控制页面打开行为，记一次留存。<br />
+                    【活跃设备用户次日留存】：当日活跃设备用户，次日有过设备控制页面打开行为，记一次留存。<br />
+                    【累计设备用户数】：累计绑定过此账号平台下产品设备的用户数量（重复绑定，绑定多个设备用户均不去重）。</span>}></LabelTip></h3>
                 <div className='echart-count-tab'>
                     {
                         countData.map((item, index) => {

@@ -15,11 +15,11 @@ const options = [
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const originCount = [
-    { label: '新增用户数', count: '--' },
-    { label: '活跃用户数', count: '--' },
-    { label: '新增用户次日留存率(昨日)', count: '--' },
-    { label: '活跃用户次日留存率(昨日)', count: '--' },
-    { label: '累计用户数', count: '--' }]
+    { label: '新增APP用户数', count: '--' },
+    { label: '活跃APP用户数', count: '--' },
+    { label: '新增APP用户次日留存率(昨日)', count: '--' },
+    { label: '活跃APP用户次日留存率(昨日)', count: '--' },
+    { label: '累计APP用户数', count: '--' }]
 const columns = [
     {
         title: '日期',
@@ -27,27 +27,27 @@ const columns = [
         key: 'summaryDate',
     },
     {
-        title: '新增用户数',
+        title: '新增APP用户数',
         dataIndex: 'newNum',
         key: 'newNum',
     },
     {
-        title: '活跃用户数',
+        title: '活跃APP用户数',
         dataIndex: 'activeNum',
         key: 'activeNum',
     },
     {
-        title: '新增用户次日留存率(昨日)',
+        title: '新增APP用户次日留存率(昨日)',
         dataIndex: 'newRatio',
         key: 'newRatio',
     },
     {
-        title: '活跃用户次日留存率(昨日)',
+        title: '活跃APP用户次日留存率(昨日)',
         dataIndex: 'activeRatio',
         key: 'activeRatio',
     },
     {
-        title: '累计用户数',
+        title: '累计APP用户数',
         dataIndex: 'totalNum',
         key: 'totalNum',
     },
@@ -58,13 +58,6 @@ export default function Device() {
     const [hackValue, setHackValue] = useState();
     const [value, setValue] = useState(); //时间值
     const disabledDate = current => {
-        // if (!dates || dates.length === 0) {
-        //     return false;
-        // }
-        // const tooLate = dates[0] && current.diff(dates[0], 'days') > 30;
-        // const tooEarly = dates[1] && dates[1].diff(current, 'days') > 30;
-        // const isBeyong = current > dayjs().subtract(1, 'day') || dates[0] > dayjs().subtract(1, 'day') || dates[1] > dayjs().subtract(1, 'day')
-        // return isBeyong || tooEarly || tooLate
         return current && current > dayjs().subtract(1, 'day') || current < dayjs().subtract(30, 'day')
     };
 
@@ -135,7 +128,7 @@ export default function Device() {
         if (selectType) {
             params.appId = selectType
         }
-        post(Paths.userDataAn, params, { loading }).then((res) => {
+        post(Paths.appUserAn, params, { loading }).then((res) => {
             if (Array.isArray(res.data)) {
                 let arr = [], tableArr = []
                 while (dayjs(params.startDate).isBefore(params.endDate, 'day')) {
@@ -183,18 +176,18 @@ export default function Device() {
         if (selectType) {
             params.appId = selectType
         }
-        post(Paths.userDataDown, params).then((res) => {
+        post(Paths.appUserFile, params).then((res) => {
             window.open(res.data.path)
         });
     }
     //处理统计
     const dealCount = (origin) => {
         let count = [
-            { label: '新增用户数', count: origin.newNum || 0 },
-            { label: '活跃用户数', count: origin.activeNum || 0 },
-            { label: '新增用户次日留存率(昨日)', count: origin.newRatio || 0 },
-            { label: '活跃用户次日留存率(昨日)', count: origin.activeRatio || 0 },
-            { label: '累计用户数', count: origin.totalNum || 0 }]
+            { label: '新增APP用户数', count: origin.newNum || 0 },
+            { label: '活跃APP用户数', count: origin.activeNum || 0 },
+            { label: '新增APP用户次日留存率(昨日)', count: origin.newRatio || 0 },
+            { label: '活跃APP用户次日留存率(昨日)', count: origin.activeRatio || 0 },
+            { label: '累计APP用户数', count: origin.totalNum || 0 }]
         setCountData(count)
     }
     //
@@ -305,7 +298,7 @@ export default function Device() {
     }
     return (
         <div id='device-analysis'>
-            <PageTitle title='用户分析' >
+            <PageTitle title='APP用户分析' >
                 <div className='top-select'>
                     <Select style={{ width: 150 }} value={selectType} onChange={selectChange} showSearch optionFilterProp="children">
                         {
@@ -337,11 +330,12 @@ export default function Device() {
 
             </div>
             <div className='comm-shadowbox main-echart'>
-                <h3>用户趋势分析<LabelTip tip="【新增用户数】：新增在当前账号下关联应用的注册用户数。
-【活跃用户数】：在当前账号下关联应用上有登录动作的人数（单日去重）。
-【新增用户次日留存】：当日新增用户中，第二日有启动过应用或控制面板的数量占比。
-【活跃用户次日留存】：当日活跃用户中，第二日有启动过应用或控制面板的数量占比。
-【累计用户数】：产品历史以来总的平台账号下关联注册用户总数"></LabelTip></h3>
+                <h3>用户趋势分析<LabelTip tip={<span>
+                    【新增APP用户数】：在平台创建的App的注册用户新增数。<br />
+                    【活跃APP用户数】：在平台创建的APP当日有过一次成功登录状态下的APP启动或唤醒行为以上，记一次活跃用户。<br />
+                    【新增APP用户次日留存】：当日新增APP用户，次日有过一次成功登录状态下的APP启动或唤醒行为以上，记一次留存。<br />
+                    【活跃APP用户次日留存】：当日活跃设备用户，次日有过一次成功登录状态下的APP启动或唤醒行为以上，记一次留存。<br />
+                    【累计APP用户数】：累计在平台创建的App的注册用户新增数。</span>}></LabelTip></h3>
                 <div className='echart-count-tab'>
                     {
                         countData.map((item, index) => {

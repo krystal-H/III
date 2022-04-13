@@ -545,6 +545,10 @@ let Paths = {
     userDataAn: '/summary/account/dashboard',//用户分析
     deviceDataDown: '/summary/device/download',//设备分析下载
     userDataDown: '/summary/account/download',//用户分析下载
+    deviceUserAn:'/summary/deviceBind/user/dashboard',//获取指定日期内的绑定设备用户统计
+    deviceUserFile:'/summary/deviceBind/user/download',//获取指定日期内的绑定设备用户统计下载
+    appUserAn:'/summary/account/dashboard',//获取指定日期内的绑定app用户统计
+    appUserFile:'/summary/account/download',//获取指定日期内的绑定app用户统计下载
     allProductPubList: '/productManage/getPublishProductList', // 已发布的产品列表  包含新旧产品
     //公共接口
     getProductType: '/productManage/getSelectList',//所有的产品下拉列表
