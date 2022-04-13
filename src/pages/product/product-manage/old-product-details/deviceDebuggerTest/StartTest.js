@@ -1691,7 +1691,7 @@ export default class StartTest  extends Component{
                     '[' +
                     this.props.deviceAndWs.token.data +
                     '|' +
-                    this.props.developerInfo.parentId || this.props.developerInfo.userId
+                    this.props.developerInfo.parentId || this.props.developerInfo.userId +
                     '|' +
                     deviceTypeId +
                     '#' +
@@ -1700,6 +1700,7 @@ export default class StartTest  extends Component{
                     productVersion +
                     ']';
                 // let productMsg = "[144514545|1|11#3#1]";//测试数据
+                console.log("productMsg-----",productMsg)
                 ws.send(productMsg);
             }.bind(this);
             //接收到消息
