@@ -198,7 +198,7 @@ let Paths = {
     getMockDeviceId: '/device/debug/mockDevice/active',//虚拟设备调试获得虚拟设备id
     getDebugHis: '/device/debug/accountAndMac/list',//设备调试-历史列表
     hisDebugMac: '/device/debug/accountAndMac/record',//设备调试-历史列表--调试/新增
-
+    hisDebugMacdel: '/device/debug/delDebugAccountByIds',//设备调试-历史列表--调试/删除
 
 
     /* 设备数据api start */
