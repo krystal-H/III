@@ -1,7 +1,7 @@
 export const urlPrefix = '/v5x/web/open';//接口统一公共路径
 // export const urlPrefix = '/v5/web/open';//接口统一公共路径
 let fileTourl = "/v4/web/tencentcloud/upload"; //上传腾讯云接口，生产环境上用跨域的绝对路径
-if(window.location.hostname == "open.clife.cn" || window.location.hostname == "cms.clife.cn"){
+if (window.location.hostname == "open.clife.cn" || window.location.hostname == "cms.clife.cn") {
     fileTourl = "https://cms.clife.cn/v4/web/tencentcloud/upload"
 }
 
@@ -11,24 +11,26 @@ const NOT_NEED_PREFIX = ['upFileUrl']
 
 let Paths = {
     /* 上传文件*/
-    upFileUrl:fileTourl,
+    upFileUrl: fileTourl,
 
     /* 账户、用户中心*/
     loginCheck: '/common/login',
     logout: '/common/loginOut',
-    verifyCodeUrl : '/common/getImgVeriCode',
-    register:'/common/register',
-    registerConfirm : '/common/authConfirm',
-    resendRegisterEmail : '/common/resendEmail',
-    subResetPassword:'/common/sub/resetPwd',
+    verifyCodeUrl: '/common/getImgVeriCode',
+    register: '/common/register',
+    registerConfirm: '/common/authConfirm',
+    resendRegisterEmail: '/common/resendEmail',
+    subResetPassword: '/common/sub/resetPwd',
     resetAuth: '/common/forgetPwd',
-    resetEmail : '/common/resetEmail',
-    setPassword : '/common/setPassWord',
-    getDeveloperInfo : '/user/getUserInfo',
-    upDeveloperInfo : '/common/updateUserInfo',
-    getRightsOneself : '/common/getSubInfo',
-    cancelAccount : '/common/cancelAccount',
-    withdraw : '/common/withdraw',
+    resetEmail: '/common/resetEmail',
+    setPassword: '/common/setPassWord',
+    getDeveloperInfo: '/user/getUserInfo',
+    upDeveloperInfo: '/common/updateUserInfo',
+    getRightsOneself: '/common/getSubInfo',
+    cancelAccount: '/common/cancelAccount',
+    withdraw: '/common/withdraw',
+    destroyUser: '/common/destroyUser',
+    
     getGroupMenuList: '/common/getMenus',//获取账号权限菜单
     customerServiceHistory: '/support/getHistory',//客服历史信息
 
@@ -94,6 +96,7 @@ let Paths = {
     getDevFirmwareList: '/firmware/list/moduleId', // 获取模组固件列表
     saveChooseFirmware: '/product/scheme/update', // 保存更换的固件
     saveCommunication: '/product/protocol/setting', // 保存通信协议
+    downloadHardWareData: '/product/dev/show/module/resources', // 下载资料
 
 
     // 5.xAPP-应用管理
@@ -123,10 +126,10 @@ let Paths = {
     getSubjectExtendMenu: '/protoManage/getSubjectExtendMenu',
     getFunctionMenu: '/protoManage/getFunctionMenu',
     getFunctionExtendMenu: '/protoManage/getFunctionExtendMenu',
-    getTsl:'/tsl/getTSL',
-    exportTsl:'/tsl/export',
-    saveNoProductId:'/thing/label/saveNoProductId',
-    
+    getTsl: '/tsl/getTSL',
+    exportTsl: '/tsl/export',
+    saveNoProductId: '/thing/label/saveNoProductId',
+
     /* 页面配置步骤信息*/
     getConfigSteps: '/product/getConfigSteps',
     saveConfigSteps: '/product/saveConfigSteps',
@@ -136,7 +139,7 @@ let Paths = {
     getH5Pages: '/projectManage/getProjectList',
     getAppsByProductId: '/projectManage/getAppsByProductId',
     delApph5Project: '/projectManage/delProject',
-    getGreyPubHistory:'/projectManage/getGreyPubHistory',
+    getGreyPubHistory: '/projectManage/getGreyPubHistory',
     getFormalPubHistory: '/projectManage/getFormalPubHistory',
     garyUpdate: '/projectManage/garyUpdate',
     formalUpdate: '/projectManage/formalUpdate',
@@ -182,20 +185,20 @@ let Paths = {
     dataTypeList: '/device/debug/getDataTypeList', //获取数据类型
     propertyConfig: '/device/debug/getPropertyConfig_v1.1',//根据产品ID获取协议信息
     deviceDebugAccountGetList: "/device/debug/account/getList",//调试账号列表
-    
+
     deviceDebugAccountDelete: "/device/debug/account/delete",//调试账号删除
     deviceDebugMacGetList: "/device/debug/mac/getList",//调试MAC列表
     deviceDebugMacDelete: "/device/debug/mac/delete",//调试MAC删除
     upgradeDebug: "/device/debug/upgradeDebug",//固件升级调试
 
-    debugSecretList:'/device/debug/mac/debugSecretList',//调试密钥列表
+    debugSecretList: '/device/debug/mac/debugSecretList',//调试密钥列表
     deviceDebugAccountInsert: "/device/debug/account/insert",//调试账号添加
-    addDebugMac:'/device/debug/mac/addDebugMac',
-    delDebugMac:'/device/debug/mac/delDebugMac',
-    getMockDeviceId:'/device/debug/mockDevice/active',//虚拟设备调试获得虚拟设备id
-    getDebugHis:'/device/debug/accountAndMac/list',//设备调试-历史列表
-    hisDebugMac:'/device/debug/accountAndMac/record',//设备调试-历史列表--调试/新增
-    
+    addDebugMac: '/device/debug/mac/addDebugMac',
+    delDebugMac: '/device/debug/mac/delDebugMac',
+    getMockDeviceId: '/device/debug/mockDevice/active',//虚拟设备调试获得虚拟设备id
+    getDebugHis: '/device/debug/accountAndMac/list',//设备调试-历史列表
+    hisDebugMac: '/device/debug/accountAndMac/record',//设备调试-历史列表--调试/新增
+    hisDebugMacdel: '/device/debug/delDebugAccountByIds',//设备调试-历史列表--调试/删除
 
 
     /* 设备数据api start */
@@ -222,16 +225,16 @@ let Paths = {
     addProduct: '/product/addProduct',//新建产品
     /* 新建产品 end */
 
-     /**
-     * 硬件开发 start
-     * aize-2019-09-11
-     */
+    /**
+    * 硬件开发 start
+    * aize-2019-09-11
+    */
     moduleBrandList: '/product/moduleBrand/list',//获取模组厂家列表
     getModuleList: '/product/getModuleList',//获取模组列表
     mcuCodeCheck: '/protoManage/mcuCodeCheck',//生成并下载MCU SDK --- 检测与协议得关系
     mcuCodeExport: '/protoManage/mcuCodeExport',//生成并下载MCU SDK
     saveModule: '/product/saveModule',//保存产品所选模组信息
-    getModuleInfo:'/product/getModuleInfo',
+    getModuleInfo: '/product/getModuleInfo',
 
 
     /**
@@ -248,40 +251,41 @@ let Paths = {
      * aize-2019-09-18
      */
     getBusinessInfo: '/product/commerce/info/show',//产品-基本信息-商业化信息
-    getPublishProductFn:'',//功能定义
-    getPublishProductLabelList:'/label/list',//标签列表
-    getPublishProductLabelAdd:'/label/create',//新增标签
-    getPublishProductLabelDel:'/label/delete',//删除标签
-    getPublishProductLabelEdit:'/label/update',//编辑标签
+    getPublishProductFn: '',//功能定义
+    getPublishProductLabelList: '/label/list',//标签列表
+    getPublishProductLabelAdd: '/label/create',//新增标签
+    getPublishProductLabelDel: '/label/delete',//删除标签
+    getPublishProductLabelEdit: '/label/update',//编辑标签
 
 
     /*产品-标签*/
-    getProductLabelList:'/label/getList',
-    getProductLabelBaseList:'/label/getDownList',
-    addProductLabel:'/label/add',
-    updateProductLabel:'/label/update',
-    delProductLabel:'/label/delete',
+    getProductLabelList: '/label/getList',
+    getProductLabelBaseList: '/label/getDownList',
+    addProductLabel: '/label/add',
+    updateProductLabel: '/label/update',
+    delProductLabel: '/label/delete',
 
-     /*产品-物标签*/
-     getThingLabelList:'/thing/label/getList',
+    /*产品-物标签*/
+    getThingLabelList: '/thing/label/getList',
 
     /*设备管理*/
-    
-    getUserProduct:'/deviceInfo/getProduct',//获取账号下的产品
-    getDeviceStat:'/deviceInfo/deviceStat',//获取设备入网统计
-    getDeviceList:'/deviceManage/getDeviceList',//获取联网设备列表
-    getDeviceInfo:'/deviceManage/getDeviceDetailInfo',//获取设备详情
-    getDeviceLabelList:'/deviceLabel/getList',//获取设备标签列表
-    getLabelBaseList:'/deviceLabel/getDownList',//获取标签库列表
-    addDeviceLabel:'/deviceLabel/add',//新增设备标签
-    updateDeviceLabel:'/deviceLabel/update',//修改设备标签
-    deleteDeviceLabel:'/deviceLabel/delete',//删除设备标签
-    exportDeviceList:'/deviceManage/exportDeviceList',//导出数据
-    deviceShadow:'/deviceManage/getProtocolList',//设备影子
-    deviceShadowHis:'/deviceManage/getHistoryProtocolList',//设备影子历史数据
-    exportShadowHis:'/deviceManage/exportHistoryProtocolList',//设备影子历史数据
-    getDeviceTitle:'/getDeviceDetailList',//设备头部
-    
+
+    getUserProduct: '/deviceInfo/getProduct',//获取账号下的产品
+    getDeviceStat: '/deviceInfo/deviceStat',//获取设备入网统计
+    getDeviceList: '/deviceManage/getDeviceList',//获取联网设备列表
+    getDeviceInfo: '/deviceManage/getDeviceDetailInfo',//获取设备详情
+    getDeviceLabelList: '/deviceLabel/getList',//获取设备标签列表
+    getLabelBaseList: '/deviceLabel/getDownList',//获取标签库列表
+    addDeviceLabel: '/deviceLabel/add',//新增设备标签
+    updateDeviceLabel: '/deviceLabel/update',//修改设备标签
+    deleteDeviceLabel: '/deviceLabel/delete',//删除设备标签
+    exportDeviceList: '/deviceManage/exportDeviceList',//导出数据
+    deviceShadow: '/deviceManage/getProtocolList',//设备影子
+    deviceShadowHis: '/deviceManage/getHistoryProtocolList',//设备影子历史数据
+    exportShadowHis: '/deviceManage/exportHistoryProtocolList',//设备影子历史数据
+    getDeviceTitle: '/getDeviceDetailList',//设备头部
+    gatewayList: '/deviceManage/getSubDeviceList',//子设备列表
+
 
     /**
      * 账户-访问用户 start
@@ -296,7 +300,7 @@ let Paths = {
     updateChild: '/common/updateSubUser',
     getChildWithSecret: '/common/getSubUserInfo',//获得单个子账号+secret数据
 
-    
+
     getRights: '/rights/getRights',//获得角色/子账户正在使用的角色的权限数据及相关列表
     /* 账户-访问用户 end */
 
@@ -306,7 +310,7 @@ let Paths = {
      */
     getRolePage: '/rights/getRolePage',
     deleteRole: '/rights/deleteRole',
-    
+
     saveRole: '/rights/createRole',
 
     /**
@@ -315,34 +319,35 @@ let Paths = {
      */
     getDataSubscriptionList: '/data/push/config/getList',
     getCurSubscription: '/data/push/config/getByUrlConfId',
-    stopCurSubscription: '/data/push/config/stop'+version,
-    enabledCurSubscription: '/data/push/config/enabled'+version,
+    stopCurSubscription: '/data/push/config/stop' + version,
+    enabledCurSubscription: '/data/push/config/enabled' + version,
     getProductByDeveloperId: '/data/push/config/getProductByDeveloperId',
     getLabelByProductId: '/data/push/config/getLabelByProductId',
-    createSubscription: '/data/push/config/create'+version,
-    saveSubscription: '/data/push/config/save'+version,
-    subscribeList:'/datapush/getSubscriptConfList', //数据订阅列表
-    subscribeStart:'/datapush/enabled',//启动数据订阅
-    subscribeClose:'/datapush/stop',//停用数据订阅
-    subscribeDetail:'/datapush/getByUrlConfId',//订阅详情
-    addsubscribe:'/datapush/create',//新增数据订阅
-    getLabelByAddress:'/deviceLabel/getDeviceLabelByProductId',//通过地区获取label
-    getProductByProject:'/projectDevice/getProductListByProjectId',
-    getDeviceEvent:'/datapush/getDeviceEventList',
-    checkRelDevice:'/datapush/checkValidDevice',//检测是否为真实设备
+    createSubscription: '/data/push/config/create' + version,
+    saveSubscription: '/data/push/config/save' + version,
+    subscribeList: '/datapush/getSubscriptConfList', //数据订阅列表
+    subscribeStart: '/datapush/enabled',//启动数据订阅
+    subscribeClose: '/datapush/stop',//停用数据订阅
+    subscribeDetail: '/datapush/getByUrlConfId',//订阅详情
+    addsubscribe: '/datapush/create',//新增数据订阅
+    getLabelByAddress: '/deviceLabel/getDeviceLabelByProductId',//通过地区获取label
+    getProductByProject: '/projectDevice/getProductListByProjectId',
+    getDeviceEvent: '/datapush/getDeviceEventList',
+    checkRelDevice: '/datapush/checkValidDevice',//检测是否为真实设备
+    getsubscribeProduct: '/datapush/getSubscriptContentByProductId', // 根据产品id查询设备事件和功能定义
     /**
      * 基础产品--应用 start
      * xiao-2019-10-17
      */
     getApplicationList: '/devapp/getAppList',
-    saveAppBaseInfo: '/devapp/saveAppBaseInfo'+version,
-    saveMiniProgramsInfo: '/devapp/saveMiniProgramsInfo'+version,
-    deleteRelationProduct: '/devapp/deleteRelaProduct'+version,
-    deleteAppVersion: '/devapp/version/delete'+version,
+    saveAppBaseInfo: '/devapp/saveAppBaseInfo' + version,
+    saveMiniProgramsInfo: '/devapp/saveMiniProgramsInfo' + version,
+    deleteRelationProduct: '/devapp/deleteRelaProduct' + version,
+    deleteAppVersion: '/devapp/version/delete' + version,
     getAppInfo: '/devapp/getAppInfo',
-    updateRelaProduct: '/devapp/updateRelaProduct'+version,
-    deleteApp: '/devapp/delete'+version,
-    createAppVersion: '/devapp/version/add'+version,
+    updateRelaProduct: '/devapp/updateRelaProduct' + version,
+    deleteApp: '/devapp/delete' + version,
+    createAppVersion: '/devapp/version/add' + version,
     getAppVersionDetail: '/devapp/version/get',
     getRelaProducts: '/devapp/getRelaProducts',
     getVersionList: '/devapp/getList',
@@ -381,18 +386,18 @@ let Paths = {
     getWarningConfigDetail: '/device/warning/rule/get',
     getWarningInfo: '/device/warning/info/get',
     dealWithWarning: '/device/warning/info/update',
-    
+
     getDeviceListByProId: '/remoteConfig/deviceInfo/getList',
-    getWarnProperty:'/device/warning/property/get',
-    getWarnEventProperty:'/device/warning/event/get',
-    getWarnEventLi:'/device/warning/event/list',
+    getWarnProperty: '/device/warning/property/get',
+    getWarnEventProperty: '/device/warning/event/get',
+    getWarnEventLi: '/device/warning/event/list',
 
-    getAppInfoPushSet:'/appInfoManage/push/get',
-    setAppInfoPushSet:'/appInfoManage/push/set',
+    getAppInfoPushSet: '/appInfoManage/push/get',
+    setAppInfoPushSet: '/appInfoManage/push/set',
 
-    
 
-    
+
+
     // 5.x远程配置
     getRomoteConfigListByProduct5x: '/remoteConfig/product/getList', // 主页列表
     getRemoteDeviceList5x: '/remoteConfig/deviceInfo/getList', // 获得单个产品下的设备列表
@@ -401,190 +406,195 @@ let Paths = {
     executeTask5x: '/remoteConfig/product/submit', // 执行远程配置任务
     getRemoteConfig5x: '/remoteConfig/product/get', // 获得单个产品的远程配置任务
     deleteRemoteConfig: '/remoteConfig/product/delete', // 删除单个产品的配置任务
-    
+
 
     // 远程配置
-    getRomoteConfigListByProduct:'/remote/config/product/task/getPage',
-    saveRomoteConfig:'/remote/config/product/task/save',
-    submitRomoteConfig:'/remote/config/product/task/submit',
-    deleteRomoteConfig:'/remote/config/product/task/delete',
-    getAllDeviceInfo:'/remote/config/product/device/getAllDeviceInfoPage',
-    getDeviceInfoByIdOrMacAddress:'/remote/config/product/device/getDeviceInfoByIdOrMacAddress',
-    downloadRemoteDeviceTemplateExcel:'/remote/config/product/device/downloadExcel',
-    importRemoteDeviceExcel:'/remote/config/product/device/importExcel',
-    getRemoteDetail:'/remote/config/product/task/get',
-    getResultTotal:'/remote/config/product/task/getResultTotal',
-    getDeviceResultList:'/remote/config/product/task/getResultPager',
-    retryByTaskId:'/remote/config/product/task/retry',
-    batchRetry:'/remote/config/product/task/batchRetry',
-    exportTaskResult:'/remote/config/product/task/exportResult',
-    getReceiveMsg:'/remote/config/product/task/getReceiveMsg',
-    getRomoteConfigListForDevice:'/remote/config/device/task/getPage',
-    getRemoteDetailForDevice:'/remote/config/device/task/get',
-    saveRomoteConfigForDevice:'/remote/config/device/task/saveAndSubmit',
-    retryByTaskIdForDevice:'/remote/config/device/task/retry',
-    getReceiveMsgForDevice:'/remote/config/device/task/getReceiveMsg',
+    getRomoteConfigListByProduct: '/remote/config/product/task/getPage',
+    saveRomoteConfig: '/remote/config/product/task/save',
+    submitRomoteConfig: '/remote/config/product/task/submit',
+    deleteRomoteConfig: '/remote/config/product/task/delete',
+    getAllDeviceInfo: '/remote/config/product/device/getAllDeviceInfoPage',
+    getDeviceInfoByIdOrMacAddress: '/remote/config/product/device/getDeviceInfoByIdOrMacAddress',
+    downloadRemoteDeviceTemplateExcel: '/remote/config/product/device/downloadExcel',
+    importRemoteDeviceExcel: '/remote/config/product/device/importExcel',
+    getRemoteDetail: '/remote/config/product/task/get',
+    getResultTotal: '/remote/config/product/task/getResultTotal',
+    getDeviceResultList: '/remote/config/product/task/getResultPager',
+    retryByTaskId: '/remote/config/product/task/retry',
+    batchRetry: '/remote/config/product/task/batchRetry',
+    exportTaskResult: '/remote/config/product/task/exportResult',
+    getReceiveMsg: '/remote/config/product/task/getReceiveMsg',
+    getRomoteConfigListForDevice: '/remote/config/device/task/getPage',
+    getRemoteDetailForDevice: '/remote/config/device/task/get',
+    saveRomoteConfigForDevice: '/remote/config/device/task/saveAndSubmit',
+    retryByTaskIdForDevice: '/remote/config/device/task/retry',
+    getReceiveMsgForDevice: '/remote/config/device/task/getReceiveMsg',
 
     //项目-设备分组
-    getGroupList:'/projectGroup/getProjectGroupList',
-    updateGroup:'/projectGroup/saveProjectGroup',
-    deleteGroup:'/projectGroup/deleteProjectGroup',
-    getGroupDeviceList:'/projectGroup/getGroupDeviceList',
-    getGroupSlctDev:'/projectDevice/getDeviceBindList',
-    delGroupDevice:'/projectGroup/deleteGroupDevice',
-    addGroupDevice:'/projectGroup/addGroupDevice',
-    
+    getGroupList: '/projectGroup/getProjectGroupList',
+    updateGroup: '/projectGroup/saveProjectGroup',
+    deleteGroup: '/projectGroup/deleteProjectGroup',
+    getGroupDeviceList: '/projectGroup/getGroupDeviceList',
+    getGroupSlctDev: '/projectDevice/getDeviceBindList',
+    delGroupDevice: '/projectGroup/deleteGroupDevice',
+    addGroupDevice: '/projectGroup/addGroupDevice',
+
     // 项目管理
-    getProjectList:'/project/getList',    
-    addProject:'/project/add',
-    updateProject:'/project/update',
-    deleteProject:'/project/delete',
-    getProductInProject:'/prod/getProduct',
-    getRelaProduct:'/prod/getRelaProduct',
-    getRelaDevice:'/project/device/getRelaDevice',
-    getDeviceInProject:'/project/device/getDevice',
-    getServeList:'/serve/getList',
-    serveAdd:'/serve/add',
-    serveCopy:'/serveOpe/duplicate',
-    serveDelete:'/serve/delete',
-    servePublish:'/serveOpe/publish',
-    serveInvoke:'/serveOpe/invoke',
-    serveCallExplain:'/serveOpe/callExplain',
-    getAllRelatedProduct:'/project/device/getDownProduct',
-    getAllRelatedDevice:'/project/device/getRelatedDevice',
-    unrelaProduct:'/prod/unrelaProduct',
-    unrelaDevice:'/project/device/unrelaDevice',
-    relaProduct:'/prod/relaProduct', 
-    relaDevice:'/project/device/relaDevice', 
-    addDevice:'/project/device/addDevice',
-    getServiceLog:'/serveOpe/getServiceLog',
-    getFlowData:'/serveOpe/editFlow',
-    saveFlowData:'/serveOpe/saveFlow',
-    getDataAnlzType:'/serveOpe/getDataAnlzType',
-    getInvokeUrl:'/serveOpe/getInvokeUrl',
-    parserSql:'/dataAccess/parserSql',
-    getServeStatu:'/serve/get',
-    getDownTbTreeByDs:'/dataAccess/getDownTbTreeByDs',
-    getPublishParam:'/serveOpe/getPublishParam',
-    updateServe:'/serve/update',
-    sqlTestTslData:'/dataoperate/search/tslData',
-    getProLogicTreeData:'/dataoperate/search/struct/product',
-    sqlTestProductData:'/dataoperate/search/data/product',
-    downTslHistory:'/dataoperate/search/download/history',
+    getProjectList: '/project/getList',
+    addProject: '/project/add',
+    updateProject: '/project/update',
+    deleteProject: '/project/delete',
+    getProductInProject: '/prod/getProduct',
+    getRelaProduct: '/prod/getRelaProduct',
+    getRelaDevice: '/project/device/getRelaDevice',
+    getDeviceInProject: '/project/device/getDevice',
+    getServeList: '/serve/getList',
+    serveAdd: '/serve/add',
+    serveCopy: '/serveOpe/duplicate',
+    serveDelete: '/serve/delete',
+    servePublish: '/serveOpe/publish',
+    serveInvoke: '/serveOpe/invoke',
+    serveCallExplain: '/serveOpe/callExplain',
+    getAllRelatedProduct: '/project/device/getDownProduct',
+    getAllRelatedDevice: '/project/device/getRelatedDevice',
+    unrelaProduct: '/prod/unrelaProduct',
+    unrelaDevice: '/project/device/unrelaDevice',
+    relaProduct: '/prod/relaProduct',
+    relaDevice: '/project/device/relaDevice',
+    addDevice: '/project/device/addDevice',
+    getServiceLog: '/serveOpe/getServiceLog',
+    getFlowData: '/serveOpe/editFlow',
+    saveFlowData: '/serveOpe/saveFlow',
+    getDataAnlzType: '/serveOpe/getDataAnlzType',
+    getInvokeUrl: '/serveOpe/getInvokeUrl',
+    parserSql: '/dataAccess/parserSql',
+    getServeStatu: '/serve/get',
+    getDownTbTreeByDs: '/dataAccess/getDownTbTreeByDs',
+    getPublishParam: '/serveOpe/getPublishParam',
+    updateServe: '/serve/update',
+    sqlTestTslData: '/dataoperate/search/tslData',
+    getProLogicTreeData: '/dataoperate/search/struct/product',
+    sqlTestProductData: '/dataoperate/search/data/product',
+    downTslHistory: '/dataoperate/search/download/history',
     addTslHistory: '/dataoperate/search/dataDownload',
-    
+
     //设备监控
-    geMonitorList:'/monitor/list',
-    startMonitor:'/monitor/start',
-    stopMonitor:'/monitor/stop',
-    deleteMonitor:'/monitor/delete',
-    addMonitor:'/monitor/add',
-    updateMonitor:'/monitor/update',
-    getMonitor:'/monitor/get',
-    getTransfer4Monitor:'/transfer/getTransferList4Monitor',
+    geMonitorList: '/monitor/list',
+    startMonitor: '/monitor/start',
+    stopMonitor: '/monitor/stop',
+    deleteMonitor: '/monitor/delete',
+    addMonitor: '/monitor/add',
+    updateMonitor: '/monitor/update',
+    getMonitor: '/monitor/get',
+    getTransfer4Monitor: '/transfer/getTransferList4Monitor',
 
     //OTA升级
-    otaDevVersionList:'/firmware/productFirmware/getList',
-    otaProDevVersionList:'/firmware/productFirmware/getProductFirmwareList',
-    otaGetExtVersion:'/device/version/5/getExtVersion',
-    otaDeleteVer:'/device/version/5/delete',
-    firmwareLastVersion:'/firmware/productFirmware/getLastProductVersion',
-    otaAddVersion:'/firmware/device/version/add',
-    otaGetVersionDetail:'/firmware/device/version/get',
-    otaGetBatch:'/firmware/device/upgrade/publish/getBatch',
-    otaGetBatchDevice:'/firmware/device/upgrade/publish/get',
-    otaGetBatchInfo:'/firmware/device/upgrade/publish/getBatchInfo',
-    otaCancelDevicePub:'/firmware/device/upgrade/publish/cancel',
-    otaValiGetinfo:'/firmware/device/version/validate/getInfo',
-    otaImportMac:'/firmware/device/version/importMac',
-    otaValidate:'/firmware/device/version/validate',
-    otaRelease:'/firmware/device/upgrade/publish',
-    getMcuSocProLi:'/productManage/getFilterSchemaSelList',
-    
+    otaDevVersionList: '/firmware/productFirmware/getList',
+    otaProDevVersionList: '/firmware/productFirmware/getProductFirmwareList',
+    otaGetExtVersion: '/device/version/5/getExtVersion',
+    otaDeleteVer: '/device/version/5/delete',
+    firmwareLastVersion: '/firmware/productFirmware/getLastProductVersion',
+    otaAddVersion: '/firmware/device/version/add',
+    otaGetVersionDetail: '/firmware/device/version/get',
+    otaGetBatch: '/firmware/device/upgrade/publish/getBatch',
+    otaGetBatchDevice: '/firmware/device/upgrade/publish/get',
+    otaGetBatchInfo: '/firmware/device/upgrade/publish/getBatchInfo',
+    otaCancelDevicePub: '/firmware/device/upgrade/publish/cancel',
+    otaValiGetinfo: '/firmware/device/version/validate/getInfo',
+    otaImportMac: '/firmware/device/version/importMac',
+    otaValidate: '/firmware/device/version/validate',
+    otaRelease: '/firmware/device/upgrade/publish',
+    getMcuSocProLi: '/productManage/getFilterSchemaSelList',
+
     //总览页
-    homeBanner:'/cover/getBannerList',//banner图
-    messageList:'/cover/getSystemNotice' ,//消息列表
-    appList:'/appInfoManage/getAppInfoList' ,//app列表
-    devWarnCount:'/deviceCount/deviceWarningCount' ,//设备报警统计
-    devSecreCount:'/deviceCount/deviceSecretKeyCount' ,//设备密钥统计
-    devMnCount:'/deviceCount/deviceManageCount' ,//设备管理统计
-    productCount:'/cover/getDeviceProductCount' ,//产品统计
-    productList:'/productManage/getProductList' ,//产品列表
+    homeBanner: '/cover/getBannerList',//banner图
+    messageList: '/cover/getSystemNotice',//消息列表
+    appList: '/appInfoManage/getAppInfoList',//app列表
+    devWarnCount: '/deviceCount/deviceWarningCount',//设备报警统计
+    devSecreCount: '/deviceCount/deviceSecretKeyCount',//设备密钥统计
+    devMnCount: '/deviceCount/deviceManageCount',//设备管理统计
+    productCount: '/cover/getDeviceProductCount',//产品统计
+    productList: '/productManage/getProductList',//产品列表
 
     // 产品发布前-定义功能
-    editProductInfo:'/product/update',//产品-基本信息-编辑
-    standardFnList:'/product/dev/show/func', //标准和自定义功能列表
-    Physpanel:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
-    exportPhysicalModel:'/physicalModel/export/product',//产品-定义功能-导出物模型
-    PhysicalModelAction:'/physicalModel/func/product/action',//产品-功能定义-物模型-功能-增
-    sepanel:'/physicalModel/func/search',//产品-功能定义-创建物模型-查询模型列表
-    addPhticalStard:'/physicalModel/func/product/add',//产品-功能定义-物模型-新增标准模型
-    downPhysicalModel:'/physicalModel/download/product',//产品-功能定义-下载物模型
-    PhysicalModelList:'/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
-    exportFnFile:'/product/dev/custom/func/upload',//产品-功能定义-导入自定义功能
-
-    upProMaxStep:'/product/update/step',//记录产品最新配置步骤
+    editProductInfo: '/product/update',//产品-基本信息-编辑
+    standardFnList: '/product/dev/show/func', //标准和自定义功能列表
+    Physpanel: '/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
+    exportPhysicalModel: '/physicalModel/export/product',//产品-定义功能-导出物模型
+    PhysicalModelAction: '/physicalModel/func/product/action',//产品-功能定义-物模型-功能-增
+    sepanel: '/physicalModel/func/search',//产品-功能定义-创建物模型-查询模型列表
+    addPhticalStard: '/physicalModel/func/product/add',//产品-功能定义-物模型-新增标准模型
+    downPhysicalModel: '/physicalModel/download/product',//产品-功能定义-下载物模型
+    PhysicalModelList: '/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
+    exportFnFile: '/product/dev/custom/func/upload',//产品-功能定义-导入自定义功能
+    cardFunList:'/product/dev/show/card/func',//产品-服务配置-显示功能卡列表
+    setCardFun:'/product/dev/config/card/func',//设置功能卡
+    upProMaxStep: '/product/update/step',//记录产品最新配置步骤
 
     // //设备-设备管理
     // getDeviceList
     //工单
-    getWorkOrderDictionary:'/workOrder/getWorkOrderDictionary',//工单-字典
-    subWorkOrder :'/workOrder/createWorkOrder',//新增工单
-    WorkOrderList:'/workOrder/getHistoryWorkOrderList',//工单列表
-    WorkOrderDetail:'/workOrder/getWorkOrder',//工单详情
-    downDeviceFile:'/deviceExport/exportDeviceList',//下载设备数据
+    getWorkOrderDictionary: '/workOrder/getWorkOrderDictionary',//工单-字典
+    subWorkOrder: '/workOrder/createWorkOrder',//新增工单
+    WorkOrderList: '/workOrder/getHistoryWorkOrderList',//工单列表
+    WorkOrderDetail: '/workOrder/getWorkOrder',//工单详情
+    downDeviceFile: '/deviceExport/exportDeviceList',//下载设备数据
 
     //数据服务
-    deviceDataAn:'/summary/device/dashboard',//设备分析
-    userDataAn:'/summary/account/dashboard',//用户分析
-    deviceDataDown:'/summary/device/download',//设备分析下载
-    userDataDown:'/summary/account/download',//用户分析下载
-    allProductPubList:'/productManage/getPublishProductList', // 已发布的产品列表  包含新旧产品
+    deviceDataAn: '/summary/device/dashboard',//设备分析
+    userDataAn: '/summary/account/dashboard',//用户分析
+    deviceDataDown: '/summary/device/download',//设备分析下载
+    userDataDown: '/summary/account/download',//用户分析下载
+    deviceUserAn:'/summary/deviceBind/user/dashboard',//获取指定日期内的绑定设备用户统计
+    deviceUserFile:'/summary/deviceBind/user/download',//获取指定日期内的绑定设备用户统计下载
+    appUserAn:'/summary/account/dashboard',//获取指定日期内的绑定app用户统计
+    appUserFile:'/summary/account/download',//获取指定日期内的绑定app用户统计下载
+    allProductPubList: '/productManage/getPublishProductList', // 已发布的产品列表  包含新旧产品
     //公共接口
-    getProductType:'/productManage/getSelectList',//所有的产品下拉列表
-    
+    getProductType: '/productManage/getSelectList',//所有的产品下拉列表
+
 
     // 产品发布后-设备注册
-    proReledRegist:'/deviceRegister/deviceList',//设备注册列表
-    proReledCount:'/deviceRegister/statistics',//设备注册统计
-    proReledExport:'/deviceRegister/importAddr',//设备注册导出
-    proReledInfo:'/product/detail',//设备基本详情
-    getProductPlus:'/productManage/getProductExtendList',//产品下拉带验证方式
-    exportRegistFile:'/deviceRegister/export',//导出设备注册文件
-    replayRegistFile:'/deviceRegister/registerDevice',//设备注册-一机一密-申请下载数量
-    downRegistFlie:'/deviceRegister/exportDeviceApply',//设备注册-一机一密-下载
-    registerTable:'/deviceRegister/deviceApplyList',//设备注册-一机一密-文件列表
-    
+    proReledRegist: '/deviceRegister/deviceList',//设备注册列表
+    proReledCount: '/deviceRegister/statistics',//设备注册统计
+    proReledExport: '/deviceRegister/importAddr',//设备注册导出
+    proReledInfo: '/product/detail',//设备基本详情
+    getProductPlus: '/productManage/getProductExtendList',//产品下拉带验证方式
+    exportRegistFile: '/deviceRegister/export',//导出设备注册文件
+    replayRegistFile: '/deviceRegister/registerDevice',//设备注册-一机一密-申请下载数量
+    downRegistFlie: '/deviceRegister/exportDeviceApply',//设备注册-一机一密-下载
+    registerTable: '/deviceRegister/deviceApplyList',//设备注册-一机一密-文件列表
+
 
     //确定面板接口
-    cusSavePanel:'/panelManage/saveProject',//自定义-保存/更新面板
-    delPanel:'/panelManage/delProject',//删除项目面板
-    greyModel:'/panelManage/garyUpdate',//灰度
-    modelRel:'/panelManage/formalUpdate',//发布
-    greyHistory:'/panelManage/getGreyPubHistory',//项目灰度历史列表
-    panelRelHistory:'/panelManage/getFormalPubHistory',//项目发布历史列表
-    panelOffLine:'/panelManage/offlineUiDesign',//下线
-    panelList:'/panelManage/getProjectPage',//获取产品下的所有项目
-    panelApplicationList:'/panelManage/getAppsByProductId',//应用列表
-    standardPanelList:'/panelManage/getTemplateMarketByProduct',//标准面板列表
+    cusSavePanel: '/panelManage/saveProject',//自定义-保存/更新面板
+    delPanel: '/panelManage/delProject',//删除项目面板
+    greyModel: '/panelManage/garyUpdate',//灰度
+    modelRel: '/panelManage/formalUpdate',//发布
+    greyHistory: '/panelManage/getGreyPubHistory',//项目灰度历史列表
+    panelRelHistory: '/panelManage/getFormalPubHistory',//项目发布历史列表
+    panelOffLine: '/panelManage/offlineUiDesign',//下线
+    panelList: '/panelManage/getProjectPage',//获取产品下的所有项目
+    panelApplicationList: '/panelManage/getAppsByProductId',//应用列表
+    standardPanelList: '/panelManage/getTemplateMarketByProduct',//标准面板列表
 
     //场景服务
-    scenceList:'/deviceProtocol/queryProtocolFromDevice',//获取场景规则列表
+    scenceList: '/deviceProtocol/queryProtocolFromDevice',//获取场景规则列表
     // saveScenceData:'/deviceProtocol/saveProtocolToScene',//保存场景规则数据到规则引擎服务
-    delScenceControl:'/deviceProtocol/deleteControlScene',//删除场景控制规则
-    delScenceRun:'/deviceProtocol/deleteStatusScene',//删除场景运行规则
-    saveScenceData:'/deviceProtocol/save',//新增
+    delScenceControl: '/deviceProtocol/deleteControlScene',//删除场景控制规则
+    delScenceRun: '/deviceProtocol/deleteStatusScene',//删除场景运行规则
+    saveScenceData: '/deviceProtocol/save',//新增
 
     //设备远程配置
-    deviceRemoteConfigList:'/remoteConfig/device/getList',//获得设备远程配置分页列表
-    singelDeviceRemoset:'/remoteConfig/device/get',//获得单个设备的远程配置任务
-    delDeviceRemoset:'/remoteConfig/device/delete',//删除单个设备的远程配置任务
-    saveDeviceRemoset:'/remoteConfig/device/save',//保存单个设备的远程配置任务
-    addDeviceRemoset:'/remoteConfig/product/submit',//提交单个产品的远程配置任务
-    excelDevTask:'/remoteConfig/device/submit',//执行设备下的任务
+    deviceRemoteConfigList: '/remoteConfig/device/getList',//获得设备远程配置分页列表
+    singelDeviceRemoset: '/remoteConfig/device/get',//获得单个设备的远程配置任务
+    delDeviceRemoset: '/remoteConfig/device/delete',//删除单个设备的远程配置任务
+    saveDeviceRemoset: '/remoteConfig/device/save',//保存单个设备的远程配置任务
+    addDeviceRemoset: '/remoteConfig/product/submit',//提交单个产品的远程配置任务
+    excelDevTask: '/remoteConfig/device/submit',//执行设备下的任务
 
     //项目列表
-    projectList:'/projectInfo/listByPage',
+    projectList: '/projectInfo/listByPage',
 
     // 项目新增/编辑
     saveProjectInfo: '/projectInfo/saveProjectInfo',
@@ -595,26 +605,26 @@ let Paths = {
     debugAPI: '/projectDetail/debugApiInterface',
 
     //项目详情-概述
-    projectInfoOverview:'/projectDetail/getProjectAuth',// 项目详情-概述
-    projectWhiteList:'/projectDetail/getProjectWhiteList',//项目详情-白名单-列表
-    projectWhiteDel:'/projectDetail/delProjectWhite',//项目详情-白名单-删除
-    projectWhiteSave:'/projectDetail/saveProjectWhite',//项目详情-白名单-新增/保存
-    projectSavePS:'/projectDetail/setPassword',//设置密码
+    projectInfoOverview: '/projectDetail/getProjectAuth',// 项目详情-概述
+    projectWhiteList: '/projectDetail/getProjectWhiteList',//项目详情-白名单-列表
+    projectWhiteDel: '/projectDetail/delProjectWhite',//项目详情-白名单-删除
+    projectWhiteSave: '/projectDetail/saveProjectWhite',//项目详情-白名单-新增/保存
+    projectSavePS: '/projectDetail/setPassword',//设置密码
     //项目详情-设备
-    projectInfoBatchList:'/projectDevice/getProjectBatch',//项目详情-设备-查询项目批次列表
-    projectInfoDevlist:'/projectDevice/getProjectDeviceList',// 项目详情-设备-查询项目设备列表
-    projectImportFile:'/projectDevice/importDevice',//项目详情-设备-导入设备
-    projectSaveFile:'/projectDevice/saveDevice',//项目详情-设备-导入设备-保存
-    projectBatchInfo:'/projectDevice/getProjectBatchDetail',//项目详情-设备-批次-明细
-    projectDelDev:'/projectDevice/deleteDeviceList',//项目详情-设备-删除设备列表
-    projectRemoveDev:'/projectDevice/unbind',//项目详情-设备-移除绑定
-    projectupdateGroup:'/projectGroup/updateGroupDevice',//项目详情-设备-修改设备分组
-    projectGroupList:"/projectGroup/getGroupList",//详情-设备-获取分组列表下拉
+    projectInfoBatchList: '/projectDevice/getProjectBatch',//项目详情-设备-查询项目批次列表
+    projectInfoDevlist: '/projectDevice/getProjectDeviceList',// 项目详情-设备-查询项目设备列表
+    projectImportFile: '/projectDevice/importDevice',//项目详情-设备-导入设备
+    projectSaveFile: '/projectDevice/saveDevice',//项目详情-设备-导入设备-保存
+    projectBatchInfo: '/projectDevice/getProjectBatchDetail',//项目详情-设备-批次-明细
+    projectDelDev: '/projectDevice/deleteDeviceList',//项目详情-设备-删除设备列表
+    projectRemoveDev: '/projectDevice/unbind',//项目详情-设备-移除绑定
+    projectupdateGroup: '/projectGroup/updateGroupDevice',//项目详情-设备-修改设备分组
+    projectGroupList: "/projectGroup/getGroupList",//详情-设备-获取分组列表下拉
 };
 
 // 拼接 urlPrefix
 Object.keys(Paths).forEach(key => {
-    if(!NOT_NEED_PREFIX.includes(key)) {
+    if (!NOT_NEED_PREFIX.includes(key)) {
         Paths[key] = urlPrefix + Paths[key]
     }
 })

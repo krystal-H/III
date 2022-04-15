@@ -125,15 +125,18 @@
         }
         .debug {
             @include flex(space-between, flex-start);
-            margin-left: 98px;
-            margin-right: 50px;
+            margin-left: 10px;
+            margin-right: 10px;
             @include text(12px, $_323Color);
+            width: 100%;
             .flex-c {
                 @include flex(center, center, column);
             }
             .line {
+                @include wh(25%, 8px);
                 img {
-                    @include wh(323px, 8px);
+                    @include wh(100%, 100%);
+                    // @include wh(323px, 8px);
                 }
             }
             &-icon {
@@ -153,6 +156,9 @@
             }
             .mar8 {
                 margin-top: 8px;
+            }
+            .lineNor {
+                line-height: normal;
             }
         }
     }

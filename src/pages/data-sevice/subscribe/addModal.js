@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
-import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, TimePicker, Checkbox } from 'antd';
+import { Modal, Button, Input, Select, Form, Steps, Radio, Tabs, TimePicker, Checkbox, Table } from 'antd';
 import './addModal.scss'
 import LabelTip from '../../../components/form-com/LabelTip';
-import { post, Paths } from '../../../api';
+import { post, Paths, get } from '../../../api';
 import { cloneDeep } from "lodash";
 import { Notification } from '../../../components/Notification'
 import moment from 'moment';
@@ -81,7 +81,6 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
             ...subObj.two,
             ...val
         }
-        console.log('====55======', params)
         if (actionType === 'edit') {
             params.urlConfId = editData.urlConfId
         }
@@ -142,7 +141,7 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                     //     arr.push(item.labelId)
                     // })
                     arr = editData.deviceLabelIds.split(',')
-                    arr=arr.map(item=>{
+                    arr = arr.map(item => {
                         return Number(item)
                     })
                 }
@@ -171,9 +170,10 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
         });
     }
     //下一步
-    const onFinish =  () => {
+    const onFinish = () => {
         form.validateFields().then(formData => {
             let res = cloneDeep(formData)
+            sessionStorage.setItem('pid', res.productId)
             let arr = formData.subscriptType === 1 ? productType1 : productType2
             let productIndex = arr.find(item => {
                 return item.productId === res.productId
@@ -191,10 +191,10 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                         selectedDeviceIds: res.deviceIds.trim()
                     }
                     post(Paths.checkRelDevice, cheackParams).then(result => {
-                        if(result.data){
+                        if (result.data) {
                             res.productName = name;
                             continueStep('1', res)
-                        }else{
+                        } else {
                             Notification({
                                 type: 'info',
                                 description: '输入的id不在这个项目和产品范围内',
@@ -208,7 +208,7 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                 return
             }
             if (res.subscriptType === 2) {
-                res.labelVoList=res.labelVoList || []
+                res.labelVoList = res.labelVoList || []
                 res.deviceLabelIds = res.labelVoList.join(',')
             }
             res.productName = name;
@@ -231,8 +231,8 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
             setLaberArr(arr)
         });
     }
-     //获取标签
-     const productIdChange2 = (val) => {
+    //获取标签
+    const productIdChange2 = (val) => {
         post(Paths.getLabelByAddress, { productId: val }).then((res) => {
             let arr = []
             res.data.forEach(item => {
@@ -383,17 +383,27 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
     </div>)
 }
 StepContentOne = forwardRef(StepContentOne)
+
+// 第二步
 function StepContentTwo({ continueStep, actionType, editData }, ref) {
     const [form] = Form.useForm();
     const [laberArr, setLaberArr] = useState([])//设备事件列表
+    const [oldEvent, setOldEvent] = useState([])//勾选的老设备事件
+    const [oldTable, setOldTable] = useState([])
+    const [testSelectObj, setTestSelectObj] = useState({ 9: [], 11: [], 12: [], 10: [] }) //table勾选
     const formlayout = {
         labelCol: { span: 6 },
         wrapperCol: { span: 18 },
     };
     useEffect(() => {
         //获取事件列表
-        post(Paths.getDeviceEvent).then((res) => {
-            let source = res.data || []
+        setTestSelectObj({ 9: [], 11: [], 12: [], 10: [] })
+        setLaberArr([])
+        form.setFieldsValue({eventIds:[]})
+        get(Paths.getsubscribeProduct,
+            { productId: sessionStorage.getItem('pid') ? Number(sessionStorage.getItem('pid')) : '' }
+        ).then((res) => {
+            let source = res.data.eventList || []
             let data = source.map(item => {
                 return {
                     label: item.deviceEventName,
@@ -401,45 +411,186 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
                 }
             })
             setLaberArr(data)
-            setLaberArr(data)
+            setOldTable(res.data.productFuncList || [])
         });
+    }, [sessionStorage.getItem('pid')])
+    useEffect(() => {
         if (actionType === 'edit') {
-            // console.log(editData, 'editDataeditDataeditData')
-            let eventIds = editData.eventIds.split(',').map(item => {
-                return Number(item)
-            })
-            let timeRange = editData.businessTime.split('-').map(item => {
-                return moment(item, 'HH:mm')
-            })
-            let obj = {
-                timeRange,
-                eventIds: eventIds
-            }
-            form.setFieldsValue(obj)
+            initEdit()
         }
     }, [])
+    const initEdit = () => {
+        setTestSelectObj(pre => {
+            let ori=editData.productFuncList || {}
+            let obj = {
+                9: ori.runningList || [],
+                11: ori.errorList || [],
+                12: ori.configList || [],
+                10: ori.controllList || [],
+            }
+            return obj
+        })
+        let eventIds = editData.eventIds.split(',').map(item => {
+            return Number(item)
+        })
+        eventChange(eventIds)
+        let timeRange = editData.businessTime.split('-').map(item => {
+            return moment(item, 'HH:mm')
+        })
+        let obj = {
+            timeRange,
+            eventIds: eventIds
+        }
+        form.setFieldsValue(obj)
+    }
     //下一步
     const onFinish = () => {
         form.validateFields().then(val => {
+            let productFunc = ''
+            if (oldEvent.length) {
+                oldEvent.forEach(item => {
+                    let arr = testSelectObj[item] || []
+                    if (item == 9) {
+                        arr.forEach(item2 => {
+                            productFunc += '3-' + item2 + ','
+                        })
+                    }
+                    if (item == 10) {
+                        arr.forEach(item2 => {
+                            productFunc += '2-' + item2 + ','
+                        })
+                    }
+                    if (item == 11) {
+                        arr.forEach(item2 => {
+                            productFunc += '4-' + item2 + ','
+                        })
+                    }
+                    if (item == 12) {
+                        arr.forEach(item2 => {
+                            productFunc += '5-' + item2 + ','
+                        })
+                    }
+                })
+                if (productFunc) {
+                    productFunc = productFunc.slice(0, -1)
+                }
+            }
             let params = {
                 businessTime: val.timeRange[0].format('HH:mm') + '-' + val.timeRange[1].format('HH:mm'),
-                eventIds: val.eventIds.join(',')
+                eventIds: val.eventIds.join(','),
+                productFunc
             }
             continueStep('2', params)
         })
     }
     useImperativeHandle(ref, () => ({
         onFinish: onFinish
-    }), []);
+    }), [testSelectObj]);
+    //===事件勾选
+    const eventChange = (val) => {
+        let arr = [9, 10, 11, 12]
+        let arr2 = []
+        val.forEach(item => {
+            if (arr.includes(item)) {
+                arr2.push(item)
+            }
+        })
+        setOldEvent(arr2)
+    }
+    const columns = [
+        {
+            title: '数据名称',
+            dataIndex: 'propertyName',
+        },
+        {
+            title: '数据标识',
+            dataIndex: 'property',
+        },
+        {
+            title: '数据属性',
+            dataIndex: 'propertyValueDesc',
+        },
+    ];
+    //获取table数据
+    const getOldData = (val) => {
+        let n = ''
+        switch (val) {
+            case 9:
+                n = '运行数据'
+                break;
+            case 10:
+                n = '控制数据'
+                break;
+            case 11:
+                n = '故障数据'
+                break;
+            case 12:
+                n = '配置数据'
+                break;
+            default:
+                return ''
+        }
+        if(!oldTable.length) return []
+        let currentData = oldTable.find(item => {
+            if (item.dataTypeName == n) {
+                return item
+            }
+        })
+        return currentData ? currentData.list : []
+    }
+    //获取tab标题
+    const getTitle = val => {
+        let n = ''
+        switch (val) {
+            case 9:
+                n = '运行数据'
+                break;
+            case 10:
+                n = '控制数据'
+                break;
+            case 11:
+                n = '故障数据'
+                break;
+            case 12:
+                n = '配置数据'
+                break;
+            default:
+                return ''
+        }
+        return n
+    }
+    const getRowSelection = val => {
+        return {
+            selectedRowKeys: testSelectObj[val],
+            onChange: (selectedRowKeys, selectedRows) => {
+                setTestSelectObj(pre => {
+                    let obj = cloneDeep(pre)
+                    obj[val] = selectedRowKeys
+                    return obj
+                })
+            },
+        }
+    }
     return (<div className='step-two'>
         <Form form={form} labelAlign='right' {...formlayout}>
             <Form.Item name="eventIds" label="选择设备事件" rules={[{ required: true, message: '请选择设备事件' }]}>
-                <Checkbox.Group options={laberArr} />
+                <Checkbox.Group options={laberArr} onChange={eventChange} />
             </Form.Item>
             <Form.Item name="timeRange" label="选择业务发生时间" rules={[{ required: true, message: '请选择业务发生时间' }]}>
                 <TimePicker.RangePicker format='HH:mm' />
             </Form.Item>
         </Form>
+        <Tabs defaultActiveKey="1" >
+            {
+                oldEvent.map(item => {
+                    return <TabPane key={item} tab={getTitle(item)}>
+                        <Table rowSelection={getRowSelection(item)}
+                            columns={columns} dataSource={getOldData(item)}
+                            rowKey='property' pagination={false} scroll={{ y: 240 }} />
+                    </TabPane>
+                })
+            }
+        </Tabs>
     </div>)
 }
 StepContentTwo = forwardRef(StepContentTwo)
@@ -465,10 +616,25 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
         window.open("http://skintest.hetyj.com/10086/a9b97e2ef3c7465bb79b63374cbd4dd8.docx")
     }
     const downSDk = () => {
-        Notification({
-            type: 'info',
-            description: '敬请期待',
-        });
+        // Notification({
+        //     type: 'info',
+        //     description: '敬请期待',
+        // });
+        const a = document.createElement('a')
+        const url = "https://skintest.hetyj.com/31438/94c43d9a5f7eb99f8565d4feb64a30b3.pdf" 
+        // 这里是将url转成blob地址，
+        fetch(url).then(res => res.blob()).then(blob => { // 将链接地址字符内容转变成blob地址
+            a.href = URL.createObjectURL(blob)
+            console.log(a.href)
+            a.download = '数据订阅帮助文档' // 下载文件的名字
+            document.body.appendChild(a)
+            a.click()
+
+            //在资源下载完成后 清除 占用的缓存资源
+            window.URL.revokeObjectURL(a.href);
+            document.body.removeChild(a);
+        })
+        // window.open("http://skintest.hetyj.com/31438/94c43d9a5f7eb99f8565d4feb64a30b3.pdf")
     }
     useEffect(() => {
         if (actionType === 'edit') {

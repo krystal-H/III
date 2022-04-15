@@ -128,10 +128,16 @@ export const navRoutes = [
 
             },
             {
-                menuname: '用户分析',
-                path: '/open/serve/user',
+                menuname: '设备用户分析',
+                path: '/open/serve/deviceUser',
+                menuid: '4-3',
+            },
+            {
+                menuname: 'APP用户分析',
+                path: '/open/serve/appUser',
                 menuid: '4-1',
             },
+
             {
                 menuname: '数据订阅',
                 path: '/open/serve/dataSub',
@@ -339,7 +345,12 @@ export const menuList = [
                 items: [],
             },
             {
-                menuname: '用户分析',
+                menuname: '设备用户分析',
+                childmenus: [],
+                items: [],
+            },
+            {
+                menuname: 'APP用户分析',
                 childmenus: [],
                 items: [],
             },
@@ -399,17 +410,22 @@ export function RouteWithSubRoutes(route) {
 export function getNavRoutes(menu) {
     let _navRoutes = navRoutes;
     function authorityMenu(menus) {
+        // console.log(menus,'===555=====',_navRoutes)
         let result = menus.map(({
             menuname,
             childmenus = [],
             items = [],
         }) => {
 
-            if (menuname == "规则引擎") {
+            if (menuname === "规则引擎") {
                 menuname = "场景服务"
             }
-            let _nav = find(_navRoutes, (o) => o.menuname == menuname) 
-            || {
+            // console.log(find(_navRoutes, (o) => o.menuname === menuname) ,menus,menuname,666)
+            if (!find(_navRoutes, (o) => o.menuname === menuname)) {
+                console.log(find, '99')
+            }
+            let _nav = find(_navRoutes, (o) => o.menuname === menuname)
+                || {
                 menuname: menuname + "（暂不支持）",
                 path: '/open/home',
                 menuid: menuname,

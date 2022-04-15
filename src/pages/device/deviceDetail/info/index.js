@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Descriptions, Divider} from 'antd';
+import { Descriptions, Divider } from 'antd';
 import { post, Paths } from '../../../../api';
-import {  DateTool } from '../../../../util/util';
+import { DateTool } from '../../../../util/util';
 import LabelVisible from '../../../../components/form-com/LabelVisible';
 import './index.scss'
 export default function DeviceInfo({ devceId }) {
@@ -20,7 +20,13 @@ export default function DeviceInfo({ devceId }) {
     const fliterFn = (value) => {
         let result = null
         if (typeof value == 'number') {
-            result = value == 1 ? '网关设备' : '普通设备'
+            if (value == 1) {
+                result = '网关设备'
+            } else if (value == 2) {
+                result = '子设备'
+            } else if (value == 3) {
+                result = '普通设备'
+            }
         }
         return result
     }

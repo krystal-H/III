@@ -28,6 +28,7 @@ class Hardware extends Component {
             configCommunicationVisible: JSON.parse(sessionStorage.getItem('productItem')) && JSON.parse(sessionStorage.getItem('productItem')).moduleId == -1, // 配置通信协议boolean
             protocolList: [], // 通信协议
             networkWayList: [], // 配网方式列表
+            downloadInfo: {} // 下载资料显示
         }
         this.columns = [
             {
@@ -78,6 +79,7 @@ class Hardware extends Component {
             moduleId
         }, { loading: true }).then(res => {
             this.setState({ allInfo: res.data })
+            this.downloadData(res.data.moduleId)
             if (res.data.firmwareDefList) {
                 this.setState({ dataSource: res.data.firmwareDefList })
                 this.setState({ currentModuleId: res.data.moduleId })
@@ -163,12 +165,17 @@ class Hardware extends Component {
     }
 
     // 获取下载资料
-    downloadData = () => {
-        post(Paths.downloadData, {
+    downloadData = (moduleId) => {
+        if (!moduleId) return this.setState({ downloadInfo: {} })
+        post(Paths.downloadHardWareData, {
             productId: this.props.productId,
-            moduleId: this.state.currentModuleId
+            moduleId: moduleId
         }).then(res => {
-            res.data ? window.location = res.data : alert('暂无数据！')
+            console.log(res)
+            if (res.code === 0) {
+                this.setState({ downloadInfo: res.data })
+            }
+            // res.data ? window.location = res.data : alert('暂无数据！')
         })
     }
 
@@ -209,7 +216,7 @@ class Hardware extends Component {
     render() {
         const { replaceModalVisible, freeApplyVisible, modifyFirmwareVisible, replaceFirmwareVisible,
             dataSource, allInfo, currentModuleId, firmwareId, productItemData, officeVis,
-            configCommunicationVisible, protocolList, networkWayList } = this.state
+            configCommunicationVisible, protocolList, networkWayList, downloadInfo } = this.state
         return (
             <div className="hardware-page">
                 <div className="hardware-wrap">
@@ -290,6 +297,45 @@ class Hardware extends Component {
                             <div className="flex-c">
                                 <img className="debug-icon" src={require('../../../../../assets/images/product/pcb.png')} alt="" />
                                 {
+                                    productItemData.schemeType === 1 && <div>设计PCB</div>
+                                }
+                                {
+                                    productItemData.schemeType === 2 && <div>MCU SDK开发</div>
+                                }
+                                {
+                                    productItemData.schemeType === 3 && <div>SDK开发</div>
+                                }
+                                {/* 下边的内容是根据模组来回变化的虽不合理，产品设计如此，不用怀疑，没有方案的维度做限制，已讨论过无果 */}
+                                {
+                                    Object.keys(downloadInfo).length == 0 && <div className='mar8'>暂无可用资料</div>
+                                }
+                                {
+                                    downloadInfo.schemeType == 1 && downloadInfo.referenceCircuitDiagram &&
+                                    <div className="blue mar8 lineNor"
+                                        onClick={() => window.location = downloadInfo.referenceCircuitDiagram}>参考电路原理图</div>
+                                }
+                                {
+                                    downloadInfo.schemeType == 2 && downloadInfo.burnFile &&
+                                    <>
+                                        <div className="blue mar8 lineNor"
+                                            onClick={() => window.location = downloadInfo.burnFile}>模组固件</div>
+                                    </>
+                                }
+                                {
+                                    downloadInfo.schemeType == 3 &&
+                                    <div className="blue mar8 lineNor">
+                                        {
+                                            downloadInfo.sourceSDK &&
+                                            <div onClick={() => window.location = downloadInfo.sourceSDK}>原厂SDK</div>
+                                        }
+                                        {
+                                            downloadInfo.clifeSDK &&
+                                            <div onClick={() => window.location = downloadInfo.clifeSDK}>clifeSDK</div>
+                                        }
+                                    </div>
+                                }
+
+                                {/* {
                                     productItemData.schemeType === 1 &&
                                     <>
                                         <div>设计PCB</div>
@@ -323,7 +369,7 @@ class Hardware extends Component {
                                             </Tooltip>
                                         </div>
                                     </>
-                                }
+                                } */}
                             </div>
                             <div className="line">
                                 <img src={require('../../../../../assets/images/product/arrowLine.png')} alt="" />
@@ -331,7 +377,7 @@ class Hardware extends Component {
                             <div className="flex-c">
                                 <img className="debug-icon" src={require('../../../../../assets/images/product/func.png')} alt="" />
                                 <div>功能测试</div>
-                                <div className="mar8">（请先完成第四步中配网以及通信安全机制的配置）</div>
+                                <div className="mar8 lineNor">（请先完成第四步中配网以及通信安全机制的配置）</div>
                                 {/* <div className="blue">进入调试验证</div> */}
                             </div>
                             <div className="line">
@@ -340,7 +386,7 @@ class Hardware extends Component {
                             <div className="flex-c">
                                 <img className="debug-icon" src={require('../../../../../assets/images/product/network.png')} alt="" />
                                 <div>联网验证</div>
-                                <div className="blue" onClick={() => this.setState({ officeVis: true })}>下载“数联智能”App</div>
+                                <div className="blue lineNor" onClick={() => this.setState({ officeVis: true })}>下载“数联智能”App</div>
                             </div>
                         </div>
                     </div>

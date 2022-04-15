@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography, Button, Space } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Table, Input, InputNumber,  Form, Typography, Button, Space } from 'antd';
 import { post, Paths, get } from '../../../../api';
 import DelModal from './actionOp'
 import './index.scss'

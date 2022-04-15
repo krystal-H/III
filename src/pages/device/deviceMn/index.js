@@ -38,12 +38,15 @@ export default function DeviceList() {
     }
     //获取列表
     const getList = (loading = true) => {
-        let arr = ['innet', 'fault']
+        let arr = ['innet', 'fault', 'gatewayType']
         let obj = {}
         for (let key in form.getFieldsValue()) {
             if (arr.indexOf(key) > -1 && typeof form.getFieldsValue()[key] == 'string') {
             } else {
                 obj[key] = form.getFieldsValue()[key]
+                if (key === 'gatewayType') {
+                    obj[key] = form.getFieldsValue()[key] - 1 //需要减去1，对应后台数据
+                }
             }
 
         }
@@ -78,8 +81,13 @@ export default function DeviceList() {
     }
     //搜索
     const searchList = () => {
-        const value = form.getFieldsValue();
-        getList(value)
+        // const value = form.getFieldsValue();
+        // getList(value)
+        if (pager.pageIndex === 1) {
+            getList()
+        } else {
+            setPager({ pageIndex: 1, pageRows: 10 })
+        }
     }
     //清除搜索条件
     const clearForm = () => {
@@ -96,7 +104,8 @@ export default function DeviceList() {
         switch (type) {
             case 'productClass':
                 if (!isNaN(value)) {
-                    result = value == 1 ? '网关设备' : '普通设备'
+                    let arr = ['网关设备', '子设备', '普通设备']
+                    result = arr[value - 1]
                 }
                 break;
             case 'internetStatus':
@@ -140,22 +149,20 @@ export default function DeviceList() {
             dataIndex: 'productType',
             key: 'productType',
         },
-        // {
-        //     title: '标签',
-        //     dataIndex: 'labelInfo',
-        //     key: 'labelInfo',
-        // },
-        // {
-        //     title: '所属分组',
-        //     dataIndex: 'groupName',
-        //     key: 'groupName',
-        // },
+        {
+            title: '绑定网关',
+            dataIndex: 'gateWay',
+            key: 'gateWay',
+            render: (text) => (
+                <span >{text || '-'}</span>
+            )
+        },
         {
             title: '类型',
             dataIndex: 'productClass',
             key: 'productClass',
-            render: (text, record, index) => (
-                <span >{fliterFn('productClass', record.productClass)}</span>
+            render: (text) => (
+                <span >{fliterFn('productClass', text)}</span>
             )
         },
         {
@@ -218,7 +225,7 @@ export default function DeviceList() {
         <CountNum data={countData} />
         <div className='comm-shadowbox device-main'>
             <div className='device-filter'>
-                <Form className='device-filter-form' form={form} layout='inline' initialValues={{ innet: '1', online: '1', fault: '1' }}>
+                <Form className='device-filter-form' form={form} layout='inline' initialValues={{ innet: '1', online: '1', fault: '1', gatewayType: '1' }}>
                     <Form.Item label="设备ID/物理地址">
                         <Input.Group compact>
                             <Form.Item
@@ -261,15 +268,16 @@ export default function DeviceList() {
                             <Option value={0}>未入网</Option>
                         </Select>
                     </Form.Item>
-                    {/* <Form.Item name="online" label="在线状态" >
+                    <Form.Item name="gatewayType" label="类型" >
                         <Select
                             style={{ width: '102px' }}
                         >
                             <Option value={'1'}>全部状态</Option>
-                            <Option value={true}>在线</Option>
-                            <Option value={false}>离线</Option>
+                            <Option value={2}>网关设备</Option>
+                            <Option value={3}>子设备</Option>
+                            <Option value={4}>普通设备</Option>
                         </Select>
-                    </Form.Item> */}
+                    </Form.Item>
                     <Form.Item name="fault" label="故障状态" >
                         <Select
                             style={{ width: '102px' }}

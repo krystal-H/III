@@ -1686,12 +1686,15 @@ export default class StartTest  extends Component{
                     ws.send('');
                 }, 5000);
                 let product = this.props.deviceAndWs.productInfo.data.productBaseInfo;
-                let {deviceTypeId,deviceSubtypeId,productVersion} = product
+                let {deviceTypeId,deviceSubtypeId,productVersion} = product;
+                let idid = this.props.developerInfo.parentId || this.props.developerInfo.userId;
+
+                console.log('idid-----',idid);
                 let productMsg =
                     '[' +
                     this.props.deviceAndWs.token.data +
                     '|' +
-                    this.props.developerInfo.userId +
+                    idid +
                     '|' +
                     deviceTypeId +
                     '#' +
@@ -1700,6 +1703,7 @@ export default class StartTest  extends Component{
                     productVersion +
                     ']';
                 // let productMsg = "[144514545|1|11#3#1]";//测试数据
+                console.log("productMsg-----",productMsg)
                 ws.send(productMsg);
             }.bind(this);
             //接收到消息

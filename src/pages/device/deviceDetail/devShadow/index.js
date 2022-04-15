@@ -36,6 +36,7 @@ export default function DeviceShadow({ baseInfo, devceId }) {
     const [dataSource, setDataSource] = useState([])
     const [jsonData, setJsonData] = useState('')
     const [currentTab, setCurrentTab] = useState('a')
+    const [tableData, setTableData] = useState([])
     useEffect(() => {
         if (devceId) {
             getDetail()
@@ -43,21 +44,46 @@ export default function DeviceShadow({ baseInfo, devceId }) {
     }, [devceId])
     const getDetail = (loading = true) => {
         post(Paths.deviceShadow, { 'deviceUniqueId': baseInfo.deviceUniqueId }, { loading }).then((res) => {
-            if (res.data.tslType == 'properties') {
-                setCurrentTab('a')
-            } else if (res.data.tslType == 'events') {
-                setCurrentTab('b')
-            } else if (res.data.tslType == 'services') {
-                setCurrentTab('c')
+            setDataSource(res.data)
+            let arr=['properties','events','services']
+            let data2 = res.data.find(item => {
+                return item.tslType == 'properties'
+            })
+            if(data2){
+                data2=delaData(data2.list)
             }
-
-            setDataSource(delaData(res.data.list))
-            let jsonData = res.data.jsonString || {}
-            setJsonData(JSON.stringify(jsonData))
+            setTableData(data2 || [])
+            let obj={}
+            for(let key of arr){
+                let data=res.data.find(item=>{
+                    return key === item.tslType
+                })
+                if(data){
+                    obj[key]=data.jsonString || {}
+                }
+            }
+            setJsonData(JSON.stringify(obj))
         });
     }
     //筛选
     const radioChange = (value) => {
+        value = value.target.value
+        let index
+        if (value === 'a') {
+            index = 'properties'
+        } else if (value === 'b') {
+            index = 'events'
+        } else if (value === 'c') {
+            index = 'services'
+        }
+        let data = dataSource.find(item => {
+            return item.tslType == index
+        })
+        if(data){
+            data=delaData(data.list)
+        }
+        setTableData(data || [])
+        setCurrentTab(value)
 
     }
     return (<div id='device-shadow'>
@@ -69,12 +95,12 @@ export default function DeviceShadow({ baseInfo, devceId }) {
         <Tabs defaultActiveKey='1' className='shadow-tab'>
             <TabPane key={'1'} tab={'表单模式'}>
                 <div >
-                    <Radio.Group defaultValue={currentTab} size="middle" onChange={radioChange} style={{ margin: '6px 0  22px 0' }}>
-                        <Radio.Button value="a" disabled={currentTab != 'a'}>属性</Radio.Button>
-                        <Radio.Button value="b" disabled={currentTab != 'b'}>事件</Radio.Button>
-                        <Radio.Button value="c" disabled={currentTab != 'c'}>服务</Radio.Button>
+                    <Radio.Group value={currentTab} size="middle" onChange={radioChange} style={{ margin: '6px 0  22px 0' }}>
+                        <Radio.Button value="a" >属性</Radio.Button>
+                        <Radio.Button value="b" >事件</Radio.Button>
+                        <Radio.Button value="c" >服务</Radio.Button>
                     </Radio.Group>
-                    <TableCom dataSource={dataSource} deviceId={devceId} baseInfo={baseInfo}/>
+                    <TableCom dataSource={tableData} deviceId={devceId} baseInfo={baseInfo} />
                 </div>
             </TabPane>
             <TabPane key={'2'} tab={'Json模式'}>

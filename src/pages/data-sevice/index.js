@@ -3,11 +3,13 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import loadable from '@loadable/component';
 
 const DeviceA = loadable(() => import('./device'));
-const UserA = loadable(() => import('./user'));
+const AppUserA= loadable(() => import('./appUser'));
+const DeviceUserA= loadable(() => import('./deviceUser'));
 const Subscribe = loadable(() => import('./subscribe'));
 const routes = {
     '设备分析': DeviceA,
-    '用户分析': UserA,
+    'APP用户分析': AppUserA,
+    '设备用户分析': DeviceUserA,
     '数据订阅': Subscribe,
 }
 

@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom';
 import ConfigFirmwareDetail from './configFirmwareDetail.js'
 import ZigbeeConfig from './zigbeeConfig'
 import ZigbeeProConfig from './zigbeeProConfig'
-
+import QuickConfig from './shiftSet'
 import './index.scss';
 
 //处理数据
@@ -120,6 +120,14 @@ function ServiceConfig({ productId, nextStep }, ref) {
       url: require('../../../../../assets/images/commonDefault/service-device.png')
     },
     {
+      title: 'APP快捷卡片功能配置',
+      desc: '配置在数联智能APP上快捷展示或控制设备的功能卡片',
+      isConfiged: false,
+      type: 'quickSetting',
+      routePath: '/open/product/proManage/voiceSetting',
+      url: require('../../../../../assets/images/commonDefault/app.png')
+    },
+    {
       title: '语音能力',
       desc: '基于产品功能点，可选择配置主流平台语音控制方案',
       isConfiged: false,
@@ -133,6 +141,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
   const [securityVisible, setSecurityVisible] = useState(false)
   const [firmwareVisible, setFirmwareVisible] = useState(false)
   const [gatewayVisible, setGatewayVisible] = useState(false)
+  const [quickVisible, setQuickVisible] = useState(false)
   const [firmwareDetailVisible, setFirmwareDetailVisible] = useState(false)
   const [productExtend, setProductExtend] = useState('') // 通信安全
   const [firmwareDetailData, setFirmwareDetailData] = useState([])
@@ -297,7 +306,13 @@ function ServiceConfig({ productId, nextStep }, ref) {
   const goVoiceSetting = () => {
     history.push(`/open/product/proManage/voiceSetting/${productId}/?detail=1`)
   }
-
+  //快捷配置
+  const setQuick = () => {
+    setQuickVisible(true)
+  }
+  const quickCancel = () => {
+    setQuickVisible(false)
+  }
   return (
     <div className="service-config-page2">
       <div className="desc">{getSchemeType()}</div>
@@ -342,10 +357,11 @@ function ServiceConfig({ productId, nextStep }, ref) {
                       </Link>
                       :
                       item.type === 'voiceSetting' ? <div className="config-card-right-btn" onClick={() => goVoiceSetting()}>配置</div> :
-                        (item.type === 'addFirmware' || item.isConfiged) ?
-                          <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
-                          :
-                          ''
+                        item.type === 'quickSetting' ? <div className="config-card-right-btn" onClick={() => setQuick()}>配置</div> :
+                          (item.type === 'addFirmware' || item.isConfiged) ?
+                            <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
+                            :
+                            ''
                   }
                 </div>
               </div>
@@ -409,6 +425,10 @@ function ServiceConfig({ productId, nextStep }, ref) {
           }}
           cancelHandle={() => setZigbeeProVisible(false)}
         />
+      }
+      {/* 快捷卡片 */}
+      {
+        quickVisible && <QuickConfig cancelHandle={quickCancel} visible={quickVisible} productId={productId} />
       }
     </div>
   )

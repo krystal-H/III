@@ -17,12 +17,13 @@ const FlowList = [
 export default class CloseAccount extends Component {
     render() {
         let {developerInfo} = this.props,
-            {email} = developerInfo;
+            {email,userId} = developerInfo;
         return (
             <AccountFlowTemplate FlowList={FlowList} 
                                  cType={5}
                                  emailFromFather={email || ''}
                                  isNeedVerifyType={true} 
+                                 userId={userId}
                                  title="注销账号"></AccountFlowTemplate>
         )
     }

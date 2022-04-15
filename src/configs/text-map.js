@@ -92,6 +92,10 @@ export const unitCollection = [{
     "Symbol": "μg/m³",
     "Name": "不知道2"
 }, {
+    "Symbol": "mV",
+    "Name": "mV"
+},
+{
     "Symbol": "mg/m³",
     "Name": "不知道3"
 }, {

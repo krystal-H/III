@@ -23,9 +23,10 @@ export default function Setting ({
             pathname: `/userCenter/security/${type}`})
     }
     const withDraw = () => {
-        get(Paths.withdraw,{
+        post(Paths.withdraw,{
         },{
-            loading:true
+            loading:true,
+            userId
         }).then( data => {
             getDeveloperInfo()
         }).catch( error => {

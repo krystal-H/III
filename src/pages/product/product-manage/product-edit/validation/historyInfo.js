@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Modal, Table } from 'antd';
+import { Modal, Table, message } from 'antd';
 import { DateTool } from '../../../../../util/util';
 import { get, post, Paths } from '../../../../../api';
-export default ({ historyVisiable, openHistory, debugInfo,productId, sentInfo }) => {
+export default ({ historyVisiable, openHistory, debugInfo, productId, sentInfo }) => {
 
     const [dataSource, setDataSource] = useState([])
 
@@ -15,31 +15,40 @@ export default ({ historyVisiable, openHistory, debugInfo,productId, sentInfo })
 
         {
             title: '配合调试时间', dataIndex: 'createTime', key: 'createTime',
-            render: text => <span>{text && DateTool.utcToDev(text) || '--'}</span>
+            render: text => <span>{text && DateTool.utcToDev(text)}</span>
         },
         {
             title: '操作', dataIndex: 'a', key: 'a',
-            render: (_,record) => <a onClick={() => { startDebug(record) }}>调试</a>
+            render: (_, record) => <span>
+                <a onClick={() => { startDebug(record) }} style={{ marginRight: '10px' }}>调试</a>
+                <a onClick={() => { delDebug(record) }}>删除</a>
+            </span>
         },
     ];
 
     const startDebug = (record) => {
         sentInfo(record)
     }
+    //删除
+    const delDebug = (row) => {
+        post(Paths.hisDebugMacdel, { ids: [row.id] }).then(res => {
+            message('删除成功')
+            getList()
+        });
+    }
     useEffect(() => {
         getList()
     }, [])
     const getList = () => {
-        // const [account, devMac] = debugInfo
         let params = {
             pageIndex: 1,
             pageRows: 10,
             productId
         }
         get(Paths.getDebugHis, params).then(res => {
-            let data=res.data.records || []
-            data.forEach((item,index)=>{
-                item.key=index
+            let data = res.data.records || []
+            data.forEach((item, index) => {
+                item.key = index
             })
             setDataSource(data)
         });
@@ -50,29 +59,19 @@ export default ({ historyVisiable, openHistory, debugInfo,productId, sentInfo })
         <Modal
             title="历史调试信息"
             visible={historyVisiable}
-            width={600}
+            width={700}
             onOk={() => { openHistory(false) }}
             onCancel={() => { openHistory(false) }}
             maskClosable={false}
             className="groupadd-device-modal"
+            footer={null}
         >
-
             <Table
                 rowKey="key"
                 columns={columns}
                 dataSource={dataSource}
                 pagination={false}
-            // loading={!!listLoading}
-            // pagination={{
-            //     defaultCurrent:pager.pageIndex, 
-            //     total:pager.totalRows, 
-            //     onChange:val=>{this.setQuestParams('pageIndex',val)},
-            //     current: pager.pageIndex
-            // }} 
             />
-
-
-
         </Modal>
     )
 
