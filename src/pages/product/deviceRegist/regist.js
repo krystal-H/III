@@ -5,6 +5,7 @@ import LabelTip from '../../../components/form-com/LabelTip';
 import TableCom from '../product-manage/product-details/regist-product/downTable';
 import './index.scss'
 import { post, Paths } from '../../../api';
+import { downfileFn } from '../../../util/util'
 export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, optionArr }) {
   const [selectPro, setSelectPro] = useState(null)
   const [isShowDn, setIsShowDn] = useState(false)
@@ -50,7 +51,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
   }
   //下载模板
   const downfile = () => {
-    window.open('http://skintest.hetyj.com/10086/fbf17720a2051f8241011426a1328992.xlsx')
+    downfileFn('http://skintest.hetyj.com/10086/fbf17720a2051f8241011426a1328992.xlsx','模板')
   }
   //打开密钥下载
   const openDown = () => {
