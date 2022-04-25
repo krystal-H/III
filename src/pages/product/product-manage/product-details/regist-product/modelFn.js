@@ -36,9 +36,9 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
     if (count === 0) {
       return (<span>一型一密<LabelTip tip="设备通信时，仅校验烧录的产品密钥，设备安全性较低。"></LabelTip></span>)
     } else if (count === 1) {
-      return (<span>一型一密pro<LabelTip tip="设备通信时，需校验烧录的产品密钥以及Clife平台设备注册的设备ID，较为安全。"></LabelTip></span>)
+      return (<span>一型一密pro<LabelTip tip="设备通信时，需校验烧录的产品密钥，同时需校验在Clife平台设备注册的设备ID，较为安全。"></LabelTip></span>)
     } else if (count === 2) {
-      return (<span>一机一密<LabelTip tip="设备通信时，需校验烧录的设备密钥和设备ID，安全性最高。"></LabelTip></span>)
+      return (<span>一机一密<LabelTip tip="设备通信时，需校验烧录的设备密钥，同时需校验烧录的设备ID，安全性最高。"></LabelTip></span>)
     }
   }, [authWay])
   const downfile = () => {
