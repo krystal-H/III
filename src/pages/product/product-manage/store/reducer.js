@@ -30,7 +30,9 @@ const defaultState = fromJS({
     createProductScheme: {}, // 创建产品-确定方案
     createProductForm: {}, // 创建产品-建立产品信息
     createProductSchemekey: '1',
-    createProductSchemeBtnKey: 0
+    createProductSchemeBtnKey: 0,
+
+    productHeadInfo: {}, // 继续开发-头部信息展示
 });
 
 
@@ -66,6 +68,10 @@ export default (state = defaultState, action) => {
       return state.set('appsByProductId',action.list)
     case ActionTypes.UPDATE_TIME_SERVICE_LIST:
       return state.set('timeServiceList',action.data)
+
+    case ActionTypes.PRODUCT_HEAD_INFO:
+      console.log(action.data)
+      return state.set('productHeadInfo', action.data)
     /**
      * 新建产品 start
      * aize-2019-09-10
