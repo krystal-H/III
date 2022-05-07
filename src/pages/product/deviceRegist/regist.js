@@ -5,6 +5,7 @@ import LabelTip from '../../../components/form-com/LabelTip';
 import TableCom from '../product-manage/product-details/regist-product/downTable';
 import './index.scss'
 import { post, Paths } from '../../../api';
+import { downfileFn } from '../../../util/util'
 export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, optionArr }) {
   const [selectPro, setSelectPro] = useState(null)
   const [isShowDn, setIsShowDn] = useState(false)
@@ -34,9 +35,9 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
     if (selectPro === 0) {
       return (<span>一型一密<LabelTip tip="设备通信时，仅校验烧录的产品密钥，设备安全性较低。"></LabelTip></span>)
     } else if (selectPro === 1) {
-      return (<span>一型一密pro<LabelTip tip="设备通信时，需校验烧录的产品密钥以及Clife平台设备注册的设备ID，较为安全。"></LabelTip></span>)
+      return (<span>一型一密pro<LabelTip tip="设设备通信时，需校验烧录的产品密钥，同时需校验在Clife平台设备注册的设备ID，较为安全。"></LabelTip></span>)
     } else if (selectPro === 2) {
-      return (<span>一机一密<LabelTip tip="设备通信时，需校验烧录的设备密钥和设备ID，安全性最高。"></LabelTip></span>)
+      return (<span>一机一密<LabelTip tip="设备通信时，需校验烧录的设备密钥，同时需校验烧录的设备ID，安全性最高。"></LabelTip></span>)
     }
   }, [selectPro])
   const selectHandle = (value) => {
@@ -50,7 +51,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
   }
   //下载模板
   const downfile = () => {
-    window.open('http://skintest.hetyj.com/10086/fbf17720a2051f8241011426a1328992.xlsx')
+    downfileFn('http://skintest.hetyj.com/10086/fbf17720a2051f8241011426a1328992.xlsx','模板')
   }
   //打开密钥下载
   const openDown = () => {

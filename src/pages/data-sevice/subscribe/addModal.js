@@ -616,10 +616,25 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
         window.open("http://skintest.hetyj.com/10086/a9b97e2ef3c7465bb79b63374cbd4dd8.docx")
     }
     const downSDk = () => {
-        Notification({
-            type: 'info',
-            description: '敬请期待',
-        });
+        // Notification({
+        //     type: 'info',
+        //     description: '敬请期待',
+        // });
+        const a = document.createElement('a')
+        const url = "https://skintest.hetyj.com/31438/94c43d9a5f7eb99f8565d4feb64a30b3.pdf" 
+        // 这里是将url转成blob地址，
+        fetch(url).then(res => res.blob()).then(blob => { // 将链接地址字符内容转变成blob地址
+            a.href = URL.createObjectURL(blob)
+            console.log(a.href)
+            a.download = '数据订阅帮助文档' // 下载文件的名字
+            document.body.appendChild(a)
+            a.click()
+
+            //在资源下载完成后 清除 占用的缓存资源
+            window.URL.revokeObjectURL(a.href);
+            document.body.removeChild(a);
+        })
+        // window.open("http://skintest.hetyj.com/31438/94c43d9a5f7eb99f8565d4feb64a30b3.pdf")
     }
     useEffect(() => {
         if (actionType === 'edit') {

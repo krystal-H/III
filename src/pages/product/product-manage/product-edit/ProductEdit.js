@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
-import { Switch, Redirect, Route, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Steps, Button } from 'antd';
 
 import NoSourceWarn from '../../../../components/no-source-warn/NoSourceWarn';
-import './ProductEdit.scss'
 import ProductProtocols from './product-protocols/index.js';
 import PageTitle from '../../../../components/page-title/PageTitle';
 import Hardware from './dev-hardware';
@@ -13,18 +12,30 @@ import ConfigService from './config-service';
 import TitleSet from './titleSet'
 import { Notification } from '../../../../components/Notification';
 import { strToAsterisk } from '../../../../util/util';
-import {
-    EyeInvisibleTwoTone,
-    EyeTwoTone,
-} from '@ant-design/icons';
+import { EyeInvisibleTwoTone, EyeTwoTone } from '@ant-design/icons';
 import { Paths, post, get } from '../../../../api'
+import { getProductHeadInfo } from '../store/ActionCreator'
+import { connect } from 'react-redux';
+import './ProductEdit.scss'
+
 const { Step } = Steps;
 
 // 获取路由中的ID参数
 const getProductIdFromPath = (match) => +match.params.id;
 
+const mapDispatchToProps = dispatch => {
+    return {
+        getHeadInfoAction: params => dispatch(getProductHeadInfo(params))
+    }
+}
 
-function ProductEdit({ match, location }) {
+const mapStateToProps = state => {
+    return {
+        productHeadInfo: state.getIn(['product', 'productHeadInfo'])
+    }
+}
+
+function ProductEdit({ match, location, productHeadInfo, getHeadInfoAction }) {
     const origincurrent = +sessionStorage.getItem("stepnum") || 0;
 
     const [productItem, setProductItem] = useState({})
@@ -33,25 +44,17 @@ function ProductEdit({ match, location }) {
     const [current, setcurrent] = useState(origincurrent);
     const [maxCurrent, setMaxCurrent] = useState(origincurrent);
 
-
     let history = useHistory();
-
     let { path } = match,
         productIdInRoutePath = getProductIdFromPath(match);
-    useEffect(() => {
-        getInfo()
-    }, [])
-    const getInfo = () => {
-        post(Paths.getProductListNew, { productName: productIdInRoutePath }, { loading: true }).then(res => {
-            setProductItem(res.data.records[0])
-            sessionStorage.setItem('productItem', JSON.stringify(res.data.records[0]))
-        })
-    }
 
     useEffect(() => {
-        setProductItem(JSON.parse(sessionStorage.getItem('productItem')))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sessionStorage.getItem('productItem')])
+        getHeadInfoAction(productIdInRoutePath)
+    }, [])
+
+    useEffect(() => {
+        setProductItem(productHeadInfo)
+    }, [productHeadInfo])
 
     const stepList = [
         { title: '定义功能', content: 'protocols', mod: ProductProtocols },
@@ -69,10 +72,12 @@ function ProductEdit({ match, location }) {
             refAll.current.onFinish()
         }
     };
+
     // 发布产品
     const releaseProduct = () => {
         refAll.current.showRelease()
     }
+
     const nextStep = useCallback(() => {
         let nxtc = current + 1;
         if (nxtc > maxCurrent) {
@@ -85,6 +90,7 @@ function ProductEdit({ match, location }) {
         setcurrent(nxtc);
         sessionStorage.setItem("stepnum", nxtc)
     });
+
     //上一步
     const prev = () => {
         setcurrent(current - 1);
@@ -92,31 +98,27 @@ function ProductEdit({ match, location }) {
     };
 
     if (!productIdInRoutePath) {
-
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
 
     const changeState = () => {
         setShowSecret(!showSecret)
     }
+
     const showText = (value) => {
         value = showSecret ? value : strToAsterisk(value, 10)
         return value
     }
+
     //标题修改
-
     const openTitle = () => {
-
         setTitleVisible(true)
     }
     const onCloseTitle = () => {
         setTitleVisible(false)
     }
     const onOkClose = (data) => {
-        // let obj = { ...JSON.parse(sessionStorage.productItem), ...data }
-        // setProductItem(obj)
-        // sessionStorage.setItem('productItem', JSON.stringify(obj))
-        getInfo()
+        getHeadInfoAction(productIdInRoutePath)
         Notification({
             type: 'success',
             description: '更新成功！',
@@ -160,9 +162,7 @@ function ProductEdit({ match, location }) {
             <div className="eidt-wrapper">
                 <PageTitle title={productItem.productName} titleTag={productItem.schemeName} btnTxt='编辑'
                     backHandle={() => { history.push('/open/product/proManage/list') }} backTitle='开发流程' btnClickHandle={openTitle} >
-
                     {titleCom}
-
                 </PageTitle>
                 <div className='product-main-wrap comm-shadowbox'>
                     <div className='product-main-wrap_step'>
@@ -202,4 +202,4 @@ function ProductEdit({ match, location }) {
     )
 }
 
-export default ProductEdit
+export default connect(mapStateToProps, mapDispatchToProps)(ProductEdit)

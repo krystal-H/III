@@ -1,21 +1,21 @@
 
 import CryptoJS from 'crypto-js';
 import moment from 'moment';
-import {Paths} from '../api';
-import {cloneDeep} from 'lodash';
-import {notification} from 'antd';
+import { Paths } from '../api';
+import { cloneDeep } from 'lodash';
+import { notification } from 'antd';
 
 /**
  * 对密码进行加密
  * @param {string} value
  */
 export function encryption(value) {
-        // 加密
-        let md5 = CryptoJS.MD5(value),
-            utf8 = CryptoJS.enc.Utf8.parse(md5),
-            base64 = CryptoJS.enc.Base64.stringify(utf8) || utf8.toString(CryptoJS.enc.Base64);
+    // 加密
+    let md5 = CryptoJS.MD5(value),
+        utf8 = CryptoJS.enc.Utf8.parse(md5),
+        base64 = CryptoJS.enc.Base64.stringify(utf8) || utf8.toString(CryptoJS.enc.Base64);
 
-         return base64;
+    return base64;
 }
 /**
  * 将对象转换为Formdata
@@ -26,7 +26,7 @@ export function objToFormdata(obj = {}) {
         temp = new FormData();
 
     keys.forEach(key => {
-        temp.append(key,obj[key])
+        temp.append(key, obj[key])
     })
     // for(var pair of temp.entries()) {//可打印FormData的值
     //     console.log(pair[0]+ ', '+ pair[1]); 
@@ -39,7 +39,7 @@ export function objToFormdata(obj = {}) {
  * @param {array} arr 待处理的数据数组
  */
 export function addKeyToTableData(arr = []) {
-    return arr.map((item,index) => {
+    return arr.map((item, index) => {
         if (item.key === undefined) {
             item.key = index;
         }
@@ -52,11 +52,11 @@ export function addKeyToTableData(arr = []) {
  * @param {array} configs 配置数组
  * @param {number} type 所需要解析的类型
  */
-export function parseConfigSteps (configs = [],type) {
-    let _configs= configs.filter(item => item.type == type),
+export function parseConfigSteps(configs = [], type) {
+    let _configs = configs.filter(item => item.type == type),
         temp = null;
     if (_configs.length > 0) {
-        let {configInfo,stepId,type} = _configs[0]
+        let { configInfo, stepId, type } = _configs[0]
         temp = {
             configInfo: JSON.parse(configInfo),
             stepId,
@@ -70,7 +70,7 @@ export function parseConfigSteps (configs = [],type) {
  * 返回updateflag的计算结果
  * @param {array} datalist 控制协议的list
  */
-export function countUpdateflag (datalist) {
+export function countUpdateflag(datalist) {
     // console.log("datalist------",datalist);
     //控制协议 字节长度和（其他字节和 + updateflag ）是16整数倍，updateFlag=（其他字段/8 向上取整）
     //validProtocolLength ： 控制协议 的 除了updateflag 的其他长度之和
@@ -90,8 +90,8 @@ export function countUpdateflag (datalist) {
             add: 0,
             sub: 0,
             updateflag: parseInt(Math.ceil(validProtocolLength / 8)), //updateflag 的字节长度 当前updateflag
-            addupdateflag:0,//通过增补保留字后标准的updateflag
-            subupdateflag:0,//通过减小保留字后标准的updateflag
+            addupdateflag: 0,//通过增补保留字后标准的updateflag
+            subupdateflag: 0,//通过减小保留字后标准的updateflag
         };
     // A: a+b = 16n (n= 1、2、3...)
     // B: 8b = a+k ( k=0到7 )
@@ -184,20 +184,20 @@ export const DateTool = {
  * 协议类型的展示文案判断规则
  * @param {object} item 协议子项
  */
-export function setFuncDataType (item){
-    const {functionDataType, propertyValueType, propertyValueDesc, javaType} = item;
-    const types = ["字符型", "数值型", "枚举型", "布尔型", "绝对时间", "相对时间", "循环时间", "RGB颜色", "二进制","数组","结构体"];
+export function setFuncDataType(item) {
+    const { functionDataType, propertyValueType, propertyValueDesc, javaType } = item;
+    const types = ["字符型", "数值型", "枚举型", "布尔型", "绝对时间", "相对时间", "循环时间", "RGB颜色", "二进制", "数组", "结构体"];
 
-    if(functionDataType && types[functionDataType-1]){
-        return types[functionDataType-1];
-    }else if(javaType && (javaType == "STRING" || javaType == "HEXSTRING")){
-        return javaType == "STRING" ? "字符型" :  "十六进制"
-    }else if(propertyValueType){
+    if (functionDataType && types[functionDataType - 1]) {
+        return types[functionDataType - 1];
+    } else if (javaType && (javaType == "STRING" || javaType == "HEXSTRING")) {
+        return javaType == "STRING" ? "字符型" : "十六进制"
+    } else if (propertyValueType) {
         return propertyValueType == "RANGE" ? "数值型" : "枚举型"
-    }else if(propertyValueDesc){
-        if(propertyValueDesc.indexOf('~') > -1){
+    } else if (propertyValueDesc) {
+        if (propertyValueDesc.indexOf('~') > -1) {
             return "数值型"
-        }else{
+        } else {
             return "枚举型"
         }
     }
@@ -209,23 +209,23 @@ export function setFuncDataType (item){
  * @param {array} typeArray 类型数组 eg:['png','zip']
  * @param {number} sizeKb 文件大小，以kb为单位，默认值为500
  */
-export function checkFileTypeAndSize(fileList,typeArray = [],sizeKb = 500) {
+export function checkFileTypeAndSize(fileList, typeArray = [], sizeKb = 500) {
     // console.log(fileList, '----fileList')
     fileList = fileList ? Array.from(fileList) : fileList
     // console.log('类数组转化', Array.from(fileList))
     let temp = {
-        isOk : true,
-        size : true,
-        type : true
+        isOk: true,
+        size: true,
+        type: true
     };
 
-    typeArray = typeArray.map(item =>{
+    typeArray = typeArray.map(item => {
         return '.' + ('' + item).trim()
     });
     sizeKb = sizeKb * 1000; // kb -> 字节
 
     fileList.forEach(file => {
-        let {name,size} = file,
+        let { name, size } = file,
             _type = '';
 
         if (name) {
@@ -250,7 +250,7 @@ export function checkFileTypeAndSize(fileList,typeArray = [],sizeKb = 500) {
  * 获取url问号之后的param参数的value
  * @param {string} paramName 参数名称
  */
-export function getUrlParam (paramName){
+export function getUrlParam(paramName) {
     if (paramName && typeof paramName == 'string') {
         var sValue = '';
         var re = new RegExp(paramName + '=([^&=]+)');
@@ -275,14 +275,14 @@ export function getUrlParam (paramName){
  * @param {number} length 必选 指定数组的长度
  * @param {any}} item 可选 指定数据的填充项
  */
-export function createArrayByLength(length,item = '') {
+export function createArrayByLength(length, item = '') {
     return new Array(length).fill(item);
 }
 
 /**
  * 获取验证码图片地址
  */
-export function getVcodeImgUrl () {
+export function getVcodeImgUrl() {
     return `${Paths.verifyCodeUrl}?t=${new Date().getTime()}`
 }
 
@@ -312,7 +312,7 @@ export function strToAsterisk(str, num) {
  * 子账号账号管理
  * @param val 需要检测的账号
  */
-export function checkAccount (val) {
+export function checkAccount(val) {
     // 验证账户格式
     var reg = /^[a-zA-Z\d\_]{6,14}$/;
     return reg.test(val);
@@ -322,13 +322,13 @@ export function checkAccount (val) {
  * 粘贴内容到粘贴板
  * @param {string} str 内容
  */
-export function copyTextToClipBoard (str = '') {
+export function copyTextToClipBoard(str = '') {
 
     if (document.execCommand) {
 
         let tempInput = document.createElement('input');
 
-        tempInput.setAttribute('style','height:0,width:0,visibility: hidden;');
+        tempInput.setAttribute('style', 'height:0,width:0,visibility: hidden;');
         tempInput.setAttribute('value', str);
 
         document.body.appendChild(tempInput);
@@ -337,16 +337,16 @@ export function copyTextToClipBoard (str = '') {
 
         // 复制
         document.execCommand('copy');
-        
+
         notification.success({
-            message:'复制成功'
+            message: '复制成功'
         })
 
         // 销毁无用元素
         document.body.removeChild(tempInput);
     } else {
         notification.warn({
-            message:'该浏览器不支持复制'
+            message: '该浏览器不支持复制'
         })
     }
 }
@@ -355,7 +355,7 @@ export function copyTextToClipBoard (str = '') {
  * 将数值或者数值字符串限制为整数 --- 用于inputNumber
  * @param {string|number} value 待转换的值
  */
-export function limitToInt (value) {
+export function limitToInt(value) {
     // eslint-disable-next-line no-useless-escape
     const reg = /^(\-)?(\d*)\.*$/;
 
@@ -368,22 +368,22 @@ export function limitToInt (value) {
         return '';
     }
 
-    return ('' + value).replace(reg,'$1$2')
+    return ('' + value).replace(reg, '$1$2')
 }
 
 /**
  * 将数接口返回得文件列表，传入处理成满足回填得格式。
  * @param [] arr 待转换的值
  */
-export function UploadFileDataBackfill (arr) {
-    arr = arr||[];//arr为null得时候，在传入参数时加得默认值不生效。所以写在下面了。
-    return arr.map((item,index)=>{
+export function UploadFileDataBackfill(arr) {
+    arr = arr || [];//arr为null得时候，在传入参数时加得默认值不生效。所以写在下面了。
+    return arr.map((item, index) => {
         return {//文件参数以[{},{}]格式回填
-                uid: -index, // 文件唯一标识，建议设置为负数，防止和内部产生的 id 冲突
-                name: item.filename||item.filesrc,
-                status: 'done',
-                url: item.filesrc,
-            }
+            uid: -index, // 文件唯一标识，建议设置为负数，防止和内部产生的 id 冲突
+            name: item.filename || item.filesrc,
+            status: 'done',
+            url: item.filesrc,
+        }
     });
 }
 
@@ -393,14 +393,14 @@ export function UploadFileDataBackfill (arr) {
  * @param {array} array 目标数组 [{},{},{}]
  * @param {string} key 需要过滤的key值
  */
-export function uniqueItemInArrayByKey (array = [],key = '') {
+export function uniqueItemInArrayByKey(array = [], key = '') {
     let temp = {};
     array = cloneDeep(array);
 
     return array.filter(item => {
         let value = item[key]
 
-        if(temp[value]) {
+        if (temp[value]) {
             return false;
         }
 
@@ -409,24 +409,24 @@ export function uniqueItemInArrayByKey (array = [],key = '') {
     })
 }
 
-export function openNewWindow(hash,search) {
-    const {origin,pathname} = window.location;
+export function openNewWindow(hash, search) {
+    const { origin, pathname } = window.location;
 
-    let url = `${origin}${pathname}#${hash}` 
+    let url = `${origin}${pathname}#${hash}`
 
     if (search) {
         url += `?${search}`
     }
 
     const newWindow = window.open(url, '_blank');
-    newWindow.focus();  
+    newWindow.focus();
 }
 
 //密码校验正则式（8到18位须同时包含字母、数字、符号）
 export const psdPattern = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~!@#$%^&*])[0-9a-zA-Z~!@#$%^&*]{8,18}$/
 
 //获取 Upload 组件上传后返回的结果url
-export const getUploadUrl = (data)=>{
+export const getUploadUrl = (data) => {
     let url = "";
     if (data && data.length) {
         let temp = data[0]
@@ -436,4 +436,19 @@ export const getUploadUrl = (data)=>{
         }
     }
     return url
+}
+export const downfileFn = (url,name) => {
+    const a = document.createElement('a')
+    url=url.replace(/^http:\/\//i,'https://')
+    // 这里是将url转成blob地址，
+    fetch(url).then(res => res.blob()).then(blob => { // 将链接地址字符内容转变成blob地址
+        a.href = URL.createObjectURL(blob)
+        a.download = name // 下载文件的名字
+        document.body.appendChild(a)
+        a.click()
+
+        //在资源下载完成后 清除 占用的缓存资源
+        window.URL.revokeObjectURL(a.href);
+        document.body.removeChild(a);
+    })
 }

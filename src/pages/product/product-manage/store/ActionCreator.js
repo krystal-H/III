@@ -339,3 +339,16 @@ export const getMcuCodeCheck = (productId) => {
 		});
 	}
 }
+
+// 获取产品-继续开发-头部信息
+export const getProductHeadInfo = (productId) => {
+  return (dispatch) => {
+    return post(Paths.getProductListNew, { productName: productId }, { loading: true }).then(res => {
+      // console.log('调用/**********', res.data.records[0])
+      dispatch({
+        type: ActionTypes.PRODUCT_HEAD_INFO,
+        data: res.data.records[0]
+      })
+    })
+  }
+}

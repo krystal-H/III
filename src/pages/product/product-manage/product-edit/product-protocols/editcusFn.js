@@ -378,7 +378,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
                                 </Select>
                             </Form.Item>
                             <Form.Item name={['specs', 'unit']} label="单位" >
-                                <Select>
+                                <Select showSearch optionFilterProp="children">
                                     {
                                         unitCollection.map(item => {
                                             return <Select.Option value={item.Symbol} key={item.Symbol}>{item.Symbol}</Select.Option>

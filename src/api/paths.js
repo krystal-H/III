@@ -198,7 +198,7 @@ let Paths = {
     getMockDeviceId: '/device/debug/mockDevice/active',//虚拟设备调试获得虚拟设备id
     getDebugHis: '/device/debug/accountAndMac/list',//设备调试-历史列表
     hisDebugMac: '/device/debug/accountAndMac/record',//设备调试-历史列表--调试/新增
-
+    hisDebugMacdel: '/device/debug/delDebugAccountByIds',//设备调试-历史列表--调试/删除
 
 
     /* 设备数据api start */
@@ -527,7 +527,8 @@ let Paths = {
     downPhysicalModel: '/physicalModel/download/product',//产品-功能定义-下载物模型
     PhysicalModelList: '/physicalModel/func/search',//产品-定义功能-创建物模型-查询模型列表
     exportFnFile: '/product/dev/custom/func/upload',//产品-功能定义-导入自定义功能
-
+    cardFunList:'/product/dev/show/card/func',//产品-服务配置-显示功能卡列表
+    setCardFun:'/product/dev/config/card/func',//设置功能卡
     upProMaxStep: '/product/update/step',//记录产品最新配置步骤
 
     // //设备-设备管理
@@ -544,6 +545,10 @@ let Paths = {
     userDataAn: '/summary/account/dashboard',//用户分析
     deviceDataDown: '/summary/device/download',//设备分析下载
     userDataDown: '/summary/account/download',//用户分析下载
+    deviceUserAn:'/summary/deviceBind/user/dashboard',//获取指定日期内的绑定设备用户统计
+    deviceUserFile:'/summary/deviceBind/user/download',//获取指定日期内的绑定设备用户统计下载
+    appUserAn:'/summary/account/dashboard',//获取指定日期内的绑定app用户统计
+    appUserFile:'/summary/account/download',//获取指定日期内的绑定app用户统计下载
     allProductPubList: '/productManage/getPublishProductList', // 已发布的产品列表  包含新旧产品
     //公共接口
     getProductType: '/productManage/getSelectList',//所有的产品下拉列表

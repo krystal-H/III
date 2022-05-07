@@ -15,7 +15,7 @@ export default function DeviceInfo({ baseInfo, projectId }) {
     //
     const [showPassWord, setShowPassWord] = useState(false);
     const showModal = () => {
-        post(Paths.projectSavePS, {accountId: baseInfo.accountId}, { loading: true }).then(res => {
+        post(Paths.projectSavePS, { accountId: baseInfo.accountId }, { loading: true }).then(res => {
             Notification({
                 type: 'success',
                 description: '重置成功！',
@@ -59,7 +59,9 @@ export default function DeviceInfo({ baseInfo, projectId }) {
                     <div className='label'>账号名称：</div>
                     <div className='name'>
                         <span>{baseInfo.accountInitName}</span>
-                        <a className='copy' onClick={() => { handleClick(baseInfo.accountInitName) }} >复制</a>
+                        {
+                            baseInfo.accountInitName && <a className='copy' onClick={() => { handleClick(baseInfo.accountInitName) }} >复制</a>
+                        }
                     </div>
                 </div>
                 <div className='item'>
@@ -106,9 +108,12 @@ export default function DeviceInfo({ baseInfo, projectId }) {
             <div className='item-content'>
                 <div className='item'>
                     <div className='label'>项目SecretKey：</div>
-                    <div className='name'>
-                        <LabelVisible label={baseInfo.secretKey} tip="点击复制" copy={true} />
-                    </div>
+                    {
+                        baseInfo.secretKey && <div className='name'>
+                            <LabelVisible label={baseInfo.secretKey} tip="点击复制" copy={true} />
+                        </div>
+                    }
+
                 </div>
             </div>
         </div>

@@ -45,7 +45,7 @@ export default function DeviceList() {
             } else {
                 obj[key] = form.getFieldsValue()[key]
                 if (key === 'gatewayType') {
-                    obj[key] = form.getFieldsValue()[key] - 1
+                    obj[key] = form.getFieldsValue()[key] - 1 //需要减去1，对应后台数据
                 }
             }
 
@@ -81,8 +81,13 @@ export default function DeviceList() {
     }
     //搜索
     const searchList = () => {
-        const value = form.getFieldsValue();
-        getList(value)
+        // const value = form.getFieldsValue();
+        // getList(value)
+        if (pager.pageIndex === 1) {
+            getList()
+        } else {
+            setPager({ pageIndex: 1, pageRows: 10 })
+        }
     }
     //清除搜索条件
     const clearForm = () => {

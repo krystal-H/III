@@ -5,6 +5,7 @@ import { UploadFileHooks } from '../../../../../components/upload-file';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../../../api';
 import TableCom from './downTable';
+import { downfileFn } from '../../../../../util/util'
 import './index.scss'
 export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, authWay }) {
   const [form] = Form.useForm();
@@ -35,13 +36,14 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
     if (count === 0) {
       return (<span>一型一密<LabelTip tip="设备通信时，仅校验烧录的产品密钥，设备安全性较低。"></LabelTip></span>)
     } else if (count === 1) {
-      return (<span>一型一密pro<LabelTip tip="设备通信时，需校验烧录的产品密钥以及Clife平台设备注册的设备ID，较为安全。"></LabelTip></span>)
+      return (<span>一型一密pro<LabelTip tip="设备通信时，需校验烧录的产品密钥，同时需校验在Clife平台设备注册的设备ID，较为安全。"></LabelTip></span>)
     } else if (count === 2) {
-      return (<span>一机一密<LabelTip tip="设备通信时，需校验烧录的设备密钥和设备ID，安全性最高。"></LabelTip></span>)
+      return (<span>一机一密<LabelTip tip="设备通信时，需校验烧录的设备密钥，同时需校验烧录的设备ID，安全性最高。"></LabelTip></span>)
     }
   }, [authWay])
   const downfile = () => {
-    window.open('http://skintest.hetyj.com/10086/fbf17720a2051f8241011426a1328992.xlsx')
+    // window.open('http://skintest.hetyj.com/10086/fbf17720a2051f8241011426a1328992.xlsx')
+    downfileFn('http://skintest.hetyj.com/10086/fbf17720a2051f8241011426a1328992.xlsx','模板')
   }
   //打开密钥下载
   const openDown = () => {

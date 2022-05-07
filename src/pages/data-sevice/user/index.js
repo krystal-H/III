@@ -94,7 +94,7 @@ export default function Device() {
     }
     const [selectType, setSelectType] = useState(0) //产品种类
     const getType = () => {
-        post(Paths.getAppInfoList, {"pageRows":9999,"pageIndex":1}).then(res => {
+        post(Paths.getAppInfoList, { "pageRows": 9999, "pageIndex": 1 }).then(res => {
             res.data.list.unshift({ appId: 0, appName: "全部App" })
             setOptionArr(res.data.list)
         })
@@ -346,8 +346,8 @@ export default function Device() {
                     {
                         countData.map((item, index) => {
                             return (
-                                <div key={index} className='count-item' onClick={() => { filterData(index) }}
-                                    className={[currentTab === index ? 'current-tab' : '', index == 4 ? 'last-wrap' : ''].join(' ')}
+                                <div key={index} onClick={() => { filterData(index) }}
+                                    className={['count-item', currentTab === index ? 'current-tab' : '', index === 4 ? 'last-wrap' : ''].join(' ')}
                                 >
                                     <div className='item-label'>{item.label}</div>
                                     <div className='item-number'>{item.count}</div>

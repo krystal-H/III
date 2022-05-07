@@ -52,10 +52,9 @@ function ProtocolFn2({ nextStep, productId }, ref) {
                 standard: data1.concat(data3),
                 custom: data2
             })
-            if (!data1.length) {
+            if (data3.length && !data1.length) {
                 setIsModalVisible(true)
             }
-
         })
 
     }
