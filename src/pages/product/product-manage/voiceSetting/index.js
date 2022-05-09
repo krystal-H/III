@@ -50,6 +50,14 @@ function VoiceSetting() {
       title: '语言调用词',
       dataIndex: 'abilityDesc',
       key: 'abilityDesc',
+      render: (text) => {
+        let abilityDesc = text && JSON.parse(text)
+        let html = <div>{abilityDesc.desc}</div>
+        const arr = abilityDesc.examples.map((item, index) => {
+          return <span key={index}>{item}<br /></span>
+        })
+        return [html, arr]
+      }
     },
     {
       title: '关联物模型功能',
