@@ -90,7 +90,7 @@ export default class Header extends PureComponent {
         window.location = window.location.origin + window.location.pathname + '#/messageCenter/detail/' + id;
     }
     render() {
-        const { onlyLogo, developerInfo = {}, newMessageNums = {}, history, messageList=[] } = this.props,
+        const { onlyLogo, developerInfo = {}, newMessageNums = {}, history, messageList = [] } = this.props,
             { userName, isSubUser } = developerInfo,
             { totalUnRead } = newMessageNums;
         let { childmenus } = userNavRoutes[0];
@@ -115,61 +115,63 @@ export default class Header extends PureComponent {
             <header className="mainpage-header">
                 <span className="logo" onClick={this.goHome.bind(this, false)}>{LOGO_TEXT}</span>
                 {
-                    !onlyLogo &&
-                    <div className='right'>
-                        <a href="https://cms.clife.cn/clifeIotDoc/" target="_blank">帮助文档</a>
-                        <Link to="/open/repairOrder" >工单</Link>
-                        <Dropdown overlay={
-                            <div className='message-wrap'>
-                                <div className='title'>消息</div>
-                                {
-                                    messageList.map((item, index) => {
-                                        return <div key={item.noticeId} className='message-item-wrap' onClick={this.goMessAgeDetail.bind(this, item.noticeId)}>
-                                            <div className='message-item'>
-                                                <div className='name'>
-                                                    <div className='text'>【{getMessageType(item.noticeType)} 】{item.noticeTitle}</div>
-                                                    {!item.isRead && <div className='count-dot'></div>}
+                    !onlyLogo ?
+                        <div className='right'>
+                            <a href="https://cms.clife.cn/clifeIotDoc/" target="_blank">帮助文档</a>
+                            <Link to="/open/repairOrder" >工单</Link>
+                            <Dropdown overlay={
+                                <div className='message-wrap'>
+                                    <div className='title'>消息</div>
+                                    {
+                                        messageList.map((item, index) => {
+                                            return <div key={item.noticeId} className='message-item-wrap' onClick={this.goMessAgeDetail.bind(this, item.noticeId)}>
+                                                <div className='message-item'>
+                                                    <div className='name'>
+                                                        <div className='text'>【{getMessageType(item.noticeType)} 】{item.noticeTitle}</div>
+                                                        {!item.isRead && <div className='count-dot'></div>}
+                                                    </div>
+                                                    <div className='time'>{item.createTime && DateTool.utcToDev(item.createTime)}</div>
                                                 </div>
-                                                <div className='time'>{item.createTime && DateTool.utcToDev(item.createTime)}</div>
                                             </div>
-                                        </div>
-                                    })
-                                }
-                                <div className='more'>
-                                    <Link to="/messageCenter/list" >查看所有消息》</Link>
-                                </div>
-                            </div>
-                        } overlayClassName='home-message-top' >
-                            <Link to="/messageCenter" target="_blank">
-                                <BellOutlined className='bellicon' />
-                                {totalUnRead && <span className='msgnum'> {totalUnRead > 99 ? '99+' : totalUnRead} </span> || null}
-                            </Link>
-                        </Dropdown>
-
-                        <div className='user'>
-                            <img src={DefaultUserIcon} alt="用户头像" className="usericon" />
-                            <span className='username'>{userName || '未知账号'}</span>
-                            <CaretDownOutlined className='downicon' />
-                            <div className='hoverbox'>
-                                <div className='comm-shadowbox menubox'>
-                                    <div className='userbox'>
-                                        {
-                                            childmenus.map(({
-                                                menuname, path, menuicon, imgUrl
-                                            }, index) => {
-                                                return <Link key={index} className="li" to={path} target="_blank">
-                                                    {/* <UserOutlined /> */}
-                                                    <img src={imgUrl} />
-                                                    <span className='txt'>{menuname}</span>
-                                                </Link>
-                                            })
-                                        }
+                                        })
+                                    }
+                                    <div className='more'>
+                                        <Link to="/messageCenter/list" >查看所有消息》</Link>
                                     </div>
-                                    <div className='logout'><span className='click' onClick={this.logout}>退出账号</span></div>
+                                </div>
+                            } overlayClassName='home-message-top' >
+                                <Link to="/messageCenter" target="_blank">
+                                    <BellOutlined className='bellicon' />
+                                    {totalUnRead && <span className='msgnum'> {totalUnRead > 99 ? '99+' : totalUnRead} </span> || null}
+                                </Link>
+                            </Dropdown>
+
+                            <div className='user'>
+                                <img src={DefaultUserIcon} alt="用户头像" className="usericon" />
+                                <span className='username'>{userName || '未知账号'}</span>
+                                <CaretDownOutlined className='downicon' />
+                                <div className='hoverbox'>
+                                    <div className='comm-shadowbox menubox'>
+                                        <div className='userbox'>
+                                            {
+                                                childmenus.map(({
+                                                    menuname, path, menuicon, imgUrl
+                                                }, index) => {
+                                                    return <Link key={index} className="li" to={path} target="_blank">
+                                                        {/* <UserOutlined /> */}
+                                                        <img src={imgUrl} />
+                                                        <span className='txt'>{menuname}</span>
+                                                    </Link>
+                                                })
+                                            }
+                                        </div>
+                                        <div className='logout'><span className='click' onClick={this.logout}>退出账号</span></div>
+                                    </div>
                                 </div>
                             </div>
+                        </div> : <div className=' right'>
+                            <a href="https://cms.clife.cn/clifeIotDoc/" target="_blank" className='nologin-right-text'>帮助文档</a>
                         </div>
-                    </div>
                 }
             </header>
         );
