@@ -1,10 +1,16 @@
 @charset 'utf-8';
 
 .config-communication-modal {
-  .ant-radio-wrapper {
+  .ant-checkbox-wrapper {
     width: 160px;
+    margin-left: 0;
   }
   .radio-group {
     padding-top: 6px;
+  }
+  .scheme-choose {
+    .ant-radio-wrapper {
+      width: auto;
+    }
   }
 }

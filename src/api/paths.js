@@ -56,6 +56,8 @@ let Paths = {
     downloadData: '/product/dev/module/data/url', // 下载资料路径
     getPanel: '/panelManage/getTemplateMarketByDeviceTypeId', // 获取品类下的面板
     getBindTypeNetworkTypeMap: '/product/getBindTypeNetworkTypeMap', // 获取配网方式
+    changeScheme: '/product/show/dev/scheme', // 非标-显示开发方案
+    subGateWayList: '/product/gateway/suppor/type', // 子设备通信方式
 
     // 5.x确定方案
     getScheme: '/scheme/list/deviceType', // 获取方案数据

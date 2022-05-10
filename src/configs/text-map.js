@@ -5,6 +5,14 @@ export const productStatusText = {
     '2': '审核中'
 }
 
+// 产品方案类型 map
+export const productSchemeTypeMap = {
+    1: '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。',
+    2: '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。',
+    3: 'SoC方案，不提供通用固件程序，需自行开发模组固件。',
+    4: '成品接入方案，支持已上市的产品，云对云方式或C-Life代理直连方式接入C-Life平台。'
+}
+
 // 页面的状态
 export const H5Status = {
     '1': '草稿',

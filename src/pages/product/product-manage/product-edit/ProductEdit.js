@@ -9,6 +9,7 @@ import Hardware from './dev-hardware';
 import ConfirmPanel from './firmpanel';
 import Validation from './validation'
 import ConfigService from './config-service';
+import Comunicate from './communicate'
 import TitleSet from './titleSet'
 import { Notification } from '../../../../components/Notification';
 import { strToAsterisk } from '../../../../util/util';
@@ -38,11 +39,31 @@ const mapStateToProps = state => {
 function ProductEdit({ match, location, productHeadInfo, getHeadInfoAction }) {
     const origincurrent = +sessionStorage.getItem("stepnum") || 0;
 
-    const [productItem, setProductItem] = useState({})
+    const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
     const [showSecret, setShowSecret] = useState(false)
     const [titleVisible, setTitleVisible] = useState(false)
     const [current, setcurrent] = useState(origincurrent);
     const [maxCurrent, setMaxCurrent] = useState(origincurrent);
+
+    const stepListCloud = [
+        { title: '定义功能', content: 'protocols', mod: ProductProtocols },
+        { title: '确定面板', content: 'firmpanel', mod: ConfirmPanel },
+        { title: '通信协议', content: 'cloud2cloud', mod: Comunicate },
+        { title: '配置服务', content: 'configService', mod: ConfigService },
+        { title: '调试验证', content: 'validation', mod: Validation },
+    ]
+
+    const stepList = [
+        { title: '定义功能', content: 'protocols', mod: ProductProtocols },
+        { title: '确定面板', content: 'firmpanel', mod: ConfirmPanel },
+        { title: '开发硬件', content: 'projectSelect', mod: Hardware },
+        { title: '配置服务', content: 'configService', mod: ConfigService },
+        { title: '调试验证', content: 'validation', mod: Validation },
+    ];
+
+    
+    const { schemeType } = productItem
+    const _stepList = (schemeType === 4 && stepListCloud) || stepList;
 
     let history = useHistory();
     let { path } = match,
@@ -55,14 +76,6 @@ function ProductEdit({ match, location, productHeadInfo, getHeadInfoAction }) {
     useEffect(() => {
         setProductItem(productHeadInfo)
     }, [productHeadInfo])
-
-    const stepList = [
-        { title: '定义功能', content: 'protocols', mod: ProductProtocols },
-        { title: '确定面板', content: 'firmpanel', mod: ConfirmPanel },
-        { title: '开发硬件', content: 'projectSelect', mod: Hardware },
-        { title: '配置服务', content: 'configService', mod: ConfigService },
-        { title: '调试验证', content: 'validation', mod: Validation },
-    ];
 
     let refAll = useRef();
     const next = () => {
@@ -155,7 +168,8 @@ function ProductEdit({ match, location, productHeadInfo, getHeadInfoAction }) {
     </div>)
 
 
-    const ModStep = stepList[current].mod;
+    // const ModStep = stepList[current].mod;
+    const ModStep = _stepList[current].mod;
 
     return (
         <React.Fragment>
@@ -167,7 +181,7 @@ function ProductEdit({ match, location, productHeadInfo, getHeadInfoAction }) {
                 <div className='product-main-wrap comm-shadowbox'>
                     <div className='product-main-wrap_step'>
                         <Steps current={current}>
-                            {stepList.map(item => (
+                            {_stepList.map(item => (
                                 <Step key={item.title} title={item.title} />
                             ))}
                         </Steps>
@@ -180,13 +194,13 @@ function ProductEdit({ match, location, productHeadInfo, getHeadInfoAction }) {
                             上一步
                         </Button>
                     )}
-                    {current < stepList.length - 1 && (
+                    {current < _stepList.length - 1 && (
                         <Button type="primary" onClick={next}>
                             下一步
                         </Button>
                     )}
 
-                    {current === stepList.length - 1 && (
+                    {current === _stepList.length - 1 && (
                         <Button type="primary" onClick={releaseProduct}>
                             发布产品
                         </Button>
