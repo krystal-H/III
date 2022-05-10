@@ -73,10 +73,10 @@ class List extends PureComponent {
           <div className="operation">
             <span className="continue" onClick={() => this.clickProductInfo(record)}>{record.status === 1 ? '开发详情' : '继续开发'}</span>
             {/* 1：有语音 0：无 */}
-            {/* {
+            {
               record.voiceable === 1 &&
               <span className="copy mar25" onClick={() => this.setVoice(record)}>语音</span>
-            } */}
+            }
             {
               record.isOldProduct === 0 &&
               <span className="copy mar25" onClick={() => this.operateProduct(record, 'copyModalVisible')}>复制</span>
