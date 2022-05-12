@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import { useHistory } from 'react-router-dom';
 import { Steps, Button } from 'antd';
 
@@ -61,9 +61,12 @@ function ProductEdit({ match, location, productHeadInfo, getHeadInfoAction }) {
         { title: '调试验证', content: 'validation', mod: Validation },
     ];
 
-    
+
     const { schemeType } = productItem
-    const _stepList = (schemeType === 4 && stepListCloud) || stepList;
+
+    const _stepList = useMemo(() => {
+        return (schemeType === 4 && stepListCloud) || stepList;
+    }, [])
 
     let history = useHistory();
     let { path } = match,

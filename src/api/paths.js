@@ -58,6 +58,9 @@ let Paths = {
     getBindTypeNetworkTypeMap: '/product/getBindTypeNetworkTypeMap', // 获取配网方式
     changeScheme: '/product/show/dev/scheme', // 非标-显示开发方案
     subGateWayList: '/product/gateway/suppor/type', // 子设备通信方式
+    feiBiaoMode: '/product/show/comm/mode', // 非标-显示通信方式
+    saveFeibiao: '/product/set/comm/mode', // 非标-保存通信方式
+
 
     // 5.x确定方案
     getScheme: '/scheme/list/deviceType', // 获取方案数据

@@ -18,12 +18,12 @@ class Comunicate extends Component {
 
   componentDidMount() {
     this.getCommunicationProtocol()
+    this.feibiaoModeDetail()
   }
 
   // 获取通信协议
   getCommunicationProtocol = () => {
     post(Paths.getCommunicationProtocol, {}).then(res => {
-      console.log(res, 'aaaaaaaaaaaaaaa')
       this.setState({
         protocolList: res.data
       })
@@ -31,12 +31,40 @@ class Comunicate extends Component {
   }
 
 
+  // 详情回显
+  feibiaoModeDetail = () => {
+    post(Paths.feiBiaoMode, { productId: this.props.productId }).then(res => {
+      const communicationModeList = res.data && res.data.map((item) => {
+        return `${item.bindType}#${item.bindTypeVersion}`
+      })
+      this.formRef.current.setFieldsValue({ communicationModeList })
+    })
+  }
+
+  // 保存通信方式
+  saveFeiBiao = () => {
+    const params = { 
+      productId: this.props.productId, 
+      communicationModeList: this.state.checkedValues 
+    }
+    params.communicationModeList = params.communicationModeList.map((item) => {
+      return {
+        bindType: Number(item.split('#')[0]),
+        bindTypeVersion: Number(item.split('#')[1])
+      }
+    })
+    post(Paths.saveFeibiao, params).then(res => {
+      this.feibiaoModeDetail()
+      this.props.nextStep()
+    })
+  }
+
   onFinish = (values) => {
     console.log(values)
     if (this.state.checkedValues.length === 0) {
-      return Notification({ type: 'warn', description: '请更改配置通信协议' })
+      return Notification({ type: 'warn', description: '请更改配置通信方式' })
     } else {
-      this.props.nextStep()
+      this.saveFeiBiao()
     }
   }
 
@@ -68,9 +96,10 @@ class Comunicate extends Component {
         <div className="desc">{this.getSchemeType()}</div>
         <Form ref={this.formRef} className="communicate-form"
           name="control-ref"
-          onFinish={this.onFinish}>
+          onFinish={this.onFinish}
+          onFinishFailed={this.onFinishFailed}>
           <Form.Item
-            name="bindType"
+            name="communicationModeList"
             label="云端通信方式"
             rules={[{ required: true, message: '请选择云端通信方式' }]}>
             <Checkbox.Group
