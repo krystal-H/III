@@ -13,6 +13,8 @@ import { Notification } from '../../../../../components/Notification'
 import ZigbeeConfig from './zigbeeConfig'
 import ZigbeeProConfig from './zigbeeProConfig'
 import QuickConfig from '../../product-details/service-config/shiftSet'
+import { productSchemeTypeMap } from '../../../../../configs/text-map';
+
 //处理数据
 function delaData(data, editData = {}) {
   let newData = []
@@ -345,18 +347,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
   // 获取方案类型展示
   const getSchemeType = () => {
     if (productItemData.schemeType) {
-      switch (productItemData.schemeType) {
-        case 1:
-          return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。'
-        case 2:
-          return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。'
-        case 3:
-          return 'SoC方案，不提供通用固件程序，需自行开发模组固件。'
-        case 4:
-          return '云接入方案，支持已上市的产品，云对云方式接入clife平台。'
-        default:
-          break;
-      }
+      return productSchemeTypeMap[productItemData.schemeType]
     } else {
       return ''
     }
@@ -365,13 +356,13 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const goVoiceSetting = () => {
     history.push(`/open/product/proManage/voiceSetting/${productId}/?detail=1`)
   }
-//快捷配置
-const setQuick = () => {
-  setQuickVisible(true)
-}
-const quickCancel = () => {
-  setQuickVisible(false)
-}
+  //快捷配置
+  const setQuick = () => {
+    setQuickVisible(true)
+  }
+  const quickCancel = () => {
+    setQuickVisible(false)
+  }
   return (
     <div className="service-config-page">
       <div className="desc">{getSchemeType()}</div>
@@ -420,13 +411,13 @@ const quickCancel = () => {
                         </Link>
                         :
                         item.type === 'voiceSetting' ? <div className="config-card-right-btn" onClick={() => goVoiceSetting()}>配置</div> :
-                        item.type === 'quickSetting' ? <div className="config-card-right-btn" onClick={() => setQuick()}>配置</div> :
-                          item.type === 'addFirmware' ?
-                            <>
-                              <div className="config-card-right-btn" onClick={() => { showModal(item.type); setShowType('add') }}>配置</div>
-                              <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
-                            </> :
-                            <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
+                          item.type === 'quickSetting' ? <div className="config-card-right-btn" onClick={() => setQuick()}>配置</div> :
+                            item.type === 'addFirmware' ?
+                              <>
+                                <div className="config-card-right-btn" onClick={() => { showModal(item.type); setShowType('add') }}>配置</div>
+                                <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
+                              </> :
+                              <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
                       : ''
                   }
                   {/* 配置的判断 */}

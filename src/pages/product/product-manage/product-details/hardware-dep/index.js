@@ -6,6 +6,7 @@ import defaultImg from '../../../../../assets/images/commonDefault/hardware.png'
 import "./index.scss"
 import { Link } from 'react-router-dom';
 import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.jpg';
+import { productSchemeTypeMap } from '../../../../../configs/text-map';
 
 class Hardware extends Component {
   constructor(props) {
@@ -109,18 +110,7 @@ class Hardware extends Component {
   // 获取方案类型展示
   getSchemeType = () => {
     if (this.state.productItemData.schemeType) {
-      switch (this.state.productItemData.schemeType) {
-        case 1:
-          return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。'
-        case 2:
-          return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。'
-        case 3:
-          return 'SoC方案，不提供通用固件程序，需自行开发模组固件。'
-        case 4:
-          return '云接入方案，支持已上市的产品，云对云方式接入clife平台。'
-        default:
-          break;
-      }
+      return productSchemeTypeMap[this.state.productItemData.schemeType]
     } else {
       return ''
     }
@@ -275,51 +265,51 @@ class Hardware extends Component {
                     </div>
                   </>
                 }*/}
-              </div> 
-                <div className="line">
-                  <img src={require('../../../../../assets/images/product/arrowLine.png')} alt="" />
-                </div>
-                <div className="flex-c">
-                  <img className="debug-icon" src={require('../../../../../assets/images/product/func.png')} alt="" />
-                  <div>功能测试</div>
-                  <div className="mar8">（请先配网以及通信安全机制的配置）</div>
-                  {/* <div className="blue">进入调试验证</div> */}
-                </div>
-                <div className="line">
-                  <img src={require('../../../../../assets/images/product/arrowLine.png')} alt="" />
-                </div>
-                <div className="flex-c">
-                  <img className="debug-icon" src={require('../../../../../assets/images/product/network.png')} alt="" />
-                  <div>联网验证</div>
-                  <div className="blue" onClick={() => this.setState({ officeVis: true })}>下载“数联智能”App</div>
-                </div>
+              </div>
+              <div className="line">
+                <img src={require('../../../../../assets/images/product/arrowLine.png')} alt="" />
+              </div>
+              <div className="flex-c">
+                <img className="debug-icon" src={require('../../../../../assets/images/product/func.png')} alt="" />
+                <div>功能测试</div>
+                <div className="mar8">（请先配网以及通信安全机制的配置）</div>
+                {/* <div className="blue">进入调试验证</div> */}
+              </div>
+              <div className="line">
+                <img src={require('../../../../../assets/images/product/arrowLine.png')} alt="" />
+              </div>
+              <div className="flex-c">
+                <img className="debug-icon" src={require('../../../../../assets/images/product/network.png')} alt="" />
+                <div>联网验证</div>
+                <div className="blue" onClick={() => this.setState({ officeVis: true })}>下载“数联智能”App</div>
               </div>
             </div>
           </div>
-          {/* 固件升级 */}
-          {
-            showImg && <Modal title="图片展示" width='970px' visible={showImg} footer={null} onCancel={() => { this.callImg() }}>
-              <div style={{ textAlign: 'center' }}>
-                <img src={imgUrl} style={{ maxWidth: '800px' }} alt="" />
-              </div>
-            </Modal>
-          }
-          {/* 下载数联app */}
-          {
-            officeVis &&
-            <Modal title="安装“数联智能”App"
-              width='470px'
-              visible={officeVis}
-              footer={null}
-              onCancel={() => this.setState({ officeVis: false })}>
-              <div className='down-office-modal' >
-                <img src={demoAppOfficial} alt="pic" />
-                <div>手机扫描二维码下载</div>
-              </div>
-            </Modal>
-          }
         </div>
-        )
+        {/* 固件升级 */}
+        {
+          showImg && <Modal title="图片展示" width='970px' visible={showImg} footer={null} onCancel={() => { this.callImg() }}>
+            <div style={{ textAlign: 'center' }}>
+              <img src={imgUrl} style={{ maxWidth: '800px' }} alt="" />
+            </div>
+          </Modal>
+        }
+        {/* 下载数联app */}
+        {
+          officeVis &&
+          <Modal title="安装“数联智能”App"
+            width='470px'
+            visible={officeVis}
+            footer={null}
+            onCancel={() => this.setState({ officeVis: false })}>
+            <div className='down-office-modal' >
+              <img src={demoAppOfficial} alt="pic" />
+              <div>手机扫描二维码下载</div>
+            </div>
+          </Modal>
+        }
+      </div>
+    )
   }
 }
 

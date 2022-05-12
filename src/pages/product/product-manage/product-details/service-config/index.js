@@ -10,6 +10,7 @@ import ConfigFirmwareDetail from './configFirmwareDetail.js'
 import ZigbeeConfig from './zigbeeConfig'
 import ZigbeeProConfig from './zigbeeProConfig'
 import QuickConfig from './shiftSet'
+import { productSchemeTypeMap } from '../../../../../configs/text-map';
 import './index.scss';
 
 //处理数据
@@ -286,18 +287,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
   // 获取方案类型展示
   const getSchemeType = () => {
     if (productItemData.schemeType) {
-      switch (productItemData.schemeType) {
-        case 1:
-          return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。'
-        case 2:
-          return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。'
-        case 3:
-          return 'SoC方案，不提供通用固件程序，需自行开发模组固件。'
-        case 4:
-          return '云接入方案，支持已上市的产品，云对云方式接入clife平台。'
-        default:
-          break;
-      }
+      return productSchemeTypeMap[productItemData.schemeType]
     } else {
       return ''
     }
