@@ -48,7 +48,7 @@ function ProductEdit({ match, location, productHeadInfo, getHeadInfoAction }) {
     const stepListCloud = [
         { title: '定义功能', content: 'protocols', mod: ProductProtocols },
         { title: '确定面板', content: 'firmpanel', mod: ConfirmPanel },
-        { title: '通信协议', content: 'cloud2cloud', mod: Comunicate },
+        { title: '通信方式', content: 'cloud2cloud', mod: Comunicate },
         { title: '配置服务', content: 'configService', mod: ConfigService },
         { title: '调试验证', content: 'validation', mod: Validation },
     ]

@@ -27,7 +27,7 @@ class Hardware extends Component {
             productItemData: JSON.parse(sessionStorage.getItem('productItem')) || {},
             officeVis: false,
             configCommunicationVisible: JSON.parse(sessionStorage.getItem('productItem')) && JSON.parse(sessionStorage.getItem('productItem')).moduleId == -1, // 配置通信协议boolean
-            protocolList: [], // 通信协议
+            protocolList: [], // 通信方式
             networkWayList: [], // 配网方式列表
             downloadInfo: {}, // 下载资料显示
             schemeInfo: {} // 方案显示字段
@@ -172,7 +172,7 @@ class Hardware extends Component {
     }
 
 
-    // 获取通信协议
+    // 获取通信方式
     getCommunicationProtocol = () => {
         post(Paths.getCommunicationProtocol, {}).then(res => {
             this.setState({

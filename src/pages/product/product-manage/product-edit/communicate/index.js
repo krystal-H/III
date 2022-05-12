@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Form, Checkbox } from 'antd'
 import { productSchemeTypeMap } from '../../../../../configs/text-map';
 import { Notification } from '../../../../../components/Notification'
+import { get, Paths, post } from '../../../../../api'
 import './index.scss'
 
 class Comunicate extends Component {
@@ -10,11 +11,26 @@ class Comunicate extends Component {
     super(props)
     this.state = {
       productItemData: JSON.parse(sessionStorage.getItem('productItem')) || {},
-      checkedValues: []
+      checkedValues: [],
+      protocolList: [], // 通信协议
     }
   }
 
-  
+  componentDidMount() {
+    this.getCommunicationProtocol()
+  }
+
+  // 获取通信协议
+  getCommunicationProtocol = () => {
+    post(Paths.getCommunicationProtocol, {}).then(res => {
+      console.log(res, 'aaaaaaaaaaaaaaa')
+      this.setState({
+        protocolList: res.data
+      })
+    })
+  }
+
+
   onFinish = (values) => {
     console.log(values)
     if (this.state.checkedValues.length === 0) {
@@ -46,6 +62,7 @@ class Comunicate extends Component {
   }
 
   render() {
+    const { protocolList } = this.state
     return (
       <div>
         <div className="desc">{this.getSchemeType()}</div>
@@ -56,12 +73,18 @@ class Comunicate extends Component {
             name="bindType"
             label="云端通信方式"
             rules={[{ required: true, message: '请选择云端通信方式' }]}>
-            <Checkbox.Group className="check-group"
-              onChange={(values) => this.changeProtocol(values)} >
-              <Checkbox value="wifi">wifi</Checkbox>
-              <Checkbox value="BLE">BLE</Checkbox>
-              <Checkbox value="GPRS">GPRS</Checkbox>
-              <Checkbox value="3G/4G/5G">3G/4G/5G</Checkbox>
+            <Checkbox.Group
+              onChange={(val) => this.changeProtocol(val)}
+              className="checkbox-group">
+              {
+                protocolList && protocolList.map(item => (
+                  <Checkbox
+                    value={`${item.bindTypeId}#${item.bindTypeVersion}`}
+                    key={`${item.bindTypeId}#${item.bindTypeVersion}`}>
+                    {item.bindTypeName}
+                  </Checkbox>
+                ))
+              }
             </Checkbox.Group>
           </Form.Item>
         </Form>

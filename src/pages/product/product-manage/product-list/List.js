@@ -61,7 +61,7 @@ class List extends PureComponent {
       },
       { title: "品类", dataIndex: "deviceType", key: "deviceType" },
       { title: "智能化方案", dataIndex: "schemeName", key: "schemeName" },
-      { title: "通信协议", dataIndex: "bindTypeStr", key: "bindTypeStr" },
+      { title: "通信方式", dataIndex: "bindTypeStr", key: "bindTypeStr" },
       {
         title: "状态", dataIndex: "status", key: "status",
         render: (text) => (<span className={`status status-${text}`}>{productStatusText['' + text] || ''}</span>)

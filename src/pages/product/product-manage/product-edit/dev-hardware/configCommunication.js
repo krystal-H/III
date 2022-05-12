@@ -7,7 +7,7 @@ import './configCommunication.scss'
 
 const { Option } = Select
 
-// 数组扁平化
+// 数组扁平化  flat()
 const flatArr = function (arr) {
   return arr.reduce((pre, cur) => pre.concat(Array.isArray(cur) ? flatArr(cur) : cur), [])
 }
