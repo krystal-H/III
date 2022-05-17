@@ -30,6 +30,7 @@ class SwitchFreeDep extends Component {
       btnList2: [], // MCU
       btnList3: [], // Soc
       btnList4: [], // 成品接入方案
+      btnList5: [], //操作系统方案
       thirdCategoryId: props.thirdCategoryId
     }
     this.refSwitchTab = null
@@ -61,7 +62,7 @@ class SwitchFreeDep extends Component {
   }
 
   render() {
-    const { currentActiveKey, btnList1, btnList2, btnList3, btnList4 } = this.state
+    const { currentActiveKey, btnList1, btnList2, btnList3, btnList4, btnList5 } = this.state
     const { thirdCategoryId } = this.props
     return (
       <Tabs onChange={(activeKey) => this.handleChange(activeKey)} destroyInactiveTabPane>
@@ -108,6 +109,18 @@ class SwitchFreeDep extends Component {
             <SwitchTab
               tip="成品接入方案，支持已上市的产品，云对云方式或C-Life代理直连方式接入C-Life平台。"
               btnList={btnList4}
+              deviceTypeId={thirdCategoryId}
+              onRef={ref => { this.refSwitchTab = ref }} />
+          </TabPane>
+        }
+
+        {/* 操作系统方案 */}
+        {
+          btnList5.length > 0 &&
+          <TabPane tab="操作系统方案" key="5">
+            <SwitchTab
+              tip="自带Android或者Linux系统的产品，有独立的系统。"
+              btnList={btnList5}
               deviceTypeId={thirdCategoryId}
               onRef={ref => { this.refSwitchTab = ref }} />
           </TabPane>

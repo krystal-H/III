@@ -10,6 +10,7 @@ import ConfirmPanel from './firmpanel';
 import Validation from './validation'
 import ConfigService from './config-service';
 import Comunicate from './communicate'
+import OperateSystem from './operateSystem'
 import TitleSet from './titleSet'
 import { Notification } from '../../../../components/Notification';
 import { strToAsterisk } from '../../../../util/util';
@@ -53,19 +54,26 @@ function ProductEdit({ match, location, productHeadInfo, getHeadInfoAction }) {
         { title: '调试验证', content: 'validation', mod: Validation },
     ]
 
+    const stepListSystem = [
+        { title: '定义功能', content: 'protocols', mod: ProductProtocols },
+        { title: '确定面板', content: 'firmpanel', mod: ConfirmPanel },
+        { title: '操作系统', content: 'projectSelect', mod: OperateSystem },
+        { title: '配置服务', content: 'configService', mod: ConfigService },
+        { title: '调试验证', content: 'validation', mod: Validation },
+    ]
+
     const stepList = [
         { title: '定义功能', content: 'protocols', mod: ProductProtocols },
         { title: '确定面板', content: 'firmpanel', mod: ConfirmPanel },
         { title: '开发硬件', content: 'projectSelect', mod: Hardware },
         { title: '配置服务', content: 'configService', mod: ConfigService },
         { title: '调试验证', content: 'validation', mod: Validation },
-    ];
-
+    ]
 
     const { schemeType } = productItem
 
     const _stepList = useMemo(() => {
-        return (schemeType === 4 && stepListCloud) || stepList;
+        return (schemeType === 4 && stepListCloud) || (schemeType === 5 && stepListSystem) || stepList;
     }, [])
 
     let history = useHistory();

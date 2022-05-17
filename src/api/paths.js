@@ -61,6 +61,11 @@ let Paths = {
     feiBiaoMode: '/product/show/comm/mode', // 非标-显示通信方式
     saveFeibiao: '/product/set/comm/mode', // 非标-保存通信方式
 
+    // 5.x系统方案
+    getSystemType: '/product/system/type', // 查找系统类型
+    systemShow: '/product/extend/info', // 显示系统类型
+    saveSystem: '/product/set/system/mode', // 设置系统类型
+
 
     // 5.x确定方案
     getScheme: '/scheme/list/deviceType', // 获取方案数据
