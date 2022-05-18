@@ -153,6 +153,11 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
             } else if (value.type === 'int' || value.type === 'float') {
                 origin.content = value
             }
+            if(value.type === 'int'){
+                if(Number(origin.content.specs.max)>2**31-1){
+                    origin.content.specs.unsigned=true
+                }
+            }
             origin.content.dataType = {
                 type: origin.content.type,
                 specs: origin.content.specs

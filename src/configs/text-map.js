@@ -89,9 +89,6 @@ export const unitCollection = [{
     "Symbol": "无",
     "Name": "无"
 }, {
-    "Symbol": "mV",
-    "Name": "mV"
-}, {
     "Symbol": "μg/m³",
     "Name": "不知道2"
 }, {
