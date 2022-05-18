@@ -7,6 +7,7 @@ function AddVoice({ productId, voiceType, visible, handleCancel, handleOk }) {
   const [dataSource, setDataSource] = useState([])
   const [selectedCount, setSelectedCount] = useState(0)
   const [abilityIds, setAbilityIds] = useState('')
+  const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10000000 })
 
   const columns = [
     {
@@ -52,7 +53,7 @@ function AddVoice({ productId, voiceType, visible, handleCancel, handleOk }) {
     const params = {
       voiceType,
       productId,
-      // ...pager
+      ...pager
     }
     post(Paths.getAllVoiceList, params, { loading: true }).then(res => {
       setDataSource(res.data.list)
@@ -108,7 +109,7 @@ function AddVoice({ productId, voiceType, visible, handleCancel, handleOk }) {
           columns={columns}
           dataSource={dataSource}
           pagination={false}
-          // scroll={{ y: 450 }}
+          scroll={{ y: 450 }}
         />
       </div>
     </Modal>
