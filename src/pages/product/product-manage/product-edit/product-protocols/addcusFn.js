@@ -192,7 +192,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
     const AddEnums = (add, count) => {
         if (count > 39) {
             Notification({
-                description: `不能超过12条数据`,
+                description: `不能超过40条数据`,
                 type: 'warn'
             });
             return
