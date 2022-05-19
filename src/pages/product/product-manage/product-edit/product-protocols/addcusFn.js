@@ -190,7 +190,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
     }));
     //添加枚举参数
     const AddEnums = (add, count) => {
-        if (count > 11) {
+        if (count > 39) {
             Notification({
                 description: `不能超过12条数据`,
                 type: 'warn'
