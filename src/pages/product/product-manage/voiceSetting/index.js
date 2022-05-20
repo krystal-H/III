@@ -141,7 +141,7 @@ function VoiceSetting() {
   // 移除listItem
   const deleteItem = (record) => {
     const params = {
-      abilityIdList: record.abilityId.toString().split('').map(item => Number(item)),
+      abilityIdList: [Number(record.abilityId)],
       productId: productItem.productId,
       operation: '0' // 移除
     }
@@ -183,7 +183,7 @@ function VoiceSetting() {
       <PageTitle
         title={productItem.productName}
         titleTag={productItem.schemeName}
-        btnTxt={productItem.status == 1 ? '' : '编辑'}
+        // btnTxt={productItem.status == 1 ? '' : '编辑'}
         btnClickHandle={() => setTitleVisible(true)}
         backHandle={() => {
           getUrlParam('detail') == 1 ? history.go(-1) : history.push('/open/product/proManage/list')
