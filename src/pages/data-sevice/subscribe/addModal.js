@@ -184,7 +184,15 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                     return item.projectId === res.projectId
                 })
                 res.projectName = projectIndex.projectName
+                if (res.isAllDevice === 2 && (!res.deviceIds || !res.deviceIds.trim())) {
+                    Notification({
+                        type: 'info',
+                        description: '请输入指定设备',
+                    });
+                    return
+                }
                 if (res.deviceIds && res.deviceIds.trim()) {
+
                     let cheackParams = {
                         productId: res.productId,
                         projectId: res.projectId,
@@ -399,7 +407,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
         //获取事件列表
         setTestSelectObj({ 9: [], 11: [], 12: [], 10: [] })
         setLaberArr([])
-        form.setFieldsValue({eventIds:[]})
+        form.setFieldsValue({ eventIds: [] })
         get(Paths.getsubscribeProduct,
             { productId: sessionStorage.getItem('pid') ? Number(sessionStorage.getItem('pid')) : '' }
         ).then((res) => {
@@ -421,7 +429,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
     }, [])
     const initEdit = () => {
         setTestSelectObj(pre => {
-            let ori=editData.productFuncList || {}
+            let ori = editData.productFuncList || {}
             let obj = {
                 9: ori.runningList || [],
                 11: ori.errorList || [],
@@ -530,7 +538,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
             default:
                 return ''
         }
-        if(!oldTable.length) return []
+        if (!oldTable.length) return []
         let currentData = oldTable.find(item => {
             if (item.dataTypeName == n) {
                 return item
@@ -621,7 +629,7 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
         //     description: '敬请期待',
         // });
         const a = document.createElement('a')
-        const url = "https://skintest.hetyj.com/31438/94c43d9a5f7eb99f8565d4feb64a30b3.pdf" 
+        const url = "https://skintest.hetyj.com/31438/94c43d9a5f7eb99f8565d4feb64a30b3.pdf"
         // 这里是将url转成blob地址，
         fetch(url).then(res => res.blob()).then(blob => { // 将链接地址字符内容转变成blob地址
             a.href = URL.createObjectURL(blob)

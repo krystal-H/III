@@ -63,8 +63,8 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
                 return item
             }
         })
-        if(!currentData) return []
-        let ori=data.productFuncList || {}
+        if (!currentData) return []
+        let ori = data.productFuncList || {}
         let obj = {
             9: ori.runningList || [],
             11: ori.errorList || [],
@@ -72,8 +72,8 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
             10: ori.controllList || [],
         }
 
-        let arr=currentData.list.filter(item=>{
-            if(obj[val].indexOf(item.property)>-1){
+        let arr = currentData.list.filter(item => {
+            if (obj[val].indexOf(item.property) > -1) {
                 return item
             }
         })
@@ -164,6 +164,10 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
                     <div className='subscrbe-t' style={{ marginTop: '22px' }}>订阅方式</div>
                     {
                         data.pushWay === 2 && <>
+                            <div className='subscrbe-item'>
+                                <div className='item-label'>主题：</div>
+                                <div className='item-value'>{data.topic}</div>
+                            </div>
                             <div className='subscrbe-item'>
                                 <div className='item-label'>账号：</div>
                                 <div className='item-value'>{data.username}</div>
