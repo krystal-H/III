@@ -351,7 +351,7 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                     <Form.Item name="isAllDevice" label="选择设备" initialValue={1} rules={[{ required: true }]}>
                         <Radio.Group >
                             <Radio value={1}>全部设备</Radio>
-                            <Radio value={2}>指定设备</Radio>
+                            {/* <Radio value={2}>指定设备</Radio> */}
                         </Radio.Group>
                     </Form.Item>
                     <Form.Item
