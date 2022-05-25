@@ -14,13 +14,13 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
         let url = Paths.subscribeDetail + '?urlConfId=' + id
         post(url).then((res) => {
             setData(res.data)
-            let eventIds = res.data.eventIds.split(',').map(item => {
-                return Number(item)
-            })
-            eventChange(eventIds)
-            get(Paths.getsubscribeProduct, { productId: res.data.productId }).then((res) => {
-                setOldTable(res.data.productFuncList || [])
-            });
+            // let eventIds = res.data.eventIds.split(',').map(item => {
+            //     return Number(item)
+            // })
+            // eventChange(eventIds)
+            // get(Paths.getsubscribeProduct, { productId: res.data.productId }).then((res) => {
+            //     setOldTable(res.data.productFuncList || [])
+            // });
         });
 
     }
@@ -147,7 +147,7 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
                         <div className='item-label'>业务时间：</div>
                         <div className='item-value'>{data.businessTime}</div>
                     </div>
-                    {
+                    {/* {
                         oldEvent.length ? <Tabs defaultActiveKey="1" >
                             {
                                 oldEvent.map(item => {
@@ -159,7 +159,7 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
                                 })
                             }
                         </Tabs> : null
-                    }
+                    } */}
 
                     <div className='subscrbe-t' style={{ marginTop: '22px' }}>订阅方式</div>
                     {

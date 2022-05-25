@@ -419,7 +419,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
                 }
             })
             setLaberArr(data)
-            setOldTable(res.data.productFuncList || [])
+            // setOldTable(res.data.productFuncList || [])
         });
     }, [sessionStorage.getItem('pid')])
     useEffect(() => {
@@ -454,39 +454,39 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
     //下一步
     const onFinish = () => {
         form.validateFields().then(val => {
-            let productFunc = ''
-            if (oldEvent.length) {
-                oldEvent.forEach(item => {
-                    let arr = testSelectObj[item] || []
-                    if (item == 9) {
-                        arr.forEach(item2 => {
-                            productFunc += '3-' + item2 + ','
-                        })
-                    }
-                    if (item == 10) {
-                        arr.forEach(item2 => {
-                            productFunc += '2-' + item2 + ','
-                        })
-                    }
-                    if (item == 11) {
-                        arr.forEach(item2 => {
-                            productFunc += '4-' + item2 + ','
-                        })
-                    }
-                    if (item == 12) {
-                        arr.forEach(item2 => {
-                            productFunc += '5-' + item2 + ','
-                        })
-                    }
-                })
-                if (productFunc) {
-                    productFunc = productFunc.slice(0, -1)
-                }
-            }
+            // let productFunc = ''
+            // if (oldEvent.length) {
+            //     oldEvent.forEach(item => {
+            //         let arr = testSelectObj[item] || []
+            //         if (item == 9) {
+            //             arr.forEach(item2 => {
+            //                 productFunc += '3-' + item2 + ','
+            //             })
+            //         }
+            //         if (item == 10) {
+            //             arr.forEach(item2 => {
+            //                 productFunc += '2-' + item2 + ','
+            //             })
+            //         }
+            //         if (item == 11) {
+            //             arr.forEach(item2 => {
+            //                 productFunc += '4-' + item2 + ','
+            //             })
+            //         }
+            //         if (item == 12) {
+            //             arr.forEach(item2 => {
+            //                 productFunc += '5-' + item2 + ','
+            //             })
+            //         }
+            //     })
+            //     if (productFunc) {
+            //         productFunc = productFunc.slice(0, -1)
+            //     }
+            // }
             let params = {
                 businessTime: val.timeRange[0].format('HH:mm') + '-' + val.timeRange[1].format('HH:mm'),
                 eventIds: val.eventIds.join(','),
-                productFunc
+                // productFunc
             }
             continueStep('2', params)
         })
@@ -496,6 +496,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
     }), [testSelectObj]);
     //===事件勾选
     const eventChange = (val) => {
+        return
         let arr = [9, 10, 11, 12]
         let arr2 = []
         val.forEach(item => {
@@ -588,7 +589,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
                 <TimePicker.RangePicker format='HH:mm' />
             </Form.Item>
         </Form>
-        <Tabs defaultActiveKey="1" >
+        {/* <Tabs defaultActiveKey="1" >
             {
                 oldEvent.map(item => {
                     return <TabPane key={item} tab={getTitle(item)}>
@@ -598,7 +599,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
                     </TabPane>
                 })
             }
-        </Tabs>
+        </Tabs> */}
     </div>)
 }
 StepContentTwo = forwardRef(StepContentTwo)
