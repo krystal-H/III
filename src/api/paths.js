@@ -620,6 +620,9 @@ let Paths = {
     projectRemoveDev: '/projectDevice/unbind',//项目详情-设备-移除绑定
     projectupdateGroup: '/projectGroup/updateGroupDevice',//项目详情-设备-修改设备分组
     projectGroupList: "/projectGroup/getGroupList",//详情-设备-获取分组列表下拉
+    //项目统计
+    projectSummaryList:'/project/summary/details',//明细
+    projectSummary: '/project/summary/information',//项目统计-汇总信息
 };
 
 // 拼接 urlPrefix

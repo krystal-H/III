@@ -158,6 +158,12 @@ export const navRoutes = [
                 menuid: '5-0',
 
             },
+            {
+                menuname: '项目统计',
+                path: '/open/project/projectCount',
+                menuid: '5-1',
+
+            },
         ]
     }
     // {
