@@ -195,7 +195,7 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
 
                     <div className='subscrbe-item'>
                         <div className='item-label'>推送频次：</div>
-                        <div className='item-value'>{data.pushFrequency === 0 ? '每次触发推送' : '相同故障每小时推送1次'}</div>
+                        <div className='item-value'>{data.pushFrequency === 2 ? '每次触发推送' : '相同故障每小时推送1次'}</div>
                     </div>
                 </div>
             </div>
