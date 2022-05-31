@@ -1,12 +1,31 @@
 import React, { useEffect, useState } from 'react'
-import { Modal, Form, Radio, Select } from 'antd'
-import { Paths, post } from '../../../../../api'
+import { Modal, Form, Radio, Select, Space, Checkbox } from 'antd'
+import { get, Paths, post } from '../../../../../api'
 import { Notification } from '../../../../../components/Notification'
 import { cloneDeep } from "lodash"
 import './configCommunication.scss'
 
 const { Option } = Select
-const gatewayTypeList = ['Wifi', '蓝牙', 'zigbee3.0']
+
+// 数组扁平化  flat()
+const flatArr = function (arr) {
+  return arr.reduce((pre, cur) => pre.concat(Array.isArray(cur) ? flatArr(cur) : cur), [])
+}
+
+// 数组去重
+const unique3 = function (arr) {
+  var obj = {}
+  var newArr = []
+  for (let i = 0; i < arr.length; i++) {
+    if (!obj[arr[i].netTypeId]) {
+      obj[arr[i].netTypeId] = 1
+      newArr.push(arr[i])
+    }
+  }
+  return newArr
+}
+
+
 function ConfigCommunication({
   visible,
   handleOk,
@@ -14,55 +33,86 @@ function ConfigCommunication({
   networkWayList,
   protocolList,
   productId,
-  deviceTypeName = ''
+  schemeInfo = {}
 }) {
+  console.log(schemeInfo, 'schemeInfo')
   const [form] = Form.useForm()
-  const [networkList, setNetworkList] = useState([]) // 动态配网列表'
-  const [productItem] = useState(JSON.parse(sessionStorage.getItem('productItem')) || {})
-  const [bindTypeStr, setBindTypeStr] = useState('') // 更新的通信协议文字
+  const [networkList, setNetworkList] = useState([]) // 动态配网列表
+  const [gatewayTypeList, setGatewayTypeList] = useState([]) // 子设备通信方式
+
+  // 根据通信方式匹配配网方式
+  const dealNetworkData = (arr) => {
+    let saveList = []
+    cloneDeep(networkWayList).forEach(item => {
+      arr.forEach(id => {
+        if (id == item.txfs) {
+          saveList.push(item.pwfs)
+        }
+      })
+    })
+    // console.log('===扁平化/去重===', flatArr(saveList), unique3(flatArr(saveList)))
+    setNetworkList(unique3(flatArr(saveList)))
+  }
 
   useEffect(() => {
-    cloneDeep(networkWayList).forEach(item => {
-      if (productItem.bindType == item.txfs) {
-        setNetworkList(item.pwfs)
-      }
+    const communicationModeList = schemeInfo.communicationModeList && schemeInfo.communicationModeList.map((item) => {
+      return `${item.bindType}#${item.bindTypeVersion}`
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    form.setFieldsValue({ communicationModeList })
+    // 根据通信方式 ——> 去筛选配网方式
+    schemeInfo.communicationModeList && dealNetworkData(schemeInfo.communicationModeList.map(item => item.bindType))
+    if (schemeInfo.schemeType != 1) {
+      if (schemeInfo.productClassId == 1) { // 网关设备——>子设备通信方式
+        get(Paths.subGateWayList).then(res => {
+          console.log('adadsa', res)
+          setGatewayTypeList(res.data)
+        })
+      }
+      form.setFieldsValue({ schemeType:schemeInfo.schemeType })
+    }
 
-  // 选择通信协议
-  const changeProtocol = (e) => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [schemeInfo])
+
+  // 选择通信方式
+  const changeProtocol = (arr) => {
     form.setFieldsValue({ netTypeId: '' })
-    // 通过通信协议获取配网方式list
-    const id = e.target.value.split('#')[0]
-    cloneDeep(networkWayList).forEach(item => {
-      if (id == item.txfs) {
-        setNetworkList(item.pwfs)
-        setBindTypeStr(protocolList.filter(ele => ele.bindTypeId == id)[0].bindTypeName)
-      }
+
+    // 通过通信方式id集合获取配网方式list
+    let tempIdArr = []
+    arr.forEach(item => {
+      tempIdArr.push(item.split('#')[0])
     })
+
+    dealNetworkData(tempIdArr)
   }
 
   // 提交保存
   const onFinish = (values) => {
     const params = { productId, ...values }
-    params.bindType = Number(values.bindType.split('#')[0])
-    params.bindTypeVersion = Number(values.bindType.split('#')[1])
+    params.communicationModeList = values.communicationModeList.map((item) => {
+      return {
+        bindType: Number(item.split('#')[0]),
+        bindTypeVersion: Number(item.split('#')[1])
+      }
+    })
+    params.schemeType = values.schemeType || 1
+    console.log(params, '保存提交的数据')
     post(Paths.saveCommunication, params, { loading: true }).then(res => {
       Notification({ description: '操作成功！', type: 'success' })
       // 前端自己保存数据，自己回显，只能更新存储里的内容了
-      handleOk(res.data, { bindTypeStr, ...params })
+      handleOk(res.data, { ...params })
     })
   }
 
-  // 点击 “确定”
+  // 确定
   const onOk = () => {
     form.submit()
   }
 
   return (
     <Modal
-      title="通信协议配置"
+      title="更改开发方案"
       visible={visible}
       onOk={onOk}
       onCancel={handleCancel}
@@ -76,26 +126,26 @@ function ConfigCommunication({
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 16 }}
         style={{ minHeight: 250 }}>
-        <Form.Item name="bindType" label="通信协议"
-          initialValue={`${productItem.bindType}#${productItem.bindTypeVersion}` || ''}
-          rules={[{ required: true, message: '请选择通信协议' }]}>
-          <Radio.Group onChange={(e) => changeProtocol(e)} className="radio-group">
+        <Form.Item name="communicationModeList" label="云端通信方式"
+          rules={[{ required: true, message: '请选择云端通信方式' }]}>
+          <Checkbox.Group onChange={(val) => changeProtocol(val)} className="radio-group">
             {
               protocolList && protocolList.map(item => (
-                <Radio
+                <Checkbox
                   value={`${item.bindTypeId}#${item.bindTypeVersion}`}
                   key={`${item.bindTypeId}#${item.bindTypeVersion}`}
-                  style={{ marginBottom: 8 }} >
+                  style={{ marginBottom: 8 }}>
                   {item.bindTypeName}
-                </Radio>
+                </Checkbox>
               ))
             }
-          </Radio.Group>
+          </Checkbox.Group>
         </Form.Item>
         <Form.Item
           label="配网方式"
           name="netTypeId"
-          initialValue={productItem.netTypeId || ''}
+          initialValue={schemeInfo.netTypeId || ''}
+          wrapperCol={{ span: 15 }}
           rules={[{ required: true, message: '请选择配网方式' }]}>
           <Select>
             {
@@ -105,19 +155,54 @@ function ConfigCommunication({
             }
           </Select>
         </Form.Item>
+        {/* mcu&soc方案才有的字段 */}
         {
-          deviceTypeName.indexOf('网关') !== -1 &&
-          <Form.Item name="gatewayType" label="网关子设备协议"
-            initialValue={productItem.gatewayType || ''}
-            rules={[{ required: true, message: '网关子设备协议' }]}>
-            <Radio.Group>
-              {
-                gatewayTypeList.map((item, index) => (
-                  <Radio value={index + 1} key={item}>{item}</Radio>
-                ))
-              }
-            </Radio.Group>
-          </Form.Item>
+          schemeInfo.schemeType != 1 &&
+          <>
+            {
+              // 普通设备—非网关设备
+              schemeInfo.productClassId == 0 &&
+              <Form.Item
+                label="是否是子设备"
+                name="isRelatedGateway"
+                initialValue={schemeInfo.isRelatedGateway}
+                rules={[{ required: true, message: '请选择是否是子设备' }]}>
+                <Radio.Group onChange={(e) => { console.log('radio checked', e.target.value) }}>
+                  <Radio value={1}>是</Radio>
+                  <Radio value={0}>否</Radio>
+                </Radio.Group>
+              </Form.Item>
+            }
+            {
+              // 网关设备
+              schemeInfo.productClassId == 1 &&
+              <Form.Item name="gatewayCommTypeList" label="子设备通信方式"
+                initialValue={schemeInfo.gatewayCommTypeList || []}
+                rules={[{ required: true, message: '请选择子设备通信方式' }]}>
+                <Checkbox.Group className="radio-group">
+                  {
+                    gatewayTypeList.map((item, index) => (
+                      <Checkbox
+                        value={item.baseTypeId}
+                        key={item.baseTypeId}
+                        style={{ marginBottom: 8 }}>{item.baseTypeName}</Checkbox>
+                    ))
+                  }
+                </Checkbox.Group>
+              </Form.Item>
+            }
+            <Form.Item label="开发方案"
+              name="schemeType"
+              initialValue={schemeInfo.schemeType || ''}
+              rules={[{ required: true, message: '请选择开发方案' }]}>
+              <Radio.Group className="scheme-choose">
+                <Space direction="vertical">
+                  <Radio value={3}>SoC方案（使用C-Life模组SDK）</Radio>
+                  <Radio value={2}>独立MCU方案（已有MCU，使用C-Llife模组+MCU SDK）</Radio>
+                </Space>
+              </Radio.Group>
+            </Form.Item>
+          </>
         }
       </Form>
     </Modal>
