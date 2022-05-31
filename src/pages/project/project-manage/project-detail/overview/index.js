@@ -120,6 +120,28 @@ export default function DeviceInfo({ baseInfo, projectId }) {
         <Divider />
         <div className='wrap-item'>
             <div className='item-title'>
+                <span>项目地址</span>
+            </div>
+            <div className='item-content'>
+                <div className='item'>
+                    <div className='label'>项目类型：</div>
+                    <div className='name'>
+                        {baseInfo.isPrivateCloud == 1 ? '私有云' : baseInfo.isPrivateCloud == 0 ? '公有云' : ''}
+                    </div>
+                </div>
+            </div>
+            <div className='item-content'>
+                <div className='item'>
+                    <div className='label'>项目地址：</div>
+                    <div className='name'>
+                        {baseInfo.brokerUrl}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <Divider />
+        <div className='wrap-item'>
+            <div className='item-title'>
                 <span>IP白名单</span>
             </div>
             <div>
