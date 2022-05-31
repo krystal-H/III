@@ -650,11 +650,13 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
             setShowWay(editData.pushWay)
             let obj = {
                 pushWay: editData.pushWay,
-                pushFrequency: editData.pushFrequency
+                pushFrequency: editData.pushFrequency,
+                
             }
             if (editData.pushWay === 1) {
                 obj.pushUrl = editData.pushUrl
                 obj.sign = editData.sign
+                obj.isEncrypt=editData.isEncrypt
             }
             form.setFieldsValue(obj)
         }
