@@ -83,13 +83,13 @@ function ServiceSelect({ productId, nextStep }, ref) {
     },
   ])
   const [optionalList, setOptionalList] = useState([
-    {
-      title: '配置MCU模块&模组插件',
-      desc: '支持配置硬件MCU的子模块，以及配置通信模组的插件',
-      isConfiged: false,
-      type: 'addFirmware',
-      url: require('../../../../../assets/images/commonDefault/service-hardware.png')
-    },
+    // {
+    //   title: '配置MCU模块&模组插件',
+    //   desc: '支持配置硬件MCU的子模块，以及配置通信模组的插件',
+    //   isConfiged: false,
+    //   type: 'addFirmware',
+    //   url: require('../../../../../assets/images/commonDefault/service-hardware.png')
+    // },
     {
       title: '固件升级',
       desc: 'MCU固件或SDK固件配置远程升级，无需烧录。需控制板支持',
@@ -237,37 +237,37 @@ function ServiceSelect({ productId, nextStep }, ref) {
   }
 
   // 固件模块
-  const getFirmwareList = () => {
-    post(Paths.getFirmwareList, { productId, schemeType: productItemData.schemeType }, { loading: true }).then(res => {
-      if (res.data && res.data.length > 0) { // 有配置数据
-        const customList = res.data.filter(item => item.isCustom === 0)
-        console.log(customList.length, 'customList.length')
-        setCustomCount(customList.length)
-        setFirmwareDetailData(res.data)
-        let tempArr = []
-        res.data.forEach(item => {
-          tempArr.push(item.firmwareTypeNo)
-        })
-        setTypeNoList(tempArr)
-        if (customList.length > 0) {
-          setOptionalList((pre) => {
-            const list = cloneDeep(pre)
-            list[0].isConfiged = true
-            return list
-          })
+  // const getFirmwareList = () => {
+  //   post(Paths.getFirmwareList, { productId, schemeType: productItemData.schemeType }, { loading: true }).then(res => {
+  //     if (res.data && res.data.length > 0) { // 有配置数据
+  //       const customList = res.data.filter(item => item.isCustom === 0)
+  //       console.log(customList.length, 'customList.length')
+  //       setCustomCount(customList.length)
+  //       setFirmwareDetailData(res.data)
+  //       let tempArr = []
+  //       res.data.forEach(item => {
+  //         tempArr.push(item.firmwareTypeNo)
+  //       })
+  //       setTypeNoList(tempArr)
+  //       if (customList.length > 0) {
+  //         setOptionalList((pre) => {
+  //           const list = cloneDeep(pre)
+  //           list[0].isConfiged = true
+  //           return list
+  //         })
 
-        }
-      } else { // 无配置数据
-        setFirmwareDetailData([])
-        setCustomCount(0)
-        setOptionalList((pre) => {
-          const list = cloneDeep(pre)
-          list[0].isConfiged = false
-          return list
-        })
-      }
-    })
-  }
+  //       }
+  //     } else { // 无配置数据
+  //       setFirmwareDetailData([])
+  //       setCustomCount(0)
+  //       setOptionalList((pre) => {
+  //         const list = cloneDeep(pre)
+  //         list[0].isConfiged = false
+  //         return list
+  //       })
+  //     }
+  //   })
+  // }
 
   // 免开发方案不显示 配置产品固件模块 、固件升级
   const noFreeScheme = () => {
@@ -282,11 +282,11 @@ function ServiceSelect({ productId, nextStep }, ref) {
         setOptionalList((preList) => {// 必须用preList  因为语音设置判断
           console.log('preList----', preList)
           const tempList = cloneDeep(preList)
-          tempList.splice(0, 2)
+          tempList.splice(0, 1)
           return tempList
         })
       } else {
-        getFirmwareList()
+        // getFirmwareList()
       }
     }
   }
@@ -468,7 +468,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
       }
 
       {/* 配置产品固件模块 */}
-      {
+      {/* {
         firmwareVisible &&
         <ConfigFirmware
           schemeType={productItemData.schemeType}
@@ -480,10 +480,10 @@ function ServiceSelect({ productId, nextStep }, ref) {
           firmwareVisible={firmwareVisible}
           confirmHandle={() => { setFirmwareVisible(false); getFirmwareList() }}
           cancelHandle={() => { setFirmwareVisible(false) }} />
-      }
+      } */}
 
       {/* 配置产品固件模块详情 */}
-      {
+      {/* {
         firmwareDetailVisible &&
         <ConfigFirmwareDetail
           productId={productId}
@@ -500,7 +500,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
             setShowType('edit')
             setEditData(val)
           }} />
-      }
+      } */}
 
       {/* zigbee设置弹窗 */}
       {

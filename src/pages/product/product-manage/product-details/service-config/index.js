@@ -81,13 +81,13 @@ function ServiceConfig({ productId, nextStep }, ref) {
   ])
 
   const [optionalList, setOptionalList] = useState([
-    {
-      title: '配置MCU模块&模组插件',
-      desc: '支持配置OTA升级模块，比如区分控制板、驱动板、显示板等不同模块',
-      isConfiged: false,
-      type: 'addFirmware',
-      url: require('../../../../../assets/images/commonDefault/service-hardware.png')
-    },
+    // {
+    //   title: '配置MCU模块&模组插件',
+    //   desc: '支持配置OTA升级模块，比如区分控制板、驱动板、显示板等不同模块',
+    //   isConfiged: false,
+    //   type: 'addFirmware',
+    //   url: require('../../../../../assets/images/commonDefault/service-hardware.png')
+    // },
     {
       title: '固件升级',
       desc: 'MCU固件或SDK固件配置远程升级，无需烧录。需控制板支持',
@@ -238,23 +238,23 @@ function ServiceConfig({ productId, nextStep }, ref) {
   }
 
   // 固件模块
-  const getFirmwareList = () => {
-    post(Paths.getFirmwareList, { productId }, { loading: true }).then(res => {
-      if (res.data && res.data.length > 0) {
-        setFirmwareDetailData(res.data)
-        // const list = cloneDeep(optionalList)
-        // list[0].isConfiged = true
-        // setOptionalList(list)
-      } else {
-        setOptionalList((pre) => {
-          const tempList = cloneDeep(pre)
-          tempList.splice(0, 1)
-          console.log(tempList, '---tem')
-          return tempList
-        })
-      }
-    })
-  }
+  // const getFirmwareList = () => {
+  //   post(Paths.getFirmwareList, { productId }, { loading: true }).then(res => {
+  //     if (res.data && res.data.length > 0) {
+  //       setFirmwareDetailData(res.data)
+  //       // const list = cloneDeep(optionalList)
+  //       // list[0].isConfiged = true
+  //       // setOptionalList(list)
+  //     } else {
+  //       setOptionalList((pre) => {
+  //         const tempList = cloneDeep(pre)
+  //         tempList.splice(0, 1)
+  //         console.log(tempList, '---tem')
+  //         return tempList
+  //       })
+  //     }
+  //   })
+  // }
 
   // 免开发方案不显示 配置产品固件模块 、固件升级
   const noFreeScheme = () => {
@@ -269,11 +269,11 @@ function ServiceConfig({ productId, nextStep }, ref) {
         setOptionalList((preList) => {// 必须用preList  因为语音设置判断
           console.log('preList----', preList)
           const tempList = cloneDeep(preList)
-          tempList.splice(0, 2)
+          tempList.splice(0, 1)
           return tempList
         })
       } else {
-        getFirmwareList()
+        // getFirmwareList()
       }
     }
 
