@@ -38,6 +38,9 @@ class Comunicate extends Component {
         return `${item.bindType}#${item.bindTypeVersion}`
       })
       this.formRef.current.setFieldsValue({ communicationModeList })
+      this.setState({
+        checkedValues: communicationModeList
+      })
     })
   }
 
