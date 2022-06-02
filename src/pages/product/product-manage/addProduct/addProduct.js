@@ -174,7 +174,7 @@ class MakeProductModal extends Component {
           controlClass: item.defaultDeviceSubtype.controlClass, // 0/1   1显示控制端口数
           deviceTypeName: item.deviceTypeName,
           productIcon: item.deviceIcon,
-          productClassId: item.productClassId || ''
+          productClassId: item.productClassId
         })
         this.setState({
           thirdCategoryId: item.deviceTypeId
