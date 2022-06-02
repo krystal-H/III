@@ -247,6 +247,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
             <Form.Item
                 label="标识符"
                 name='identifier'
+                getValueFromEvent={e => e.target.value.replace(/[\u4e00-\u9fa5]|(^\s+)|(\s+$)/ig, '')}
                 rules={[
                     {
                         required: true,
@@ -537,6 +538,7 @@ function EventTemp({ actionData, sentReq, modelType }, ref) {
                 <Form.Item
                     label="标识符"
                     name="identifier"
+                    getValueFromEvent={e => e.target.value.replace(/[\u4e00-\u9fa5]|(^\s+)|(\s+$)/ig, '')}
                     rules={[
                         {
                             required: true,
@@ -742,6 +744,7 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
                 <Form.Item
                     label="标识符"
                     name="identifier"
+                    getValueFromEvent={e => e.target.value.replace(/[\u4e00-\u9fa5]|(^\s+)|(\s+$)/ig, '')}
                     rules={[
                         {
                             required: true,
