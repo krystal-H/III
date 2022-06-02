@@ -218,6 +218,13 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
             if (res.subscriptType === 2) {
                 res.labelVoList = res.labelVoList || []
                 res.deviceLabelIds = res.labelVoList.join(',')
+                if (formData.isAllLabel === 0 && res.labelVoList.length ===0){
+                    Notification({
+                        type: 'info',
+                        description: '没有标签数据，无法进行下一步',
+                    });
+                    return
+                }
             }
             res.productName = name;
             continueStep('1', res)
@@ -620,9 +627,6 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
     }
     //是否加密
     const encryChange = (e) => {
-    }
-    const downFile = () => {
-        window.open("http://skintest.hetyj.com/10086/a9b97e2ef3c7465bb79b63374cbd4dd8.docx")
     }
     const downSDk = () => {
         // Notification({
