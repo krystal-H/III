@@ -115,7 +115,7 @@ function ProtocolFn2({ nextStep, productId }, ref) {
     }));
     //====
     const wayText = () => {
-        if (productItem.schemeName === '独立MCU方案') {
+        if (productItem.schemeName === 'MCU方案') {
             return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发'
         } else if (productItem.schemeName === 'SoC方案') {
             return 'SoC方案，不提供通用固件程序，需自行开发模组固件'
@@ -138,7 +138,7 @@ function ProtocolFn2({ nextStep, productId }, ref) {
         <div className='Protocol-label'>
             <div>{wayText()}</div>
             <div className='Protocol-download' onClick={exportFile}>
-                <a>导出物模型</a>
+                <a>导出物模型（json）</a>
                 <img src={downpng} alt='' />
             </div>
         </div>
