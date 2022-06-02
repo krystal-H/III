@@ -10,6 +10,7 @@ import ConfigFirmwareDetail from './configFirmwareDetail.js'
 import ZigbeeConfig from './zigbeeConfig'
 import ZigbeeProConfig from './zigbeeProConfig'
 import QuickConfig from './shiftSet'
+import { productSchemeTypeMap } from '../../../../../configs/text-map';
 import './index.scss';
 
 //处理数据
@@ -80,13 +81,13 @@ function ServiceConfig({ productId, nextStep }, ref) {
   ])
 
   const [optionalList, setOptionalList] = useState([
-    {
-      title: '配置MCU模块&模组插件',
-      desc: '支持配置OTA升级模块，比如区分控制板、驱动板、显示板等不同模块',
-      isConfiged: false,
-      type: 'addFirmware',
-      url: require('../../../../../assets/images/commonDefault/service-hardware.png')
-    },
+    // {
+    //   title: '配置MCU模块&模组插件',
+    //   desc: '支持配置OTA升级模块，比如区分控制板、驱动板、显示板等不同模块',
+    //   isConfiged: false,
+    //   type: 'addFirmware',
+    //   url: require('../../../../../assets/images/commonDefault/service-hardware.png')
+    // },
     {
       title: '固件升级',
       desc: 'MCU固件或SDK固件配置远程升级，无需烧录。需控制板支持',
@@ -237,23 +238,23 @@ function ServiceConfig({ productId, nextStep }, ref) {
   }
 
   // 固件模块
-  const getFirmwareList = () => {
-    post(Paths.getFirmwareList, { productId }, { loading: true }).then(res => {
-      if (res.data && res.data.length > 0) {
-        setFirmwareDetailData(res.data)
-        // const list = cloneDeep(optionalList)
-        // list[0].isConfiged = true
-        // setOptionalList(list)
-      } else {
-        setOptionalList((pre) => {
-          const tempList = cloneDeep(pre)
-          tempList.splice(0, 1)
-          console.log(tempList, '---tem')
-          return tempList
-        })
-      }
-    })
-  }
+  // const getFirmwareList = () => {
+  //   post(Paths.getFirmwareList, { productId }, { loading: true }).then(res => {
+  //     if (res.data && res.data.length > 0) {
+  //       setFirmwareDetailData(res.data)
+  //       // const list = cloneDeep(optionalList)
+  //       // list[0].isConfiged = true
+  //       // setOptionalList(list)
+  //     } else {
+  //       setOptionalList((pre) => {
+  //         const tempList = cloneDeep(pre)
+  //         tempList.splice(0, 1)
+  //         console.log(tempList, '---tem')
+  //         return tempList
+  //       })
+  //     }
+  //   })
+  // }
 
   // 免开发方案不显示 配置产品固件模块 、固件升级
   const noFreeScheme = () => {
@@ -268,11 +269,11 @@ function ServiceConfig({ productId, nextStep }, ref) {
         setOptionalList((preList) => {// 必须用preList  因为语音设置判断
           console.log('preList----', preList)
           const tempList = cloneDeep(preList)
-          tempList.splice(0, 2)
+          tempList.splice(0, 1)
           return tempList
         })
       } else {
-        getFirmwareList()
+        // getFirmwareList()
       }
     }
 
@@ -286,18 +287,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
   // 获取方案类型展示
   const getSchemeType = () => {
     if (productItemData.schemeType) {
-      switch (productItemData.schemeType) {
-        case 1:
-          return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。'
-        case 2:
-          return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。'
-        case 3:
-          return 'SoC方案，不提供通用固件程序，需自行开发模组固件。'
-        case 4:
-          return '云接入方案，支持已上市的产品，云对云方式接入clife平台。'
-        default:
-          break;
-      }
+      return productSchemeTypeMap[productItemData.schemeType]
     } else {
       return ''
     }
