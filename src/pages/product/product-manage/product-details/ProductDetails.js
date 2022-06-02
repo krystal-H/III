@@ -33,12 +33,13 @@ export default function ProductDetails({ productBaseInfo, match, getProtocolList
     let history = useHistory();
     // let productIdInRoutePath = getProductIdFromPath(match);
     let productItem = {}
+    const [showSecret, setShowSecret] = useState(false)
     if (sessionStorage.getItem('productItem')) {
         productItem = JSON.parse(sessionStorage.getItem('productItem'))
     } else {
         return <NoSourceWarn tipText="没有传入产品ID哦"></NoSourceWarn>
     }
-    const [showSecret, setShowSecret] = useState(false)
+    
     const changeState = () => {
         setShowSecret(!showSecret)
     }

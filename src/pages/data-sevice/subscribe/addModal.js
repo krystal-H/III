@@ -218,6 +218,13 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
             if (res.subscriptType === 2) {
                 res.labelVoList = res.labelVoList || []
                 res.deviceLabelIds = res.labelVoList.join(',')
+                if (formData.isAllLabel === 0 && res.labelVoList.length ===0){
+                    Notification({
+                        type: 'info',
+                        description: '没有标签数据，无法进行下一步',
+                    });
+                    return
+                }
             }
             res.productName = name;
             continueStep('1', res)
@@ -621,16 +628,13 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
     //是否加密
     const encryChange = (e) => {
     }
-    const downFile = () => {
-        window.open("http://skintest.hetyj.com/10086/a9b97e2ef3c7465bb79b63374cbd4dd8.docx")
-    }
     const downSDk = () => {
         // Notification({
         //     type: 'info',
         //     description: '敬请期待',
         // });
         const a = document.createElement('a')
-        const url = "https://skintest.hetyj.com/31438/94c43d9a5f7eb99f8565d4feb64a30b3.pdf"
+        const url = "http://skintest.hetyj.com/31438/c102a1f81779213def30dc899a612c48.pdf"
         // 这里是将url转成blob地址，
         fetch(url).then(res => res.blob()).then(blob => { // 将链接地址字符内容转变成blob地址
             a.href = URL.createObjectURL(blob)
@@ -651,12 +655,12 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
             let obj = {
                 pushWay: editData.pushWay,
                 pushFrequency: editData.pushFrequency,
-                
+
             }
             if (editData.pushWay === 1) {
                 obj.pushUrl = editData.pushUrl
                 obj.sign = editData.sign
-                obj.isEncrypt=editData.isEncrypt
+                obj.isEncrypt = editData.isEncrypt
             }
             form.setFieldsValue(obj)
         }
@@ -678,7 +682,7 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
                                 <Radio value={0}>否</Radio>
                             </Radio.Group>
                         </Form.Item>
-                        <Form.Item
+                        {/* <Form.Item
                             noStyle
                             shouldUpdate={(prevValues, currentValues) => prevValues.isEncrypt !== currentValues.isEncrypt}
                         >
@@ -691,6 +695,9 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
                                     <a onClick={downSDk}>下载SDK&帮助文档</a>
                                 </Form.Item>
                             }
+                        </Form.Item> */}
+                        <Form.Item label=" " colon={false} className='sub-text-link'>
+                            <a onClick={downSDk}>下载帮助文档</a>
                         </Form.Item>
                         <Form.Item
                             name="pushUrl"
