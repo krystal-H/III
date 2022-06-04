@@ -63,7 +63,8 @@ export default class FirmwareManagement extends Component {
             viewFirmid:undefined,//查看固件的产品id，同时控制查看弹窗是否可见
             viewFirmtype:undefined,
 
-            editId:0
+            editId:0,
+            editProductFirParams
         }
 
         this.columns = [
@@ -112,7 +113,7 @@ export default class FirmwareManagement extends Component {
                                     </>
                         }
                         {
-                            status < 2 && <a onClick={() => { this.editFirmware(productId) }}>修改固件</a> 
+                            status < 2 && <a onClick={() => { this.editFirmware(productId,{productFirmwareId,schemeType}) }}>修改固件</a> 
                         }
                         {/* <a onClick={()=>{this.deleteConfirm(productFirmwareId)}}>删除</a> */}
                     </Space>
@@ -144,10 +145,11 @@ export default class FirmwareManagement extends Component {
         this.pagerIndex()
         this.props.getMcuSocProLi();
     }
-    editFirmware = (productId)=>{
+    editFirmware = (productId,params)=>{
         this.setState({
             editId:productId,
-            addFirmwareVisiable:true
+            addFirmwareVisiable:true.valueOf,
+            editProductFirParams:params
         })
 
     }
@@ -288,7 +290,7 @@ export default class FirmwareManagement extends Component {
                                 }
                             </Select>
                         </div>
-                        <Button className='button' onClick={() => { this.switchDialog('addFirmwareVisiable') }} type="primary">添加固件{editId}</Button>
+                        <Button className='button' onClick={() => { this.switchDialog('addFirmwareVisiable') }} type="primary">添加固件</Button>
                     </div>
 
 
@@ -303,7 +305,7 @@ export default class FirmwareManagement extends Component {
                             onChange: this.pagerIndex
                         }}
                     />
-                    {addFirmwareVisiable && <AddFirmwareDialog changeState={this.changeState} editId={editId}  />}
+                    {addFirmwareVisiable && <AddFirmwareDialog changeState={this.changeState} editId={editId} editProductFirParams={editProductFirParams}  />}
 
 
                     {releaseFirmwareDialog &&

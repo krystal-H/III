@@ -31,7 +31,7 @@ const mapDispatchToProps = dispatch => {
 
 const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     changeState,
-    editId,
+    editId,editProductFirParams,
     firmwareLastVersion,mcusocproLi,firmwareFrPro,getVersionLi
 })=>{
 
@@ -40,6 +40,9 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     const [modIsUp, setModIsUp] = useState(1);
     const [curTabNo, setCurTabNo] = useState('tab0');
     const [latestModLi, setLatestModLi] = useState([]);
+    const [editFirParamsInfoLi, setEditFirParamsInfoLi] = useState([]);
+    const [editFirParamsFm, setEditFirParamsFm] = useState({});
+    const { f_firmwareVersionTypeName,f_curExtVersion } = editFirParamsFm;
     
     const { schemeType, productFirmwareVersion=0 , productId, productName, summaryVersions=[] } = firmwareFrPro;//schemeType: 2 MCU, 3 SoC,  5 SoC
     const communicationMod = summaryVersions.find((itm)=>{return itm.firmwareVersionType == 0}) || {} //通信模组
@@ -60,8 +63,59 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     useEffect(() => {
         if(editId){
             changedPro(editId)
+            post(Paths.otaDevVersionList,{...editProductFirParams}).then(({data=[]}) => {
+                setEditFirParamsInfoLi(data)
+            })
         }
     }, [editId])
+
+    useEffect(() => {//修改固件初始化表单
+        if(editFirParamsInfoLi.length){
+            let alldata = JSON.parse(JSON.stringify(editFirParamsInfoLi));
+            let communicationMod = null;
+            let idx =  alldata.findIndex(itm=>{
+                return itm.firmwareVersionType == 0
+            });
+            if(idx>-1){
+                communicationMod = alldata.slice(i,1);
+                setModIsUp(0);
+                setEditFirParamsFm(communicationMod);
+                formInstance.setFields({
+                    modUpgrade:0,
+                    f_extVersion:communicationMod.extVersion
+                })
+                if(schemeType==3){
+                    formInstance.setFields({
+                        f_totalVersion:communicationMod.totalVersion,
+                        f_filePath:communicationMod.filePath
+                    })
+                }
+            }
+            if(alldata.length){
+                setMcuIsUp(0);
+                formInstance.setFieldsValue({mcuUpgrade:0});
+                let _updateFirmwareLi = [], form_val = {}
+                for(let i=0;i<alldata.length;i++){
+                    let k = "tab"+i, _data = alldata[i];
+                    _updateFirmwareLi.push(k);
+                    let { firmwareVersionTypeName,firmwareTypeNo,totalVersion,extVersion,filePath } =_data;
+                   
+                    form_val["firmwareVersionTypeName_"+k] = firmwareVersionTypeName;
+                    form_val["firmwareTypeNo_"+k] = firmwareTypeNo;
+                    form_val["totalVersion_"+k] = totalVersion;
+                    form_val["extVersion_"+k] = extVersion;
+                    form_val["filePath_"+k] = filePath;
+
+                }
+                setUpdateFirmwareLi(_updateFirmwareLi);
+                formInstance.setFields(form_val)
+
+            }
+            
+            
+            
+        }
+    }, [editFirParamsInfoLi])
 
     const changedPro= productId =>{
         // productId = 12150;
@@ -87,13 +141,10 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
 
                     
                 return {
-                    // deviceVersionName:firmwareVersionTypeName,
-                    // deviceVersionType,
                     deviceVersionName:firmwareVersionTypeName,
                     firmwareVersionType:firmwareTypeNo,
                     mainVersion:'', extVersion, totalVersion, filePath,
-                    productId,
-                    deviceVersionIds:summaryVersions[0] && summaryVersions[0].deviceVersionId || ""
+                    productId,deviceVersionType:schemeType,
                 }
             })
             params = {...params,deviceVersions}
@@ -105,8 +156,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 mainVersion:'',
                 extVersion:f_extVersion,
                 totalVersion:f_totalVersion,
-                filePath:f_filePath,productId,
-                deviceVersionIds:summaryVersions[0] && summaryVersions[0].deviceVersionId || "",
+                filePath:f_filePath,productId,deviceVersionType:schemeType,
                 curExtVersion:f_curExtVersion
             }
             if(params.deviceVersions){
@@ -128,14 +178,13 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     const uploadChange = ({file})=>{
         if(file.response){ //上传成功返回 file.status=="done"
             const url = file.response.data && file.response.data.url || '';
-            // console.log(111111,`filePath_${curFirmwareTypeNo}`,url)
             formInstance.setFieldsValue({ 
-                [`filePath_${curFirmwareTypeNo}`]:url
+                [`filePath_${deviceVersionId}`]:url
             })
         }
         if(file.status=="removed"){ //删除操作
             formInstance.setFieldsValue({ 
-                [`filePath_${curFirmwareTypeNo}`]:""
+                [`filePath_${deviceVersionId}`]:""
             })
 
         }
@@ -143,7 +192,6 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     const uploadChangeSoc = ({file})=>{
         if(file.response){ //上传成功返回 file.status=="done"
             const url = file.response.data && file.response.data.url || '';
-            // console.log(111111,`filePath_${curFirmwareTypeNo}`,url)
             formInstance.setFieldsValue({ 
                 'f_filePath':url
             })
@@ -175,7 +223,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
             return [...pre,newActiveKey]
         })
         setCurTabNo(newActiveKey);
-        console.log('--addd---',newActiveKey)
+        // console.log('--addd---',newActiveKey)
     };
     
     const remove = (targetKey) => {
@@ -253,8 +301,8 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 {
                     schemeType==2&&modIsUp==0&&
                     <div className='modupbox'>
-                        <Item label="通信模组" name='f_firmwareVersionTypeName' >{firmwareVersionTypeName}</Item>
-                        <Item label="当前模组固件版本" name='f_curExtVersion'> { curExtVersion}</Item>
+                        <Item label="通信模组" name='f_firmwareVersionTypeName' >{f_firmwareVersionTypeName||firmwareVersionTypeName}</Item>
+                        <Item label="当前模组固件版本" name='f_curExtVersion'> {f_curExtVersion|| curExtVersion}</Item>
                         <Item label="最新模组固件版本" name='f_extVersion' rules={[{ required: true, message: '请选择' }]}>
                             <Select placeholder="请选择"  getPopupContainer={() => document.getElementById('area')}>
                                 {
@@ -272,9 +320,9 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 {
                     schemeType==3&&modIsUp==0&&
                     <div className='modupbox'>
-                        <Item label="通信模组" name='f_firmwareVersionTypeName' >{firmwareVersionTypeName}</Item>
+                        <Item label="通信模组" name='f_firmwareVersionTypeName' >{f_firmwareVersionTypeName||firmwareVersionTypeName}</Item>
                         <Item label='硬件版本号' name="f_totalVersion" > <Input maxLength={30}  placeholder='非必填'/> </Item>
-                        <Item label='当前软件版本号' name='f_curExtVersion'>{curExtVersion}</Item>
+                        <Item label='当前软件版本号' name='f_curExtVersion'>{f_curExtVersion||curExtVersion}</Item>
                         <Item label="待上传软件版本号" name={'f_extVersion'} rules={[{ required: true, message: '待上传软件版本号' }]}>
                             <Input maxLength={30} placeholder='最多30个字符' />
                         </Item>
