@@ -62,6 +62,8 @@ export default class FirmwareManagement extends Component {
 
             viewFirmid:undefined,//查看固件的产品id，同时控制查看弹窗是否可见
             viewFirmtype:undefined,
+
+            editId:0
         }
 
         this.columns = [
@@ -69,7 +71,7 @@ export default class FirmwareManagement extends Component {
             { title: '产品名称', dataIndex: 'productName' },
             {
                 title: '开发方案', dataIndex: 'schemeType',
-                render: s => s > 0 && SCHMETYPE[s - 1].nam || "脏数据"
+                render: s =>  SCHMETYPE.find(({id})=>id==s).nam || "脏数据"
             },
             { title: '产品版本号', dataIndex: 'productFirmwareVersion' },
             { title: '固件名称', dataIndex: 'productFirmwareName' },
@@ -91,7 +93,7 @@ export default class FirmwareManagement extends Component {
                     const {
                         status = 0, productFirmwareId,
                         macSet = '', validateType = 0,
-                        productId, totalVersion,
+                        productId, totalVersion,productName,
                         schemeType, firmwareVersionType,
                     } = recard
                     return <Space>
@@ -108,6 +110,9 @@ export default class FirmwareManagement extends Component {
                                         <a onClick={() => { this.openRelease(productFirmwareId) }}>发布</a>
                                         { status ==2 && <Link to={`/open/product/otaUpdate/details/${productFirmwareId}`}>查看批次</Link> }
                                     </>
+                        }
+                        {
+                            status < 2 && <a onClick={() => { this.editFirmware(productId) }}>修改固件</a> 
                         }
                         {/* <a onClick={()=>{this.deleteConfirm(productFirmwareId)}}>删除</a> */}
                     </Space>
@@ -139,7 +144,13 @@ export default class FirmwareManagement extends Component {
         this.pagerIndex()
         this.props.getMcuSocProLi();
     }
+    editFirmware = (productId)=>{
+        this.setState({
+            editId:productId,
+            addFirmwareVisiable:true
+        })
 
+    }
     changeState = (k, v) => {
         this.setState({
             [k]: v
@@ -239,7 +250,8 @@ export default class FirmwareManagement extends Component {
     render() {
         const {
             addFirmwareVisiable, releaseFirmwareDialog, validationFirmwareDialog,
-            deviceVersionId, validationDetail, validateInfo, validationModTit,viewFirmid,viewFirmtype
+            deviceVersionId, validationDetail, validateInfo, validationModTit,viewFirmid,viewFirmtype,
+            editId
         } = this.state;
         const { versionList: { list, pager },mcusocproLi } = this.props;
         const { pageIndex, totalRows } = pager;
@@ -272,11 +284,11 @@ export default class FirmwareManagement extends Component {
                             >
                                 <Option value={-1}>全部类型</Option>
                                 {
-                                    SCHMETYPE.map(({ id, nam }, i) => (id!=1 && <Option key={i} value={id}>{nam}</Option>))
+                                    SCHMETYPE.map(({ id, nam }, i) => <Option key={i} value={id}>{nam}</Option>)
                                 }
                             </Select>
                         </div>
-                        <Button className='button' onClick={() => { this.switchDialog('addFirmwareVisiable') }} type="primary">添加固件</Button>
+                        <Button className='button' onClick={() => { this.switchDialog('addFirmwareVisiable') }} type="primary">添加固件{editId}</Button>
                     </div>
 
 
@@ -291,7 +303,7 @@ export default class FirmwareManagement extends Component {
                             onChange: this.pagerIndex
                         }}
                     />
-                    {addFirmwareVisiable && <AddFirmwareDialog changeState={this.changeState} />}
+                    {addFirmwareVisiable && <AddFirmwareDialog changeState={this.changeState} editId={editId}  />}
 
 
                     {releaseFirmwareDialog &&

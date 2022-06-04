@@ -505,6 +505,7 @@ let Paths = {
     otaValidate: '/firmware/device/version/validate',
     otaRelease: '/firmware/device/upgrade/publish',
     getMcuSocProLi: '/productManage/getFilterSchemaSelList',
+    getModuleDeviceVersionList:'/firmware/productFirmware/getModuleDeviceVersionList',
 
     //总览页
     homeBanner: '/cover/getBannerList',//banner图
