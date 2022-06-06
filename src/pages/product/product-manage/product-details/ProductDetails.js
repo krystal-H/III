@@ -80,7 +80,7 @@ export default function ProductDetails({ productBaseInfo, match, getProtocolList
         <div className="eidt-wrapper">
             <PageTitle title={productItem.productName} backHandle={() => { history.push('/open/product/proManage/list') }} titleTag={productItem.schemeName} backTitle='开发详情' children={titleCom} />
             <div className='comm-shadowbox product-detail-wrap'>
-                <ProductTabs productId={productItem.productId} 
+                <ProductTabs productId={productItem.productId} schemeType={productItem.schemeType}
                 ></ProductTabs>
             </div>
         </div>
