@@ -42,6 +42,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     const [latestModLi, setLatestModLi] = useState([]);
     const [editFirParamsInfoLi, setEditFirParamsInfoLi] = useState([]);
     const [editFirParamsFm, setEditFirParamsFm] = useState({});
+    const [editFirParams, setEditFirParams] = useState([]);
     const { f_firmwareVersionTypeName,f_curExtVersion } = editFirParamsFm;
     
     const { schemeType, productFirmwareVersion=0 , productId, productName, summaryVersions=[] } = firmwareFrPro;//schemeType: 2 MCU, 3 SoC,  5 SoC
@@ -80,6 +81,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 communicationMod = alldata.slice(i,1);
                 setModIsUp(0);
                 setEditFirParamsFm(communicationMod);
+                deviceVersionId
                 formInstance.setFields({
                     modUpgrade:0,
                     f_extVersion:communicationMod.extVersion
@@ -93,6 +95,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
             }
             if(alldata.length){
                 setMcuIsUp(0);
+                setEditFirParams(alldata);
                 formInstance.setFieldsValue({mcuUpgrade:0});
                 let _updateFirmwareLi = [], form_val = {}
                 for(let i=0;i<alldata.length;i++){
@@ -132,7 +135,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
         }
 
         if(schemeType==5||mcuIsUp==0){
-            let deviceVersions = updateFirmwareLi.map(k=>{
+            let deviceVersions = updateFirmwareLi.map((k,i)=>{
                 const  firmwareTypeNo = values[`firmwareTypeNo_${k}`],
                     firmwareVersionTypeName = values[`firmwareVersionTypeName_${k}`],
                     extVersion = values[`extVersion_${k}`],
@@ -145,6 +148,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     firmwareVersionType:firmwareTypeNo,
                     mainVersion:'', extVersion, totalVersion, filePath,
                     productId,deviceVersionType:schemeType,
+                    deviceVersionId:editFirParams[i] && editFirParams[i].deviceVersionId
                 }
             })
             params = {...params,deviceVersions}
@@ -157,7 +161,8 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 extVersion:f_extVersion,
                 totalVersion:f_totalVersion,
                 filePath:f_filePath,productId,deviceVersionType:schemeType,
-                curExtVersion:f_curExtVersion
+                curExtVersion:f_curExtVersion,
+                deviceVersionId:editFirParamsFm.deviceVersionId
             }
             if(params.deviceVersions){
                 params.deviceVersions.push(deviceVersion)
