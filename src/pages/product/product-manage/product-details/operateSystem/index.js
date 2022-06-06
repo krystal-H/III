@@ -57,9 +57,9 @@ class Comunicate extends Component {
     return (
       <div>
         <div className="desc">{this.getSchemeType()}</div>
-        <Form ref={this.formRef} className="communicate-form" name="control-ref">
+        <Form ref={this.formRef} className="operate-form" name="control-ref">
           <Form.Item name="systemType" label="操作系统" >
-            <span>{showProtocolStr}</span>
+            <span className='pro-item'>{showProtocolStr}</span>
           </Form.Item>
         </Form>
       </div>
