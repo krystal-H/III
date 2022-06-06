@@ -494,4 +494,4 @@ class Hardware extends Component {
     }
 }
 
-export default connect(null, mapDispatchToProps)(Hardware)
+export default connect(null,mapDispatchToProps,null,{forwardRef: true})(Hardware)

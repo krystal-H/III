@@ -49,7 +49,7 @@ function ProductEdit({ match, location, productHeadInfo, getHeadInfoAction }) {
     const stepListCloud = [
         { title: '定义功能', content: 'protocols', mod: ProductProtocols },
         { title: '确定面板', content: 'firmpanel', mod: ConfirmPanel },
-        { title: '通信方式', content: 'cloud2cloud', mod: Comunicate },
+        { title: '通信方式', content: 'comunicate', mod: Comunicate },
         { title: '配置服务', content: 'configService', mod: ConfigService },
         { title: '调试验证', content: 'validation', mod: Validation },
     ]
@@ -57,7 +57,7 @@ function ProductEdit({ match, location, productHeadInfo, getHeadInfoAction }) {
     const stepListSystem = [
         { title: '定义功能', content: 'protocols', mod: ProductProtocols },
         { title: '确定面板', content: 'firmpanel', mod: ConfirmPanel },
-        { title: '操作系统', content: 'projectSelect', mod: OperateSystem },
+        { title: '操作系统', content: 'operateSystem', mod: OperateSystem },
         { title: '配置服务', content: 'configService', mod: ConfigService },
         { title: '调试验证', content: 'validation', mod: Validation },
     ]
@@ -65,7 +65,7 @@ function ProductEdit({ match, location, productHeadInfo, getHeadInfoAction }) {
     const stepList = [
         { title: '定义功能', content: 'protocols', mod: ProductProtocols },
         { title: '确定面板', content: 'firmpanel', mod: ConfirmPanel },
-        { title: '开发硬件', content: 'projectSelect', mod: Hardware },
+        { title: '开发硬件', content: 'hardware', mod: Hardware },
         { title: '配置服务', content: 'configService', mod: ConfigService },
         { title: '调试验证', content: 'validation', mod: Validation },
     ]
