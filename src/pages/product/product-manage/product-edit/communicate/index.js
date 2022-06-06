@@ -35,6 +35,9 @@ class Comunicate extends Component {
   feibiaoModeDetail = () => {
     post(Paths.feiBiaoMode, { productId: this.props.productId }).then(res => {
       const communicationModeList = res.data && res.data.map((item) => {
+        if (item.bindType == 0) {
+          return ''
+        }
         return `${item.bindType}#${item.bindTypeVersion}`
       })
       this.formRef.current.setFieldsValue({ communicationModeList })
@@ -63,8 +66,8 @@ class Comunicate extends Component {
   }
 
   onFinish = (values) => {
-    console.log(values)
-    if (this.state.checkedValues.length === 0) {
+    console.log(values, this.state.checkedValues.filter(item => item))
+    if (this.state.checkedValues.filter(item => item).length === 0) {
       return Notification({ type: 'warn', description: '请更改配置通信方式' })
     } else {
       this.saveFeiBiao()

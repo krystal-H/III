@@ -35,7 +35,7 @@ function ConfigCommunication({
   productId,
   schemeInfo = {}
 }) {
-  console.log(schemeInfo, 'schemeInfo')
+  // console.log(schemeInfo, 'schemeInfo')
   const [form] = Form.useForm()
   const [networkList, setNetworkList] = useState([]) // 动态配网列表
   const [gatewayTypeList, setGatewayTypeList] = useState([]) // 子设备通信方式

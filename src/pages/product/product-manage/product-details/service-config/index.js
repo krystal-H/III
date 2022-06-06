@@ -265,7 +265,7 @@ function ServiceConfig({ productId, nextStep }, ref) {
     }
 
     if (productItemData.schemeType) {
-      if (productItemData.schemeType == 1) {
+      if (productItemData.schemeType == 1 || productItemData.schemeType == 4) { // 免开发/成品方案  无固件升级
         setOptionalList((preList) => {// 必须用preList  因为语音设置判断
           console.log('preList----', preList)
           const tempList = cloneDeep(preList)

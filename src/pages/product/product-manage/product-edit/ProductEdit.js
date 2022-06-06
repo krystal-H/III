@@ -179,6 +179,7 @@ function ProductEdit({ match, location, productHeadInfo, getHeadInfoAction }) {
     </div>)
 
 
+
     // const ModStep = stepList[current].mod;
     const ModStep = _stepList[current].mod;
 

@@ -10,7 +10,15 @@ import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.jpg';
 import ConfigCommunication from './configCommunication'
 import { Notification } from '../../../../../components/Notification'
 import { productSchemeTypeMap } from '../../../../../configs/text-map';
+import { getProductHeadInfo } from '../../store/ActionCreator'
+import { connect } from 'react-redux';
 import "./index.scss"
+
+const mapDispatchToProps = dispatch => {
+    return {
+        getHeadInfoAction: params => dispatch(getProductHeadInfo(params))
+    }
+}
 
 class Hardware extends Component {
     constructor(props) {
@@ -202,6 +210,7 @@ class Hardware extends Component {
 
     // 配网协议修改
     handleCommunicationOk = (res, params) => {
+        console.log(params)
         let copyData = JSON.parse(sessionStorage.getItem('productItem')) || {}
         copyData.moduleId = res.moduleId
         copyData.netTypeId = params.netTypeId
@@ -214,6 +223,8 @@ class Hardware extends Component {
         this.getMoudleInfo(res.moduleId)
         this.getChangeScheme()
         this.setState({ configCommunicationVisible: false })
+        this.props.getHeadInfoAction(this.props.productId)
+        this.getSchemeType()
     }
 
     render() {
@@ -483,4 +494,4 @@ class Hardware extends Component {
     }
 }
 
-export default Hardware
+export default connect(null, mapDispatchToProps)(Hardware)
