@@ -108,8 +108,15 @@ export const PACKAGETYPE =['整包','差分包']
 export const UPGRADESTATUS = ['升级中','已完成']
 
 export const SCHMETYPE = [
-    {id:1,nam:'免开发'},
+    // {id:1,nam:'免开发'},
     {id:2,nam:'MCU'},
     {id:3,nam:'SoC'},
-    // {id:4,nam:'出错了！'},
+    {id:5,nam:'系统方案'},
+    
 ]
+
+export const TXTUPNAME = {
+    2:'模块',
+    3:'插件',
+    5:'升级包'
+}
