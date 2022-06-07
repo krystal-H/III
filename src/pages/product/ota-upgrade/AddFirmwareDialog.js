@@ -90,18 +90,20 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 return itm.firmwareVersionType == 0
             });
             if(idx>-1){
-                communicationMod = alldata.slice(idx,1);
+                communicationMod = alldata.splice(idx,1)[0];
+                const { extVersion,totalVersion,filePath } = communicationMod
+                console.log(444,communicationMod)
                 setModIsUp(0);
                 setEditFirParamsFm(communicationMod);
-                // deviceVersionId
                 formInstance.setFieldsValue({
                     modUpgrade:0,
-                    f_extVersion:communicationMod.extVersion
+                    f_extVersion:extVersion
                 })
                 if(schemeType==3){
+                    console.log(555,totalVersion,filePath)
                     formInstance.setFieldsValue({
-                        f_totalVersion:communicationMod.totalVersion,
-                        f_filePath:communicationMod.filePath
+                        f_totalVersion:totalVersion,
+                        f_filePath:filePath
                     })
                 }
             }
@@ -113,10 +115,10 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 for(let i=0;i<alldata.length;i++){
                     let k = "tab"+i, _data = alldata[i];
                     _updateFirmwareLi.push(k);
-                    let { firmwareVersionTypeName,firmwareTypeNo,totalVersion,extVersion,filePath } =_data;
+                    let { firmwareVersionTypeName,firmwareVersionType,totalVersion,extVersion,filePath } =_data;
                    
                     form_val["firmwareVersionTypeName_"+k] = firmwareVersionTypeName;
-                    form_val["firmwareTypeNo_"+k] = firmwareTypeNo;
+                    form_val["firmwareTypeNo_"+k] = firmwareVersionType;
                     form_val["totalVersion_"+k] = totalVersion;
                     form_val["extVersion_"+k] = extVersion;
                     form_val["filePath_"+k] = filePath;
@@ -343,12 +345,12 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     schemeType==3&&modIsUp==0&&
                     <div className='modupbox'>
                         <Item label="通信模组"  >{f_firmwareVersionTypeName||firmwareVersionTypeName}</Item>
-                        <Item label='硬件版本号' name="f_totalVersion" > <Input maxLength={30}  placeholder='非必填'/> </Item>
+                        <Item label='硬件版本号' name="f_totalVersion" ><Input maxLength={30}  placeholder='非必填'/></Item>
                         <Item label='当前软件版本号' >{f_curExtVersion||curExtVersion}</Item>
-                        <Item label="待上传软件版本号" name={'f_extVersion'} rules={[{ required: true, message: '待上传软件版本号' }]}>
+                        <Item label="待上传软件版本号" name='f_extVersion' rules={[{ required: true, message: '待上传软件版本号' }]}>
                             <Input maxLength={30} placeholder='最多30个字符' />
                         </Item>
-                        <Item label='固件程序' name={'f_filePath'}
+                        <Item label='固件程序' name='f_filePath'
                             rules={[{ required: true, message: '请输入URL' },{pattern: formrules.url, message: '请输入正确的URL'}]}
                         ><Input maxLength={200} placeholder='请输入URL或者上传一个附件自动填充' />
                         </Item>
@@ -385,7 +387,9 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                                     <Item label={TXTUPNAME[schemeType] +"编号"} name={`firmwareTypeNo_${key}`} rules={[{ required: true, message: '请填写模块编号' }]}>
                                         <Input maxLength={3}  placeholder='请输入1-100的整数字，编号须唯一'/>
                                     </Item>
-                                    <Item label='硬件版本号' name={`totalVersion_${key}`} > <Input maxLength={30}  placeholder='非必填'/> </Item>
+                                    <Item label='硬件版本号' name={`totalVersion_${key}`} >
+                                        <Input maxLength={30}  placeholder='非必填'/>
+                                    </Item>
                                     <Item label="待上传软件版本号" name={`extVersion_${key}`} rules={[{ required: true, message: '待上传软件版本号' }]}>
                                         <Input maxLength={30} placeholder='最多30个字符' />
                                     </Item>
