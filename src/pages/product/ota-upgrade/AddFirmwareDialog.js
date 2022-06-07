@@ -142,7 +142,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     }
 
     const onFinish=(values)=>{
-        const { productId,productFirmwareName,f_firmwareVersionTypeName,f_curExtVersion,f_extVersion,f_totalVersion,f_filePath } = values;
+        const { productId,productFirmwareName,f_extVersion,f_totalVersion,f_filePath } = values;
         let params = {
             productId:editId||productId, 
             productFirmwareName, 
@@ -178,7 +178,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 totalVersion:f_totalVersion,
                 filePath:f_filePath,productId,deviceVersionType:{'2':2,'3':1,'5':4}[schemeType+""],
                 curExtVersion:f_curExtVersion,
-                deviceVersionId:editFirParamsFm.deviceVersionId
+                deviceVersionId:editFirParamsFm.deviceVersionId,
             }
             if(params.deviceVersions){
                 params.deviceVersions.push(deviceVersion)
