@@ -516,6 +516,7 @@ let Paths = {
     otaRelease: '/firmware/device/upgrade/publish',
     getMcuSocProLi: '/productManage/getFilterSchemaSelList',
     getModuleDeviceVersionList:'/firmware/productFirmware/getModuleDeviceVersionList',
+    otaUpdateVersion: '/firmware/device/version/update',
 
     //总览页
     homeBanner: '/cover/getBannerList',//banner图

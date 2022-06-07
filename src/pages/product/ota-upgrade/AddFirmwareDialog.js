@@ -51,7 +51,8 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
         productId, 
         productName, 
         summaryVersions=[] ,
-        productFirmwareName
+        productFirmwareName,
+        productFirmwareId
     } = firmwareFrPro;//schemeType: 2 MCU, 3 SoC,  5 系统
     const communicationMod = summaryVersions.find((itm)=>{return itm.firmwareVersionType == 0}) || {} //通信模组
     const { firmwareVersionTypeName,curExtVersion } = communicationMod;
@@ -141,12 +142,12 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     }
 
     const onFinish=(values)=>{
-        console.log("---formvalues---",values)
         const { productId,productFirmwareName,f_firmwareVersionTypeName,f_curExtVersion,f_extVersion,f_totalVersion,f_filePath } = values;
         let params = {
             productId:editId||productId, 
             productFirmwareName, 
             productFirmwareVersion:editId ?productFirmwareVersion : (productFirmwareVersion+1 ),
+            productFirmwareId:editId?productFirmwareId:undefined
         }
 
         if(schemeType==5||mcuIsUp==0){
@@ -185,15 +186,17 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 params.deviceVersions = [deviceVersion]
             }
         }
+        let reqpath = Paths.otaAddVersion
+        if(editId){
+            reqpath = Paths.otaUpdateVersion;
+        }
 
-        post(Paths.otaAddVersion,params).then((res) => {
+        post(reqpath,params).then((res) => {
             Notification({type:'success',description:'操作成功！'});
             getVersionLi();
             changeState('addFirmwareVisiable',false); 
             changeState('editId',0)
-            changeState('editProductFirParams',{})
-
-            
+            changeState('editProductFirParams',{}) 
         }); 
     }
 
@@ -324,7 +327,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 }
                 {
                     schemeType==2&&modIsUp==0&&
-                    <div className='modupbox'>
+                    <div className='modupbox margb'>
                         <Item label="通信模组" >{f_firmwareVersionTypeName||firmwareVersionTypeName}</Item>
                         <Item label="当前模组固件版本" > {f_curExtVersion|| curExtVersion}</Item>
                         <Item label="最新模组固件版本" name='f_extVersion' rules={[{ required: true, message: '请选择' }]}>
@@ -343,7 +346,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
 
                 {
                     schemeType==3&&modIsUp==0&&
-                    <div className='modupbox'>
+                    <div className='modupbox margb'>
                         <Item label="通信模组"  >{f_firmwareVersionTypeName||firmwareVersionTypeName}</Item>
                         <Item label='硬件版本号' name="f_totalVersion" ><Input maxLength={30}  placeholder='非必填'/></Item>
                         <Item label='当前软件版本号' >{f_curExtVersion||curExtVersion}</Item>
@@ -375,9 +378,9 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     </Item>
                 }
 
-                { (schemeType==5||mcuIsUp==0) && <>
+                { (schemeType==5||mcuIsUp==0) && <div className='modupbox'>
 
-                    <Tabs className='tabs'type="editable-card" onChange={cngTab} activeKey={curTabNo} onEdit={onEditTab} hideAdd={updateFirmwareLi.length>=5}>
+                    <Tabs className='tabs' type="editable-card" onChange={cngTab} activeKey={curTabNo} onEdit={onEditTab} hideAdd={updateFirmwareLi.length>=5}>
                         {
                             updateFirmwareLi.map( (key,i) =>{
                                 return <Tabs.TabPane tab={`${TXTUPNAME[schemeType]}${i}`} key={key} >
@@ -412,7 +415,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                                 <div>支持.bin,.hex,.zip,.cyacd,.apk,.dpkg格式，不超过200MB。</div>
                         </Upload>
                     }
-                </>
+                </div >
                 }
             </Form>
 
