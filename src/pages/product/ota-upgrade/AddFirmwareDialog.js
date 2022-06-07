@@ -78,16 +78,16 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 return itm.firmwareVersionType == 0
             });
             if(idx>-1){
-                communicationMod = alldata.slice(i,1);
+                communicationMod = alldata.slice(idx,1);
                 setModIsUp(0);
                 setEditFirParamsFm(communicationMod);
                 // deviceVersionId
-                formInstance.setFields({
+                formInstance.setFieldsValue({
                     modUpgrade:0,
                     f_extVersion:communicationMod.extVersion
                 })
                 if(schemeType==3){
-                    formInstance.setFields({
+                    formInstance.setFieldsValue({
                         f_totalVersion:communicationMod.totalVersion,
                         f_filePath:communicationMod.filePath
                     })
@@ -112,7 +112,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 }
                 console.log('--form_val--',form_val)
                 setUpdateFirmwareLi(_updateFirmwareLi);
-                // formInstance.setFields(form_val)
+                formInstance.setFieldsValue(form_val)
 
             }
             
@@ -311,8 +311,8 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 {
                     schemeType==2&&modIsUp==0&&
                     <div className='modupbox'>
-                        <Item label="通信模组" name='f_firmwareVersionTypeName' >{f_firmwareVersionTypeName||firmwareVersionTypeName}</Item>
-                        <Item label="当前模组固件版本" name='f_curExtVersion'> {f_curExtVersion|| curExtVersion}</Item>
+                        <Item label="通信模组" >{f_firmwareVersionTypeName||firmwareVersionTypeName}</Item>
+                        <Item label="当前模组固件版本" > {f_curExtVersion|| curExtVersion}</Item>
                         <Item label="最新模组固件版本" name='f_extVersion' rules={[{ required: true, message: '请选择' }]}>
                             <Select placeholder="请选择"  getPopupContainer={() => document.getElementById('area')}>
                                 {
@@ -330,9 +330,9 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 {
                     schemeType==3&&modIsUp==0&&
                     <div className='modupbox'>
-                        <Item label="通信模组" name='f_firmwareVersionTypeName' >{f_firmwareVersionTypeName||firmwareVersionTypeName}</Item>
+                        <Item label="通信模组"  >{f_firmwareVersionTypeName||firmwareVersionTypeName}</Item>
                         <Item label='硬件版本号' name="f_totalVersion" > <Input maxLength={30}  placeholder='非必填'/> </Item>
-                        <Item label='当前软件版本号' name='f_curExtVersion'>{f_curExtVersion||curExtVersion}</Item>
+                        <Item label='当前软件版本号' >{f_curExtVersion||curExtVersion}</Item>
                         <Item label="待上传软件版本号" name={'f_extVersion'} rules={[{ required: true, message: '待上传软件版本号' }]}>
                             <Input maxLength={30} placeholder='最多30个字符' />
                         </Item>
