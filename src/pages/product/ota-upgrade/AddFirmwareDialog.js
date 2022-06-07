@@ -45,7 +45,14 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     const [editFirParams, setEditFirParams] = useState([]);
     const { f_firmwareVersionTypeName,f_curExtVersion } = editFirParamsFm;
     
-    const { schemeType=editProductFirParams.schemeType, productFirmwareVersion=0 , productId, productName, summaryVersions=[] } = firmwareFrPro;//schemeType: 2 MCU, 3 SoC,  5 SoC
+    const { 
+        schemeType=editProductFirParams.schemeType, 
+        productFirmwareVersion=0 , 
+        productId, 
+        productName, 
+        summaryVersions=[] ,
+        productFirmwareName
+    } = firmwareFrPro;//schemeType: 2 MCU, 3 SoC,  5 系统
     const communicationMod = summaryVersions.find((itm)=>{return itm.firmwareVersionType == 0}) || {} //通信模组
     const { firmwareVersionTypeName,curExtVersion } = communicationMod;
     const [updateFirmwareLi, setUpdateFirmwareLi] = useState(['tab0']);
@@ -69,6 +76,11 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
             })
         }
     }, [editId])
+    useEffect(() => {
+        if(productFirmwareName){
+            formInstance.setFieldsValue({productFirmwareName})
+        }
+    }, [productFirmwareName])
 
     useEffect(() => {//修改固件初始化表单
         if(editFirParamsInfoLi.length){
@@ -132,7 +144,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
         let params = {
             productId:editId||productId, 
             productFirmwareName, 
-            productFirmwareVersion:productFirmwareVersion+1,
+            productFirmwareVersion:editId ?productFirmwareVersion : (productFirmwareVersion+1 ),
         }
 
         if(schemeType==5||mcuIsUp==0){
@@ -294,9 +306,9 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 }
                 <Item label="开发方案"> { schemeType && SCHMETYPE.find(({id})=>id==schemeType).nam || '--' }</Item>
                 <Item label={<LabelTip label="产品版本号" tip="产品版本自动生成，自增长，产品的整体内部版本号"/>}>
-                    { productFirmwareVersion+1 }
+                    { editId ?productFirmwareVersion : (productFirmwareVersion+1 )}
                 </Item>
-                <Item label="产品版本名称" name='productFirmwareName' rules={[{ required: true, message: '请输入产品版本名称' }]}>
+                <Item label="产品版本名称" name='productFirmwareName'   rules={[{ required: true, message: '请输入产品版本名称' }]}>
                     <Input maxLength={30} placeholder='最多30个字符' />
                 </Item>
                 {
