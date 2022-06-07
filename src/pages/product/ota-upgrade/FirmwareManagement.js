@@ -64,7 +64,7 @@ export default class FirmwareManagement extends Component {
             viewFirmtype:undefined,
 
             editId:0,
-            editProductFirParams
+            editProductFirParams:{}
         }
 
         this.columns = [
@@ -148,7 +148,7 @@ export default class FirmwareManagement extends Component {
     editFirmware = (productId,params)=>{
         this.setState({
             editId:productId,
-            addFirmwareVisiable:true.valueOf,
+            addFirmwareVisiable:true,
             editProductFirParams:params
         })
 
@@ -253,7 +253,7 @@ export default class FirmwareManagement extends Component {
         const {
             addFirmwareVisiable, releaseFirmwareDialog, validationFirmwareDialog,
             deviceVersionId, validationDetail, validateInfo, validationModTit,viewFirmid,viewFirmtype,
-            editId
+            editId,editProductFirParams
         } = this.state;
         const { versionList: { list, pager },mcusocproLi } = this.props;
         const { pageIndex, totalRows } = pager;
@@ -295,7 +295,7 @@ export default class FirmwareManagement extends Component {
 
 
                     <Table
-                        rowKey={({ deviceVersionId,createTime }) => deviceVersionId + "_" + createTime}
+                        rowKey={({ deviceVersionId,createTime,productFirmwareId }) => deviceVersionId + '_'+ productFirmwareId + createTime}
                         columns={this.columns}
                         dataSource={list}
                         pagination={{
