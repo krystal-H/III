@@ -13,6 +13,8 @@ import { Notification } from '../../../../../components/Notification'
 import ZigbeeConfig from './zigbeeConfig'
 import ZigbeeProConfig from './zigbeeProConfig'
 import QuickConfig from '../../product-details/service-config/shiftSet'
+import { productSchemeTypeMap } from '../../../../../configs/text-map';
+
 //处理数据
 function delaData(data, editData = {}) {
   let newData = []
@@ -81,13 +83,13 @@ function ServiceSelect({ productId, nextStep }, ref) {
     },
   ])
   const [optionalList, setOptionalList] = useState([
-    {
-      title: '配置MCU模块&模组插件',
-      desc: '支持配置硬件MCU的子模块，以及配置通信模组的插件',
-      isConfiged: false,
-      type: 'addFirmware',
-      url: require('../../../../../assets/images/commonDefault/service-hardware.png')
-    },
+    // {
+    //   title: '配置MCU模块&模组插件',
+    //   desc: '支持配置硬件MCU的子模块，以及配置通信模组的插件',
+    //   isConfiged: false,
+    //   type: 'addFirmware',
+    //   url: require('../../../../../assets/images/commonDefault/service-hardware.png')
+    // },
     {
       title: '固件升级',
       desc: 'MCU固件或SDK固件配置远程升级，无需烧录。需控制板支持',
@@ -235,37 +237,37 @@ function ServiceSelect({ productId, nextStep }, ref) {
   }
 
   // 固件模块
-  const getFirmwareList = () => {
-    post(Paths.getFirmwareList, { productId, schemeType: productItemData.schemeType }, { loading: true }).then(res => {
-      if (res.data && res.data.length > 0) { // 有配置数据
-        const customList = res.data.filter(item => item.isCustom === 0)
-        console.log(customList.length, 'customList.length')
-        setCustomCount(customList.length)
-        setFirmwareDetailData(res.data)
-        let tempArr = []
-        res.data.forEach(item => {
-          tempArr.push(item.firmwareTypeNo)
-        })
-        setTypeNoList(tempArr)
-        if (customList.length > 0) {
-          setOptionalList((pre) => {
-            const list = cloneDeep(pre)
-            list[0].isConfiged = true
-            return list
-          })
+  // const getFirmwareList = () => {
+  //   post(Paths.getFirmwareList, { productId, schemeType: productItemData.schemeType }, { loading: true }).then(res => {
+  //     if (res.data && res.data.length > 0) { // 有配置数据
+  //       const customList = res.data.filter(item => item.isCustom === 0)
+  //       console.log(customList.length, 'customList.length')
+  //       setCustomCount(customList.length)
+  //       setFirmwareDetailData(res.data)
+  //       let tempArr = []
+  //       res.data.forEach(item => {
+  //         tempArr.push(item.firmwareTypeNo)
+  //       })
+  //       setTypeNoList(tempArr)
+  //       if (customList.length > 0) {
+  //         setOptionalList((pre) => {
+  //           const list = cloneDeep(pre)
+  //           list[0].isConfiged = true
+  //           return list
+  //         })
 
-        }
-      } else { // 无配置数据
-        setFirmwareDetailData([])
-        setCustomCount(0)
-        setOptionalList((pre) => {
-          const list = cloneDeep(pre)
-          list[0].isConfiged = false
-          return list
-        })
-      }
-    })
-  }
+  //       }
+  //     } else { // 无配置数据
+  //       setFirmwareDetailData([])
+  //       setCustomCount(0)
+  //       setOptionalList((pre) => {
+  //         const list = cloneDeep(pre)
+  //         list[0].isConfiged = false
+  //         return list
+  //       })
+  //     }
+  //   })
+  // }
 
   // 免开发方案不显示 配置产品固件模块 、固件升级
   const noFreeScheme = () => {
@@ -276,15 +278,15 @@ function ServiceSelect({ productId, nextStep }, ref) {
     }
 
     if (productItemData.schemeType) {
-      if (productItemData.schemeType == 1) {
+      if (productItemData.schemeType == 1 || productItemData.schemeType == 4) { // 免开发/成品无固件升级
         setOptionalList((preList) => {// 必须用preList  因为语音设置判断
           console.log('preList----', preList)
           const tempList = cloneDeep(preList)
-          tempList.splice(0, 2)
+          tempList.splice(0, 1)
           return tempList
         })
       } else {
-        getFirmwareList()
+        // getFirmwareList()
       }
     }
   }
@@ -345,18 +347,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
   // 获取方案类型展示
   const getSchemeType = () => {
     if (productItemData.schemeType) {
-      switch (productItemData.schemeType) {
-        case 1:
-          return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。'
-        case 2:
-          return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。'
-        case 3:
-          return 'SoC方案，不提供通用固件程序，需自行开发模组固件。'
-        case 4:
-          return '云接入方案，支持已上市的产品，云对云方式接入clife平台。'
-        default:
-          break;
-      }
+      return productSchemeTypeMap[productItemData.schemeType]
     } else {
       return ''
     }
@@ -365,13 +356,13 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const goVoiceSetting = () => {
     history.push(`/open/product/proManage/voiceSetting/${productId}/?detail=1`)
   }
-//快捷配置
-const setQuick = () => {
-  setQuickVisible(true)
-}
-const quickCancel = () => {
-  setQuickVisible(false)
-}
+  //快捷配置
+  const setQuick = () => {
+    setQuickVisible(true)
+  }
+  const quickCancel = () => {
+    setQuickVisible(false)
+  }
   return (
     <div className="service-config-page">
       <div className="desc">{getSchemeType()}</div>
@@ -420,13 +411,13 @@ const quickCancel = () => {
                         </Link>
                         :
                         item.type === 'voiceSetting' ? <div className="config-card-right-btn" onClick={() => goVoiceSetting()}>配置</div> :
-                        item.type === 'quickSetting' ? <div className="config-card-right-btn" onClick={() => setQuick()}>配置</div> :
-                          item.type === 'addFirmware' ?
-                            <>
-                              <div className="config-card-right-btn" onClick={() => { showModal(item.type); setShowType('add') }}>配置</div>
-                              <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
-                            </> :
-                            <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
+                          item.type === 'quickSetting' ? <div className="config-card-right-btn" onClick={() => setQuick()}>配置</div> :
+                            item.type === 'addFirmware' ?
+                              <>
+                                <div className="config-card-right-btn" onClick={() => { showModal(item.type); setShowType('add') }}>配置</div>
+                                <div className="config-card-right-btn mar6" onClick={() => { showFirmwareDetail() }}>详情</div>
+                              </> :
+                              <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>配置</div>
                       : ''
                   }
                   {/* 配置的判断 */}
@@ -477,7 +468,7 @@ const quickCancel = () => {
       }
 
       {/* 配置产品固件模块 */}
-      {
+      {/* {
         firmwareVisible &&
         <ConfigFirmware
           schemeType={productItemData.schemeType}
@@ -489,10 +480,10 @@ const quickCancel = () => {
           firmwareVisible={firmwareVisible}
           confirmHandle={() => { setFirmwareVisible(false); getFirmwareList() }}
           cancelHandle={() => { setFirmwareVisible(false) }} />
-      }
+      } */}
 
       {/* 配置产品固件模块详情 */}
-      {
+      {/* {
         firmwareDetailVisible &&
         <ConfigFirmwareDetail
           productId={productId}
@@ -509,7 +500,7 @@ const quickCancel = () => {
             setShowType('edit')
             setEditData(val)
           }} />
-      }
+      } */}
 
       {/* zigbee设置弹窗 */}
       {

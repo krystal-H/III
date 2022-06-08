@@ -12,7 +12,7 @@ function CreateProject({ visible, handleCancel, handleOk, opeType, editData = {}
 
   const onFinish = (values) => {
     console.log('Success:', values)
-    let params = {...values}
+    let params = { ...values }
     if (opeType === 'edit') {
       params.projectId = editData.projectId
     }
@@ -61,6 +61,9 @@ function CreateProject({ visible, handleCancel, handleOk, opeType, editData = {}
         </Form.Item>
         <Form.Item name="projectDesc" label="项目描述" initialValue={editData.projectDesc} >
           <Input.TextArea showCount maxLength={50} />
+        </Form.Item>
+        <Form.Item name="brokerUrl" label="项目地址" initialValue={editData.brokerUrl}>
+          <Input maxLength={100}/>
         </Form.Item>
       </Form>
     </Modal>

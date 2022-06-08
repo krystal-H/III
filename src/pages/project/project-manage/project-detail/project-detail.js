@@ -41,7 +41,10 @@ export default function DeviceInfo({ match }) {
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (<div className='project-detail-page'>
-        <PageTitle backTitle={detailObj.projectName} backHandle={() => { history.push('/open/project/projectManage/list') }}>
+        <PageTitle
+            backTitle={detailObj.projectName}
+            titleTag={baseInfo.isPrivateCloud == 1 ? '私有云' : baseInfo.isPrivateCloud == 0 ? '公有云' : ''}
+            backHandle={() => { history.push('/open/project/projectManage/list') }}>
             <div className='device-top'>
                 <div className='device-top-item'>
                     <label className='device-label'>项目ID：</label>
@@ -65,7 +68,7 @@ export default function DeviceInfo({ match }) {
                     <OpenAPI projectId={projectId} />
                 </TabPane>
                 <TabPane key={'3'} tab={'分组'}>
-                    <Grouping projectId={projectId} userId={baseInfo.accountId}  />
+                    <Grouping projectId={projectId} userId={baseInfo.accountId} />
                 </TabPane>
                 <TabPane key={'4'} tab={'设备'}>
                     <Device baseInfo={baseInfo} projectId={projectId} />

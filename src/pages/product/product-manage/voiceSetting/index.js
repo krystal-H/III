@@ -22,7 +22,7 @@ function VoiceSetting() {
   const [currentTab, setCurrentTab] = useState('0')
   const [titleVisible, setTitleVisible] = useState(false) // 头部产品信息编辑
   const [dataSource, setDataSource] = useState([])
-  const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 1000000 })
+  const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10 })
   const [productItem, setProductItem] = useState(sessionStorage.getItem('productItem') ? JSON.parse(sessionStorage.getItem('productItem')) : {})
   const [addVoiceVisible, setAddVoiceVisible] = useState(false)
 
@@ -50,6 +50,14 @@ function VoiceSetting() {
       title: '语言调用词',
       dataIndex: 'abilityDesc',
       key: 'abilityDesc',
+      render: (text) => {
+        let abilityDesc = text && JSON.parse(text)
+        let html = <div>{abilityDesc.desc}</div>
+        const arr = abilityDesc.examples.map((item, index) => {
+          return <span key={index}>{item}<br /></span>
+        })
+        return [html, arr]
+      }
     },
     {
       title: '关联物模型功能',
@@ -115,7 +123,7 @@ function VoiceSetting() {
     const params = {
       voiceType: Number(currentTab) + 1,
       productId: productItem.productId,
-      // ...pager
+      ...pager
     }
     post(Paths.getProductVoiceList, params, { loading: true }).then(res => {
       setDataSource(addKeyToTableData(res.data.list))
@@ -128,12 +136,12 @@ function VoiceSetting() {
   useEffect(() => {
     getTableList()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [pager.pageIndex, pager.pageRows])
 
   // 移除listItem
   const deleteItem = (record) => {
     const params = {
-      abilityIdList: record.abilityId.toString().split('').map(item => Number(item)),
+      abilityIdList: [Number(record.abilityId)],
       productId: productItem.productId,
       operation: '0' // 移除
     }
@@ -175,7 +183,7 @@ function VoiceSetting() {
       <PageTitle
         title={productItem.productName}
         titleTag={productItem.schemeName}
-        btnTxt='编辑'
+        // btnTxt={productItem.status == 1 ? '' : '编辑'}
         btnClickHandle={() => setTitleVisible(true)}
         backHandle={() => {
           getUrlParam('detail') == 1 ? history.go(-1) : history.push('/open/product/proManage/list')
@@ -200,17 +208,16 @@ function VoiceSetting() {
             className="ant-table-fixed"
             rowKey="abilityId"
             dataSource={dataSource}
-            pagination={false}
-          // pagination={{
-          //   defaultCurrent: 1,
-          //   current: pager.pageIndex,
-          //   pageSize: pager.pageRows,
-          //   total: pager.totalRows,
-          //   showSizeChanger: false,
-          //   showQuickJumper: pager.totalPages > 5,
-          //   onChange: pagerChange,
-          //   showTotal: total => <span>共 <a>{total}</a> 条</span>
-          // }}
+            pagination={{
+              defaultCurrent: 1,
+              current: pager.pageIndex,
+              pageSize: pager.pageRows,
+              total: pager.totalRows,
+              showSizeChanger: false,
+              showQuickJumper: pager.totalPages > 5,
+              onChange: pagerChange,
+              showTotal: total => <span>共 <a>{total}</a> 条</span>
+            }}
           />
           <Button type="primary" ghost className='add-table-btn' onClick={() => setAddVoiceVisible(true)}>
             <PlusOutlined />增加能力

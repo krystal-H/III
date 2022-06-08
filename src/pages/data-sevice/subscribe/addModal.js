@@ -184,7 +184,15 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                     return item.projectId === res.projectId
                 })
                 res.projectName = projectIndex.projectName
+                if (res.isAllDevice === 2 && (!res.deviceIds || !res.deviceIds.trim())) {
+                    Notification({
+                        type: 'info',
+                        description: '请输入指定设备',
+                    });
+                    return
+                }
                 if (res.deviceIds && res.deviceIds.trim()) {
+
                     let cheackParams = {
                         productId: res.productId,
                         projectId: res.projectId,
@@ -210,6 +218,13 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
             if (res.subscriptType === 2) {
                 res.labelVoList = res.labelVoList || []
                 res.deviceLabelIds = res.labelVoList.join(',')
+                if (formData.isAllLabel === 0 && res.labelVoList.length ===0){
+                    Notification({
+                        type: 'info',
+                        description: '没有标签数据，无法进行下一步',
+                    });
+                    return
+                }
             }
             res.productName = name;
             continueStep('1', res)
@@ -343,7 +358,7 @@ function StepContentOne({ continueStep, actionType, editData }, ref) {
                     <Form.Item name="isAllDevice" label="选择设备" initialValue={1} rules={[{ required: true }]}>
                         <Radio.Group >
                             <Radio value={1}>全部设备</Radio>
-                            <Radio value={2}>指定设备</Radio>
+                            {/* <Radio value={2}>指定设备</Radio> */}
                         </Radio.Group>
                     </Form.Item>
                     <Form.Item
@@ -399,7 +414,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
         //获取事件列表
         setTestSelectObj({ 9: [], 11: [], 12: [], 10: [] })
         setLaberArr([])
-        form.setFieldsValue({eventIds:[]})
+        form.setFieldsValue({ eventIds: [] })
         get(Paths.getsubscribeProduct,
             { productId: sessionStorage.getItem('pid') ? Number(sessionStorage.getItem('pid')) : '' }
         ).then((res) => {
@@ -411,7 +426,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
                 }
             })
             setLaberArr(data)
-            setOldTable(res.data.productFuncList || [])
+            // setOldTable(res.data.productFuncList || [])
         });
     }, [sessionStorage.getItem('pid')])
     useEffect(() => {
@@ -421,7 +436,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
     }, [])
     const initEdit = () => {
         setTestSelectObj(pre => {
-            let ori=editData.productFuncList || {}
+            let ori = editData.productFuncList || {}
             let obj = {
                 9: ori.runningList || [],
                 11: ori.errorList || [],
@@ -446,39 +461,39 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
     //下一步
     const onFinish = () => {
         form.validateFields().then(val => {
-            let productFunc = ''
-            if (oldEvent.length) {
-                oldEvent.forEach(item => {
-                    let arr = testSelectObj[item] || []
-                    if (item == 9) {
-                        arr.forEach(item2 => {
-                            productFunc += '3-' + item2 + ','
-                        })
-                    }
-                    if (item == 10) {
-                        arr.forEach(item2 => {
-                            productFunc += '2-' + item2 + ','
-                        })
-                    }
-                    if (item == 11) {
-                        arr.forEach(item2 => {
-                            productFunc += '4-' + item2 + ','
-                        })
-                    }
-                    if (item == 12) {
-                        arr.forEach(item2 => {
-                            productFunc += '5-' + item2 + ','
-                        })
-                    }
-                })
-                if (productFunc) {
-                    productFunc = productFunc.slice(0, -1)
-                }
-            }
+            // let productFunc = ''
+            // if (oldEvent.length) {
+            //     oldEvent.forEach(item => {
+            //         let arr = testSelectObj[item] || []
+            //         if (item == 9) {
+            //             arr.forEach(item2 => {
+            //                 productFunc += '3-' + item2 + ','
+            //             })
+            //         }
+            //         if (item == 10) {
+            //             arr.forEach(item2 => {
+            //                 productFunc += '2-' + item2 + ','
+            //             })
+            //         }
+            //         if (item == 11) {
+            //             arr.forEach(item2 => {
+            //                 productFunc += '4-' + item2 + ','
+            //             })
+            //         }
+            //         if (item == 12) {
+            //             arr.forEach(item2 => {
+            //                 productFunc += '5-' + item2 + ','
+            //             })
+            //         }
+            //     })
+            //     if (productFunc) {
+            //         productFunc = productFunc.slice(0, -1)
+            //     }
+            // }
             let params = {
                 businessTime: val.timeRange[0].format('HH:mm') + '-' + val.timeRange[1].format('HH:mm'),
                 eventIds: val.eventIds.join(','),
-                productFunc
+                // productFunc
             }
             continueStep('2', params)
         })
@@ -488,6 +503,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
     }), [testSelectObj]);
     //===事件勾选
     const eventChange = (val) => {
+        return
         let arr = [9, 10, 11, 12]
         let arr2 = []
         val.forEach(item => {
@@ -530,7 +546,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
             default:
                 return ''
         }
-        if(!oldTable.length) return []
+        if (!oldTable.length) return []
         let currentData = oldTable.find(item => {
             if (item.dataTypeName == n) {
                 return item
@@ -580,7 +596,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
                 <TimePicker.RangePicker format='HH:mm' />
             </Form.Item>
         </Form>
-        <Tabs defaultActiveKey="1" >
+        {/* <Tabs defaultActiveKey="1" >
             {
                 oldEvent.map(item => {
                     return <TabPane key={item} tab={getTitle(item)}>
@@ -590,7 +606,7 @@ function StepContentTwo({ continueStep, actionType, editData }, ref) {
                     </TabPane>
                 })
             }
-        </Tabs>
+        </Tabs> */}
     </div>)
 }
 StepContentTwo = forwardRef(StepContentTwo)
@@ -612,16 +628,13 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
     //是否加密
     const encryChange = (e) => {
     }
-    const downFile = () => {
-        window.open("http://skintest.hetyj.com/10086/a9b97e2ef3c7465bb79b63374cbd4dd8.docx")
-    }
     const downSDk = () => {
         // Notification({
         //     type: 'info',
         //     description: '敬请期待',
         // });
         const a = document.createElement('a')
-        const url = "https://skintest.hetyj.com/31438/94c43d9a5f7eb99f8565d4feb64a30b3.pdf" 
+        const url = "http://skintest.hetyj.com/31438/c102a1f81779213def30dc899a612c48.pdf"
         // 这里是将url转成blob地址，
         fetch(url).then(res => res.blob()).then(blob => { // 将链接地址字符内容转变成blob地址
             a.href = URL.createObjectURL(blob)
@@ -641,11 +654,13 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
             setShowWay(editData.pushWay)
             let obj = {
                 pushWay: editData.pushWay,
-                pushFrequency: editData.pushFrequency
+                pushFrequency: editData.pushFrequency,
+
             }
             if (editData.pushWay === 1) {
                 obj.pushUrl = editData.pushUrl
                 obj.sign = editData.sign
+                obj.isEncrypt = editData.isEncrypt
             }
             form.setFieldsValue(obj)
         }
@@ -667,7 +682,7 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
                                 <Radio value={0}>否</Radio>
                             </Radio.Group>
                         </Form.Item>
-                        <Form.Item
+                        {/* <Form.Item
                             noStyle
                             shouldUpdate={(prevValues, currentValues) => prevValues.isEncrypt !== currentValues.isEncrypt}
                         >
@@ -680,6 +695,9 @@ function StepContentThree({ finishSub, actionType, editData }, ref) {
                                     <a onClick={downSDk}>下载SDK&帮助文档</a>
                                 </Form.Item>
                             }
+                        </Form.Item> */}
+                        <Form.Item label=" " colon={false} className='sub-text-link'>
+                            <a onClick={downSDk}>下载帮助文档</a>
                         </Form.Item>
                         <Form.Item
                             name="pushUrl"

@@ -15,6 +15,8 @@ export const CREATE_PRODUCT_FORM = "CREATE_PRODUCT_FORM" // 创建产品-建立�
 export const CREATE_PRODUCT_SCHEMEKEY = "CREATE_PRODUCT_SCHEMEKEY" // 大方案索引
 export const CREATE_PRODUCT_BTNKEY = "CREATE_PRODUCT_BTNKEY" // 子方案索引
 
+export const PRODUCT_HEAD_INFO = "PRODUCT_HEAD_INFO" // 继续开发-产品头部信息
+
 // --------------
 
 /**

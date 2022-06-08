@@ -17,8 +17,8 @@ const { RangePicker } = DatePicker;
 const originCount = [
     { label: '新增设备用户数', count: '--' },
     { label: '活跃设备用户数', count: '--' },
-    { label: '新增设备用户次日留存率(昨日)', count: '--' },
-    { label: '活跃设备用户次日留存率(昨日)', count: '--' },
+    { label: '新增设备用户次日留存数(昨日)', count: '--' },
+    { label: '活跃设备用户次日留存数(昨日)', count: '--' },
     { label: '累计设备用户数', count: '--' }]
 const columns = [
     {
@@ -37,12 +37,12 @@ const columns = [
         key: 'activeNum',
     },
     {
-        title: '新增设备用户次日留存率(昨日)',
+        title: '新增设备用户次日留存数(昨日)',
         dataIndex: 'newRatio',
         key: 'newRatio',
     },
     {
-        title: '活跃设备用户次日留存率(昨日)',
+        title: '活跃设备用户次日留存数(昨日)',
         dataIndex: 'activeRatio',
         key: 'activeRatio',
     },
@@ -57,6 +57,8 @@ export default function Device() {
     const [dates, setDates] = useState([]);
     const [hackValue, setHackValue] = useState();
     const [value, setValue] = useState(); //时间值
+    const [newTableData, setNewTableData] = useState([]);
+    const [activeTableData, setActiveTableData] = useState([]);
     const disabledDate = current => {
         return current && current > dayjs().subtract(1, 'day') || current < dayjs().subtract(30, 'day')
     };
@@ -134,7 +136,6 @@ export default function Device() {
                 while (dayjs(params.startDate).isBefore(params.endDate, 'day')) {
                     arr.push(params.startDate)
                     params.startDate = dayjs(params.startDate).add(1, 'day').format('YYYY-MM-DD')
-                    console.log(arr)
                 }
                 arr.push(params.endDate)
                 arr.reverse().forEach(item => {
@@ -155,6 +156,10 @@ export default function Device() {
                 initData(res.data.summaryList || [])
                 dealCount(res.data || {})
                 setTableData(res.data.summaryList || [])
+                let data1 = res.data.newList || []
+                let data2 = res.data.activeList || []
+                setNewTableData(data1.reverse())
+                setActiveTableData(data2.reverse())
             }
 
         });
@@ -185,8 +190,8 @@ export default function Device() {
         let count = [
             { label: '新增设备用户数', count: origin.newNum || 0 },
             { label: '活跃设备用户数', count: origin.activeNum || 0 },
-            { label: '新增设备用户次日留存率(昨日)', count: origin.newRatio || 0 },
-            { label: '活跃设备用户次日留存率(昨日)', count: origin.activeRatio || 0 },
+            { label: '新增设备用户次日留存数(昨日)', count: origin.newRatio || 0 },
+            { label: '活跃设备用户次日留存数(昨日)', count: origin.activeRatio || 0 },
             { label: '累计设备用户数', count: origin.totalNum || 0 }]
         setCountData(count)
     }
@@ -350,8 +355,14 @@ export default function Device() {
                         })
                     }
                 </div>
-                {
+                {/* {
                     showTable ? <TableCom tableData={tableData} /> : null
+                } */}
+                {
+                    (showTable && currentTab === 2) ? <TableCom tableData={newTableData} /> : null
+                }
+                {
+                    (showTable && currentTab === 3) ? <ActiveTableCom tableData={activeTableData} /> : null
                 }
                 <div style={{ height: showTable ? 0 : '303px', overflow: 'hidden' }} id='echart-show'></div>
             </div>
@@ -371,78 +382,131 @@ function TableCom({ tableData }) {
     const columnList = [
         {
             title: '首次使用时间',
-            dataIndex: 'summaryDate',
-            key: 'summaryDate',
+            dataIndex: 'sumDate',
+            key: 'sumDate',
         },
         {
             title: '新用户',
             dataIndex: 'newNum',
             key: 'newNum',
-            render: (text, record) => 0,
         },
         {
             title: '1天后',
-            dataIndex: 'activeNum',
-            key: 'activeNum',
-            render: (text, record) => 0,
+            dataIndex: 'newRemainNum1',
+            key: 'newRemainNum1',
         },
         {
             title: '2天后',
-            dataIndex: 'newRatio',
-            key: 'newRatio',
-            render: (text, record) => 0,
+            dataIndex: 'newRemainNum2',
+            key: 'newRemainNum2',
         },
         {
             title: '3天后',
-            dataIndex: 'activeRatio',
-            key: 'activeRatio',
-            render: (text, record) => 0,
+            dataIndex: 'newRemainNum3',
+            key: 'newRemainNum3',
         },
         {
             title: '4天后',
-            dataIndex: 'totalNum',
-            key: 'totalNum',
-            render: (text, record) => 0,
+            dataIndex: 'newRemainNum4',
+            key: 'newRemainNum4',
         },
         {
             title: '5天后',
-            dataIndex: 'totalNum1',
-            key: 'totalNum1',
-            render: (text, record) => 0,
+            dataIndex: 'newRemainNum5',
+            key: 'newRemainNum5',
         },
         {
             title: '6天后',
-            dataIndex: 'totalNum2',
-            key: 'totalNum2',
-            render: (text, record) => 0,
+            dataIndex: 'newRemainNum6',
+            key: 'newRemainNum6',
         },
         {
             title: '7天后',
-            dataIndex: 'totalNum3',
-            key: 'totalNum3',
-            render: (text, record) => 0,
-        },
-        {
-            title: '14天后',
-            dataIndex: 'totalNum4',
-            key: 'totalNum4',
-            render: (text, record) => 0,
-        },
-        {
-            title: '30天后',
-            dataIndex: 'totalNum5',
-            key: 'totalNum5',
-            render: (text, record) => 0,
-        },
+            dataIndex: 'newRemainNum7',
+            key: 'newRemainNum7',
+        }
     ];
     return (
-        <Tabs defaultActiveKey="1" >
-            <TabPane tab="留存率" key="1">
-                <Table dataSource={tableData} columns={columnList} pagination={false} rowKey='summaryDate' />
-            </TabPane>
-            <TabPane tab="留存数" key="2">
-                <Table dataSource={tableData} columns={columnList} pagination={false} rowKey='summaryDate' />
-            </TabPane>
-        </Tabs>
+        <div>
+            <Table dataSource={tableData} columns={columnList} pagination={false} rowKey='summaryDate' />
+        </div>
+        // <Tabs defaultActiveKey="1" >
+        //     <TabPane tab="留存率" key="1">
+        //         <Table dataSource={tableData} columns={columnList} pagination={false} rowKey='summaryDate' />
+        //     </TabPane>
+        //     <TabPane tab="留存数" key="2">
+        //         <Table dataSource={tableData} columns={columnList} pagination={false} rowKey='summaryDate' />
+        //     </TabPane>
+        // </Tabs>
+    )
+}
+function ActiveTableCom({ tableData }) {
+    const { TabPane } = Tabs;
+    const columnList = [
+        {
+            title: '首次使用时间',
+            dataIndex: 'sumDate',
+            key: 'sumDate',
+        },
+        {
+            title: '新用户',
+            dataIndex: 'activeNum',
+            key: 'activeNum',
+        },
+        {
+            title: '1天后',
+            dataIndex: 'activeRemainNum1',
+            key: 'activeRemainNum1',
+
+        },
+        {
+            title: '2天后',
+            dataIndex: 'activeRemainNum2',
+            key: 'activeRemainNum2',
+
+        },
+        {
+            title: '3天后',
+            dataIndex: 'activeRemainNum3',
+            key: 'activeRemainNum3',
+
+        },
+        {
+            title: '4天后',
+            dataIndex: 'activeRemainNum4',
+            key: 'activeRemainNum4',
+
+        },
+        {
+            title: '5天后',
+            dataIndex: 'activeRemainNum5',
+            key: 'activeRemainNum5',
+
+        },
+        {
+            title: '6天后',
+            dataIndex: 'activeRemainNum6',
+            key: 'activeRemainNum6',
+
+        },
+        {
+            title: '7天后',
+            dataIndex: 'activeRemainNum7',
+            key: 'activeRemainNum7',
+
+        }
+    ];
+    return (
+        <div>
+            <Table dataSource={tableData} columns={columnList} pagination={false} rowKey='summaryDate' />
+        </div>
+        // <Tabs defaultActiveKey="1" >
+        //     <TabPane tab="留存率" key="1">
+        //         <Table dataSource={tableData} columns={columnList} pagination={false} rowKey='summaryDate' />
+        //     </TabPane>
+        //     <TabPane tab="留存数" key="2">
+        //         <Table dataSource={tableData} columns={columnList} pagination={false} rowKey='summaryDate' />
+        //     </TabPane>
+        // </Tabs>
     )
 }

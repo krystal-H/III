@@ -58,9 +58,16 @@ overflow : hidden;
 text-overflow: ellipsis;
 display: -webkit-box;
 -webkit-line-clamp: $line;
-/*! autoprefixer: off */
+
+
+
+/*! autoprefixer: ignore next */
 -webkit-box-orient: vertical;
-/*! autoprefixer: on */
+
+
+// /*! autoprefixer: off */
+// -webkit-box-orient: vertical;
+// /*! autoprefixer: on */
 }
 
 // 宽高

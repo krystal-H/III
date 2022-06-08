@@ -46,7 +46,7 @@ export default function ChangeModal() {
     }, [])
     return (<div id='product-detail-fun-defin'>
         <div>
-            <Button style={{ padding: 0 }} type="link" icon={<ToTopOutlined />} onClick={exportFile}>导出物模型</Button>
+            <Button style={{ padding: 0 }} type="link" icon={<ToTopOutlined />} onClick={exportFile}>导出物模型（json）</Button>
         </div>
         <div className='table-item'>
             <h3>标准功能<LabelTip tip="支持用户编辑修改功能点名称以及数值范围，但是不能修改功能点的数据标识、数据类型，数据传输类型。"></LabelTip></h3>

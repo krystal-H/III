@@ -104,10 +104,10 @@ function ConfigFirmwareDetail({ confirmHandle, cancelHandle, visible, productId 
         let arr = [...selectNormal]
         let params = []
         let numCount = 0, boolCount = 0
-        if (!arr.length) {
-            cancelHandle()
-            return
-        }
+        // if (!arr.length) {
+        //     cancelHandle()
+        //     return
+        // }
         standardData.forEach(item => {
             let obj = {
                 productId,

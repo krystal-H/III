@@ -7,6 +7,7 @@ function AddVoice({ productId, voiceType, visible, handleCancel, handleOk }) {
   const [dataSource, setDataSource] = useState([])
   const [selectedCount, setSelectedCount] = useState(0)
   const [abilityIds, setAbilityIds] = useState('')
+  const [pager, setPager] = useState({ pageIndex: 1, totalRows: 0, pageRows: 10000000 })
 
   const columns = [
     {
@@ -25,6 +26,14 @@ function AddVoice({ productId, voiceType, visible, handleCancel, handleOk }) {
       title: '语言调用词',
       dataIndex: 'abilityDesc',
       key: 'abilityDesc',
+      render: (text) => {
+        let abilityDesc = text && JSON.parse(text)
+        let html = <div>{abilityDesc.desc}</div>
+        const arr = abilityDesc.examples.map((item, index) => {
+          return <span key={index}>{item}<br /></span>
+        })
+        return [html, arr]
+      }
     },
     {
       title: '关联物模型功能',
@@ -44,7 +53,7 @@ function AddVoice({ productId, voiceType, visible, handleCancel, handleOk }) {
     const params = {
       voiceType,
       productId,
-      // ...pager
+      ...pager
     }
     post(Paths.getAllVoiceList, params, { loading: true }).then(res => {
       setDataSource(res.data.list)
@@ -83,7 +92,7 @@ function AddVoice({ productId, voiceType, visible, handleCancel, handleOk }) {
       destroyOnClose
       maskClosable={false}
       visible={visible}
-      width={1100}
+      width={1200}
       onOk={submitData}
       okText="提交"
       onCancel={handleCancel}>
@@ -100,7 +109,7 @@ function AddVoice({ productId, voiceType, visible, handleCancel, handleOk }) {
           columns={columns}
           dataSource={dataSource}
           pagination={false}
-          // scroll={{ y: 450 }}
+          scroll={{ y: 450 }}
         />
       </div>
     </Modal>

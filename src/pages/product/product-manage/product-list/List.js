@@ -61,7 +61,7 @@ class List extends PureComponent {
       },
       { title: "品类", dataIndex: "deviceType", key: "deviceType" },
       { title: "智能化方案", dataIndex: "schemeName", key: "schemeName" },
-      { title: "通信协议", dataIndex: "bindTypeStr", key: "bindTypeStr" },
+      { title: "通信方式", dataIndex: "bindTypeStr", key: "bindTypeStr" },
       {
         title: "状态", dataIndex: "status", key: "status",
         render: (text) => (<span className={`status status-${text}`}>{productStatusText['' + text] || ''}</span>)
@@ -73,10 +73,10 @@ class List extends PureComponent {
           <div className="operation">
             <span className="continue" onClick={() => this.clickProductInfo(record)}>{record.status === 1 ? '开发详情' : '继续开发'}</span>
             {/* 1：有语音 0：无 */}
-            {/* {
+            {
               record.voiceable === 1 &&
               <span className="copy mar25" onClick={() => this.setVoice(record)}>语音</span>
-            } */}
+            }
             {
               record.isOldProduct === 0 &&
               <span className="copy mar25" onClick={() => this.operateProduct(record, 'copyModalVisible')}>复制</span>

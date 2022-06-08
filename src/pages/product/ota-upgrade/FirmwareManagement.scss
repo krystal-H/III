@@ -69,7 +69,19 @@
         padding: 0;
         background-color: #fff;
         cursor:text
+    }
 
+
+    .modupbox{
+        padding: 8px 0;
+        background-color: #fafafa;
+        .tips{
+            padding-left: 150px;
+            color: #BFBFBF;
+        }
+        &.margb{
+            margin-bottom: 12px;
+        }
     }
 }
 

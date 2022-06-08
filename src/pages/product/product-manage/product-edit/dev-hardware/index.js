@@ -9,7 +9,16 @@ import ModifyFirmwareModal from './modifyFirmware'
 import demoAppOfficial from '../../../../../assets/images/demoAppOfficial.jpg';
 import ConfigCommunication from './configCommunication'
 import { Notification } from '../../../../../components/Notification'
+import { productSchemeTypeMap } from '../../../../../configs/text-map';
+import { getProductHeadInfo } from '../../store/ActionCreator'
+import { connect } from 'react-redux';
 import "./index.scss"
+
+const mapDispatchToProps = dispatch => {
+    return {
+        getHeadInfoAction: params => dispatch(getProductHeadInfo(params))
+    }
+}
 
 class Hardware extends Component {
     constructor(props) {
@@ -26,9 +35,10 @@ class Hardware extends Component {
             productItemData: JSON.parse(sessionStorage.getItem('productItem')) || {},
             officeVis: false,
             configCommunicationVisible: JSON.parse(sessionStorage.getItem('productItem')) && JSON.parse(sessionStorage.getItem('productItem')).moduleId == -1, // 配置通信协议boolean
-            protocolList: [], // 通信协议
+            protocolList: [], // 通信方式
             networkWayList: [], // 配网方式列表
-            downloadInfo: {} // 下载资料显示
+            downloadInfo: {}, // 下载资料显示
+            schemeInfo: {} // 方案显示字段
         }
         this.columns = [
             {
@@ -67,6 +77,7 @@ class Hardware extends Component {
     componentDidMount() {
         this.getCommunicationProtocol()
         this.getBindTypeNetworkType()
+        this.getChangeScheme()
         if (this.state.productItemData.moduleId != -1) {
             this.getMoudleInfo(this.state.productItemData.moduleId)
         }
@@ -147,18 +158,7 @@ class Hardware extends Component {
     // 获取方案类型展示
     getSchemeType = () => {
         if (this.state.productItemData.schemeType) {
-            switch (this.state.productItemData.schemeType) {
-                case 1:
-                    return '免开发方案，只需选择推荐模组以及配置固件信息，快速实现硬件智能化。'
-                case 2:
-                    return '独立MCU方案，需选择下载MCU开发资料包等，进行相应开发。'
-                case 3:
-                    return 'SoC方案，不提供通用固件程序，需自行开发模组固件。'
-                case 4:
-                    return '云接入方案，支持已上市的产品，云对云方式接入clife平台。'
-                default:
-                    break;
-            }
+            return productSchemeTypeMap[this.state.productItemData.schemeType]
         } else {
             return ''
         }
@@ -180,11 +180,21 @@ class Hardware extends Component {
     }
 
 
-    // 获取通信协议
+    // 获取通信方式
     getCommunicationProtocol = () => {
         post(Paths.getCommunicationProtocol, {}).then(res => {
             this.setState({
                 protocolList: res.data
+            })
+        })
+    }
+
+    // 非标-显示开发方案
+    getChangeScheme = () => {
+        post(Paths.changeScheme, { productId: this.props.productId }).then(res => {
+            console.log(res)
+            this.setState({
+                schemeInfo: res.data
             })
         })
     }
@@ -200,28 +210,32 @@ class Hardware extends Component {
 
     // 配网协议修改
     handleCommunicationOk = (res, params) => {
+        console.log(params)
         let copyData = JSON.parse(sessionStorage.getItem('productItem')) || {}
         copyData.moduleId = res.moduleId
         copyData.netTypeId = params.netTypeId
-        copyData.bindType = params.bindType
-        copyData.bindTypeVersion = params.bindTypeVersion
-        copyData.gatewayType = params.gatewayType || ''
-        copyData.bindTypeStr = params.bindTypeStr
-        // 前端自己保存数据，自己回显，只能更新存储里的内容了
+        copyData.schemeType = params.schemeType
+        // copyData.bindType = params.bindType
+        // copyData.bindTypeVersion = params.bindTypeVersion
+        // copyData.gatewayType = params.gatewayType || ''
+        // copyData.bindTypeStr = params.bindTypeStr
         sessionStorage.setItem('productItem', JSON.stringify(copyData))
         this.getMoudleInfo(res.moduleId)
+        this.getChangeScheme()
         this.setState({ configCommunicationVisible: false })
+        this.props.getHeadInfoAction(this.props.productId)
+        this.getSchemeType()
     }
 
     render() {
         const { replaceModalVisible, freeApplyVisible, modifyFirmwareVisible, replaceFirmwareVisible,
             dataSource, allInfo, currentModuleId, firmwareId, productItemData, officeVis,
-            configCommunicationVisible, protocolList, networkWayList, downloadInfo } = this.state
+            configCommunicationVisible, protocolList, networkWayList, downloadInfo, schemeInfo } = this.state
         return (
             <div className="hardware-page">
                 <div className="hardware-wrap">
                     <div className="desc">{this.getSchemeType()}
-                        <a onClick={() => this.setState({ configCommunicationVisible: true })}>更改通信协议</a>
+                        <a onClick={() => this.setState({ configCommunicationVisible: true })}>更改方案</a>
                     </div>
                     {/* 已选模组 */}
                     <div className="module-box">
@@ -396,10 +410,10 @@ class Hardware extends Component {
                     configCommunicationVisible &&
                     <ConfigCommunication
                         visible={configCommunicationVisible}
+                        schemeInfo={schemeInfo}
                         protocolList={protocolList}
                         networkWayList={networkWayList}
                         productId={productItemData.productId}
-                        deviceTypeName={productItemData.deviceType}
                         handleOk={(res, params) => this.handleCommunicationOk(res, params)}
                         handleCancel={() => this.setState({ configCommunicationVisible: false })}
                     />
@@ -480,4 +494,4 @@ class Hardware extends Component {
     }
 }
 
-export default Hardware
+export default connect(null,mapDispatchToProps,null,{forwardRef: true})(Hardware)

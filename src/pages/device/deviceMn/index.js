@@ -5,7 +5,7 @@ import PageTitle from '../../../components/page-title/PageTitle';
 import CountNum from '../../../components/CountNum/index';
 import { post, Paths, get } from '../../../api';
 import downpng from '../../../assets/images/product/download.png';
-
+import { cloneDeep } from 'lodash'
 import './index.scss'
 // import GroupDetailt from '../../product/device/device-group/groupDeviceList';
 const { Option } = Select;
@@ -40,15 +40,15 @@ export default function DeviceList() {
     const getList = (loading = true) => {
         let arr = ['innet', 'fault', 'gatewayType']
         let obj = {}
-        for (let key in form.getFieldsValue()) {
-            if (arr.indexOf(key) > -1 && typeof form.getFieldsValue()[key] == 'string') {
-            } else {
-                obj[key] = form.getFieldsValue()[key]
-                if (key === 'gatewayType') {
-                    obj[key] = form.getFieldsValue()[key] - 1 //需要减去1，对应后台数据
-                }
+        let source = cloneDeep(form.getFieldsValue())
+        arr.forEach(item=>{
+            if (source[item] !== -1) {
+                obj[item] = source[item]
             }
-
+        })
+        if(source.infoType && source.field && source.field.trim()){
+            obj.infoType=source.infoType
+            obj.field=source.field.trim()
         }
         let params = {
             ...obj,
@@ -81,8 +81,6 @@ export default function DeviceList() {
     }
     //搜索
     const searchList = () => {
-        // const value = form.getFieldsValue();
-        // getList(value)
         if (pager.pageIndex === 1) {
             getList()
         } else {
@@ -200,7 +198,22 @@ export default function DeviceList() {
     ];
     //导出
     const exportFile = () => {
-        post(Paths.downDeviceFile).then((res) => {
+        let arr = ['innet', 'fault', 'gatewayType']
+        let obj = {}
+        let source = cloneDeep(form.getFieldsValue())
+        arr.forEach(item=>{
+            if (source[item] !== -1) {
+                obj[item] = source[item]
+            }
+        })
+        if(source.infoType && source.field && source.field.trim()){
+            obj.infoType=source.infoType
+            obj.field=source.field.trim()
+        }
+        if (selectType) {
+            obj.productId = selectType
+        }
+        post(Paths.downDeviceFile,obj).then((res) => {
             window.open(res.data)
         });
     }
@@ -225,7 +238,7 @@ export default function DeviceList() {
         <CountNum data={countData} />
         <div className='comm-shadowbox device-main'>
             <div className='device-filter'>
-                <Form className='device-filter-form' form={form} layout='inline' initialValues={{ innet: '1', online: '1', fault: '1', gatewayType: '1' }}>
+                <Form className='device-filter-form' form={form} layout='inline' initialValues={{ innet: -1, fault: -1, gatewayType: -1 }}>
                     <Form.Item label="设备ID/物理地址">
                         <Input.Group compact>
                             <Form.Item
@@ -245,25 +258,11 @@ export default function DeviceList() {
                             </Form.Item>
                         </Input.Group>
                     </Form.Item>
-                    {/* <Form.Item label="设备标签">
-                        <Form.Item
-                            name="labelKey"
-                            style={{ display: 'inline-block', width: '174px', marginRight: '2px' }}
-                        >
-                            <Input placeholder='请输入标签Key' />
-                        </Form.Item>
-                        <Form.Item
-                            name="labelValue"
-                            style={{ display: 'inline-block', width: '221px' }}
-                        >
-                            <Input placeholder='请输入标签Value' />
-                        </Form.Item>
-                    </Form.Item> */}
                     <Form.Item name="innet" label="入网状态" >
                         <Select
                             style={{ width: '102px' }}
                         >
-                            <Option value={'1'}>全部状态</Option>
+                            <Option value={-1}>全部状态</Option>
                             <Option value={1}>已入网</Option>
                             <Option value={0}>未入网</Option>
                         </Select>
@@ -272,17 +271,17 @@ export default function DeviceList() {
                         <Select
                             style={{ width: '102px' }}
                         >
-                            <Option value={'1'}>全部状态</Option>
-                            <Option value={2}>网关设备</Option>
-                            <Option value={3}>子设备</Option>
-                            <Option value={4}>普通设备</Option>
+                            <Option value={-1}>全部</Option>
+                            <Option value={1}>网关设备</Option>
+                            <Option value={2}>子设备</Option>
+                            <Option value={3}>普通设备</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item name="fault" label="故障状态" >
                         <Select
                             style={{ width: '102px' }}
                         >
-                            <Option value={'1'}>全部状态</Option>
+                            <Option value={-1}>全部状态</Option>
                             <Option value={false}>正常运行</Option>
                             <Option value={true}>今日故障</Option>
                         </Select>

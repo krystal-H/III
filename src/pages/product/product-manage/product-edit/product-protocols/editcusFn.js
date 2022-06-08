@@ -153,6 +153,11 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
             } else if (value.type === 'int' || value.type === 'float') {
                 origin.content = value
             }
+            if(value.type === 'int'){
+                if(Number(origin.content.specs.max)>2**31-1){
+                    origin.content.specs.unsigned=true
+                }
+            }
             origin.content.dataType = {
                 type: origin.content.type,
                 specs: origin.content.specs
@@ -206,9 +211,9 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
     }));
     //添加枚举参数
     const AddEnums = (add, count) => {
-        if (count > 11) {
+        if (count > 39) {
             Notification({
-                description: `不能超过12条数据`,
+                description: `不能超过40条数据`,
                 type: 'warn'
             });
             return
@@ -242,6 +247,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
             <Form.Item
                 label="标识符"
                 name='identifier'
+                getValueFromEvent={e => e.target.value.replace(/[\u4e00-\u9fa5]|(^\s+)|(\s+$)/ig, '')}
                 rules={[
                     {
                         required: true,
@@ -532,6 +538,7 @@ function EventTemp({ actionData, sentReq, modelType }, ref) {
                 <Form.Item
                     label="标识符"
                     name="identifier"
+                    getValueFromEvent={e => e.target.value.replace(/[\u4e00-\u9fa5]|(^\s+)|(\s+$)/ig, '')}
                     rules={[
                         {
                             required: true,
@@ -737,6 +744,7 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
                 <Form.Item
                     label="标识符"
                     name="identifier"
+                    getValueFromEvent={e => e.target.value.replace(/[\u4e00-\u9fa5]|(^\s+)|(\s+$)/ig, '')}
                     rules={[
                         {
                             required: true,

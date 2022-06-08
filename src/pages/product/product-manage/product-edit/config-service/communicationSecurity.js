@@ -65,14 +65,14 @@ function CommunicateSecurity({ securityVisible, productId, cancelHandle, isGateW
               </Radio>
               <Radio value="1">
                 <Tooltip
-                  title='设备通信时，需校验烧录的产品密钥以及Clife平台设备注册的设备ID，较为安全。'
+                  title='设备通信时，需校验烧录的产品密钥，同时需校验在Clife平台设备注册的设备ID，较为安全。'
                   placement="bottom">
                   一型一密pro
                 </Tooltip>
               </Radio>
               <Radio value="2">
                 <Tooltip
-                  title='设备通信时，需校验烧录的设备密钥和设备ID，安全性最高。'
+                  title='设备通信时，需校验烧录的设备密钥，同时需校验烧录的设备ID，安全性最高。'
                   placement="bottom">
                   一机一密
                 </Tooltip>

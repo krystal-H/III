@@ -14,13 +14,13 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
         let url = Paths.subscribeDetail + '?urlConfId=' + id
         post(url).then((res) => {
             setData(res.data)
-            let eventIds = res.data.eventIds.split(',').map(item => {
-                return Number(item)
-            })
-            eventChange(eventIds)
-            get(Paths.getsubscribeProduct, { productId: res.data.productId }).then((res) => {
-                setOldTable(res.data.productFuncList || [])
-            });
+            // let eventIds = res.data.eventIds.split(',').map(item => {
+            //     return Number(item)
+            // })
+            // eventChange(eventIds)
+            // get(Paths.getsubscribeProduct, { productId: res.data.productId }).then((res) => {
+            //     setOldTable(res.data.productFuncList || [])
+            // });
         });
 
     }
@@ -63,8 +63,8 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
                 return item
             }
         })
-        if(!currentData) return []
-        let ori=data.productFuncList || {}
+        if (!currentData) return []
+        let ori = data.productFuncList || {}
         let obj = {
             9: ori.runningList || [],
             11: ori.errorList || [],
@@ -72,8 +72,8 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
             10: ori.controllList || [],
         }
 
-        let arr=currentData.list.filter(item=>{
-            if(obj[val].indexOf(item.property)>-1){
+        let arr = currentData.list.filter(item => {
+            if (obj[val].indexOf(item.property) > -1) {
                 return item
             }
         })
@@ -147,7 +147,7 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
                         <div className='item-label'>业务时间：</div>
                         <div className='item-value'>{data.businessTime}</div>
                     </div>
-                    {
+                    {/* {
                         oldEvent.length ? <Tabs defaultActiveKey="1" >
                             {
                                 oldEvent.map(item => {
@@ -159,11 +159,15 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
                                 })
                             }
                         </Tabs> : null
-                    }
+                    } */}
 
                     <div className='subscrbe-t' style={{ marginTop: '22px' }}>订阅方式</div>
                     {
                         data.pushWay === 2 && <>
+                            <div className='subscrbe-item'>
+                                <div className='item-label'>主题：</div>
+                                <div className='item-value'>{data.topic}</div>
+                            </div>
                             <div className='subscrbe-item'>
                                 <div className='item-label'>账号：</div>
                                 <div className='item-value'>{data.username}</div>
@@ -191,7 +195,7 @@ export default function ProtocolDelete({ rightVisible, onCloseRight, id }) {
 
                     <div className='subscrbe-item'>
                         <div className='item-label'>推送频次：</div>
-                        <div className='item-value'>{data.pushFrequency === 0 ? '每次触发推送' : '相同故障每小时推送1次'}</div>
+                        <div className='item-value'>{data.pushFrequency === 2 ? '每次触发推送' : '相同故障每小时推送1次'}</div>
                     </div>
                 </div>
             </div>

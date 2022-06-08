@@ -512,11 +512,18 @@ class DataDebuggingPage extends React.Component{
         // this.state.selectedData1.parseData[key] = value;
     }
     analysisData () {
-
-        let product = this.state.deviceAndWs.productInfo.data,
+        let product = this.state.deviceAndWs.productInfo.data.productBaseInfo,
         propertyConfig = this.state.propertyConfig.propertyConfig,
         propertyConfigId = this.state.propertyConfig.propertyConfigId;
+
+        // console.log(11111,product,this.state.selectedData1,this.state.propertyConfig)
+
         if ( !product || !propertyConfigId || !propertyConfig || !this.state.selectedData1) return [];
+
+        console.log(2222,product)
+        console.log('---selectedData1----',this.state.selectedData1)
+        console.log('---propertyConfig----',propertyConfig)
+        console.log('---propertyConfigId----',propertyConfigId)
         
         let productStr = [
             product.productVersion,
@@ -524,6 +531,7 @@ class DataDebuggingPage extends React.Component{
             product.deviceSubtypeId,
             this.state.selectedData1.command,
         ].join('-'); //"产品序号-大类-小类-命令字";
+        console.log('---productStr----',productStr)
         // let protocolId= this.state.propertyConfigId["3-35-1-0401"];
         let protocolId = propertyConfigId[productStr];
         if (!protocolId) return [];

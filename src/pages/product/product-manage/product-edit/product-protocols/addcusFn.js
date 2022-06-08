@@ -164,6 +164,11 @@ function NumberTemp({ currentTab, sentReq }, ref) {
             } else if (value.type === 'float' || value.type === 'int') {
                 origin.content = value
             }
+            if (value.type === 'int') {
+                if (Number(origin.content.specs.max) > 2 ** 31 - 1) {
+                    origin.content.specs.unsigned = true
+                }
+            }
             origin.content.dataType = {
                 type: origin.content.type,
                 specs: origin.content.specs
@@ -185,9 +190,9 @@ function NumberTemp({ currentTab, sentReq }, ref) {
     }));
     //添加枚举参数
     const AddEnums = (add, count) => {
-        if (count > 11) {
+        if (count > 39) {
             Notification({
-                description: `不能超过12条数据`,
+                description: `不能超过40条数据`,
                 type: 'warn'
             });
             return
@@ -220,12 +225,13 @@ function NumberTemp({ currentTab, sentReq }, ref) {
             <Form.Item
                 label="标识符"
                 name='identifier'
+                getValueFromEvent={e => e.target.value.replace(/[\u4e00-\u9fa5]|(^\s+)|(\s+$)/ig, '')}
                 rules={[
                     {
                         required: true,
                     },
                 ]}
-            ><Input />
+            ><Input οnkeyup="value=value.replace(/[\u4e00-\u9fa5]|(^\s+)|(\s+$)/ig,'')" />
             </Form.Item>
             <Form.Item
                 label="数据类型"
@@ -342,7 +348,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                                 name={['specs', 'interval']}
                                 rules={[{ required: true }]}
                             ><Input /></Form.Item>
-                            <Form.Item name={['specs', 'multiple']} label="倍数"  rules={[{ required: true }]}>
+                            <Form.Item name={['specs', 'multiple']} label="倍数" rules={[{ required: true }]}>
                                 <Select  >
                                     {
                                         multipleCollection.map(item => {
@@ -351,7 +357,7 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                                     }
                                 </Select>
                             </Form.Item>
-                            <Form.Item name={['specs', 'unit']} label="单位"  rules={[{ required: true }]}>
+                            <Form.Item name={['specs', 'unit']} label="单位" rules={[{ required: true }]}>
                                 <Select showSearch optionFilterProp="children">
                                     {
                                         unitCollection.map(item => {
@@ -486,6 +492,7 @@ function EventTemp({ currentTab, sentReq }, ref) {
                 <Form.Item
                     label="标识符"
                     name="identifier"
+                    getValueFromEvent={e => e.target.value.replace(/[\u4e00-\u9fa5]|(^\s+)|(\s+$)/ig, '')}
                     rules={[
                         {
                             required: true,
@@ -650,6 +657,7 @@ function ServeTemp({ sentReq }, ref) {
                 <Form.Item
                     label="标识符"
                     name="identifier"
+                    getValueFromEvent={e => e.target.value.replace(/[\u4e00-\u9fa5]|(^\s+)|(\s+$)/ig, '')}
                     rules={[
                         {
                             required: true,

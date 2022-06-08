@@ -1,4 +1,12 @@
 .project-detail-page {
+
+  .main-page-title {
+    position: relative;
+    .title {
+      display: inline-block;
+    }
+  }
+
   .device-top-name {
     width: 100px;
     height: 28px;

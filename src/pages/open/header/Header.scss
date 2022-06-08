@@ -28,7 +28,9 @@
     text-align: right;
     height: 100%;
     width: 600px;
-
+    .nologin-right-text{
+      line-height: 52px
+    }
     &>a,
     .user {
       @include ver-middle;

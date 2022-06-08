@@ -116,7 +116,7 @@ function ReplaceModule({
       onOk={() => judgeHandleOk()}
       onCancel={() => handleCancel(opeType)}
       maskClosable={false}
-      width={900}
+      width={1000}
       wrapClassName="replace-module-modal">
       {desc && <div className="replace-firmware-desc">{desc}</div>}
 
