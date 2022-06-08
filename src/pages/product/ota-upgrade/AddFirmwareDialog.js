@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Input, Select, Radio, Button, Upload ,Form, Modal,Tabs } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { FIRMWAREFROMPRO } from "./store/actionTypes";
 import { post,Paths } from '../../../api';
 import {Notification} from '../../../components/Notification';
 import LabelTip from '../../../components/form-com/LabelTip';
 import { SCHMETYPE,formrules,TXTUPNAME } from './store/constData'
 import {getVersionList,firmwareLastVersion} from './store/actionCreators'
+import store from '../../../store';
 const { Option } = Select;
 const { Item } = Form;
 
@@ -32,9 +34,9 @@ const mapDispatchToProps = dispatch => {
 const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     changeState,
     editId,editProductFirParams,
-    firmwareLastVersion,mcusocproLi,firmwareFrPro,getVersionLi
+    firmwareLastVersion,mcusocproLi,firmwareFrPro={},getVersionLi
 })=>{
-
+console.log(999,firmwareFrPro)
 
     const [mcuIsUp, setMcuIsUp] = useState(1);
     const [modIsUp, setModIsUp] = useState(1);
@@ -75,11 +77,18 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
             post(Paths.otaDevVersionList,{...editProductFirParams}).then(({data=[]}) => {
                 setEditFirParamsInfoLi(data)
             })
+        }else{
+            store.dispatch({
+                type: FIRMWAREFROMPRO,
+                firmwareFrPro:{},
+            })
         }
     }, [editId])
     useEffect(() => {
         if(productFirmwareName){
             formInstance.setFieldsValue({productFirmwareName})
+        }else{
+            formInstance.setFieldsValue({productFirmwareName:''})
         }
     }, [productFirmwareName])
 
@@ -142,6 +151,12 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     }
 
     const onFinish=(values)=>{
+        if(mcuIsUp&&modIsUp&&schemeType!=5){
+            Notification({type:'info',description:'请至少升级一项'});
+            return
+
+        }
+
         const { productId,productFirmwareName,f_extVersion,f_totalVersion,f_filePath } = values;
         let params = {
             productId:editId||productId, 
@@ -172,7 +187,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
         if(schemeType!=5&&modIsUp==0){
             let deviceVersion = {
                 firmwareVersionType:0,
-                deviceVersionName:f_firmwareVersionTypeName,
+                deviceVersionName:f_firmwareVersionTypeName || firmwareVersionTypeName,
                 mainVersion:'',
                 extVersion:f_extVersion,
                 totalVersion:f_totalVersion,
@@ -282,7 +297,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
 
     return (
         <Modal
-            title={editId&&'修改固件'||'新增固件' + editId}
+            title={editId&&'修改固件'||'新增固件'}
             visible={true}
             onOk={formInstance.submit}
             onCancel={()=>{ 
@@ -383,7 +398,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     <Tabs className='tabs' type="editable-card" onChange={cngTab} activeKey={curTabNo} onEdit={onEditTab} hideAdd={updateFirmwareLi.length>=5}>
                         {
                             updateFirmwareLi.map( (key,i) =>{
-                                return <Tabs.TabPane tab={`${TXTUPNAME[schemeType]}${i}`} key={key} >
+                                return <Tabs.TabPane tab={`${{2:"MCU",3:"模组",5:"系统"}[schemeType]}${TXTUPNAME[schemeType]}${i}`} key={key} >
                                     <Item label={TXTUPNAME[schemeType] +"名称"} name={`firmwareVersionTypeName_${key}`} rules={[{ required: true, message: '请填写模块名称' }]}>
                                         <Input maxLength={30}  placeholder='不超过30字符'/>
                                     </Item>
