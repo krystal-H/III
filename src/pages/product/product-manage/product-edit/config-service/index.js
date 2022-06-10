@@ -172,10 +172,14 @@ function ServiceSelect({ productId, nextStep }, ref) {
   //验证函数
   const subNextConFirm = () => {
     // console.log('requiredList----', requiredList.every(item => item.isConfiged === true), '***', requiredList)
-    if (requiredList.every(item => item.isConfiged === true)) {
-      nextStep()
+    if (productItemData.schemeType != 4 && productItemData.schemeType != 5) {
+      if (requiredList.every(item => item.isConfiged === true)) {
+        nextStep()
+      } else {
+        Notification({ description: '请完善必选配置信息！', type: 'warn' })
+      }
     } else {
-      Notification({ description: '请完善必选配置信息！', type: 'warn' })
+      nextStep()
     }
   }
 
@@ -367,31 +371,62 @@ function ServiceSelect({ productId, nextStep }, ref) {
     <div className="service-config-page">
       <div className="desc">{getSchemeType()}</div>
       {/* 必选配置 */}
-      <div className="service-config-title">必选配置</div>
-      <div className="service-config-cont">
-        {
-          requiredList && requiredList.map((item, index) =>
-            <div className="config-card" key={index}>
-              <div className="config-card-left">
-                <img src={item.url} alt="图片" />
-              </div>
-              <div className="config-card-right">
-                <div className="config-card-right-title">{item.title}</div>
-                <div className="config-card-right-desc">{item.desc}</div>
-                <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
-                  {!item.isConfiged ? '配置' : '修改'}
+      {/* 系统方案和成品接入  都放入非必填——产品需求 */}
+      {
+        productItemData.schemeType !== 4 && productItemData.schemeType !== 5 && <>
+          <div className="service-config-title">必选配置</div>
+          <div className="service-config-cont">
+            {
+              requiredList && requiredList.map((item, index) =>
+                <div className="config-card" key={index}>
+                  <div className="config-card-left">
+                    <img src={item.url} alt="图片" />
+                  </div>
+                  <div className="config-card-right">
+                    <div className="config-card-right-title">{item.title}</div>
+                    <div className="config-card-right-desc">{item.desc}</div>
+                    <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
+                      {!item.isConfiged ? '配置' : '修改'}
+                    </div>
+                  </div>
+                  {
+                    item.isConfiged && <div className="configured-logo">已配置</div>
+                  }
                 </div>
-              </div>
-              {
-                item.isConfiged && <div className="configured-logo">已配置</div>
-              }
-            </div>
-          )
-        }
-      </div>
+              )
+            }
+          </div>
+        </>
+      }
       {/* 可选配置 */}
       <div className="service-config-title">可选配置</div>
       <div className="service-config-cont">
+        {/* 系统方案和成品接入  都放入非必填——产品需求 */}
+        {
+          (productItemData.schemeType == 4 || productItemData.schemeType == 5) && <>
+            <div className="service-config-cont">
+              {
+                requiredList && requiredList.map((item, index) =>
+                  <div className="config-card" key={index}>
+                    <div className="config-card-left">
+                      <img src={item.url} alt="图片" />
+                    </div>
+                    <div className="config-card-right">
+                      <div className="config-card-right-title">{item.title}</div>
+                      <div className="config-card-right-desc">{item.desc}</div>
+                      <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
+                        {!item.isConfiged ? '配置' : '修改'}
+                      </div>
+                    </div>
+                    {
+                      item.isConfiged && <div className="configured-logo">已配置</div>
+                    }
+                  </div>
+                )
+              }
+            </div>
+          </>
+        }
         {
           optionalList.map((item, index) =>
             <div className="config-card" key={index}>
