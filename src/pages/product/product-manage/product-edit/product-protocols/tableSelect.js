@@ -2,12 +2,24 @@ import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef, us
 import { useHistory } from "react-router-dom"
 import { Table, Button, Space, Checkbox } from 'antd';
 import { getRowSpanCount } from '../../../../../configs/tableCombine'
-
+import { cloneDeep } from 'lodash'
 
 export default function TableCom({ dataSource, refreshCount }) {
-    const history = useHistory();
     const [selectData, setSelectData] = useState([])
-
+    const [tableData, setTableData] = useState(cloneDeep(dataSource))
+    const [indeterminate, setIndeterminate] = useState(false);
+    const [isAll, setIsAll] = useState(false)
+    const [dataLen, setDataLen] = useState(0)
+    useEffect(() => {
+        setTableData(cloneDeep(dataSource))
+        let arr = []
+        dataSource.forEach(item => {
+            if (!arr.includes(item.funcIdentifier)) {
+                arr.push(item.funcIdentifier)
+                setDataLen(arr.length)
+            }
+        })
+    }, [dataSource.length])
     //展示
     const filterFn = (data) => {
         let result = null
@@ -54,16 +66,63 @@ export default function TableCom({ dataSource, refreshCount }) {
                     }
                 })
             }
+            setIndeterminate(!!arr.length && arr.length < dataLen);
+            setIsAll(arr.length === dataLen);
+            return arr
+        })
+        setTableData(pre => {
+            let arr = cloneDeep(pre)
+            let index = arr.findIndex(item => {
+                if (item.funcIdentifier === data.funcIdentifier) {
+                    return item
+                }
+            })
+            arr[index].checked = isTrue
             return arr
         })
     }
     useEffect(() => {
         refreshCount(selectData)
     }, [selectData.length])
+    const onAllChange = (e) => {
+        let isTrue = e.target.checked
+        const productId = JSON.parse(sessionStorage.getItem('productItem')).productId
+        setTableData(pre => {
+            let arr = cloneDeep(pre)
+            arr.forEach(item => {
+                item.checked = isTrue
+            })
+            return arr
+        })
+        setIsAll(isTrue)
+        setIndeterminate(false);
+        
+        if(isTrue){
+            let ids=[]
+            let selArr=[]
+            dataSource.forEach(item=>{
+                if(!ids.includes(item.funcIdentifier)){
+                    let obj = {
+                        id: item.id,
+                        funcType: item.funcType,
+                        identifier: item.funcIdentifier,
+                        productId
+                    }
+                    selArr.push(obj)
+                    ids.push(item.funcIdentifier)
+                }
+            })
+            setSelectData(selArr)
+        }else{
+            setSelectData([])
+        }
+    }
     const columns = [
         {
-            title: '勾选',
             width: '80px',
+            title: () => {
+                return <Checkbox onChange={(e) => { onAllChange(e) }} checked={isAll} indeterminate={indeterminate}></Checkbox>
+            },
             render: (value, row, index) => {
                 let obj = getRowSpanCount(
                     dataSource,
@@ -72,7 +131,7 @@ export default function TableCom({ dataSource, refreshCount }) {
                     row.funcIdentifier,
                     "funcIdentifier"
                 );
-                obj.children = <Checkbox onChange={(e) => { onChange(e, row) }}></Checkbox>
+                obj.children = <Checkbox onChange={(e) => { onChange(e, row) }} checked={row.checked}></Checkbox>
                 return obj
             },
         },
@@ -140,10 +199,9 @@ export default function TableCom({ dataSource, refreshCount }) {
         <Table
             rowKey="key"
             columns={columns}
-            dataSource={dataSource}
+            dataSource={tableData}
             pagination={false}
             scroll={{ y: 440 }}
         />
-
     </div>
 }
