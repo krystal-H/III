@@ -19,7 +19,10 @@ export default function TableCom({ dataSource, refreshCount }) {
                 setDataLen(arr.length)
             }
         })
-    }, [dataSource.length])
+        setSelectData([])
+        setIndeterminate(false)
+        setIsAll(false)
+    }, [JSON.stringify(dataSource)])
     //展示
     const filterFn = (data) => {
         let result = null
