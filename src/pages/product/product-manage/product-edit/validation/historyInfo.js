@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Modal, Table, message } from 'antd';
+import {Notification} from '../../../../../components/Notification';
 import { DateTool } from '../../../../../util/util';
 import { get, post, Paths } from '../../../../../api';
 export default ({ historyVisiable, openHistory, debugInfo, productId, sentInfo }) => {
@@ -32,7 +33,7 @@ export default ({ historyVisiable, openHistory, debugInfo, productId, sentInfo }
     //删除
     const delDebug = (row) => {
         post(Paths.hisDebugMacdel, { ids: [row.id] }).then(res => {
-            message('删除成功')
+            Notification({type:'success',description:'删除成功！'});
             getList()
         });
     }

@@ -36,7 +36,6 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     editId,editProductFirParams,
     firmwareLastVersion,mcusocproLi,firmwareFrPro={},getVersionLi
 })=>{
-console.log(999,firmwareFrPro)
 
     const [mcuIsUp, setMcuIsUp] = useState(1);
     const [modIsUp, setModIsUp] = useState(1);
@@ -85,7 +84,7 @@ console.log(999,firmwareFrPro)
         }
     }, [editId])
     useEffect(() => {
-        if(productFirmwareName){
+        if(productFirmwareName && editId){
             formInstance.setFieldsValue({productFirmwareName})
         }else{
             formInstance.setFieldsValue({productFirmwareName:''})
@@ -206,7 +205,7 @@ console.log(999,firmwareFrPro)
             reqpath = Paths.otaUpdateVersion;
         }
 
-        post(reqpath,params).then((res) => {
+        post(reqpath,params,{loading:true}).then((res) => {
             Notification({type:'success',description:'操作成功！'});
             getVersionLi();
             changeState('addFirmwareVisiable',false); 
@@ -398,7 +397,7 @@ console.log(999,firmwareFrPro)
                     <Tabs className='tabs' type="editable-card" onChange={cngTab} activeKey={curTabNo} onEdit={onEditTab} hideAdd={updateFirmwareLi.length>=5}>
                         {
                             updateFirmwareLi.map( (key,i) =>{
-                                return <Tabs.TabPane tab={`${{2:"MCU",3:"模组",5:"系统"}[schemeType]}${TXTUPNAME[schemeType]}${i}`} key={key} >
+                                return <Tabs.TabPane tab={`${{2:"MCU",3:"模组",5:"系统"}[schemeType]}${TXTUPNAME[schemeType]}${i+1}`} key={key} >
                                     <Item label={TXTUPNAME[schemeType] +"名称"} name={`firmwareVersionTypeName_${key}`} rules={[{ required: true, message: '请填写模块名称' }]}>
                                         <Input maxLength={30}  placeholder='不超过30字符'/>
                                     </Item>
