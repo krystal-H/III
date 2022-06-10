@@ -184,16 +184,27 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
             params = {...params,deviceVersions}
         }
         if(schemeType!=5&&modIsUp==0){
+
             let deviceVersion = {
                 firmwareVersionType:0,
                 deviceVersionName:f_firmwareVersionTypeName || firmwareVersionTypeName,
                 mainVersion:'',
-                extVersion:f_extVersion,
+                // extVersion:f_extVersion,
                 totalVersion:f_totalVersion,
                 filePath:f_filePath,productId,deviceVersionType:{'2':2,'3':1,'5':4}[schemeType+""],
                 curExtVersion:f_curExtVersion,
                 deviceVersionId:editFirParamsFm.deviceVersionId,
             }
+
+            if(schemeType == 3){
+                deviceVersion.extVersion = f_extVersion
+            }else{
+                let lastmodinfo = latestModLi.find(t=>{t.deviceVersionId==f_extVersion}) || {}
+                deviceVersion = {...deviceVersion,...lastmodinfo}
+
+            }
+
+
             if(params.deviceVersions){
                 params.deviceVersions.push(deviceVersion)
             }else{
@@ -348,8 +359,8 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                             <Select placeholder="请选择"  getPopupContainer={() => document.getElementById('area')}>
                                 {
                                     latestModLi.map(item => {
-                                        const {deviceVersionId} = item;
-                                        return <Option key={deviceVersionId} value={deviceVersionId}>{deviceVersionId}</Option>
+                                        const {deviceVersionId,extVersion} = item;
+                                        return <Option key={deviceVersionId} value={deviceVersionId}>{extVersion}</Option>
                                     })
                                 }
                             </Select>
