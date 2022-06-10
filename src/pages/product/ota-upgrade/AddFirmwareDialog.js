@@ -36,7 +36,6 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     editId,editProductFirParams,
     firmwareLastVersion,mcusocproLi,firmwareFrPro={},getVersionLi
 })=>{
-console.log(999,firmwareFrPro)
 
     const [mcuIsUp, setMcuIsUp] = useState(1);
     const [modIsUp, setModIsUp] = useState(1);
@@ -65,9 +64,8 @@ console.log(999,firmwareFrPro)
     useEffect(() => {
         if(schemeType == 2){
             post(Paths.getModuleDeviceVersionList,{productId:editId||productId},{loading:true}).then(({data={}}) => {
+                console.log('---lastmodinfo--',data)
                 setLatestModLi(data)
-               
-                console.log(777,data)
             });
         }
     }, [schemeType])
@@ -85,7 +83,7 @@ console.log(999,firmwareFrPro)
         }
     }, [editId])
     useEffect(() => {
-        if(productFirmwareName){
+        if(productFirmwareName && editId){
             formInstance.setFieldsValue({productFirmwareName})
         }else{
             formInstance.setFieldsValue({productFirmwareName:''})
@@ -185,16 +183,28 @@ console.log(999,firmwareFrPro)
             params = {...params,deviceVersions}
         }
         if(schemeType!=5&&modIsUp==0){
+
             let deviceVersion = {
                 firmwareVersionType:0,
                 deviceVersionName:f_firmwareVersionTypeName || firmwareVersionTypeName,
                 mainVersion:'',
-                extVersion:f_extVersion,
+                // extVersion:f_extVersion,
                 totalVersion:f_totalVersion,
                 filePath:f_filePath,productId,deviceVersionType:{'2':2,'3':1,'5':4}[schemeType+""],
                 curExtVersion:f_curExtVersion,
                 deviceVersionId:editFirParamsFm.deviceVersionId,
             }
+
+            if(schemeType == 3){
+                deviceVersion.extVersion = f_extVersion
+            }else{
+                let lastmodinfo = latestModLi.find(t=>{return t.deviceVersionId==f_extVersion}) || {}
+                console.log(777,f_extVersion,lastmodinfo)
+                deviceVersion = {...deviceVersion,...lastmodinfo}
+
+            }
+
+
             if(params.deviceVersions){
                 params.deviceVersions.push(deviceVersion)
             }else{
@@ -206,7 +216,7 @@ console.log(999,firmwareFrPro)
             reqpath = Paths.otaUpdateVersion;
         }
 
-        post(reqpath,params).then((res) => {
+        post(reqpath,params,{loading:true}).then((res) => {
             Notification({type:'success',description:'操作成功！'});
             getVersionLi();
             changeState('addFirmwareVisiable',false); 
@@ -349,8 +359,8 @@ console.log(999,firmwareFrPro)
                             <Select placeholder="请选择"  getPopupContainer={() => document.getElementById('area')}>
                                 {
                                     latestModLi.map(item => {
-                                        const {deviceVersionId} = item;
-                                        return <Option key={deviceVersionId} value={deviceVersionId}>{deviceVersionId}</Option>
+                                        const {deviceVersionId,extVersion} = item;
+                                        return <Option key={deviceVersionId} value={deviceVersionId}>{extVersion}</Option>
                                     })
                                 }
                             </Select>
@@ -398,7 +408,7 @@ console.log(999,firmwareFrPro)
                     <Tabs className='tabs' type="editable-card" onChange={cngTab} activeKey={curTabNo} onEdit={onEditTab} hideAdd={updateFirmwareLi.length>=5}>
                         {
                             updateFirmwareLi.map( (key,i) =>{
-                                return <Tabs.TabPane tab={`${{2:"MCU",3:"模组",5:"系统"}[schemeType]}${TXTUPNAME[schemeType]}${i}`} key={key} >
+                                return <Tabs.TabPane tab={`${{2:"MCU",3:"模组",5:"系统"}[schemeType]}${TXTUPNAME[schemeType]}${i+1}`} key={key} >
                                     <Item label={TXTUPNAME[schemeType] +"名称"} name={`firmwareVersionTypeName_${key}`} rules={[{ required: true, message: '请填写模块名称' }]}>
                                         <Input maxLength={30}  placeholder='不超过30字符'/>
                                     </Item>
