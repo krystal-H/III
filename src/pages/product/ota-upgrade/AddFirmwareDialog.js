@@ -64,9 +64,8 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     useEffect(() => {
         if(schemeType == 2){
             post(Paths.getModuleDeviceVersionList,{productId:editId||productId},{loading:true}).then(({data={}}) => {
+                console.log('---lastmodinfo--',data)
                 setLatestModLi(data)
-               
-                console.log(777,data)
             });
         }
     }, [schemeType])
@@ -199,7 +198,8 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
             if(schemeType == 3){
                 deviceVersion.extVersion = f_extVersion
             }else{
-                let lastmodinfo = latestModLi.find(t=>{t.deviceVersionId==f_extVersion}) || {}
+                let lastmodinfo = latestModLi.find(t=>{return t.deviceVersionId==f_extVersion}) || {}
+                console.log(777,f_extVersion,lastmodinfo)
                 deviceVersion = {...deviceVersion,...lastmodinfo}
 
             }
