@@ -152,7 +152,6 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
         if(mcuIsUp&&modIsUp&&schemeType!=5){
             Notification({type:'info',description:'请至少升级一项'});
             return
-
         }
 
         const { productId,productFirmwareName,f_extVersion,f_totalVersion,f_filePath } = values;
@@ -162,6 +161,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
             productFirmwareVersion:editId ?productFirmwareVersion : (productFirmwareVersion+1 ),
             productFirmwareId:editId?productFirmwareId:undefined
         }
+        const indexarr = []
 
         if(schemeType==5||mcuIsUp==0){
             let deviceVersions = updateFirmwareLi.map((k,i)=>{
@@ -170,8 +170,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     extVersion = values[`extVersion_${k}`],
                     totalVersion = values[`totalVersion_${k}`],
                     filePath = values[`filePath_${k}`];
-
-                    
+                indexarr.push(firmwareTypeNo)    
                 return {
                     deviceVersionName:firmwareVersionTypeName,
                     firmwareVersionType:firmwareTypeNo,
@@ -180,8 +179,14 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     deviceVersionId:editFirParams[i] && editFirParams[i].deviceVersionId
                 }
             })
+            if(Array.from(new Set(indexarr)).length<indexarr.length){
+                Notification({type:'info',description:TXTUPNAME[schemeType] +"编号不能重复"});
+                return
+
+            }
             params = {...params,deviceVersions}
         }
+        // return
         if(schemeType!=5&&modIsUp==0){
 
             let deviceVersion = {
@@ -412,7 +417,10 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                                     <Item label={TXTUPNAME[schemeType] +"名称"} name={`firmwareVersionTypeName_${key}`} rules={[{ required: true, message: '请填写模块名称' }]}>
                                         <Input maxLength={30}  placeholder='不超过30字符'/>
                                     </Item>
-                                    <Item label={TXTUPNAME[schemeType] +"编号"} name={`firmwareTypeNo_${key}`} rules={[{ required: true, message: '请填写模块编号' }]}>
+                                    <Item label={TXTUPNAME[schemeType] +"编号"} name={`firmwareTypeNo_${key}`} rules={[
+                                        { required: true, message: '请填写模块编号' },
+                                        {pattern: formrules.mainVer, message: '请输入大于0的整数'}
+                                    ]}>
                                         <Input maxLength={3}  placeholder='请输入1-100的整数字，编号须唯一'/>
                                     </Item>
                                     <Item label='硬件版本号' name={`totalVersion_${key}`} >

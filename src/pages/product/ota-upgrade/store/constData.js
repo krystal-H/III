@@ -78,7 +78,7 @@ export const VERFIRMTYPE = [
 export const formrules = {
     strextVer:/^[a-zA-Z0-9_\-\.]{1,30}$/,
     verNam:/^[a-zA-Z0-9\u4e00-\u9fa5][a-zA-Z0-9_\u4e00-\u9fa5]{0,39}$/,
-    mainVer:/^[0-9]*$/,
+    mainVer:/^[1-9][0-9]*$/,
     url:/https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/,
 }
 export const UPDATETYPE = [
