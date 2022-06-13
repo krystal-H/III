@@ -68,7 +68,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 setLatestModLi(data)
             });
         }
-    }, [schemeType])
+    }, [schemeType,productId])
     useEffect(() => {
         if(editId){
             changedPro(editId)
@@ -144,7 +144,6 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     }, [editFirParamsInfoLi])
 
     const changedPro= productId =>{
-        // productId = 12150;
         firmwareLastVersion(productId)   
     }
 
