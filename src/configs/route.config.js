@@ -100,6 +100,11 @@ export const navRoutes = [
                 menuname: '设备消息',
                 path: '/open/device/devMsg',
                 menuid: '2-3',
+            },
+            {
+                menuname: '数据下载',
+                path: '/open/device/dataDownload',
+                menuid: '2-4',
             }
         ]
     }, {
@@ -328,6 +333,11 @@ export const menuList = [
                 childmenus: [],
                 items: [],
             },
+            {
+                menuname: '数据下载',
+                childmenus: [],
+                items: []
+            }
         ],
         items: [],
     },
