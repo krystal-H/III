@@ -137,7 +137,7 @@ function DataDownloadPage() {
   }
 
   return (
-    <div class='download-data-page'>
+    <div className='download-data-page'>
       <PageTitle title='下载数据'></PageTitle>
       <div className='comm-shadowbox filter'>
         <Form className='device-filter-form' form={form} layout='inline'>
