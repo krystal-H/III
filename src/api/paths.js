@@ -285,7 +285,11 @@ let Paths = {
     exportShadowHis: '/deviceManage/exportHistoryProtocolList',//设备影子历史数据
     getDeviceTitle: '/getDeviceDetailList',//设备头部
     gatewayList: '/deviceManage/getSubDeviceList',//子设备列表
+    
 
+    /**数据下载 */
+    downDeviceDataList: '/data/export/list', // 下载数据列表
+    createExport: '/device/data/export', // 数据下载
 
     /**
      * 账户-访问用户 start

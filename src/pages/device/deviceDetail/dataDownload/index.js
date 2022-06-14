@@ -16,7 +16,7 @@ const statusMap = {
   4: '运行失败'
 }
 
-function DataDownload() {
+function DataDownload({ baseInfo, devceId }) {
   const history = useHistory()
   const [form] = Form.useForm()
   const [projectName, setProjectName] = useState('')
@@ -70,28 +70,26 @@ function DataDownload() {
       key: 'action',
       render: (text, record) => (
         <div className="operation">
-          <a>下载</a>
+          <a onClick={() => downData(record.result)}>下载</a>
         </div>
       )
     }
   ]
 
+  const downData = (url) => {
+    window.open(url)
+  }
+
   // 获取列表数据
   const getTableList = () => {
-    const { times } = form.getFieldsValue()
-    let obj = { ...pager }
-    if (times && times.length) {
-      obj.startTime = moment(times[0]).valueOf()
-      obj.endTime = moment(times[1]).valueOf()
-    }
-    // post(Paths.projectList, obj, { loading: true }).then(res => {
-    //   setDataSource(res.data.list)
-    //   setPager(pre => {
-    //     let obj = cloneDeep(pre)
-    //     obj.totalRows = res.data.pager.totalRows
-    //     return obj
-    //   })
-    // })
+    post(Paths.downDeviceDataList, {origin: 'open', ...pager}, { loading: true }).then(res => {
+      setDataSource(res.data.list)
+      setPager(pre => {
+        let obj = cloneDeep(pre)
+        obj.totalRows = res.data.pager.totalRows
+        return obj
+      })
+    })
   }
 
   useEffect(() => {
@@ -106,11 +104,23 @@ function DataDownload() {
   }
 
   // 搜索
-  const searchList = (val) => {
-    // setProjectName(val)
-    // setPager(pre => {
-    //   return Object.assign(cloneDeep(pre), { pageIndex: 1 })
-    // })
+  const searchList = () => {
+    const { times } = form.getFieldsValue()
+    let obj = {}
+    if (times && times.length) {
+      obj.startTime = moment(times[0]).valueOf()
+      obj.endTime = moment(times[1]).valueOf()
+    }
+    let params = {
+      macStrs: baseInfo.deviceMac,
+      productId: baseInfo.productId,
+      originEnum: 'open',
+      startTime: obj.startTime,
+      endTime: obj.endTime
+    }
+    post(Paths.createExport, params).then(res => {
+
+    })
   }
 
   //清除搜索条件

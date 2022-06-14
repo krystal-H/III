@@ -70,11 +70,15 @@ function DataDownloadPage() {
       key: 'action',
       render: (text, record) => (
         <div className="operation">
-          <a>下载</a>
+          <a onClick={() => downData(record.result)}>下载</a>
         </div>
       )
     }
   ]
+
+  const downData = (url) => {
+    window.open(url)
+  }
 
   const disabledDate = current => {
     let middle = dayjs().format('YYYY-MM-DD')
@@ -83,22 +87,14 @@ function DataDownloadPage() {
 
   // 获取列表数据
   const getTableList = () => {
-    const { productId, macAddr, times } = form.getFieldsValue()
-    let obj = { ...pager }
-    if (times && times.length) {
-      obj.startTime = moment(times[0]).valueOf()
-      obj.endTime = moment(times[1]).valueOf()
-    }
-    if (productId) obj.productId = productId
-    if (macAddr) obj.macAddr = macAddr.trim()
-    // post(Paths.projectList, obj, { loading: true }).then(res => {
-    //   setDataSource(res.data.list)
-    //   setPager(pre => {
-    //     let obj = cloneDeep(pre)
-    //     obj.totalRows = res.data.pager.totalRows
-    //     return obj
-    //   })
-    // })
+    post(Paths.downDeviceDataList, {origin: 'open', ...pager}, { loading: true }).then(res => {
+      setDataSource(res.data.list)
+      setPager(pre => {
+        let obj = cloneDeep(pre)
+        obj.totalRows = res.data.pager.totalRows
+        return obj
+      })
+    })
   }
 
   useEffect(() => {
@@ -123,12 +119,27 @@ function DataDownloadPage() {
     })
   }
 
-  // 搜索
-  const searchList = (val) => {
-    // setProjectName(val)
-    // setPager(pre => {
-    //   return Object.assign(cloneDeep(pre), { pageIndex: 1 })
-    // })
+  // 创建查询任务
+  const searchList = () => {
+    const { productId, macStrs, times } = form.getFieldsValue()
+    // let obj = { ...pager }
+    let obj = {}
+    if (times && times.length) {
+      obj.startTime = moment(times[0]).valueOf()
+      obj.endTime = moment(times[1]).valueOf()
+    }
+    if (productId) obj.productId = productId
+    if (macStrs) obj.macStrs = macStrs.trim()
+    const params = {
+      productId: productId,
+      originEnum: 'open',
+      macStrs: obj.macStrs,
+      startTime: obj.startTime,
+      endTime: obj.endTime
+    }
+    post(Paths.createExport, params).then(res => {
+
+    })
   }
 
   //清除搜索条件
@@ -140,9 +151,9 @@ function DataDownloadPage() {
     <div className='download-data-page'>
       <PageTitle title='下载数据'></PageTitle>
       <div className='comm-shadowbox filter'>
-        <Form className='device-filter-form' form={form} layout='inline'>
+        <Form className='device-filter-form' form={form} layout='inline' autoComplete='off'>
           <Form.Item name="productId" label="选择产品">
-            <Select showSearch labelInValue
+            <Select showSearch
               optionFilterProp="children"
               placeholder='搜索产品名称'
               style={{width: 200}}>
@@ -153,7 +164,7 @@ function DataDownloadPage() {
               }
             </Select>
           </Form.Item>
-          <Form.Item name="macAddr" label="设备Mac">
+          <Form.Item name="macStrs" label="设备Mac">
             <Input placeholder="输入多个时以英文逗号隔开" allowClear style={{ width: 220 }} />
           </Form.Item>
           <Form.Item name="times" label="时间">
