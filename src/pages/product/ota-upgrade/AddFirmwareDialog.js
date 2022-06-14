@@ -418,7 +418,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                                     </Item>
                                     <Item label={TXTUPNAME[schemeType] +"编号"} name={`firmwareTypeNo_${key}`} rules={[
                                         { required: true, message: '请填写模块编号' },
-                                        {pattern: formrules.mainVer, message: '请输入大于0的整数'}
+                                        {pattern: formrules.mainVer, message: '请输入1-100的整数'}
                                     ]}>
                                         <Input maxLength={3}  placeholder='请输入1-100的整数字，编号须唯一'/>
                                     </Item>
