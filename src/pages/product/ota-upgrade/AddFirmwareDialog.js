@@ -40,6 +40,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     const [mcuIsUp, setMcuIsUp] = useState(1);
     const [modIsUp, setModIsUp] = useState(1);
     const [curTabNo, setCurTabNo] = useState('tab0');
+
     const [latestModLi, setLatestModLi] = useState([]);
     const [editFirParamsInfoLi, setEditFirParamsInfoLi] = useState([]);
     const [editFirParamsFm, setEditFirParamsFm] = useState({});
@@ -185,7 +186,6 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
             }
             params = {...params,deviceVersions}
         }
-        // return
         if(schemeType!=5&&modIsUp==0){
 
             let deviceVersion = {
@@ -230,16 +230,17 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     }
 
 
-    const uploadChange = ({file})=>{
+    const uploadChange = ({file},key)=>{
         if(file.response){ //上传成功返回 file.status=="done"
             const url = file.response.data && file.response.data.url || '';
             formInstance.setFieldsValue({ 
-                [`filePath_${curTabNo}`]:url
+                [`filePath_${key}`]:url
             })
+            
         }
         if(file.status=="removed"){ //删除操作
             formInstance.setFieldsValue({ 
-                [`filePath_${curTabNo}`]:""
+                [`filePath_${key}`]:""
             })
 
         }
@@ -320,7 +321,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 changeState('editProductFirParams',{})
                 
             }}
-            width={650}
+            width={700}
             maskClosable={false}
         >
             <Form form={formInstance} {...formItemLayout} className="ota_add_firmware_dialog" onFinish={onFinish} id='area'>
@@ -389,7 +390,6 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                         <Upload className='filepathinpt' onChange={uploadChangeSoc}
                             accept='.bin,.hex,.zip,.cyacd,.apk,.dpkg'
                             maxCount={1}
-                            // fileList={[]}
                             action={Paths.upFileUrl}
                             data={{ appId: 31438, domainType: 4, }}>
                                 <Button type="primary" ><UploadOutlined />上传附件</Button>
@@ -418,7 +418,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                                     </Item>
                                     <Item label={TXTUPNAME[schemeType] +"编号"} name={`firmwareTypeNo_${key}`} rules={[
                                         { required: true, message: '请填写模块编号' },
-                                        {pattern: formrules.mainVer, message: '请输入大于0的整数'}
+                                        {pattern: formrules.mainVer, message: '请输入1-100的整数'}
                                     ]}>
                                         <Input maxLength={3}  placeholder='请输入1-100的整数字，编号须唯一'/>
                                     </Item>
@@ -432,21 +432,19 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                                         rules={[{ required: true, message: '请输入URL' },{pattern: formrules.url, message: '请输入正确的URL'}]}
                                     ><Input maxLength={200} placeholder='请输入URL或者上传一个附件自动填充' />
                                     </Item>
+
+                                    <Upload className='filepathinpt' onChange={data=>{uploadChange(data,key)}} accept='.bin,.hex,.zip,.cyacd,.apk,.dpkg' maxCount={1}
+                                        // fileList={[]}
+                                        action={Paths.upFileUrl}
+                                        data={{ appId: 31438, domainType: 4, }}>
+                                            <Button type="primary" ><UploadOutlined />上传附件</Button>
+                                            <div>支持.bin,.hex,.zip,.cyacd,.apk,.dpkg格式，不超过200MB。</div>
+                                    </Upload>
+
                                 </Tabs.TabPane>
                             })
                         }    
                     </Tabs>
-                    {
-                        updateFirmwareLi.length>0 && 
-                        <Upload className='filepathinpt' onChange={uploadChange}
-                            accept='.bin,.hex,.zip,.cyacd,.apk,.dpkg'
-                            maxCount={1}
-                            action={Paths.upFileUrl}
-                            data={{ appId: 31438, domainType: 4, }}>
-                                <Button type="primary" ><UploadOutlined />上传附件</Button>
-                                <div>支持.bin,.hex,.zip,.cyacd,.apk,.dpkg格式，不超过200MB。</div>
-                        </Upload>
-                    }
                 </div >
                 }
             </Form>
