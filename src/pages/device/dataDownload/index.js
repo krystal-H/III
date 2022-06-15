@@ -8,6 +8,7 @@ import PageTitle from '../../../components/page-title/PageTitle'
 import dayjs from 'dayjs'
 import moment from 'moment'
 import './index.scss'
+import { Notification } from '../../../components/Notification'
 
 const { Search } = Input
 const { RangePicker } = DatePicker
@@ -33,21 +34,25 @@ function DataDownloadPage() {
       title: '序号',
       dataIndex: 'id',
       key: 'id',
+      width: 80
     },
     {
       title: '名称',
-      dataIndex: 'projectId',
-      key: 'projectId'
+      dataIndex: 'name',
+      key: 'name',
+      width: 300
     },
     {
       title: '参数',
       dataIndex: 'params',
-      key: 'params'
+      key: 'params',
+      width: '28%'
     },
     {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
+      width: 120,
       render(text) {
         return <span>{statusMap[text]}</span>
       }
@@ -55,12 +60,14 @@ function DataDownloadPage() {
     {
       title: '日志',
       dataIndex: 'msg',
-      key: 'msg'
+      key: 'msg',
+      width: '25%'
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTime',
+      width: 220,
       render(createTime) {
         return createTime && DateTool.utcToDev(createTime);
       }
@@ -68,6 +75,7 @@ function DataDownloadPage() {
     {
       title: '操作',
       key: 'action',
+      width: 80,
       render: (text, record) => (
         <div className="operation">
           <a onClick={() => downData(record.result)}>下载</a>
@@ -77,6 +85,7 @@ function DataDownloadPage() {
   ]
 
   const downData = (url) => {
+    if (!url) return Notification({type: 'warn', message: '暂无数据'})
     window.open(url)
   }
 
@@ -138,7 +147,9 @@ function DataDownloadPage() {
       endTime: obj.endTime
     }
     post(Paths.createExport, params).then(res => {
-
+      if (res.code === 0) {
+        getTableList()
+      }
     })
   }
 
