@@ -128,7 +128,7 @@ export default function Device() {
             params.startDate = value[0].format('YYYY-MM-DD')
         }
         if (selectType) {
-            params.appId = selectType
+            params.productId = selectType
         }
         post(Paths.deviceUserAn, params, { loading }).then((res) => {
             if (Array.isArray(res.data)) {
