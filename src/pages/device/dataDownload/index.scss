@@ -1,0 +1,27 @@
+.download-data-page {
+  .filter {
+    padding: 40px 22px 22px 16px;
+    margin-bottom: 16px;
+
+    .device-filter-form {
+      >.ant-row {
+        margin-right: 20PX;
+        margin-bottom: 22px;
+      }
+    }
+  }
+
+  .content {
+    padding: 22px;
+
+    .ant-table-thead>tr>th,
+    .ant-table-tbody>tr>td {
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+
+}

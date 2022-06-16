@@ -4,11 +4,13 @@ import loadable from '@loadable/component';
 
 const DeviceMn = loadable(() => import('./home'));
 const DeviceWarn = loadable(() => import('./deviceWarning'));
+const DataDownload = loadable(() => import('./dataDownload'))
 
 const routes = {
     '设备管理': DeviceMn,
     // '设备密钥': null, //暂时不开放 20210816
     '设备消息': DeviceWarn,//即：设备告警
+    '数据下载': DataDownload, // 数据下载
 }
 
 export default function Device({ childmenus }) {
