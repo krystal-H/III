@@ -38,13 +38,13 @@ const columns = [
     },
     {
         title: '新增设备用户次日留存数(昨日)',
-        dataIndex: 'newRatio',
-        key: 'newRatio',
+        dataIndex: 'newRetainNum',
+        key: 'newRetainNum',
     },
     {
         title: '活跃设备用户次日留存数(昨日)',
-        dataIndex: 'activeRatio',
-        key: 'activeRatio',
+        dataIndex: 'activeRetainNum',
+        key: 'activeRetainNum',
     },
     {
         title: '累计设备用户数',
