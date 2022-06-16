@@ -18,7 +18,8 @@ const statusMap = {
   1: '初始化',
   2: '运行中',
   3: '运行成功',
-  4: '运行失败'
+  4: '运行失败',
+  5: '创建作业失败'
 }
 
 function DataDownloadPage() {
@@ -131,7 +132,7 @@ function DataDownloadPage() {
   // 创建查询任务
   const searchList = () => {
     const { productId, macStrs, times } = form.getFieldsValue()
-    // let obj = { ...pager }
+    if (!productId || !macStrs || !times) return Notification({ type: 'warn', messgae: '请输入查询条件' })
     let obj = {}
     if (times && times.length) {
       obj.startTime = moment(times[0]).valueOf()
