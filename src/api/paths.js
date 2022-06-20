@@ -546,6 +546,7 @@ let Paths = {
     cardFunList:'/product/dev/show/card/func',//产品-服务配置-显示功能卡列表
     setCardFun:'/product/dev/config/card/func',//设置功能卡
     upProMaxStep: '/product/update/step',//记录产品最新配置步骤
+    checkIdentifier:'/product/validate/identifier',//产品-功能定义-添加属性identifier校验
 
     // //设备-设备管理
     // getDeviceList

@@ -83,16 +83,39 @@ export default function ProtocoLeft({ rightVisible, onCloseRight, onRefreshList,
     }
     //提交数据
     const sentReq = (data) => {
+        function addData(data) {
+            post(Paths.PhysicalModelAction, data, { loading: true }).then((res) => {
+                Notification({
+                    description: `新增成功`,
+                    type: 'success'
+                });
+                onRefreshList()
+            });
+        }
         data.funcType = currentTab
         data.type = 'add'
         let productItem = JSON.parse(sessionStorage.getItem('productItem'))
         data.productId = productItem.productId
         data.content.standard = false
-        data.content = JSON.stringify(data.content)
+        console.log(data, 99999)
+        let params = {
+            productId: productItem.productId,
+            identifier: data.content.identifier
+        }
+        post(Paths.checkIdentifier, params, { loading: true }).then((res) => {
+            if (res.data) {
+                Notification({
+                    description: `标识符已存在`,
+                    type: 'warn'
+                });
+            } else {
+                data.content = JSON.stringify(data.content)
+                addData(data)
+            }
 
-        post(Paths.PhysicalModelAction, data, { loading: true }).then((res) => {
-            onRefreshList()
         });
+        // 
+
     }
     return (
         <Drawer
