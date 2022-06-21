@@ -108,6 +108,7 @@ export default function DeviceRegist() {
             type: 'success',
             description: '注册成功！',
         });
+        getList()
         setModelVis(false)
     }
     //搜索
