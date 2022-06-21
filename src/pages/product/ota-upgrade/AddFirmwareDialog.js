@@ -62,14 +62,16 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     const [formInstance] = Form.useForm();
     const newTabIndex = useRef(0);
 
+    const selectproId = useRef();
+
     useEffect(() => {
         if(schemeType == 2){
-            post(Paths.getModuleDeviceVersionList,{productId:editId||productId},{loading:true}).then(({data={}}) => {
+            post(Paths.getModuleDeviceVersionList,{productId:editId||productId||selectproId.current},{loading:true}).then(({data={}}) => {
                 console.log('---lastmodinfo--',data)
                 setLatestModLi(data)
             });
         }
-    }, [schemeType,productId])
+    }, [firmwareFrPro])
     useEffect(() => {
         if(editId){
             changedPro(editId)
@@ -145,7 +147,8 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     }, [editFirParamsInfoLi])
 
     const changedPro= productId =>{
-        firmwareLastVersion(productId)   
+        firmwareLastVersion(productId)
+        selectproId.current = productId
     }
 
     const onFinish=(values)=>{
