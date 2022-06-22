@@ -65,8 +65,9 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     const selectproId = useRef();
 
     useEffect(() => {
-        if(schemeType == 2){
-            post(Paths.getModuleDeviceVersionList,{productId:editId||productId||selectproId.current},{loading:true}).then(({data={}}) => {
+        let id = editId || selectproId.current;
+        if(schemeType == 2 && id){
+            post(Paths.getModuleDeviceVersionList,{productId:id},{loading:true}).then(({data={}}) => {
                 console.log('---lastmodinfo--',data)
                 setLatestModLi(data)
             });
