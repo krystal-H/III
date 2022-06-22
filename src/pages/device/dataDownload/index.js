@@ -127,7 +127,7 @@ function DataDownloadPage() {
 
   //产品列表
   const getProductList = () => {
-    get(Paths.getProductType).then((res) => {
+    post(Paths.newProduct).then((res) => {
       setProductArr(res.data)
     })
   }

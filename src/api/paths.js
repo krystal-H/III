@@ -640,6 +640,7 @@ let Paths = {
     //项目统计
     projectSummaryList:'/project/summary/details',//明细
     projectSummary: '/project/summary/information',//项目统计-汇总信息
+    newProduct:'/product/list/new',//新产品列表
 };
 
 // 拼接 urlPrefix
