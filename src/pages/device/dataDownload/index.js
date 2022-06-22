@@ -77,16 +77,19 @@ function DataDownloadPage() {
       title: '操作',
       key: 'action',
       width: 80,
-      render: (text, record) => (
-        <div className="operation">
-          <a onClick={() => downData(record.result)}>下载</a>
-        </div>
-      )
+      render: (text, record) => {
+        if (record.status ==3) {
+          return <div className="operation">
+            <a onClick={() => downData(record.result)}>下载</a>
+          </div>
+        }
+        return ''
+      }
     }
   ]
 
   const downData = (url) => {
-    if (!url) return Notification({type: 'warn', message: '暂无数据'})
+    if (!url) return Notification({ type: 'warn', message: '暂无数据' })
     window.open(url)
   }
 
@@ -97,7 +100,7 @@ function DataDownloadPage() {
 
   // 获取列表数据
   const getTableList = () => {
-    post(Paths.downDeviceDataList, {origin: 'open', ...pager}, { loading: true }).then(res => {
+    post(Paths.downDeviceDataList, { origin: 'open', ...pager }, { loading: true }).then(res => {
       setDataSource(res.data.list)
       setPager(pre => {
         let obj = cloneDeep(pre)
@@ -124,7 +127,7 @@ function DataDownloadPage() {
 
   //产品列表
   const getProductList = () => {
-    get(Paths.getProductType).then((res) => {
+    post(Paths.newProduct).then((res) => {
       setProductArr(res.data)
     })
   }
@@ -132,7 +135,7 @@ function DataDownloadPage() {
   // 创建查询任务
   const searchList = () => {
     const { productId, macStrs, times } = form.getFieldsValue()
-    if (!productId || !macStrs || !times) return Notification({ type: 'warn', messgae: '请输入查询条件' })
+    if (!productId || !macStrs || !times) return Notification({ type: 'warn', description: '请输入查询条件' })
     let obj = {}
     if (times && times.length) {
       obj.startTime = moment(times[0]).valueOf()
@@ -147,7 +150,7 @@ function DataDownloadPage() {
       startTime: obj.startTime,
       endTime: obj.endTime
     }
-    post(Paths.createExport, params).then(res => {
+    post(Paths.createExport, params, { loading: true }).then(res => {
       if (res.code === 0) {
         getTableList()
       }
@@ -168,7 +171,7 @@ function DataDownloadPage() {
             <Select showSearch
               optionFilterProp="children"
               placeholder='搜索产品名称'
-              style={{width: 200}}>
+              style={{ width: 200 }}>
               {
                 productArr && productArr.map(item => {
                   return <Option value={item.productId} key={item.productId}>{item.productName}</Option>
