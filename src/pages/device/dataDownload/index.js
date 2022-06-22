@@ -78,12 +78,12 @@ function DataDownloadPage() {
       key: 'action',
       width: 80,
       render: (text, record) => {
-        if (record.status != 1) {
+        if (record.status ==3) {
           return <div className="operation">
             <a onClick={() => downData(record.result)}>下载</a>
           </div>
         }
-
+        return ''
       }
     }
   ]
@@ -150,7 +150,7 @@ function DataDownloadPage() {
       startTime: obj.startTime,
       endTime: obj.endTime
     }
-    post(Paths.createExport, params).then(res => {
+    post(Paths.createExport, params, { loading: true }).then(res => {
       if (res.code === 0) {
         getTableList()
       }
