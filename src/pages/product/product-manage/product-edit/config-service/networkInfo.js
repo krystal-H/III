@@ -9,7 +9,7 @@ const { Option } = Select
 const guidePic = require('../../../../../assets/images/commonDefault/service-guidePage.png')
 const errorPic = require('../../../../../assets/images/commonDefault/service-bindFailPage.png')
 
-function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited, cancelHandle }) {
+function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited, cancelHandle, okHandle }) {
   const [form] = Form.useForm()
   const formRef = useRef()
   const imgRef = useRef()
@@ -70,7 +70,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
     console.log('提交的数据****', values)
     post(Paths.saveNetworkConfig, { ...values }, { loading: true }).then(res => {
       Notification({ description: '操作成功！', type: 'success' })
-      cancelHandle()
+      okHandle()
     })
   }
 

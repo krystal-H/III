@@ -483,10 +483,12 @@ function ServiceSelect({ productId, nextStep }, ref) {
           productId={productId}
           isGateWayDevice={isGateWayDevice}
           isedited={requiredList[0].isConfiged}
-          cancelHandle={() => {
-            setNetworkVisible(false)
+          okHandle={() => {
             isConfigedFunc()
             judgeIsGateWay()
+          }}
+          cancelHandle={() => {
+            setNetworkVisible(false)
           }} />
       }
 

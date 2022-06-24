@@ -34,20 +34,21 @@
       // 本地导入文件
       .local-import {
         .file-input-wrapper {
-          position: relative;
-          width: max-content;
+          @include flex(center, center);
+          // position: relative;
+          // width: max-content;
           margin: 70px auto 16px;
           font-size: 12px;
-          input {
-            width: 194px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0;
-            cursor: pointer;
-          }
+          // input {
+          //   width: 194px;
+          //   position: absolute;
+          //   top: 0;
+          //   left: 0;
+          //   right: 0;
+          //   bottom: 0;
+          //   opacity: 0;
+          //   cursor: pointer;
+          // }
           .get-template {
             margin-left: 12px;
           }
