@@ -242,10 +242,10 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
   // 本地导入
   const beforeUpload = file => {
     console.log(file, 'file')
-    const isLt2M = file.size / 1024 < 500;//限制500k
+    const isLt2M = file.size / 1024 < 500;//限制500kb
     if (!isLt2M) {
       Notification({
-        description: '文件上传大小超过500k限制'
+        description: '文件上传大小超过500kb限制'
       });
       return false;
     }
