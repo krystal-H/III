@@ -198,7 +198,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 mainVersion:'',
                 // extVersion:f_extVersion,
                 totalVersion:f_totalVersion,
-                filePath:f_filePath,productId,deviceVersionType:{'2':2,'3':1,'5':4}[schemeType+""],
+                filePath:f_filePath,productId,deviceVersionType:{'2':1,'3':1,'5':4}[schemeType+""],
                 curExtVersion:f_curExtVersion,
                 deviceVersionId:editFirParamsFm.deviceVersionId,
             }
