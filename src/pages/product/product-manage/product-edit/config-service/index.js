@@ -14,6 +14,7 @@ import ZigbeeConfig from './zigbeeConfig'
 import ZigbeeProConfig from './zigbeeProConfig'
 import QuickConfig from '../../product-details/service-config/shiftSet'
 import { productSchemeTypeMap } from '../../../../../configs/text-map';
+import { useSelector } from 'react-redux'
 
 //处理数据
 function delaData(data, editData = {}) {
@@ -153,7 +154,6 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [networkVisible, setNetworkVisible] = useState(false)
   const [securityVisible, setSecurityVisible] = useState(false)
   const [firmwareVisible, setFirmwareVisible] = useState(false)
-  // const [gatewayVisible, setGatewayVisible] = useState(false)
   const [firmwareDetailVisible, setFirmwareDetailVisible] = useState(false)
   const [isGateWayDevice, setIsGateWayDevice] = useState('') // （0-普通设备，1-网关设备）
   const [firmwareDetailData, setFirmwareDetailData] = useState([])
@@ -169,9 +169,17 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [zigbeeSign, setZigbeeSign] = useState('') // 产品标识zigbee
   const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
 
+  const [requireTempList, setRequireTempList] = useState([])
+  const headInfo = useSelector(state => {
+    return state.getIn(['product']).toJS()
+  })
+  useEffect(() => {
+    judgeHasZigbee(requireTempList)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [headInfo.productHeadInfo])
+
   //验证函数
   const subNextConFirm = () => {
-    // console.log('requiredList----', requiredList.every(item => item.isConfiged === true), '***', requiredList)
     if (productItemData.schemeType != 4 && productItemData.schemeType != 5) {
       if (requiredList.every(item => item.isConfiged === true)) {
         nextStep()
@@ -203,6 +211,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
         setProductExtend(res.data.productExtend.authorityType)
       }
     })
+    setRequireTempList(list)
     judgeHasZigbee(list)
   }
 
@@ -215,7 +224,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
 
   // 是否配置过 zigbee四元组配置、zigbee四元组配置
   const judgeHasZigbee = (requireTempList) => {
-    if (productItemData.bindTypeStr.indexOf('Zigbee') !== -1) { // 通信协议是zigbee类型的
+    if (Object.keys(headInfo.productHeadInfo).length && headInfo.productHeadInfo.bindTypeStr.indexOf('Zigbee') !== -1) { // 通信协议是zigbee类型的
       post(Paths.isConfigZigbee, { productId }).then(res => {
         if (res.data.isZigbeeSignConfig) {// 配置了产品标示
           requireTempList.filter(item => item.type === 'zigbee')[0].isConfiged = true
