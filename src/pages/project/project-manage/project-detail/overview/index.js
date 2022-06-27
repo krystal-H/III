@@ -123,7 +123,7 @@ export default function DeviceInfo({ baseInfo, projectId }) {
                 <span>项目地址</span>
             </div>
             <div className='item-content'>
-                <div className='item'>
+                <div className='item widthAuto'>
                     <div className='label'>项目类型：</div>
                     <div className='name'>
                         {baseInfo.isPrivateCloud == 1 ? '私有云' : baseInfo.isPrivateCloud == 0 ? '公有云' : ''}
@@ -131,7 +131,7 @@ export default function DeviceInfo({ baseInfo, projectId }) {
                 </div>
             </div>
             <div className='item-content'>
-                <div className='item'>
+                <div className='item widthAuto'>
                     <div className='label'>项目地址：</div>
                     <div className='name'>
                         {baseInfo.brokerUrl}
