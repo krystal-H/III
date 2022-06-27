@@ -484,6 +484,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
           isGateWayDevice={isGateWayDevice}
           isedited={requiredList[0].isConfiged}
           okHandle={() => {
+            setNetworkVisible(false)
             isConfigedFunc()
             judgeIsGateWay()
           }}
