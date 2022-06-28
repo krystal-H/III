@@ -43,7 +43,7 @@ export default ({ historyVisiable, openHistory, debugInfo, productId, sentInfo }
     const getList = () => {
         let params = {
             pageIndex: 1,
-            pageRows: 10,
+            pageRows: 999,
             productId
         }
         get(Paths.getDebugHis, params).then(res => {
