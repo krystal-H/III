@@ -252,9 +252,11 @@ function NumberTemp({ currentTab, sentReq }, ref) {
                 rules={[
                     {
                         required: true,
+                        pattern: new RegExp(/^(?![0-9_])\w+$/),
+                        message: '请输入数字/字母/下划线，且不能以数字或下划线开头'
                     },
                 ]}
-            ><Input οnkeyup="value=value.replace(/[\u4e00-\u9fa5]|(^\s+)|(\s+$)/ig,'')" />
+            ><Input />
             </Form.Item>
             <Form.Item
                 label="数据类型"
@@ -519,6 +521,8 @@ function EventTemp({ currentTab, sentReq }, ref) {
                     rules={[
                         {
                             required: true,
+                            pattern: new RegExp(/^(?![0-9_])\w+$/),
+                            message: '请输入数字/字母/下划线，且不能以数字或下划线开头'
                         },
                     ]}
                 ><Input />
@@ -684,6 +688,8 @@ function ServeTemp({ sentReq }, ref) {
                     rules={[
                         {
                             required: true,
+                            pattern: new RegExp(/^(?![0-9_])\w+$/),
+                            message: '请输入数字/字母/下划线，且不能以数字或下划线开头'
                         },
                     ]}
                 ><Input />
