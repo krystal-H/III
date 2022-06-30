@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Input, Select, Radio, Button, Upload ,Form, Modal,Tabs } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { FIRMWAREFROMPRO } from "./store/actionTypes";
 import { post,Paths } from '../../../api';
 import {Notification} from '../../../components/Notification';
 import LabelTip from '../../../components/form-com/LabelTip';
 import { SCHMETYPE,formrules,TXTUPNAME } from './store/constData'
 import {getVersionList,firmwareLastVersion} from './store/actionCreators'
+import store from '../../../store';
 const { Option } = Select;
 const { Item } = Form;
 
@@ -32,13 +34,13 @@ const mapDispatchToProps = dispatch => {
 const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     changeState,
     editId,editProductFirParams,
-    firmwareLastVersion,mcusocproLi,firmwareFrPro,getVersionLi
+    firmwareLastVersion,mcusocproLi,firmwareFrPro={},getVersionLi
 })=>{
-
 
     const [mcuIsUp, setMcuIsUp] = useState(1);
     const [modIsUp, setModIsUp] = useState(1);
     const [curTabNo, setCurTabNo] = useState('tab0');
+
     const [latestModLi, setLatestModLi] = useState([]);
     const [editFirParamsInfoLi, setEditFirParamsInfoLi] = useState([]);
     const [editFirParamsFm, setEditFirParamsFm] = useState({});
@@ -60,26 +62,35 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     const [formInstance] = Form.useForm();
     const newTabIndex = useRef(0);
 
+    const selectproId = useRef();
+
     useEffect(() => {
-        if(schemeType == 2){
-            post(Paths.getModuleDeviceVersionList,{productId:editId||productId},{loading:true}).then(({data={}}) => {
+        let id = editId || selectproId.current;
+        if(schemeType == 2 && id){
+            post(Paths.getModuleDeviceVersionList,{productId:id},{loading:true}).then(({data={}}) => {
+                console.log('---lastmodinfo--',data)
                 setLatestModLi(data)
-               
-                console.log(777,data)
             });
         }
-    }, [schemeType])
+    }, [firmwareFrPro])
     useEffect(() => {
         if(editId){
             changedPro(editId)
             post(Paths.otaDevVersionList,{...editProductFirParams}).then(({data=[]}) => {
                 setEditFirParamsInfoLi(data)
             })
+        }else{
+            store.dispatch({
+                type: FIRMWAREFROMPRO,
+                firmwareFrPro:{},
+            })
         }
     }, [editId])
     useEffect(() => {
-        if(productFirmwareName){
+        if(productFirmwareName && editId){
             formInstance.setFieldsValue({productFirmwareName})
+        }else{
+            formInstance.setFieldsValue({productFirmwareName:''})
         }
     }, [productFirmwareName])
 
@@ -137,11 +148,16 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     }, [editFirParamsInfoLi])
 
     const changedPro= productId =>{
-        // productId = 12150;
-        firmwareLastVersion(productId)   
+        firmwareLastVersion(productId)
+        selectproId.current = productId
     }
 
     const onFinish=(values)=>{
+        if(mcuIsUp&&modIsUp&&schemeType!=5){
+            Notification({type:'info',description:'请至少升级一项'});
+            return
+        }
+
         const { productId,productFirmwareName,f_extVersion,f_totalVersion,f_filePath } = values;
         let params = {
             productId:editId||productId, 
@@ -149,6 +165,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
             productFirmwareVersion:editId ?productFirmwareVersion : (productFirmwareVersion+1 ),
             productFirmwareId:editId?productFirmwareId:undefined
         }
+        const indexarr = []
 
         if(schemeType==5||mcuIsUp==0){
             let deviceVersions = updateFirmwareLi.map((k,i)=>{
@@ -157,8 +174,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     extVersion = values[`extVersion_${k}`],
                     totalVersion = values[`totalVersion_${k}`],
                     filePath = values[`filePath_${k}`];
-
-                    
+                indexarr.push(firmwareTypeNo)    
                 return {
                     deviceVersionName:firmwareVersionTypeName,
                     firmwareVersionType:firmwareTypeNo,
@@ -167,19 +183,36 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     deviceVersionId:editFirParams[i] && editFirParams[i].deviceVersionId
                 }
             })
+            if(Array.from(new Set(indexarr)).length<indexarr.length){
+                Notification({type:'info',description:TXTUPNAME[schemeType] +"编号不能重复"});
+                return
+
+            }
             params = {...params,deviceVersions}
         }
         if(schemeType!=5&&modIsUp==0){
+
             let deviceVersion = {
                 firmwareVersionType:0,
-                deviceVersionName:f_firmwareVersionTypeName,
+                deviceVersionName:f_firmwareVersionTypeName || firmwareVersionTypeName,
                 mainVersion:'',
-                extVersion:f_extVersion,
+                // extVersion:f_extVersion,
                 totalVersion:f_totalVersion,
-                filePath:f_filePath,productId,deviceVersionType:{'2':2,'3':1,'5':4}[schemeType+""],
+                filePath:f_filePath,productId,deviceVersionType:{'2':1,'3':1,'5':4}[schemeType+""],
                 curExtVersion:f_curExtVersion,
                 deviceVersionId:editFirParamsFm.deviceVersionId,
             }
+
+            if(schemeType == 3){
+                deviceVersion.extVersion = f_extVersion
+            }else{
+                let lastmodinfo = latestModLi.find(t=>{return t.deviceVersionId==f_extVersion}) || {}
+                console.log(777,f_extVersion,lastmodinfo)
+                deviceVersion = {...deviceVersion,...lastmodinfo}
+
+            }
+
+
             if(params.deviceVersions){
                 params.deviceVersions.push(deviceVersion)
             }else{
@@ -191,7 +224,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
             reqpath = Paths.otaUpdateVersion;
         }
 
-        post(reqpath,params).then((res) => {
+        post(reqpath,params,{loading:true}).then((res) => {
             Notification({type:'success',description:'操作成功！'});
             getVersionLi();
             changeState('addFirmwareVisiable',false); 
@@ -201,16 +234,17 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
     }
 
 
-    const uploadChange = ({file})=>{
+    const uploadChange = ({file},key)=>{
         if(file.response){ //上传成功返回 file.status=="done"
             const url = file.response.data && file.response.data.url || '';
             formInstance.setFieldsValue({ 
-                [`filePath_${curTabNo}`]:url
+                [`filePath_${key}`]:url
             })
+            
         }
         if(file.status=="removed"){ //删除操作
             formInstance.setFieldsValue({ 
-                [`filePath_${curTabNo}`]:""
+                [`filePath_${key}`]:""
             })
 
         }
@@ -282,7 +316,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
 
     return (
         <Modal
-            title={editId&&'修改固件'||'新增固件' + editId}
+            title={editId&&'修改固件'||'新增固件'}
             visible={true}
             onOk={formInstance.submit}
             onCancel={()=>{ 
@@ -291,7 +325,7 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                 changeState('editProductFirParams',{})
                 
             }}
-            width={650}
+            width={700}
             maskClosable={false}
         >
             <Form form={formInstance} {...formItemLayout} className="ota_add_firmware_dialog" onFinish={onFinish} id='area'>
@@ -334,8 +368,8 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                             <Select placeholder="请选择"  getPopupContainer={() => document.getElementById('area')}>
                                 {
                                     latestModLi.map(item => {
-                                        const {deviceVersionId} = item;
-                                        return <Option key={deviceVersionId} value={deviceVersionId}>{deviceVersionId}</Option>
+                                        const {deviceVersionId,extVersion} = item;
+                                        return <Option key={deviceVersionId} value={deviceVersionId}>{extVersion}</Option>
                                     })
                                 }
                             </Select>
@@ -360,7 +394,6 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                         <Upload className='filepathinpt' onChange={uploadChangeSoc}
                             accept='.bin,.hex,.zip,.cyacd,.apk,.dpkg'
                             maxCount={1}
-                            // fileList={[]}
                             action={Paths.upFileUrl}
                             data={{ appId: 31438, domainType: 4, }}>
                                 <Button type="primary" ><UploadOutlined />上传附件</Button>
@@ -383,11 +416,14 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                     <Tabs className='tabs' type="editable-card" onChange={cngTab} activeKey={curTabNo} onEdit={onEditTab} hideAdd={updateFirmwareLi.length>=5}>
                         {
                             updateFirmwareLi.map( (key,i) =>{
-                                return <Tabs.TabPane tab={`${TXTUPNAME[schemeType]}${i}`} key={key} >
+                                return <Tabs.TabPane tab={`${{2:"MCU",3:"模组",5:"系统"}[schemeType]}${TXTUPNAME[schemeType]}${i+1}`} key={key} >
                                     <Item label={TXTUPNAME[schemeType] +"名称"} name={`firmwareVersionTypeName_${key}`} rules={[{ required: true, message: '请填写模块名称' }]}>
                                         <Input maxLength={30}  placeholder='不超过30字符'/>
                                     </Item>
-                                    <Item label={TXTUPNAME[schemeType] +"编号"} name={`firmwareTypeNo_${key}`} rules={[{ required: true, message: '请填写模块编号' }]}>
+                                    <Item label={TXTUPNAME[schemeType] +"编号"} name={`firmwareTypeNo_${key}`} rules={[
+                                        { required: true, message: '请填写模块编号' },
+                                        {pattern: formrules.mainVer, message: '请输入1-100的整数'}
+                                    ]}>
                                         <Input maxLength={3}  placeholder='请输入1-100的整数字，编号须唯一'/>
                                     </Item>
                                     <Item label='硬件版本号' name={`totalVersion_${key}`} >
@@ -400,21 +436,19 @@ const AddMod = connect(mapStateToProps, mapDispatchToProps)(({
                                         rules={[{ required: true, message: '请输入URL' },{pattern: formrules.url, message: '请输入正确的URL'}]}
                                     ><Input maxLength={200} placeholder='请输入URL或者上传一个附件自动填充' />
                                     </Item>
+
+                                    <Upload className='filepathinpt' onChange={data=>{uploadChange(data,key)}} accept='.bin,.hex,.zip,.cyacd,.apk,.dpkg' maxCount={1}
+                                        // fileList={[]}
+                                        action={Paths.upFileUrl}
+                                        data={{ appId: 31438, domainType: 4, }}>
+                                            <Button type="primary" ><UploadOutlined />上传附件</Button>
+                                            <div>支持.bin,.hex,.zip,.cyacd,.apk,.dpkg格式，不超过200MB。</div>
+                                    </Upload>
+
                                 </Tabs.TabPane>
                             })
                         }    
                     </Tabs>
-                    {
-                        updateFirmwareLi.length>0 && 
-                        <Upload className='filepathinpt' onChange={uploadChange}
-                            accept='.bin,.hex,.zip,.cyacd,.apk,.dpkg'
-                            maxCount={1}
-                            action={Paths.upFileUrl}
-                            data={{ appId: 31438, domainType: 4, }}>
-                                <Button type="primary" ><UploadOutlined />上传附件</Button>
-                                <div>支持.bin,.hex,.zip,.cyacd,.apk,.dpkg格式，不超过200MB。</div>
-                        </Upload>
-                    }
                 </div >
                 }
             </Form>

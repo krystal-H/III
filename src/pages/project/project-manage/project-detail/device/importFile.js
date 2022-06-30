@@ -48,7 +48,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
 
     //下载模板
     const downfile = () => {
-        window.open('http://skintest.hetyj.com/b325662c4122f1b8948fe07c9d782ecb.xlsx')
+        window.open('https://skintest.hetyj.com/b325662c4122f1b8948fe07c9d782ecb.xlsx')
     }
     //导入
     const customRequest = (option) => {

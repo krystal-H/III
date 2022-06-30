@@ -298,10 +298,12 @@ export default class FirmwareManagement extends Component {
                         rowKey={({ deviceVersionId,createTime,productFirmwareId }) => deviceVersionId + '_'+ productFirmwareId + createTime}
                         columns={this.columns}
                         dataSource={list}
+
                         pagination={{
                             defaultCurrent: pageIndex,
                             total: totalRows,
                             hideOnSinglePage: false,
+                            showTotal:total => `共 ${total} 条`,
                             onChange: this.pagerIndex
                         }}
                     />

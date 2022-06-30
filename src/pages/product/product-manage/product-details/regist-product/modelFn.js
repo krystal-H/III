@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Modal, Tooltip, Form, Input, InputNumber } from 'antd';
-import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
 import { UploadFileHooks } from '../../../../../components/upload-file';
 import LabelTip from '../../../../../components/form-com/LabelTip';
 import { post, Paths, get } from '../../../../../api';
 import TableCom from './downTable';
-import { downfileFn } from '../../../../../util/util'
 import './index.scss'
 export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, authWay }) {
   const [form] = Form.useForm();
@@ -24,7 +22,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
         productId,
         data: value.upload[0].url
       }
-      post(Paths.proReledExport, params).then((res) => {
+      post(Paths.proReledExport, params,{loading:true}).then((res) => {
         colseMoadl()
       });
     }).catch(err => {
@@ -42,8 +40,7 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
     }
   }, [authWay])
   const downfile = () => {
-    // window.open('http://skintest.hetyj.com/10086/fbf17720a2051f8241011426a1328992.xlsx')
-    downfileFn('http://skintest.hetyj.com/10086/fbf17720a2051f8241011426a1328992.xlsx','模板')
+    window.open('https://skintest.hetyj.com/10086/fbf17720a2051f8241011426a1328992.xlsx')
   }
   //打开密钥下载
   const openDown = () => {

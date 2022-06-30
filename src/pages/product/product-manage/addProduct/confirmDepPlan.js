@@ -119,7 +119,7 @@ class SwitchFreeDep extends Component {
           btnList5.length > 0 &&
           <TabPane tab="操作系统方案" key="5">
             <SwitchTab
-              tip="自带Android或者Linux系统的产品，有独立的系统。"
+              tip="操作系统方案，产品自带Android或者Linux系统，可实现丰富的功能。"
               btnList={btnList5}
               deviceTypeId={thirdCategoryId}
               onRef={ref => { this.refSwitchTab = ref }} />

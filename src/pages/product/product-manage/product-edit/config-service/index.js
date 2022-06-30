@@ -14,6 +14,7 @@ import ZigbeeConfig from './zigbeeConfig'
 import ZigbeeProConfig from './zigbeeProConfig'
 import QuickConfig from '../../product-details/service-config/shiftSet'
 import { productSchemeTypeMap } from '../../../../../configs/text-map';
+import { useSelector } from 'react-redux'
 
 //处理数据
 function delaData(data, editData = {}) {
@@ -153,7 +154,6 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [networkVisible, setNetworkVisible] = useState(false)
   const [securityVisible, setSecurityVisible] = useState(false)
   const [firmwareVisible, setFirmwareVisible] = useState(false)
-  // const [gatewayVisible, setGatewayVisible] = useState(false)
   const [firmwareDetailVisible, setFirmwareDetailVisible] = useState(false)
   const [isGateWayDevice, setIsGateWayDevice] = useState('') // （0-普通设备，1-网关设备）
   const [firmwareDetailData, setFirmwareDetailData] = useState([])
@@ -169,13 +169,25 @@ function ServiceSelect({ productId, nextStep }, ref) {
   const [zigbeeSign, setZigbeeSign] = useState('') // 产品标识zigbee
   const [initialProtoclList, setInitialProtoclList] = useState([]) // 接口请求初始数据
 
+  const [requireTempList, setRequireTempList] = useState([])
+  const headInfo = useSelector(state => {
+    return state.getIn(['product']).toJS()
+  })
+  useEffect(() => {
+    judgeHasZigbee(requireTempList)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [headInfo.productHeadInfo])
+
   //验证函数
   const subNextConFirm = () => {
-    // console.log('requiredList----', requiredList.every(item => item.isConfiged === true), '***', requiredList)
-    if (requiredList.every(item => item.isConfiged === true)) {
-      nextStep()
+    if (productItemData.schemeType != 4 && productItemData.schemeType != 5) {
+      if (requiredList.every(item => item.isConfiged === true)) {
+        nextStep()
+      } else {
+        Notification({ description: '请完善必选配置信息！', type: 'warn' })
+      }
     } else {
-      Notification({ description: '请完善必选配置信息！', type: 'warn' })
+      nextStep()
     }
   }
 
@@ -199,6 +211,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
         setProductExtend(res.data.productExtend.authorityType)
       }
     })
+    setRequireTempList(list)
     judgeHasZigbee(list)
   }
 
@@ -211,7 +224,7 @@ function ServiceSelect({ productId, nextStep }, ref) {
 
   // 是否配置过 zigbee四元组配置、zigbee四元组配置
   const judgeHasZigbee = (requireTempList) => {
-    if (productItemData.bindTypeStr.indexOf('Zigbee') !== -1) { // 通信协议是zigbee类型的
+    if (Object.keys(headInfo.productHeadInfo).length && headInfo.productHeadInfo.bindTypeStr.indexOf('Zigbee') !== -1) { // 通信协议是zigbee类型的
       post(Paths.isConfigZigbee, { productId }).then(res => {
         if (res.data.isZigbeeSignConfig) {// 配置了产品标示
           requireTempList.filter(item => item.type === 'zigbee')[0].isConfiged = true
@@ -367,31 +380,62 @@ function ServiceSelect({ productId, nextStep }, ref) {
     <div className="service-config-page">
       <div className="desc">{getSchemeType()}</div>
       {/* 必选配置 */}
-      <div className="service-config-title">必选配置</div>
-      <div className="service-config-cont">
-        {
-          requiredList && requiredList.map((item, index) =>
-            <div className="config-card" key={index}>
-              <div className="config-card-left">
-                <img src={item.url} alt="图片" />
-              </div>
-              <div className="config-card-right">
-                <div className="config-card-right-title">{item.title}</div>
-                <div className="config-card-right-desc">{item.desc}</div>
-                <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
-                  {!item.isConfiged ? '配置' : '修改'}
+      {/* 系统方案和成品接入  都放入非必填——产品需求 */}
+      {
+        productItemData.schemeType !== 4 && productItemData.schemeType !== 5 && <>
+          <div className="service-config-title">必选配置</div>
+          <div className="service-config-cont">
+            {
+              requiredList && requiredList.map((item, index) =>
+                <div className="config-card" key={index}>
+                  <div className="config-card-left">
+                    <img src={item.url} alt="图片" />
+                  </div>
+                  <div className="config-card-right">
+                    <div className="config-card-right-title">{item.title}</div>
+                    <div className="config-card-right-desc">{item.desc}</div>
+                    <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
+                      {!item.isConfiged ? '配置' : '修改'}
+                    </div>
+                  </div>
+                  {
+                    item.isConfiged && <div className="configured-logo">已配置</div>
+                  }
                 </div>
-              </div>
-              {
-                item.isConfiged && <div className="configured-logo">已配置</div>
-              }
-            </div>
-          )
-        }
-      </div>
+              )
+            }
+          </div>
+        </>
+      }
       {/* 可选配置 */}
       <div className="service-config-title">可选配置</div>
       <div className="service-config-cont">
+        {/* 系统方案和成品接入  都放入非必填——产品需求 */}
+        {
+          (productItemData.schemeType == 4 || productItemData.schemeType == 5) && <>
+            <div className="service-config-cont">
+              {
+                requiredList && requiredList.map((item, index) =>
+                  <div className="config-card" key={index}>
+                    <div className="config-card-left">
+                      <img src={item.url} alt="图片" />
+                    </div>
+                    <div className="config-card-right">
+                      <div className="config-card-right-title">{item.title}</div>
+                      <div className="config-card-right-desc">{item.desc}</div>
+                      <div className="config-card-right-btn" onClick={() => { showModal(item.type) }}>
+                        {!item.isConfiged ? '配置' : '修改'}
+                      </div>
+                    </div>
+                    {
+                      item.isConfiged && <div className="configured-logo">已配置</div>
+                    }
+                  </div>
+                )
+              }
+            </div>
+          </>
+        }
         {
           optionalList.map((item, index) =>
             <div className="config-card" key={index}>
@@ -448,10 +492,13 @@ function ServiceSelect({ productId, nextStep }, ref) {
           productId={productId}
           isGateWayDevice={isGateWayDevice}
           isedited={requiredList[0].isConfiged}
-          cancelHandle={() => {
+          okHandle={() => {
             setNetworkVisible(false)
             isConfigedFunc()
             judgeIsGateWay()
+          }}
+          cancelHandle={() => {
+            setNetworkVisible(false)
           }} />
       }
 

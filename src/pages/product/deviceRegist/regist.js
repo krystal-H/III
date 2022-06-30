@@ -51,7 +51,8 @@ export default function AddFuncModal({ isModalVisible, colseMoadl, cancelModel, 
   }
   //下载模板
   const downfile = () => {
-    downfileFn('http://skintest.hetyj.com/10086/fbf17720a2051f8241011426a1328992.xlsx','模板')
+    // downfileFn('http://skintest.hetyj.com/10086/fbf17720a2051f8241011426a1328992.xlsx','模板')
+    window.open('https://skintest.hetyj.com/10086/fbf17720a2051f8241011426a1328992.xlsx')
   }
   //打开密钥下载
   const openDown = () => {

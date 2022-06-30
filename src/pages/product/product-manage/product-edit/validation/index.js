@@ -206,7 +206,8 @@ function Validation({ productId, developerInfo, refInstance }) {
     //真实设备上报数据显示
     const toDataList = data => {
         const _d = JSON.parse(data);
-        const { topic, physicalAddr, did, map } = _d;
+        const { topic, physicalAddr, did, map, msgId, timestamp } = _d;
+        // console.log(_d, '发送过来的数据-------')
         setDataList(preLi => {
             let li = cloneDeep(preLi);
 
@@ -214,7 +215,7 @@ function Validation({ productId, developerInfo, refInstance }) {
             console.log('---lengthRef.current---',lengthRef.current)
 
 
-            li.unshift({ topic, physicalAddr, did, map, index: ++lengthRef.current })
+            li.unshift({ topic, physicalAddr, did, map, msgId, timestamp, index: ++lengthRef.current })
             if(lengthRef.current>900){
                 li.pop();
             }
@@ -276,7 +277,7 @@ function Validation({ productId, developerInfo, refInstance }) {
                                     pagination={false}
                                     onRow={r => {
                                         return {
-                                            onClick: e => { setAnalysisData(r.map || {}) },
+                                            onClick: e => { setAnalysisData({...r.map,msgId: r.msgId, timestamp: r.timestamp} || {}) },
                                         };
                                     }}
                                     scroll={{ y: 305 }}

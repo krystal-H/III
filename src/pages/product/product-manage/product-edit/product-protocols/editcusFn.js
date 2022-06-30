@@ -255,7 +255,7 @@ function NumberTemp({ currentTab, sentReq, actionData, modelType }, ref) {
                 ]}
             >
                 {
-                    modelType == 1 ? <span>{actionData.funcIdentifier}</span> : <Input />
+                    modelType == 1 ? <span>{actionData.funcIdentifier}</span> : <Input disabled/>
                 }
 
             </Form.Item>
@@ -546,7 +546,7 @@ function EventTemp({ actionData, sentReq, modelType }, ref) {
                     ]}
                 >
                     {
-                        modelType == 1 ? <span>{actionData.funcIdentifier}</span> : <Input />
+                        modelType == 1 ? <span>{actionData.funcIdentifier}</span> : <Input disabled/>
                     }
                 </Form.Item>
                 <Form.Item
@@ -752,7 +752,7 @@ function ServeTemp({ sentReq, actionData, modelType }, ref) {
                     ]}
                 >
                     {
-                        modelType == 1 ? <span>{actionData.funcIdentifier}</span> : <Input />
+                        modelType == 1 ? <span>{actionData.funcIdentifier}</span> : <Input disabled/>
                     }
                 </Form.Item>
             </Form>

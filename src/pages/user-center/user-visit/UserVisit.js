@@ -30,7 +30,7 @@ export default class UserVisit extends Component {
             { title: '用户名', dataIndex: 'userName', key: 'userName',
                 render: text => <Tooltip placement="topLeft" title={text}><a>{text}</a></Tooltip>
             },
-            { title: '用户角色', dataIndex: 'roleName',  key: 'roleName',
+            { title: '用户角色', dataIndex: 'userRole',  key: 'userRole',
                 render:text=> <Tooltip placement="topLeft" title={text}> <span>{text}</span> </Tooltip>
             },
             { title: '备注', dataIndex: 'remark', key: 'remark',

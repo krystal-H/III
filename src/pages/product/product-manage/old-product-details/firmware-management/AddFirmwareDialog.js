@@ -152,7 +152,7 @@ export const AddFirmwareDialog = Form.create({
                                 onRef={el => this.addFirmwareInput = el}
                                 isNotImg={true} 
                                 format='.bin,.hex,.zip,.cyacd' 
-                                maxSize={20}
+                                maxSize={50}
                             />
                         </Form.Item>
                         <div className='oldPro-but'>

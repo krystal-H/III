@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
-import { Select, Tabs, Input, Table, Button } from 'antd'
+import { Select, Tabs, Input, Table, Button, Upload } from 'antd'
 import { Paths, post, get } from '../../../api'
 import { uniqueItemInArrayByKey, checkFileTypeAndSize } from '../../../util/util'
 import { MinusCircleOutlined, UploadOutlined } from '@ant-design/icons'
@@ -240,64 +240,65 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
   }
 
   // 本地导入
-  const importRemoteExcel = e => {
-    const input = e.target;
-    if (input.files && input.files.length > 0) {
-      let { isOk, type, size } = checkFileTypeAndSize(input.files, ['xls', 'xlsx'], 10000)
-      if (!isOk) {
-        return Notification({ description: '文件类型或者大小不符合要求' })
-      }
-      let excel = input.files[0];
-      post(Paths.importRemoteConfigExcel, {
-        uploadExcel: excel,
-        productId
-      }, {
-        needFormData: true,
-        loading: true
-      }).then(data => {
-        if (data.data) {
-          let allList = data.data,
-            successList = [],
-            errorList = [];
-
-          allList.forEach((item, index) => {
-            let { errorType, deviceUniqueId, macAddress } = item
-            item.key = deviceUniqueId;
-
-            if (errorType) {
-              errorList.push({
-                deviceUniqueId,
-                macAddress,
-                errorType,
-                key: deviceUniqueId
-              })
-            } else {
-              successList.push({ ...item })
-            }
-          })
-
-          setImportDeviceData({
-            ...importDeviceData,
-            allList,
-            successList,
-            errorList
-          })
-          if (successList.length > 0) {
-            const temp = uniqueItemInArrayByKey([...rightAllList, ...successList], 'deviceUniqueId')
-            setRightDeviceList({
-              rightAllList: temp,
-              rightTempList: temp
-            })
-          }
-          setExcelFileName(excel.name)
-          setIsShowImportResult(true)
-        }
-      })
+  const beforeUpload = file => {
+    console.log(file, 'file')
+    const isLt2M = file.size / 1024 < 500;//限制500kb
+    if (!isLt2M) {
+      Notification({
+        description: '文件上传大小超过500kb限制'
+      });
+      return false;
     }
+    post(Paths.importRemoteConfigExcel, {
+      uploadExcel: file,
+      productId
+    }, {
+      needFormData: true,
+      loading: true
+    }).then(data => {
+      if (data.data) {
+        let allList = data.data,
+          successList = [],
+          errorList = [];
+
+        allList.forEach((item, index) => {
+          let { errorType, deviceUniqueId, macAddress } = item
+          item.key = deviceUniqueId;
+
+          if (errorType) {
+            errorList.push({
+              deviceUniqueId,
+              macAddress,
+              errorType,
+              key: deviceUniqueId
+            })
+          } else {
+            successList.push({ ...item })
+          }
+        })
+
+        setImportDeviceData({
+          ...importDeviceData,
+          allList,
+          successList,
+          errorList
+        })
+        if (successList.length > 0) {
+          const temp = uniqueItemInArrayByKey([...rightAllList, ...successList], 'deviceUniqueId')
+          setRightDeviceList({
+            rightAllList: temp,
+            rightTempList: temp
+          })
+        }
+        setExcelFileName(file.name)
+        setIsShowImportResult(true)
+      }
+    })
+    return false;
   }
 
   const getRemoteExcelTemplate = () => {
-    window.open('http://skintest.hetyj.com/b325662c4122f1b8948fe07c9d782ecb.xlsx')
+    window.open('https://skintest.hetyj.com/b325662c4122f1b8948fe07c9d782ecb.xlsx')
   }
 
   let leftDeviceDataSource = curDeviceInfoList
@@ -358,11 +359,12 @@ function ChooseUpdateDevice({ productId, editData, onCancel, getRemoteConfigList
                   :
                   <div className="local-import">
                     <div className="file-input-wrapper">
-                      <Button type="primary" className="upload-btn"><UploadOutlined /> 选择本地设备数据文件</Button>
-                      <input type="file" onInput={importRemoteExcel} accept=".xls,.xlsx" />
+                      <Upload className="upload-btn" beforeUpload={beforeUpload} fileList={[]} accept='.xls,.xlsx'>
+                        <Button type="primary" icon={<UploadOutlined />}>选择本地设备数据文件</Button>
+                      </Upload>
                       <a className="get-template" onClick={getRemoteExcelTemplate}>设备数据模板</a>
                     </div>
-                    <p className="local-import-tip">支持xls、xlsx格式，每次添加最多支持20,000个设备，总体文件大小不超过10MB</p>
+                    <p className="local-import-tip">支持xls、xlsx格式，每次添加最多支持20,000个设备，总体文件大小不超过500kb</p>
                   </div>
               }
             </TabPane>

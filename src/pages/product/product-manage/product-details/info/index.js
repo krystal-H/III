@@ -29,8 +29,8 @@ export default function ProductInfo() {
     const [showImg, setShowImg] = useState(false)
     const [imgUrl, setImgUrl] = useState('')
     useEffect(() => {
-        if(step==1){
-            getBusinessInfo()  
+        if (step == 1) {
+            getBusinessInfo()
         }
     }, [step])
     // useEffect(()=>{
@@ -40,7 +40,7 @@ export default function ProductInfo() {
     if (sessionStorage.getItem('productItem')) {
         productBaseInfo = JSON.parse(sessionStorage.getItem('productItem'))
     }
-    
+
     const getBusinessInfo = () => {
         let productId = productBaseInfo.productId
         post(Paths.getBusinessInfo, { productId }).then((res) => {
@@ -73,7 +73,7 @@ export default function ProductInfo() {
             return ''
         }
     }
-    
+
     const openImg = (url) => {
         setImgUrl(url)
         setShowImg(true)
@@ -93,10 +93,14 @@ export default function ProductInfo() {
                             <span>产品型号：</span>
                             <span>{imageInfo.productCode}</span>
                         </div>
-                        <div>
-                            <span>网关子设备：</span>
-                            <span>{imageInfo.productClassId ? '是' : '否'}</span>
-                        </div>
+                        {/* 普通设备才显示 */}
+                        {
+                            imageInfo.productClassId == 0 &&
+                            <div>
+                                <span>网关子设备：</span>
+                                <span>{imageInfo.isRelatedGateway == 1 ? '是' : imageInfo.isRelatedGateway == 0 ? '否' : ''}</span>
+                            </div>
+                        }
                         <div>
                             <span>通信安全验证：</span>
                             <span>{getMcuCodeCheck(imageInfo.authorityType)}</span>
@@ -208,7 +212,7 @@ export default function ProductInfo() {
         {
             showImg && <Modal title="图片展示" width='970px' visible={showImg} footer={null} onCancel={() => { setShowImg(false) }}>
                 <div style={{ textAlign: 'center' }}>
-                    <img src={imgUrl} style={{ maxWidth: '800px' }} alt=''/>
+                    <img src={imgUrl} style={{ maxWidth: '800px' }} alt='' />
                 </div>
             </Modal>
         }

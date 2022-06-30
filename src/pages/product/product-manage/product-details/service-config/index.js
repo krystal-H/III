@@ -53,14 +53,14 @@ function ServiceConfig({ productId, nextStep }, ref) {
     {
       title: '配网信息',
       desc: '选择设备联网方式，设置配网引导图，相关指引等',
-      isConfiged: true,
+      isConfiged: false,
       type: 'network',
       url: require('../../../../../assets/images/commonDefault/service-network.png')
     },
     {
       title: '通信安全机制',
       desc: '配置设备通信的安全机制，兼顾客户的便利以及安全需求',
-      isConfiged: true,
+      isConfiged: false,
       type: 'security',
       url: require('../../../../../assets/images/commonDefault/service-security.png')
     },
@@ -191,9 +191,15 @@ function ServiceConfig({ productId, nextStep }, ref) {
   const isConfigedFunc = () => {
     setSecurityVisible(false)
     post(Paths.getSecurityConfigStatus, { productId }, { loading: true }).then(res => {
+      let temRequiredList = cloneDeep(requiredList)
       if (res.data.securityConfigflag) { // 通信安全配置过
         setProductExtend(res.data.productExtend.authorityType)
+        temRequiredList.filter(item => item.type === 'security')[0].isConfiged = true
       }
+      if (res.data.gatewayConfigflag) { // 配网信息配置过
+        temRequiredList.filter(item => item.type === 'network')[0].isConfiged = true
+      }
+      setRequiredList(temRequiredList)
     })
     judgeHasZigbee(cloneDeep(requiredList))
   }
@@ -307,29 +313,58 @@ function ServiceConfig({ productId, nextStep }, ref) {
     <div className="service-config-page2">
       <div className="desc">{getSchemeType()}</div>
       {/* 必选配置 */}
-      <div className="service-config-title">必选配置</div>
-      <div className="service-config-cont">
-        {
-          requiredList.map((item, index) =>
-            <div className="config-card" key={index}>
-              <div className="config-card-left">
-                <img src={item.url} alt="图片" />
-              </div>
-              <div className="config-card-right">
-                <div className="config-card-right-title">{item.title}</div>
-                <div className="config-card-right-desc">{item.desc}</div>
-                <div className="config-card-right-btn" onClick={() => { checkNetwork(item.type) }}>查看</div>
-              </div>
-              {
-                item.isConfiged && <div className="configured-logo">已配置</div>
-              }
-            </div>
-          )
-        }
-      </div>
+      {/* 系统方案和成品接入  都放入非必填——产品需求 */}
+      {
+        productItemData.schemeType !== 4 && productItemData.schemeType !== 5 && <>
+          <div className="service-config-title">必选配置</div>
+          <div className="service-config-cont">
+            {
+              requiredList.map((item, index) =>
+                <div className="config-card" key={index}>
+                  <div className="config-card-left">
+                    <img src={item.url} alt="图片" />
+                  </div>
+                  <div className="config-card-right">
+                    <div className="config-card-right-title">{item.title}</div>
+                    <div className="config-card-right-desc">{item.desc}</div>
+                    <div className="config-card-right-btn" onClick={() => { checkNetwork(item.type) }}>查看</div>
+                  </div>
+                  {
+                    item.isConfiged && <div className="configured-logo">已配置</div>
+                  }
+                </div>
+              )
+            }
+          </div>
+        </>
+      }
       {/* 可选配置 */}
       <div className="service-config-title">可选配置</div>
       <div className="service-config-cont">
+        {/* 系统方案和成品接入  都放入非必填——产品需求 */}
+        {
+          (productItemData.schemeType == 4 || productItemData.schemeType == 5) && <>
+            <div className="service-config-cont">
+              {
+                requiredList.map((item, index) =>
+                  <div className="config-card" key={index}>
+                    <div className="config-card-left">
+                      <img src={item.url} alt="图片" />
+                    </div>
+                    <div className="config-card-right">
+                      <div className="config-card-right-title">{item.title}</div>
+                      <div className="config-card-right-desc">{item.desc}</div>
+                      <div className="config-card-right-btn" onClick={() => { checkNetwork(item.type) }}>查看</div>
+                    </div>
+                    {
+                      item.isConfiged && <div className="configured-logo">已配置</div>
+                    }
+                  </div>
+                )
+              }
+            </div>
+          </>
+        }
         {
           optionalList.map((item, index) =>
             <div className="config-card" key={index}>

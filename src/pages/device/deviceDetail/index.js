@@ -3,6 +3,7 @@ import DevTag from './devTag'
 import DevShadow from './devShadow'
 import DevSet from './onlineSet'
 import DevGateway from './gateWay'
+import DataDownload from './dataDownload'
 import { getUrlParam } from '../../../util/util';
 import React, { useState, useEffect, useMemo } from 'react'
 import { post, Paths } from '../../../api';
@@ -51,6 +52,9 @@ export default function DeviceInfo({ match }) {
                 </TabPane>
                 <TabPane key={'3'} tab={'设备影子'}>
                     <DevShadow devceId={baseInfo.deviceId} baseInfo={baseInfo} />
+                </TabPane>
+                <TabPane key={'6'} tab={'数据下载'}>
+                    <DataDownload devceId={baseInfo.deviceId} baseInfo={baseInfo}/>
                 </TabPane>
                 <TabPane key={'4'} tab={'远程配置'}>
                     <DevSet devceId={baseInfo.deviceId} baseInfo={baseInfo} />

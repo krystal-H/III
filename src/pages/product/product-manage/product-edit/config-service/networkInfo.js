@@ -9,7 +9,7 @@ const { Option } = Select
 const guidePic = require('../../../../../assets/images/commonDefault/service-guidePage.png')
 const errorPic = require('../../../../../assets/images/commonDefault/service-bindFailPage.png')
 
-function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited, cancelHandle }) {
+function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited, cancelHandle, okHandle }) {
   const [form] = Form.useForm()
   const formRef = useRef()
   const imgRef = useRef()
@@ -70,7 +70,7 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
     console.log('提交的数据****', values)
     post(Paths.saveNetworkConfig, { ...values }, { loading: true }).then(res => {
       Notification({ description: '操作成功！', type: 'success' })
-      cancelHandle()
+      okHandle()
     })
   }
 
@@ -176,9 +176,9 @@ function NetworkInfo({ networkModalVisible, productId, isGateWayDevice, isedited
               <Input maxLength={50} style={{ width: 380 }} />
             </Form.Item>
           }
-          {/* 通信是wifi且是smartLink配网方式 或者 通信方式是蓝牙 */}
+          {/* 通信是wifi且是smartLink配网方式 或者 通信方式是蓝牙  或者 通信是wifi+wifiBle配网方式*/}
           {
-            ((netData.bindTypeId === 1 && baseTypeId === 3) || (netData.bindTypeId === 2)) &&
+            ((netData.bindTypeId === 1 && baseTypeId === 3) || (netData.bindTypeId === 2) || (netData.bindTypeId === 1 && baseTypeId === 2)) &&
             <Form.Item
               label="广播名"
               name="radiocastName"

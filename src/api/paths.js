@@ -168,7 +168,7 @@ let Paths = {
     oldVersionAdd: '/firmware/old/device/version/add',//固件添加
     oldVersionDelete: '/firmware/old/device/version/delete',//固件删除
     versionCheckMac: '/firmware/old/device/version/checkMac',//批量导入mac
-    versionValidate: '/firmware/device/version/validate',//发起验证
+    versionValidate: '/firmware/old/device/version/validate',//发起验证
     oldVersionPublish: '/firmware/old/device/version/publish',//发布
 
 
@@ -295,7 +295,11 @@ let Paths = {
     exportShadowHis: '/deviceManage/exportHistoryProtocolList',//设备影子历史数据
     getDeviceTitle: '/getDeviceDetailList',//设备头部
     gatewayList: '/deviceManage/getSubDeviceList',//子设备列表
+    
 
+    /**数据下载 */
+    downDeviceDataList: '/data/export/list', // 下载数据列表
+    createExport: '/device/data/export', // 数据下载
 
     /**
      * 账户-访问用户 start
@@ -542,6 +546,7 @@ let Paths = {
     cardFunList:'/product/dev/show/card/func',//产品-服务配置-显示功能卡列表
     setCardFun:'/product/dev/config/card/func',//设置功能卡
     upProMaxStep: '/product/update/step',//记录产品最新配置步骤
+    checkIdentifier:'/product/validate/identifier',//产品-功能定义-添加属性identifier校验
 
     // //设备-设备管理
     // getDeviceList
@@ -635,6 +640,7 @@ let Paths = {
     //项目统计
     projectSummaryList:'/project/summary/details',//明细
     projectSummary: '/project/summary/information',//项目统计-汇总信息
+    newProduct:'/product/list/new',//新产品列表
 };
 
 // 拼接 urlPrefix
